@@ -1,0 +1,122 @@
+#corpusTableContainer {
+    margin-bottom: 0px;
+
+    table {
+        border-spacing: 0px;
+        width: 100%;
+        flex-grow: 0;
+        table-layout: fixed;
+        position: absolute;
+        top: 0px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    tr {
+        width: 100%;
+    }
+
+    td {
+        padding: 4px;
+        word-wrap: break-word;
+        width: 100%;
+    }
+
+    tr:nth-child(even) {
+        background-color: #EEE;
+    }
+
+    tr:hover {
+        background-color: #dbdbdb;
+    }
+}
+
+#documentTableContainer {
+    margin-bottom: 0px;
+
+    table {
+        border-spacing: 0px;
+        width: 100%;
+        flex-grow: 0;
+        table-layout: fixed;
+        position: absolute;
+        top: 0px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    tr {
+        width: 100%;
+    }
+
+    td {
+        padding: 4px;
+        word-wrap: break-word;
+        width: 100%;
+    }
+
+    tr:nth-child(even) {
+        background-color: #EEE;
+    }
+
+    tr:hover {
+        background-color: #dbdbdb;
+    }
+
+    .definition {
+        color: $wt-text-color;
+        font-size: 0.75rem;
+    }
+}
+
+#sentenceTableContainer {
+    margin-bottom: 0px;
+    table {
+        border-spacing: 0px;
+        width: 100%;
+        flex-grow: 0;
+        table-layout: fixed;
+        position: absolute;
+        top: 0px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    tr {
+        width: 100%;
+    }
+
+    td {
+        padding: 4px;
+        word-wrap: break-word;
+        width: 100%;
+
+        &.sentence {
+            width: calc(100% - 4rem);
+        }
+        &.idSentence {
+            width: 4rem;
+        }
+    }
+
+    tr:nth-child(even) {
+        background-color: #EEE;
+    }
+
+    tr:hover {
+        background-color: #dbdbdb;
+    }
+
+    .sentence {
+        color: $wt-text-color;
+        font-size: 0.75rem;
+    }
+
+}
+
+
+
+

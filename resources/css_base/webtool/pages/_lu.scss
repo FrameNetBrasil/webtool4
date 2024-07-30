@@ -1,0 +1,29 @@
+
+.luReport__card {
+    margin-bottom: 8px;
+}
+
+.luReport__table {
+    border-spacing: 8px;
+}
+
+#divLexicalEntrySentences {
+    font-size:0.75rem;
+    margin-top: 4px;
+
+    div {
+        box-sizing: border-box;
+        margin-bottom: 4px;
+
+        .delete {
+            cursor: pointer;
+        }
+    }
+    div:nth-child(even) {
+        background-color: $grey-3;
+    }
+
+    div:nth-child(odd) {
+        background-color: white;
+    }
+}
