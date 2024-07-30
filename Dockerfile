@@ -1,4 +1,6 @@
-FROM node:21-alpine3.18 as frontend
+FROM node:21-alpine3.18 AS frontend
+
+ARG PROD
 
 COPY . /frontend
 RUN mkdir -p /frontend/public/build
@@ -27,6 +29,7 @@ RUN apk add -U --no-cache \
 
 RUN docker-php-ext-configure gd --with-jpeg \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+    && docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-install \
     -j$(nproc) gd \
     zip \
@@ -58,7 +61,7 @@ RUN docker-php-ext-configure gd --with-jpeg \
     && pecl install openswoole \
     && docker-php-ext-enable openswoole
 
-ARG WWWGROUP=1000
+ARG WWWGROUP=1001
 ARG WWWUSER=1000
 RUN addgroup -g $WWWGROUP www \
     && adduser -s /usr/bin/fish -D -G www -u $WWWUSER sail \
@@ -69,11 +72,12 @@ RUN addgroup -g $WWWGROUP www \
 COPY . /www
 RUN chown -R sail:www /www
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-COPY --from=frontend /frontend/public/build /public/build
-
 USER sail
 WORKDIR /www
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=frontend /frontend/public /www/public
+
 RUN if [[ -n "$PROD" ]] ; then composer install; fi
 
 CMD ["./artisan", "octane:start", "--port=8000", "--host=0.0.0.0"]
