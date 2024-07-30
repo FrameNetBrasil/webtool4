@@ -6,9 +6,9 @@ return [
     'language' => 'pt',
     'defaultIdLanguage' => 1,
     'defaultPassword' => 'default',
-    'pageTitle' => 'Webtool 3.8',
-    'mainTitle' => 'FrameNet Brasil Webtool 3.8',
-    'headerTitle' => 'FNBr Webtool',
+    'pageTitle' => 'Webtool 4.0',
+    'mainTitle' => 'FrameNet Brasil Webtool 4.0',
+    'headerTitle' => 'FNBr Webtool 4.0',
     'footer' => '&copy; 2014-2024 FrameNet Brasil Lab, UFJF.',
     'login' => [
         'handler' => env('APP_AUTH'),
