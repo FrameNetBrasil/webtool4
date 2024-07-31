@@ -1,3 +1,11 @@
+FROM node:21-alpine3.18 AS frontend
+
+ARG PROD
+
+#COPY . /frontend
+#RUN mkdir -p /frontend/public/build
+#RUN if [[ -n "$PROD" ]] ; then cd frontend && npm install && npm run build; fi
+
 FROM php:8.3-fpm-alpine3.19
 
 ARG PROD
@@ -68,5 +76,8 @@ USER sail
 WORKDIR /www
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+#COPY --from=frontend /frontend/public /www/public
 
 RUN if [[ -n "$PROD" ]] ; then composer install; fi
+
+CMD ["./artisan", "octane:start", "--port=8000", "--host=0.0.0.0"]
