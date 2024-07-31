@@ -66,8 +66,8 @@ class LoginController extends Controller
         $auth0 = $this->getAuth0();
         $auth0->clear();
         $redirectURI = env('AUTH0_CALLBACK_URL');
-        header("Location: " . $auth0->login($redirectURI));
-        exit;
+        //header("Location: " . $auth0->login($redirectURI));
+        return redirect($auth0->login($redirectURI));
     }
 
     #[Post(path: '/login')]

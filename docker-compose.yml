@@ -6,10 +6,10 @@ services:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${FORWARD_PHP_PORT}:8000'
-        volumes:
-            - '.:/www'
-            - ./php.dev.ini:/usr/local/etc/php/conf.d/xdebug.ini
-        command: php artisan serve --host=0.0.0.0
+#        volumes:
+#            - '.:/www'
+#            - ./php.dev.ini:/usr/local/etc/php/conf.d/xdebug.ini
+#        command: php artisan serve --host=0.0.0.0
         user: 'sail'
         environment:
             - 'PHP_IDE_CONFIG=${PHP_IDE_CONFIG}'
@@ -23,18 +23,6 @@ services:
         command: 'php artisan queue:work'
         ports:
             - '0:8080'
-    node:
-        image: node:21-alpine3.18
-        user: node
-        working_dir: /frontend
-        environment:
-            - NODE_ENV=development
-        volumes:
-            - '.:/frontend'
-        command: 'npm run dev -- --host=0.0.0.0 --port=${FORWARD_NODE_PORT}'
-        ports:
-            - ${FORWARD_NODE_PORT}:${FORWARD_NODE_PORT}
-
     redis:
         image: redis:7.2-alpine
         ports:
