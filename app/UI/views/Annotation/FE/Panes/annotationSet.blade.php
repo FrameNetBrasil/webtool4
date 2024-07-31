@@ -37,7 +37,7 @@
                                                     {{--                                                                            <span class="line" style="background:#{{$fes[$idEntityFE]->rgbBg}}; top:{{$topLine}}px">--}}
                                                     <span class="line color_{{$fes[$idEntityFE]->idColor}}"
                                                           style="top:{{$topLine}}px">
-                                        <span class="label color_{{$fes[$idEntityFE]->idColor}}"
+                                        <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
                                               style="top:0px">{{$niFE['label']}}</span>
                             </span>
                                                     @php($topLine += 24)
