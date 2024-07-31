@@ -24,7 +24,7 @@ class FEController extends Controller
     public function browse()
     {
         $search = session('searchFEAnnotation') ?? SearchData::from();
-        return view("Panes.FE.browse", [
+        return view("Annotation.FE.browse", [
             'search' => $search
         ]);
     }
@@ -32,7 +32,7 @@ class FEController extends Controller
     #[Post(path: '/annotation/fe/grid')]
     public function grid(SearchData $search)
     {
-        return view("Panes.FE.grids", [
+        return view("Annotation.FE.grids", [
             'search' => $search,
             'sentences' => [],
         ]);
@@ -43,7 +43,7 @@ class FEController extends Controller
     {
         $document = Document::byId($idDocument);
         $sentences = AnnotationFEService::listSentences($idDocument);
-        return view("Panes.FE.sentences", [
+        return view("Annotation.FE.sentences", [
             'document' => $document,
             'sentences' => $sentences
         ]);
@@ -53,21 +53,21 @@ class FEController extends Controller
     public function sentence(int $idDocumentSentence)
     {
         $data = AnnotationFEService::getAnnotationData($idDocumentSentence);
-        return view("Panes.FE.annotationSentence", $data);
+        return view("Annotation.FE.annotationSentence", $data);
     }
 
     #[Get(path: '/annotation/fe/annotations/{idSentence}')]
     public function annotations(int $idSentence)
     {
         $data = AnnotationFEService::getAnnotationData($idSentence);
-        return view("Panes.FE.annotations", $data);
+        return view("Annotation.FE.Panes.annotations", $data);
     }
 
     #[Get(path: '/annotation/fe/as/{idAS}')]
     public function annotationSet(int $idAS)
     {
         $data = AnnotationFEService::getASData($idAS);
-        return view("Panes.FE.Panes.annotationSet", $data);
+        return view("Annotation.FE.Panes.annotationSet", $data);
     }
 
     #[Get(path: '/annotation/fe/lus/{idDocumentSentence}/{idWord}')]
@@ -77,7 +77,7 @@ class FEController extends Controller
         $data['idWord'] = $idWord;
         $data['idDocumentSentence'] = $idDocumentSentence;
         debug($data);
-        return view("Panes.FE.Panes.lus", $data);
+        return view("Annotation.FE.Panes.lus", $data);
     }
 
     #[Post(path: '/annotation/fe/annotate')]
@@ -86,7 +86,7 @@ class FEController extends Controller
         $input->range = SelectionData::from(request("selection"));
         debug($input);
         $data = AnnotationFEService::annotateFE($input);
-        return view("Panes.FE.Panes.annotationSet", $data);
+        return view("Annotation.FE.Panes.annotationSet", $data);
     }
 
     #[Post(path: '/annotation/fe/create')]
@@ -101,7 +101,7 @@ class FEController extends Controller
         } else {
             $data = AnnotationFEService::getASData($idAnnotationSet);
             return response()
-                ->view("Panes.FE.annotationSet", $data)
+                ->view("Annotation.FE.Panes.annotationSet", $data)
                 ->header('HX-Trigger', 'reload-sentence');
 
         }
@@ -114,7 +114,7 @@ class FEController extends Controller
             AnnotationSet::delete($idAnnotationSet);
             $this->trigger('reload-sentence');
             return response()
-                ->view("Panes.FE.dummy", [])
+                ->view("Annotation.FE.Panes.dummy", [])
                 ->header('HX-Trigger', 'reload-sentence');
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -127,7 +127,7 @@ class FEController extends Controller
         try {
             AnnotationSet::deleteFE($data);
             $data = AnnotationFEService::getASData($data->idAnnotationSet);
-            return view("Panes.FE.annotationSet", $data);
+            return view("Annotation.FE.Panes.annotationSet", $data);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
