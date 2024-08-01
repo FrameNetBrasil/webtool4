@@ -27,7 +27,7 @@ class StaticEventController extends Controller
     public function browse()
     {
         $search = session('searchStaticEvent') ?? SearchData::from();
-        return view("Panes.StaticEvent.browse", [
+        return view("Annotation.StaticEvent.browse", [
             'search' => $search
         ]);
     }
@@ -35,7 +35,7 @@ class StaticEventController extends Controller
     #[Post(path: '/annotation/staticEvent/grid')]
     public function grid(SearchData $search)
     {
-        return view("Panes.StaticEvent.grids", [
+        return view("Annotation.StaticEvent.grids", [
             'search' => $search,
             'sentences' => []
         ]);
@@ -46,7 +46,7 @@ class StaticEventController extends Controller
     {
         $document = Document::byId($idDocument);
         $sentences = AnnotationStaticEventService::listSentences($idDocument);
-        return view("Panes.StaticEvent.sentences", [
+        return view("Annotation.StaticEvent.sentences", [
             'document' => $document,
             'sentences' => $sentences
         ]);
@@ -85,7 +85,7 @@ class StaticEventController extends Controller
     {
         $data = $this->getData($idDocumentSentence);
         debug($data);
-        return view("Panes.StaticEvent.annotationSentence", $data->toArray());
+        return view("Annotation.StaticEvent.annotationSentence", $data->toArray());
     }
 
 //    #[Get(path: '/annotation/staticEvent/sentence/{idSentenceMM}/object')]
@@ -114,7 +114,7 @@ class StaticEventController extends Controller
                     'objects' => []
                 ];
             }
-            return view("Panes.StaticEvent.fes", $data);
+            return view("Annotation.StaticEvent.fes", $data);
         } else {
             return $this->renderNotify("error", "Frame not found!");
         }

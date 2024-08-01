@@ -8,6 +8,7 @@ use App\Data\Annotation\FE\CreateASData;
 use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\FE\SearchData;
 use App\Data\Annotation\FE\SelectionData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
@@ -76,7 +77,6 @@ class FEController extends Controller
         $data = AnnotationFEService::getLUs($idDocumentSentence, $idWord);
         $data['idWord'] = $idWord;
         $data['idDocumentSentence'] = $idDocumentSentence;
-        debug($data);
         return view("Annotation.FE.Panes.lus", $data);
     }
 
@@ -85,7 +85,6 @@ class FEController extends Controller
     {
         try {
             $input->range = SelectionData::from(request("selection"));
-            debug($input);
             if ($input->range->type != '') {
                 $data = AnnotationFEService::annotateFE($input);
                 return view("Annotation.FE.Panes.annotationSet", $data);
@@ -128,11 +127,9 @@ class FEController extends Controller
     public function deleteAS(int $idAnnotationSet)
     {
         try {
+            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $idAnnotationSet);
             AnnotationSet::delete($idAnnotationSet);
-            $this->trigger('reload-sentence');
-            return response()
-                ->view("Annotation.FE.Panes.dummy", [])
-                ->header('HX-Trigger', 'reload-sentence');
+            return $this->clientRedirect("/annotation/fe/sentence/{$annotationSet->idDocumentSentence}");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

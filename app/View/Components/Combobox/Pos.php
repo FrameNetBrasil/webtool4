@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Combobox;
 
+use App\Database\Criteria;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -19,8 +20,10 @@ class Pos extends Component
         public string $placeholder = ''
     )
     {
-        $pos = new \App\Repositories\POS();
-        $this->options = $pos->listForSelection()->getResult();
+        //$pos = new \App\Repositories\POS();
+        $this->options = Criteria::table("pos")
+            ->orderBy("POS")
+            ->all();
     }
 
     /**

@@ -111,7 +111,6 @@
                         >
                             <i
                                 class="delete icon"
-                                {{--                                hx-disinherit="hx-post"--}}
                                 hx-on:click="event.stopPropagation()"
                                 hx-delete="/annotation/fe/frameElement"
                                 hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idFrameElement:{{$fe->idFrameElement}}}'
@@ -128,12 +127,19 @@
                 @endforeach
             </div>
             <hr />
-            <div class="rowDanger">
-                <x-button
-                    label="Delete this AnnotationSet"
-                    color="danger"
+            <div class="rowDanger flex">
+                <button
+                    class="ui button negative"
                     onclick="manager.confirmDelete(`Removing AnnotationSet #{{$idAnnotationSet}}'.`, '/annotation/fe/annotationset/{{$idAnnotationSet}}', null, '#workArea')"
-                ></x-button>
+                    hx-indicator="#htmx-indicator"
+                >
+                    Delete this AnnotationSet
+                </button>
+                <div id="htmx-indicator" class="htmx-indicator">
+                    <div class="ui page">
+                            <div class="ui loader active tiny text inverted">Processing</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

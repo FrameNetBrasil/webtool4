@@ -239,7 +239,6 @@ class AnnotationFEService
 //        debug($nis);
 //        debug( $wordsChars->words);
 //        debug($spans);
-debug($fes);
         return [
             'it' => $it,
             'idLayers' => $idLayers,

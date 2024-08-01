@@ -177,7 +177,6 @@ class Criteria extends Builder
     }
 
 
-
 //    public function __construct(ConnectionInterface $connection)
 //    {
 //        $grammar = match (get_class($connection->getQueryGrammar())) {

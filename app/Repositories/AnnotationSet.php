@@ -161,60 +161,79 @@ HERE;
 
     public static function createForLU(int $idDocumentSentence, int $idLU, int $startChar, int $endChar): ?int
     {
-        $idAnnotationSet = function () use ($idDocumentSentence, $idLU, $startChar, $endChar): int {
-                $lu = LU::byId($idLU);
-                $ti = Criteria::byId("typeinstance", "entry", 'ast_unann');
-                $annotationSet = [
-                    'idDocumentSentence' => $idDocumentSentence,
-                    'idEntityRelated' => $lu->idEntity,
-                    'idLU' => $lu->idLU,
-                    'idAnnotationStatus' => $ti->idTypeInstance
+        DB::beginTransaction();
+        try {
+            $lu = LU::byId($idLU);
+            $ti = Criteria::byId("typeinstance", "entry", 'ast_unann');
+            $annotationSet = [
+                'idAnnotationObjectRelation' => $idDocumentSentence,
+                'idEntityRelated' => $lu->idEntity,
+                'idLU' => $lu->idLU,
+                'idAnnotationStatus' => $ti->idTypeInstance
+            ];
+            $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
+            $ti = Criteria::byId("typeinstance", "entry", 'int_normal');
+            $layerTypes = LayerType::listToLU($lu);
+            foreach ($layerTypes as $lt) {
+                $layer = [
+                    'rank' => 1,
+                    'idLayerType' => $lt->idLayerType,
+                    'idAnnotationSet' => $idAnnotationSet
                 ];
-                $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
-                $ti = Criteria::byId("typeinstance", "entry", 'int_normal');
-                $layerTypes = LayerType::listToLU($lu);
-                foreach ($layerTypes as $lt) {
-                    $layer = [
-                        'rank' => 1,
-                        'idLayerType' => $lt->idLayerType,
-                        'idAnnotationSet' => $idAnnotationSet
-                    ];
-                    $idLayer = Criteria::create("layer", $layer);
-                    if ($lt->entry == 'lty_target') {
-                        $target = Criteria::table("genericlabel")
-                            ->where("name", "Target")
-                            ->where("idLanguage", AppService::getCurrentIdLanguage())
-                            ->first();
-                        $textspan = json_encode([
-                            'startChar' => $startChar,
-                            'endChar' => $endChar,
-                            'multi' => 0,
-                            'idInstantiationType' => $ti->idTypeInstance,
-                            'idLayer' => $idLayer,
-                        ]);
-                        $idTextSpan = Criteria::function("textspan_char_create(?)", [$textspan]);
-                        $ts = Criteria::table("textspan")
-                            ->where("idTextSpan", $idTextSpan)
-                            ->first();
-                        $userTask = Criteria::table("usertask as ut")
-                            ->join("task as t", "ut.idTask", "=", "t.idTask")
-                            ->where("ut.idUser", -2)
-                            ->where("t.name", 'Default Task')
-                            ->first();
-                        $data = json_encode([
-                            'idAnnotationObject' => $ts->idAnnotationObject,
-                            'idEntity' => $target->idEntity,
-                            'relationType' => 'rel_annotation',
-                            'idUserTask' => $userTask->idUserTask
-                        ]);
-                        Criteria::function("annotation_create(?)", [$data]);
-                    }
+                $idLayer = Criteria::create("layer", $layer);
+                if ($lt->entry == 'lty_target') {
+                    $target = Criteria::table("genericlabel")
+                        ->where("name", "Target")
+                        ->where("idLanguage", AppService::getCurrentIdLanguage())
+                        ->first();
+                    $textspan = json_encode([
+                        'startChar' => $startChar,
+                        'endChar' => $endChar,
+                        'multi' => 0,
+                        'idInstantiationType' => $ti->idTypeInstance,
+                        'idLayer' => $idLayer,
+                    ]);
+                    $idTextSpan = Criteria::function("textspan_char_create(?)", [$textspan]);
+                    $ts = Criteria::table("textspan")
+                        ->where("idTextSpan", $idTextSpan)
+                        ->first();
+                    $userTask = Criteria::table("usertask as ut")
+                        ->join("task as t", "ut.idTask", "=", "t.idTask")
+                        ->where("ut.idUser", -2)
+                        ->where("t.name", 'Default Task')
+                        ->first();
+                    $data = json_encode([
+                        'idAnnotationObject' => $ts->idAnnotationObject,
+                        'idEntity' => $target->idEntity,
+                        'relationType' => 'rel_annotation',
+                        'idUserTask' => $userTask->idUserTask
+                    ]);
+                    Criteria::function("annotation_create(?)", [$data]);
                 }
-                return $idAnnotationSet;
-        };
-        DB::transaction($idAnnotationSet);
-        return $idAnnotationSet();
+            }
+            DB::commit();
+            return $idAnnotationSet;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e->getMessage());
+        }
+
     }
+
+    public static function delete(int $idAnnotationSet): int
+    {
+        DB::beginTransaction();
+        try {
+            $idAnnotationSet = Criteria::function("annotationset_delete(?,?)",[$idAnnotationSet, AppService::getCurrentIdUser()]);
+            DB::commit();
+            return $idAnnotationSet;
+        } catch (\Exception $e) {
+            DB::rollback();
+            debug($e->getMessage());
+            throw new \Exception("Operation denied. Check if AS has spans.");
+        }
+    }
+
 
 //    public function allowManyAnnotationSet()
 //    {
@@ -262,21 +281,6 @@ HERE;
 //        }
 //    }
 //
-//    public static function delete($id): int
-//    {
-//        self::beginTransaction();
-//        try {
-//            ASComments::deleteByAnnotationSet($id);
-//            Layer::deleteByAnnotationSet($id);
-//            Timeline::addTimeline("annotationset", $id, "D");
-//            parent::delete($id);
-//            self::commit();
-//            return $id;
-//        } catch (\Exception $e) {
-//            self::rollback();
-//            throw new \Exception($e->getMessage());
-//        }
-//    }
 //
 //    public static function deleteFE(DeleteFEData $data): int
 //    {

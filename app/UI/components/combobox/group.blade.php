@@ -27,19 +27,4 @@
     });
 </script>
 
-{{--<div class="form-field">--}}
-{{--    <label for="{{$id}}">{{$label}}</label>--}}
-{{--    <input {{$attributes}} id="{{$id}}" name="{{$id}}">--}}
-{{--</div>--}}
-{{--<script>--}}
-{{--    $(function() {--}}
-{{--        $('#{{$id}}').combobox({--}}
-{{--            valueField: "idGroup",--}}
-{{--            textField: "name",--}}
-{{--            mode: "remote",--}}
-{{--            method: "get",--}}
-{{--            editable:false,--}}
-{{--            url: "/group/listForSelect"--}}
-{{--        });--}}
-{{--    });--}}
-{{--</script>--}}
+
