@@ -53,9 +53,10 @@
                 </div>
                 <div>
                     <div class="rowWord">
+
                         @foreach($words as $i => $word)
-                            @if($word['word'] != ' ')
-                                <div class="colWord">
+{{--                            @if($word['word'] != ' ')--}}
+                                <div class="{!! ($word['word'] != ' ') ? 'colWord' : 'colSpace' !!}">
                                     @php($isTarget = ($i >= $target->startWord) && ($i <= $target->endWord))
                                     @php($topLine = 30)
                                     @php($labelsAtWord = ($spans[$i] ?? []))
@@ -69,25 +70,30 @@
                                         data-endchar="{{$word['endChar']}}"
                                         style="height:{{$height}}px"
                                     >{{$word['word']}}
-                                        @foreach($labelsAtWord as $label)
+                                        @foreach($idLayers as $l => $idLayer)
+                                            @php($label = $spans[$i][$idLayer])
+{{--                                        @foreach($labelsAtWord as $label)--}}
                                             @if(!is_null($label))
                                                 @php($idEntityFE = $label['idEntityFE'])
                                                 {{--                                <span class="line" style="background:#{{$fes[$idEntityFE]->rgbBg}}; top:{{$topLine}}px">--}}
                                                 <span class="line color_{{$fes[$idEntityFE]->idColor}}"
                                                       style="top:{{$topLine}}px">
-                                            @if($label['label'])
+                                                @if($label['label'])
                                                         <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
                                                               style="top:0px">{{$label['label']}}</span>
-                                                    @endif
-
-                            </span>
+                                                @endif
+                                                </span>
+                                            @else
+                                                <span></span>
                                             @endif
                                             @php($topLine += 24)
+{{--                                        @endforeach--}}
                                         @endforeach
                     </span>
                                 </div>
-                            @endif
+{{--                            @endif--}}
                         @endforeach
+
                     </div>
 
                 </div>
@@ -105,13 +111,18 @@
                         >
                             <i
                                 class="delete icon"
-                                hx-delete="/annotation/fe/{{$fe->idFrameElement}}"
+                                {{--                                hx-disinherit="hx-post"--}}
+                                hx-on:click="event.stopPropagation()"
+                                hx-delete="/annotation/fe/frameElement"
                                 hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idFrameElement:{{$fe->idFrameElement}}}'
                                 hx-target="#workArea"
                             >
                             </i>
-                            <x-element.fe name="{{$fe->name}}" type="{{$fe->coreType}}"
-                                          idColor="{{$fe->idColor}}"></x-element.fe>
+                            <x-element.fe
+                                name="{{$fe->name}}"
+                                type="{{$fe->coreType}}"
+                                idColor="{{$fe->idColor}}"
+                            ></x-element.fe>
                         </button>
                     </div>
                 @endforeach
@@ -127,4 +138,11 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript">
+    annotationFE.selection = {
+        type: "",
+        id: "",
+        start: 0,
+        end: 0
+    };
+</script>

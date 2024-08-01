@@ -13,7 +13,6 @@
             let { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
             var startNode = anchorNode?.parentNode || null;
             var endNode = focusNode?.parentNode || null;
-            console.log(startNode);
             if ((startNode !== null) && (endNode !== null)) {
                 if (startNode.dataset.type === "ni") {
                     let range = new Range();
