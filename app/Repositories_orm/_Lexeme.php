@@ -7,7 +7,7 @@ use Orkester\Persistence\Enum\Key;
 use Orkester\Persistence\Map\ClassMap;
 use Orkester\Persistence\Repository;
 
-class Lexeme extends Repository {
+class _Lexeme extends Repository {
 
     public static function map(ClassMap $classMap): void
     {

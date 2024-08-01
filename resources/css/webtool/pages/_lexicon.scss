@@ -1,84 +1,35 @@
-#lemmaTableContainer {
+#lexiconTableContainer {
     margin-bottom: 0px;
+    height:100%;
 
-    table {
-        border-spacing: 0px;
-        width: 100%;
-        flex-grow: 0;
-        table-layout: fixed;
-        position: absolute;
-        top: 0px;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
+    #lemmaTreeWrapper {
+        height:100%;
+        position:relative;
+        overflow-y:auto;
+        margin: 0.5rem;
 
-    tr {
-        width: 100%;
-    }
+        #lemmaTree {
+            border-spacing: 0px;
+            width: 100%;
+            flex-grow: 0;
+            table-layout: fixed;
+            position: absolute;
+            top: 0px;
+            bottom: 0;
+            left: 0;
+            right: 0;
 
-    td {
-        padding: 4px;
-        word-wrap: break-word;
-        width: 100%;
-    }
-
-    tr:nth-child(even) {
-        background-color: #EEE;
-    }
-
-    tr:hover {
-        background-color: #dbdbdb;
-    }
-}
-
-#lexemeTableContainer {
-    margin-bottom: 0px;
-
-    table {
-        border-spacing: 0px;
-        width: 100%;
-        flex-grow: 0;
-        table-layout: fixed;
-        position: absolute;
-        top: 0px;
-        bottom: 0;
-        left: 0;
-        right: 0;
-
-        thead {
-            td {
-                background-color: $blue-100;
+            .lexeme:hover {
+                background-color: $blue-2;
             }
         }
     }
-
-    tr {
-        width: 100%;
-    }
-
-    td {
-        padding: 4px;
-        word-wrap: break-word;
-        width: 100%;
-    }
-
-    tr:nth-child(even) {
-        background-color: #EEE;
-    }
-
-    tr:hover {
-        background-color: #dbdbdb;
-    }
-
-    .definition {
-        color: $wt-text-color;
-        font-size: 0.75rem;
-    }
 }
 
-#wordformTableContainer {
+#lexiconEditContainer {
     margin-bottom: 0px;
+    overflow-y:auto;
+
     table {
         border-spacing: 0px;
         width: 100%;
@@ -116,15 +67,11 @@
         background-color: #dbdbdb;
     }
 
-    .sentence {
+    .wordform {
         color: $wt-text-color;
-        font-size: 0.75rem;
+        font-size: 0.875rem;
     }
 
-}
-
-#lxwfTableContainer {
-    margin-bottom: 0px;
 }
 
 
