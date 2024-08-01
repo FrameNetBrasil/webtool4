@@ -83,18 +83,35 @@ class FEController extends Controller
     #[Post(path: '/annotation/fe/annotate')]
     public function annotate(AnnotationData $input)
     {
-        $input->range = SelectionData::from(request("selection"));
-        debug($input);
-        $data = AnnotationFEService::annotateFE($input);
-        return view("Annotation.FE.Panes.annotationSet", $data);
+        try {
+            $input->range = SelectionData::from(request("selection"));
+            debug($input);
+            if ($input->range->type != '') {
+                $data = AnnotationFEService::annotateFE($input);
+                return view("Annotation.FE.Panes.annotationSet", $data);
+            } else {
+                return $this->renderNotify("error", "No selection.");
+            }
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/annotation/fe/frameElement')]
+    public function deleteFE(DeleteFEData $data)
+    {
+        try {
+            AnnotationFEService::deleteFE($data);
+            $data = AnnotationFEService::getASData($data->idAnnotationSet);
+            return view("Annotation.FE.Panes.annotationSet", $data);
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
     }
 
     #[Post(path: '/annotation/fe/create')]
     public function createAS(CreateASData $input)
     {
-        $data = [];
-        debug($input);
-        debug(request('wordList'));
         $idAnnotationSet = AnnotationFEService::createAnnotationSet($input);
         if (is_null($idAnnotationSet)) {
             return $this->renderNotify("error", "Error creating AnnotationSet.");
@@ -120,19 +137,6 @@ class FEController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
-
-    #[Delete(path: '/annotation/fe/frameElement')]
-    public function deleteFE(DeleteFEData $data)
-    {
-        try {
-            AnnotationSet::deleteFE($data);
-            $data = AnnotationFEService::getASData($data->idAnnotationSet);
-            return view("Annotation.FE.Panes.annotationSet", $data);
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
 
 }
 

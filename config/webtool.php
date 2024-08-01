@@ -33,7 +33,7 @@ return [
 //            'domaingrapher' => ['Frames by Domain', '/domain/grapher', 'domaingrapher', '', '', []],
 //            'ccngrapher' => ['Constructicon', '/ccn/grapher', 'ccngrapher', '', '', []],
         ]],
-        'annotation' => ['Panes', '/annotation', 'MASTER', [
+        'annotation' => ['Annotation', '/annotation', 'MASTER', [
 //            'lexicalAnnotation' => ['Frame Mode', '/lexicalAnnotation', 'lexicalAnnotation', '', 1, []],
 //            'cnxAnnotation' => ['Construction Mode', '/constructionalAnnotation', 'cxnAnnotation', '', 1, []],
             //'corpusAnnotation' => ['Corpus Mode', '/annotation/corpus', 'MASTER', []],

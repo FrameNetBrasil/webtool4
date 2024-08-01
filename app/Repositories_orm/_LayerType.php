@@ -7,7 +7,7 @@ use Orkester\Persistence\Enum\Key;
 use Orkester\Persistence\Map\ClassMap;
 use Orkester\Persistence\Repository;
 
-class LayerType extends Repository
+class _LayerType extends Repository
 {
     public static function map(ClassMap $classMap): void
     {

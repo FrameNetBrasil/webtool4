@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Data\Annotation\FE\AnnotationData;
 use App\Data\Annotation\FE\CreateASData;
+use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\FE\SearchData;
 use App\Data\Label\CreateData;
 use App\Database\Criteria;
@@ -186,9 +187,6 @@ class AnnotationFEService
             ->where("idFrame", $lu->idFrame)
             ->keyBy("idEntity")
             ->all();
-//        foreach ($fes as $fe) {
-//            $fe->coreTypeIcon = substr($fe->coreType, 4);
-//        }
         $layers = AnnotationSet::getLayers($idAS);
         $target = array_filter($layers, fn($x) => ($x->layerTypeEntry == 'lty_target'));
         foreach ($target as $tg) {
@@ -198,10 +196,12 @@ class AnnotationFEService
         $feSpans = array_filter($layers, fn($x) => $x->layerTypeEntry == 'lty_fe');
         $spans = [];
         $nis = [];
+        $idLayers = [];
         $firstWord = array_key_first($wordsChars->words);
         $lastWord = array_key_last($wordsChars->words);
         $spansByLayer = collect($feSpans)->groupBy('idLayer')->all();
         foreach ($spansByLayer as $idLayer => $existingSpans) {
+            $idLayers[] = $idLayer;
             for ($i = $firstWord; $i <= $lastWord; $i++) {
                 $spans[$i][$idLayer] = null;
             }
@@ -233,12 +233,16 @@ class AnnotationFEService
             }
         }
         //debug($baseLabels, $labels);
-        ksort($spans);
+//        ksort($spans);
 //        debug($labels);
 //        debug($it);
 //        debug($nis);
+//        debug( $wordsChars->words);
+//        debug($spans);
+debug($fes);
         return [
             'it' => $it,
+            'idLayers' => $idLayers,
             'words' => $wordsChars->words,
             'idAnnotationSet' => $idAS,
             'lu' => $lu,
@@ -262,28 +266,47 @@ class AnnotationFEService
                 ->where("t.name", 'Default Task')
                 ->first();
             $fe = FrameElement::byId($data->idFrameElement);
-            $layers = AnnotationSet::getLayers($data->idAnnotationSet);
-            $spans = array_filter($layers, fn($x) => $x->layerTypeEntry == 'lty_fe');
-            $idLayer = $spans[array_key_first($spans)]->idLayer;
-            debug($spans);
-            //$spansByLayer = collect($spans)->groupBy('idLayer')->toArray();
-            // debug($labelsByLayer);
-            if ($data->range->type == 'word') {
+            $spans = Criteria::table("view_annotation_text_fe")
+                ->where('idAnnotationSet', $data->idAnnotationSet)
+                ->where("layerTypeEntry", "lty_fe")
+                ->where("idLanguage", AppService::getCurrentIdLanguage())
+                ->select('idAnnotationSet', 'idLayerType', 'idLayer', 'startChar', 'endChar', 'idEntity', 'idTextSpan', 'layerTypeEntry', 'idInstantiationType')
+                ->all();
+            $layers = Criteria::table("view_layer")
+                ->where('idAnnotationSet', $data->idAnnotationSet)
+                ->where("entry", "lty_fe")
+                ->where("idLanguage", AppService::getCurrentIdLanguage())
+                ->all();
+            // verify if exists a layer with no overlap, else create one
+            $idLayer = 0;
+            foreach ($layers as $layer) {
                 $overlap = false;
-                //verify overlap with existing labels
                 foreach ($spans as $span) {
-                    $idLayer = $span->idLayer;
-                    if (!(($data->range->end < $span->startChar) || ($data->range->start > $span->endChar))) {
-                        $overlap |= true;
+                    if ($span->idLayer == $layer->idLayer) {
+                        if (!(($data->range->end < $span->startChar) || ($data->range->start > $span->endChar))) {
+                            $overlap |= true;
+                        }
                     }
                 }
-                if ($overlap) {
-                    $idLayer = AnnotationSet::addFELayer($data->idAnnotationSet);
+                if (!$overlap) {
+                    $idLayer = $layer->idLayer;
+                    break;
                 }
+            }
+            if ($idLayer == 0) {
+                $layerType = Criteria::byId("layertype", "entry", "lty_fe");
+                $idLayer = Criteria::create("layer", [
+                    'rank' => 0,
+                    'idLayerType' => $layerType->idLayerType,
+                    'idAnnotationSet' => $data->idAnnotationSet
+
+                ]);
+            }
+            //
+            if ($data->range->type == 'word') {
                 $it = Criteria::table("view_instantiationtype")
                     ->where('entry', 'int_normal')
                     ->first();
-                debug($it);
                 $data = json_encode([
                     'startChar' => (int)$data->range->start,
                     'endChar' => (int)$data->range->end,
@@ -327,8 +350,39 @@ class AnnotationFEService
         return self::getASData($data->idAnnotationSet);
     }
 
+    public static function deleteFE(DeleteFEData $data): void
+    {
+        DB::transaction(function () use ($data) {
+            // get FE spans for this idAnnotationSet
+            $annotations = Criteria::table("view_annotation_text_fe")
+                ->where("idAnnotationSet", $data->idAnnotationSet)
+                ->where("idFrameElement", $data->idFrameElement)
+                ->where("layerTypeEntry", "lty_fe")
+                ->where("idLanguage", AppService::getCurrentIdLanguage())
+                ->select("idAnnotation", "idTextSpan", "idLayer")
+                ->all();
+            foreach ($annotations as $annotation) {
+                Criteria::deleteById("annotation", "idAnnotation", $annotation->idAnnotation);
+            }
+            foreach ($annotations as $annotation) {
+                Criteria::deleteById("textspan", "idTextSpan", $annotation->idTextSpan);
+            }
+            // if FE layer was empty, remove it
+            foreach ($annotations as $annotation) {
+                $annotationsByLayer = Criteria::table("view_annotation_text_fe")
+                    ->where("idLayer", $annotation->idLayer)
+                    ->count();
+                debug("count = " . $annotationsByLayer);
+                if ($annotationsByLayer == 0) {
+                    Criteria::deleteById("layer", "idLayer", $annotation->idLayer);
+                }
+            }
+        });
+    }
+
     public static function createAnnotationSet(CreateASData $data): ?int
     {
+        debug($data);
         $startChar = 4000;
         $endChar = -1;
         foreach ($data->wordList as $word) {
@@ -341,7 +395,7 @@ class AnnotationFEService
         }
         $idAnnotationSet = null;
         if (($startChar != -1) && ($endChar != 4000)) {
-            $idAnnotationSet = AnnotationSet::createForLU($data->idSentence, $data->idLU, $startChar, $endChar);
+            $idAnnotationSet = AnnotationSet::createForLU($data->idDocumentSentence, $data->idLU, $startChar, $endChar);
         }
         return $idAnnotationSet;
     }

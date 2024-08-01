@@ -146,9 +146,9 @@ HERE;
     public static function listSentencesByAS(int|array $idAnnotationSet)
     {
         $criteria = Criteria::table("view_annotationset as a")
-            ->join("view_document_sentence as ds","a.idDocumentSentence","=","ds.idDocumentSentence")
-            ->join("sentence as s","ds.idSentence","=","s.idSentence")
-            ->select('a.idAnnotationSet','ds.idDocumentSentence','s.idSentence','s.text');
+            ->join("view_document_sentence as ds", "a.idDocumentSentence", "=", "ds.idDocumentSentence")
+            ->join("sentence as s", "ds.idSentence", "=", "s.idSentence")
+            ->select('a.idAnnotationSet', 'ds.idDocumentSentence', 's.idSentence', 's.text');
         if (is_array($idAnnotationSet)) {
             $criteria->where('idAnnotationSet', 'IN', $idAnnotationSet);
         } else {
@@ -157,6 +157,63 @@ HERE;
         $criteria->orderBy('idAnnotationSet');
 //        $criteria->where('entries.idLanguage','=', AppService::getCurrentIdLanguage());
         return $criteria->all();
+    }
+
+    public static function createForLU(int $idDocumentSentence, int $idLU, int $startChar, int $endChar): ?int
+    {
+        $idAnnotationSet = function () use ($idDocumentSentence, $idLU, $startChar, $endChar): int {
+                $lu = LU::byId($idLU);
+                $ti = Criteria::byId("typeinstance", "entry", 'ast_unann');
+                $annotationSet = [
+                    'idDocumentSentence' => $idDocumentSentence,
+                    'idEntityRelated' => $lu->idEntity,
+                    'idLU' => $lu->idLU,
+                    'idAnnotationStatus' => $ti->idTypeInstance
+                ];
+                $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
+                $ti = Criteria::byId("typeinstance", "entry", 'int_normal');
+                $layerTypes = LayerType::listToLU($lu);
+                foreach ($layerTypes as $lt) {
+                    $layer = [
+                        'rank' => 1,
+                        'idLayerType' => $lt->idLayerType,
+                        'idAnnotationSet' => $idAnnotationSet
+                    ];
+                    $idLayer = Criteria::create("layer", $layer);
+                    if ($lt->entry == 'lty_target') {
+                        $target = Criteria::table("genericlabel")
+                            ->where("name", "Target")
+                            ->where("idLanguage", AppService::getCurrentIdLanguage())
+                            ->first();
+                        $textspan = json_encode([
+                            'startChar' => $startChar,
+                            'endChar' => $endChar,
+                            'multi' => 0,
+                            'idInstantiationType' => $ti->idTypeInstance,
+                            'idLayer' => $idLayer,
+                        ]);
+                        $idTextSpan = Criteria::function("textspan_char_create(?)", [$textspan]);
+                        $ts = Criteria::table("textspan")
+                            ->where("idTextSpan", $idTextSpan)
+                            ->first();
+                        $userTask = Criteria::table("usertask as ut")
+                            ->join("task as t", "ut.idTask", "=", "t.idTask")
+                            ->where("ut.idUser", -2)
+                            ->where("t.name", 'Default Task')
+                            ->first();
+                        $data = json_encode([
+                            'idAnnotationObject' => $ts->idAnnotationObject,
+                            'idEntity' => $target->idEntity,
+                            'relationType' => 'rel_annotation',
+                            'idUserTask' => $userTask->idUserTask
+                        ]);
+                        Criteria::function("annotation_create(?)", [$data]);
+                    }
+                }
+                return $idAnnotationSet;
+        };
+        DB::transaction($idAnnotationSet);
+        return $idAnnotationSet();
     }
 
 //    public function allowManyAnnotationSet()
@@ -179,25 +236,7 @@ HERE;
 //        ]);
 //    }
 //
-//    public static function createForLU(int $idSentence, int $idLU, int $startChar, int $endChar): ?int
-//    {
-//        self::beginTransaction();
-//        try {
-//            $lu = ViewLU::getById($idLU);
-//            $ti = TypeInstance::getByEntry('ast_unann');
-//            $idAnnotationSet = self::save((object)[
-//                'idSentence' => $idSentence,
-//                'idEntityRelated' => $lu->idEntity,
-//                'idAnnotationStatus' => $ti->idTypeInstance
-//            ]);
-//            self::createLayersForLU($idAnnotationSet, $lu, $startChar, $endChar);
-//            self::commit();
-//            return $idAnnotationSet;
-//        } catch (\Exception $ex) {
-//            self::rollback();
-//            throw new \Exception($ex->getMessage());
-//        }
-//    }
+
 //
 //    public static function createLayersForLU(int $idAnnotationSet, object $lu, int $startChar, int $endChar)
 //    {
