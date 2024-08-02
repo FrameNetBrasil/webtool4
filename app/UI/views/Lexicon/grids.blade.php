@@ -1,7 +1,7 @@
 <div class="grid h-full">
-    <div id="lexiconTableContainer" class="col-4">
+    <div id="lexiconTableContainer" class="col-3">
         @include("Lexicon.lexicon")
     </div>
-    <div id="lexiconEditContainer" class="col-8">
+    <div id="lexiconEditContainer" class="col-9">
     </div>
 </div>

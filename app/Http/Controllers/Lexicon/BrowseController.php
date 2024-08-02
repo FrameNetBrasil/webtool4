@@ -7,6 +7,7 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Lemma;
 use App\Repositories\Lexeme;
+use App\Services\AppService;
 use App\Services\LexiconService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -58,6 +59,20 @@ class BrowseController extends Controller
         return view("Lexicon.wordforms", [
             'lexeme' => $lexeme,
             'wordforms' => $wordforms
+        ]);
+    }
+
+    #[Get(path: '/lexicon/lemma/{idLemma}/lexemeentries')]
+    public function lexemeentries(int $idLemma)
+    {
+        $lemma = Lemma::byId($idLemma);
+        $lexemeentries = Criteria::table("view_lexicon")
+            ->where("idLemma", $idLemma)
+            ->orderBy("lexemeorder")
+            ->all();
+        return view("Lexicon.lexementries", [
+            'lemma' => $lemma,
+            'lexementries' => $lexemeentries
         ]);
     }
 
