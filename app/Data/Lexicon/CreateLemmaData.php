@@ -24,7 +24,7 @@ class CreateLemmaData extends Data
             if (str_contains($this->name,'.')) {
                 $parts = explode('.',$this->name);
                 $pos = Criteria::table("pos")
-                    ->whereRaw("upper(pos) = " .strtoupper($parts[1]))
+                    ->whereRaw("upper(pos) = '" . strtoupper($parts[1]) . "'")
                     ->first();
                 $this->idPOS = $pos->idPOS;
             } else {

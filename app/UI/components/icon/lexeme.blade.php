@@ -1,1 +1,1 @@
-<i class="icon material color_document">description</i>
+<i class="icon material">text_format</i>

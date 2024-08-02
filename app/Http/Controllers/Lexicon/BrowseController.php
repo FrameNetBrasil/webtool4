@@ -62,17 +62,35 @@ class BrowseController extends Controller
         ]);
     }
 
+    #[Get(path: '/lexicon/lemma/{idLemma}')]
+    public function lemma(int $idLemma)
+    {
+        $lemma = Lemma::byId($idLemma);
+        $lexemeentries = Criteria::table("lexemeentry as le")
+            ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
+            ->where("le.idLemma", $idLemma)
+            ->select("le.*", "lexeme.name as lexeme")
+            ->orderBy("le.lexemeorder")
+            ->all();
+        return view("Lexicon.lemma", [
+            'lemma' => $lemma,
+            'lexemeentries' => $lexemeentries
+        ]);
+    }
+
     #[Get(path: '/lexicon/lemma/{idLemma}/lexemeentries')]
     public function lexemeentries(int $idLemma)
     {
         $lemma = Lemma::byId($idLemma);
-        $lexemeentries = Criteria::table("view_lexicon")
-            ->where("idLemma", $idLemma)
-            ->orderBy("lexemeorder")
+        $lexemeentries = Criteria::table("lexemeentry as le")
+            ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
+            ->where("le.idLemma", $idLemma)
+            ->select("le.*", "lexeme.name as lexeme")
+            ->orderBy("le.lexemeorder")
             ->all();
         return view("Lexicon.lexementries", [
             'lemma' => $lemma,
-            'lexementries' => $lexemeentries
+            'lexemeentries' => $lexemeentries
         ]);
     }
 
