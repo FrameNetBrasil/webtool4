@@ -46,6 +46,6 @@
             <x-submit label="Add" hx-post="/lexicon/lexemeentry/new"></x-submit>
         </x-slot:buttons>
     </x-form>
-    <h2>Wordforms</h2>
+    <h2>Lexemes</h2>
     @include("Lexicon.lexemeentries")
 </div>

@@ -8,6 +8,7 @@ use App\Data\Lexicon\UpdateLexemeData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Lemma;
+use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -73,13 +74,35 @@ class ResourceController extends Controller
             ]);
             $idLemma = Criteria::function("lemma_create(?)",[$newLemma]);
             $lemma = Lemma::byId($idLemma);
-            return view('Lexicon.lemma',[
-                'lemma' => $lemma,
-            ]);
+            $lexemeentries = Criteria::table("lexemeentry as le")
+                ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
+                ->where("le.idLemma", $idLemma)
+                ->select("le.*","lexeme.name as lexeme")
+                ->orderBy("le.lexemeorder")
+                ->all();
+            return response()
+                ->view('Lexicon.lemma',[
+                    'lemma' => $lemma,
+                    'lexemeentries' => $lexemeentries
+                ])
+                ->header('HX-Trigger', 'reload-gridLexicon');
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
+    #[Delete(path: '/lexicon/lemma/{idLemma}')]
+    public function deleteLemma(string $idLemma)
+    {
+        try {
+            Criteria::function("lemma_delete(?,?)",[$idLemma, AppService::getCurrentIdUser()]);
+            $this->trigger('reload-gridLexicon');
+            return $this->renderNotify("success", "Lemma removed.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
 
 
 //    #[Get(path: '/frame/new')]
