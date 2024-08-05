@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Grapher;
 
 use App\Data\Grapher\FrameData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Frame;
 use App\Repositories\RelationType;
@@ -19,16 +20,16 @@ class FrameController extends Controller
     #[Get(path: '/grapher/frame')]
     public function frame()
     {
-        $relations = RelationType::listByFilter((object)[
-            'group' => 'rgp_frame_relations'
+        $relations = Criteria::byFilterLanguage("view_relationtype",[
+            'rgEntry',"=",'rgp_frame_relations'
         ])->all();
         $dataRelations = [];
         $config = config('webtool.relations');
         foreach($relations as $relation) {
-            $dataRelations[] = [
-                'value' => $relation->idRelationType,
-                'entry' => $relation->entry,
+            $dataRelations[] = (object)[
+                'idRelationType' => $relation->idRelationType,
                 'name' => $config[$relation->entry]['direct'],
+                'entry' => $relation->entry,
             ];
         }
         return view('Grapher.Frame.frame', [
@@ -41,11 +42,11 @@ class FrameController extends Controller
     {
         $nodes = session("graphNodes") ?? [];
         if (!is_null($data->idFrame)) {
-            $frame = Frame::getById($data->idFrame);
+            $frame = Frame::byId($data->idFrame);
             $nodes = [$frame->idEntity];
         }
-        if (empty($data->idRelationType)) {
-            $data->idRelationType = session('idRelationType') ?? [];
+        if (empty($data->frameRelation)) {
+            $data->frameRelation = session('frameRelation') ?? [];
         }
         if (!is_null($idEntity)) {
             if ($idEntity == 0) {
@@ -56,10 +57,10 @@ class FrameController extends Controller
         }
         session([
             "graphNodes" => $nodes,
-            "idRelationType" => $data->idRelationType
+            "idRelationType" => $data->frameRelation
         ]);
         return view('Grapher.Frame.frameGraph', [
-            'graph' => RelationService::listFrameRelationsForGraph($nodes, $data->idRelationType)
+            'graph' => RelationService::listFrameRelationsForGraph($nodes, $data->frameRelation)
         ]);
     }
 
