@@ -6,6 +6,7 @@ use App\Data\CreateFrameData;
 use App\Data\CreateRelationFEInternalData;
 use App\Data\Frame\CreateData;
 use App\Data\UpdateFrameClassificationData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FE\FEController;
 use App\Repositories\Entry;
@@ -30,7 +31,7 @@ class ResourceController extends Controller
     public function store(CreateData $data)
     {
         try {
-            $idFrame = Frame::create($data);
+            $idFrame = Criteria::function('frame_create(?)', [$data->toJson()]);
             return $this->clientRedirect("/frame/{$idFrame}");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -41,7 +42,10 @@ class ResourceController extends Controller
     public function delete(string $idFrame)
     {
         try {
-            Frame::delete($idFrame);
+            Criteria::function('frame_delete(?, ?)', [
+                $idFrame,
+                AppService::getCurrentIdUser()
+            ]);
             return $this->clientRedirect("/frame");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());

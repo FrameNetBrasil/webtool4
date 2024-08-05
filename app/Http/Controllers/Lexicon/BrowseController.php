@@ -28,6 +28,8 @@ class BrowseController extends Controller
     #[Post(path: '/lexicon/grid')]
     public function grid(SearchData $search)
     {
+        $search = (($search->lemma != '') || ($search->lexeme != '')) ? $search : session('searchLexicon');
+        session(['searchLexicon' => $search]);
         return view("Lexicon.grids", [
             'search' => $search,
             'wordforms' => []
@@ -88,7 +90,7 @@ class BrowseController extends Controller
             ->select("le.*", "lexeme.name as lexeme")
             ->orderBy("le.lexemeorder")
             ->all();
-        return view("Lexicon.lexementries", [
+        return view("Lexicon.lexemeentries", [
             'lemma' => $lemma,
             'lexemeentries' => $lexemeentries
         ]);

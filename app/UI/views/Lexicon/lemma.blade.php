@@ -26,7 +26,8 @@
         </x-slot:fields>
         <x-slot:buttons>
             <x-submit label="Update" hx-put="/lexicon/lemma/{{$lemma->idLemma}}"></x-submit>
-            <x-button label="Delete" color="negative" onclick="manager.confirmDelete(`Removing Lemma '{{$lemma->name}}'.`, '/lexicon/lemma/{{$lemma->idLemma}}')"></x-button>
+            <x-button label="Delete" color="negative"
+                      onclick="manager.confirmDelete(`Removing Lemma '{{$lemma->name}}'.`, '/lexicon/lemma/{{$lemma->idLemma}}')"></x-button>
         </x-slot:buttons>
     </x-form>
     <x-form
@@ -36,11 +37,36 @@
     >
         <x-slot:fields>
             <x-hidden-field id="idLemmaEntry" :value="$lemma->idLemma"></x-hidden-field>
-            <x-text-field
-                label="Lexeme"
-                id="lexeme"
-                value=""
-            ></x-text-field>
+            <div class="grid">
+                <div class="col">
+                    <x-text-field
+                        label="Lexeme"
+                        id="lexeme"
+                        value=""
+                    ></x-text-field>
+                </div>
+                <div class="col">
+                    <x-text-field
+                        label="Order"
+                        id="lexemeOrder"
+                        :value="count($lexemeentries) + 1"
+                    ></x-text-field>
+                </div>
+                <div class="col">
+                    <x-checkbox
+                        id="headWord"
+                        label="Head word"
+                        :active="true"
+                    ></x-checkbox>
+                </div>
+                <div class="col">
+                    <x-checkbox
+                        id="breakBefore"
+                        label="Break before"
+                        :active="false"
+                    ></x-checkbox>
+                </div>
+            </div>
         </x-slot:fields>
         <x-slot:buttons>
             <x-submit label="Add" hx-post="/lexicon/lexemeentry/new"></x-submit>

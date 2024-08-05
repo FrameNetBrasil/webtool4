@@ -20,7 +20,7 @@
                                 class="header"
                             >
                                 <div
-                                    class="cursor-pointer"
+                                    class=""
                                 >
                                     {{$wordform->form}}
                                 </div>

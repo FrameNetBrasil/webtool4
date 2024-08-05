@@ -35,16 +35,24 @@
                         <div>
                             <x-text-field
                                 label=""
-                                id="lemma"
+                                id="addName"
                                 value=""
                             >
                             </x-text-field>
                         </div>
                         <div>
                             <x-button
-                                label="Add Lemma"
+                                label="Add as Lemma"
                                 color="secondary"
                                 hx-post="/lexicon/lemma/new"
+                                hx-target="#lexiconEditContainer"
+                            ></x-button>
+                        </div>
+                        <div>
+                            <x-button
+                                label="Add as Lexeme"
+                                color="secondary"
+                                hx-post="/lexicon/lexeme/new"
                                 hx-target="#lexiconEditContainer"
                             ></x-button>
                         </div>
