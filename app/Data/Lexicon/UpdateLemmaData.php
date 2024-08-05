@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Data;
+namespace App\Data\Lexicon;
 
 use Spatie\LaravelData\Data;
 
 class UpdateLemmaData extends Data
 {
     public function __construct(
-        public int $idLanguage,
-        public int $idPOS,
+        public string $idLemma,
         public string $name,
-        public string $_token = '',
+        public int $idPOS,
     )
     {
-        $this->_token = csrf_token();
     }
 }

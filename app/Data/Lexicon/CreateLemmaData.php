@@ -12,17 +12,21 @@ class CreateLemmaData extends Data
         public ?string $lemma = '',
         public ?int $idPOS = null,
         public ?int $idLanguage = null,
-        public ?string $name = '',
+        public ?string $addName = '',
         public string $_token = '',
     )
     {
-        $this->name = $this->lemma;
+        if ($this->lemma == '') {
+            $this->lemma = $this->addName;
+        } else {
+            $this->addName = $this->lemma;
+        }
         if (is_null($this->idLanguage)) {
             $this->idLanguage = AppService::getCurrentIdLanguage();
         }
         if (is_null($this->idPOS)) {
-            if (str_contains($this->name,'.')) {
-                $parts = explode('.',$this->name);
+            if (str_contains($this->addName,'.')) {
+                $parts = explode('.',$this->addName);
                 $pos = Criteria::table("pos")
                     ->whereRaw("upper(pos) = '" . strtoupper($parts[1]) . "'")
                     ->first();
