@@ -2,7 +2,9 @@
 
 namespace App\View\Components\Combobox;
 
+use App\Database\Criteria;
 use App\Repositories\SemanticType;
+use App\Services\AppService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -21,10 +23,15 @@ class FrameDomain extends Component
         public string $placeholder = ''
     )
     {
-        $domains = SemanticType::listFrameDomain()->all();
+        $domains = Criteria::table("view_semantictype")
+            ->where('idLanguage', '=', AppService::getCurrentIdLanguage())
+            ->where('entry', 'startswith', 'sty\_fd')
+            ->select('idSemanticType', 'name')
+            ->orderBy('name')
+            ->all();
         $this->options = [];
         foreach ($domains as $domain) {
-            $this->options[] = [
+            $this->options[] = (object)[
                 'idSemanticType' => $domain->idSemanticType,
                 'name' => $domain->name,
             ];

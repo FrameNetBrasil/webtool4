@@ -8,7 +8,7 @@ class FrameData extends Data
 {
     public function __construct(
         public ?int $idFrame,
-        public array $idRelationType = [],
+        public array $frameRelation = [],
         public string  $_token = '',
     )
     {

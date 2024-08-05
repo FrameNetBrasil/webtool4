@@ -8,7 +8,7 @@ class DomainData extends Data
 {
     public function __construct(
         public ?int $idSemanticType,
-        public array $idRelationType = [],
+        public array $frameRelation = [],
         public string  $_token = '',
     )
     {

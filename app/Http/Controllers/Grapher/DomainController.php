@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Grapher;
 
 use App\Data\Grapher\DomainData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Frame;
 use App\Repositories\RelationType;
@@ -19,16 +20,16 @@ class DomainController extends Controller
     #[Get(path: '/grapher/domain')]
     public function domain()
     {
-        $relations = RelationType::listByFilter((object)[
-            'group' => 'rgp_frame_relations'
+        $relations = Criteria::byFilterLanguage("view_relationtype",[
+            'rgEntry',"=",'rgp_frame_relations'
         ])->all();
         $dataRelations = [];
         $config = config('webtool.relations');
         foreach($relations as $relation) {
-            $dataRelations[] = [
-                'value' => $relation->idRelationType,
-                'entry' => $relation->entry,
+            $dataRelations[] = (object)[
+                'idRelationType' => $relation->idRelationType,
                 'name' => $config[$relation->entry]['direct'],
+                'entry' => $relation->entry,
             ];
         }
         return view('Grapher.Domain.domain', [
@@ -44,7 +45,7 @@ class DomainController extends Controller
             $data->idSemanticType = 0;
         }
         if (empty($data->idRelationType)) {
-            $data->idRelationType = session('idRelationType') ?? [];
+            $data->idRelationType = session('frameRelation') ?? [];
         }
         if (!is_null($idEntity)) {
             if ($idEntity == 0) {
@@ -55,10 +56,10 @@ class DomainController extends Controller
         }
         session([
             "graphNodes" => $nodes,
-            "idRelationType" => $data->idRelationType
+            "frameRelation" => $data->frameRelation
         ]);
         return view('Grapher.Domain.domainGraph', [
-            'graph' => RelationService::listDomainForGraph($data->idSemanticType, $data->idRelationType)
+            'graph' => RelationService::listDomainForGraph($data->idSemanticType, $data->frameRelation)
         ]);
     }
 

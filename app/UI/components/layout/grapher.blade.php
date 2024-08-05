@@ -1,76 +1,103 @@
-<div id="graphPane"
-     class="flex flex-column w-full h-full p-0 wt-layout-grapher">
-    <div class="flex-none">
-        <div class="options">
-            {{$menu}}
+<!DOCTYPE html>
+<html id="fnbr-webtool" class="" lang="en">
+<head>
+    <meta name="Generator" content="Laravel 11.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>{!! config('webtool.pageTitle') !!}</title>
+    <meta name="description" content="Framenet Brasil Webtool 3.8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    {{--    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Filled"--}}
+    {{--          rel="stylesheet"--}}
+    {{--          type="text/css">--}}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+
+    <script type="text/javascript" src="/scripts/htmx/htmx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    <!--
+    <script type="text/javascript" src="/scripts/jquery-easyui-1.10.17/jquery.min.js"></script>
+-->
+    <script type="text/javascript" src="/scripts/maestro/manager.js"></script>
+
+    <script type="text/javascript" src="/scripts/pdf/jspdf.debug.js"></script>
+    <script type="text/javascript" src="/scripts/pdf/html2canvas.min.js"></script>
+    <script type="text/javascript" src="/scripts/pdf/html2pdf.min.js"></script>
+    <script defer src="/scripts/alpinejs/cdn.min.js"></script>
+
+    <script type="text/javascript" src="/scripts/jquery-easyui-1.10.17/jquery.easyui.min.js"></script>
+    <!--
+    <script type="text/javascript" src="/scripts/maestro/_notify.js"></script>
+    -->
+
+    <link rel="stylesheet" type="text/css" href="/scripts/jointjs/dist/joint.css" />
+    <script type="text/javascript" src="/scripts/video-js-8.11.5/video.min.js"></script>
+    <link href="/scripts/video-js-8.11.5/video-js.css" rel="stylesheet" />
+
+    <!--
+    <script src="/scripts/helix-ui/webcomponents-loader.js"></script>
+    -->
+
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="/scripts/semantic-ui/semantic.min.css">
+    -->
+    <script src="/scripts/fomantic-ui/semantic.min.js"></script>
+
+    @vite(['resources/js/app.js'])
+</head>
+<body
+    class="hxVertical"
+    hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}'
+>
+@include('Grapher.controls')
+
+<div class="pusher">
+
+@include('components.head')
+@include('components.head-small')
+@include('components.confirm')
+
+<div id="content">
+    <main role="main" class="mainFull">
+        <header class="flex">
+            <div class="col-8">
+                {{$header}}
+            </div>
+        </header>
+        <div id="graphPane"
+             class="flex flex-column w-full h-full p-0 wt-layout-grapher">
+            <div class="flex-none">
+                <div class="options">
+                    {{$menu}}
+                </div>
+            </div>
+            <div
+                id="graph"
+            >
+            </div>
+            <div id="paper"></div>
         </div>
-    </div>
-    <div id="paper"></div>
-
-    <hx-drawer
-        id="graph-drawer">
-        <header>Graph Options</header>
-        <hx-div class="flex flex-column">
-            <div class="hxBox p-1">
-                <label for="ranker">Ranker:</label>
-                <x-select id="ranker" style="width:150px">
-                    <option value="network-simplex" selected>network-simplex</option>
-                    <option value="tight-tree">tight-tree</option>
-                    <option value="longest-path">longer-path</option>
-                </x-select>
-            </div>
-            <div class="hxBox p-1">
-                <label for="rankdir">RankDir:</label>
-                <x-select id="rankdir" style="width:120px">
-                    <option value="TB" selected>Top-Bottom</option>
-                    <option value="BT">Bottom-Top</option>
-                    <option value="RL">Right-Left</option>
-                    <option value="LR">Left-Right</option>
-                </x-select>
-            </div>
-            <div class="hxBox p-1">
-                <label for="align">Align:</label>
-                <x-select id="align" style="width:120px">
-                    <option value="DL" selected>Down-Left</option>
-                    <option value="DR">Down-Right</option>
-                    <option value="UL">Up-Left</option>
-                    <option value="UR">Up-Right</option>
-                </x-select>
-            </div>
-            <div class="hxBox p-1">
-                <label for="ranksep">RankSep:</label>
-                <input id="ranksep" type="range" min="1" max="100" value="50" />
-            </div>
-            <div class="hxBox p-1">
-                <label for="edgesep">EdgeSep:</label>
-                <input id="edgesep" type="range" min="1" max="100" value="50" />
-            </div>
-            <div class="hxBox p-1">
-                <label for="nodesep">NodeSep:</label>
-                <input id="nodesep" type="range" min="1" max="100" value="50" />
-            </div>
-            <div class="hxBox p-1">
-                <label for="vertices">Vertices:</label>
-                <input type=checkbox checked id="vertices">
-            </div>
-            <div class="hxBox p-1">
-                <label for="connector">Connector:</label>
-                <x-select id="connector" style="width:120px">
-                    <option value="smooth" selected>smooth</option>
-                    <option value="curve">curve</option>
-                    <option value="normal">normal</option>
-                    <option value="jumpover">jumpover</option>
-                </x-select>
-            </div>
-
-        </hx-div>
-        <footer>
-        </footer>
-    </hx-drawer>
-
+        <wt-go-top id="myButton" label="Top" offset="64"></wt-go-top>
+    </main>
 </div>
+<footer id="foot">
+    {!! config('webtool.footer') !!}
+</footer>
+</div>
+
 <script>
-    $(function() {
+    $(function () {
+        $('.ui.flyout').flyout();
         window.Grapher = joint.mvc.View.extend({
             options: {
                 nodes: [],
@@ -80,17 +107,17 @@
                 el: document.getElementById("layout-controls"),
                 paper: null,
                 panAndZoom: null,
-                buildGraph: function() {
+                buildGraph: function () {
                     return [];
                 },
-                cellDblClick: function(cellView) {
+                cellDblClick: function (cellView) {
                 },
-                linkEnter: function(linkView) {
+                linkEnter: function (linkView) {
                 },
-                elementEnter: function(elementView) {
+                elementEnter: function (elementView) {
                 }
             },
-            init: function() {
+            init: function () {
                 let that = this;
                 let options = this.options;
 
@@ -113,19 +140,19 @@
 
                 this.paper.on("link:mouseenter", options.linkEnter);
 
-                this.paper.on("link:mouseleave", function(linkView) {
+                this.paper.on("link:mouseleave", function (linkView) {
                     linkView.removeTools();
                 });
 
                 this.paper.on("element:mouseenter", options.elementEnter);
 
-                this.paper.on("element:mouseleave", function(elementView) {
+                this.paper.on("element:mouseleave", function (elementView) {
                     elementView.removeTools();
                 });
 
-                $("#rankdir").combobox({ onChange: () => that.onChange() });
-                $("#ranker").combobox({ onChange: () => that.onChange() });
-                $("#align").combobox({ onChange: () => that.onChange() });
+                $("#rankdir").combobox({onChange: () => that.onChange()});
+                $("#ranker").combobox({onChange: () => that.onChange()});
+                $("#align").combobox({onChange: () => that.onChange()});
                 $("#vertices").on("change", () => this.onChange());
                 $("#ranksep").on("change", () => this.onChange());
                 $("#nodesep").on("change", () => this.onChange());
@@ -141,12 +168,13 @@
                     }
                 });
                 this.cells = options.buildGraph();
+                console.log(this.cells);
             },
-            onChange: function() {
+            onChange: function () {
                 this.layout();
                 this.trigger("layout");
             },
-            layout: function() {
+            layout: function () {
                 let paper = this.paper;
                 let graph = paper.model;
                 let cells = this.cells;
@@ -187,11 +215,11 @@
                 this.panAndZoom.enableControlIcons();
                 this.panAndZoom.disablePan();
             },
-            getLayoutOptions: function() {
+            getLayoutOptions: function () {
                 return {
                     dagre: dagre,
                     graphlib: dagre.graphlib,
-                    setVertices: $("#vertices").is(":checked") ? true : function(link) {
+                    setVertices: $("#vertices").is(":checked") ? true : function (link) {
                         link.set("vertices", []);
                     },
                     setLinkVertices: $("#vertices").is(":checked"),
@@ -208,7 +236,34 @@
 
 
     });
-
-
 </script>
 
+<!-- App Scripts Go Here -->
+<script src="/scripts/lodash/lodash.js"></script>
+<script src="/scripts/backbone/backbone.js"></script>
+<script src="/scripts/jointjs/dist/joint.js"></script>
+<script src="/scripts/dagre/dist/dagre.js"></script>
+<script src="/scripts/utils/md5.min.js"></script>
+
+<!--
+<script type="module">
+    import HelixUI from "/scripts/helix-ui/helix-ui.module.js";
+    HelixUI.initialize();
+</script>
+-->
+
+<script>
+    // document.body.addEventListener("notify", function(evt) {
+    //     console.log(evt.detail.type, evt.detail.message);
+    //     $.toast({
+    //         class: evt.detail.type,
+    //         message: evt.detail.message,
+    //         className: {
+    //             content: 'content  wt-notify-' + evt.detail.type,
+    //         },
+    //     })
+    //     ;
+    // });
+</script>
+</body>
+</html>
