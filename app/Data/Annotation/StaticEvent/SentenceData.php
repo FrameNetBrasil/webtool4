@@ -15,7 +15,9 @@ class SentenceData extends Data
         public ?object $corpus = null,
         public ?object $image = null,
         public ?array $objects = null,
-        public ?array $frames = null
+        public ?array $frames = null,
+        public ?string $type = '',
+        public ?string $comment = '',
     )
     {
     }

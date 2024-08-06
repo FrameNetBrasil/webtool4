@@ -13,7 +13,7 @@
        'state' => 'open',
        'type' => 'project'
     ], $taskDocs ?? []);
-    $allowedCorpus = collect($taskDocs)->pluck('idCorpus')->all();
+    $allowedCorpus = collect($taskDocs)->pluck('idCorpus')->unique()->all();
     $allowedDocuments = collect($taskDocs)->pluck('idDocument')->all();
     if ($search->document == '') {
         $corpus = Criteria::byFilterLanguage("view_corpus",["name","startswith", $search->corpus])

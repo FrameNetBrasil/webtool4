@@ -16,7 +16,6 @@ class Project
     {
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
-        debug($user);
         if (User::isManager($user)) {
             $criteria = Criteria::table("view_project_docs");
         } else {

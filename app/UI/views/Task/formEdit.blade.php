@@ -11,12 +11,12 @@
             id="description"
             value="{{$task->description}}"
         ></x-multiline-field>
-        <x-combobox.project
-            id="idProject"
-            label="Source project"
-            value="{{$task->idProject}}"
-        >
-        </x-combobox.project>
+{{--        <x-combobox.project--}}
+{{--            id="idProject"--}}
+{{--            label="Source project"--}}
+{{--            value="{{$task->idProject}}"--}}
+{{--        >--}}
+{{--        </x-combobox.project>--}}
         <div class="three fields">
             <div class="field">
                 <x-text-field

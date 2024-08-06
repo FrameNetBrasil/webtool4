@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Network;
 
 use App\Data\ComboBox\QData;
 use App\Data\Network\SearchData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FE\BrowseController as FEController;
 use App\Http\Controllers\LU\BrowseController as LUController;
@@ -11,6 +12,7 @@ use App\Repositories\Frame;
 use App\Repositories\Relation;
 use App\Repositories\SemanticType;
 use App\Repositories\ViewFrame;
+use App\Services\AppService;
 use App\Services\RelationService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -38,7 +40,7 @@ class BrowseController extends Controller
     }
 
     #[Post(path: '/network/listForTree')]
-    public function listForTree(SearchData $search)
+    public function listForTree(SearchData $search): array
     {
         debug($search);
         $result = [];
@@ -48,8 +50,9 @@ class BrowseController extends Controller
                 return $resultFrame;
             } else {
                 if ($search->idFramalDomain != 0) {
-                    //$icon = 'material-icons-outlined wt-tree-icon wt-icon-domain';
-                    $frames = ViewFrame::listByFilter($search)->all();
+                    $frames = Criteria::byFilterLanguage("view_frame", [
+                        ["name", "startswith", $search->frame]
+                    ])->all();
                     foreach ($frames as $row) {
                         $domain = $this->getDomain($row->idFrame);
                         $node = [];
@@ -63,22 +66,10 @@ class BrowseController extends Controller
                     }
                     return $result;
                 } else {
-                    $icon = 'material-icons-outlined wt-tree-icon wt-icon-domain';
-                    if ($search->frame == '') {
-                        $domains = SemanticType::listFrameDomain()->all();
-                        foreach ($domains as $row) {
-                            $node = [];
-                            $node['id'] = 'd' . $row->idSemanticType;
-                            $node['type'] = 'domain';
-                            $node['name'] = [$row->name, $row->description ?? ''];
-                            $node['state'] = 'closed';
-                            $node['iconCls'] = 'material-icons-outlined wt-tree-icon wt-icon-domain';
-                            $node['children'] = [];
-                            $result[] = $node;
-                        }
-                    } else {
-                        $icon = 'material-icons-outlined wt-tree-icon wt-icon-frame';
-                        $frames = ViewFrame::listByFilter($search)->all();
+                    if ($search->frame != '') {
+                        $frames = Criteria::byFilterLanguage("view_frame", [
+                            ["name", "startswith", $search->frame]
+                        ])->all();
                         foreach ($frames as $row) {
                             $domain = $this->getDomain($row->idFrame);
                             $node = [];
@@ -95,37 +86,30 @@ class BrowseController extends Controller
                 }
             }
         }
-//        $total = count($result);
-//        return [
-//            'total' => $total,
-//            'rows' => $result,
-//            'footer' => [
-//                [
-//                    'type' => 'frame',
-//                    'name' => ["{$total} record(s)", ''],
-//                    'iconCls' => $icon
-//                ]
-//            ]
-//        ];
         return $result;
     }
 
     public function listForTreeByFrame(int $idFrame): array
     {
         $result = [];
-        $frameBase = Frame::getById($idFrame);
+        $frameBase = Frame::byId($idFrame);
+        $idLanguage = AppService::getCurrentIdLanguage();
         $config = config('webtool.relations');
-        $relations = Frame::listDirectRelations($idFrame)->all();
+        $relations = Criteria::table("view_frame_relation")
+            ->where("f1IdFrame", $idFrame)
+            ->where("idLanguage", $idLanguage)
+            ->orderBy("relationType")
+            ->all();
         foreach ($relations as $row) {
-            $relationName = $config[$row->entry]['direct'];
-            $frame = Frame::getById($row->idFrame);
-            $domain = $this->getDomain($row->idFrame);
+            $relationName = $config[$row->relationType]['direct'];
+            $frame = Frame::byId($row->f2IdFrame);
+            $domain = $this->getDomain($frame->idFrame);
             $node = [];
-            $node['id'] = $idFrame . '_' . $row->entry . '_' . $row->idFrame;
-            $node['idFrame'] = 'f' . $row->idFrame;
+            $node['id'] = $idFrame . '_' . $row->relationType . '_' . $frame->idFrame;
+            $node['idFrame'] = 'f' . $frame->idFrame;
             $node['idEntityRelation'] = $row->idEntityRelation;
             $node['type'] = 'relation';
-            $node['name'] = [$row->name, $frame->description ?? '', $relationName, $row->entry, $domain];
+            $node['name'] = [$frame->name, $frame->description ?? '', $relationName, $row->relationType, $domain];
             $node['frame'] = $frameBase->name;
             $node['state'] = 'closed';
             $node['iconCls'] = 'material-icons-outlined wt-tree-icon wt-icon-relation';
@@ -141,17 +125,22 @@ class BrowseController extends Controller
             'children' => empty($result) ? null : $result
         ];
         $result = [];
-        $relations = Frame::listInverseRelations($idFrame)->all();
+
+        $relations = Criteria::table("view_frame_relation")
+            ->where("f2IdFrame", $idFrame)
+            ->where("idLanguage", $idLanguage)
+            ->orderBy("relationType")
+            ->all();
         foreach ($relations as $row) {
-            $relationName = $config[$row->entry]['inverse'];
-            $frame = Frame::getById($row->idFrame);
-            $domain = $this->getDomain($row->idFrame);
+            $relationName = $config[$row->relationType]['inverse'];
+            $frame = Frame::byId($row->f1IdFrame);
+            $domain = $this->getDomain($frame->idFrame);
             $node = [];
-            $node['id'] = $idFrame . '_' . $row->entry . '_' . $row->idFrame;
-            $node['idFrame'] = 'f' . $row->idFrame;
+            $node['id'] = $idFrame . '_' . $row->relationType . '_' . $frame->idFrame;
+            $node['idFrame'] = 'f' . $frame->idFrame;
             $node['idEntityRelation'] = $row->idEntityRelation;
             $node['type'] = 'relation';
-            $node['name'] = [$row->name, $frame->description ?? '', $relationName, $row->entry, $domain];
+            $node['name'] = [$frame->name, $frame->description ?? '', $relationName, $row->relationType, $domain];
             $node['frame'] = $frameBase->name;
             $node['state'] = 'closed';
             $node['iconCls'] = 'material-icons-outlined wt-tree-icon wt-icon-relation';
@@ -181,21 +170,21 @@ class BrowseController extends Controller
         return $domain;
     }
 
-    #[Get(path: '/network/ferelation/{idEntityRelation}')]
-    public function gridRelationsFE(int $idEntityRelation)
-    {
-        $relation = Relation::getById($idEntityRelation);
-        debug($relation);
-        $config = config('webtool.relations');
-        return view("Network.feRelationGrid",[
-            'idEntityRelation' => $idEntityRelation,
-            'frame' => Frame::getByIdEntity($relation->idEntity1),
-            'relatedFrame' => Frame::getByIdEntity($relation->idEntity2),
-            'relation' => (object)[
-                'name' => $config[$relation->entry]['direct'],
-                'entry' => $relation->entry
-            ],
-            'relations' => RelationService::listRelationsFE($idEntityRelation)
-        ]);
-    }
+//    #[Get(path: '/network/ferelation/{idEntityRelation}')]
+//    public function gridRelationsFE(int $idEntityRelation)
+//    {
+//        $relation = Relation::getById($idEntityRelation);
+//        debug($relation);
+//        $config = config('webtool.relations');
+//        return view("Network.feRelationGrid",[
+//            'idEntityRelation' => $idEntityRelation,
+//            'frame' => Frame::getByIdEntity($relation->idEntity1),
+//            'relatedFrame' => Frame::getByIdEntity($relation->idEntity2),
+//            'relation' => (object)[
+//                'name' => $config[$relation->entry]['direct'],
+//                'entry' => $relation->entry
+//            ],
+//            'relations' => RelationService::listRelationsFE($idEntityRelation)
+//        ]);
+//    }
 }
