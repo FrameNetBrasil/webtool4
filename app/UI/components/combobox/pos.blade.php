@@ -21,7 +21,8 @@
     $(function() {
         $('#{{$id}}_dropdown').dropdown({
             onChange: function(value, text, $choice) {
-                $('#{{$id}}').val($(value).data('value'));
+                {{--$('#{{$id}}').val($(value).data('value'));--}}
+                {{--console.log(value, $('#{{$id}}').val());--}}
             }
         });
     });

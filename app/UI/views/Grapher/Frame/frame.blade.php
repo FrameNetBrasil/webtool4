@@ -11,7 +11,7 @@
                     <x-combobox.frame
                         id="idFrame"
                         label=""
-                        placeholder="Frame (min: 2 chars)"
+                        placeholder="Frame (min: 3 chars)"
                         style="width:250px"
                     ></x-combobox.frame>
                     <x-checkbox.relation
@@ -40,7 +40,7 @@
                         <x-button
                             id="btnToogle"
                             type="button"
-                            label="Graph options"
+                            label="Grapher options"
                             color="secondary"
                             hx-on:click="$('#graph-drawer').flyout('toggle');"
                         ></x-button>

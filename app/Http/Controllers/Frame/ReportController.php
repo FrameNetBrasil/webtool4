@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frame;
 use App\Data\ComboBox\QData;
 use App\Data\Frame\SearchData;
 use App\Data\SearchFrameData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FE\FEController;
 use App\Http\Controllers\LU\BrowseController as LUController;
@@ -104,10 +105,18 @@ class ReportController extends Controller
         */
     }
 
-    #[Get(path: '/report/frame/listForSelect')]
+//    #[Get(path: '/report/frame/listForSelect')]
+//    public function listForSelect(QData $data)
+//    {
+//        return Frame::listForSelect($data->q)->all();
+//    }
+
+
+    #[Get(path: '/frame/list/forSelect')]
     public function listForSelect(QData $data)
     {
-        return Frame::listForSelect($data->q)->all();
+        $name = (strlen($data->q) > 2) ? $data->q : 'none';
+        return ['results' => Criteria::byFilterLanguage("view_frame",["name","startswith",$name])->orderby("name")->all()];
     }
 
 }

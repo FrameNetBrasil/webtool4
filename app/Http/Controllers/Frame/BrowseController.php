@@ -213,11 +213,5 @@ class BrowseController extends Controller
         return $result;
     }
 
-    #[Get(path: '/frame/list/forSelect')]
-    public function listForSelect(QData $data)
-    {
-        $name = (strlen($data->q) > 2) ? $data->q : 'none';
-        return ['results' => Criteria::byFilterLanguage("view_frame",["name","startswith",$name])->orderby("name")->all()];
-    }
 
 }
