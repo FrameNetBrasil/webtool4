@@ -51,7 +51,7 @@ class LoginController extends Controller
             } elseif ($status == 'pending') {
                 throw new UserPendingException('User already registered, but waiting for Administrator approval.');
             } elseif ($status == 'logged') {
-                return redirect("/report/frame");
+                return redirect("/");
             } else {
                 throw new LoginException('Login failed; contact administrator.');
             }
