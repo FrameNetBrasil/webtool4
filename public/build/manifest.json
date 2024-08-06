@@ -12,12 +12,12 @@
     "src": "resources/css/easyui/images/tree_icons.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CQhkhSZI.js",
+    "file": "assets/app-hfA9q0Yx.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-0Ic5tq6r.css"
+      "assets/app-CBWSswbp.css"
     ],
     "assets": [
       "assets/datagrid_icons-BeGSjom2.png",
