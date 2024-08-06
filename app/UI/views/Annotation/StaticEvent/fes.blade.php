@@ -30,9 +30,11 @@
                             <form>
                                 @foreach($objects as $i => $object)
                                     @php($phrase = '')
+                                    @if($type != 'No Text')
                                     @for($w = $object->startWord - 1; $w < $object->endWord; $w++)
                                         @php($phrase .= ' '. $words[$w])
                                     @endfor
+                                    @endif
                                     @if((count($object->bboxes) > 0) || ($object->name == 'scene'))
                                         <x-card class="m-2 font-bold"
                                                 title="Object #{{++$idObject}}: <span class='wt-anno-box-color-{{$idObject}}'>{{$phrase}}</span> ">

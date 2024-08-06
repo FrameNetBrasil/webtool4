@@ -23,6 +23,7 @@ return [
         'report' => ['Report', '/report', '', [
             'reportframe' => ['Frame', '/report/frame', '', []],
             'reportlu' => ['LU', '/report/lu', '', []],
+            'networkstructure' => ['Network', '/network', 'MASTER', []],
 //            'cxnreport' => ['Constructions', '/cxn/report', 'cxnreport', '', '', []],
 //            'corpusAnnotationReport' => ['Corpus Panes', '/corpus/report', 'corpusreport', '', 1, []],
         ]],
@@ -46,7 +47,6 @@ return [
         ]],
         'structure' => ['Structure', '/structure', 'MASTER', [
             'framestructure' => ['Frame', '/frame', 'MASTER', []],
-            'networkstructure' => ['Network', '/network', 'MASTER', []],
             'corpusstructure' => ['Corpus', '/corpus', 'MASTER', []],
             'lexiconstructure' => ['Lexicon', '/lexicon', 'MASTER', []],
 //            'cxnstructure' => ['Construction', '/cxn', 'MASTER', []],

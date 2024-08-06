@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Annotation;
 
+use App\Data\Annotation\StaticEvent\AnnotationCommentData;
 use App\Data\Annotation\StaticEvent\CreateData;
 use App\Data\Annotation\StaticEvent\SearchData;
 use App\Data\Annotation\StaticEvent\SentenceData;
@@ -66,6 +67,7 @@ class StaticEventController extends Controller
             ["idSentence", "=", $sentence->idSentence]
         ])->first();
         $image = Criteria::byFilter("image", ["idImage", "=", $is->idImage])->first();
+        $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $idDocumentSentence])->first();
         $annotation = AnnotationStaticEventService::getObjectsForAnnotationImage($document->idDocument, $sentence->idSentence);
         return SentenceData::from([
             'idDocumentSentence' => $idDocumentSentence,
@@ -77,6 +79,8 @@ class StaticEventController extends Controller
             'image' => $image,
             'objects' => $annotation['objects'],
             'frames' => $annotation['frames'],
+            'type' => $annotation['type'],
+            'comment' => $comment->comment
         ]);
     }
 
@@ -145,6 +149,34 @@ class StaticEventController extends Controller
         try {
             AnnotationStaticEventService::deleteAnnotationByFrame($idDocumentSentence, $idFrame);
             return $this->clientRedirect("/annotation/staticEvent/sentence/{$idDocumentSentence}");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/staticEvent/comment')]
+    public function annotationComment(AnnotationCommentData $data)
+    {
+        debug($data);
+        try {
+            $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $data->idDocumentSentence])->first();
+            if ($comment->idAnnotationComment) {
+                Criteria::table("annotationcomment")
+                    ->where("idAnnotationComment", "=", $comment->idAnnotationComment)
+                    ->update([
+                        "type" => "StaticEvent",
+                        "id1" => $data->idDocumentSentence,
+                        "comment" => $data->comment
+                    ]);
+            } else {
+                Criteria::table("annotationcomment")
+                    ->insert([
+                        "type" => "StaticEvent",
+                        "id1" => $data->idDocumentSentence,
+                        "comment" => $data->comment
+                    ]);
+            }
+            return $this->renderNotify("success", "Comment added.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

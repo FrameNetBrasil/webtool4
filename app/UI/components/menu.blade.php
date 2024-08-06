@@ -17,9 +17,11 @@
 <div id="leftNav">
     <form
         id="appSearch"
-        action="/app/search"
-        method="POST"
+{{--        action="/app/search"--}}
+{{--        method="GET"--}}
         class="pt-2"
+        hx-post="/app/search"
+        hx-target="#work"
     >
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
         <x-search-field

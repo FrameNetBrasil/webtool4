@@ -12,6 +12,7 @@ use App\Repositories\StaticAnnotationMM;
 use App\Repositories\StaticBBoxMM;
 use App\Repositories\StaticObjectSentenceMM;
 use App\Repositories\StaticSentenceMM;
+use App\Repositories\Task;
 use App\Repositories\User;
 use App\Repositories\UserAnnotation;
 use App\Repositories\Timeline;
@@ -66,7 +67,7 @@ class AnnotationStaticEventService
             ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
             ->where("usertask_document.idDocument", $idDocument)
             ->where("ut.idUser", $idUser)
-            ->select("ut.idUserTask")
+            ->select("ut.idUserTask","ut.idTask")
             ->first();
         if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
             if (User::isManager($user)) {
@@ -74,7 +75,7 @@ class AnnotationStaticEventService
                     ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
                     ->where("usertask_document.idDocument", $idDocument)
                     ->where("ut.idUser", -2)
-                    ->select("ut.idUserTask")
+                    ->select("ut.idUserTask","ut.idTask")
                     ->first();
             } else {
                 $usertask = null;
@@ -92,6 +93,7 @@ class AnnotationStaticEventService
                 'frames' => []
             ];
         }
+        $task = Task::byId($usertask->idTask);
         //objects for document_sentence
         $criteria = Criteria::table("view_staticobject_textspan")
             ->where("idDocument", $idDocument)
@@ -139,6 +141,7 @@ class AnnotationStaticEventService
             }
         }
         return [
+            'type' => $task->type,
             'objects' => $objects,
             'frames' => $frames
         ];

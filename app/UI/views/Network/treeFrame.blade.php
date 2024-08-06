@@ -33,12 +33,8 @@
                 },
             ]],
             onClickRow: (row) => {
-                if (row.type === 'relation') {
-                    let idEntityRelation = row.idEntityRelation;
-                    console.log(idEntityRelation, row.idFrame);
-                    htmx.ajax('GET', `/network/ferelation/${idEntityRelation}`, {target:'#fefeTableContainer', swap:'innerHTML'})
-
-                }
+                console.log(row);
+                $("#networkFrameGrid").treegrid('toggle', row.id);
             },
         });
     });

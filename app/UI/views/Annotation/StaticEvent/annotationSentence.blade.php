@@ -16,7 +16,12 @@
                     @include('Annotation.StaticEvent.Panes.imagePane')
                 </div>
                 <div class="sentence">
-                    @include('Annotation.StaticEvent.Panes.sentencePane')
+                    @if($type != 'No Text')
+                        @include('Annotation.StaticEvent.Panes.sentencePane')
+                    @endif
+                </div>
+                <div class="comment">
+                    @include('Annotation.StaticEvent.Panes.commentPane')
                 </div>
             </div>
             <div class="center">
@@ -38,7 +43,8 @@
                     <div class="navigation">
                         @if($idPrevious)
                             <div class="previous">
-                                <x-element.previous url="/annotation/staticEvent/sentence/{{$idPrevious}}"></x-element.previous>
+                                <x-element.previous
+                                    url="/annotation/staticEvent/sentence/{{$idPrevious}}"></x-element.previous>
                             </div>
                         @endif
                         @if($idNext)
