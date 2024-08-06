@@ -17,8 +17,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
 
     <script type="text/javascript" src="/scripts/htmx/htmx.min.js"></script>
@@ -63,41 +65,41 @@
 
 <div class="pusher">
 
-@include('components.head')
-@include('components.head-small')
-@include('components.confirm')
+    @include('components.head')
+    @include('components.head-small')
+    @include('components.confirm')
 
-<div id="content">
-    <main role="main" class="mainFull">
-        <header class="flex">
-            <div class="col-8">
-                {{$header}}
-            </div>
-        </header>
-        <div id="graphPane"
-             class="flex flex-column w-full h-full p-0 wt-layout-grapher">
-            <div class="flex-none">
-                <div class="options">
-                    {{$menu}}
+    <div id="content">
+        <main role="main" class="mainFull">
+            <header class="flex">
+                <div class="col-8">
+                    {{$header}}
                 </div>
+            </header>
+            <div id="graphPane"
+                 class="flex flex-column w-full h-full p-0 wt-layout-grapher">
+                <div class="flex-none">
+                    <div class="options">
+                        {{$menu}}
+                    </div>
+                </div>
+                <div
+                    id="graph"
+                >
+                </div>
+                <div id="paper"></div>
             </div>
-            <div
-                id="graph"
-            >
-            </div>
-            <div id="paper"></div>
-        </div>
-        <wt-go-top id="myButton" label="Top" offset="64"></wt-go-top>
-    </main>
-</div>
-<footer id="foot">
-    {!! config('webtool.footer') !!}
-</footer>
+            <wt-go-top id="myButton" label="Top" offset="64"></wt-go-top>
+        </main>
+    </div>
+    <footer id="foot">
+        {!! config('webtool.footer') !!}
+    </footer>
 </div>
 
 <script>
-    $(function () {
-        $('.ui.flyout').flyout();
+    $(function() {
+        $(".ui.flyout").flyout();
         window.Grapher = joint.mvc.View.extend({
             options: {
                 nodes: [],
@@ -107,17 +109,17 @@
                 el: document.getElementById("layout-controls"),
                 paper: null,
                 panAndZoom: null,
-                buildGraph: function () {
+                buildGraph: function() {
                     return [];
                 },
-                cellDblClick: function (cellView) {
+                cellDblClick: function(cellView) {
                 },
-                linkEnter: function (linkView) {
+                linkEnter: function(linkView) {
                 },
-                elementEnter: function (elementView) {
+                elementEnter: function(elementView) {
                 }
             },
-            init: function () {
+            init: function() {
                 let that = this;
                 let options = this.options;
 
@@ -140,27 +142,46 @@
 
                 this.paper.on("link:mouseenter", options.linkEnter);
 
-                this.paper.on("link:mouseleave", function (linkView) {
+                this.paper.on("link:mouseleave", function(linkView) {
                     linkView.removeTools();
                 });
 
                 this.paper.on("element:mouseenter", options.elementEnter);
 
-                this.paper.on("element:mouseleave", function (elementView) {
+                this.paper.on("element:mouseleave", function(elementView) {
                     elementView.removeTools();
                 });
 
-                $("#rankdir").combobox({onChange: () => that.onChange()});
-                $("#ranker").combobox({onChange: () => that.onChange()});
-                $("#align").combobox({onChange: () => that.onChange()});
+                $("#ranker_dropdown").dropdown({
+                    onChange: function(value) {
+                        $('#ranker').val(value);
+                        that.onChange();
+                    }
+                });
+                $("#rankdir_dropdown").dropdown({
+                    onChange: function(value) {
+                        $('#rankdir').val(value);
+                        that.onChange();
+                    }
+                });
+
+                $("#align_dropdown").dropdown({
+                    onChange: function(value) {
+                        $('#align').val(value);
+                        that.onChange();
+                    }
+                });
+
                 $("#vertices").on("change", () => this.onChange());
                 $("#ranksep").on("change", () => this.onChange());
                 $("#nodesep").on("change", () => this.onChange());
                 $("#edgesep").on("change", () => this.onChange());
-                $("#connector").combobox({
-                    onChange: () => {
+
+                $("#connector_dropdown").dropdown({
+                    onChange: (value) => {
+                        $('#connector').val(value);
                         let links = this.paper.model.getLinks();
-                        let connector = $("#connector").combobox("getValue");
+                        let connector = value;
                         for (var link of links) {
                             link.connector(connector);
                             this.paper.findViewByModel(link.id).render();
@@ -168,13 +189,13 @@
                     }
                 });
                 this.cells = options.buildGraph();
-                console.log(this.cells);
             },
-            onChange: function () {
+            onChange: function() {
+                console.log($("#ranker").val(),$("#rankdir").val(),$("#align").val(),$("#connector").val(),)
                 this.layout();
                 this.trigger("layout");
             },
-            layout: function () {
+            layout: function() {
                 let paper = this.paper;
                 let graph = paper.model;
                 let cells = this.cells;
@@ -215,18 +236,18 @@
                 this.panAndZoom.enableControlIcons();
                 this.panAndZoom.disablePan();
             },
-            getLayoutOptions: function () {
+            getLayoutOptions: function() {
                 return {
                     dagre: dagre,
                     graphlib: dagre.graphlib,
-                    setVertices: $("#vertices").is(":checked") ? true : function (link) {
+                    setVertices: $("#vertices").is(":checked") ? true : function(link) {
                         link.set("vertices", []);
                     },
                     setLinkVertices: $("#vertices").is(":checked"),
                     setLabels: true,
-                    ranker: $("#ranker").combobox("getValue"),
-                    rankDir: $("#rankdir").combobox("getValue"),
-                    align: $("#align").combobox("getValue"),
+                    ranker: $("#ranker").val(),
+                    rankDir: $("#rankdir").val(),
+                    align: $("#align").val(),
                     rankSep: parseInt($("#ranksep").val(), 10),
                     edgeSep: parseInt($("#edgesep").val(), 10),
                     nodeSep: parseInt($("#nodesep").val(), 10)

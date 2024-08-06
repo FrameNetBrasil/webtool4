@@ -8,7 +8,7 @@
                 var elements = [];
                 var links = [];
                 let rect, text, w;
-                let connector = $('#connector').combobox('getValue');
+                let connector = $('#connector').val();
                 for (var index in this.nodes) {
                     let node = this.nodes[index]
                     if (node['type'] === 'frame') {

@@ -39,7 +39,7 @@
                     <x-button
                         id="btnToogle"
                         type="button"
-                        label="Graph options"
+                        label="Grapher options"
                         color="secondary"
                         hx-on:click="$('#graph-drawer').flyout('toggle');"
                     ></x-button>
