@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Data\Frame\SearchData;
+use App\Database\Criteria;
 use App\Repositories\Language;
 use App\Repositories\ViewFrame;
 use App\Repositories\ViewLU;
@@ -42,11 +43,10 @@ class AppController extends Controller
     {
         $lus =[];
         $frames = [];
-        debug($search);
-        $searchLU = $search->frame;
-        if ($searchLU != '') {
-            $lus = self::listLUSearch($searchLU);
-            $frames = self::listFrame($search);
+        $searchString = $search->frame;
+        if ($searchString != '') {
+            $lus = self::listLUSearch($searchString);
+            $frames = self::listFrame($searchString);
         }
         return view("App.search", [
             'search' => $search,
@@ -57,28 +57,28 @@ class AppController extends Controller
         ]);
     }
 
-    public static function listFrame(SearchData $search)
+    public static function listFrame(string $name)
     {
         $result = [];
-        $frames = ViewFrame::listByFilter($search)->all();
+        $frames = Criteria::byFilterLanguage("view_frame",[
+            ["name","startswith", $name]
+        ])->all();
         foreach ($frames as $row) {
             $result[$row->idFrame] = [
                 'id' => 'f' . $row->idFrame,
                 'idFrame' => $row->idFrame,
                 'type' => 'frame',
                 'name' => [$row->name, $row->description],
-                'iconCls' => 'material-icons-outlined wt-icon wt-icon-frame',
             ];
         }
         return $result;
     }
 
-    public static function listLUSearch(string $lu)
+    public static function listLUSearch(string $name)
     {
         $result = [];
-        $lus = ViewLU::listByFilter((object)[
-            'lu' => $lu,
-            'idLanguage' => AppService::getCurrentIdLanguage()
+        $lus = Criteria::byFilterLanguage("view_lu",[
+            ["name","startswith", $name]
         ])->all();
         foreach ($lus as $lu) {
             $result[$lu->idLU] = [
@@ -87,7 +87,6 @@ class AppController extends Controller
                 'type' => 'lu',
                 'name' => [$lu->name, $lu->senseDescription],
                 'frameName' => $lu->frameName,
-                'iconCls' => 'material-icons-outlined wt-icon wt-icon-lu',
             ];
         }
         return $result;
