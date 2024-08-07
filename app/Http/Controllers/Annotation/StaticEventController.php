@@ -80,7 +80,7 @@ class StaticEventController extends Controller
             'objects' => $annotation['objects'],
             'frames' => $annotation['frames'],
             'type' => $annotation['type'],
-            'comment' => $comment->comment
+            'comment' => $comment->comment ?? ''
         ]);
     }
 
