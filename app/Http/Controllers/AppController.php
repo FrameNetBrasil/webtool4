@@ -33,7 +33,7 @@ class AppController extends Controller
     #[Get(path: '/changeLanguage/{language}')]
     public function changeLanguage(string $language)
     {
-        $data = Language::first([['language', '=', $language]]);
+        $data = Criteria::byFilter("language", ['language', '=', $language])->first();
         AppService::setCurrentLanguage($data->idLanguage);
         return $this->redirect("/");
     }
@@ -43,7 +43,7 @@ class AppController extends Controller
     {
         $lus =[];
         $frames = [];
-        $searchString = $search->frame;
+        $searchString = '%' . $search->frame;
         if ($searchString != '') {
             $lus = self::listLUSearch($searchString);
             $frames = self::listFrame($searchString);
