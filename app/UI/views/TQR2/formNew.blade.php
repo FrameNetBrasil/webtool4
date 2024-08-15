@@ -1,4 +1,4 @@
-<x-form id="formNewTQR2" title="New Structure" :center="false"  hx-post="/tqr2/new">
+<x-form id="formNewTQR2" title="New Structure" :center="false"  hx-post="/tqr2/new" hx-target="#editArea">
     <x-slot:fields>
         <x-combobox.frame
             id="idFrame"

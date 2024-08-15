@@ -20,12 +20,19 @@
         <div id="structureEditWrapper">
             <x-form
                 id="argumentFormAdd"
-                title="Add Argument"
+                title="Add Argument  [{{$relation->direct}}/{{$relation->inverse}}]"
                 center="true"
             >
                 <x-slot:fields>
                     <x-hidden-field id="idQualiaStructure" :value="$structure->idQualiaStructure"></x-hidden-field>
-                    <div class="grid">
+                    <div class="formgrid grid">
+                        <div class="col">
+                            <x-number-field
+                                id="order"
+                                label="Order"
+                                value="1"
+                            ></x-number-field>
+                        </div>
                         <div class="col">
                             <x-combobox.fe-frame
                                 id="idFrameElement"
@@ -51,7 +58,7 @@
                 </x-slot:buttons>
             </x-form>
             <h2>Arguments</h2>
-                @include("TQR2.arguments")
+            @include("TQR2.arguments")
         </div>
     </x-slot:main>
 </x-layout.crud>

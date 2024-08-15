@@ -28,6 +28,7 @@
                     <div
                         class="meta"
                     >
+                        <span>Order: {!! $argument->order !!}</span><br>
                         <span>Type: {!! $types[$argument->type] !!}</span>
                     </div>
                 </div>

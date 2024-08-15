@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TQR2;
 
+use App\Data\ComboBox\QData;
 use App\Data\TQR2\CreateArgumentData;
 use App\Data\TQR2\CreateData;
 use App\Data\TQR2\SearchData;
@@ -29,8 +30,7 @@ class ResourceController extends Controller
     public function grid(SearchData $search, ?string $fragment = null)
     {
         $view = view("TQR2.grids", [
-            'search' => $search,
-            'sentences' => [],
+            'search' => $search
         ]);
         return (is_null($fragment) ? $view : $view->fragment('search'));
     }
@@ -58,11 +58,10 @@ class ResourceController extends Controller
     public function getArguments(int $idQualiaStructure): array
     {
         debug($idQualiaStructure);
-        return Criteria::table("qualiaargument as qa")
-            ->join("view_frameelement as fe", "qa.idEntity", "=", "fe.idEntity")
-            ->where("qa.idQualiaStructure", $idQualiaStructure)
-            ->where("fe.idLanguage", AppService::getCurrentIdLanguage())
-            ->select("qa.idQualiaArgument", "qa.type", "fe.name as feName", "fe.coreType as feCoreType", "fe.idColor as feIdColor")
+        return Criteria::byFilterLanguage("view_qualiaargument", [
+            "idQualiaStructure", "=", $idQualiaStructure
+        ])->select("idQualiaArgument", "order", "type", "feName", "feCoreType", "feIdColor")
+            ->orderby("order")
             ->all();
     }
 
@@ -96,9 +95,10 @@ class ResourceController extends Controller
     public function create(CreateData $data)
     {
         try {
-            Criteria::create("qualiastructure", $data->toArray());
-            $this->trigger("reload-gridTQR2");
-            return $this->renderNotify("success", "Structure created.");
+            $idQualiaStructure = Criteria::create("qualiastructure", $data->toArray());
+//            $this->trigger("reload-gridTQR2");
+//            return $this->renderNotify("success", "Structure created.");
+            return $this->edit($idQualiaStructure);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
@@ -120,7 +120,7 @@ class ResourceController extends Controller
     public function createArgument(CreateArgumentData $data)
     {
         try {
-            Criteria::create("qualiaargument", $data->toCreate());
+            Criteria::create("qualiaargument", $data->toArray());
             $this->trigger("reload-gridTQR2Argument");
             return $this->renderNotify("success", "Argument created.");
         } catch (\Exception $e) {
@@ -151,10 +151,22 @@ class ResourceController extends Controller
         }
     }
 
-    #[Get(path: '/tqr2/listForSelect')]
+    #[Get(path: '/tqr2/qualialu/new')]
+    public function formNewQualiaLU()
+    {
+        return view("TQR2.formNewQualiaLU");
+    }
+
+    #[Get(path: '/tqr2/list/forSelect')]
     public function listForSelect(QData $data)
     {
         $name = (strlen($data->q) > 2) ? $data->q : 'none';
-        return ['results' => Criteria::byFilterLanguage("view_corpus", ["name", "startswith", $name])->orderby("name")->all()];
+        $results = Criteria::table("view_qualiastructure")
+            ->whereRaw("lower(concat(name,'::',relation)) like lower('%$name%')")
+            ->where("idLanguage", AppService::getCurrentIdLanguage())
+            ->selectRaw("idQualiaStructure, concat(name,'::',relation) as name")
+            ->orderBy("name")
+            ->all();
+        return ['results' => $results];
     }
 }
