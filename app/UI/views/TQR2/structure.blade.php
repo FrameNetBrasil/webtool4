@@ -2,25 +2,24 @@
     use App\Database\Criteria;use App\Services\AppService;
     $frameIcon = view('components.icon.frame')->render();
     $structureIcon = view('components.icon.document')->render();
-    $frames = Criteria::table("qualiastructure as qs")
-        ->join("view_frame as f", "qs.idFrame","=","f.idFrame")
+    $frames = Criteria::table("view_frame as f")
+        ->join("view_qualiastructure as qs","f.idFrame","=","qs.idFrame")
         ->where("f.name","startswith", $search->frame)
-        ->where("f.idLanguage",AppService::getCurrentIdLanguage())
+        ->where("f.idLanguage", "=", AppService::getCurrentIdLanguage())
         ->select("qs.idQualiaStructure","f.idFrame","f.name as frame")
-        ->orderBy("f.name")
-        ->get()->keyBy("idFrame")->all();
+      ->orderBy("f.name")
+      ->get()->keyBy("idFrame")->all();
     $ids = array_keys($frames);
-    $structures = Criteria::table("qualiastructure as qs")
-            ->join("qualiarelation as qr", "qs.idQualiaRelation","=","qr.idQualiaRelation")
-            ->where("idFrame","IN", $ids)
-            ->orderBy("idQualiaStructure")
+    $structures = Criteria::byFilterLanguage("view_qualiastructure",[
+            "idFrame","IN", $ids
+            ])->orderBy("idQualiaStructure")
             ->get()->groupBy("idFrame")
             ->toArray();
         $data = [];
         foreach($frames as $f) {
            $children = array_map(fn($item) => [
              'id'=> $item->idQualiaStructure,
-             'text' => $structureIcon . $item->name . "_" . $item->idQualiaStructure,
+             'text' => $structureIcon . $item->relation . "_" . $item->idQualiaStructure,
              'state' => 'closed',
              'type' => 'structure'
             ], $structures[$f->idFrame] ?? []);

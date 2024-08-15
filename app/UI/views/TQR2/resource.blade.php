@@ -10,6 +10,13 @@
             hx-target="#editArea"
             hx-swap="innerHTML"
         ></x-button>
+        <x-button
+            label="New QualiaLU"
+            color="secondary"
+            hx-get="/tqr2/qualialu/new"
+            hx-target="#editArea"
+            hx-swap="innerHTML"
+        ></x-button>
     </x-slot:actions>
     <x-slot:grid>
         <div
