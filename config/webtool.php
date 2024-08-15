@@ -49,6 +49,7 @@ return [
             'framestructure' => ['Frame', '/frame', 'MASTER', []],
             'corpusstructure' => ['Corpus', '/corpus', 'MASTER', []],
             'lexiconstructure' => ['Lexicon', '/lexicon', 'MASTER', []],
+            'tqr2structure' => ['TQR2', '/tqr2', 'MASTER', []],
 //            'cxnstructure' => ['Construction', '/cxn', 'MASTER', []],
 //            'lemmastructure' => ['Lemma', '/lemma', 'MASTER', []],
 //            'lexemestructure' => ['Lexeme', '/lexeme', 'MASTER', []],
