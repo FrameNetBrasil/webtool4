@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TQR2;
 
+use App\Data\TQR2\CreateArgumentData;
 use App\Data\TQR2\CreateData;
 use App\Data\TQR2\SearchData;
 use App\Database\Criteria;
@@ -38,35 +39,52 @@ class ResourceController extends Controller
     public function edit(string $id)
     {
         $structure = Criteria::byId("qualiastructure", "idQualiaStructure", $id);
+        $relation = Criteria::byId("qualiarelation", "idQualiaRelation", $structure->idQualiaRelation);
         $frame = Frame::byId($structure->idFrame);
         return view("TQR2.edit", [
             "structure" => $structure,
-            'frame' => $frame
+            'frame' => $frame,
+            'relation' => $relation,
+            'arguments' => $this->getArguments($id),
+            "types" => $this->getTypes()
         ]);
     }
 
-    #[Get(path: '/tqr2/{id}/formEdit')]
-    public function formEdit(string $id)
+    public function getTypes(): array
     {
-        $arguments = Criteria::byFilter("qualiaargument", [
-            ["idQualiaStructure", "=", $id]
-        ]);
-        return view("TQR2.formEdit", [
-            'arguments' => $arguments
-        ]);
+        return ['A' => 'Agentive', 'T' => 'Telic', 'C1' => 'Constitutive_1', 'C2' => 'Constitutive_2', 'C3' => 'Constitutive_3'];
     }
 
-    #[Post(path: '/tqr2')]
-    public function update(UpdateData $data)
+    public function getArguments(int $idQualiaStructure): array
     {
-        try {
-            Criteria::function('dataset_update(?)', [$data->toJson()]);
-            $this->trigger("reload-gridDataset");
-            return $this->renderNotify("success", "Dataset updated.");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
+        debug($idQualiaStructure);
+        return Criteria::table("qualiaargument as qa")
+            ->join("view_frameelement as fe", "qa.idEntity", "=", "fe.idEntity")
+            ->where("qa.idQualiaStructure", $idQualiaStructure)
+            ->where("fe.idLanguage", AppService::getCurrentIdLanguage())
+            ->select("qa.idQualiaArgument", "qa.type", "fe.name as feName", "fe.coreType as feCoreType", "fe.idColor as feIdColor")
+            ->all();
     }
+
+//    #[Get(path: '/tqr2/{id}/formEdit')]
+//    public function formEdit(string $id)
+//    {
+//        return view("TQR2.formEdit", [
+//            'arguments' => $this->getArguments($id)
+//        ]);
+//    }
+
+//    #[Post(path: '/tqr2')]
+//    public function update(UpdateData $data)
+//    {
+//        try {
+//            Criteria::function('dataset_update(?)', [$data->toJson()]);
+//            $this->trigger("reload-gridDataset");
+//            return $this->renderNotify("success", "Dataset updated.");
+//        } catch (\Exception $e) {
+//            return $this->renderNotify("error", $e->getMessage());
+//        }
+//    }
 
     #[Get(path: '/tqr2/new')]
     public function new()
@@ -78,9 +96,7 @@ class ResourceController extends Controller
     public function create(CreateData $data)
     {
         try {
-            Criteria::create("qualiastructure", [
-                'idFrame' => $data->idFrame
-            ]);
+            Criteria::create("qualiastructure", $data->toArray());
             $this->trigger("reload-gridTQR2");
             return $this->renderNotify("success", "Structure created.");
         } catch (\Exception $e) {
@@ -92,11 +108,44 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
-            Criteria::function('dataset_delete(?, ?)', [
-                $id,
-                AppService::getCurrentIdUser()
-            ]);
+            Criteria::deleteById("qualiaargument", "idQualiaStructure", $id);
+            Criteria::deleteById("qualiastructure", "idQualiaStructure", $id);
             return $this->clientRedirect("/tqr2");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/tqr2/argument/new')]
+    public function createArgument(CreateArgumentData $data)
+    {
+        try {
+            Criteria::create("qualiaargument", $data->toCreate());
+            $this->trigger("reload-gridTQR2Argument");
+            return $this->renderNotify("success", "Argument created.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Get(path: '/tqr2/{id}/arguments')]
+    public function arguments(string $id)
+    {
+        $structure = Criteria::byId("qualiastructure", "idQualiaStructure", $id);
+        return view("TQR2.arguments", [
+            'structure' => $structure,
+            'arguments' => $this->getArguments($id),
+            "types" => $this->getTypes(),
+        ]);
+    }
+
+    #[Delete(path: '/tqr2/arguments/{id}')]
+    public function deleteArgument(string $id)
+    {
+        try {
+            Criteria::deleteById("qualiaargument", "idQualiaArgument", $id);
+            $this->trigger("reload-gridTQR2Argument");
+            return $this->renderNotify("success", "Argument removed.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

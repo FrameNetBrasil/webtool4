@@ -5,6 +5,10 @@
             label="Background Frame to (min 3 chars)"
             placeholder=""
         ></x-combobox.frame>
+        <x-combobox.qualia-relations-2
+            id="idQualiaRelation"
+            label="Relation"
+        ></x-combobox.qualia-relations-2>
     </x-slot:fields>
     <x-slot:buttons>
         <x-submit label="Save"></x-submit>
