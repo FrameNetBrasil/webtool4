@@ -26,6 +26,7 @@ class FeFrame extends Component
         public ?string $value = null,
         public ?string $name = null,
         public ?string $nullName = null,
+        public ?array  $coreType = [],
         public bool    $hasNull = false
     )
     {
@@ -35,7 +36,11 @@ class FeFrame extends Component
         $this->value = $this->value ?? $this->nullName ?? '';
         $this->options = [];
         if ($idFrame > 0) {
-            $fes = Criteria::byFilterLanguage("view_frameelement", ["idFrame", "=", $idFrame])->all();
+            $filter = [["idFrame", "=", $idFrame]];
+            if (!empty($this->coreType)) {
+                $filter[] = ["coreType", "IN", $this->coreType];
+            }
+            $fes = Criteria::byFilterLanguage("view_frameelement", $filter)->all();
             if ($this->hasNull) {
                 $this->options[] = [
                     'idFrameElement' => '-1',

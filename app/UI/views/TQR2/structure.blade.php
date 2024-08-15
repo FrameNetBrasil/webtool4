@@ -6,10 +6,12 @@
         ->join("view_frame as f", "qs.idFrame","=","f.idFrame")
         ->where("f.name","startswith", $search->frame)
         ->where("f.idLanguage",AppService::getCurrentIdLanguage())
+        ->select("qs.idQualiaStructure","f.idFrame","f.name as frame")
         ->orderBy("f.name")
         ->get()->keyBy("idFrame")->all();
     $ids = array_keys($frames);
-    $structures = Criteria::table("qualiastructure")
+    $structures = Criteria::table("qualiastructure as qs")
+            ->join("qualiarelation as qr", "qs.idQualiaRelation","=","qr.idQualiaRelation")
             ->where("idFrame","IN", $ids)
             ->orderBy("idQualiaStructure")
             ->get()->groupBy("idFrame")
@@ -18,13 +20,13 @@
         foreach($frames as $f) {
            $children = array_map(fn($item) => [
              'id'=> $item->idQualiaStructure,
-             'text' => $structureIcon . "structure_" . $item->idQualiaStructure,
+             'text' => $structureIcon . $item->name . "_" . $item->idQualiaStructure,
              'state' => 'closed',
              'type' => 'structure'
             ], $structures[$f->idFrame] ?? []);
             $data[] = [
                 'id' => $f->idFrame,
-                'text' => $frameIcon . $f->name,
+                'text' => $frameIcon . $f->frame,
                 'state' => 'closed',
                 'type' => 'frame',
                 'children' => $children

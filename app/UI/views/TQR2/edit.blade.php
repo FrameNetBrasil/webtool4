@@ -1,6 +1,6 @@
 <x-layout.crud>
     <x-slot:name>
-        <span class="color_frame">{{$frame->name}}</span>
+        <span class="color_frame">{{$frame->name}}</span>::{{$relation->name}}_{{$structure->idQualiaStructure}}
     </x-slot:name>
     <x-slot:detail>
         <div class="ui label tag wt-tag-id">
@@ -27,17 +27,22 @@
                     <x-hidden-field id="idQualiaStructure" :value="$structure->idQualiaStructure"></x-hidden-field>
                     <div class="grid">
                         <div class="col">
-                            <x-text-field
+                            <x-combobox.fe-frame
+                                id="idFrameElement"
+                                label="FE"
+                                :idFrame="$structure->idFrame"
+                                :coreType="['cty_core','cty_core-unexpressed']"
+                                class="w-25rem"
+                            ></x-combobox.fe-frame>
+                        </div>
+                        <div class="col">
+                            <x-combobox.options
                                 label="Type"
                                 id="type"
                                 value=""
-                            ></x-text-field>
-                        </div>
-                        <div class="col">
-                        </div>
-                        <div class="col">
-                        </div>
-                        <div class="col">
+                                :options="$types"
+                                class="w-10rem"
+                            ></x-combobox.options>
                         </div>
                     </div>
                 </x-slot:fields>
@@ -46,7 +51,7 @@
                 </x-slot:buttons>
             </x-form>
             <h2>Arguments</h2>
-            {{--    @include("Lexicon.lexemeentries")--}}
+                @include("TQR2.arguments")
         </div>
     </x-slot:main>
 </x-layout.crud>
