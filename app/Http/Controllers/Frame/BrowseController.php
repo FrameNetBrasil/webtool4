@@ -9,6 +9,7 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Frame;
 use App\Repositories\SemanticType;
+use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
@@ -126,9 +127,26 @@ class BrowseController extends Controller
     public static function listFrame(SearchData $search)
     {
         $result = [];
+        if (!is_null($search->idFramalDomain)) {
+            $frames = Criteria::table("view_frame as f")
+                ->join("view_frame_classification as c", "f.idFrame", "=", "c.idFrame")
+                ->where("f.idLanguage", AppService::getCurrentIdLanguage())
+                ->where("c.idSemanticType",$search->idFramalDomain)
+                ->select("f.idFrame","f.name","f.description")
+                ->orderby("f.name")->all();
+        } else if (!is_null($search->idFramalType)) {
+            $frames = Criteria::table("view_frame as f")
+                ->join("view_frame_classification as c", "f.idFrame", "=", "c.idFrame")
+                ->where("f.idLanguage", AppService::getCurrentIdLanguage())
+                ->where("c.idSemanticType",$search->idFramalType)
+                ->select("f.idFrame","f.name","f.description")
+                ->orderby("f.name")->all();
+        } else {
+            $frames = Criteria::byFilterLanguage("view_frame", ['name', "startswith", $search->frame])
+                ->orderBy('name')->all();
+        }
+
         //$frames = ViewFrame::listByFilter($search)->all();
-        $frames = Criteria::byFilterLanguage("view_frame", ['name', "startswith", $search->frame])
-            ->orderBy('name')->all();
         foreach ($frames as $row) {
             $result[$row->idFrame] = [
                 'id' => 'f' . $row->idFrame,
