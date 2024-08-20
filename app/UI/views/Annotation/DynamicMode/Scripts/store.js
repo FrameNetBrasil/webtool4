@@ -143,11 +143,11 @@ document.addEventListener('alpine:init', () => {
         const newObjectStateTracking = (Alpine.store('doStore').newObjectState === 'tracking');
         if (currentVideoState === 'playing') {
             if (!newObjectStateTracking) {
-                document.querySelector('#btnCreateObject').disabled = true;
-                document.querySelector('#btnStartTracking').disabled = true;
-                document.querySelector('#btnPauseTracking').disabled = true;
-                document.querySelector('#btnEndObject').disabled = true;
-                document.querySelector('#btnShowHideObjects').disabled = true;
+                $('#btnCreateObject').addClass('disabled');
+                $('#btnStartTracking').addClass('disabled');
+                $('#btnPauseTracking').addClass('disabled');
+                $('#btnEndObject').addClass('disabled');
+                $('#btnShowHideObjects').addClass('disabled');
                 let rate =  annotation.video.player.playbackRate();
                 if (rate > 0.9) {
                     Alpine.store('doStore').newObjectState = 'none';
@@ -156,19 +156,19 @@ document.addEventListener('alpine:init', () => {
         }
         if (currentVideoState === 'paused') {
             if (!newObjectStateTracking) {
-                document.querySelector('#btnCreateObject').disabled = false;
-                document.querySelector('#btnShowHideObjects').disabled = false;
+                $('#btnCreateObject').removeClass('disabled');
+                $('#btnShowHideObjects').removeClass('disabled');
             }
         }
     });
     Alpine.effect(async () => {
         const newObjectState = Alpine.store('doStore').newObjectState;
         if (newObjectState === 'creating') {
-            document.querySelector('#btnCreateObject').disabled = true;
-            document.querySelector('#btnStartTracking').disabled = true;
-            document.querySelector('#btnPauseTracking').disabled = true;
-            document.querySelector('#btnStopTracking').disabled = true;
-            document.querySelector('#btnEndObject').disabled = true;
+            $('#btnCreateObject').addClass('disabled');
+            $('#btnStartTracking').addClass('disabled');
+            $('#btnPauseTracking').addClass('disabled');
+            $('#btnStopTracking').addClass('disabled');
+            $('#btnEndObject').addClass('disabled');
             annotation.video.disablePlayPause();
         }
         if (newObjectState === 'created') {
@@ -177,29 +177,29 @@ document.addEventListener('alpine:init', () => {
             Alpine.store('doStore').currentVideoState = 'paused';
         }
         if (newObjectState === 'showing') {
-            document.querySelector('#btnCreateObject').disabled = true;
-            document.querySelector('#btnStartTracking').disabled = false;
-            document.querySelector('#btnPauseTracking').disabled = true;
-            document.querySelector('#btnStopTracking').disabled = true;
-            document.querySelector('#btnEndObject').disabled = true;
+            $('#btnCreateObject').addClass('disabled');
+            $('#btnStartTracking').removeClass('disabled');
+            $('#btnPauseTracking').addClass('disabled');
+            $('#btnStopTracking').addClass('disabled');
+            $('#btnEndObject').addClass('disabled');
             annotation.video.enablePlayPause();
         }
         if (newObjectState === 'tracking') {
             let pausedTracking = Alpine.store('doStore').currentVideoState === 'paused';
-            document.querySelector('#btnCreateObject').disabled = true;
-            document.querySelector('#btnStartTracking').disabled = !pausedTracking;
-            document.querySelector('#btnPauseTracking').disabled = pausedTracking;
-            document.querySelector('#btnStopTracking').disabled = !pausedTracking;
-            document.querySelector('#btnEndObject').disabled = !pausedTracking;
+            $('#btnCreateObject').addClass('disabled');
+            $('#btnStartTracking').disabled = !pausedTracking;
+            $('#btnPauseTracking').disabled = pausedTracking;
+            $('#btnStopTracking').disabled = !pausedTracking;
+            $('#btnEndObject').disabled = !pausedTracking;
             annotation.video.disablePlayPause();
         }
         if (newObjectState === 'none') {
             annotation.objects.clearFrameObject();
-            document.querySelector('#btnCreateObject').disabled = false;
-            document.querySelector('#btnStartTracking').disabled = true;
-            document.querySelector('#btnPauseTracking').disabled = true;
-            document.querySelector('#btnStopTracking').disabled = true;
-            document.querySelector('#btnEndObject').disabled = true;
+            $('#btnCreateObject').removeClass('disabled');
+            $('#btnStartTracking').addClass('disabled');
+            $('#btnPauseTracking').addClass('disabled');
+            $('#btnStopTracking').addClass('disabled');
+            $('#btnEndObject').addClass('disabled');
             annotation.video.enablePlayPause();
         }
     });

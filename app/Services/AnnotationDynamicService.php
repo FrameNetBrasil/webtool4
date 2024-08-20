@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Base;
 use App\Repositories\Corpus;
@@ -22,52 +23,28 @@ class AnnotationDynamicService
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $cmd = <<<SQL
-
-select do.idDynamicObject as idObject,
-       do.startFrame,
-       do.endFrame,
-       do.startTime,
-       do.endTime,
-       do.status,
-       do.origin,
-       do.idLU,
-       IF(do.idLU,concat(entries_flu.name,'.',lu.name),'') as lu,
-       do.idFrameElement,
-       fe.idFrame,
-       IFNULL(entries_f.name, '')  as frame,
-       do.idFrameElement as idFE,
-       IFNULL(entries_fe.name, '') as fe,
-       color.rgbBg as color
-from dynamicobject do
-         left join view_frameelement as fe on do.idFrameElement = fe.idFrameElement
-         left join view_ frame as f on fe.idFrame = f.idFrame
-         left join color on fe.idColor = color.idColor
-         left join view_lu on do.idLU = lu.idLU
-         left join view_frame flu on lu.idFrame = flu.idFrame
-where (do.idDocument = {$idDocument})
-and ((entries_f.idLanguage = {$idLanguage}) or (entries_f.idLanguage is null))
-and ((entries_fe.idLanguage = {$idLanguage}) or (entries_fe.idLanguage is null))
-and ((entries_flu.idLanguage = {$idLanguage}) or (entries_flu.idLanguage is null))
-order by do.startTime asc,do.endTime asc
-
-SQL;
-        $result = DB::select($cmd);
+        $result = Criteria::table("view_annotation_dynamic")
+            ->where("idLanguage", $idLanguage)
+            ->where("idDocument", $idDocument)
+            ->select("idDynamicObject","name","startFrame","endFrame","startTime","endTime","status","origin","idAnnotationLU","idLU","lu","idAnnotationFE","idFrameElement","idFrame","frame","fe","color")
+            ->all();
         $oMM = [];
-        foreach ($result as $i => $row) {
-            $oMM[] = $row->idObjectMM;
-        }
         $bboxes = [];
+        foreach ($result as $row) {
+            $oMM[] = $row->idDynamicObject;
+        }
         if (count($result) > 0) {
-            $bboxList = DynamicBBoxMM::listByObjectsMM($oMM)->all();
+            $bboxList = Criteria::table("view_dynamicobject_boundingbox")
+                ->whereIN("idDynamicObject", $oMM)
+                ->all();
             foreach ($bboxList as $bbox) {
-                $bboxes[$bbox->idObjectMM][] = $bbox;
+                $bboxes[$bbox->idDynamicObject][] = $bbox;
             }
         }
         $objects = [];
         foreach ($result as $i => $row) {
             $row->order = $i + 1;
-            $row->bboxes = $bboxes[$row->idObjectMM] ?? [];
+            $row->bboxes = $bboxes[$row->idDynamicObject] ?? [];
             $objects[] = $row;
         }
         return $objects;
