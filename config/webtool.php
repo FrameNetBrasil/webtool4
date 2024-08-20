@@ -42,7 +42,7 @@ return [
 //            'staticFrameMode2' => ['Static Frame Mode 2', '/annotation/staticFrameMode2', 'MASTER', []],
             'staticEvent' => ['Static Event', '/annotation/staticEvent', 'MASTER', []],
             'fe' => ['FE', '/annotation/fe', 'MASTER', []],
-//            'dynamicMode' => ['Dynamic Mode', '/annotation/dynamicMode', 'MASTER', []],
+            'dynamicMode' => ['Dynamic Mode', '/annotation/dynamicMode', 'MASTER', []],
 //            'layers' => ['Manage Layers', '/layer/formManager', 'fa fa-list fa16px', 'JUNIOR', 1, []],
         ]],
         'structure' => ['Structure', '/structure', 'MASTER', [

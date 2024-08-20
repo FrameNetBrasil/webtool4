@@ -1,4 +1,68 @@
 .dynamicAnnotationPane {
+
+    display: flex;
+    flex-flow: row;
+    height:100%;
+
+    .west {
+        display: flex;
+        flex-flow: column;
+
+        .video {
+
+        }
+
+        .controls {
+            flex-grow: 1;
+        }
+
+        .comment {
+            flex-grow: 1;
+        }
+    }
+
+    .center {
+        flex-grow: 1;
+        display: flex;
+        flex-flow: column;
+
+        .header {
+            display: flex;
+            flex-flow: row;
+
+            .tag {
+                text-align: left;
+                padding-left: 1rem;
+            }
+            .navigation {
+                text-align: right;
+                flex-grow: 1;
+
+                .previous{
+                    display: inline-block;
+
+                }
+                .next {
+                    display: inline-block;
+
+                }
+
+                a {
+                    display: inline;
+                    font-size: 14px;
+                    text-decoration: none;
+                    color: var(--wt-text-color);
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .annotation {
+
+        }
+
+    }
+
     .bbox {
         border: 1px solid #D3D3D3;
         position: absolute;
