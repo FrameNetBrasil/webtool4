@@ -221,7 +221,7 @@ annotation.objects = {
     },
     creatingObject() {
         annotation.drawBox.init();
-        console.log("creating new object")
+        console.log("creating new object");
         document.querySelector('#canvas').style.cursor = 'crosshair';
         $("#canvas").on('mousedown', function (e) {
             annotation.drawBox.handleMouseDown(e);
@@ -237,7 +237,7 @@ annotation.objects = {
         });
     },
     async createdObject() {
-        console.log("new box created")
+        console.log("new box created");
         document.querySelector('#canvas').style.cursor = 'default';
         $("#canvas").off('mousedown');
         $("#canvas").off('mousemove');
@@ -302,17 +302,18 @@ annotation.objects = {
                 endTime: annotation.video.timeFromFrame(annotatedObject.object.endFrame),
                 origin: 2,
                 frames: [],
-            }
+            };
             let data = await annotation.objects.saveObject(annotatedObject, params);
             Alpine.store('doStore').selectObjectByIdObjectMM(data.idDynamicObjectMM);
 
             //Alpine.store('doStore').newObjectState = 'tracking';
-            manager.messager("success", "New object created.");
+            //manager.messager("success", "New object created.");
             return data;
         } catch (e) {
             Alpine.store('doStore').newObjectState = 'none';
             Alpine.store('doStore').currentVideoState = 'paused';
-            manager.messager('error', e.message);
+            //manager.messager('error', e.message);
+            console.log(e.message);
             return null;
         }
     },

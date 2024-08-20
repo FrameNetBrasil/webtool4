@@ -3,10 +3,15 @@
     $projectIcon = view('components.icon.project')->render();
     $corpusIcon = view('components.icon.corpus')->render();
     $documentIcon = view('components.icon.document')->render();
+    // get projects for documents that has videos
+    $listProjects = Criteria::table("view_document_video as v")
+        ->join("view_project_docs as p","v.idDocument","=","p.idDocument")
+        ->where("p.idLanguage",\App\Services\AppService::getCurrentIdLanguage())
+        ->where("p.projectName","<>","Default Project")
+        ->select("p.projectName")
+        ->chunkResult("projectName","projectName");
     // get the documents allowed to this user
-    $taskDocs = Project::getAllowedDocsForUser([
-        'Pedro_pelo_mundo',
-    ]);
+    $taskDocs = Project::getAllowedDocsForUser($listProjects);
     $projects = array_map(fn($item) => [
        'id'=> 'p'.$item->idProject,
        'text' => $projectIcon . $item->projectName,

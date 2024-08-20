@@ -11,7 +11,7 @@
                     @include("Annotation.DynamicMode.Panes.videoPane")
                 </div>
                 <div class="controls">
-{{--                        @include('Annotation.StaticEvent.Panes.sentencePane')--}}
+                    @include("Annotation.DynamicMode.Panes.controlsPane")
                 </div>
                 <div class="comment">
 {{--                    @include('Annotation.StaticEvent.Panes.commentPane')--}}

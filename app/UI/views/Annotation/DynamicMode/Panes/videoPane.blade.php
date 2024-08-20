@@ -37,10 +37,13 @@
             }
         };
 
+        //<span class="vjs-icon-placeholder" aria-hidden="true"></span>
+        //<span class="vjs-control-text" aria-live="polite">Play</span>
+
         // button frame forward
         let btnForward = player.controlBar.addChild('button', {}, 0);
         let btnForwardDom = btnForward.el();
-        btnForwardDom.innerHTML = '<span class="material-icons-outlined wt-icon">skip_next</span>';
+        btnForwardDom.innerHTML = '<span class="vjs-icon-placeholder"  aria-hidden="true" title="Next frame"><i class="video-material">skip_next</i></span>';
         btnForwardDom.onclick = function () {
             console.log('click forward');
             let state = Alpine.store('doStore').currentVideoState;
@@ -54,7 +57,7 @@
         // button frame backward
         let btnBackward = player.controlBar.addChild('button', {}, 0);
         let btnBackwardDom = btnBackward.el();
-        btnBackwardDom.innerHTML = '<span class="material-icons-outlined wt-icon">skip_previous</span>';
+        btnBackwardDom.innerHTML = '<span class="vjs-icon-placeholder"  aria-hidden="true" title="Previous frame"><i class="video-material">skip_previous</i></span>';
         btnBackwardDom.onclick = function () {
             console.log('click backward');
             let state = Alpine.store('doStore').currentVideoState;
