@@ -20,8 +20,9 @@ annotation.objects = {
     get: (idObject) => {
         return annotation.objects.tracker.annotatedObjects.find(o => o.idObject === idObject);
     },
-    getByIdObjectMM: (idObjectMM) => {
-        return annotation.objects.tracker.annotatedObjects.find(o => o.object.idObjectMM === idObjectMM);
+    getByIdDynamicObject: (idDynamicObject) => {
+        console.log('get', annotation.objects.tracker.annotatedObjects);
+        return annotation.objects.tracker.annotatedObjects.find(o => o.object.idDynamicObject === idDynamicObject);
     },
     /*
     clear: (annotatedObject) => {
@@ -31,31 +32,6 @@ annotation.objects = {
     clearAll: () => {
         annotation.objects.tracker.clearAll();
     },
-    /*
-    getByIdObjectMM: (idObjectMM) => {
-        return dynamicObjects.tracker.annotatedObjects.find(o => o.idObjectMM === idObjectMM);
-    },
-    clearObject: (i) => {
-        let annotatedObject = dynamicObjects.tracker.get(i);
-        dynamicObjects.tracker.clear(annotatedObject);
-    },
-    toAbsoluteCoord: (x, y, width, height, currentScale) => {
-        return {
-            x: Math.round(x / currentScale),
-            y: Math.round(y / currentScale),
-            width: Math.round(width / currentScale),
-            height: Math.round(height / currentScale)
-        }
-    },
-    toScaledCoord: (x, y, width, height, currentScale) => {
-        return {
-            x: Math.round(x * currentScale),
-            y: Math.round(y * currentScale),
-            width: Math.round(width * currentScale),
-            height: Math.round(height * currentScale)
-        }
-    },
-    */
     interactify: (annotatedObject, onChange) => {
         let dom = annotatedObject.dom;
         let bbox = $(dom);
@@ -130,10 +106,10 @@ annotation.objects = {
                         frameObject.bbox = bbox;
                         frameObject.isGroundTruth = true;
                         annotatedObject.addToFrame(frameObject);
-                        console.log(frameObject.idDynamicBBoxMM, bbox)
+                        console.log(frameObject.idBoundingBox, bbox);
                         //annotation.objects.saveRawObject(annotatedObject);
                         annotation.api.updateBBox({
-                            idDynamicBBoxMM: frameObject.idDynamicBBoxMM,
+                            idBoundingBox: frameObject.idBoundingBox,
                             bbox: bbox
                         });
                     }
@@ -150,8 +126,8 @@ annotation.objects = {
                     let w = parseInt(polygon.width);
                     let h = parseInt(polygon.height);
                     bbox = new BoundingBox(x, y, w, h);
-                    let idDynamicBBoxMM = parseInt(polygon.idDynamicBBoxMM);
-                    let frameObject = new Frame(frameNumber, bbox, isGroundThrough, idDynamicBBoxMM);
+                    let idBoundingBox = parseInt(polygon.idBoundingBox);
+                    let frameObject = new Frame(frameNumber, bbox, isGroundThrough, idBoundingBox);
                     frameObject.blocked = (parseInt(polygon.blocked) === 1);
                     annotatedObject.addToFrame(frameObject);
                     lastFrame = frameNumber;
@@ -216,7 +192,7 @@ annotation.objects = {
             console.log(objects);
             objects.forEach(o => {
                 o.drawBoxInFrame(frameNumber, 'showing');
-            })
+            });
         }
     },
     creatingObject() {
@@ -281,18 +257,17 @@ annotation.objects = {
             annotation.objects.initializeNewObject(annotatedObject, currentFrame);
             annotation.objects.interactify(
                 annotatedObject,
-                (x, y, width, height, idDynamicBBoxMM) => {
+                (x, y, width, height, idBoundingBox) => {
                     let bbox = new BoundingBox(x, y, width, height);
                     let currentFrame = Alpine.store('doStore').currentFrame;
-                    let frameObject = new Frame(currentFrame, bbox, true, idDynamicBBoxMM);
+                    let frameObject = new Frame(currentFrame, bbox, true, idBoundingBox);
                     annotatedObject.addToFrame(frameObject);
                     annotation.objects.saveRawObject(annotatedObject);
                 }
             );
             console.log('##### creating newObject');
             let params = {
-                idObjectMM: null,
-                idDynamicObjectMM: null,
+                idDynamicObject: null,
                 startFrame: annotatedObject.object.startFrame,
                 endFrame: annotatedObject.object.endFrame,
                 idFrame: null,
@@ -304,25 +279,25 @@ annotation.objects = {
                 frames: [],
             };
             let data = await annotation.objects.saveObject(annotatedObject, params);
-            Alpine.store('doStore').selectObjectByIdObjectMM(data.idDynamicObjectMM);
-
-            //Alpine.store('doStore').newObjectState = 'tracking';
+            Alpine.store('doStore').selectObjectByIdDynamicObject(data.idDynamicObject);
+            Alpine.store('doStore').newObjectState = 'tracking';
             //manager.messager("success", "New object created.");
+            manager.notify("success", "New object created.");
             return data;
         } catch (e) {
             Alpine.store('doStore').newObjectState = 'none';
             Alpine.store('doStore').currentVideoState = 'paused';
-            //manager.messager('error', e.message);
+            manager.notify('error', e.message);
             console.log(e.message);
             return null;
         }
     },
     getObjectFrameData: (currentObject, startFrame, endFrame) => {
-        console.log('getObjectFrameData', currentObject, startFrame, endFrame)
+        console.log('getObjectFrameData', currentObject, startFrame, endFrame);
         let data = [];
         //let lastFrame = currentObject.endFrame;
         let lastFrame = startFrame;
-        for (frame of currentObject.frames) {
+        for (var frame of currentObject.frames) {
             if ((frame.frameNumber >= startFrame) && (frame.frameNumber <= endFrame)) {
                 if (frame.bbox !== null) {
                     data.push({
@@ -333,7 +308,7 @@ annotation.objects = {
                         width: frame.bbox.width,
                         height: frame.bbox.height,
                         blocked: frame.blocked ? 1 : 0,
-                    })
+                    });
                     lastFrame = frame.frameNumber;
                 }
             }
@@ -341,12 +316,12 @@ annotation.objects = {
         return {
             frames: data,
             lastFrame: lastFrame
-        }
+        };
     },
 
     saveObject: async (currentObject, params) => {
-        params.idDocumentMM = annotation.documentMM.idDocumentMM;
-        console.log('saveObject', currentObject, params)
+        params.idDocument = annotation.document.idDocument;
+        console.log('saveObject', currentObject, params);
         if (params.startFrame > params.endFrame) {
             throw new Error('endFrame must be greater or equal to startFrame.');
         }
@@ -401,11 +376,11 @@ annotation.objects = {
     },
     saveRawObject: async (currentObject) => {
         try {
-            console.log('saving raw object #', currentObject.idObject)
+            console.log('saving raw object #', currentObject.idObject);
             let params = {
-                idDocumentMM: annotation.documentMM.idDocumentMM,
-                idObjectMM: currentObject.object.idObjectMM,
-                idDynamicObjectMM: currentObject.object.idObjectMM,
+                idDocument: annotation.document.idDocument,
+                //idObjectMM: currentObject.object.idObjectMM,
+                idDynamicObject: currentObject.object.idObject,
                 startFrame: currentObject.object.startFrame,
                 endFrame: currentObject.object.endFrame,
                 idFrame: currentObject.object.idFrame,
@@ -415,7 +390,7 @@ annotation.objects = {
                 endTime: annotation.video.timeFromFrame(currentObject.object.endFrame),
                 origin: 2,
                 frames: [],
-            }
+            };
             annotation.objects.saveObject(currentObject, params);
         } catch (e) {
             Alpine.store('doStore').newObjectState = 'none';
@@ -439,13 +414,13 @@ annotation.objects = {
         }
     },
     async cloneObject(idObject) {
-        let sourceObject = annotation.objects.get(idObject)
+        let sourceObject = annotation.objects.get(idObject);
         let cloneObject = new DynamicObject(sourceObject.object);
         cloneObject.cloneFrom(sourceObject);
         let params = {
-            idDocumentMM: annotation.documentMM.idDocumentMM,
-            idObjectMM: null,
-            idDynamicObjectMM: null,
+            idDocument: annotation.document.idDocument,
+            //idObjectMM: null,
+            idDynamicObject: null,
             startFrame: cloneObject.object.startFrame,
             endFrame: cloneObject.object.endFrame,
             idFrame: null,
@@ -455,9 +430,9 @@ annotation.objects = {
             endTime: annotation.video.timeFromFrame(cloneObject.object.endFrame),
             origin: 2,
             frames: cloneObject.object.frames,
-        }
+        };
         let data = await annotation.objects.saveObject(cloneObject, params);
-        Alpine.store('doStore').selectObjectByIdObjectMM(data.idDynamicObjectMM);
+        Alpine.store('doStore').selectObjectByIdDynamicObject(data.idDynamicObject);
         manager.messager("success", "Object cloned.");
     }
-}
+};

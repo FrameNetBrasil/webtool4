@@ -11,10 +11,10 @@ annotation.api = {
             }
         });
     },
-    deleteObject: async (idObjectMM) => {
+    deleteObject: async (idDynamicObject) => {
         let result = null;
         await $.ajax({
-            url: "/annotation/dynamicMode/" + idObjectMM,
+            url: "/annotation/dynamicMode/" + idDynamicObject,
             method: "DELETE",
             dataType: "json",
             data: {
