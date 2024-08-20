@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\DynamicMode\DocumentData;
+use App\Data\Annotation\DynamicMode\ObjectData;
 use App\Data\Annotation\DynamicMode\SearchData;
+use App\Data\Annotation\DynamicMode\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
@@ -74,6 +76,7 @@ class DynamicModeController extends Controller
             'comment' => $comment->comment ?? ''
         ]);
     }
+
     #[Get(path: '/annotation/dynamicMode/{idDocument}')]
     public function annotation(int $idDocument)
     {
@@ -89,17 +92,15 @@ class DynamicModeController extends Controller
     }
 
     #[Post(path: '/annotation/dynamicMode/updateObject')]
-    public function updateObject()
+    public function updateObject(ObjectData $data)
     {
-        debug($this->data);
+        debug($data);
         try {
-            $dynamicObjectMM = new DynamicObjectMM();
-            $dynamicObjectMM->updateObject($this->data);
-            return $dynamicObjectMM->getData();
-//            $this->renderJSon(json_encode(['type' => 'success', 'message' => 'Object saved.', 'data' => $result]));
+            $idDynamicObject = AnnotationDynamicService::updateObject($data);
+            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
-//            $this->renderJSon(json_encode(['type' => 'error', 'message' => $e->getMessage()]));
+            return $this->renderNotify("error", $e->getMessage());
         }
     }
 
@@ -117,13 +118,16 @@ class DynamicModeController extends Controller
     }
 
     #[Post(path: '/annotation/dynamicMode/updateBBox')]
-    public function updateBBox()
+    public function updateBBox(UpdateBBoxData $data)
     {
         try {
-            debug($this->data);
-            $dynamicBBoxMM = new DynamicBBoxMM(data('idDynamicBBoxMM'));
-            $dynamicBBoxMM->updateBBox(data('bbox'));
-            return $dynamicBBoxMM->getData();
+            debug($data);
+            $idBoundingBox = AnnotationDynamicService::updateBBox($data);
+            return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
+
+//            $dynamicBBoxMM = new DynamicBBoxMM(data('idDynamicBBoxMM'));
+//            $dynamicBBoxMM->updateBBox(data('bbox'));
+//            return $dynamicBBoxMM->getData();
 //            $this->renderJSon(json_encode(['type' => 'success', 'message' => 'Object saved.', 'data' => $result]));
         } catch (\Exception $e) {
             debug($e->getMessage());

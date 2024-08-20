@@ -40,7 +40,6 @@ document.addEventListener('alpine:init', () => {
         selectObject(idObject) {
             if (idObject === null) {
                 this.currentObject = null;
-
                 this.newObjectState = 'none';
             } else {
                 let object = annotation.objects.get(idObject);
@@ -54,8 +53,10 @@ document.addEventListener('alpine:init', () => {
             }
             annotationGridObject.selectRowByObject(idObject);
         },
-        selectObjectByIdObjectMM(idObjectMM) {
-            let object = annotation.objects.getByIdObjectMM(idObjectMM);
+        selectObjectByIdDynamicObject(idDynamicObject) {
+            console.log('getting', idDynamicObject);
+            let object = annotation.objects.getByIdDynamicObject(idDynamicObject);
+            console.log('after', object);
             this.selectObject(object.idObject);
         },
         selectObjectFrame(idObject, frameNumber) {
@@ -91,9 +92,9 @@ document.addEventListener('alpine:init', () => {
             //     this.$store.commit('updateObjectPane', true);
 
         },
-        async deleteObject(idObjectMM) {
+        async deleteObject(idDynamicObject) {
             if (this.currentVideoState === 'paused') {
-                await annotation.api.deleteObject(idObjectMM);
+                await annotation.api.deleteObject(idDynamicObject);
                 this.updateObjectList();
                 this.selectObject(null);
             }
@@ -212,6 +213,7 @@ document.addEventListener('alpine:init', () => {
         }
         if (dataState === 'loaded') {
             console.log('Data Loaded');
+            console.log(annotation.objectList);
             window.annotation.objects.annotateObjects(annotation.objectList);
             $('#gridObjects').datagrid({
                 data: annotation.objectList

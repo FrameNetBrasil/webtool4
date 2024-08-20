@@ -125,7 +125,7 @@ class DynamicObject {
     cloneFrom(sourceObject) {
         // this.idObject is unique
         this.object = sourceObject.object;
-        this.object.idDynamicObjectMM = null;
+        this.object.idDynamicObject = null;
         this.object.idFrame = null;
         this.object.frame = '';
         this.object.idFE = null;

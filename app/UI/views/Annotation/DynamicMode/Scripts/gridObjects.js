@@ -35,7 +35,7 @@ let annotationGridObject = {
                                     <span
                                         class="action material-icons-outlined wt-datagrid-icon wt-icon-delete cursor-pointer"
                                         title="delete Object"
-                                        hx-delete="/annotation/dynamicMode/object/${row.idObjectMM}"
+                                        hx-delete="/annotation/dynamicMode/object/${row.idDynamicObject}"
                                     ></span></div>`
             },
         },
@@ -127,10 +127,10 @@ let annotationGridObject = {
             },
         },
         {
-            field: 'idObjectMM',
+            field: 'idDynamicObject',
             title: 'id',
             formatter: function (value, row, index) {
-                return `<span class="wt-tag">#${row.idObjectMM}</span>`;
+                return `<span class="wt-tag">#${row.idDynamicObject}</span>`;
             },
         },
     ],
@@ -223,7 +223,7 @@ $('#gridObjects').datagrid({
                 } else if (annotationGridObject.fieldClicked === 'endFrame') {
                     Alpine.store('doStore').selectObjectFrame(row.order, row.endFrame);
                 } else if (annotationGridObject.fieldClicked === 'delete') {
-                    Alpine.store('doStore').deleteObject(row.idObjectMM);
+                    Alpine.store('doStore').deleteObject(row.idDynamicObject);
                 } else if (annotationGridObject.fieldClicked === 'clone') {
                     annotation.objects.cloneObject(row.order);
                 } else {

@@ -67,6 +67,14 @@ var manager = {
         });
 
          */
+    },
+    notify(type, message) {
+        $("body").trigger("notify",{
+            detail: {
+                type: type,
+                message: message
+            }
+        });
     }
 };
 

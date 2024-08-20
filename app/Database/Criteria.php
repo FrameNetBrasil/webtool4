@@ -167,12 +167,15 @@ class Criteria extends Builder
                 $this->whereIn($column, $value);
             } else if ($uOp === 'NOT IN') {
                 $this->whereNotIn($column, $value);
+            } else if ($uOp === 'LEFT') {
+                $this->whereRaw("(({$column} = {$value}) or ({$column} IS NULL))");
             } else {
                 parent::where($column, $operator, $value, $boolean);
             }
         } else {
             parent::where($column, $operator, $value, $boolean);
         }
+
         return $this;
     }
 
