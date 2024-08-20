@@ -77,7 +77,7 @@
                     $("#corpusTree").tree('toggle', node.target);
                 }
                 if (node.type === 'document') {
-                    window.location = `Panes/dynamicMode/${node.id}`;
+                    window.location = `/annotation/dynamicMode/${node.id}`;
                 }
             }
         });

@@ -19,7 +19,7 @@ use Orkester\Manager;
 
 class AnnotationDynamicService
 {
-    public static function getObjectsByDocument(int $idDocumentVideo): array
+    public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $cmd = <<<SQL
