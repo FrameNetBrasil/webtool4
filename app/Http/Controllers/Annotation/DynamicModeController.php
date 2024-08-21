@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Annotation;
 
+use App\Data\Annotation\DynamicMode\AnnotationCommentData;
 use App\Data\Annotation\DynamicMode\DocumentData;
 use App\Data\Annotation\DynamicMode\ObjectData;
 use App\Data\Annotation\DynamicMode\SearchData;
@@ -59,11 +60,12 @@ class DynamicModeController extends Controller
             ->where("idDocument", $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $idDocument])->first();
+        $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $documentVideo->idDocumentVideo])->first();
 
 //        $annotation =  AnnotationStaticEventService::getObjectsForAnnotationImage($document->idDocument, $sentence->idSentence);
         return DocumentData::from([
             'idDocument' => $idDocument,
+            'idDocumentVideo' => $documentVideo->idDocumentVideo,
 //            'idPrevious' => AnnotationStaticEventService::getPrevious($document->idDocument,$idDocumentSentence),
 //            'idNext' => AnnotationStaticEventService::getNext($document->idDocument,$idDocumentSentence),
             'document' => $document,
@@ -86,11 +88,10 @@ class DynamicModeController extends Controller
     }
 
     #[Get(path: '/annotation/dynamicMode/gridObjects/{idDocument}')]
-    public function gridObjects(int $idDocument)
+    public function objectsForGrid(int $idDocument)
     {
         return AnnotationDynamicService::getObjectsByDocument($idDocument);
     }
-
     #[Post(path: '/annotation/dynamicMode/updateObject')]
     public function updateObject(ObjectData $data)
     {
@@ -132,7 +133,16 @@ class DynamicModeController extends Controller
         } catch (\Exception $e) {
             debug($e->getMessage());
 //            $this->renderJSon(json_encode(['type' => 'error', 'message' => $e->getMessage()]));
+            return $this->renderNotify("error", $e->getMessage());
         }
+    }
+
+    #[Get(path: '/annotation/dynamicMode/fes/{idFrame}')]
+    public function feCombobox(int $idFrame)
+    {
+        return view("Annotation.DynamicMode.Panes.fes", [
+            'idFrame' => $idFrame
+        ]);
     }
 
     #[Get(path: '/annotation/dynamicMode/gridSentences/{idDocument}')]
@@ -140,4 +150,32 @@ class DynamicModeController extends Controller
     {
         return (array)AnnotationDynamicService::listSentencesByDocument($idDocument);
     }
+    #[Post(path: '/annotation/dynamicMode/comment')]
+    public function annotationComment(AnnotationCommentData $data)
+    {
+        debug($data);
+        try {
+            $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $data->idDocumentVideo])->first();
+            if ($comment->idAnnotationComment) {
+                Criteria::table("annotationcomment")
+                    ->where("idAnnotationComment", "=", $comment->idAnnotationComment)
+                    ->update([
+                        "type" => "StaticEvent",
+                        "id1" => $data->idDocumentVideo,
+                        "comment" => $data->comment
+                    ]);
+            } else {
+                Criteria::table("annotationcomment")
+                    ->insert([
+                        "type" => "StaticEvent",
+                        "id1" => $data->idDocumentVideo,
+                        "comment" => $data->comment
+                    ]);
+            }
+            return $this->renderNotify("success", "Comment added.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
 }

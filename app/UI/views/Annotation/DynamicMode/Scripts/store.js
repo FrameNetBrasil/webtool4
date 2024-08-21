@@ -11,6 +11,7 @@ document.addEventListener('alpine:init', () => {
         currentObjectState: 'none',
         newObjectState: 'none',
         showHideBoxesState: 'hide',
+        ox: [],
         init() {
             annotation.objects.init();
         },
@@ -21,6 +22,9 @@ document.addEventListener('alpine:init', () => {
             };
             annotation.objects.config(config);
             annotation.drawBox.config(config);
+        },
+        setObjects(objects) {
+            this.ox = objects;
         },
         async updateObjectList() {
             this.dataState = 'loading';
@@ -207,18 +211,20 @@ document.addEventListener('alpine:init', () => {
     Alpine.effect(async () => {
         const dataState = Alpine.store('doStore').dataState;
         if (dataState === 'loading') {
-            if (!$('#gridObjects').length) {
-                $('#gridObjects').datagrid('loading');
-            }
+            // if (!$('#gridObjects').length) {
+            //     $('#gridObjects').datagrid('loading');
+            // }
         }
         if (dataState === 'loaded') {
             console.log('Data Loaded');
             console.log(annotation.objectList);
             window.annotation.objects.annotateObjects(annotation.objectList);
-            $('#gridObjects').datagrid({
-                data: annotation.objectList
-            });
-            $('#gridObjects').datagrid('loaded');
+            // $('#gridObjects').datagrid({
+            //     data: annotation.objectList
+            // });
+            // $('#gridObjects').datagrid('loaded');
+            Alpine.store('doStore').setObjects(annotation.objectList);
+            console.log(Alpine.store('doStore').ox.length);
             Alpine.store('doStore').newObjectState = 'none';
             Alpine.store('doStore').currentVideoState = 'paused';
 

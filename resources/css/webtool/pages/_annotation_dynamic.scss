@@ -134,8 +134,13 @@
             }
         }
 
-        .annotation {
+        .form {
+            margin-top: 8px;
+        }
 
+        .grids {
+            padding-top: 8px;
+            flex-grow: 1;
         }
 
     }

@@ -25,6 +25,7 @@
                 minCharacters: 3,
                 onSelect: (result) => {
                     $('#{{$id}}').val(result.idFrame);
+                    {!! $onSelect !!}
                 }
             })
         ;

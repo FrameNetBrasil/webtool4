@@ -3,10 +3,10 @@
     <div id="{{$id}}_search" class="ui very short search">
         <div class="ui left icon small input">
             <input type="hidden" id="{{$id}}" name="{{$id}}" value="">
-            <input id="{{$id}}_input" class="prompt" type="search" placeholder="{{$placeholder}}">
+            <input id="{{$id}}_input" {{$attributes->class(['prompt'])}} type="search" placeholder="{{$placeholder}}">
             <i class="search icon"></i>
         </div>
-        <div class="results"></div>
+        <div {{$attributes->class(['results'])}}></div>
     </div>
 </div>
 <script>

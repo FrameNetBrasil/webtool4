@@ -7,6 +7,7 @@
             name="{{$id}}"
             value="{{$value}}"
             placeholder="{{$placeholder}}"
+            {{$attributes->class([])}}
         >
     </div>
 </div>
