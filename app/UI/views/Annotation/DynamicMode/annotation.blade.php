@@ -34,8 +34,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex flex-column flex-grow-1" x-data="$store.doStore">
                 @include("Annotation.DynamicMode.Panes.formPane")
                 @include("Annotation.DynamicMode.Panes.gridsPane")
+                </div>
                 <script type="text/javascript" src="/scripts/vatic/dist/compatibility.js"></script>
                 <script type="text/javascript" src="/scripts/vatic/dist/jszip.js"></script>
                 <script type="text/javascript" src="/scripts/vatic/dist/StreamSaver.js"></script>
@@ -61,8 +63,8 @@
                     @include("Annotation.DynamicMode.Scripts.video")
                     @include("Annotation.DynamicMode.Scripts.drawBox")
                     @include("Annotation.DynamicMode.Scripts.objects")
-                    @include("Annotation.DynamicMode.Scripts.gridObjects")
-                    @include("Annotation.DynamicMode.Scripts.gridSentences")
+{{--                    @include("Annotation.DynamicMode.Scripts.gridObjects")--}}
+{{--                    @include("Annotation.DynamicMode.Scripts.gridSentences")--}}
                     @include("Annotation.DynamicMode.Scripts.formObject")
                     @include("Annotation.DynamicMode.Scripts.store")
 

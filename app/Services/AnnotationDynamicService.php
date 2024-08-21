@@ -173,38 +173,40 @@ class AnnotationDynamicService
     }
     public static function listSentencesByDocument($idDocument): array
     {
-        $result = [];
-        $sentences = DynamicSentenceMM::listByDocument($idDocument);
-        $annotation = collect(ViewAnnotationSet::listFECEByIdDocument($idDocument))->groupBy('idSentence')->all();
-        foreach ($sentences as $sentence) {
-            if (isset($annotation[$sentence->idSentence])) {
-                $sentence->decorated = self::decorateSentence($sentence->text, $annotation[$sentence->idSentence]);
-            } else {
-                $targets = [];
-                $sentence->decorated = self::decorateSentence($sentence->text, $targets);
+        $sentences = Criteria::table("sentence")
+            ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            ->join("view_sentence_timespan as st", "sentence.idSentence", "=", "st.idSentence")
+            ->join("document as d", "ds.idDocument", "=", "d.idDocument")
+            ->where("d.idDocument", $idDocument)
+            ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence","st.startTime","st.endTime")
+            ->orderBy("ds.idDocumentSentence")
+            ->limit(1000)
+            ->get()->keyBy("idDocumentSentence")->all();
+        if (!empty($sentences)) {
+            $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
+            foreach ($targets as $idDocumentSentence => $spans) {
+                $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);
             }
-            $result[] = $sentence;
         }
-        return $result;
+        return $sentences;
     }
 
-    public static function decorateSentence($sentence, $labels): string
+
+    public static function decorateSentenceTarget($text, $spans)
     {
         $decorated = "";
         $ni = "";
         $i = 0;
-        foreach ($labels as $label) {
-            $style = 'background-color:#' . $label->rgbBg . ';color:#' . $label->rgbFg . ';';
-            if ($label->startChar >= 0) {
-                $title = isset($label->frameName) ? " title='{$label->frameName}' " : '';
-                $decorated .= mb_substr($sentence, $i, $label->startChar - $i);
-                $decorated .= "<span {$title} style='{$style}'>" . mb_substr($sentence, $label->startChar, $label->endChar - $label->startChar + 1) . "</span>";
-                $i = $label->endChar + 1;
-            } else { // null instantiation
-                $ni .= "<span style='{$style}'>" . $label->instantiationType . "</span> " . $decorated;
+        foreach ($spans as $span) {
+            //$style = 'background-color:#' . $label['rgbBg'] . ';color:#' . $label['rgbFg'] . ';';
+            if ($span->startChar >= 0) {
+                $decorated .= mb_substr($text, $i, $span->startChar - $i);
+                $decorated .= "<span class='color_target'>" . mb_substr($text, $span->startChar, $span->endChar - $span->startChar + 1) . "</span>";
+                $i = $span->endChar + 1;
             }
         }
-        return $ni . $decorated . mb_substr($sentence, $i);
+        $decorated = $decorated . mb_substr($text, $i);
+        return $decorated;
     }
 
 

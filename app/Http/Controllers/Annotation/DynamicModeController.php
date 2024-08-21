@@ -145,10 +145,13 @@ class DynamicModeController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/dynamicMode/gridSentences/{idDocument}')]
+    #[Get(path: '/annotation/dynamicMode/sentences/{idDocument}')]
     public function gridSentences(int $idDocument)
     {
-        return (array)AnnotationDynamicService::listSentencesByDocument($idDocument);
+        $sentences = AnnotationDynamicService::listSentencesByDocument($idDocument);
+        return view("Annotation.DynamicMode.Panes.sentences", [
+            'sentences' => $sentences
+        ]);
     }
     #[Post(path: '/annotation/dynamicMode/comment')]
     public function annotationComment(AnnotationCommentData $data)
