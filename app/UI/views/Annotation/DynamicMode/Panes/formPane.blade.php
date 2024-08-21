@@ -1,4 +1,5 @@
-<div id="form" x-data="$store.doStore">
+{{--<div id="form" x-data="$store.doStore">--}}
+<div class="form">
     {{--    <template x-if="currentObject?.object?.order">--}}
     <x-form id="formObject" title="" center="true">
         <x-slot:fields>
