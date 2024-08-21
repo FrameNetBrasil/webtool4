@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Data\Annotation\DynamicMode\ObjectData;
+use App\Data\Annotation\DynamicMode\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Base;
@@ -163,6 +164,13 @@ class AnnotationDynamicService
         return $idDynamicObject;
     }
 
+    public static function updateBBox(UpdateBBoxData $data): int
+    {
+        Criteria::table("boundingbox")
+            ->where("idBoundingBox", $data->idBoundingBox)
+            ->update($data->bbox);
+        return $data->idBoundingBox;
+    }
     public static function listSentencesByDocument($idDocument): array
     {
         $result = [];

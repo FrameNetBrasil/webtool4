@@ -14,7 +14,7 @@
                     @include("Annotation.DynamicMode.Panes.controlsPane")
                 </div>
                 <div class="comment">
-{{--                    @include('Annotation.StaticEvent.Panes.commentPane')--}}
+                    @include("Annotation.DynamicMode.Panes.commentPane")
                 </div>
             </div>
             <div class="center">
@@ -33,23 +33,9 @@
                             #{{$idDocument}}
                         </div>
                     </div>
-{{--                    <div class="navigation">--}}
-{{--                        @if($idPrevious)--}}
-{{--                            <div class="previous">--}}
-{{--                                <x-element.previous--}}
-{{--                                    url="/annotation/staticEvent/sentence/{{$idPrevious}}"></x-element.previous>--}}
-{{--                            </div>--}}
-{{--                        @endif--}}
-{{--                        @if($idNext)--}}
-{{--                            <div class="next">--}}
-{{--                                <x-element.next url="/annotation/staticEvent/sentence/{{$idNext}}"></x-element.next>--}}
-{{--                            </div>--}}
-{{--                        @endif--}}
-{{--                    </div>--}}
                 </div>
-                <div class="annotation">
-{{--                    @include('Annotation.StaticEvent.Panes.framePane')--}}
-                </div>
+                @include("Annotation.DynamicMode.Panes.formPane")
+                @include("Annotation.DynamicMode.Panes.gridsPane")
                 <script type="text/javascript" src="/scripts/vatic/dist/compatibility.js"></script>
                 <script type="text/javascript" src="/scripts/vatic/dist/jszip.js"></script>
                 <script type="text/javascript" src="/scripts/vatic/dist/StreamSaver.js"></script>
