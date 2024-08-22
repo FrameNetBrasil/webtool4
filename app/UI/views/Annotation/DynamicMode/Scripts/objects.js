@@ -68,15 +68,16 @@ annotation.objects = {
                 if (d.top < 0) {
                     d.top = 0;
                 }
-                if (d.left + $(d.target).outerWidth() > $(d.parent).width()) {
-                    d.left = $(d.parent).width() - $(d.target).outerWidth();
+                if (d.left + $(d.target).outerWidth() > $("#canvas").width()) {
+                    d.left = $("#canvas").width() - $(d.target).outerWidth();
                 }
-                if (d.top + $(d.target).outerHeight() > $(d.parent).height()) {
-                    d.top = $(d.parent).height() - $(d.target).outerHeight();
+                if (d.top + $(d.target).outerHeight() > $("#canvas").height()) {
+                    d.top = $("#canvas").height() - $(d.target).outerHeight();
                 }
             },
             onStopDrag: (e) => {
                 let position = bbox.position();
+                console.log('stopdrag position', position);
                 onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
             }
         });
@@ -400,12 +401,7 @@ annotation.objects = {
 
     },
     updateObject: async (data) => {
-        // console.log('update',data);
-        // console.log(Alpine.store('doStore').currentObject);
         let currentObject = Alpine.store('doStore').currentObject;
-        // currentObject.object.idFrameElement = data.idFrameElement;
-        // currentObject.object.idLU = data.idLU;
-        // await annotation.objects.saveRawObject(currentObject);
         let params = {
             idDocument: annotation.document.idDocument,
             idDynamicObject: currentObject.object.idDynamicObject,
@@ -415,18 +411,24 @@ annotation.objects = {
         await annotation.api.updateObject(params);
         await Alpine.store('doStore').updateObjectList();
         Alpine.store('doStore').selectObject(currentObject.idObject);
-
+    },
+    deleteObject: async (idDynamicObject) => {
+        console.log('deletting', idDynamicObject);
+        // await annotation.api.deleteObject(idDynamicObject);
+        htmx.ajax('DELETE', '/annotation/dynamicMode/' + idDynamicObject);
+        await Alpine.store('doStore').updateObjectList();
     },
     async tracking(canGoOn) {
         if (canGoOn) {
             let currentFrame = Alpine.store('doStore').currentFrame;
+            console.log("range", annotation.video.framesRange);
             if (((currentFrame >= annotation.video.framesRange.first) && (currentFrame < annotation.video.framesRange.last))) {
                 currentFrame = currentFrame + 1;
                 console.log('tracking....', currentFrame);
                 annotation.video.gotoFrame(currentFrame);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 await new Promise(r => setTimeout(r, 1000));
-                return annotation.objects.tracking(Alpine.store('doStore').currentVideoState === 'playing');
+                //return annotation.objects.tracking(Alpine.store('doStore').currentVideoState === 'playing');
             }
         }
     },

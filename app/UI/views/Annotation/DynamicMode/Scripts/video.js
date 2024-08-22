@@ -41,7 +41,7 @@ annotation.video = {
     },
     playRange(range) {
         annotation.video.playingRange = range;
-        annotation.video.gotoFrame(range.startFrame)
+        annotation.video.gotoFrame(range.startFrame);
         annotation.video.player.play();
     }
-}
+};

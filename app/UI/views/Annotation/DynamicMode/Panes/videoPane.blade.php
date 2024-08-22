@@ -112,7 +112,8 @@
     <video-js
         id="videoContainer"
         class="video-js"
-        src="http://dynamic.frame.net.br/afa00f72fb6fe767d051f2dff2633ee3e67eecdd.mp4"
+{{--        src="http://dynamic.frame.net.br/afa00f72fb6fe767d051f2dff2633ee3e67eecdd.mp4"--}}
+        src="http://dynamic.frame.net.br/{{$video->sha1Name}}.mp4"
     >
     </video-js>
     <canvas id="canvas" width=0 height=0></canvas>
@@ -123,7 +124,10 @@
             <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeCount"></span>s]
         </div>
         <div>
-            <span x-text="$store.doStore.currentVideoState"></span>|<span x-text="$store.doStore.newObjectState"></span>
+            Video: <span x-text="$store.doStore.currentVideoState"></span>
+        </div>
+        <div>
+            Object: <span x-text="$store.doStore.newObjectState"></span>
         </div>
         <div style="width:120px; text-align:right">
             <span x-text="$store.doStore.frameDuration"></span> [<span x-text="$store.doStore.timeDuration"></span>s]

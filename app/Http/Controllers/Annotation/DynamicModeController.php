@@ -116,14 +116,16 @@ class DynamicModeController extends Controller
         }
     }
 
-    #[Delete(path: '/annotation/dynamicMode/{idDynamicObjectMM}')]
-    public function deleteObjectObject(int $idDynamicObjectMM)
+    #[Delete(path: '/annotation/dynamicMode/{idDynamicObject}')]
+    public function deleteObject(int $idDynamicObject)
     {
         try {
-            $dynamicObjectMM = new DynamicObjectMM($idDynamicObjectMM);
-            $dynamicObjectMM->delete();
-            return [];
+            debug("========== deleting {$idDynamicObject}");
+            AnnotationDynamicService::deleteObject($idDynamicObject);
+            return $this->renderNotify("success", "Object removed.");
         } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
         }
     }
 
