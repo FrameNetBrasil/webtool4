@@ -127,7 +127,10 @@
             Video: <span x-text="$store.doStore.currentVideoState"></span>
         </div>
         <div>
-            Object: <span x-text="$store.doStore.newObjectState"></span>
+            Object: <span x-text="$store.doStore.currentObject?.idObject || 'none'"></span>
+        </div>
+        <div>
+            Status: <span x-text="$store.doStore.newObjectState"></span>
         </div>
         <div style="width:120px; text-align:right">
             <span x-text="$store.doStore.frameDuration"></span> [<span x-text="$store.doStore.timeDuration"></span>s]

@@ -51,7 +51,7 @@
             <x-button
                 type="button"
                 label="Save"
-                onclick="annotation.objects.updateObject({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
+                onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
             ></x-button>
         </x-slot:fields>
     </x-form>
