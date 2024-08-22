@@ -4,8 +4,8 @@
     @endif
     <div id="{{$id}}_search" class="ui very short search">
         <div class="ui left icon small input">
-            <input type="hidden" id="{{$id}}" name="{{$id}}" value="">
-            <input class="prompt" type="search" placeholder="{{$placeholder}}">
+            <input type="hidden" id="{{$id}}" name="{{$id}}" value="{{$value}}">
+            <input class="prompt" type="search" placeholder="{{$placeholder}}" value="{{$name}}">
             <i class="search icon"></i>
         </div>
         <div class="results"></div>
@@ -19,7 +19,8 @@
                     url: "/frame/list/forSelect?q={query}"
                 },
                 fields: {
-                    title: "name"
+                    title: "name",
+                    description: "{{$description}}"
                 },
                 maxResults: 20,
                 minCharacters: 3,

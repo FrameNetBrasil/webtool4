@@ -16,6 +16,8 @@ class Lu extends Component
         public string $label,
         public string $placeholder = '',
         public string $pos = '',
+        public string $name = '',
+        public ?int $value = null,
     )
     {
     }

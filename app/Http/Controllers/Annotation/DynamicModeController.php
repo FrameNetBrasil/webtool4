@@ -87,6 +87,17 @@ class DynamicModeController extends Controller
         return view("Annotation.DynamicMode.annotation", $data->toArray());
     }
 
+    #[Post(path: '/annotation/dynamicMode/formObject')]
+    public function formObject(ObjectData $data)
+    {
+        debug($data);
+        $object = AnnotationDynamicService::getObject($data->idDynamicObject ?? 0);
+        return view("Annotation.DynamicMode.Panes.formPane", [
+            'order' => $data->order,
+            'object' => $object
+        ]);
+    }
+
     #[Get(path: '/annotation/dynamicMode/gridObjects/{idDocument}')]
     public function objectsForGrid(int $idDocument)
     {
@@ -112,9 +123,7 @@ class DynamicModeController extends Controller
             $dynamicObjectMM = new DynamicObjectMM($idDynamicObjectMM);
             $dynamicObjectMM->delete();
             return [];
-//            $this->renderJSon(json_encode(['type' => 'success', 'message' => 'Object saved.', 'data' => $result]));
         } catch (\Exception $e) {
-//            $this->renderJSon(json_encode(['type' => 'error', 'message' => $e->getMessage()]));
         }
     }
 
@@ -125,14 +134,8 @@ class DynamicModeController extends Controller
             debug($data);
             $idBoundingBox = AnnotationDynamicService::updateBBox($data);
             return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
-
-//            $dynamicBBoxMM = new DynamicBBoxMM(data('idDynamicBBoxMM'));
-//            $dynamicBBoxMM->updateBBox(data('bbox'));
-//            return $dynamicBBoxMM->getData();
-//            $this->renderJSon(json_encode(['type' => 'success', 'message' => 'Object saved.', 'data' => $result]));
         } catch (\Exception $e) {
             debug($e->getMessage());
-//            $this->renderJSon(json_encode(['type' => 'error', 'message' => $e->getMessage()]));
             return $this->renderNotify("error", $e->getMessage());
         }
     }

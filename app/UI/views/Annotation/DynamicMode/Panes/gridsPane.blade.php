@@ -8,10 +8,24 @@
             <div
                 id="gridObjects"
                 class="grid"
+                hx-post="/annotation/dynamicMode/formObject"
+                hx-target="#formObject"
+                hx-swap="innerHTML"
+                hx-trigger="card-click"
+                hx-on::config-request="
+                    event.detail.parameters.order = event.detail.triggeringEvent.target.getAttribute('data-order');
+                    event.detail.parameters.idDynamicObject = event.detail.triggeringEvent.target.getAttribute('data-idDynamicObject');
+                    Alpine.store('doStore').selectObject(parseInt(event.detail.parameters.order));
+                "
             >
                 <template x-for="object,index in objects">
-                    <div class="col-4">
-                        <div :class="'ui card w-full ' + ((object.fe === '') ? 'empty' : 'filled')">
+                    <div  class="col-4">
+                        <div
+                             @click="$dispatch('card-click', this)"
+                             :data-order="index + 1"
+                             :data-idDynamicObject="object.idDynamicObject"
+                             :class="'ui card cursor-pointer w-full ' + ((object.fe === '') ? 'empty' : 'filled')"
+                        >
                             <div class="content">
                             <span class="right floated">
                                 <x-delete
@@ -25,7 +39,7 @@
                                     <div
                                     >
                                         <div class="flex">
-                                            <div class="objectId" x-text="'#' + index"></div>
+                                            <div class="objectId" x-text="'#' + (index + 1)"></div>
                                             <div class="frame">
                                                 <span x-text="object.startFrame"></span>
                                                 <span>/</span>
@@ -55,7 +69,7 @@
             hx-trigger="load"
             hx-get="/annotation/dynamicMode/sentences/{{$idDocument}}"
         >
-            fdsfsdf
+            sentences
         </div>
 
     </div>

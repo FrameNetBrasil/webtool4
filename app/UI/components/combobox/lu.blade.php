@@ -2,8 +2,8 @@
     <label for="{{$id}}">{{$label}}</label>
     <div id="{{$id}}_search" class="ui very short search">
         <div class="ui left icon small input">
-            <input type="hidden" id="{{$id}}" name="{{$id}}" value="">
-            <input id="{{$id}}_input" {{$attributes->class(['prompt'])}} type="search" placeholder="{{$placeholder}}">
+            <input type="hidden" id="{{$id}}" name="{{$id}}" value="{{$value}}">
+            <input id="{{$id}}_input" {{$attributes->class(['prompt'])}} type="search" placeholder="{{$placeholder}}" value="{{$name}}">
             <i class="search icon"></i>
         </div>
         <div {{$attributes->class(['results'])}}></div>

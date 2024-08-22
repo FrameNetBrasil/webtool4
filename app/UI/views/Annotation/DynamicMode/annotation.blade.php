@@ -35,8 +35,14 @@
                     </div>
                 </div>
                 <div class="flex flex-column flex-grow-1" x-data="$store.doStore">
-                @include("Annotation.DynamicMode.Panes.formPane")
-                @include("Annotation.DynamicMode.Panes.gridsPane")
+                    <div
+                        id="formObject"
+                        class="form"
+                        hx-trigger="load"
+                        hx-post="/annotation/dynamicMode/formObject"
+                    >
+                    </div>
+                    @include("Annotation.DynamicMode.Panes.gridsPane")
                 </div>
                 <script type="text/javascript" src="/scripts/vatic/dist/compatibility.js"></script>
                 <script type="text/javascript" src="/scripts/vatic/dist/jszip.js"></script>

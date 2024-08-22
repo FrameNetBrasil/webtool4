@@ -7,7 +7,6 @@ use Spatie\LaravelData\Data;
 class ObjectData extends Data
 {
     public function __construct(
-        public ?array $idStaticObjectSentenceMM = [],
         public ?int   $idDynamicObject = null,
         public ?int   $startFrame = null,
         public ?int   $endFrame = null,
@@ -20,6 +19,7 @@ class ObjectData extends Data
         public ?int   $status = 1,
         public ?array $frames = [],
         public ?int   $idDocument = null,
+        public ?int   $order = 0,
         public ?string $name = '',
         public string $_token = '',
     )
