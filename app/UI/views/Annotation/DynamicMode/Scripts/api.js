@@ -12,6 +12,8 @@ annotation.api = {
         });
     },
     deleteObject: async (idDynamicObject) => {
+        console.log('deletting api', idDynamicObject, annotation._token);
+
         let result = null;
         await $.ajax({
             url: "/annotation/dynamicMode/" + idDynamicObject,

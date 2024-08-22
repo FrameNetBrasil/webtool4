@@ -177,6 +177,54 @@ class AnnotationDynamicService
         return $idDynamicObject;
     }
 
+    public static function deleteObject(int $idDynamicObject): void
+    {
+        // se pode remover o objeto se for Manager ou se for o criador do objeto
+        $idUser = AppService::getCurrentIdUser();
+        $user = User::byId($idUser);
+        if (!User::isManager($user)) {
+            $tl = Criteria::table("timeline")
+                ->where("tablename", "dynamicobject")
+                ->where("id", $idDynamicObject)
+                ->select("idUser")
+                ->first();
+            if ($tl->idUser != $idUser) {
+                throw new \Exception("Object can not be removed.");
+            }
+        }
+        DB::transaction(function () use ($idDynamicObject) {
+//            $vd = Criteria::table("view_video_dynamicobject")
+//                ->where("idDynamicObject", $idDynamicObject)
+//                ->select("idVideo")
+//                ->first();
+//            $dv = Criteria::table("view_document_video")
+//                ->where("idVideo", $vd->idVideo)
+//                ->select("idDocument")
+//                ->first();
+//            $usertask = self::getCurrentUserTask($dv->idDocument);
+//            if (is_null($usertask)) {
+//                throw new \Exception("UserTask not found!");
+//            }
+            // remove boundingbox
+            $bboxes = Criteria::table("view_dynamicobject_boundingbox as db")
+                ->join("boundingbox as bb", "db.idBoundingBox","=","bb.idBoundingBox")
+                ->where("db.idDynamicObject", $idDynamicObject)
+                ->chunkResult("bb.idAnnotationObject","bb.idAnnotationObject");
+            Criteria::table("annotationobjectrelation")
+                ->whereIn("idAnnotationObject2", $bboxes)
+                ->delete();
+            Criteria::table("boundingbox")
+                ->whereIn("idAnnotationObject", $bboxes)
+                ->delete();
+            Criteria::table("annotationobject")
+                ->whereIn("idAnnotationObject", $bboxes)
+                ->delete();
+            // remove dynamicobject
+            $idUser = AppService::getCurrentIdUser();
+            Criteria::function("dynamicobject_delete(?,?)", [$idDynamicObject, $idUser]);
+        });
+    }
+
     public static function updateBBox(UpdateBBoxData $data): int
     {
         Criteria::table("boundingbox")

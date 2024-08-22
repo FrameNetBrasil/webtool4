@@ -189,12 +189,13 @@ document.addEventListener('alpine:init', () => {
             annotation.video.enablePlayPause();
         }
         if (newObjectState === 'tracking') {
+            console.log("newobjectstate = tracking");
             let pausedTracking = Alpine.store('doStore').currentVideoState === 'paused';
             $('#btnCreateObject').addClass('disabled');
-            $('#btnStartTracking').disabled = !pausedTracking;
-            $('#btnPauseTracking').disabled = pausedTracking;
-            $('#btnStopTracking').disabled = !pausedTracking;
-            $('#btnEndObject').disabled = !pausedTracking;
+            if (!pausedTracking)  {$('#btnStartTracking').addClass('disabled');} else {$('#btnStartTracking').removeClass('disabled');}
+            if (pausedTracking) {$('#btnPauseTracking').addClass('disabled');} else {$('#btnStartTracking').removeClass('disabled');}
+            if (!pausedTracking)  {$('#btnStopTracking').addClass('disabled');} else {$('#btnStartTracking').removeClass('disabled');}
+            if (!pausedTracking)  {$('#btnEndObject').addClass('disabled');} else {$('#btnStartTracking').removeClass('disabled');}
             annotation.video.disablePlayPause();
         }
         if (newObjectState === 'none') {
