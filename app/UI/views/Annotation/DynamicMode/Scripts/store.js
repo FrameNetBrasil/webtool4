@@ -37,7 +37,6 @@ document.addEventListener('alpine:init', () => {
                 (this.newObjectState === 'tracking') ||
                 (this.newObjectState === 'showing')
             ) {
-                console.error('===================');
                 annotation.objects.drawFrameObject(frameNumber);
             }
         },
@@ -55,7 +54,7 @@ document.addEventListener('alpine:init', () => {
                 annotation.objects.drawFrameObject(object.object.startFrame);
                 this.newObjectState = 'showing';
             }
-            annotationGridObject.selectRowByObject(idObject);
+            // annotationGridObject.selectRowByObject(idObject);
         },
         selectObjectByIdDynamicObject(idDynamicObject) {
             console.log('getting', idDynamicObject);
@@ -65,7 +64,7 @@ document.addEventListener('alpine:init', () => {
         },
         selectObjectFrame(idObject, frameNumber) {
             this.currentObject = annotation.objects.get(idObject);
-            annotationGridObject.selectRowByObject(idObject);
+            // annotationGridObject.selectRowByObject(idObject);
             let time = annotation.video.timeFromFrame(frameNumber);
             annotation.video.player.currentTime(time);
             annotation.objects.drawFrameObject(frameNumber);

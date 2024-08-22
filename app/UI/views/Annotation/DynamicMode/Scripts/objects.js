@@ -18,7 +18,7 @@ annotation.objects = {
     },
     */
     get: (idObject) => {
-        return annotation.objects.tracker.annotatedObjects.find(o => o.idObject === idObject);
+        return annotation.objects.tracker.annotatedObjects.find((o) => o.idObject === idObject);
     },
     getByIdDynamicObject: (idDynamicObject) => {
         console.log('get', annotation.objects.tracker.annotatedObjects);
@@ -379,12 +379,11 @@ annotation.objects = {
             console.log('saving raw object #', currentObject.idObject);
             let params = {
                 idDocument: annotation.document.idDocument,
-                //idObjectMM: currentObject.object.idObjectMM,
-                idDynamicObject: currentObject.object.idObject,
+                idDynamicObject: currentObject.object.idDynamicObject,
                 startFrame: currentObject.object.startFrame,
                 endFrame: currentObject.object.endFrame,
                 idFrame: currentObject.object.idFrame,
-                idFrameElement: currentObject.object.idFE,
+                idFrameElement: currentObject.object.idFrameElement,
                 idLU: currentObject.object.idLU,
                 startTime: annotation.video.timeFromFrame(currentObject.object.startFrame),
                 endTime: annotation.video.timeFromFrame(currentObject.object.endFrame),
@@ -395,9 +394,27 @@ annotation.objects = {
         } catch (e) {
             Alpine.store('doStore').newObjectState = 'none';
             Alpine.store('doStore').currentVideoState = 'paused';
-            manager.messager('error', e.message);
+            console.log(e.message);
             return null;
         }
+
+    },
+    updateObject: async (data) => {
+        // console.log('update',data);
+        // console.log(Alpine.store('doStore').currentObject);
+        let currentObject = Alpine.store('doStore').currentObject;
+        // currentObject.object.idFrameElement = data.idFrameElement;
+        // currentObject.object.idLU = data.idLU;
+        // await annotation.objects.saveRawObject(currentObject);
+        let params = {
+            idDocument: annotation.document.idDocument,
+            idDynamicObject: currentObject.object.idDynamicObject,
+            idFrameElement: parseInt(data.idFrameElement),
+            idLU: parseInt(data.idLU),
+        };
+        await annotation.api.updateObject(params);
+        await Alpine.store('doStore').updateObjectList();
+        Alpine.store('doStore').selectObject(currentObject.idObject);
 
     },
     async tracking(canGoOn) {

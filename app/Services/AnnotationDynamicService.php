@@ -52,6 +52,19 @@ class AnnotationDynamicService
         return $usertask;
     }
 
+    public static function getObject(int $idDynamicObject): object|null
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $do = Criteria::table("view_annotation_dynamic")
+            ->where("idLanguage", "left",  $idLanguage)
+            ->where("idDynamicObject", $idDynamicObject)
+            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color")
+            ->orderBy("startFrame")
+            ->orderBy("endFrame")
+            ->first();
+        return $do;
+    }
+
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
@@ -140,24 +153,24 @@ class AnnotationDynamicService
                 ->delete();
             if ($data->idFrameElement) {
                 $fe = Criteria::byId("frameelement", "idFrameElement", $data->idFrameElement);
-                $data = json_encode([
+                $json = json_encode([
                     'idEntity' => $fe->idEntity,
                     'idAnnotationObject' => $do->idAnnotationObject,
                     'relationType' => 'rel_annotation',
                     'idUserTask' => $usertask->idUserTask
                 ]);
-                $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
+                $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
                 Timeline::addTimeline("annotation", $idAnnotation, "C");
             }
             if ($data->idLU) {
                 $lu = Criteria::byId("lu", "idLU", $data->idLU);
-                $data = json_encode([
+                $json = json_encode([
                     'idEntity' => $lu->idEntity,
                     'idAnnotationObject' => $do->idAnnotationObject,
                     'relationType' => 'rel_annotation',
                     'idUserTask' => $usertask->idUserTask
                 ]);
-                $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
+                $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
                 Timeline::addTimeline("annotation", $idAnnotation, "C");
             }
         }

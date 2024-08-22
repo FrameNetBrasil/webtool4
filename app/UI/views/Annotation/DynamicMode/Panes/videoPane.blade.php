@@ -11,7 +11,7 @@
             children: {
                 controlBar: {
                     playToggle: true,
-                    volumePanel: true,
+                    volumePanel: false,
                     remainingTimeDisplay: false,
                     fullscreenToggle: false,
                     pictureInPictureToggle: false,
