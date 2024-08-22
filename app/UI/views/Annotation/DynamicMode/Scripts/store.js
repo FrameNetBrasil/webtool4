@@ -118,6 +118,13 @@ document.addEventListener('alpine:init', () => {
         stopTracking() {
             console.log('stop tracking');
             this.currentVideoState = 'paused';
+            this.newObjectState = 'showing';
+            // this.selectObject(null);
+        },
+        clear() {
+            console.log('clear');
+            // this.currentVideoState = 'paused';
+            this.newObjectState = 'none';
             this.selectObject(null);
         },
         showHideObjects() {
@@ -129,9 +136,6 @@ document.addEventListener('alpine:init', () => {
             }
             annotation.objects.drawFrameBoxes(this.currentFrame);
         },
-        updateObject(data) {
-            console.log(data);
-        }
     });
 
     Alpine.effect(() => {
@@ -167,6 +171,7 @@ document.addEventListener('alpine:init', () => {
     });
     Alpine.effect(async () => {
         const newObjectState = Alpine.store('doStore').newObjectState;
+        console.log("newobjectstate = " + newObjectState);
         if (newObjectState === 'creating') {
             $('#btnCreateObject').addClass('disabled');
             $('#btnStartTracking').addClass('disabled');
@@ -189,13 +194,19 @@ document.addEventListener('alpine:init', () => {
             annotation.video.enablePlayPause();
         }
         if (newObjectState === 'tracking') {
-            console.log("newobjectstate = tracking");
             let pausedTracking = Alpine.store('doStore').currentVideoState === 'paused';
             $('#btnCreateObject').addClass('disabled');
-            if (!pausedTracking)  {$('#btnStartTracking').addClass('disabled');} else {$('#btnStartTracking').removeClass('disabled');}
-            if (pausedTracking) {$('#btnPauseTracking').addClass('disabled');} else {$('#btnStartTracking').removeClass('disabled');}
-            if (!pausedTracking)  {$('#btnStopTracking').addClass('disabled');} else {$('#btnStartTracking').removeClass('disabled');}
-            if (!pausedTracking)  {$('#btnEndObject').addClass('disabled');} else {$('#btnStartTracking').removeClass('disabled');}
+            if (pausedTracking) {
+                $('#btnStartTracking').removeClass('disabled');
+                $('#btnStopTracking').removeClass('disabled');
+                $('#btnPauseTracking').addClass('disabled');
+                $('#btnEndObject').removeClass('disabled');
+            } else {
+                $('#btnStartTracking').addClass('disabled');
+                $('#btnStopTracking').removeClass('disabled');
+                $('#btnPauseTracking').removeClass('disabled');
+                $('#btnEndObject').addClass('disabled');
+            }
             annotation.video.disablePlayPause();
         }
         if (newObjectState === 'none') {

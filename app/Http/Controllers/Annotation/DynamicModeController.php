@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\DynamicMode\AnnotationCommentData;
 use App\Data\Annotation\DynamicMode\DocumentData;
+use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
 use App\Data\Annotation\DynamicMode\SearchData;
 use App\Data\Annotation\DynamicMode\UpdateBBoxData;
@@ -109,6 +110,19 @@ class DynamicModeController extends Controller
         debug($data);
         try {
             $idDynamicObject = AnnotationDynamicService::updateObject($data);
+            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/dynamicMode/updateObjectAnnotation')]
+    public function updateObjectAnnotation(ObjectAnnotationData $data)
+    {
+        debug($data);
+        try {
+            $idDynamicObject = AnnotationDynamicService::updateObjectAnnotation($data);
             return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());

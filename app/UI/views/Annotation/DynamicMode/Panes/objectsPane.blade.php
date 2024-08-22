@@ -21,10 +21,10 @@
                     :class="'ui card cursor-pointer w-full ' + ((object.fe === '') ? 'empty' : 'filled')"
                 >
                     <div class="content">
-                            <span class="right floated" x-data="{idDynamicObject: object.idDynamicObject}">
+                            <span class="right floated">
                                 <x-delete
                                     title="delete Object"
-                                    @click.stop="annotation.objects.deleteObject(idDynamicObject)"
+                                    @click.stop="annotation.objects.deleteObject(object.idDynamicObject)"
                                 ></x-delete>
                             </span>
                         <div
@@ -38,6 +38,9 @@
                                         <span x-text="object.startFrame"></span>
                                         <span>/</span>
                                         <span x-text="object.endFrame"></span>
+                                    </div>
+                                    <div class="frame">
+                                        #<span x-text="object.idDynamicObject"></span>
                                     </div>
                                 </div>
                             </div>

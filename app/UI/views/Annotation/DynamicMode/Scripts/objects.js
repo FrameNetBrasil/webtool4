@@ -412,6 +412,18 @@ annotation.objects = {
         await Alpine.store('doStore').updateObjectList();
         Alpine.store('doStore').selectObject(currentObject.idObject);
     },
+    updateObjectAnnotation: async (data) => {
+        let currentObject = Alpine.store('doStore').currentObject;
+        let params = {
+            idDocument: annotation.document.idDocument,
+            idDynamicObject: currentObject.object.idDynamicObject,
+            idFrameElement: parseInt(data.idFrameElement),
+            idLU: parseInt(data.idLU),
+        };
+        await annotation.api.updateObjectAnnotation(params);
+        await Alpine.store('doStore').updateObjectList();
+        Alpine.store('doStore').selectObject(currentObject.idObject);
+    },
     deleteObject: async (idDynamicObject) => {
         console.log('deletting', idDynamicObject);
         // await annotation.api.deleteObject(idDynamicObject);
@@ -428,7 +440,7 @@ annotation.objects = {
                 annotation.video.gotoFrame(currentFrame);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 await new Promise(r => setTimeout(r, 1000));
-                //return annotation.objects.tracking(Alpine.store('doStore').currentVideoState === 'playing');
+                return annotation.objects.tracking(Alpine.store('doStore').currentVideoState === 'playing');
             }
         }
     },
