@@ -99,6 +99,16 @@ class DynamicModeController extends Controller
         ]);
     }
 
+    #[Get(path: '/annotation/dynamicMode/formObject/{idDynamicObject}/{order}')]
+    public function getFormObject(int $idDynamicObject, int $order)
+    {
+        $object = AnnotationDynamicService::getObject($idDynamicObject ?? 0);
+        return view("Annotation.DynamicMode.Panes.formPane", [
+            'order' => $order,
+            'object' => $object
+        ]);
+    }
+
     #[Get(path: '/annotation/dynamicMode/gridObjects/{idDocument}')]
     public function objectsForGrid(int $idDocument)
     {

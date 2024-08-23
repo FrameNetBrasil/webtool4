@@ -8,6 +8,7 @@
             preload: "auto",
             playbackRates: [0.2, 0.5, 0.8, 1, 2],
             bigPlayButton: false,
+            inactivityTimeout: 0,
             children: {
                 controlBar: {
                     playToggle: true,
@@ -43,21 +44,21 @@
         // button frame forward
         let btnForward = player.controlBar.addChild('button', {}, 0);
         let btnForwardDom = btnForward.el();
-        btnForwardDom.innerHTML = '<span class="vjs-icon-placeholder"  aria-hidden="true" title="Next frame"><i class="video-material">skip_next</i></span>';
+        btnForwardDom.innerHTML = '<span class="vjs-icon-placeholder" id="btnForward" aria-hidden="true" title="Next frame"><i class="video-material">skip_next</i></span>';
         btnForwardDom.onclick = function () {
             console.log('click forward');
             let state = Alpine.store('doStore').currentVideoState;
             if (state === 'paused') {
                 let currentTime = player.currentTime();
                 let newTime = currentTime + annotation.video.timeInterval;
-                console.log('newTime', newTime);
+                //console.log('newTime', newTime);
                 player.currentTime(newTime);
             }
         };
         // button frame backward
         let btnBackward = player.controlBar.addChild('button', {}, 0);
         let btnBackwardDom = btnBackward.el();
-        btnBackwardDom.innerHTML = '<span class="vjs-icon-placeholder"  aria-hidden="true" title="Previous frame"><i class="video-material">skip_previous</i></span>';
+        btnBackwardDom.innerHTML = '<span class="vjs-icon-placeholder"  id="btnBackward" aria-hidden="true" title="Previous frame"><i class="video-material">skip_previous</i></span>';
         btnBackwardDom.onclick = function () {
             console.log('click backward');
             let state = Alpine.store('doStore').currentVideoState;
@@ -65,7 +66,7 @@
                 let currentTime = player.currentTime();
                 if (Alpine.store('doStore').frameCount > 1) {
                     let newTime = currentTime - annotation.video.timeInterval;
-                    console.log('newTime', newTime);
+                    //console.log('newTime', newTime);
                     player.currentTime(newTime);
                 }
             }
@@ -84,7 +85,7 @@
             player.on('timeupdate', () => {
                 let currentTime = player.currentTime();
                 let currentFrame = annotation.video.frameFromTime(currentTime);
-                console.log('time update', currentTime);
+                //console.log('time update', currentTime);
                 Alpine.store('doStore').timeCount = parseInt(currentTime);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 if (annotation.video.playingRange) {
@@ -99,9 +100,29 @@
                 if (state === 'paused') {
                     Alpine.store('doStore').currentVideoState = 'playing';
                 }
+                $btn = document.querySelector("#btnBackward");
+                if ($btn) {
+                    $btn.style.color = "grey";
+                    $btn.style.cursor = "default";
+                }
+                $btn = document.querySelector("#btnForward");
+                if ($btn) {
+                    $btn.style.color = "grey";
+                    $btn.style.cursor = "default";
+                }
             })
             player.on('pause', () => {
                 Alpine.store('doStore').currentVideoState = 'paused';
+                $btn = document.querySelector("#btnBackward");
+                if ($btn) {
+                    $btn.style.color = "white";
+                    $btn.style.cursor = "pointer";
+                }
+                $btn = document.querySelector("#btnForward");
+                if ($btn) {
+                    $btn.style.color = "white";
+                    $btn.style.cursor = "pointer";
+                }
             })
         });
 
@@ -127,7 +148,7 @@
             Video: <span x-text="$store.doStore.currentVideoState"></span>
         </div>
         <div>
-            Object: <span x-text="$store.doStore.currentObject?.idObject || 'none'"></span>
+            Object: #<span x-text="$store.doStore.currentObject?.idObject || 'none'"></span>
         </div>
         <div>
             Status: <span x-text="$store.doStore.newObjectState"></span>

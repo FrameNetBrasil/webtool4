@@ -57,6 +57,10 @@ annotation.objects = {
         });
         i.addEventListener("click", function () {
             //dynamicStore.dispatch('selectObject', parseInt(this.innerHTML))
+            let idObject = parseInt(this.innerHTML);
+            Alpine.store('doStore').selectObject(idObject);
+            //let currentObject = Alpine.store('doStore').currentObject;
+            //htmx.ajax("GET","/annotation/dynamicMode/formObject/" + currentObject.object.idDynamicObject + "/" + idObject, "#formObject");
         });
         bbox.draggable({
             handle: $(x),

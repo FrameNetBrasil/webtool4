@@ -7,12 +7,17 @@
                 <div class="flex">
                     @if($order == 0)
                         <div class="field title">Current Object: #none</div>
+                        <div class="frame">
+                        </div>
                     @else
                         <div class="field title">Current Object: #{{$order}}</div>
                         <div class="frame">
                             <span>{{$object->startFrame}}</span>
                             <span>/</span>
                             <span>{{$object->endFrame}}</span>
+                        </div>
+                        <div class="frame">
+                            <span>#{{$object->idDynamicObject}}</span>
                         </div>
                     @endif
                 </div>

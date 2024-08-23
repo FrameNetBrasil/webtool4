@@ -16,7 +16,7 @@ class Project
     {
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
-        if (User::isManager($user)) {
+        if (User::isManager($user) || (User::isMemberOf($user,'MASTER'))) {
             $criteria = Criteria::table("view_project_docs");
         } else {
             $criteria = Criteria::table("view_alloweddocs");
