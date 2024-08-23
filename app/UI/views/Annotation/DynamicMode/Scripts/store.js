@@ -117,7 +117,7 @@ document.addEventListener('alpine:init', () => {
             console.log('clear');
             this.newObjectState = 'none';
             this.selectObject(null);
-            htmx.ajax("GET","/annotation/dynamicMode/formObject", "#formObject");
+            htmx.ajax("GET","/annotation/dynamicMode/formObject/0", "#formObject");
         },
         showHideObjects() {
             console.log('show/hide objects');
