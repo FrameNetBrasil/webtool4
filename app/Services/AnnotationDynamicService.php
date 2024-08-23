@@ -39,7 +39,7 @@ class AnnotationDynamicService
             ->select("ut.idUserTask", "ut.idTask")
             ->first();
         if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-            if (User::isManager($user)) {
+            if (User::isManager($user) || User::isMemberOf($user,'MASTER')) {
                 $usertask = Criteria::table("usertask_document")
                     ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
                     ->where("usertask_document.idDocument", $idDocument)
@@ -123,6 +123,7 @@ class AnnotationDynamicService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
+        debug($data);
         $usertask = self::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
         Criteria::deleteById("annotation", "idAnnotationObject", $do->idAnnotationObject);

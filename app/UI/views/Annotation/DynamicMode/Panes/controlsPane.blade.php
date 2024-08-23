@@ -23,6 +23,13 @@
                     <i class="window close outline icon"></i>
                     <span x-data x-text="'End at frame #' + ($store.doStore.currentFrame || '')"></span>
                 </button>
+                <button
+                    id="btnShowHideObjects"
+                    class="ui toggle button secondary"
+                    x-data @click="$store.doStore.showHideObjects()"
+                >
+                    Show/Hide
+                </button>
             </div>
         </div>
     </div>
@@ -50,14 +57,14 @@
                     <i class="pause icon"></i>
                     Pause
                 </button>
-                <button
-                    id="btnStopTracking"
-                    class="ui button primary"
-                    x-data @click="$store.doStore.stopTracking()"
-                >
-                    <i class="stop icon"></i>
-                    Stop
-                </button>
+{{--                <button--}}
+{{--                    id="btnStopTracking"--}}
+{{--                    class="ui button primary"--}}
+{{--                    x-data @click="$store.doStore.stopTracking()"--}}
+{{--                >--}}
+{{--                    <i class="stop icon"></i>--}}
+{{--                    Stop--}}
+{{--                </button>--}}
             </div>
         </div>
     </div>

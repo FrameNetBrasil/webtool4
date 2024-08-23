@@ -2,23 +2,25 @@
     <div
         id="gridObjects"
         class="grid"
-        hx-post="/annotation/dynamicMode/formObject"
-        hx-target="#formObject"
-        hx-swap="innerHTML"
-        hx-trigger="card-click"
-        hx-on::config-request="
-                    event.detail.parameters.order = event.detail.triggeringEvent.target.getAttribute('data-order');
-                    event.detail.parameters.idDynamicObject = event.detail.triggeringEvent.target.getAttribute('data-idDynamicObject');
-                    Alpine.store('doStore').selectObject(parseInt(event.detail.parameters.order));
-                "
+{{--        hx-post="/annotation/dynamicMode/formObject"--}}
+{{--        hx-target="#formObject"--}}
+{{--        hx-swap="innerHTML"--}}
+{{--        hx-trigger="card-click"--}}
+{{--        hx-on::config-request="--}}
+{{--                    event.detail.parameters.order = event.detail.triggeringEvent.target.getAttribute('data-order');--}}
+{{--                    event.detail.parameters.idDynamicObject = event.detail.triggeringEvent.target.getAttribute('data-idDynamicObject');--}}
+{{--                    Alpine.store('doStore').selectObject(parseInt(event.detail.parameters.order));--}}
+{{--                "--}}
     >
         <template x-for="object,index in objects">
             <div class="col-4">
                 <div
-                    @click="$dispatch('card-click', this)"
-                    :data-order="index + 1"
-                    :data-idDynamicObject="object.idDynamicObject"
-                    :class="'ui card cursor-pointer w-full ' + ((object.fe === '') ? 'empty' : 'filled')"
+                    @click="Alpine.store('doStore').selectObject(index + 1)"
+
+                    {{--                    @click="$dispatch('card-click', this)"--}}
+{{--                    :data-order="index + 1"--}}
+{{--                    :data-idDynamicObject="object.idDynamicObject"--}}
+                    :class="'ui card cursor-pointer w-full ' + (object.fe ? 'filled' : 'empty')"
                 >
                     <div class="content">
                             <span class="right floated">
@@ -46,11 +48,11 @@
                             </div>
                         </div>
                         <div class="description">
-                            <template x-if="object.fe !== ''">
+                            <template x-if="object.fe">
                                 <div><i class="icon material color_frame">dashboard</i><span
                                         x-text="object.frame + '.' + object.fe"></span></div>
                             </template>
-                            <template x-if="object.lu != ''">
+                            <template x-if="object.lu">
                                 <div><i class="icon material color_lu">abc</i><span x-text="object.lu"></span></div>
                             </template>
                         </div>

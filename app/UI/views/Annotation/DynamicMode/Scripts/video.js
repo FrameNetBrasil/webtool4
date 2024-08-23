@@ -39,6 +39,32 @@ annotation.video = {
             $btn.style.cursor = "default";
         }
     },
+    enableSkipFrame() {
+        $btn = document.querySelector("#btnBackward");
+        if ($btn) {
+            $btn.style.color = "white";
+            $btn.style.cursor = "pointer";
+        }
+        $btn = document.querySelector("#btnForward");
+        if ($btn) {
+            $btn.style.color = "white";
+            $btn.style.cursor = "pointer";
+        }
+    },
+    disableSkipFrame() {
+        $btn = document.querySelector("#btnBackward");
+        if ($btn) {
+            $btn.style.color = "grey";
+            $btn.style.cursor = "default";
+        }
+        $btn = document.querySelector("#btnForward");
+        if ($btn) {
+            $btn.style.color = "grey";
+            $btn.style.cursor = "default";
+        }
+    },
+
+
     playRange(range) {
         annotation.video.playingRange = range;
         annotation.video.gotoFrame(range.startFrame);
