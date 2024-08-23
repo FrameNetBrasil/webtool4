@@ -63,8 +63,15 @@ annotation.video = {
             $btn.style.cursor = "default";
         }
     },
-
-
+    playByRange(startTime, endTime, offset) {
+        console.log('startTime',startTime);
+        console.log('offset',offset);
+        let playRange = {
+            startFrame: annotation.video.frameFromTime(startTime - offset),
+            endFrame: annotation.video.frameFromTime(endTime + offset)
+        };
+        annotation.video.playRange(playRange);
+    },
     playRange(range) {
         annotation.video.playingRange = range;
         annotation.video.gotoFrame(range.startFrame);

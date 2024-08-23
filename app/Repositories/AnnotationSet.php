@@ -11,11 +11,15 @@ class AnnotationSet
 {
     public static function listTargetsForDocumentSentence(array $idDocumentSentences): Collection
     {
+        $idLanguage = AppService::getCurrentIdLanguage();
         return Criteria::table("view_annotationset as a")
             ->join("view_annotation_text_gl as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
-            ->select('a.idDocumentSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet')
+            ->join("lu","a.idLU","=", "lu.idLU")
+            ->join("view_frame as f","lu.idFrame","=","f.idFrame")
+            ->select('a.idDocumentSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet','f.name as frameName')
             ->where("gl.layerTypeEntry", 'lty_target')
             ->whereIn("a.idDocumentSentence", $idDocumentSentences)
+            ->where("f.idLanguage", $idLanguage)
             ->orderby("gl.startChar")
             ->get();
     }

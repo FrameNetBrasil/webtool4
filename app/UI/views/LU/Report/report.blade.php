@@ -24,7 +24,7 @@
                           idColor="{{$incorporatedFE->idColor}}"></x-element.fe>
         @endif
     </x-card>
-    <div class="grid overflow-y-auto h-25rem w-full mt-2 mb-2">
+    <div class="grid w-full mt-2 mb-2">
         <div class="col-4">
             <x-datagrid
                 id="gridFE"
@@ -142,7 +142,7 @@
             </x-datagrid>
         </div>
     </div>
-    <div id="reportLUSentences" class="mt-2 flex-grow-0  h-25rem overflow-y-auto">
+    <div id="reportLUSentences" class="mt-2 flex-grow-1">
         <div class="flex flex-column">
             <div class="text">
                 <x-button color="secondary" onclick="reportLU.clearSentences()">Clear Sentences</x-button>
@@ -266,8 +266,9 @@
             var ban = `
                        <span class="delete material-icons-outlined wt-datagrid-icon wt-icon-delete" title="delete Sentence" onclick="reportLU.removeSentence('${id}')"></span>
                     `;
-            $("#divSentencesColorOn").append("<div class='sentence' id='" + id + "'>" + ban + text + "  [#" + idSentence + "]</div>");
-            $("#divSentencesColorOff").append("<div class='sentence' id='" + id + "'>" + ban + cleanText + "  [#" + idSentence + "]</div>");
+            var linkToAnnotation = `<a href="/annotation/fe/sentence/${idSentence}" target="_blank">[#${idSentence}]</a>`;
+            $("#divSentencesColorOn").append("<div class='sentence' id='" + id + "'>" + ban + text + linkToAnnotation + "</div>");
+            $("#divSentencesColorOff").append("<div class='sentence' id='" + id + "'>" + ban + cleanText + linkToAnnotation + "</div>");
         },
         removeSentence: function(id) {
             console.log(id);
