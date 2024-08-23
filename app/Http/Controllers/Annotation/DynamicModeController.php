@@ -188,7 +188,7 @@ class DynamicModeController extends Controller
         debug($data);
         try {
             $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $data->idDocumentVideo])->first();
-            if ($comment->idAnnotationComment) {
+            if (!is_null($comment)) {
                 Criteria::table("annotationcomment")
                     ->where("idAnnotationComment", "=", $comment->idAnnotationComment)
                     ->update([
