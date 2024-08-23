@@ -239,18 +239,6 @@ class AnnotationDynamicService
             }
         }
         DB::transaction(function () use ($idDynamicObject) {
-//            $vd = Criteria::table("view_video_dynamicobject")
-//                ->where("idDynamicObject", $idDynamicObject)
-//                ->select("idVideo")
-//                ->first();
-//            $dv = Criteria::table("view_document_video")
-//                ->where("idVideo", $vd->idVideo)
-//                ->select("idDocument")
-//                ->first();
-//            $usertask = self::getCurrentUserTask($dv->idDocument);
-//            if (is_null($usertask)) {
-//                throw new \Exception("UserTask not found!");
-//            }
             // remove boundingbox
             self::deleteBBoxesByDynamicObject($idDynamicObject);
             // remove dynamicobject
@@ -281,6 +269,7 @@ class AnnotationDynamicService
         if (!empty($sentences)) {
             $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
             foreach ($targets as $idDocumentSentence => $spans) {
+                debug($spans);
                 $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);
             }
         }
@@ -291,13 +280,11 @@ class AnnotationDynamicService
     public static function decorateSentenceTarget($text, $spans)
     {
         $decorated = "";
-        $ni = "";
         $i = 0;
         foreach ($spans as $span) {
-            //$style = 'background-color:#' . $label['rgbBg'] . ';color:#' . $label['rgbFg'] . ';';
             if ($span->startChar >= 0) {
                 $decorated .= mb_substr($text, $i, $span->startChar - $i);
-                $decorated .= "<span class='color_target'>" . mb_substr($text, $span->startChar, $span->endChar - $span->startChar + 1) . "</span>";
+                $decorated .= "<span class='color_target' style='cursor:default' title='{$span->frameName}'>" . mb_substr($text, $span->startChar, $span->endChar - $span->startChar + 1) . "</span>";
                 $i = $span->endChar + 1;
             }
         }
