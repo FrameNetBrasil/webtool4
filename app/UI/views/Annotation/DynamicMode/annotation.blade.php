@@ -39,7 +39,7 @@
                         id="formObject"
                         class="form"
                         hx-trigger="load"
-                        hx-post="/annotation/dynamicMode/formObject"
+                        hx-get="/annotation/dynamicMode/formObject"
                     >
                     </div>
                     @include("Annotation.DynamicMode.Panes.gridsPane")
