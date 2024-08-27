@@ -68,7 +68,7 @@ class audioPreprocess
             $this->videoFileOriginal = "{$this->dataPath}/{$this->videoPath}/{$this->videoName}";
             $this->videoSize = 'small';
             $this->audioProcess();
-            break;
+            //break;
         }
 
 //        $this->videoProcess();
@@ -119,7 +119,7 @@ class audioPreprocess
             //debug($upload);
             //shell_exec($upload);
         }
-        $this->speechToText($this->audioFile );
+        //$this->speechToText($this->audioFile );
 
     }
 

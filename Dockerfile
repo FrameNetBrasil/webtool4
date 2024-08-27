@@ -44,8 +44,10 @@ RUN docker-php-ext-configure gd --with-jpeg \
     && docker-php-ext-enable ds \
     && pecl install redis \
     && pecl install xdebug \
+    && pecl install grpc \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-enable redis \
+    && docker-php-ext-enable grpc \
     && pecl install apcu \
     && docker-php-ext-enable apcu \
     && echo "apc.enable_cli=1" >> "$PHP_INI_DIR/php.ini" \

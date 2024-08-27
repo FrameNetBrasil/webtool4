@@ -3,6 +3,13 @@
         Dynamic Annotation
     </x-slot:title>
     <x-slot:actions>
+        <x-button
+            id="btnBuildSentences"
+            label="Build Sentences"
+            color="secondary"
+            href="/annotation/dynamicMode/buildSentences/{{$idDocument}}"
+        >
+        </x-button>
     </x-slot:actions>
     <x-slot:main>
         <div id="dynamicAnnotationPane" class="dynamicAnnotationPane">
