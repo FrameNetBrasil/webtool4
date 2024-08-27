@@ -7,31 +7,18 @@ use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Orkester\Persistence\Map\ClassMap;
 
 class Criteria extends Builder
 {
-//    public string|Model $model;
-//    public ClassMap $classMap;
-//    public $fieldAlias = [];
-//    public $tableAlias = [];
-//    public Set $generatedAliases;
-//    public $classAlias = [];
-//    public $criteriaAlias = [];
-//    public $associationJoin = [];
-//    public $associationAlias = [];
-//    public $associationClass = [];
-//    static public $aliasCount = 0;
-//    public $parameters = [];
-//    public $aliasTable = NULL;
-    /**
-     * //     * @var ClassMap[] $maps
-     */
-//    private array $maps;
+    public static string $database = '';
 
     public function __construct()
     {
-        $connection = app()->make(ConnectionInterface::class);
+        if (self::$database != '') {
+            $connection = DB::connection(self::$database);
+        } else {
+            $connection = app()->make(ConnectionInterface::class);
+        }
         parent::__construct($connection);
     }
 
