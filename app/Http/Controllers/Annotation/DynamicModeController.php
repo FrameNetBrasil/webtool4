@@ -210,4 +210,34 @@ class DynamicModeController extends Controller
         }
     }
 
+    #[Get(path: '/annotation/dynamicMode/buildSentences/{idDocument}')]
+    public function buildSentences(int $idDocument)
+    {
+        $data = $this->getData($idDocument);
+        return view("Annotation.DynamicMode.buildSentences", $data->toArray());
+    }
+
+    #[Get(path: '/annotation/dynamicMode/formSentence/{idSentence}')]
+    public function formSentence(int $idSentence)
+    {
+        $sentence = (object)[
+            "idSentence" => $idSentence,
+            "text" => ""
+        ];
+        return view("Annotation.DynamicMode.Panes.formSentencePane", [
+            "sentence" => $sentence
+        ]);
+    }
+
+    #[Get(path: '/annotation/dynamicMode/gridWords/{idDocument}')]
+    public function gridWords(int $idDocument)
+    {
+        $words = Criteria::table("view_document_wordmm")
+            ->where("idDocument", "=", $idDocument)
+            ->all();
+        return view("Annotation.DynamicMode.Panes.gridWordPane", [
+            "words" => $words
+        ]);
+    }
+
 }
