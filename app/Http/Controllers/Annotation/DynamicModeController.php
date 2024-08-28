@@ -7,7 +7,9 @@ use App\Data\Annotation\DynamicMode\DocumentData;
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
 use App\Data\Annotation\DynamicMode\SearchData;
+use App\Data\Annotation\DynamicMode\SentenceData;
 use App\Data\Annotation\DynamicMode\UpdateBBoxData;
+use App\Data\Annotation\DynamicMode\WordData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
@@ -217,27 +219,60 @@ class DynamicModeController extends Controller
         return view("Annotation.DynamicMode.buildSentences", $data->toArray());
     }
 
-    #[Get(path: '/annotation/dynamicMode/formSentence/{idSentence}')]
-    public function formSentence(int $idSentence)
+    #[Get(path: '/annotation/dynamicMode/formSentence/{idDocument}/{idSentence}')]
+    public function formSentence(int $idDocument, int $idSentence)
     {
-        $sentence = (object)[
-            "idSentence" => $idSentence,
-            "text" => ""
-        ];
+        $sentence = Criteria::byId("sentence","idSentence",$idSentence);
+        if (is_null($sentence)) {
+            $sentence = (object)[
+                "idSentence" => 0,
+                "text" => ''
+            ];
+        }
+        $documentVideo = Criteria::table("view_document_video")
+            ->where("idDocument", $idDocument)
+            ->first();
+        $video = Video::byId($documentVideo->idVideo);
         return view("Annotation.DynamicMode.Panes.formSentencePane", [
-            "sentence" => $sentence
+            'idDocument' => $idDocument,
+            "sentence" => $sentence,
+            'idLanguage' => $video->idLanguage
         ]);
     }
 
-    #[Get(path: '/annotation/dynamicMode/gridWords/{idDocument}')]
-    public function gridWords(int $idDocument)
+    #[Post(path: '/annotation/dynamicMode/formSentence')]
+    public function sentence(SentenceData $data)
     {
-        $words = Criteria::table("view_document_wordmm")
-            ->where("idDocument", "=", $idDocument)
+        try {
+            debug($data);
+            AnnotationDynamicService::updateSentence($data);
+            return $this->renderNotify("success", "Sentence updated.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Get(path: '/annotation/dynamicMode/words/{idVideo}')]
+    public function words(int $idVideo)
+    {
+        $words = Criteria::table("view_video_wordmm")
+            ->where("idVideo", "=", $idVideo)
+            ->whereNull("idDocumentSentence")
             ->all();
-        return view("Annotation.DynamicMode.Panes.gridWordPane", [
-            "words" => $words
-        ]);
+        return $words;
+    }
+
+    #[Post(path: '/annotation/dynamicMode/joinWords')]
+    public function joinWords(WordData $data)
+    {
+        try {
+            debug($data);
+
+//            AnnotationDynamicService::updateSentence($data);
+            return $this->renderNotify("success", "Sentence updated.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
     }
 
 }

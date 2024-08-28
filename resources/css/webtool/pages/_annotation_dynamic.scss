@@ -282,7 +282,20 @@
             flex-flow: column nowrap;
             height: 1px;
             overflow: auto;
-            padding-left:8px;
+            padding:8px 0 0 8px;
+
+            .content {
+                padding:8px;
+
+                .description {
+                    margin-top: 0;
+                    font-size: 0.75rem;
+                }
+            }
+
+            .selected {
+                background-color: $blue-3;
+            }
 
             .words {
                 position: relative;

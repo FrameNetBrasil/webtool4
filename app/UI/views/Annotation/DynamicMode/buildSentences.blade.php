@@ -11,12 +11,24 @@
                     @include("Annotation.DynamicMode.Panes.videoBuildSentencesPane")
                 </div>
                 <div
-                    id="gridWord"
-                    class="gridWord"
-                    hx-trigger="load"
-                    hx-get="/annotation/dynamicMode/gridWords/{{$idDocument}}"
+                    class="pb-1"
                 >
+                    <button
+                        id="btnJoin"
+                        class="ui button primary"
+                        x-data @click="$store.doStore.join()"
+                    >
+                        <span x-data x-text="'Join words'"></span>
+                    </button>
+                    <button
+                        id="btnClear selection"
+                        class="ui button primary"
+                        x-data @click="$store.doStore.clearSelection()"
+                    >
+                        <span x-data x-text="'Clear selection'"></span>
+                    </button>
                 </div>
+                @include("Annotation.DynamicMode.Panes.gridWordPane")
             </div>
             <div class="center">
                 <div class="header">
@@ -40,16 +52,17 @@
                         id="formSentence"
                         class="form"
                         hx-trigger="load"
-                        hx-get="/annotation/dynamicMode/formSentence/0"
+                        hx-get="/annotation/dynamicMode/formSentence/{{$idDocument}}/0"
                     >
                     </div>
-{{--                    @include("Annotation.DynamicMode.Panes.gridsPane")--}}
+
                 </div>
                 <script type="text/javascript">
                     window.annotation = {
                         _token: "{{ csrf_token() }}",
                         document: {{ Js::from($document) }},
-                        video: {{ Js::from($video) }},
+                        videoObject: {{ Js::from($video) }},
+                        wordList: [],
                     }
                     @include("Annotation.DynamicMode.Scripts.api")
                     @include("Annotation.DynamicMode.Scripts.videoBuildSentences")

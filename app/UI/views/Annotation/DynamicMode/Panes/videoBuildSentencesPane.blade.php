@@ -80,6 +80,7 @@
                 let lastFrame = annotation.video.frameFromTime(duration);
                 Alpine.store('doStore').frameDuration = lastFrame;
                 annotation.video.framesRange.last = lastFrame;
+                Alpine.store('doStore').updateWordList();
             })
             player.on('timeupdate', () => {
                 let currentTime = player.currentTime();
@@ -144,14 +145,26 @@
             <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeCount"></span>s]
         </div>
         <div>
+            <button
+                id="btnCopyToStart"
+                class="ui button primary"
+                x-data @click="$store.doStore.copyStartTime()"
+            >
+                <span x-data x-text="'Copy time to Start'"></span>
+            </button>
         </div>
         <div>
-        </div>
-        <div>
+            <button
+                id="btnCopyToEnd"
+                class="ui button primary"
+                x-data @click="$store.doStore.copyEndTime()"
+            >
+                <span x-data x-text="'Copy time to End'"></span>
+            </button>
         </div>
         <div style="width:120px; text-align:right">
             <span x-text="$store.doStore.frameDuration"></span> [<span x-text="$store.doStore.timeDuration"></span>s]
         </div>
     </div>
-
+    <hr/>
 </div>

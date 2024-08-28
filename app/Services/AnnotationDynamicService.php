@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
+use App\Data\Annotation\DynamicMode\SentenceData;
 use App\Data\Annotation\DynamicMode\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
@@ -292,5 +293,33 @@ class AnnotationDynamicService
         return $decorated;
     }
 
+    public static function updateSentence(SentenceData $data): void
+    {
+        if ($data->idSentence == 0) {
+            $idUser = AppService::getCurrentIdUser();
+            $json = json_encode([
+                'text' => $data->text,
+                'idUser' => $idUser,
+                'idDocument' => $data->idDocument,
+                'idLanguage' => $data->idLanguage
+            ]);
+            $idSentence = Criteria::function("sentence_create(?)", [$json]);
+            $sentence = Criteria::byId("sentence","idSentence", $idSentence);
+            $json = json_encode([
+                'startTime' => (float)$data->startTime,
+                'endTime' => (float)$data->endTime,
+            ]);
+            $idTimeSpan = Criteria::function("timespan_create(?)", [$json]);
+            $timespan = Criteria::byId("timespan","idTimeSpan", $idTimeSpan);
+            $json = json_encode([
+                'idAnnotationObject1' => $sentence->idAnnotationObject,
+                'idAnnotationObject2' => $timespan->idAnnotationObject,
+                'relationType' => 'rel_sentence_time'
+            ]);
+            $idObject = Criteria::function("objectrelation_create(?)",[$json]);
+        } else {
+
+        }
+    }
 
 }
