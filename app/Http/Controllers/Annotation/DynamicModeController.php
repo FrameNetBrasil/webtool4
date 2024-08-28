@@ -228,6 +228,10 @@ class DynamicModeController extends Controller
                 "idSentence" => 0,
                 "text" => ''
             ];
+        } else {
+            $ts = Criteria::byId("view_sentence_timespan","idSentence",$idSentence);
+            $sentence->startTime = $ts->startTime;
+            $sentence->endTime = $ts->endTime;
         }
         $documentVideo = Criteria::table("view_document_video")
             ->where("idDocument", $idDocument)
@@ -244,8 +248,11 @@ class DynamicModeController extends Controller
     public function sentence(SentenceData $data)
     {
         try {
-            debug($data);
+            if ($data->text == "") {
+                return $this->renderNotify("error", "No data.");
+            }
             AnnotationDynamicService::updateSentence($data);
+            $this->trigger('reload-gridSentence');
             return $this->renderNotify("success", "Sentence updated.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -267,12 +274,35 @@ class DynamicModeController extends Controller
     {
         try {
             debug($data);
+            $idSentence = AnnotationDynamicService::buildSentenceFromWords($data);
+            return $idSentence;
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
 
-//            AnnotationDynamicService::updateSentence($data);
+    #[Get(path: '/annotation/dynamicMode/buildSentences/sentences/{idDocument}')]
+    public function buildSentenceSentences(int $idDocument)
+    {
+
+        $sentences = AnnotationDynamicService::listSentencesByDocument($idDocument);
+        return view("Annotation.DynamicMode.Panes.buildSentences", [
+            'idDocument' => $idDocument,
+            'sentences' => $sentences
+        ]);
+    }
+
+    #[Post(path: '/annotation/dynamicMode/splitSentence')]
+    public function splitSentence(SentenceData $data)
+    {
+        try {
+            AnnotationDynamicService::splitSentence($data);
+            $this->trigger('reload-gridSentence');
             return $this->renderNotify("success", "Sentence updated.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
 
 }

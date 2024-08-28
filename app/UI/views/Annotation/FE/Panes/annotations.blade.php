@@ -14,7 +14,7 @@
             @if($hasAS != '')
                 <button
                     class="hasAS"
-                    hx-get="/annotation/fe/as/{{$token['idAS']}}"
+                    hx-get="/annotation/fe/as/{{$token['idAS']}}/{{$token['word']}}"
                     hx-target="#workArea"
                     hx-swap="innerHTML"
                 >{{$token['word']}}

@@ -3,6 +3,13 @@
         Dynamic Annotation - Build Sentences
     </x-slot:title>
     <x-slot:actions>
+        <x-button
+            id="btnAnnotation"
+            label="Annotation"
+            color="secondary"
+            href="/annotation/dynamicMode/{{$idDocument}}"
+        >
+        </x-button>
     </x-slot:actions>
     <x-slot:main>
         <div id="dynamicAnnotationBuildSentencesPane" class="dynamicAnnotationBuildSentencesPane">
@@ -50,12 +57,17 @@
                 <div class="flex flex-column flex-grow-1" x-data="$store.doStore">
                     <div
                         id="formSentence"
-                        class="form"
                         hx-trigger="load"
                         hx-get="/annotation/dynamicMode/formSentence/{{$idDocument}}/0"
                     >
                     </div>
-
+                    <div
+                        id="gridSentences"
+                        class="gridSentences"
+                        hx-trigger="load"
+                        hx-get="/annotation/dynamicMode/buildSentences/sentences/{{$idDocument}}"
+                    >
+                    </div>
                 </div>
                 <script type="text/javascript">
                     window.annotation = {

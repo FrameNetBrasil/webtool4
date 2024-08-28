@@ -45,31 +45,20 @@ document.addEventListener('alpine:init', () => {
                      words.push(word);
                  }
             }
-            await annotation.api.joinWords({
+            let idSentence = await annotation.api.joinWords({
                 words
             });
-
-            // let start = 100000;
-            // let end = 0;
-            // let text = "";
-            // for (var word of this.words) {
-            //     if (word.selected) {
-            //         text = text + " " + word.word;
-            //         if (word.startTime < start) {
-            //             start = word.startTime;
-            //         }
-            //         if (word.endTime > end) {
-            //             end = word.endTime;
-            //         }
-            //     }
-            // }
-            // start = parseInt(start * 100) / 100;
-            // $("#startTime").val(start);
-            // end = parseInt(end * 100) / 100;
-            // $("#endTime").val(end);
-            // $("#text").val(text);
-            // $("#idOriginMM_dropdown").dropdown('set selected', 4);
-            // console.log(text, start, end);
+            await this.updateWordList();
+            htmx.ajax('GET', `/annotation/dynamicMode/formSentence/${annotation.document.idDocument}/${idSentence}`, '#formSentence');
+            htmx.ajax('GET', `/annotation/dynamicMode/buildSentences/sentences/${annotation.document.idDocument}`,'#gridSentences');
+        },
+        async split(idSentence) {
+            annotation.api.splitSentence({
+                idSentence
+            });
+            await this.updateWordList();
+            htmx.ajax('GET', `/annotation/dynamicMode/formSentence/${annotation.document.idDocument}/0`, '#formSentence');
+            htmx.ajax('GET', `/annotation/dynamicMode/buildSentences/sentences/${annotation.document.idDocument}`,'#gridSentences');
         },
         clearSelection() {
             console.log("clear selection");

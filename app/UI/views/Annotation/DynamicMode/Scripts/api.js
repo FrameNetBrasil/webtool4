@@ -151,6 +151,9 @@ annotation.api = {
 
     joinWords: async function (params) {
         params._token = annotation._token;
+        params.idVideo  = annotation.videoObject.idVideo;
+        params.idLanguage  = annotation.videoObject.idLanguage;
+        params.idDocument  = annotation.document.idDocument;
         let result = null;
         await $.ajax({
             url: "/annotation/dynamicMode/joinWords",
@@ -162,6 +165,23 @@ annotation.api = {
                 console.log(result);
             }
         });
+        return result;
+    },
+
+    splitSentence: async function (params) {
+        params._token = annotation._token;
+        let result = null;
+        await $.ajax({
+            url: "/annotation/dynamicMode/splitSentence",
+            method: "POST",
+            dataType: "json",
+            data: params,
+            success: (response) => {
+                result = response;
+                console.log(result);
+            }
+        });
+        return result;
     },
 
 };

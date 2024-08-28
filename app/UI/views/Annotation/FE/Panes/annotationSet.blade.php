@@ -6,6 +6,15 @@
                     LU: {{$lu->frame->name}}.{{$lu->name}}
                 </div>
                 <div class="col-4 text-right">
+                    <div class="ui dropdown alternativeLU">
+                        <div class="text">Alternative LUs</div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            @foreach($alternativeLU as $lu)
+                            <div class="item">{{$lu->frameName}}.{{$lu->lu}}</div>
+                            @endforeach
+                        </div>
+                    </div>
                     <div class="ui label tag wt-tag-id">
                         #{{$idAnnotationSet}}
                     </div>
@@ -151,4 +160,11 @@
         start: 0,
         end: 0
     };
+
+    $(function() {
+        $('.alternativeLU')
+            .dropdown({
+                action: 'hide'
+            });
+    })
 </script>
