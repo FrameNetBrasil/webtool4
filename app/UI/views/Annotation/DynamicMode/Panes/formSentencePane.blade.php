@@ -9,7 +9,7 @@
         <x-slot:fields>
             <div class="field ">
                 <div class="flex">
-                    @if($sentence->idSentence == 0)
+                    @if($sentence?->idSentence == 0)
                         <div class="field title">Current Sentence: #new</div>
                         <div class="frame">
                         </div>
@@ -19,6 +19,18 @@
                 </div>
             </div>
             <div class="flex flex-row flex-wrap gap-2">
+                <x-hidden-field
+                    id="idDocument"
+                    :value="$idDocument"
+                ></x-hidden-field>
+                <x-hidden-field
+                    id="idLanguage"
+                    :value="$idLanguage"
+                ></x-hidden-field>
+                <x-hidden-field
+                    id="idSentence"
+                    :value="$sentence?->idSentence"
+                ></x-hidden-field>
                 <x-text-field
                     id="startTime"
                     label="Start"
@@ -52,6 +64,14 @@
                     <x-button
                         type="button"
                         label="Save"
+                        hx-post="/annotation/dynamicMode/formSentence"
+                    ></x-button>
+                    <x-button
+                        type="button"
+                        label="Reset"
+                        color="secondary"
+                        hx-get="/annotation/dynamicMode/formSentence/0"
+                        hx-target="#formSentence"
                     ></x-button>
                 </div>
             </div>

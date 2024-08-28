@@ -134,5 +134,34 @@ annotation.api = {
                 $.messager.alert('Error', e.message, 'error');
             }
         });
-    }
-}
+    },
+
+    loadWords: async function () {
+        console.log(annotation.videoObject);
+        await $.ajax({
+            url: "/annotation/dynamicMode/words/" + annotation.videoObject.idVideo,
+            method: "GET",
+            dataType: "json",
+            success: (response) => {
+                annotation.wordList = response;
+                Alpine.store('doStore').dataState = 'loaded';
+            }
+        });
+    },
+
+    joinWords: async function (params) {
+        params._token = annotation._token;
+        let result = null;
+        await $.ajax({
+            url: "/annotation/dynamicMode/joinWords",
+            method: "POST",
+            dataType: "json",
+            data: params,
+            success: (response) => {
+                result = response;
+                console.log(result);
+            }
+        });
+    },
+
+};

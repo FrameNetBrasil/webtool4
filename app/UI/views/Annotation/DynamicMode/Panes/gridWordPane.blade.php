@@ -1,23 +1,38 @@
-<div class="grid words w-full">
-@foreach($words as $word)
-        <div class="col-3">
+<div
+    id="gridWord"
+    class="gridWord"
+    x-data
+>
+    <div
+        class="grid words w-full"
+    >
+        <template x-for="word,index in $store.doStore.words">
             <div
-                class="ui card cursor-pointer w-full"
+                class="col-3"
             >
-                <div class="content">
-                    <div
-                        class="header"
-                    >
+                <div
+                    @click="Alpine.store('doStore').selectWord(index)"
+                    :class="'ui card cursor-pointer w-full ' + (word.selected ? 'selected' : '')"
+                >
+                    <div class="content">
                         <div
-                            class="word"
+                            class="header"
                         >
-                            {{$word->word}}
+                            <div
+                                class="word"
+                                x-text="word.word"
+                            >
+                            </div>
                         </div>
-                    </div>
-                    <div class="description">
+                        <div
+                            class="description"
+                            x-text="word.startTime + '/' + word.endTime"
+                        >
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    @endforeach
+        </template>
+    </div>
 </div>
+
