@@ -11,8 +11,6 @@
                 <div class="flex">
                     @if($sentence?->idSentence == 0)
                         <div class="field title">Current Sentence: #new</div>
-                        <div class="frame">
-                        </div>
                     @else
                         <div class="field title">Current Sentence: #{{$sentence->idSentence}}</div>
                     @endif
@@ -46,9 +44,9 @@
                     <x-combobox.options
                         label="Text source"
                         id="idOriginMM"
-                        :value="$sentence?->idOrigin ?? 0"
+                        :value="$sentence?->idOriginMM ?? 0"
                         :options="$origins"
-                        class="w-10rem"
+                        class="w-14rem"
                     ></x-combobox.options>
             </div>
             <div class="flex flex-row flex-wrap gap-2">
@@ -70,8 +68,14 @@
                         type="button"
                         label="Reset"
                         color="secondary"
-                        hx-get="/annotation/dynamicMode/formSentence/0"
+                        hx-get="/annotation/dynamicMode/formSentence/{{$idDocument}}/0"
                         hx-target="#formSentence"
+                    ></x-button>
+                    <x-button
+                        type="button"
+                        label="Split"
+                        color="danger"
+                        x-data @click="$store.doStore.split({{$sentence?->idSentence}})"
                     ></x-button>
                 </div>
             </div>

@@ -12,6 +12,7 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
+use App\Repositories\WordForm;
 use App\Services\AnnotationFEService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -64,10 +65,18 @@ class FEController extends Controller
         return view("Annotation.FE.Panes.annotations", $data);
     }
 
-    #[Get(path: '/annotation/fe/as/{idAS}')]
-    public function annotationSet(int $idAS)
+    #[Get(path: '/annotation/fe/as/{idAS}/{token}')]
+    public function annotationSet(int $idAS, string $token)
     {
         $data = AnnotationFEService::getASData($idAS);
+        debug($token);
+        $idLU = $data['lu']->idLU;
+        $data['alternativeLU'] = [];
+        foreach(WordForm::getLUs($token) as $lu) {
+            if ($lu->idLU != $idLU) {
+                $data['alternativeLU'][] = $lu;
+            }
+        }
         return view("Annotation.FE.Panes.annotationSet", $data);
     }
 

@@ -6,6 +6,7 @@ use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
 use App\Data\Annotation\DynamicMode\SentenceData;
 use App\Data\Annotation\DynamicMode\UpdateBBoxData;
+use App\Data\Annotation\DynamicMode\WordData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Base;
@@ -40,7 +41,7 @@ class AnnotationDynamicService
             ->select("ut.idUserTask", "ut.idTask")
             ->first();
         if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-            if (User::isManager($user) || User::isMemberOf($user,'MASTER')) {
+            if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
                 $usertask = Criteria::table("usertask_document")
                     ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
                     ->where("usertask_document.idDocument", $idDocument)
@@ -152,6 +153,7 @@ class AnnotationDynamicService
         }
         return $data->idDynamicObject;
     }
+
     public static function updateObject(ObjectData $data): int
     {
         // if idDynamicObject = null : object create
@@ -203,7 +205,7 @@ class AnnotationDynamicService
                     'endFrame' => $data->endFrame,
                     'startTime' => $data->startTime,
                     'endTime' => $data->endTime,
-            ]);
+                ]);
             if (count($data->frames)) {
                 self::deleteBBoxesByDynamicObject($idDynamicObject);
                 foreach ($data->frames as $frame) {
@@ -262,9 +264,11 @@ class AnnotationDynamicService
             ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
             ->join("view_sentence_timespan as st", "sentence.idSentence", "=", "st.idSentence")
             ->join("document as d", "ds.idDocument", "=", "d.idDocument")
+            ->leftJoin("originmm as o","sentence.idOriginMM","=","o.idOriginMM")
             ->where("d.idDocument", $idDocument)
-            ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence", "st.startTime", "st.endTime")
-            ->orderBy("ds.idDocumentSentence")
+            ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence", "st.startTime", "st.endTime","o.origin","d.idDocument")
+            ->orderBy("st.startTime")
+            ->orderBy("st.endTime")
             ->limit(1000)
             ->get()->keyBy("idDocumentSentence")->all();
         if (!empty($sentences)) {
@@ -295,31 +299,89 @@ class AnnotationDynamicService
 
     public static function updateSentence(SentenceData $data): void
     {
-        if ($data->idSentence == 0) {
-            $idUser = AppService::getCurrentIdUser();
-            $json = json_encode([
-                'text' => $data->text,
-                'idUser' => $idUser,
-                'idDocument' => $data->idDocument,
-                'idLanguage' => $data->idLanguage
-            ]);
-            $idSentence = Criteria::function("sentence_create(?)", [$json]);
-            $sentence = Criteria::byId("sentence","idSentence", $idSentence);
-            $json = json_encode([
-                'startTime' => (float)$data->startTime,
-                'endTime' => (float)$data->endTime,
-            ]);
-            $idTimeSpan = Criteria::function("timespan_create(?)", [$json]);
-            $timespan = Criteria::byId("timespan","idTimeSpan", $idTimeSpan);
-            $json = json_encode([
-                'idAnnotationObject1' => $sentence->idAnnotationObject,
-                'idAnnotationObject2' => $timespan->idAnnotationObject,
-                'relationType' => 'rel_sentence_time'
-            ]);
-            $idObject = Criteria::function("objectrelation_create(?)",[$json]);
-        } else {
-
+        if ($data->idSentence > 0) {
+            $sentence = Criteria::byId("sentence", "idSentence", $data->idSentence);
+            // atualiza timespan associadp
+            $or = Criteria::table("view_object_relation as or")
+                ->where("idAnnotationObject1", $sentence->idAnnotationObject)
+                ->where("relationType", "rel_sentence_time")
+                ->first();
+            Criteria::table("timespan")
+                ->where("idAnnotationObject", $or->idAnnotationObject2)
+                ->update([
+                    'startTime' => $data->startTime,
+                    'endTime' => $data->endTime
+                ]);
+            // atualiza sentence
+            Criteria::table("sentence")
+                ->where("idSentence", $data->idSentence)
+                ->update([
+                    'text' => trim($data->text),
+                    'idOriginMM' => $data->idOriginMM
+                ]);
         }
     }
+
+    public static function buildSentenceFromWords(WordData $data): int
+    {
+        $start = 100000;
+        $end = 0;
+        $text = '';
+        $idWordMM = [];
+        foreach ($data->words as $word) {
+            $text .= $word->word . ' ';
+            if ($word->startTime < $start) {
+                $start = $word->startTime;
+            }
+            if ($word->endTime > $end) {
+                $end = $word->endTime;
+            }
+            $idWordMM[] = $word->idWordMM;
+        }
+        debug($text, $start, $end, $idWordMM);
+        $idUser = AppService::getCurrentIdUser();
+        $json = json_encode([
+            'text' => trim($text),
+            'idUser' => $idUser,
+            'idDocument' => $data->idDocument,
+            'idLanguage' => $data->idLanguage
+        ]);
+        $idSentence = Criteria::function("sentence_create(?)", [$json]);
+        $sentence = Criteria::byId("sentence", "idSentence", $idSentence);
+        Criteria::table("sentence")
+            ->where("idSentence", $idSentence)
+            ->update(['idOriginMM' => 4]);
+        $json = json_encode([
+            'startTime' => (float)$start,
+            'endTime' => (float)$end,
+        ]);
+        $idTimeSpan = Criteria::function("timespan_create(?)", [$json]);
+        $timespan = Criteria::byId("timespan", "idTimeSpan", $idTimeSpan);
+        $json = json_encode([
+            'idAnnotationObject1' => $sentence->idAnnotationObject,
+            'idAnnotationObject2' => $timespan->idAnnotationObject,
+            'relationType' => 'rel_sentence_time'
+        ]);
+        $idObject = Criteria::function("objectrelation_create(?)", [$json]);
+        $documentSentence = Criteria::table("view_document_sentence as ds")
+            ->where("ds.idSentence", $idSentence)
+            ->where("ds.idDocument", $data->idDocument)
+            ->first();
+        Criteria::table("wordmm")
+            ->whereIn("idWordMM", $idWordMM)
+            ->update([
+                "idDocumentSentence" => $documentSentence->idDocumentSentence
+            ]);
+        return $idSentence;
+    }
+
+    public static function splitSentence(SentenceData $data): void
+    {
+        if ($data->idSentence > 0) {
+            $idUser = AppService::getCurrentIdUser();
+            Criteria::function("sentence_delete(?,?)", [$data->idSentence, $idUser]);
+        }
+    }
+
 
 }
