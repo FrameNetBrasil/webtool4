@@ -8,7 +8,7 @@ class GoogleStorage
     public function __construct()
     {
         //$file = trim("/home/framenetbr/devel/fnbr/charon_docker_maestro/apps/webtool/offline/google-cloud/storage/charon-286713-0b09338da74c.json");
-        $file = trim("/var/www/html/apps/webtool/offline/google-cloud/storage/charon-286713-0b09338da74c.json");
+        $file = trim(__DIR__ . "/charon-286713-0b09338da74c.json");
         putenv("GOOGLE_APPLICATION_CREDENTIALS=$file");
     }
 
