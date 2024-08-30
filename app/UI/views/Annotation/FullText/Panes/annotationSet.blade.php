@@ -44,32 +44,47 @@
                                                 @if($type->idTypeInstance == $idInstantiationType)
                                                     @foreach($niFEs as $niFE)
                                                         @php($idEntityFE = $niFE['idEntityFE'])
-                                                        {{--                                                                            <span class="line" style="background:#{{$fes[$idEntityFE]->rgbBg}}; top:{{$topLine}}px">--}}
-                                                        <span class="line color_{{$fes[$idEntityFE]->idColor}}"
-                                                              style="top:{{$topLine}}px">
-                                        <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
-                                              style="top:0px">{{$niFE['label']}}</span>
-                            </span>
+                                                        <span
+                                                            class="line color_{{$entities[$idEntityFE]->idColor}}"
+                                                            style="top:{{$topLine}}px"
+                                                        >
+                                                            <span
+                                                                class="feLabel color_{{$entities[$idEntityFE]->idColor}}"
+                                                                style="top:0px"
+                                                            >{{$niFE['label']}}
+                                                            </span>
+                                                        </span>
                                                         @php($topLine += 24)
                                                     @endforeach
                                                 @endif
                                             @endforeach
-                    </span>
+                                        </span>
                                     </div>
                                 @endif
                             @endforeach
                         </div>
-
                     </div>
-                    <div>
+                    <div
+                        class="layers"
+                    >
+                        @foreach($layerTypes as $i => $layerType)
+                            @php($topLine = 21 + ($i * 24))
+                            <span
+                                class=""
+                                style="top:{{$topLine}}px"
+                            >{{$layerType->name}}
+                            </span>
+                        @endforeach
+                    </div>
+                    <div
+                        class="annotationSentence flex flex-column"
+                    >
                         <div class="rowWord">
-
                             @foreach($words as $i => $word)
-                                {{--                            @if($word['word'] != ' ')--}}
                                 <div class="{!! ($word['word'] != ' ') ? 'colWord' : 'colSpace' !!}">
                                     @php($isTarget = ($i >= $target->startWord) && ($i <= $target->endWord))
                                     @php($labelsAtWord = ($spans[$i] ?? []))
-                                    @php($height = 24 + ($isTarget ? 0 : ((count($labelsAtWord) - 1) * 30)))
+                                    @php($height = 24)
                                     <span
                                         class="word {{$isTarget ? 'target' : ''}} {{$word['hasFE'] ? 'hasFE' : ''}}"
                                         id="word_{{$i}}"
@@ -78,52 +93,51 @@
                                         data-startchar="{{$word['startChar']}}"
                                         data-endchar="{{$word['endChar']}}"
                                         style="height:{{$height}}px"
-                                    >{{$word['word']}}
-                                        @foreach($idLayers as $l => $idLayer)
-                                            @php($topLine = 6 + ($l * 24))
-                                            @php($label = $spans[$i][$idLayer])
-                                            @if(!is_null($label))
-                                                @if(isset($label['idEntityFE']))
-                                                    @php($idEntityFE = $label['idEntityFE'])
-                                                    <span class="line color_{{$fes[$idEntityFE]->idColor}}"
-                                                          style="top:{{$topLine}}px">
-                                                @if($label['label'])
-                                                            <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
-                                                                  style="top:0">{{$label['label']}}</span>
-                                                        @endif
-                                                </span>
-                                                @endif
-                                                @if(isset($label['idEntityGF']))
-                                                    @php($idEntityGF = $label['idEntityGF'])
-                                                    <span class="line color_{{$gfs[$idEntityGF]->idColor}}"
-                                                          style="top:{{$topLine}}px">
-                                                        @if($label['label'])
-                                                            <span class="feLabel color_{{$gfs[$idEntityGF]->idColor}}"
-                                                                  style="top:0">{{$label['label']}}</span>
-                                                        @endif
-                                                </span>
-                                                @endif
-                                                @if(isset($label['idEntityPT']))
-                                                    @php($idEntityPT = $label['idEntityPT'])
-                                                    <span class="line color_{{$pts[$idEntityPT]->idColor}}"
-                                                          style="top:{{$topLine}}px">
-                                                        @if($label['label'])
-                                                            <span class="feLabel color_{{$pts[$idEntityPT]->idColor}}"
-                                                                  style="top:0">{{$label['label']}}</span>
-                                                        @endif
-                                                </span>
-                                                @endif
-                                            @else
-                                                <span></span>
-                                            @endif
-                                            {{--                                            @php($topLine += 24)--}}
-                                        @endforeach
-                                </span>
+                                    >{!! ($word['word'] != ' ') ? $word['word'] : '&nbsp;' !!}
+                                    </span>
                                 </div>
                             @endforeach
-
                         </div>
-
+                        <div class="rowAnnotation">
+                            @foreach($words as $i => $word)
+                                <div class="{!! ($word['word'] != ' ') ? 'colWord' : 'colSpace' !!}">
+                                    @php($isTarget = ($i >= $target->startWord) && ($i <= $target->endWord))
+                                    @php($labelsAtWord = ($spans[$i] ?? []))
+                                    @php($height = 24 + ($isTarget ? 0 : ((count($labelsAtWord) - 1) * 24)))
+                                    <span
+                                        class="word"
+                                        id="word_{{$i}}"
+                                        data-type="word"
+                                        data-i="{{$i}}"
+                                        data-startchar="{{$word['startChar']}}"
+                                        data-endchar="{{$word['endChar']}}"
+                                        style="height:{{$height}}px"
+                                    ><span style="visibility: hidden">{!! ($word['word'] != ' ') ? $word['word'] : '&nbsp;' !!}</span>
+                                        @foreach($idLayers as $l => $idLayer)
+                                            @php($topLine = 0 + ($l * 24))
+                                            @php($annotation = $spans[$i][$idLayer])
+                                            @if(!is_null($annotation))
+                                                @if(isset($annotation['idEntity']))
+                                                    @php($idEntity = $annotation['idEntity'])
+                                                    <span class="line color_{{$entities[$idEntity]->idColor}}"
+                                                          style="top:{{$topLine}}px">
+                                                    @if($annotation['label'])
+                                                            <span
+                                                                class="feLabel color_{{$entities[$idEntity]->idColor}}"
+                                                                style="top:0"
+                                                            >{{$annotation['label']}}
+                                                            </span>
+                                                        @endif
+                                                    </span>
+                                                @endif
+{{--                                            @else--}}
+{{--                                                <span>&nbsp;</span>--}}
+                                            @endif
+                                        @endforeach
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,181 +162,190 @@
 
     <div class="gridLabels">
         <div class="labels">
-            <div class="ui card w-full tab" data-tab="fe">
-                <div class="content">
-                    <div class="rowFE">
-                        @foreach($fes as $fe)
-                            <div class="colFE">
-                                <button
-                                    class="ui right labeled icon button color_{{$fe->idColor}}"
-                                    hx-post="/annotation/fullText/annotate/"
-                                    hx-target="#workArea"
-                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idFrameElement:{{$fe->idFrameElement}}, selection: annotationFE.selection}'
-                                >
-                                    <i
-                                        class="delete icon"
-                                        hx-on:click="event.stopPropagation()"
-                                        hx-delete="/annotation/fullText/frameElement"
-                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idFrameElement:{{$fe->idFrameElement}}}'
+            @foreach($labels as $type => $labelData)
+                <div class="ui card w-full tab" data-tab="fe">
+                    <div class="content">
+                        <div class="rowFE">
+                            @foreach($labelData as $idEntity => $label)
+                                <div class="colFE">
+                                    <button
+                                        class="ui right labeled icon button color_{{$label->idColor}}"
+                                        hx-post="/annotation/fullText/annotate/"
                                         hx-target="#workArea"
+                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idEntity:{{$idEntity}}, selection: annotationFullText.selection}'
                                     >
-                                    </i>
-                                    <x-element.fe
-                                        name="{{$fe->name}}"
-                                        type="{{$fe->coreType}}"
-                                        idColor="{{$fe->idColor}}"
-                                    ></x-element.fe>
-                                </button>
-                            </div>
-                        @endforeach
+                                        <i
+                                            class="delete icon"
+                                            hx-on:click="event.stopPropagation()"
+                                            hx-delete="/annotation/fullText/label"
+                                            hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idEntity:{{$idEntity}}}'
+                                            hx-target="#workArea"
+                                        >
+                                        </i>
+                                        @if ($type == 'fe')
+                                            <x-element.fe
+                                                name="{{$label->name}}"
+                                                type="{{$label->coreType}}"
+                                                idColor="{{$label->idColor}}"
+                                            ></x-element.fe>
+                                        @else
+                                            <x-element.gl
+                                                name="{{$label->name}}"
+                                                idColor="{{$label->idColor}}"
+                                            ></x-element.gl>
+                                        @endif
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="ui card w-full tab" data-tab="gf">
-                <div class="content">
-                    <div class="rowFE">
-                        @foreach($gfs as $gf)
-                            <div class="colFE">
-                                <button
-                                    class="ui right labeled icon button color_{{$gf->idColor}}"
-                                    hx-post="/annotation/fullText/annotate/"
-                                    hx-target="#workArea"
-                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$gf->idGenericLabel}}, selection: annotationFullText.selection}'
-                                >
-                                    <i
-                                        class="delete icon"
-                                        hx-on:click="event.stopPropagation()"
-                                        hx-delete="/annotation/fullText/genericLabel"
-                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$gf->idGenericLabel}}}'
-                                        hx-target="#workArea"
-                                    >
-                                    </i>
-                                    <x-element.gl
-                                        name="{{$gf->name}}"
-                                        idColor="{{$gf->idColor}}"
-                                    ></x-element.gl>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="ui card w-full tab" data-tab="pt">
-                <div class="content">
-                    <div class="rowFE">
-                        @foreach($pts as $pt)
-                            <div class="colFE">
-                                <button
-                                    class="ui right labeled icon button color_{{$pt->idColor}}"
-                                    hx-post="/annotation/fullText/annotate/"
-                                    hx-target="#workArea"
-                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$pt->idGenericLabel}}, selection: annotationFullText.selection}'
-                                >
-                                    <i
-                                        class="delete icon"
-                                        hx-on:click="event.stopPropagation()"
-                                        hx-delete="/annotation/fullText/genericLabel"
-                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$pt->idGenericLabel}}}'
-                                        hx-target="#workArea"
-                                    >
-                                    </i>
-                                    <x-element.gl
-                                        name="{{$pt->name}}"
-                                        idColor="{{$pt->idColor}}"
-                                    ></x-element.gl>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="ui card w-full tab" data-tab="other">
-                <div class="content">
-                    <div class="rowFE">
-                        @foreach($others as $other)
-                            <div class="colFE">
-                                <button
-                                    class="ui right labeled icon button color_{{$other->idColor}}"
-                                    hx-post="/annotation/fullText/annotate/"
-                                    hx-target="#workArea"
-                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$other->idGenericLabel}}, selection: annotationFullText.selection}'
-                                >
-                                    <i
-                                        class="delete icon"
-                                        hx-on:click="event.stopPropagation()"
-                                        hx-delete="/annotation/fullText/genericLabel"
-                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$other->idGenericLabel}}}'
-                                        hx-target="#workArea"
-                                    >
-                                    </i>
-                                    <x-element.gl
-                                        name="{{$other->name}}"
-                                        idColor="{{$other->idColor}}"
-                                    ></x-element.gl>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="ui card w-full tab" data-tab="pos">
-                <div class="content">
-                    <div class="rowFE">
-                        @foreach($pos as $p)
-                            <div class="colFE">
-                                <button
-                                    class="ui right labeled icon button color_{{$p->idColor}}"
-                                    hx-post="/annotation/fullText/annotate/"
-                                    hx-target="#workArea"
-                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$p->idGenericLabel}}, selection: annotationFullText.selection}'
-                                >
-                                    <i
-                                        class="delete icon"
-                                        hx-on:click="event.stopPropagation()"
-                                        hx-delete="/annotation/fullText/genericLabel"
-                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$p->idGenericLabel}}}'
-                                        hx-target="#workArea"
-                                    >
-                                    </i>
-                                    <x-element.gl
-                                        name="{{$p->name}}"
-                                        idColor="{{$p->idColor}}"
-                                    ></x-element.gl>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="ui card w-full tab" data-tab="sent">
-                <div class="content">
-                    <div class="rowFE">
-                        @foreach($sents as $sent)
-                            <div class="colFE">
-                                <button
-                                    class="ui right labeled icon button color_{{$sent->idColor}}"
-                                    hx-post="/annotation/fullText/annotate/"
-                                    hx-target="#workArea"
-                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$sent->idGenericLabel}}, selection: annotationFullText.selection}'
-                                >
-                                    <i
-                                        class="delete icon"
-                                        hx-on:click="event.stopPropagation()"
-                                        hx-delete="/annotation/fullText/genericLabel"
-                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$sent->idGenericLabel}}}'
-                                        hx-target="#workArea"
-                                    >
-                                    </i>
-                                    <x-element.gl
-                                        name="{{$sent->name}}"
-                                        idColor="{{$sent->idColor}}"
-                                    ></x-element.gl>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
+            @endforeach
+            {{--            <div class="ui card w-full tab" data-tab="gf">--}}
+            {{--                <div class="content">--}}
+            {{--                    <div class="rowFE">--}}
+            {{--                        @foreach($gfs as $gf)--}}
+            {{--                            <div class="colFE">--}}
+            {{--                                <button--}}
+            {{--                                    class="ui right labeled icon button color_{{$gf->idColor}}"--}}
+            {{--                                    hx-post="/annotation/fullText/annotate/"--}}
+            {{--                                    hx-target="#workArea"--}}
+            {{--                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$gf->idGenericLabel}}, selection: annotationFullText.selection}'--}}
+            {{--                                >--}}
+            {{--                                    <i--}}
+            {{--                                        class="delete icon"--}}
+            {{--                                        hx-on:click="event.stopPropagation()"--}}
+            {{--                                        hx-delete="/annotation/fullText/genericLabel"--}}
+            {{--                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$gf->idGenericLabel}}}'--}}
+            {{--                                        hx-target="#workArea"--}}
+            {{--                                    >--}}
+            {{--                                    </i>--}}
+            {{--                                    <x-element.gl--}}
+            {{--                                        name="{{$gf->name}}"--}}
+            {{--                                        idColor="{{$gf->idColor}}"--}}
+            {{--                                    ></x-element.gl>--}}
+            {{--                                </button>--}}
+            {{--                            </div>--}}
+            {{--                        @endforeach--}}
+            {{--                    </div>--}}
+            {{--                </div>--}}
+            {{--            </div>--}}
+            {{--            <div class="ui card w-full tab" data-tab="pt">--}}
+            {{--                <div class="content">--}}
+            {{--                    <div class="rowFE">--}}
+            {{--                        @foreach($pts as $pt)--}}
+            {{--                            <div class="colFE">--}}
+            {{--                                <button--}}
+            {{--                                    class="ui right labeled icon button color_{{$pt->idColor}}"--}}
+            {{--                                    hx-post="/annotation/fullText/annotate/"--}}
+            {{--                                    hx-target="#workArea"--}}
+            {{--                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$pt->idGenericLabel}}, selection: annotationFullText.selection}'--}}
+            {{--                                >--}}
+            {{--                                    <i--}}
+            {{--                                        class="delete icon"--}}
+            {{--                                        hx-on:click="event.stopPropagation()"--}}
+            {{--                                        hx-delete="/annotation/fullText/genericLabel"--}}
+            {{--                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$pt->idGenericLabel}}}'--}}
+            {{--                                        hx-target="#workArea"--}}
+            {{--                                    >--}}
+            {{--                                    </i>--}}
+            {{--                                    <x-element.gl--}}
+            {{--                                        name="{{$pt->name}}"--}}
+            {{--                                        idColor="{{$pt->idColor}}"--}}
+            {{--                                    ></x-element.gl>--}}
+            {{--                                </button>--}}
+            {{--                            </div>--}}
+            {{--                        @endforeach--}}
+            {{--                    </div>--}}
+            {{--                </div>--}}
+            {{--            </div>--}}
+            {{--            <div class="ui card w-full tab" data-tab="other">--}}
+            {{--                <div class="content">--}}
+            {{--                    <div class="rowFE">--}}
+            {{--                        @foreach($others as $other)--}}
+            {{--                            <div class="colFE">--}}
+            {{--                                <button--}}
+            {{--                                    class="ui right labeled icon button color_{{$other->idColor}}"--}}
+            {{--                                    hx-post="/annotation/fullText/annotate/"--}}
+            {{--                                    hx-target="#workArea"--}}
+            {{--                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$other->idGenericLabel}}, selection: annotationFullText.selection}'--}}
+            {{--                                >--}}
+            {{--                                    <i--}}
+            {{--                                        class="delete icon"--}}
+            {{--                                        hx-on:click="event.stopPropagation()"--}}
+            {{--                                        hx-delete="/annotation/fullText/genericLabel"--}}
+            {{--                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$other->idGenericLabel}}}'--}}
+            {{--                                        hx-target="#workArea"--}}
+            {{--                                    >--}}
+            {{--                                    </i>--}}
+            {{--                                    <x-element.gl--}}
+            {{--                                        name="{{$other->name}}"--}}
+            {{--                                        idColor="{{$other->idColor}}"--}}
+            {{--                                    ></x-element.gl>--}}
+            {{--                                </button>--}}
+            {{--                            </div>--}}
+            {{--                        @endforeach--}}
+            {{--                    </div>--}}
+            {{--                </div>--}}
+            {{--            </div>--}}
+            {{--            <div class="ui card w-full tab" data-tab="pos">--}}
+            {{--                <div class="content">--}}
+            {{--                    <div class="rowFE">--}}
+            {{--                        @foreach($pos as $p)--}}
+            {{--                            <div class="colFE">--}}
+            {{--                                <button--}}
+            {{--                                    class="ui right labeled icon button color_{{$p->idColor}}"--}}
+            {{--                                    hx-post="/annotation/fullText/annotate/"--}}
+            {{--                                    hx-target="#workArea"--}}
+            {{--                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$p->idGenericLabel}}, selection: annotationFullText.selection}'--}}
+            {{--                                >--}}
+            {{--                                    <i--}}
+            {{--                                        class="delete icon"--}}
+            {{--                                        hx-on:click="event.stopPropagation()"--}}
+            {{--                                        hx-delete="/annotation/fullText/genericLabel"--}}
+            {{--                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$p->idGenericLabel}}}'--}}
+            {{--                                        hx-target="#workArea"--}}
+            {{--                                    >--}}
+            {{--                                    </i>--}}
+            {{--                                    <x-element.gl--}}
+            {{--                                        name="{{$p->name}}"--}}
+            {{--                                        idColor="{{$p->idColor}}"--}}
+            {{--                                    ></x-element.gl>--}}
+            {{--                                </button>--}}
+            {{--                            </div>--}}
+            {{--                        @endforeach--}}
+            {{--                    </div>--}}
+            {{--                </div>--}}
+            {{--            </div>--}}
+            {{--            <div class="ui card w-full tab" data-tab="sent">--}}
+            {{--                <div class="content">--}}
+            {{--                    <div class="rowFE">--}}
+            {{--                        @foreach($sents as $sent)--}}
+            {{--                            <div class="colFE">--}}
+            {{--                                <button--}}
+            {{--                                    class="ui right labeled icon button color_{{$sent->idColor}}"--}}
+            {{--                                    hx-post="/annotation/fullText/annotate/"--}}
+            {{--                                    hx-target="#workArea"--}}
+            {{--                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$sent->idGenericLabel}}, selection: annotationFullText.selection}'--}}
+            {{--                                >--}}
+            {{--                                    <i--}}
+            {{--                                        class="delete icon"--}}
+            {{--                                        hx-on:click="event.stopPropagation()"--}}
+            {{--                                        hx-delete="/annotation/fullText/genericLabel"--}}
+            {{--                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idGenericLabel:{{$sent->idGenericLabel}}}'--}}
+            {{--                                        hx-target="#workArea"--}}
+            {{--                                    >--}}
+            {{--                                    </i>--}}
+            {{--                                    <x-element.gl--}}
+            {{--                                        name="{{$sent->name}}"--}}
+            {{--                                        idColor="{{$sent->idColor}}"--}}
+            {{--                                    ></x-element.gl>--}}
+            {{--                                </button>--}}
+            {{--                            </div>--}}
+            {{--                        @endforeach--}}
+            {{--                    </div>--}}
+            {{--                </div>--}}
+            {{--            </div>--}}
 
             {{--        <div class="ui card w-full">--}}
             {{--            <div class="content">--}}

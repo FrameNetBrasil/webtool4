@@ -69,7 +69,6 @@ class FullTextController extends Controller
     public function annotationSet(int $idAS, string $token)
     {
         $data = AnnotationFullTextService::getASData($idAS);
-        debug($data['lu']);
         $idLU = $data['lu']->idLU;
         $data['alternativeLU'] = [];
         foreach(WordForm::getLUs($token) as $lu) {
