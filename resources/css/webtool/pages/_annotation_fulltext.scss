@@ -85,9 +85,12 @@
                     .layers {
                         width: 64px;
                         position:relative;
+                        margin-left:8px;
+                        padding-left:8px;
+                        border-left: 2px solid $grey-3;
 
                         span {
-                            left: 0px;
+                            left: 8px;
                             width: calc(100%);
                             height: 24px;
                             position: absolute;
@@ -173,20 +176,7 @@
 
 
 
-                        .feLabel {
-                            top: 32px;
-                            left: -1px;
-                            padding: 2px 3px;
-                            z-index: 10;
-                            position: absolute;
-                            font-size: 0.75rem;
-                            background: black;
-                            font-weight: bold;
-                            font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
-                            line-height: 1;
-                            border-radius: 1px;
-                            //text-transform: uppercase;
-                        }
+
                     }
 
                     .rowNI {
@@ -220,6 +210,20 @@
                         }
 
                     }
+                    .feLabel {
+                        top: 32px;
+                        left: -1px;
+                        padding: 2px 3px;
+                        z-index: 10;
+                        position: absolute;
+                        font-size: 0.75rem;
+                        background: black;
+                        font-weight: bold;
+                        font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
+                        line-height: 1;
+                        border-radius: 1px;
+                        //text-transform: uppercase;
+                    }
                 }
 
                 .gridLabels {
@@ -234,9 +238,11 @@
                         position: relative;
                         top: 0;
                         left: 0;
+                        height:100%;
 
                         .ui.card {
                             margin: 0;
+                            height:100%;
                         }
 
                         .rowFE {
@@ -244,6 +250,7 @@
                             flex-direction: row;
                             flex-wrap: wrap;
                             justify-content: left;
+                            height:100%;
 
                             .colFE {
                                 position: relative;
@@ -256,6 +263,10 @@
                         }
                     }
 
+                }
+
+                .ui.secondary.menu {
+                    margin: 0;
                 }
 
             }

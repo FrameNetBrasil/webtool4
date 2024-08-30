@@ -2,18 +2,13 @@
 
 namespace App\Services;
 
-use App\Data\Annotation\FE\AnnotationData;
-use App\Data\Annotation\FE\CreateASData;
-use App\Data\Annotation\FE\DeleteFEData;
-use App\Data\Annotation\FE\SearchData;
-use App\Data\Label\CreateData;
+use App\Data\Annotation\FullText\AnnotationData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\FrameElement;
 use App\Repositories\LU;
-use App\Repositories\POS;
 use App\Repositories\Timeline;
 use App\Repositories\WordForm;
 use Illuminate\Support\Facades\DB;
@@ -151,7 +146,7 @@ class AnnotationFullTextService
 
     }
 
-    public static function getASData(int $idAS): array
+    public static function getASData(int $idAS, string $token = ''): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $it = Criteria::table("view_instantiationtype")
@@ -171,7 +166,7 @@ class AnnotationFullTextService
         }
         $lu = LU::byId($as->idLU);
         $pos = Criteria::byId("pos","idPOS", $lu->idPOS);
-        $layerPOS = ['pos_n' => 'lty_noun', 'pos_v' => 'lty_verb', 'pos_a' => 'lty_adj','pos_prep' => 'lty_prep'];
+        $layerPOS = ['pos_n' => 'lty_noun', 'pos_v' => 'lty_verb', 'pos_a' => 'lty_adj','pos_prep' => 'lty_prep','pos_adv' => 'lty_adv','pos_num' => 'lty_num'];
         $labels = [];
         $labels['fe'] = Criteria::table("view_frameelement")
             ->where('idLanguage', $idLanguage)
@@ -240,7 +235,7 @@ class AnnotationFullTextService
                             $name = (!$hasLabel) ? $entities[$span->idEntity]->name : null;
                             $spans[$i][$idLayer] = [
                                 'idEntity' => $span->idEntity,
-                                'label' => $name
+                                'label' => $name,
                             ];
                             $wordsChars->words[$i]['hasAnnotation'] = true;
                             $hasLabel = true;
@@ -265,6 +260,17 @@ class AnnotationFullTextService
             ->orderBy("lt.layerOrder")
             ->all();
 
+        $alternativeLU = [];
+        if ($token != '') {
+            $idLU = $lu->idLU;
+            foreach (WordForm::getLUs($token) as $altLU) {
+                if ($altLU->idLU != $idLU) {
+                    $alternativeLU[] = $altLU;
+                }
+            }
+        }
+
+
         //debug($baseLabels, $labels);
 //        ksort($spans);
 //        debug($labels);
@@ -273,6 +279,7 @@ class AnnotationFullTextService
 //        debug( $wordsChars->words);
 //        debug($spans);
         return [
+            'pos' => $pos,
             'it' => $it,
             'layerTypes' => $layerTypes,
             'idLayers' => $idLayers,
@@ -283,7 +290,8 @@ class AnnotationFullTextService
             'spans' => $spans,
             'labels' => $labels,
             'entities' => $entities,
-            'nis' => $nis
+            'nis' => $nis,
+            'alternativeLU' => $alternativeLU
         ];
 
     }
@@ -291,9 +299,10 @@ class AnnotationFullTextService
     /**
      * @throws \Exception
      */
-    public static function annotateFE(AnnotationData $data): array
+    public static function annotateEntity(AnnotationData $data): array
     {
         DB::transaction(function () use ($data) {
+            /*
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
                 ->where("ut.idUser", -2)
@@ -380,6 +389,7 @@ class AnnotationFullTextService
                 $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
             }
             Timeline::addTimeline("annotation", $idAnnotation, "C");
+            */
         });
         return self::getASData($data->idAnnotationSet);
     }
