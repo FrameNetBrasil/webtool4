@@ -204,9 +204,11 @@ class AnnotationFullTextService
             ->keyBy("idEntityGenericLabel")
             ->all();
         $entities = [];
-        foreach($labels as $labelNames) {
+        foreach($labels as $type => $labelNames) {
             foreach($labelNames as $idEntity => $label) {
-                $entities[$idEntity] = $label->name;
+                $label->type = $type;
+                $entities[$idEntity] = $label;
+//                $idLayerTypes[$type] = $label->idLayerType;
             }
         }
         $layers = AnnotationSet::getLayers($idAS);
@@ -215,7 +217,7 @@ class AnnotationFullTextService
             $tg->startWord = $wordsChars->chars[$tg->startChar]['order'];
             $tg->endWord = $wordsChars->chars[$tg->endChar]['order'];
         }
-        $allSpans = $layers;
+        $allSpans = array_filter($layers, fn($x) => ($x->layerTypeEntry != 'lty_target'));;
         $spans = [];
         $nis = [];
         $idLayers = [];
@@ -235,75 +237,34 @@ class AnnotationFullTextService
                     if ($span->startWord != -1) {
                         $hasLabel = false;
                         for ($i = $span->startWord; $i <= $span->endWord; $i++) {
-                            $name = (!$hasLabel) ? $fes[$span->idEntity]->name : null;
+                            $name = (!$hasLabel) ? $entities[$span->idEntity]->name : null;
                             $spans[$i][$idLayer] = [
                                 'idEntity' => $span->idEntity,
                                 'label' => $name
                             ];
-                            $wordsChars->words[$i]['hasFE'] = true;
+                            $wordsChars->words[$i]['hasAnnotation'] = true;
                             $hasLabel = true;
                         }
                     } else {
                         if ($span->layerTypeEntry == 'lty_fe') {
-                            $name = $fes[$span->idEntity]->name;
+                            $name = $entities[$span->idEntity]->name;
                             $nis[$span->idInstantiationType][] = [
                                 'idEntityFE' => $span->idEntity,
                                 'label' => $name
                             ];
-                        }
-                    }
-
-
-
-
-
-                    if ($span->layerTypeEntry == 'lty_fe') {
-                        if ($span->startWord != -1) {
-                            $hasLabel = false;
-                            for ($i = $span->startWord; $i <= $span->endWord; $i++) {
-                                $name = (!$hasLabel) ? $fes[$span->idEntity]->name : null;
-                                $spans[$i][$idLayer] = [
-                                    'idEntityFE' => $span->idEntity,
-                                    'label' => $name
-                                ];
-                                $wordsChars->words[$i]['hasFE'] = true;
-                                $hasLabel = true;
-                            }
-                        } else {
-                            $name = $fes[$span->idEntity]->name;
-                            $nis[$span->idInstantiationType][] = [
-                                'idEntityFE' => $span->idEntity,
-                                'label' => $name
-                            ];
-                        }
-                    }
-                    if ($span->layerTypeEntry == 'lty_gf') {
-                        $hasLabel = false;
-                        for ($i = $span->startWord; $i <= $span->endWord; $i++) {
-                            $name = (!$hasLabel) ? $gfs[$span->idEntity]->name : null;
-                            $spans[$i][$idLayer] = [
-                                'idEntityGF' => $span->idEntity,
-                                'label' => $name
-                            ];
-                            $wordsChars->words[$i]['hasGF'] = true;
-                            $hasLabel = true;
-                        }
-                    }
-                    if ($span->layerTypeEntry == 'lty_pt') {
-                        $hasLabel = false;
-                        for ($i = $span->startWord; $i <= $span->endWord; $i++) {
-                            $name = (!$hasLabel) ? $pts[$span->idEntity]->name : null;
-                            $spans[$i][$idLayer] = [
-                                'idEntityPT' => $span->idEntity,
-                                'label' => $name
-                            ];
-                            $wordsChars->words[$i]['hasPT'] = true;
-                            $hasLabel = true;
                         }
                     }
                 }
             }
         }
+        $layerTypes = Criteria::table("view_layertype as lt")
+            ->join("view_layer as l","lt.idLayerType","=","l.idLayerType")
+            ->where('lt.idLanguage', $idLanguage)
+            ->where('l.idLanguage', $idLanguage)
+            ->whereIn("l.idLayer", $idLayers)
+            ->orderBy("lt.layerOrder")
+            ->all();
+
         //debug($baseLabels, $labels);
 //        ksort($spans);
 //        debug($labels);
@@ -313,6 +274,7 @@ class AnnotationFullTextService
 //        debug($spans);
         return [
             'it' => $it,
+            'layerTypes' => $layerTypes,
             'idLayers' => $idLayers,
             'words' => $wordsChars->words,
             'idAnnotationSet' => $idAS,
@@ -320,12 +282,7 @@ class AnnotationFullTextService
             'target' => $target[0],
             'spans' => $spans,
             'labels' => $labels,
-//            'fes' => $fes,
-//            'gfs' => $gfs,
-//            'pts' => $pts,
-//            'others' => $others,
-//            'pos' => $pos,
-//            'sents' => $sents,
+            'entities' => $entities,
             'nis' => $nis
         ];
 
