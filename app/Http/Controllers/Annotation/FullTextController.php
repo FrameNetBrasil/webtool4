@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Annotation;
 
 
-use App\Data\Annotation\FE\AnnotationData;
-use App\Data\Annotation\FE\CreateASData;
-use App\Data\Annotation\FE\DeleteFEData;
-use App\Data\Annotation\FE\SearchData;
-use App\Data\Annotation\FE\SelectionData;
+use App\Data\Annotation\FullText\SelectionData;
+use App\Data\Annotation\FullText\AnnotationData;
+use App\Data\Annotation\FullText\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
@@ -65,17 +63,17 @@ class FullTextController extends Controller
         return view("Annotation.FullText.Panes.annotations", $data);
     }
 
+    #[Get(path: '/annotation/fullText/asData/{idAS}')]
+    public function getASData(int $idAS)
+    {
+        return AnnotationFullTextService::getASData($idAS);
+    }
+
     #[Get(path: '/annotation/fullText/as/{idAS}/{token}')]
     public function annotationSet(int $idAS, string $token)
     {
-        $data = AnnotationFullTextService::getASData($idAS);
-        $idLU = $data['lu']->idLU;
-        $data['alternativeLU'] = [];
-        foreach(WordForm::getLUs($token) as $lu) {
-            if ($lu->idLU != $idLU) {
-                $data['alternativeLU'][] = $lu;
-            }
-        }
+        $data = AnnotationFullTextService::getASData($idAS, $token);
+        debug($data['lu']);
         return view("Annotation.FullText.Panes.annotationSet", $data);
     }
 
@@ -94,7 +92,7 @@ class FullTextController extends Controller
         try {
             $input->range = SelectionData::from(request("selection"));
             if ($input->range->type != '') {
-                $data = AnnotationFullTextService::annotateFE($input);
+                $data = AnnotationFullTextService::annotateEntity($input);
                 return view("Annotation.FullText.Panes.annotationSet", $data);
             } else {
                 return $this->renderNotify("error", "No selection.");

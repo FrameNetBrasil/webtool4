@@ -32,9 +32,9 @@
                         @endif
                     </div>
                 </div>
-                <div class="annotations">
+                <div class="annotations" >
                     @include('Annotation.FullText.Panes.annotations')
-                    <div id="workArea" class="workArea">
+                    <div id="workArea" class="workArea" x-data="$store.ftStore">
                     </div>
                 </div>
         </div>
