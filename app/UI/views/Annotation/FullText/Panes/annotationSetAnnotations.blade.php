@@ -41,13 +41,12 @@
     <div
         class="layers"
     >
+        <div>&nbsp;</div>
         @foreach($layerTypes as $i => $layerType)
             @php($topLine = 21 + ($i * 24))
-            <span
-                class=""
-                style="top:{{$topLine}}px"
+            <div
             >{{$layerType->name}}
-                            </span>
+            </div>
         @endforeach
     </div>
     <div
@@ -91,33 +90,55 @@
                 </div>
             @endforeach
         </div>
-        <div class="rowAnnotation" x-data="{idLayers: asData.idLayers}">
+        <div class="rowAnnotation" x-data="{layerTypes: asData.layerTypes, spans: asData.spans}">
             <template x-for="word,index in asData.words">
                 <div
-                    :class="(word.word == ' ') ? 'colSpace' : 'colWord'"
-                    x-data="{labelsAtWord: asData.spans.length, height: 174}"
+                    :class="'flex flex-column ' + ((word.word == ' ') ? 'colSpace' : 'colWord')"
+                    {{--                    x-data="{labelsAtWord: asData.spans.length, height: 174}"--}}
                 >
-                                <span
-                                    class="word"
-                                    :id="'word_anno_' + index"
-                                    data-type="word"
-                                    :style="'height:' + height + 'px'"
+                    <div
+                        style="height:0;overflow-y:hidden"
+                        x-text="(word.word == ' ') ? '&nbsp;' : word.word"
+                    >
+                    </div>
+                    <template x-for="layerType in layerTypes">
+                        <div class="label">
+                            <template x-if="asData.spans[layerType.idLayerType]">
+                                <div
+                                    x-data="{span: asData.spans[layerType.idLayerType]}"
                                 >
-                                    <span
-                                        style="visibility: hidden"
-                                        x-text="(word.word == ' ') ? '&nbsp;' : word.word"
+                                    <div
+
+                                        :class="'line color_' + span.idColor"
                                     >
-                                    </span>
-                                    <template x-for="(span,idLayer) in asData.spans[index]" :key="idLayer" x-data="{i:0}">
-                                            <template x-if="span.idEntity">
-                                            <div
-                                                :class="'line color_' + asData.entities[span.idEntity].idColor"
-                                                :style="'top:' + (span.index * 24) + 'px'"
-                                            >
-                                            </div>
-                                            </template>
-                                    </template>
-                                </span>
+                                        {{--                                    <span--}}
+                                        {{--                                        :class="'feLabel color_' + span.idColor"--}}
+                                        {{--                                        style="top:0"--}}
+                                        {{--                                        x-text="span.label"--}}
+                                        {{--                                    >--}}
+                                        {{--                                    </span>--}}
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    {{--                    <div--}}
+                    {{--                                    class="word"--}}
+                    {{--                                    :id="'word_anno_' + index"--}}
+                    {{--                                    data-type="word"--}}
+                    {{--                                    :style="'height:' + height + 'px'"--}}
+                    {{--                                >--}}
+                    {{--                                    <template x-for="(span,idLayer) in asData.spans[index]" :key="idLayer">--}}
+                    {{--                                            <template x-if="span.idEntity || false">--}}
+                    {{--                                            <div--}}
+                    {{--                                                :class="'line color_' + asData.entities[span.idEntity].idColor"--}}
+                    {{--                                                :style="'top:' + (span.index * 24) + 'px'"--}}
+                    {{--                                            >--}}
+                    {{--                                            </div>--}}
+                    {{--                                            </template>--}}
+                    {{--                                    </template>--}}
+                    {{--                                </div>--}}
                 </div>
             </template>
 

@@ -89,24 +89,16 @@
                         padding-left:8px;
                         border-left: 2px solid $grey-3;
 
-                        span {
-                            left: 8px;
-                            width: calc(100%);
+                        div {
+                            //left: 8px;
+                            //width: calc(100%);
                             height: 24px;
-                            position: absolute;
-                            z-index: 1;
+                            //position: absolute;
+                            //z-index: 1;
                         }
                     }
 
-                    .line {
-                        top: 30px;
-                        left: 0px;
-                        width: calc(100%);
-                        height: 3px;
-                        position: absolute;
-                        background: black;
-                        z-index: 1;
-                    }
+
                     .annotationSentence {
                         flex-grow: 1;
                         width:100%;
@@ -162,14 +154,43 @@
                                 font-size: 1.25rem;
                                 padding: 0 0;
                                 background-color:$grey-3;
+                                position:relative;
+
+                                .label {
+                                    height:24px;
+                                    position:relative;
+
+                                    .line {
+                                        //top: 30px;
+                                        //left: 0px;
+                                        width: calc(100%);
+                                        height: 3px;
+                                        //position: absolute;
+                                        background: black;
+                                        z-index: 1;
+                                    }
+                                }
                             }
 
                             .colSpace {
                                 font-size: 1.25rem;
                                 width: 0.75rem;
+                                position:relative;
 
-                                .word {
+                                .label {
                                     width: 100%;
+                                    height:24px;
+                                    position:relative;
+
+                                    .line {
+                                        //top: 30px;
+                                        //left: 0px;
+                                        width: calc(100%);
+                                        height: 3px;
+                                        //position: absolute;
+                                        background: black;
+                                        z-index: 1;
+                                    }
                                 }
                             }
                         }
