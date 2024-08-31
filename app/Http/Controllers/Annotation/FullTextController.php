@@ -63,10 +63,10 @@ class FullTextController extends Controller
         return view("Annotation.FullText.Panes.annotations", $data);
     }
 
-    #[Get(path: '/annotation/fullText/asData/{idAS}')]
-    public function getASData(int $idAS)
+    #[Get(path: '/annotation/fullText/spans/{idAS}')]
+    public function getSpans(int $idAS)
     {
-        return AnnotationFullTextService::getASData($idAS);
+        return AnnotationFullTextService::getSpans($idAS);
     }
 
     #[Get(path: '/annotation/fullText/as/{idAS}/{token}')]

@@ -296,6 +296,139 @@ class AnnotationFullTextService
 
     }
 
+    public static function getSpans(int $idAS): array
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $it = Criteria::table("view_instantiationtype")
+            ->where('idLanguage', AppService::getCurrentIdLanguage())
+            ->all();
+        $as = Criteria::table("view_annotationset")
+            ->where('idAnnotationSet', $idAS)
+            ->first();
+        $sentence = Criteria::table("sentence as s")
+            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            ->where("ds.idDocumentSentence", $as->idDocumentSentence)
+            ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
+            ->first();
+        $wordsChars = AnnotationSet::getWordsChars($sentence->text);
+        foreach ($wordsChars->words as $i => $word) {
+            $wordsChars->words[$i]['hasFE'] = false;
+        }
+        $lu = LU::byId($as->idLU);
+        $pos = Criteria::byId("pos","idPOS", $lu->idPOS);
+        $layerPOS = ['pos_n' => 'lty_noun', 'pos_v' => 'lty_verb', 'pos_a' => 'lty_adj','pos_prep' => 'lty_prep','pos_adv' => 'lty_adv','pos_num' => 'lty_num'];
+        $labels = [];
+        $labels['fe'] = Criteria::table("view_frameelement")
+            ->where('idLanguage', $idLanguage)
+            ->where("idFrame", $lu->idFrame)
+            ->keyBy("idEntity")
+            ->all();
+        $labels['gf'] = Criteria::table("view_layertype_gl")
+            ->where('idLanguage', $idLanguage)
+            ->where("entry","lty_gf")
+            ->keyBy("idEntityGenericLabel")
+            ->all();
+        $labels['pt'] = Criteria::table("view_layertype_gl")
+            ->where('idLanguage', $idLanguage)
+            ->where("entry","lty_pt")
+            ->keyBy("idEntityGenericLabel")
+            ->all();
+        $labels['other'] = Criteria::table("view_layertype_gl")
+            ->where('idLanguage', $idLanguage)
+            ->where("entry","lty_other")
+            ->keyBy("idEntityGenericLabel")
+            ->all();
+        $labels['pos'] = Criteria::table("view_layertype_gl")
+            ->where('idLanguage', $idLanguage)
+            ->where("entry",$layerPOS[$pos->entry])
+            ->keyBy("idEntityGenericLabel")
+            ->all();
+        $labels['sent'] = Criteria::table("view_layertype_gl")
+            ->where('idLanguage', $idLanguage)
+            ->where("entry","lty_sent")
+            ->keyBy("idEntityGenericLabel")
+            ->all();
+        $entities = [];
+        foreach($labels as $type => $labelNames) {
+            foreach($labelNames as $idEntity => $label) {
+                $label->type = $type;
+                $entities[$idEntity] = $label;
+            }
+        }
+        $layers = AnnotationSet::getLayers($idAS);
+        $target = array_filter($layers, fn($x) => ($x->layerTypeEntry == 'lty_target'));
+        foreach ($target as $tg) {
+            $tg->startWord = $wordsChars->chars[$tg->startChar]['order'];
+            $tg->endWord = $wordsChars->chars[$tg->endChar]['order'];
+        }
+        $allSpans = array_filter($layers, fn($x) => ($x->layerTypeEntry != 'lty_target'));;
+        $spans = [];
+        $nis = [];
+        $idLayers = [];
+        $firstWord = array_key_first($wordsChars->words);
+        $lastWord = array_key_last($wordsChars->words);
+        $spansByLayer = collect($allSpans)->groupBy('idLayer')->all();
+        foreach ($spansByLayer as $idLayer => $existingSpans) {
+            $idLayers[] = $idLayer;
+            for ($i = $firstWord; $i <= $lastWord; $i++) {
+                $spans[$i][$idLayer] = null;
+            }
+            foreach ($existingSpans as $span) {
+                if ($span->idTextSpan != '') {
+                    $span->startWord = ($span->startChar != -1) ? $wordsChars->chars[$span->startChar]['order'] : -1;
+                    $span->endWord = ($span->endChar != -1) ? $wordsChars->chars[$span->endChar]['order'] : -1;
+
+                    if ($span->startWord != -1) {
+                        $hasLabel = false;
+                        for ($i = $span->startWord; $i <= $span->endWord; $i++) {
+                            $label = $entities[$span->idEntity];
+                            $name = (!$hasLabel) ? $label->name : null;
+                            $spans[$i][$idLayer] = [
+                                'idEntity' => $span->idEntity,
+                                'label' => $name,
+                                'idColor' => $label->idColor,
+                            ];
+                            $wordsChars->words[$i]['hasAnnotation'] = true;
+                            $hasLabel = true;
+                        }
+                    } else {
+                        if ($span->layerTypeEntry == 'lty_fe') {
+                            $label = $entities[$span->idEntity];
+                            $nis[$span->idInstantiationType][] = [
+                                'idEntityFE' => $span->idEntity,
+                                'label' => $label->name,
+                                'idColor' => $label->idColor,
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+        $layerTypes = Criteria::table("view_layertype as lt")
+            ->join("view_layer as l","lt.idLayerType","=","l.idLayerType")
+            ->where('lt.idLanguage', $idLanguage)
+            ->where('l.idLanguage', $idLanguage)
+            ->whereIn("l.idLayer", $idLayers)
+            ->orderBy("lt.layerOrder")
+            ->all();
+
+        return [
+            'pos' => $pos,
+            'it' => $it,
+            'layerTypes' => $layerTypes,
+            'idLayers' => $idLayers,
+            'words' => $wordsChars->words,
+            'idAnnotationSet' => $idAS,
+            'lu' => $lu,
+            'target' => $target[0],
+            'spans' => $spans,
+            'labels' => $labels,
+            'entities' => $entities,
+            'nis' => $nis,
+        ];
+
+    }
+
     /**
      * @throws \Exception
      */

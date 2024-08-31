@@ -2,7 +2,7 @@ let annotationFullText = {
     api: {
         loadASData: async function(idAnnotationSet) {
             await $.ajax({
-                url: "/annotation/fullText/asData/" + idAnnotationSet,
+                url: "/annotation/fullText/spans/" + idAnnotationSet,
                 method: "GET",
                 dataType: "json",
                 success: (response) => {
