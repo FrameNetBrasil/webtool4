@@ -90,6 +90,8 @@ class AnnotationSet
             ifnull(ts.startChar,-1) AS startChar,
             ifnull(ts.endChar,-1) AS endChar,
             ifnull(gl.idEntity, ifnull(fe.idEntity, ce.idEntity)) AS idEntity,
+            ifnull(gl.name, ifnull(fe.name, ce.name)) AS name,
+            ifnull(gl.idColor, ifnull(fe.idColor, ce.idColor)) AS idColor,
             ts.idTextSpan,
             l.entry as layerTypeEntry,
             ts.idInstantiationType,
@@ -107,7 +109,7 @@ class AnnotationSet
             AND ((fe.idLanguage = {$idLanguage}) or (fe.idLanguage is null))
             AND ((ce.idLanguage = {$idLanguage}) or (ce.idLanguage is null))
             AND ((it.idLanguage = {$idLanguage}) or (it.idLanguage is null))
-        ORDER BY a.idAnnotationSet, l.layerOrder, l.idLayer, ts.startChar
+        ORDER BY a.idAnnotationSet, l.layerOrder, ts.startChar
 
 HERE;
 

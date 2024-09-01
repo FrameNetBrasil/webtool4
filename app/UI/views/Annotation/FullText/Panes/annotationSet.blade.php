@@ -38,38 +38,40 @@
 
 
 <div class="ui secondary menu tabs">
-    <a class="item" data-tab="fe">FE</a>
-    <a class="item" data-tab="gf">GF</a>
-    <a class="item" data-tab="pt">PT</a>
-    <a class="item" data-tab="other">Other</a>
-    <a class="item" data-tab="pos">{{$pos->POS}}</a>
-    <a class="item" data-tab="sent">Sent</a>
+    @foreach($layerTypes as $layerType)
+        <a class="item" data-tab="{{$layerType->entry}}">{{$layerType->name}}</a>
+    @endforeach
+
+    {{--    <a class="item" data-tab="lty_fe">FE</a>--}}
+{{--    <a class="item" data-tab="lty_gf">GF</a>--}}
+{{--    <a class="item" data-tab="lty_pt">PT</a>--}}
+{{--    <a class="item" data-tab="lty_other">Other</a>--}}
+{{--    <a class="item" data-tab="lty_pos">{{$pos->POS}}</a>--}}
+{{--    <a class="item" data-tab="lty_sent">Sent</a>--}}
 </div>
 <div class="gridLabels">
     <div class="labels">
         {{--            <div class="grids flex flex-column flex-grow-1">--}}
-        @foreach($labels as $type => $labelData)
-            <div class="ui card w-full tab {!! ($type == 'fe') ? 'active' : '' !!}" data-tab="{{$type}}">
+        @foreach($labels as $layerType => $labelData)
+            <div class="ui card w-full tab {!! ($layerType == 'lty_fe') ? 'active' : '' !!}" data-tab="{{$layerType}}">
                 <div class="content">
                     <div class="rowFE">
                         @foreach($labelData as $idEntity => $label)
-                            @php(debug($label))
                             <div class="colFE">
                                 <button
                                     class="ui right labeled icon button color_{{$label->idColor}}"
-                                    hx-post="/annotation/fullText/annotate/"
-                                    hx-target="#workArea"
-                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idEntity:{{$idEntity}}, selection: annotationFullText.selection}'
+                                    x-data @click="$store.ftStore.annotate({{$idEntity}},'{{$layerType}}')"
                                 >
                                     <i
                                         class="delete icon"
-                                        hx-on:click="event.stopPropagation()"
-                                        hx-delete="/annotation/fullText/label"
-                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idEntity:{{$idEntity}}}'
-                                        hx-target="#workArea"
+                                        x-data @click.stop="$store.ftStore.deleteLabel({{$idEntity}})"
+{{--                                        hx-on:click="event.stopPropagation()"--}}
+{{--                                        hx-delete="/annotation/fullText/label"--}}
+{{--                                        hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idEntity:{{$idEntity}}}'--}}
+{{--                                        hx-target="#workArea"--}}
                                     >
                                     </i>
-                                    @if ($type == 'fe')
+                                    @if ($layerType == 'lty_fe')
                                         <x-element.fe
                                             name="{{$label->name}}"
                                             type="{{$label->coreType}}"
@@ -93,9 +95,10 @@
 
 <script type="text/javascript">
     console.log({{$idAnnotationSet}});
-    Alpine.store('ftStore').idAnnotationSet = {{$idAnnotationSet}};
-    Alpine.store('ftStore').updateASData();
     $(function() {
+        Alpine.store('ftStore').idAnnotationSet = {{$idAnnotationSet}};
+        Alpine.store('ftStore')._token = "{{ csrf_token() }}";
+        Alpine.store('ftStore').updateASData();
         $(".tabs .item")
             .tab()
         ;

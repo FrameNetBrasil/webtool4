@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Annotation;
 
 
+use App\Data\Annotation\FullText\DeleteLabelData;
 use App\Data\Annotation\FullText\SelectionData;
 use App\Data\Annotation\FullText\AnnotationData;
 use App\Data\Annotation\FullText\SearchData;
@@ -73,7 +74,7 @@ class FullTextController extends Controller
     public function annotationSet(int $idAS, string $token)
     {
         $data = AnnotationFullTextService::getASData($idAS, $token);
-        debug($data['lu']);
+//        debug($data['lu']);
         return view("Annotation.FullText.Panes.annotationSet", $data);
     }
 
@@ -90,27 +91,37 @@ class FullTextController extends Controller
     public function annotate(AnnotationData $input)
     {
         try {
+            debug($input);
+            debug(request("selection"));
             $input->range = SelectionData::from(request("selection"));
             if ($input->range->type != '') {
                 $data = AnnotationFullTextService::annotateEntity($input);
-                return view("Annotation.FullText.Panes.annotationSet", $data);
+                //return view("Annotation.FullText.Panes.annotationSet", $data);
+                //return $data;
+                return $input->idAnnotationSet;
             } else {
-                return $this->renderNotify("error", "No selection.");
+                throw new \Exception("No selection.");
             }
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            $trigger = $this->notify("error", $e->getMessage());
+            return response('', 500)
+                ->header('HX-Trigger', $trigger);
         }
     }
 
-    #[Delete(path: '/annotation/fullText/frameElement')]
-    public function deleteFE(DeleteFEData $data)
+    #[Delete(path: '/annotation/fullText/label')]
+    public function deleteFE(DeleteLabelData $data)
     {
         try {
-            AnnotationFullTextService::deleteFE($data);
-            $data = AnnotationFullTextService::getASData($data->idAnnotationSet);
-            return view("Annotation.FullText.Panes.annotationSet", $data);
+            AnnotationFullTextService::deleteLabel($data);
+            //AnnotationFullTextService::getASData($data->idAnnotationSet);
+            //return view("Annotation.FullText.Panes.annotationSet", $data);
+            return $data->idAnnotationSet;
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+//            return $this->renderNotify("error", $e->getMessage());
+            $trigger = $this->notify("error", $e->getMessage());
+            return response('', 500)
+                ->header('HX-Trigger', $trigger);
         }
     }
 
