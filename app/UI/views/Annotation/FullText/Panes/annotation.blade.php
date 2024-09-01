@@ -26,16 +26,16 @@
                     range.setEnd(startNode, 1);
                     document.getSelection().removeAllRanges();
                     document.getSelection().addRange(range);
-                    annotationFullText.selection.type = "ni";
-                    annotationFullText.selection.id = startNode.dataset.id;
+                    Alpine.store('ftStore').selection.type = "ni";
+                    Alpine.store('ftStore').selection.id = startNode.dataset.id;
                 }
                 if (startNode.dataset.type === "word") {
-                    annotationFullText.selection.type = "word";
+                    Alpine.store('ftStore').selection.type = "word";
                     if (startNode.dataset.startchar) {
-                        annotationFullText.selection.start = startNode.dataset.startchar;
+                        Alpine.store('ftStore').selection.start = startNode.dataset.startchar;
                     }
                     if (endNode.dataset.endchar) {
-                        annotationFullText.selection.end = endNode.dataset.endchar;
+                        Alpine.store('ftStore').selection.end = endNode.dataset.endchar;
                     }
                 }
             }

@@ -11,7 +11,54 @@ let annotationFullText = {
                     //Alpine.store('ftStore').dataState = 'loaded';
                 }
             });
+        },
+        annotate: async (params) => {
+            try {
+                params._token = Alpine.store("ftStore")._token;
+                let result = $.ajax({
+                    url: "/annotation/fullText/annotate",
+                    method: "POST",
+                    dataType: "json",
+                    data: params
+                })
+                    .done(function(result) {
+                        console.log(1, result);
+                        // Alpine.store("ftStore").asData.nis = result.nis;
+                        // Alpine.store("ftStore").asData.spans = result.spans;
+                        // Alpine.store("ftStore").asData.layerTypes = result.layerTypes;
+                        Alpine.store('ftStore').updateASData();
+                    })
+                    .fail(function(result) {
+                        let trigger = JSON.parse(result.getResponseHeader("Hx-Trigger"));
+                        htmx.trigger("body", "notify", trigger.notify);
+                    });
+                return result;
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        deleteLabel: async (params) => {
+            try {
+                params._token = Alpine.store("ftStore")._token;
+                let result = $.ajax({
+                    url: "/annotation/fullText/label",
+                    method: "DELETE",
+                    dataType: "json",
+                    data: params
+                })
+                    .done(function(result) {
+                        Alpine.store('ftStore').updateASData();
+                    })
+                    .fail(function(result) {
+                        let trigger = JSON.parse(result.getResponseHeader("Hx-Trigger"));
+                        htmx.trigger("body", "notify", trigger.notify);
+                    });
+                return result;
+            } catch (e) {
+                console.log(e);
+            }
         }
+
         // deleteObject: async (idDynamicObject) => {
         //     console.log('deletting api', idDynamicObject, annotation._token);
         //
