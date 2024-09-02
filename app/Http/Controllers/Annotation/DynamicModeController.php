@@ -116,6 +116,7 @@ class DynamicModeController extends Controller
     {
         return AnnotationDynamicService::getObjectsByDocument($idDocument);
     }
+
     #[Post(path: '/annotation/dynamicMode/updateObject')]
     public function updateObject(ObjectData $data)
     {
@@ -184,6 +185,7 @@ class DynamicModeController extends Controller
             'sentences' => $sentences
         ]);
     }
+
     #[Post(path: '/annotation/dynamicMode/comment')]
     public function annotationComment(AnnotationCommentData $data)
     {
@@ -222,14 +224,14 @@ class DynamicModeController extends Controller
     #[Get(path: '/annotation/dynamicMode/formSentence/{idDocument}/{idSentence}')]
     public function formSentence(int $idDocument, int $idSentence)
     {
-        $sentence = Criteria::byId("sentence","idSentence",$idSentence);
+        $sentence = Criteria::byId("sentence", "idSentence", $idSentence);
         if (is_null($sentence)) {
             $sentence = (object)[
                 "idSentence" => 0,
                 "text" => ''
             ];
         } else {
-            $ts = Criteria::byId("view_sentence_timespan","idSentence",$idSentence);
+            $ts = Criteria::byId("view_sentence_timespan", "idSentence", $idSentence);
             $sentence->startTime = $ts->startTime;
             $sentence->endTime = $ts->endTime;
         }
@@ -251,7 +253,12 @@ class DynamicModeController extends Controller
             if ($data->text == "") {
                 return $this->renderNotify("error", "No data.");
             }
-            AnnotationDynamicService::updateSentence($data);
+            debug($data);
+            if ($data->idSentence == 0) {
+                AnnotationDynamicService::createSentence($data);
+            } else {
+                AnnotationDynamicService::updateSentence($data);
+            }
             $this->trigger('reload-gridSentence');
             return $this->renderNotify("success", "Sentence updated.");
         } catch (\Exception $e) {
