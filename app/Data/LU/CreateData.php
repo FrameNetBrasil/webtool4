@@ -11,9 +11,9 @@ class CreateData extends Data
     public function __construct(
         public int $idFrame,
         public int $idLemma,
-        public ?string $senseDescription,
-        public ?int $incorporatedFE,
         public ?string $name,
+        public ?string $senseDescription = '',
+        public ?int $incorporatedFE = -1,
         public ?int $active = 1,
         public ?int $idUser = 1,
         public ?int $idEntity = null
@@ -23,6 +23,6 @@ class CreateData extends Data
         $this->name = $lemma->name;
         $this->incorporatedFE = ($this->incorporatedFE < 0) ? null : $this->incorporatedFE;
         $this->idUser = AppService::getCurrentIdUser();
-
+        $this->senseDescription = $this->senseDescription ?? '';
     }
 }
