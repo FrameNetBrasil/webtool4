@@ -23,6 +23,7 @@
                 hx-target="#formSentence"
                 hx-swap="innerHTML"
                 class="cursor-pointer"
+                onclick="annotation.video.playByRange({{$sentence->startTime}},{{$sentence->endTime}},0)"
             >
                 <td>
                     #{{$sentence->idSentence}}
