@@ -322,6 +322,57 @@ class AnnotationDynamicService
         }
     }
 
+    public static function createSentence(SentenceData $data): void
+    {
+        if ($data->idSentence == 0) {
+            $idUser = AppService::getCurrentIdUser();
+            $json = json_encode([
+                'text' => trim($data->text),
+                'idUser' => $idUser,
+                'idDocument' => $data->idDocument,
+                'idLanguage' => $data->idLanguage
+            ]);
+            $idSentence = Criteria::function("sentence_create(?)", [$json]);
+            $sentence = Criteria::byId("sentence", "idSentence", $idSentence);
+            Criteria::table("sentence")
+                ->where("idSentence", $idSentence)
+                ->update(['idOriginMM' => $data->idOriginMM]);
+            $json = json_encode([
+                'startTime' => (float)$data->startTime,
+                'endTime' => (float)$data->endTime,
+            ]);
+            $idTimeSpan = Criteria::function("timespan_create(?)", [$json]);
+            $timespan = Criteria::byId("timespan", "idTimeSpan", $idTimeSpan);
+            $json = json_encode([
+                'idAnnotationObject1' => $sentence->idAnnotationObject,
+                'idAnnotationObject2' => $timespan->idAnnotationObject,
+                'relationType' => 'rel_sentence_time'
+            ]);
+            $idObject = Criteria::function("objectrelation_create(?)", [$json]);
+
+
+//            $sentence = Criteria::byId("sentence", "idSentence", $data->idSentence);
+//            // atualiza timespan associadp
+//            $or = Criteria::table("view_object_relation as or")
+//                ->where("idAnnotationObject1", $sentence->idAnnotationObject)
+//                ->where("relationType", "rel_sentence_time")
+//                ->first();
+//            Criteria::table("timespan")
+//                ->where("idAnnotationObject", $or->idAnnotationObject2)
+//                ->update([
+//                    'startTime' => $data->startTime,
+//                    'endTime' => $data->endTime
+//                ]);
+//            // atualiza sentence
+//            Criteria::table("sentence")
+//                ->where("idSentence", $data->idSentence)
+//                ->update([
+//                    'text' => trim($data->text),
+//                    'idOriginMM' => $data->idOriginMM
+//                ]);
+        }
+    }
+
     public static function buildSentenceFromWords(WordData $data): int
     {
         $start = 100000;

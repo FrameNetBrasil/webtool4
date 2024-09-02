@@ -73,7 +73,7 @@
                     ></x-button>
                     <x-button
                         type="button"
-                        label="Split"
+                        label="Split/Delete"
                         color="danger"
                         x-data @click="$store.doStore.split({{$sentence?->idSentence}})"
                     ></x-button>
