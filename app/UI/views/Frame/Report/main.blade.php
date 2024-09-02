@@ -13,12 +13,13 @@
                 id="frame"
                 value="{{$search->frame}}"
                 placeholder="Search Frame"
-                class="w-12rem"
+                class="w-13rem"
             ></x-search-field>
-            <x-submit
-                label="Search"
-                class="mb-2"
-            ></x-submit>
+{{--            <x-button--}}
+{{--                label="Search"--}}
+{{--                icon="search"--}}
+{{--                class="mb-2"--}}
+{{--            ></x-button>--}}
         </x-form-search>
     </x-slot:search>
     <x-slot:grid>
