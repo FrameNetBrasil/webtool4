@@ -138,8 +138,6 @@ class ReportFrameService
 
     public static function decorate($description, $styles)
     {
-        debug($description);
-        debug($styles);
         $sentence = utf8_decode($description);
         $decorated = preg_replace_callback(
             "/\#([^\s\.\,\;\?\!\']*)/i",
@@ -147,7 +145,7 @@ class ReportFrameService
                 $m = substr($matches[0], 1);
                 $l = strtolower($m);
                 foreach ($styles as $fe => $s) {
-                    if (str_contains(utf8_encode($l), $fe)) {
+                    if(utf8_encode($l) ==  $fe) {
                         return "<span class='{$s}'>{$m}</span>";
                     }
                 }

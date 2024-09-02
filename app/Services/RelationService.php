@@ -67,7 +67,6 @@ class RelationService extends Controller
             ->where("idLanguage", $idLanguage)
             ->all();
         foreach ($inverse as $relation) {
-            debug($relation);
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
                 'relationType' => $relation->relationType,
@@ -316,7 +315,6 @@ class RelationService extends Controller
             foreach ($frames as $frame) {
                 $list[$frame->idEntity] = $frame->idEntity;
             }
-            debug($list);
             foreach ($frames as $frame) {
                 $idEntity = $frame->idEntity;
                 $partial = Criteria::table("view_relation as r")
