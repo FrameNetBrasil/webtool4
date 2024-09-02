@@ -10,12 +10,12 @@
             id="description"
             value=""
         ></x-multiline-field>
-        <x-combobox.project
-            id="idProject"
-            label="Source project"
+        <x-combobox.dataset
+            id="idDataset"
+            label="Source Dataset"
             value="0"
         >
-        </x-combobox.project>
+        </x-combobox.dataset>
         <div class="three fields">
             <div class="field">
                 <x-text-field

@@ -12,7 +12,7 @@ class CreateData extends Data
         public ?string $description = '',
         public ?int $isActive = null,
         public ?int $size = null,
-        public ?int $idProject = null,
+        public ?int $idDataset = null,
         public ?string $type = '',
         public ?string $createdAt = null
     )
