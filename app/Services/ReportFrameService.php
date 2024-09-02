@@ -31,7 +31,7 @@ class ReportFrameService
         $report['fecoreset'] = self::getFECoreSet($frame);
         $report['frame']->description = self::decorate($frame->description, $report['fe']['styles']);
         $report['relations'] = self::getRelations($frame);
-        $report['classification'] = self::getClassification($frame);
+        $report['classification'] = Frame::getClassificationLabels($idFrame);
         $report['lus'] = self::getLUs($frame, $idLanguage);
         return $report;
     }

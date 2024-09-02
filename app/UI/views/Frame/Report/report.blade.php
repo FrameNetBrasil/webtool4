@@ -11,7 +11,7 @@
                     </div>
                 @endforeach
             @endforeach
-                <i id="btnDownload" class="icon material text-lg cursor-pointer" title="Save as PDF">picture_as_pdf</i>
+            <i id="btnDownload" class="icon material text-lg cursor-pointer" title="Save as PDF">picture_as_pdf</i>
         </div>
     </div>
     <x-card title="Definition" class="frameReport__card frameReport__card--main">
