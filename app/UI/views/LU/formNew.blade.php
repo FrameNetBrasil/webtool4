@@ -3,6 +3,7 @@
         id="formNew"
         title="New LU"
         center="true"
+        hx-post="/lu"
     >
         <x-slot:fields>
             <x-hidden-field
@@ -24,6 +25,7 @@
             <x-combobox.fe-frame
                 id="incorporatedFE"
                 label="Incorporated FE"
+                :value="-1"
                 :idFrame="$idFrame"
                 nullName="No incorporated FE"
                 :hasNull="true"
@@ -32,7 +34,6 @@
         <x-slot:buttons>
             <x-submit
                 label="Add LU"
-                hx-post="/lu"
             ></x-submit>
         </x-slot:buttons>
     </x-inline-form>
