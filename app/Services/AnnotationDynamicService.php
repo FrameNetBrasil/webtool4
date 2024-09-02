@@ -90,10 +90,6 @@ class AnnotationDynamicService
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $result = Criteria::table("view_annotation_dynamic")
-//            ->orWhere(function (Builder $query) {
-//                $query->where('idLanguage', $idLanguage)
-//                    ->whereNull('idLanguage');
-//            })
             ->where("idLanguage", "left", $idLanguage)
             ->where("idDocument", $idDocument)
             ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color")
