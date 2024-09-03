@@ -69,7 +69,6 @@ class FEController extends Controller
     public function annotationSet(int $idAS, string $token)
     {
         $data = AnnotationFEService::getASData($idAS);
-        debug($token);
         $idLU = $data['lu']->idLU;
         $data['alternativeLU'] = [];
         foreach(WordForm::getLUs($token) as $lu) {
@@ -96,6 +95,7 @@ class FEController extends Controller
             $input->range = SelectionData::from(request("selection"));
             if ($input->range->type != '') {
                 $data = AnnotationFEService::annotateFE($input);
+                $data['alternativeLU'] = [];
                 return view("Annotation.FE.Panes.annotationSet", $data);
             } else {
                 return $this->renderNotify("error", "No selection.");
@@ -111,6 +111,7 @@ class FEController extends Controller
         try {
             AnnotationFEService::deleteFE($data);
             $data = AnnotationFEService::getASData($data->idAnnotationSet);
+            $data['alternativeLU'] = [];
             return view("Annotation.FE.Panes.annotationSet", $data);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -125,6 +126,7 @@ class FEController extends Controller
             return $this->renderNotify("error", "Error creating AnnotationSet.");
         } else {
             $data = AnnotationFEService::getASData($idAnnotationSet);
+            $data['alternativeLU'] = [];
             return response()
                 ->view("Annotation.FE.Panes.annotationSet", $data)
                 ->header('HX-Trigger', 'reload-sentence');
