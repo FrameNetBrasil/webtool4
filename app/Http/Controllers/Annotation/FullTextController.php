@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Annotation;
 
 
+use App\Data\Annotation\FullText\CreateASData;
 use App\Data\Annotation\FullText\DeleteLabelData;
 use App\Data\Annotation\FullText\SelectionData;
 use App\Data\Annotation\FullText\AnnotationData;
