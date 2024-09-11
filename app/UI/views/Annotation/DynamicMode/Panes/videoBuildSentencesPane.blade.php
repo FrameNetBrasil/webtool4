@@ -86,7 +86,7 @@
                 let currentTime = player.currentTime();
                 let currentFrame = annotation.video.frameFromTime(currentTime);
                 //console.log('time update', currentTime);
-                Alpine.store('doStore').timeCount = currentTime;
+                Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 if (annotation.video.playingRange) {
                     if (currentFrame > annotation.video.playingRange.endFrame) {
@@ -141,7 +141,7 @@
     <div id="boxesContainer">
     </div>
     <div x-data class="info flex flex-row justify-content-between">
-        <div style="width:120px; text-align:left">
+        <div style="width:200px; text-align:left">
             <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeCount"></span>s]
         </div>
         <div>
