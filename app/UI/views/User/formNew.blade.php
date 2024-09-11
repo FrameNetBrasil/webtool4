@@ -24,6 +24,7 @@
         <x-combobox.group
             id="idGroup"
             label="Group"
+            value="0"
         ></x-combobox.group>
     </x-slot:fields>
     <x-slot:buttons>

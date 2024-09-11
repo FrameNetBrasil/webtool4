@@ -16,7 +16,7 @@ class Group extends Component
     public function __construct(
         public string $id,
         public string $label,
-        public int $value
+        public ?int $value = null,
     )
     {
         $list = Criteria::table("group")->orderBy("name")->all();

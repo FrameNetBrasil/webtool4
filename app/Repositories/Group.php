@@ -7,9 +7,14 @@ namespace App\Repositories;
 //use Orkester\Persistence\Map\ClassMap;
 //use Orkester\Persistence\Repository;
 
+use App\Database\Criteria;
+
 class Group
 {
-
+    public static function byId(int $id): object
+    {
+        return Criteria::byId("group", 'idGroup', $id);
+    }
 //    public static function map(ClassMap $classMap): void
 //    {
 //        $classMap->table('group')
