@@ -66,7 +66,7 @@ class User
 
     public static function create(object $user): void
     {
-        $user->idUser = Criteria::function('user_create(?, ?)', [$user->login, $user->passMD5]);
+        $user->idUser = Criteria::function('user_create(?, ?)', [$user->login, $user->passMD5 ?? md5($user->login)]);
         if (isset($user->auth0IdUser)) {
             DB::table("user")
                 ->where("idUser", $user->idUser)

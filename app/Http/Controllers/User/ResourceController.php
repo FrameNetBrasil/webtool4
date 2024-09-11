@@ -96,7 +96,7 @@ class ResourceController extends Controller
     public function create(CreateData $user)
     {
         try {
-            $user->groups = [Group::getById($user->idGroup)];
+            $user->groups = [Group::byId($user->idGroup)];
             $user->passMD5 = md5(config('webtool.defaultPassword'));
             User::create($user);
             $this->trigger("reload-gridUser");
