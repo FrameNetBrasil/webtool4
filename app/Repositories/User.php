@@ -71,10 +71,10 @@ class User
             DB::table("user")
                 ->where("idUser", $user->idUser)
                 ->update([
-                    "lastLogin" => $user->lastLogin,
+                    "lastLogin" => $user->lastLogin ?? Carbon::now(),
                     'auth0IdUser' => $user->auth0IdUser,
                     'email' => $user->email,
-                    'auth0CreatedAt' => $user->auth0CreatedAt,
+                    'auth0CreatedAt' => $user->auth0CreatedAt ?? Carbon::now(),
                     'name' => $user->name
                 ]);
         }
