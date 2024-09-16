@@ -182,6 +182,12 @@ class AnnotationFEService
             $wordsChars->words[$i]['hasFE'] = false;
         }
         $lu = LU::byId($as->idLU);
+        $alternativeLU = Criteria::table("view_lu as lu1")
+            ->join("view_lu as lu2", "lu1.idLemma", "=", "lu2.idLemma")
+            ->where("lu2.idLU", $lu->idLU)
+            ->where("lu1.idLU","<>", $lu->idLU)
+            ->select("lu1.frameName","lu1.name as lu")
+            ->all();
         $fes = Criteria::table("view_frameelement")
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->where("idFrame", $lu->idFrame)
@@ -245,6 +251,7 @@ class AnnotationFEService
             'words' => $wordsChars->words,
             'idAnnotationSet' => $idAS,
             'lu' => $lu,
+            'alternativeLU' => $alternativeLU,
             'target' => $target[0],
             'spans' => $spans,
             'fes' => $fes,
