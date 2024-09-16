@@ -22,6 +22,13 @@
                     >
                         #{{$sentence->idDocumentSentence}}
                     </td>
+                    @if(isset($sentence->startTime))
+                        <td
+                            style="width:100px"
+                        >
+                            <i class="material icon">schedule</i>{{$sentence->startTime}}
+                        </td>
+                    @endif
                     <td>
                         <a
                             href="/annotation/fe/sentence/{{$idSentence}}"
