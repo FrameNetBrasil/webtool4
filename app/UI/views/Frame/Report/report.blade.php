@@ -67,7 +67,7 @@
             </x-card>
         @endif
 
-        <x-card title="Non-Core" class="frameReport__card frameReport__card--internal">
+        <x-card title="Non-Core" class="frameReport__card frameReport__card--internal" open="true">
             <table id="feNonNuclear" class="frameReport__table">
                 <tbody>
                 @foreach ($fe['noncore'] as $feNN)
@@ -85,7 +85,7 @@
             </table>
         </x-card>
     </x-card>
-    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main">
+    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main"  open="false">
         @php($i = 0)
         @foreach ($relations as $nameEntry => $relations1)
             @php([$entry, $name] = explode('|', $nameEntry))
@@ -110,7 +110,7 @@
             </x-card-plain>
         @endforeach
     </x-card>
-    <x-card title="Lexical Units" class="frameReport__card frameReport__card--main">
+    <x-card title="Lexical Units" class="frameReport__card frameReport__card--main"  open="true">
         @foreach ($lus as $POS => $posLU)
             <x-card-plain
                 title="POS: {{$POS}}"

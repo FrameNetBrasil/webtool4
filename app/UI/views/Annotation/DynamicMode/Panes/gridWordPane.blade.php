@@ -14,7 +14,9 @@
                     @click="Alpine.store('doStore').selectWord(index)"
                     :class="'ui card cursor-pointer w-full ' + (word.selected ? 'selected' : '')"
                 >
-                    <div class="content">
+                    <div
+                        class="content"
+                    >
                         <div
                             class="header"
                         >
