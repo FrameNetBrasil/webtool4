@@ -13,6 +13,7 @@ class CreateLexemeEntryData extends Data
         public ?int    $idLemmaEntry = null,
         public ?string $lexeme = '',
         public ?int    $idLexeme = null,
+        public ?int    $idPOSLexeme = null,
         public ?int    $lexemeOrder = null,
         public ?int    $breakBefore = null,
         public ?int    $headWord = null,
@@ -33,6 +34,7 @@ class CreateLexemeEntryData extends Data
         }
         $lexeme = Criteria::table("lexeme")
             ->where("name", "=", $this->lexeme)
+            ->where("idPOS", "=", $this->idPOSLexeme)
             ->where("idLanguage", "=", AppService::getCurrentIdLanguage())
             ->first();
         if (!is_null($lexeme)) {

@@ -70,8 +70,9 @@ class BrowseController extends Controller
         $lemma = Lemma::byId($idLemma);
         $lexemeentries = Criteria::table("lexemeentry as le")
             ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
+            ->join("pos", "lexeme.idPOS", "=", "pos.idPOS")
             ->where("le.idLemma", $idLemma)
-            ->select("le.*", "lexeme.name as lexeme")
+            ->select("le.*", "lexeme.name as lexeme","pos.pos")
             ->orderBy("le.lexemeorder")
             ->all();
         return view("Lexicon.lemma", [
@@ -86,8 +87,9 @@ class BrowseController extends Controller
         $lemma = Lemma::byId($idLemma);
         $lexemeentries = Criteria::table("lexemeentry as le")
             ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
+            ->join("pos", "lexeme.idPOS", "=", "pos.idPOS")
             ->where("le.idLemma", $idLemma)
-            ->select("le.*", "lexeme.name as lexeme")
+            ->select("le.*", "lexeme.name as lexeme", "pos.pos")
             ->orderBy("le.lexemeorder")
             ->all();
         return view("Lexicon.lexemeentries", [
