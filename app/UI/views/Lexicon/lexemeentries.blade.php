@@ -27,6 +27,7 @@
                     <div
                         class="meta"
                     >
+                        <span>{{$lexemeentry->pos}}</span>
                         <span>Order: {{$lexemeentry->lexemeOrder}}</span>
                         <span>{{$lexemeentry->headWord ? ' headWord ': ''}}</span>
                     </div>

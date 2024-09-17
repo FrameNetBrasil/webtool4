@@ -46,6 +46,13 @@
                     ></x-text-field>
                 </div>
                 <div class="col">
+                    <x-combobox.pos
+                        id="idPOSLexeme"
+                        label="POS"
+                        :value="$lemma->idPOS"
+                    ></x-combobox.pos>
+                </div>
+                <div class="col">
                     <x-text-field
                         label="Order"
                         id="lexemeOrder"
