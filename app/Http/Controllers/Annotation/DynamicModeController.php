@@ -282,6 +282,9 @@ class DynamicModeController extends Controller
         try {
             debug($data);
             $idSentence = AnnotationDynamicService::buildSentenceFromWords($data);
+            if ($idSentence == 0) {
+                throw new \Exception("Error joining words.");
+            }
             return $idSentence;
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
