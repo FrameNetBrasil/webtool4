@@ -40,6 +40,10 @@ class AnnotationSet
         $array = array();
         $punctuation = " .,;:?/'][\{\}\"!@#$%&*\(\)-_+=“”";
         mb_internal_encoding("UTF-8"); // this IS A MUST!! PHP has trouble with multibyte when no internal encoding is set!
+        $last = mb_substr($text, -1);
+        if (mb_strpos($punctuation, $last) === false) {
+            $text .= '.';
+        }
         $i = 0;
         for ($j = 0; $j < mb_strlen($text); $j++) {
             $char = mb_substr($text, $j, 1);
@@ -51,6 +55,7 @@ class AnnotationSet
                 $i = $j + 1;
             }
         }
+        $words = [];
         $chars = [];
         $order = 1;
         foreach ($array as $startChar => $wordForm) {
