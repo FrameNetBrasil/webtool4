@@ -14,39 +14,43 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'web')]
 class ReportController extends Controller
 {
-    #[Get(path: '/report/frame/content/{idFrame?}/{lang?}')]
-    public function reportContent(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
-    {
-        $data = ReportFrameService::report($idFrame, $lang);
-        return view("Frame.Report.report", $data);
-    }
+//    #[Get(path: '/report/frame/content/{idFrame?}/{lang?}')]
+//    public function reportContent(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
+//    {
+//        $data = ReportFrameService::report($idFrame, $lang);
+//        return view("Frame.Report.report", $data);
+//    }
 
     #[Get(path: '/report/frame/{idFrame?}/{lang?}')]
     public function report(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
     {
         $search = session('searchFrame') ?? SearchData::from();
+        $frames = BrowseController::listFrame($search);
         if (($idFrame == 'list') || ($idFrame == '')) {
             return view("Frame.Report.main", [
-                'search' => $search
+                'search' => $search,
+                'idFrame' => null,
+                'frames' => $frames
             ]);
         } else {
-            return view("Frame.Report.main", [
-                'search' => $search,
-                'idFrame' => $idFrame
-            ]);
+            $data = ReportFrameService::report($idFrame, $lang);
+            $data['search'] = $search;
+            $data['idFrame'] = $idFrame;
+            $data['frames'] = $frames;
+            return view("Frame.Report.main", $data);
         }
     }
 
 
-    #[Post(path: '/report/frame/grid')]
-    public function grid(SearchData $search)
-    {
-        $frames = BrowseController::listFrame($search);
-        return view("Frame.Report.grid", [
-            'search' => $search,
-            'frames' => $frames,
-        ]);
-    }
+//    #[Post(path: '/report/frame/grid')]
+//    public function grid(SearchData $search)
+//    {
+//        $frames = BrowseController::listFrame($search);
+//        return view("Frame.Report.grid", [
+//            'search' => $search,
+//            'frames' => $frames,
+//        ]);
+//    }
 
     #[Get(path: '/frame/list/forSelect')]
     public function listForSelect(QData $data)

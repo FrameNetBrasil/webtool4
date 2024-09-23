@@ -11,6 +11,7 @@ use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
+use Illuminate\Http\Request;
 use Orkester\Security\MAuth;
 
 #[Middleware(name: 'web')]
@@ -31,11 +32,12 @@ class AppController extends Controller
     }
 
     #[Get(path: '/changeLanguage/{language}')]
-    public function changeLanguage(string $language)
+    public function changeLanguage(Request $request, string $language)
     {
+        $currentURL = $request->header("Hx-Current-Url");
         $data = Criteria::byFilter("language", ['language', '=', $language])->first();
         AppService::setCurrentLanguage($data->idLanguage);
-        return $this->redirect("/");
+        return $this->redirect($currentURL);
     }
 
     #[Post(path: '/app/search')]

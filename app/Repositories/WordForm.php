@@ -104,7 +104,7 @@ class WordForm
             return false;
         }
         $idLanguage = AppService::getCurrentIdLanguage();
-        $wf1 = md5($wordform);
+        $wf1 = md5(mb_strtolower($wordform));
         $r = DB::select("
                     select l.form,count(l.idLU) as n
                     from view_lexicon l

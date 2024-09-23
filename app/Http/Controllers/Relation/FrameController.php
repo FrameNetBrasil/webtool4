@@ -18,6 +18,7 @@ class FrameController extends Controller
     public function deleteFrameRelation(string $idEntityRelation)
     {
         try {
+            Criteria::deleteById("entityrelation","idRelation", $idEntityRelation);
             Criteria::deleteById("entityrelation","idEntityRelation", $idEntityRelation);
             $this->trigger('reload-gridFrameRelation');
             return $this->renderNotify("success", "Relation deleted.");
