@@ -1,17 +1,23 @@
 <div id="frameReport" class="flex flex-column h-full">
-    <div class="flex flex-row align-content-start h-3rem">
-        <div class="col">
-            <h1><x-element.frame name="{{$frame->name}}"></x-element.frame></h1>
+    <div class="flex flex-row align-content-start">
+        <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
+            <h1>
+                <x-element.frame name="{{$frame->name}}"></x-element.frame>
+            </h1>
         </div>
-        <div class="col text-right">
+        <div class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
             @foreach ($classification as $name => $values)
                 @foreach ($values as $value)
-                    <div class="ui label tag wt-tag-{{$name}}">
-                        {{$value}}
+                    <div
+                        class="sm:pb-1"
+                    >
+                        <div class="ui label tag wt-tag-{{$name}}">
+                            {{$value}}
+                        </div>
                     </div>
                 @endforeach
             @endforeach
-            <i id="btnDownload" class="icon material text-lg cursor-pointer" title="Save as PDF">picture_as_pdf</i>
+            <i id="btnDownload" class="icon material text-2xl cursor-pointer" title="Save as PDF">picture_as_pdf</i>
         </div>
     </div>
     <x-card title="Definition" class="frameReport__card frameReport__card--main">
@@ -85,7 +91,7 @@
             </table>
         </x-card>
     </x-card>
-    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main"  open="false">
+    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main" open="false">
         @php($i = 0)
         @foreach ($relations as $nameEntry => $relations1)
             @php([$entry, $name] = explode('|', $nameEntry))
@@ -95,22 +101,23 @@
                 @class(["frameReport__card" => (++$i < count($report['relations']))])
                 class="frameReport__card--internal">
                 <div class="flex flex-wrap gap-1">
-                @foreach ($relations1 as $idFrame => $relation)
-                    <button
-                        id="btnRelation_{{$relId}}_{{$idFrame}}"
-                        class="ui button basic"
-                    >
-                        <a
-                            href="/report/frame/{{$idFrame}}"
-                        ><x-element.frame name="{{$relation['name']}}"></x-element.frame>
-                        </a>
-                    </button>
-                @endforeach
+                    @foreach ($relations1 as $idFrame => $relation)
+                        <button
+                            id="btnRelation_{{$relId}}_{{$idFrame}}"
+                            class="ui button basic"
+                        >
+                            <a
+                                href="/report/frame/{{$idFrame}}"
+                            >
+                                <x-element.frame name="{{$relation['name']}}"></x-element.frame>
+                            </a>
+                        </button>
+                    @endforeach
                 </div>
             </x-card-plain>
         @endforeach
     </x-card>
-    <x-card title="Lexical Units" class="frameReport__card frameReport__card--main"  open="true">
+    <x-card title="Lexical Units" class="frameReport__card frameReport__card--main" open="true">
         @foreach ($lus as $POS => $posLU)
             <x-card-plain
                 title="POS: {{$POS}}"

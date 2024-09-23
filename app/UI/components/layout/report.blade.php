@@ -6,8 +6,8 @@
             </h1>
         </div>
     </header>
-    <section id="work" class="flex flex-row align-content-start">
-        <div class="col-2">
+    <section id="work" class="flex flex-row align-content-start flex-wrap">
+        <div class="col-12 sm:col-12 md:col-4 lg:col-3 xl:col-2 h-full" >
             <div class="flex flex-column align-content-start h-full">
                 <div class="h-3rem">
                     {{$search}}
@@ -18,7 +18,7 @@
             </div>
 
         </div>
-        <div class="col-10 pl-3">
+        <div class="col-12 sm:col-12 md:col-8 lg:col-9 xl:col-10 pl-3 h-full">
             <div class="flex flex-column align-content-start h-full">
             {{$pane}}
             </div>

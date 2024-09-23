@@ -74,6 +74,46 @@ class AnnotationFEService
         return $sentences;
     }
 
+    public static function getSentence(int $idDocumentSentence): array
+    {
+        $document = Criteria::table("view_document_sentence as ds")
+            ->where("ds.idDocumentSentence", $idDocumentSentence)
+            ->first();
+        $idDocument = $document->idDocument;
+        $hasTimespan = self::hasTimespan($idDocument);
+        if ($hasTimespan) {
+            $sentences = Criteria::table("sentence")
+                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
+                ->join("document as d", "ds.idDocument", "=", "d.idDocument")
+                ->where("d.idDocument", $idDocument)
+                ->where("ds.idDocumentSentence", $idDocumentSentence)
+                ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence", "ts.startTime", "ts.endTime")
+                ->orderBy("ts.startTime")
+                ->orderBy("ds.idDocumentSentence")
+                ->limit(1000)
+                ->get()->keyBy("idDocumentSentence")->all();
+        } else {
+            $sentences = Criteria::table("sentence")
+                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document as d", "ds.idDocument", "=", "d.idDocument")
+                ->where("d.idDocument", $idDocument)
+                ->where("ds.idDocumentSentence", $idDocumentSentence)
+                ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence")
+                ->orderBy("ds.idDocumentSentence")
+                ->limit(1000)
+                ->get()->keyBy("idDocumentSentence")->all();
+        }
+        if (!empty($sentences)) {
+            $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
+            foreach ($targets as $idDocumentSentence => $spans) {
+                $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);
+            }
+        }
+        return $sentences;
+    }
+
+
     public static function getPrevious(int $idDocument, int $idDocumentSentence)
     {
         $hasTimespan = self::hasTimespan($idDocument);

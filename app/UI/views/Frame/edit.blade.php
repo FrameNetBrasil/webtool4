@@ -16,8 +16,12 @@
             <x-slot:detail>
                 @foreach ($classification as $name => $values)
                     @foreach ($values as $value)
-                        <div class="ui label tag wt-tag-{{$name}}">
-                            {{$value}}
+                        <div
+                            class="sm:pb-1"
+                        >
+                            <div class="ui label tag wt-tag-{{$name}}">
+                                {{$value}}
+                            </div>
                         </div>
                     @endforeach
                 @endforeach

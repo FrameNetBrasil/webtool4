@@ -12,6 +12,7 @@ use App\Repositories\Entry;
 use App\Repositories\Frame;
 use App\Services\AppService;
 use App\Services\RelationService;
+use App\Services\ReportFrameService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -40,10 +41,11 @@ class RelationController extends Controller
     #[Get(path: '/frame/{id}/relations/grid')]
     public function gridRelation(string $id)
     {
-
+        $frame = Frame::byId($id);
+        $relations = ReportFrameService::getRelations($frame);
         return view("Relation.frameGrid", [
             'idFrame' => $id,
-            'relations' => RelationService::listRelationsFrame($id)
+            'relations' => $relations//RelationService::listRelationsFrame($id)
         ]);
     }
 

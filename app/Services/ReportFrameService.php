@@ -102,6 +102,7 @@ class ReportFrameService
         foreach ($result as $row) {
             $relationName = $row->relationType . '|' . $row->name;
             $relations[$relationName][$row->idFrameRelated] = [
+                'idEntityRelation' => $row->idEntityRelation,
                 'idFrame' => $row->idFrameRelated,
                 'name' => $row->related,
                 'color' => $row->color

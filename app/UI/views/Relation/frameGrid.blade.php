@@ -6,38 +6,47 @@
     hx-swap="outerHTML"
     hx-get="/frame/{{$idFrame}}/relations/grid"
 >
-    @foreach($relations as $relation)
-        <div class="col-3">
-            <div class="ui card w-full">
-                <div class="content">
-                    <span class="right floated">
-                        <x-delete
-                            title="delete Relation"
-                            onclick="manager.confirmDelete(`Removing Relation '{{$relation->name}} {{$relation->related}}'.`, '/relation/frame/{{$relation->idEntityRelation}}')"
-                        ></x-delete>
-                    </span>
-                    <div
-                        class="header"
+    @php($i = 0)
+    @foreach ($relations as $nameEntry => $relations1)
+        @php([$entry, $name] = explode('|', $nameEntry))
+        @php($relId = str_replace(' ', '_', $name))
+        <x-card-plain
+            title="<span class='color_{{$entry}}'>{{$name}}</span>"
+            @class(["frameReport__card" => (++$i < count($report['relations']))])
+            class="frameReport__card--internal">
+            <div class="flex flex-wrap gap-1">
+                @foreach ($relations1 as $idFrame => $relation)
+                    <button
+                        id="btnRelation_{{$relId}}_{{$idFrame}}"
+                        class="ui button basic grey"
                     >
                         <div
-                            hx-target="#editMainArea"
-                            hx-swap="innerHTML"
-                            hx-get="/fe/relations/{{$relation->idEntityRelation}}"
-                            class="cursor-pointer"
+                            class="flex align-items-center "
                         >
-                            <span class="color_{{$relation->relationType}}">{{$relation->name}}</span>
+                            <a
+                                href="/frame/{{$idFrame}}"
+                                class="font-bold"
+                            >
+                                <x-element.frame name="{{$relation['name']}}"></x-element.frame>
+                            </a>
+                            <div
+                                hx-target="#editMainArea"
+                                hx-swap="innerHTML"
+                                hx-get="/fe/relations/{{$relation['idEntityRelation']}}"
+                                class="cursor-pointer right pl-2"
+                            >
+                                FE-FE
+                            </div>
+                            <div class="right pl-2">
+                                <x-delete
+                                    title="delete Relation"
+                                    onclick="manager.confirmDelete(`Removing Relation '{{$name}} {{$relation['name']}}'.`, '/relation/frame/{{$relation['idEntityRelation']}}')"
+                                ></x-delete>
+                            </div>
                         </div>
-                    </div>
-                    <div class="description">
-                        <a
-                            href="/frame/{{$relation->idFrameRelated}}"
-                        >
-                            <x-element.frame name="{{$relation->related}}"></x-element.frame>
-                        </a>
-                    </div>
-                </div>
+                    </button>
+                @endforeach
             </div>
-        </div>
-
+        </x-card-plain>
     @endforeach
 </div>

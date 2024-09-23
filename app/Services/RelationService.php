@@ -50,6 +50,8 @@ class RelationService extends Controller
         $relations = Criteria::table("view_frame_relation")
             ->where("f1IdFrame", $idFrame)
             ->where("idLanguage", $idLanguage)
+            ->orderBy("relationType")
+            ->orderBy("f2Name")
             ->all();
         foreach ($relations as $relation) {
             $result[] = (object)[
