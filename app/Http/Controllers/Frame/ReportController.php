@@ -21,6 +21,16 @@ class ReportController extends Controller
 //        return view("Frame.Report.report", $data);
 //    }
 
+    #[Post(path: '/report/frame/grid')]
+    public function grid(SearchData $search)
+    {
+        $frames = BrowseController::listFrame($search);
+        return view("Frame.Report.grid", [
+            'search' => $search,
+            'frames' => $frames,
+        ]);
+    }
+
     #[Get(path: '/report/frame/{idFrame?}/{lang?}')]
     public function report(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
     {
@@ -41,16 +51,6 @@ class ReportController extends Controller
         }
     }
 
-
-//    #[Post(path: '/report/frame/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        $frames = BrowseController::listFrame($search);
-//        return view("Frame.Report.grid", [
-//            'search' => $search,
-//            'frames' => $frames,
-//        ]);
-//    }
 
     #[Get(path: '/frame/list/forSelect')]
     public function listForSelect(QData $data)
