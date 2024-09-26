@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Data\Frame\SearchData;
 use App\Database\Criteria;
-use App\Repositories\Language;
-use App\Repositories\ViewFrame;
-use App\Repositories\ViewLU;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;

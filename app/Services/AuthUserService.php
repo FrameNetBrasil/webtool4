@@ -80,4 +80,19 @@ class AuthUserService
         }
     }
 
+    public function impersonate($user)
+    {
+        $idLanguage = $user->idLanguage;
+        if ($idLanguage == '') {
+            $idLanguage = config('webtool.defaultIdLanguage');
+        }
+        session(['user' => $user]);
+        session(['idLanguage' => $idLanguage]);
+        session(['userLevel' => User::getUserLevel($user)]);
+        session(['isAdmin' => User::isMemberOf($user, 'ADMIN')]);
+        session(['isMaster' => User::isMemberOf($user, 'MASTER')]);
+        session(['isAnno' => User::isMemberOf($user, 'ANNO')]);
+        debug("[LOGIN] Authenticated {$user->login}");
+    }
+
 }

@@ -31,7 +31,7 @@ class MAuth
             $result = false;
             if (!is_null(self::$login)) {
                 $user = self::$login;
-                $result = User::isMemberOf($user,$group);
+                $result = User::isMemberOf($user,$group) || User::isManager($user);
             }
             return $result;
         }

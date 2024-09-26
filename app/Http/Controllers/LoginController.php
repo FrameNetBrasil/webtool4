@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\ImperData;
 use App\Data\LoginData;
 use App\Exceptions\LoginException;
 use App\Exceptions\UserNewException;
 use App\Exceptions\UserPendingException;
 use App\Http\Controllers\Controller;
+use App\Mail\WebToolMail;
 use App\Repositories\Base;
+use App\Repositories\User;
 use App\Services\AppService;
 use App\Services\AuthUserService;
 use Auth0\SDK\Auth0;
@@ -15,6 +18,7 @@ use Auth0\SDK\Exception\StateException;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
+use Illuminate\Support\Facades\Mail;
 use Orkester\Security\MAuth;
 
 #[Middleware(name: 'web')]
@@ -105,6 +109,30 @@ class LoginController extends Controller
         }
         return $this->redirect("/");
     }
+
+    #[Get(path: '/impersonating')]
+    public function impersonating()
+    {
+        $token = md5(uniqid(rand(), true));
+        session(['mail_token' => $token]);
+        Mail::to("ely.matos@gmail.com")->send(new WebToolMail($token));
+        return view("App.impersonating", []);
+    }
+
+    #[Post(path: '/impersonating')]
+    public function impersonatingPost(ImperData $data)
+    {
+        $token = session('mail_token');
+        if ($token == $data->password) {
+            $userInfo = User::byId($data->idUser);
+            $user = new AuthUserService();
+            $user->impersonate($userInfo);
+            return $this->redirect("/");
+        } else {
+            return $this->notify('error', "Access denied.");
+        }
+    }
+
 
 
 }
