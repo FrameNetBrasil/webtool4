@@ -30,6 +30,13 @@
             >
                 Projects
             </a>
+            <a
+                class="item"
+                hx-get="/dataset/{{$dataset->idDataset}}/corpus"
+                hx-target="#objectMainArea"
+            >
+                Corpus
+            </a>
         </div>
     </x-slot:nav>
     <x-slot:main>
