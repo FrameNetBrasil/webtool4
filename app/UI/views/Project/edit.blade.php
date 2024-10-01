@@ -23,13 +23,13 @@
             >
                 Edit
             </a>
-            <a
-                class="item"
-                hx-get="/project/{{$project->idProject}}/formDataset"
-                hx-target="#objectMainArea"
-            >
-                Datasets
-            </a>
+{{--            <a--}}
+{{--                class="item"--}}
+{{--                hx-get="/project/{{$project->idProject}}/formDataset"--}}
+{{--                hx-target="#objectMainArea"--}}
+{{--            >--}}
+{{--                Datasets--}}
+{{--            </a>--}}
         </div>
     </x-slot:nav>
     <x-slot:main>
