@@ -116,6 +116,20 @@ annotation.api = {
         });
         return result;
     },
+    cloneObject: async (params) => {
+        params._token = annotation._token;
+        let result = null;
+        await $.ajax({
+            url: "/annotation/dynamicMode/cloneObject",
+            method: "POST",
+            dataType: "json",
+            data: params,
+            success: (response) => {
+                result = response;
+            }
+        });
+        return result;
+    },
 
     updateObjectData: (params) => {
         return new Promise((resolve, reject) => {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\DynamicMode\AnnotationCommentData;
+use App\Data\Annotation\DynamicMode\CloneData;
 use App\Data\Annotation\DynamicMode\DocumentData;
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
@@ -136,6 +137,19 @@ class DynamicModeController extends Controller
         debug($data);
         try {
             $idDynamicObject = AnnotationDynamicService::updateObjectAnnotation($data);
+            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/dynamicMode/cloneObject')]
+    public function cloneObject(CloneData $data)
+    {
+        debug($data);
+        try {
+            $idDynamicObject = AnnotationDynamicService::cloneObject($data);
             return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());

@@ -69,12 +69,20 @@ var manager = {
          */
     },
     notify(type, message) {
-        $("body").trigger("notify",{
-            detail: {
-                type: type,
-                message: message
-            }
-        });
+        $.toast({
+            class: type,
+            message: message,
+            className: {
+                content: 'content  wt-notify-' + type,
+            },
+        })
+        ;
+        // $("body").trigger("notify",{
+        //     detail: {
+        //         type: type,
+        //         message: message
+        //     }
+        // });
     }
 };
 
