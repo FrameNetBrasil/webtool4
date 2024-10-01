@@ -10,5 +10,4 @@ class Video
     {
         return Criteria::byFilter("video", ["idVideo","=", $id])->first();
     }
-
 }
