@@ -232,7 +232,7 @@
                         if ($("#" + id).length) {
                             //$(sentence.text).replaceAll('#' + id);
                         } else {
-                            reportLU.addSentence(id, sentence.text, sentence.clean, sentence.idSentence);
+                            reportLU.addSentence(id, sentence.text, sentence.clean, sentence.idDocumentSentence);
                         }
                     });
                 }
