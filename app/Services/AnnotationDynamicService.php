@@ -152,6 +152,7 @@ class AnnotationDynamicService
 
     public static function updateObject(ObjectData $data): int
     {
+        $idUser = AppService::getCurrentIdUser();
         // if idDynamicObject = null : object create
         if (is_null($data->idDynamicObject)) {
             $do = json_encode([
@@ -161,7 +162,8 @@ class AnnotationDynamicService
                 'startTime' => (float)$data->startTime,
                 'endTime' => (float)$data->endTime,
                 'status' => (int)$data->status,
-                'origin' => (int)$data->origin
+                'origin' => (int)$data->origin,
+                'idUser' => $idUser
             ]);
             $idDynamicObject = Criteria::function("dynamicobject_create(?)", [$do]);
             $dynamicObject = Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
