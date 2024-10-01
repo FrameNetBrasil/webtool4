@@ -58,6 +58,12 @@
                 label="Save"
                 onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
             ></x-button>
+            <x-button
+                type="button"
+                label="Clone"
+                color="secondary"
+                onclick="annotation.objects.cloneCurrentObject()"
+            ></x-button>
         </x-slot:fields>
     </x-form>
 </div>

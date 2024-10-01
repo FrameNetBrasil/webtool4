@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Data\Annotation\DynamicMode\CloneData;
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
 use App\Data\Annotation\DynamicMode\SentenceData;
@@ -222,6 +223,54 @@ class AnnotationDynamicService
             }
         }
         return $idDynamicObject;
+    }
+
+    public static function cloneObject(CloneData $data): int
+    {
+        $idUser = AppService::getCurrentIdUser();
+        $idDynamicObject = $data->idDynamicObject;
+        $do = self::getObject($idDynamicObject);
+        $clone = json_encode([
+            'name' => $do->name,
+            'startFrame' => (int)$do->startFrame,
+            'endFrame' => (int)$do->endFrame,
+            'startTime' => (float)$do->startTime,
+            'endTime' => (float)$do->endTime,
+            'status' => (int)$do->status,
+            'origin' => (int)$do->origin,
+            'idUser' => $idUser
+        ]);
+        $idDynamicObjectClone = Criteria::function("dynamicobject_create(?)", [$clone]);
+        $dynamicObjectClone = Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObjectClone);
+        $documentVideo = Criteria::table("view_document_video")
+            ->where("idDocument", $data->idDocument)
+            ->first();
+        $video = Video::byId($documentVideo->idVideo);
+        // create annotationobjectrelation for rel_video_dynobj
+        $relation = json_encode([
+            'idAnnotationObject1' => $video->idAnnotationObject,
+            'idAnnotationObject2' => $dynamicObjectClone->idAnnotationObject,
+            'relationType' => 'rel_video_dynobj'
+        ]);
+        $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
+        // cloning bboxes
+        $bboxes = Criteria::table("view_dynamicobject_boundingbox")
+            ->where("idDynamicObject", $idDynamicObject)
+            ->all();
+        foreach ($bboxes as $bbox) {
+            $json = json_encode([
+                'frameNumber' => (int)$bbox->frameNumber,
+                'frameTime' => (float)$bbox->frameTime,
+                'x' => (int)$bbox->x,
+                'y' => (int)$bbox->y,
+                'width' => (int)$bbox->width,
+                'height' => (int)$bbox->height,
+                'blocked' => (int)$bbox->blocked,
+                'idDynamicObject' => (int)$idDynamicObjectClone
+            ]);
+            $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
+        }
+        return $idDynamicObjectClone;
     }
 
     public static function deleteObject(int $idDynamicObject): void

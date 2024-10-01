@@ -448,26 +448,39 @@ annotation.objects = {
             }
         }
     },
-    async cloneObject(idObject) {
-        let sourceObject = annotation.objects.get(idObject);
-        let cloneObject = new DynamicObject(sourceObject.object);
-        cloneObject.cloneFrom(sourceObject);
+    cloneCurrentObject: async () => {
+        let currentObject = Alpine.store('doStore').currentObject;
         let params = {
             idDocument: annotation.document.idDocument,
-            //idObjectMM: null,
-            idDynamicObject: null,
-            startFrame: cloneObject.object.startFrame,
-            endFrame: cloneObject.object.endFrame,
-            idFrame: null,
-            idFrameElement: null,
-            idLU: null,
-            startTime: annotation.video.timeFromFrame(cloneObject.object.startFrame),
-            endTime: annotation.video.timeFromFrame(cloneObject.object.endFrame),
-            origin: 2,
-            frames: cloneObject.object.frames,
+            idDynamicObject: currentObject.object.idDynamicObject,
         };
-        let data = await annotation.objects.saveObject(cloneObject, params);
-        Alpine.store('doStore').selectObjectByIdDynamicObject(data.idDynamicObject);
-        manager.messager("success", "Object cloned.");
-    }
+        let object = await annotation.api.cloneObject(params);
+        console.log(object);
+        await Alpine.store('doStore').updateObjectList();
+        manager.notify("success", "Cloned object : #" + object.idDynamicObject);
+        Alpine.store('doStore').selectObjectByIdDynamicObject(object.idDynamicObject);
+    },
+
+    // async cloneObject(idObject) {
+    //     let sourceObject = annotation.objects.get(idObject);
+    //     let cloneObject = new DynamicObject(sourceObject.object);
+    //     cloneObject.cloneFrom(sourceObject);
+    //     let params = {
+    //         idDocument: annotation.document.idDocument,
+    //         //idObjectMM: null,
+    //         idDynamicObject: null,
+    //         startFrame: cloneObject.object.startFrame,
+    //         endFrame: cloneObject.object.endFrame,
+    //         idFrame: null,
+    //         idFrameElement: null,
+    //         idLU: null,
+    //         startTime: annotation.video.timeFromFrame(cloneObject.object.startFrame),
+    //         endTime: annotation.video.timeFromFrame(cloneObject.object.endFrame),
+    //         origin: 2,
+    //         frames: cloneObject.object.frames,
+    //     };
+    //     let data = await annotation.objects.saveObject(cloneObject, params);
+    //     Alpine.store('doStore').selectObjectByIdDynamicObject(data.idDynamicObject);
+    //     manager.messager("success", "Object cloned.");
+    // }
 };
