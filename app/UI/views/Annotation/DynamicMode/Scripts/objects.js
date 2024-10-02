@@ -422,7 +422,7 @@ annotation.objects = {
             idDocument: annotation.document.idDocument,
             idDynamicObject: currentObject.object.idDynamicObject,
             idFrameElement: parseInt(data.idFrameElement),
-            idLU: parseInt(data.idLU),
+            idLU: data.idLU ? parseInt(data.idLU) : null,
         };
         await annotation.api.updateObjectAnnotation(params);
         await Alpine.store('doStore').updateObjectList();
