@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Video;
 use App\Data\ComboBox\QData;
 use App\Data\Video\CreateData;
 use App\Data\Video\SearchData;
+use App\Data\Video\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
@@ -50,17 +51,22 @@ class ResourceController extends Controller
         ]);
     }
 
-//    #[Post(path: '/video')]
-//    public function update(UpdateData $data)
-//    {
-//        try {
-//            Criteria::function('dataset_update(?)', [$data->toJson()]);
-//            $this->trigger("reload-gridDataset");
-//            return $this->renderNotify("success", "Dataset updated.");
-//        } catch (\Exception $e) {
-//            return $this->renderNotify("error", $e->getMessage());
-//        }
-//    }
+    #[Post(path: '/video')]
+    public function update(UpdateData $data)
+    {
+        try {
+            Criteria::table("video")
+                ->where("idVideo",$data->idVideo)
+                ->update([
+                    "title" => $data->title,
+                    "originalFile" => $data->originalFile,
+                ]);
+            $this->trigger("reload-gridVideo");
+            return $this->renderNotify("success", "Video updated.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
 
     #[Get(path: '/video/new')]
     public function new()
@@ -72,6 +78,7 @@ class ResourceController extends Controller
     public function create(CreateData $data)
     {
         try {
+            debug($data);
             Criteria::function('video_create(?)', [$data->toJson()]);
             $this->trigger("reload-gridVideo");
             return $this->renderNotify("success", "Video created.");
@@ -100,4 +107,6 @@ class ResourceController extends Controller
         $name = (strlen($data->q) > 2) ? $data->q : 'none';
         return ['results' => Criteria::byFilter("video",["title","startswith",$name])->orderby("title")->all()];
     }
+
+
 }

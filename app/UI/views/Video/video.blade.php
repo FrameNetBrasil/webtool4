@@ -9,7 +9,7 @@
             'id' => $video->idVideo,
             'text' => $videoIcon . $video->title,
             'state' => 'closed',
-            'type' => 'corpus',
+            'type' => 'video',
             'children' => null
         ];
     }

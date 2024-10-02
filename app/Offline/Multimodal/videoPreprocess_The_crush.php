@@ -26,6 +26,9 @@ Compress the video with CRF of 23 (constant rate factor)
 */
 
 use App\Database\Criteria;
+use App\Repositories\Document;
+use App\Repositories\Video;
+use App\Services\AppService;
 use getID3;
 use thiagoalessio\TesseractOCR\TesseractOCR;
 use GuzzleHttp\Client;
@@ -37,68 +40,41 @@ class videoPreprocess_The_crush
 {
     public $videoFile;
     public $audioFile;
-    public $transcriptFile;
-    public $combinedFile;
     public $dataPath;
     public $videoSize;
-    public $videoName;
     public $videoPath;
     public $videoFileOriginal;
     public $sha1Name;
     public $video;
     public $ffmpegConfig;
     private $ffmpeg;
-    private $videoHeight;
-    private $videoWidth;
-
-    //public $testingPhase;
-
-    private $idDocumentMM;
     private $idDocument;
-    private $idUser;
+    private $idVideo;
     private $idLanguage;
-    private $email;
-    private $preprocess;
 
-    public function __construct($videoPath)
+    public function __construct(int $idDocument)
     {
-        Criteria::$database = 'webtool37';
-        //debug($videoPath, $videoName, $documentMMTitle);
-        $this->dataPath = "/home/ematos/temp/ReporterBrasilCorpus";
-        $this->videoPath = $videoPath;
+        Criteria::$database = 'webtool';
+        $this->idDocument = $idDocument;
+        $this->dataPath = "/home/ematos/devel/fnbr/webtool4/storage/app/videos";
+        AppService::setCurrentLanguage(1);
     }
 
 
     public function process()
     {
-        $sufix = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
-        $directory = "{$this->dataPath}/{$this->videoPath}";
-        $files = array_diff(scandir($directory), array('..', '.'));
-        debug($files);
-        $i = 0;
-        foreach($files as $videoName) {
-            $title = $this->videoPath . '_' . $sufix[$i++];
-            debug($videoName, $title);
-            $documentMM = Criteria::table("documentmm")
-                ->where("title", $title)
-                ->first();
-            $this->idDocumentMM = $documentMM->idDocumentMM;
-            $this->idLanguage = 1;
-            $this->dataPath = "/home/ematos/temp/ReporterBrasilCorpus";
-            $this->videoName = $videoName;
-            $this->sha1Name = sha1($this->videoPath . $this->videoName);
-            $this->videoFileOriginal = "{$this->dataPath}/{$this->videoPath}/{$this->videoName}";
-            $this->videoSize = 'small';
-            $this->videoProcess();
-        }
-
-//        $this->videoProcess();
-//        $this->getFrames();
-//        $this->getAudio();
-//        $this->speechToText();
-//        $this->ccextractor();
-//        $this->extractFrames();
-//        $this->charon();
+        debug("Document " . $this->idDocument);
+        $dv = Criteria::table("view_document_video")
+            ->where("idDocument", $this->idDocument)
+            ->first();
+        $document = Document::byId($dv->idDocument);
+        $video = Video::byId($dv->idVideo);
+        $this->idVideo = $dv->idVideo;
+        $this->sha1Name = $video->sha1Name;
+        $this->videoFileOriginal = "{$this->dataPath}/{$video->sha1Name}_original.mp4";
+        $this->videoSize = 'small';
+        $this->idLanguage = $video->idLanguage;
+        $this->videoProcess();
     }
 
     public function videoProcess()
@@ -119,7 +95,7 @@ class videoPreprocess_The_crush
             'ffmpeg.threads' => 12, // The number of threads that FFMpeg should use
         ], @$logger);
         //$this->videoFile = str_replace("_original", "", $this->videoFileOriginal);
-        $this->videoFile = "{$this->dataPath}/Videos/{$this->sha1Name}.mp4";
+        $this->videoFile = "{$this->dataPath}/{$this->sha1Name}.mp4";
         debug('=2');
         // preprocess the video
         debug('probing ' . $this->videoFileOriginal);
@@ -178,24 +154,15 @@ class videoPreprocess_The_crush
         debug('compressed video file saved');
         $this->videoHeight = 480;
         $this->videoWidth = $newWidth;
-        Criteria::table("documentmm")
-            ->where("idDocumentMM", $this->idDocumentMM)
+        Criteria::table("video")
+            ->where("idVideo", $this->idVideo)
             ->update([
-                'sha1Name' => $this->sha1Name,
-                'videoWidth' =>  $this->videoWidth,
-                'videoHeight' =>  $this->videoHeight,
-                'originalFile' => $this->videoName
+                'width' => $this->videoWidth,
+                'height' => $this->videoHeight,
             ]);
-//            $documentMM = new fnbr\models\DocumentMM();
-//            $documentMM->getById($this->idDocumentMM);
-//            $documentMM->saveMMData((object)[
-//                'videoHeight' => $this->videoHeight,
-//                'videoWidth' => $this->videoWidth,
-//            ]);
-
-
     }
 
+    /*
     public function getFrames()
     {
         // getting frame
@@ -555,6 +522,7 @@ class videoPreprocess_The_crush
             rmdir($dir);
         }
     }
+    */
 }
 
 
