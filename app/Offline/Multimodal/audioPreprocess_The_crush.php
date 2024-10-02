@@ -104,7 +104,7 @@ class audioPreprocess_The_crush
             }
             // update table WordMM
             Criteria::table("wordmm")
-                ->where("idDocumentMM", $this->idDocumentMM)
+                ->where("idVideo", $this->idVideo)
                 ->where("origin", 0)
                 ->delete();
             $transcript = json_decode(file_get_contents($outputFile));
@@ -113,6 +113,7 @@ class audioPreprocess_The_crush
                     $start = str_replace('s', '', $word->startTime);
                     $end = str_replace('s', '', $word->endTime);
                     Criteria::create("wordmm", [
+                        "idDocumentMM" => 1339,
                         "word" => $word->word,
                         "startTime" => $start,
                         "endTime" => $end,

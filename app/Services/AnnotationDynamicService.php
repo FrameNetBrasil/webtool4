@@ -43,12 +43,15 @@ class AnnotationDynamicService
             ->first();
         if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
             if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
-                $usertask = Criteria::table("usertask_document")
-                    ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-                    ->where("usertask_document.idDocument", $idDocument)
-                    ->where("ut.idUser", -2)
-                    ->select("ut.idUserTask", "ut.idTask")
-                    ->first();
+                $usertask = (object)[
+                    "idUserTask" => 1
+                ];
+//                $usertask = Criteria::table("usertask_document")
+//                    ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
+//                    ->where("usertask_document.idDocument", $idDocument)
+//                    ->where("ut.idUser", -2)
+//                    ->select("ut.idUserTask", "ut.idTask")
+//                    ->first();
             } else {
                 $usertask = null;
             }
