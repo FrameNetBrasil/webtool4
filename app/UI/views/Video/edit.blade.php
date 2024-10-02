@@ -25,7 +25,7 @@
             </a>
             <a
                 class="item"
-                hx-get="/video/{{$video->idVideo}}/documents"
+                hx-get="/video/{{$video->idVideo}}/document"
                 hx-target="#objectMainArea"
             >
                 Documents

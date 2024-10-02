@@ -1,14 +1,14 @@
-<h2>Corpus</h2>
+<h2>Document</h2>
 <div
     hx-trigger="load"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/dataset/{{$idDataset}}/corpus/formNew"
+    hx-get="/video/{{$idVideo}}/document/formNew"
 ></div>
 <div
     hx-trigger="load"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/dataset/{{$idDataset}}/corpus/grid"
+    hx-get="/video/{{$idVideo}}/document/grid"
 ></div>
 

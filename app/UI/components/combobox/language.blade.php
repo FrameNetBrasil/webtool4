@@ -1,18 +1,24 @@
-@if($placeholder == '')
-    <div class="form-field">
+<div {{$attributes}}>
+    <div class="form-field field" style="overflow:initial">
         <label for="{{$id}}">{{$label}}</label>
-        <input {{$attributes}} id="{{$id}}" name="{{$id}}">
+        <div id="{{$id}}_dropdown" class="ui tiny selection dropdown" style="overflow:initial">
+            <input type="hidden" name="{{$id}}" value="{{$value}}">
+            <i class="dropdown icon"></i>
+            <div class="default text"></div>
+            <div class="menu">
+                @foreach($options as $idOption => $option)
+                    <div data-value="{{$idOption}}"
+                         class="item p-1 min-h-0"
+                    >
+                        {{$option}}
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
-@else
-    <input {{$attributes}} id="{{$id}}" name="{{$id}}">
-@endif
-@push('onload')
-    $('#{{$id}}').combobox({
-        valueField: 'idLanguage',
-        textField: 'ldescription',
-        editable:false,
-        value: '{{$value}}',
-        prompt: '{{$placeholder}}',
-        data: {{ Js::from($options) }},
+</div>
+<script>
+    $(function() {
+        $('#{{$id}}_dropdown').dropdown();
     });
-@endpush
+</script>

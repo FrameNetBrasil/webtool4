@@ -5,6 +5,7 @@ namespace App\View\Components\Combobox;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Repositories\Language as LanguageRepository;
 
 class Language extends Component
 {
@@ -19,8 +20,7 @@ class Language extends Component
         public string $placeholder = ''
     )
     {
-        $language = new \App\Repositories\Language();
-        $this->options = $language->listForSelection()->getResult();
+        $this->options = LanguageRepository::listForSelection();
     }
 
     /**

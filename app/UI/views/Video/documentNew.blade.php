@@ -1,12 +1,12 @@
-<x-form id="formNewDatasetCorpus" title="Add to Dataset" :center="false"  hx-post="/dataset/{{$idDataset}}/corpus/new">
+<x-form id="formNewDocumentVideo" title="Add Document" :center="false"  hx-post="/video/{{$idVideo}}/document/new">
     <x-slot:fields>
-        <x-hidden-field id="idDataset" value="{{$idDataset}}"></x-hidden-field>
-        <x-combobox.corpus
-            id="idCorpus"
-            label="Associated Corpus"
+        <x-hidden-field id="idVideo" value="{{$idVideo}}"></x-hidden-field>
+        <x-combobox.document
+            id="idDocument"
+            label="Associated Document"
             :value="null"
         >
-        </x-combobox.corpus>
+        </x-combobox.document>
     </x-slot:fields>
     <x-slot:buttons>
         <x-submit label="Add"></x-submit>

@@ -1,28 +1,30 @@
 <div
     id="gridDatasetCorpus"
     class="grid"
-    hx-trigger="reload-gridDatasetCorpus from:body"
+    hx-trigger="reload-gridVideoDocument from:body"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/dataset/{{$idDataset}}/corpus/grid"
+    hx-get="/video/{{$idVideo}}/document/grid"
 >
-    @foreach($corpus as $c)
+    @foreach($documents as $document)
         <div class="col-4">
             <div class="ui card w-full">
                 <div class="content">
                     <span class="right floated">
                         <x-delete
-                            title="delete Corpus from Dataset"
-                            onclick="manager.confirmDelete(`Removing association to Corpus '{{$c->name}}'.`, '/dataset/{{$idDataset}}/corpus/{{$c->idCorpus}}')"
+                            title="delete Document-Video"
+                            onclick="manager.confirmDelete(`Removing association to Document '{{$document->name}}'.`, '/video/{{$idVideo}}/document/{{$document->idDocument}}')"
                         ></x-delete>
                     </span>
                     <div
                         class="header"
                     >
-                        {{$c->name}}
+                        {{$document->name}}
                     </div>
-                    <div class="description">
-                        {{$c->description}}
+                    <div
+                        class="description"
+                    >
+                        #{{$document->idDocument}}
                     </div>
                 </div>
             </div>
