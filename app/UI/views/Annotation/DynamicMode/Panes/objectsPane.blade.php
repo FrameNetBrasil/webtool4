@@ -40,7 +40,7 @@
                                         x-text="object.frame + '.' + object.fe"></span></div>
                             </template>
                             <template x-if="object.lu">
-                                <div><i class="icon material color_lu">abc</i><span x-text="object.lu"></span></div>
+                                <div><i class="icon material color_lu">abc</i><span x-text="object.luFrameName + '.' + object.luName"></span></div>
                             </template>
                         </div>
                     </div>
