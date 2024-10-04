@@ -94,9 +94,12 @@ class AnnotationDynamicService
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $result = Criteria::table("view_annotation_dynamic")
-            ->where("idLanguage", "left", $idLanguage)
+            ->leftJoin("view_lu", "view_annotation_dynamic.idLu", "=", "view_lu.idLU")
+            ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
+            ->where("view_annotation_dynamic.idLanguage", "left", $idLanguage)
             ->where("idDocument", $idDocument)
-            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color")
+            ->where("view_frame.idLanguage","left",$idLanguage)
+            ->select("idDynamicObject", "view_annotation_dynamic.name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "view_annotation_dynamic.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName","idAnnotationFE", "idFrameElement", "view_annotation_dynamic.idFrame", "frame", "fe", "color")
             ->orderBy("startFrame")
             ->orderBy("endFrame")
             ->orderBy("idDynamicObject")
