@@ -1,4 +1,3 @@
-<h2>Users</h2>
 <div
     hx-trigger="load"
     hx-target="this"

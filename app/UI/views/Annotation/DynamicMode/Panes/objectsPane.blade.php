@@ -23,18 +23,21 @@
                             >
                                 <div class="flex">
                                     <div class="objectId" x-text="'#' + (index + 1)"></div>
-                                    <div class="frame">
-                                        <span x-text="object.startFrame"></span>
-                                        <span>/</span>
-                                        <span x-text="object.endFrame"></span>
-                                    </div>
-                                    <div class="frame">
-                                        #<span x-text="object.idDynamicObject"></span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="description">
+                            <div class="ui label mb-1">
+                                Start
+                                <div class="detail"><span x-text="object.startFrame"></span></div>
+                            </div>
+                            <div class="ui label mb-1">
+                                End
+                                <div class="detail" @click.stop="Alpine.store('doStore').selectObject(index + 1);annotation.video.gotoFrame(object.endFrame)"><span x-text="object.endFrame"></span></div>
+                            </div>
+                            <div class="ui label mb-1">
+                                #<span x-text="object.idDynamicObject"></span>
+                            </div>
                             <template x-if="object.fe">
                                 <div><i class="icon material color_frame">dashboard</i><span
                                         x-text="object.frame + '.' + object.fe"></span></div>

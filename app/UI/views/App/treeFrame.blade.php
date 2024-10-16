@@ -1,4 +1,9 @@
 <div class="wt-datagrid flex flex-column" style="height:100%">
+    <div class="datagrid-header">
+        <div class="datagrid-title">
+            Frame
+        </div>
+    </div>
     <div class="table" style="position:relative;height:100%">
         <table id="frameTable">
             <tbody>

@@ -12,8 +12,8 @@ class Form extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string $id,
-        public bool $center,
+        public string $id = '',
+        public bool $center = false,
         public bool $border = true,
         public string $title = '',
         public string $toolbar = '',
@@ -21,7 +21,9 @@ class Form extends Component
 //        public string $buttons,
     )
     {
-        //
+        if ($this->id === '') {
+            $this->id = uniqid();
+        }
     }
 
     /**

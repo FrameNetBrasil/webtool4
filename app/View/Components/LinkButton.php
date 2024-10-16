@@ -12,9 +12,10 @@ class LinkButton extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string $id,
         public string $label,
+        public string $id = '',
         public string $icon = '',
+        public string $color = '',
         public string $plain = 'true',
         public string $href = '#'
     )

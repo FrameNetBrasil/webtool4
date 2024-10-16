@@ -1,6 +1,6 @@
-<x-layout.object :center="false">
+<x-layout.object>
     <x-slot:name>
-        <span class="color_corpus">{{$document->name}}</span>
+        <span>{{$document->name}}</span>
     </x-slot:name>
     <x-slot:detail>
         <div class="ui label tag wt-tag-id">
@@ -13,27 +13,9 @@
         ></x-button>
     </x-slot:detail>
     <x-slot:description>
+        {{$document->description}}
     </x-slot:description>
-    <x-slot:nav>
-        <div class="ui vertical menu w-auto">
-            <a
-                class="item"
-                hx-get="/document/{{$document->idDocument}}/formCorpus"
-                hx-target="#objectMainArea"
-            >
-                Corpus
-            </a>
-            <a
-                class="item"
-                hx-get="/document/{{$document->idDocument}}/entries"
-                hx-target="#objectMainArea"
-            >
-                Translations
-            </a>
-        </div>
-    </x-slot:nav>
     <x-slot:main>
-        <div id="objectMainArea" class="objectMainArea">
-        </div>
+        @include("Document.menu")
     </x-slot:main>
 </x-layout.object>

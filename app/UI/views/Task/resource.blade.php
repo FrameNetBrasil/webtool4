@@ -1,4 +1,7 @@
 <x-layout.resource>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['/','Home'],['','Task/User']]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:title>
         Task/User
     </x-slot:title>
@@ -11,6 +14,31 @@
             hx-swap="innerHTML"
         ></x-button>
     </x-slot:actions>
+    <x-slot:search>
+        <x-form-search>
+
+            <div class="field">
+                <x-search-field
+                    id="task"
+                    placeholder="Search Task"
+                    hx-post="/task/grid/search"
+                    hx-trigger="input changed delay:500ms, search"
+                    hx-target="#gridDataset"
+                    hx-swap="innerHTML"
+                ></x-search-field>
+            </div>
+            <div class="field">
+                <x-search-field
+                    id="user"
+                    placeholder="Search User"
+                    hx-post="/task/grid/search"
+                    hx-trigger="input changed delay:500ms, search"
+                    hx-target="#gridDataset"
+                    hx-swap="innerHTML"
+                ></x-search-field>
+            </div>
+        </x-form-search>
+    </x-slot:search>
     <x-slot:grid>
         <div
             hx-trigger="load"

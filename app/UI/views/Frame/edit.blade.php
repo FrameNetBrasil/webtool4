@@ -1,10 +1,7 @@
 <x-layout.edit>
-    <x-slot:title>
-        Frame
-    </x-slot:title>
-    <x-slot:actions>
-        <x-button label="List" color="secondary" href="/frame"></x-button>
-    </x-slot:actions>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['/','Home'],['/frame','Frames'],['',$frame?->name]]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:main>
         <x-layout.object>
             <x-slot:name>
@@ -19,7 +16,7 @@
                         <div
                             class="sm:pb-1"
                         >
-                            <div class="ui label tag wt-tag-{{$name}}">
+                            <div class="ui label wt-tag-{{$name}}">
                                 {{$value}}
                             </div>
                         </div>
@@ -33,63 +30,13 @@
                     ></x-button>
                 @endif
             </x-slot:detail>
-            <x-slot:nav>
-                <div class="ui vertical menu w-auto">
-                    <a
-                        class="item"
-                        hx-get="/frame/{{$frame->idFrame}}/entries"
-                        hx-target="#editMainArea"
-                    >
-                        Translations
-                    </a>
-                    <a
-                        class="item"
-                        hx-get="/frame/{{$frame->idFrame}}/fes"
-                        hx-target="#editMainArea"
-                    >
-                        FrameElements
-                    </a>
-                    <a
-                        class="item"
-                        hx-get="/frame/{{$frame->idFrame}}/lus"
-                        hx-target="#editMainArea"
-                    >
-                        LUs
-                    </a>
-                    <a
-                        class="item"
-                        hx-get="/frame/{{$frame->idFrame}}/classification"
-                        hx-target="#editMainArea"
-                    >
-                        Classification
-                    </a>
-                    <a
-                        class="item"
-                        hx-get="/frame/{{$frame->idFrame}}/relations"
-                        hx-target="#editMainArea"
-                    >
-                        F-F Relations
-                    </a>
-                    <a
-                        class="item"
-                        hx-get="/frame/{{$frame->idFrame}}/feRelations"
-                        hx-target="#editMainArea"
-                    >
-                        FE-FE Relations
-                    </a>
-                    <a
-                        class="item"
-                        hx-get="/frame/{{$frame->idFrame}}/semanticTypes"
-                        hx-target="#editMainArea"
-                    >
-                        SemanticTypes
-                    </a>
-                </div>
-            </x-slot:nav>
+            <x-slot:description>
+                {{$frame->description}}
+            </x-slot:description>
             <x-slot:main>
-                <div id="editMainArea" class="editMainArea">
-                </div>
+                @include("Frame.menu")
             </x-slot:main>
         </x-layout.object>
     </x-slot:main>
 </x-layout.edit>
+

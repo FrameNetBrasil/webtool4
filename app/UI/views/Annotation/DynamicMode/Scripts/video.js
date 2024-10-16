@@ -23,6 +23,9 @@ annotation.video = {
         let time = annotation.video.timeFromFrame(frameNumber);
         annotation.video.player.currentTime(time);
     },
+    gotoTime(time) {
+        annotation.video.player.currentTime(parseFloat(time));
+    },
     enablePlayPause() {
         $btn = document.querySelector(".vjs-play-control");
         if ($btn) {

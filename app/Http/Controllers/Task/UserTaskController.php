@@ -22,31 +22,6 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware("master")]
 class UserTaskController extends Controller
 {
-//    #[Get(path: '/task')]
-//    public function resource()
-//    {
-//        return view("Task.resource");
-//    }
-//
-//    #[Get(path: '/task/new')]
-//    public function new()
-//    {
-//        return view("Task.formNew");
-//    }
-//
-//    #[Get(path: '/task/grid/{fragment?}')]
-//    #[Post(path: '/task/grid/{fragment?}')]
-//    public function grid(SearchData $search, ?string $fragment = null)
-//    {
-//        $users = Task::listUsersToGrid($search->user ?? '');
-//        $tasks = Task::listToGrid($search?->task ?? '');
-//        $view = view("Task.grid",[
-//            'tasks' => $tasks,
-//            'users' => $users
-//        ]);
-//        return (is_null($fragment) ? $view : $view->fragment('search'));
-//    }
-
     #[Get(path: '/usertask/{id}/edit')]
     public function edit(string $id)
     {
@@ -74,30 +49,16 @@ class UserTaskController extends Controller
     #[Get(path: '/usertask/{id}/documents/grid')]
     public function documentsGrid(string $id)
     {
-        $documents = Criteria::table("usertask_document as utd")
-            ->join("view_document as d","utd.idDocument","=","d.idDocument")
-            ->select("d.idDocument","d.name")
-            ->where("d.idLanguage","=", AppService::getCurrentIdLanguage())
+        $documents = Criteria::table("view_usertask_docs as utd")
+            ->select("utd.idDocument","utd.name")
+            ->where("utd.idUserTask", $id)
+            ->where("utd.idLanguage","=", AppService::getCurrentIdLanguage())
             ->all();
         return view("UserTask.documentsGrid",[
             'idUserTask' => $id,
             'documents' => $documents
         ]);
     }
-
-//    #[Post(path: '/task')]
-//    public function update(UpdateData $data)
-//    {
-//        try {
-//            Criteria::table("task")
-//                ->where("idTask",$data->idTask)
-//                ->update($data->toArray());
-//            $this->trigger("reload-gridTask");
-//            return $this->renderNotify("success", "Task updated.");
-//        } catch (\Exception $e) {
-//            return $this->renderNotify("error", $e->getMessage());
-//        }
-//    }
 
     #[Post(path: '/usertask/documents/new')]
     public function create(UserTaskDocumentData $data)

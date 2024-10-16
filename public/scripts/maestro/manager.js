@@ -30,7 +30,7 @@ var manager = {
             }
         });
     },
-    confirmDelete(message, action, event, target) {
+    confirmDelete(message, action, onApprove, onDeny) {
         $('#confirmtemplate')
             .toast({
                 title: 'Warning',
@@ -49,9 +49,12 @@ var manager = {
                 onApprove : function() {
                     //$.toast({message:'Approved'});
                     console.log('yes');
-                    htmx.ajax('DELETE', action, target);
-                    if (event) {
-                        $("#" + event[0]).trigger(event[1]);
+                    htmx.ajax('DELETE', action, null);
+                    // if (event) {
+                    //     $("#" + event[0]).trigger(event[1]);
+                    // }
+                    if (onApprove) {
+                        onApprove();
                     }
                     return true;
                 }

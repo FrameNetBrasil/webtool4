@@ -129,7 +129,9 @@
 
     })
 </script>
-<div style="position:relative; width:852px;height:480px">
+<div
+    style="position:relative; width:852px;height:480px"
+>
     <video-js
         id="videoContainer"
         class="video-js"
@@ -142,19 +144,29 @@
     </div>
     <div x-data class="info flex flex-row justify-content-between">
         <div style="width:200px; text-align:left">
+            <div class="ui label">
             <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeCount"></span>s]
+            </div>
         </div>
         <div>
-            Video: <span x-text="$store.doStore.currentVideoState"></span>
+            <div class="ui label">
+                Video <div class="detail"><span x-text="$store.doStore.currentVideoState"></span></div>
+            </div>
         </div>
         <div>
-            Object: #<span x-text="$store.doStore.currentObject?.idObject || 'none'"></span>
+            <div class="ui label">
+                Object <div class="detail">#<span x-text="$store.doStore.currentObject?.idObject || 'none'"></span></div>
+            </div>
         </div>
         <div>
-            Status: <span x-text="$store.doStore.newObjectState"></span>
+            <div class="ui label">
+                Status <div class="detail"><span x-text="$store.doStore.newObjectState"></span></div>
+            </div>
         </div>
         <div style="width:120px; text-align:right">
+            <div class="ui label">
             <span x-text="$store.doStore.frameDuration"></span> [<span x-text="$store.doStore.timeDuration"></span>s]
+            </div>
         </div>
     </div>
 

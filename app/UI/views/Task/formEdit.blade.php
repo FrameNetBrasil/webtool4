@@ -1,22 +1,23 @@
-<x-form id="formEditTask" title="Task" :center="false" hx-post="/task">
+<x-form
+    title="Task"
+    hx-post="/task"
+>
     <x-slot:fields>
         <x-hidden-field id="idTask" value="{{$task->idTask}}"></x-hidden-field>
-        <x-text-field
-            label="Name"
-            id="name"
-            value="{{$task->name}}"
-        ></x-text-field>
-        <x-multiline-field
-            label="Description"
-            id="description"
-            value="{{$task->description}}"
-        ></x-multiline-field>
-{{--        <x-combobox.project--}}
-{{--            id="idProject"--}}
-{{--            label="Source project"--}}
-{{--            value="{{$task->idProject}}"--}}
-{{--        >--}}
-{{--        </x-combobox.project>--}}
+        <div class="field">
+            <x-text-field
+                label="Name"
+                id="name"
+                value="{{$task->name}}"
+            ></x-text-field>
+        </div>
+        <div class="field">
+            <x-multiline-field
+                label="Description"
+                id="description"
+                value="{{$task->description}}"
+            ></x-multiline-field>
+        </div>
         <div class="three fields">
             <div class="field">
                 <x-text-field
@@ -32,10 +33,11 @@
                     value="{{$task->size}}"
                 ></x-text-field>
             </div>
-            <div class="form-field field">
-                <label for="isActive"></label>
-                <div>
-                    <input type="checkbox" name="isActive" value="1"  {!! (($task->isActive > 0) ? 'checked' : '')  !!}><span>Is Active?</span>
+            <div class="field">
+                <div class="ui checkbox">
+                    <input type="checkbox" name="isActive" class="hidden"
+                           value="1" {!! (($task->isActive > 0) ? 'checked' : '')  !!}>
+                    <label for="isActive">Is Active?</label>
                 </div>
             </div>
         </div>

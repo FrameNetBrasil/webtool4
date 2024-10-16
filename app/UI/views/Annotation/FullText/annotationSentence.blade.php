@@ -1,21 +1,20 @@
-<x-layout.edit-full>
-    <x-slot:title>
-        FullText Annotation
-    </x-slot:title>
-    <x-slot:actions>
-    </x-slot:actions>
+<x-layout.edit>
+    <x-slot:head>
+        <x-breadcrumb
+            :sections="[['/','Home'],['/annotation/fullText','FullText Annotation'],['',$document->name]]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:main>
         @include('Annotation.FullText.Panes.annotation')
         <div id="fullTextAnnotationPane" class="fullTextAnnotationPane">
                 <div class="header">
                     <div class="tag">
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             {{$corpus->name}}
                         </div>
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             {{$document->name}}
                         </div>
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             #{{$idDocumentSentence}}
                         </div>
                     </div>
@@ -39,4 +38,4 @@
                 </div>
         </div>
     </x-slot:main>
-</x-layout.edit-full>
+</x-layout.edit>

@@ -1,13 +1,24 @@
-<div class="form-field">
+@if($label != '')
     <label for="{{$id}}">{{$label}}</label>
-    <div {{$attributes}} id="{{$id}}">
-        @foreach($options as $i => $fe)
-            <div class="p-1">
-                <input type="checkbox" name="{{$id}}[{{$i}}]" value="{{$fe->idFrameElement}}" {{isset($value[$i]) ? 'checked' : ''}}>
-                <x-element.fe name="{{$fe->name}}" idColor="{{$fe->idColor}}" type="{{$fe->coreType}}"></x-element.fe>
-{{--                <span style="padding-top:7px" class="{{$option['icon']}}"></span>--}}
-{{--                <span class="{{$option['color']}}">{{$option['name']}}</span>--}}
+@endif
+<div class="flex flex-wrap">
+    @foreach($options as $i => $fe)
+        <div class="field">
+            <div class="w-16rem ui checkbox {{isset($value[$i]) ? 'checked' : ''}}">
+                <input type="checkbox" name="{{$id}}[{{$i}}]"
+                       value="{{$fe->idFrameElement}}" {{isset($value[$i]) ? 'checked' : ''}}>
+                <label>
+                    <x-element.fe name="{{$fe->name}}" idColor="{{$fe->idColor}}"
+                                  type="{{$fe->coreType}}"></x-element.fe>
+                </label>
             </div>
-        @endforeach
-    </div>
+        </div>
+    @endforeach
 </div>
+<script>
+    $(function() {
+        $(".ui.checkbox")
+            .checkbox()
+        ;
+    });
+</script>

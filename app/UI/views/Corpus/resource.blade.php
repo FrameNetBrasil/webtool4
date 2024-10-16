@@ -1,4 +1,7 @@
 <x-layout.resource>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['/','Home'],['','Corpus/Document']]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:title>
         Corpus/Document
     </x-slot:title>
@@ -18,6 +21,30 @@
             hx-swap="innerHTML"
         ></x-button>
     </x-slot:actions>
+    <x-slot:search>
+        <x-form-search>
+            <div class="field">
+                <x-search-field
+                    id="corpus"
+                    placeholder="Search Corpus"
+                    hx-post="/corpus/grid/search"
+                    hx-trigger="input changed delay:500ms, search"
+                    hx-target="#corpusTreeWrapper"
+                    hx-swap="innerHTML"
+                ></x-search-field>
+            </div>
+            <div class="field">
+                <x-search-field
+                    id="document"
+                    placeholder="Search Document"
+                    hx-post="/corpus/grid/search"
+                    hx-trigger="input changed delay:500ms, search"
+                    hx-target="#corpusTreeWrapper"
+                    hx-swap="innerHTML"
+                ></x-search-field>
+            </div>
+        </x-form-search>
+    </x-slot:search>
     <x-slot:grid>
         <div
             hx-trigger="load"

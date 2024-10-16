@@ -16,8 +16,8 @@
                     <td>
                         #{{$sentence->idDocumentSentence}}
                     </td>
-                    <td>{{$sentence->startTime}}</td>
-                    <td>{{$sentence->endTime}}</td>
+                    <td onclick="annotation.video.gotoTime({{$sentence->startTime}})"><span class="cursor-pointer">{{$sentence->startTime}}</span></td>
+                    <td onclick="annotation.video.gotoTime({{$sentence->endTime}})"><span class="cursor-pointer">{{$sentence->endTime}}</span></td>
                     <td onclick="annotation.video.playByRange({{$sentence->startTime}},{{$sentence->endTime}},0)"><i class="icon material text-xl cursor-pointer">play_arrow</i></td>
                     <td onclick="annotation.video.playByRange({{$sentence->startTime}},{{$sentence->endTime}},1)"><i class="icon material text-xl cursor-pointer">timer</i></td>
                     <td onclick="annotation.video.playByRange({{$sentence->startTime}},{{$sentence->endTime}},3)"><i class="icon material text-xl cursor-pointer">timer_3_alt_1</i></td>

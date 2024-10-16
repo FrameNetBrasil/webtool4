@@ -11,13 +11,18 @@
                     <div
                         class="sm:pb-1"
                     >
-                        <div class="ui label tag wt-tag-{{$name}}">
+                        <div class="ui label wt-tag-{{$name}}">
                             {{$value}}
                         </div>
                     </div>
                 @endforeach
             @endforeach
-            <i id="btnDownload" class="icon material text-2xl cursor-pointer" title="Save as PDF">picture_as_pdf</i>
+{{--            <i id="btnDownload" class="icon material text-2xl cursor-pointer" title="Save as PDF">picture_as_pdf</i>--}}
+                <button
+                    id="btnDownload"
+                    class="ui button mini basic secondary"
+                ><i class="icon material">download</i>PDF
+                </button>
         </div>
     </div>
     <x-card title="Definition" class="frameReport__card frameReport__card--main">
@@ -91,7 +96,7 @@
             </table>
         </x-card>
     </x-card>
-    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main" open="false">
+    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main" open="true">
         @php($i = 0)
         @foreach ($relations as $nameEntry => $relations1)
             @php([$entry, $name] = explode('|', $nameEntry))

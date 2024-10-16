@@ -1,9 +1,7 @@
 <x-layout.main>
-    <x-slot:actions>
-        Webtool
-    </x-slot:actions>
-    <x-slot:title>
-    </x-slot:title>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['','Home']]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:main>
         <div class="wt-container-center h-full">
             <div id="formDiv">

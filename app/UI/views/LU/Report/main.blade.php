@@ -1,7 +1,7 @@
 <x-layout.report>
-    <x-slot:title>
-        LU Report
-    </x-slot:title>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['/','Home'],['','LU Report']]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:search>
         <x-form-search
             id="luSearch"
@@ -13,16 +13,11 @@
                 id="lu"
                 value="{{$search->lu}}"
                 placeholder="Search LU"
-                class="w-12rem"
+                class="w-full"
             ></x-search-field>
-            <x-submit
-                label="Search"
-                class="mb-2"
-            ></x-submit>
         </x-form-search>
     </x-slot:search>
     <x-slot:grid>
-
         <div
             id="gridArea"
             class="h-full"
@@ -30,12 +25,11 @@
             hx-post="/report/lu/grid"
         >
         </div>
-
     </x-slot:grid>
     <x-slot:pane>
         <div
             id="reportArea"
-            class="h-full"
+            class="h-full overflow-y-auto"
             @if(isset($idLU))
                 hx-trigger="load"
             hx-get="/report/lu/content/{{$idLU}}"

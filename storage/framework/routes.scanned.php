@@ -624,40 +624,48 @@ $router->post('report/lu/sentences', [
 	'domain' => NULL,
 ]);
 
-$router->post('lexicon/wordform/new', [
-	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@newWordform',
+$router->get('lexicon', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@browse',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->delete('lexicon/wordform/{idWordForm}', [
-	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@deleteWordform',
+$router->get('lexicon/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@grid',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('lexicon/lexeme/new', [
-	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@newLexeme',
+$router->post('lexicon/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@grid',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->put('lexicon/lexeme/{idLexeme}', [
-	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@updateLexeme',
+$router->get('lexicon/lemma/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@formNewLemma',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->delete('lexicon/lexeme/{idLexeme}', [
-	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@deleteLexeme',
+$router->get('lexicon/lemma/{idLemma}/lexemeentries', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@lexemeentries',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon/lemma/{idLemma}/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@lemma',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -688,6 +696,54 @@ $router->delete('lexicon/lemma/{idLemma}', [
 	'domain' => NULL,
 ]);
 
+$router->get('lexicon/lexeme/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@formNewLexeme',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon/lexeme/{idLexeme}/wordforms', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@wordforms',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon/lexeme/{idLexeme}/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@lexeme',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lexicon/lexeme/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@newLexeme',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->put('lexicon/lexeme/{idLexeme}', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@updateLexeme',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('lexicon/lexeme/{idLexeme}', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@deleteLexeme',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('lexicon/lexemeentry/new', [
 	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@newLexemeEntry',
 	'as' => NULL,
@@ -704,48 +760,16 @@ $router->delete('lexicon/lexemeentries/{idLexemeEntry}', [
 	'domain' => NULL,
 ]);
 
-$router->get('lexicon', [
-	'uses' => 'App\Http\Controllers\Lexicon\BrowseController@browse',
+$router->post('lexicon/wordform/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@newWordform',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('lexicon/grid', [
-	'uses' => 'App\Http\Controllers\Lexicon\BrowseController@grid',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('lexicon/lexeme/{idLexeme}', [
-	'uses' => 'App\Http\Controllers\Lexicon\BrowseController@lexeme',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('lexicon/lexeme/{idLexeme}/wordforms', [
-	'uses' => 'App\Http\Controllers\Lexicon\BrowseController@wordforms',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('lexicon/lemma/{idLemma}', [
-	'uses' => 'App\Http\Controllers\Lexicon\BrowseController@lemma',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('lexicon/lemma/{idLemma}/lexemeentries', [
-	'uses' => 'App\Http\Controllers\Lexicon\BrowseController@lexemeentries',
+$router->delete('lexicon/wordform/{idWordForm}', [
+	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@deleteWordform',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -1880,6 +1904,126 @@ $router->get('layer', [
 	'domain' => NULL,
 ]);
 
+$router->get('image', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@resource',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/grid', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('image/grid', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/{id}/edit', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@edit',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/{id}/editForm', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@editForm',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('image', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@update',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/new', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@new',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('image/new', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@create',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('image/{id}', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@delete',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/listForSelect', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@listForSelect',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/{id}/document', [
+	'uses' => 'App\Http\Controllers\Image\DocumentController@document',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/{id}/document/formNew', [
+	'uses' => 'App\Http\Controllers\Image\DocumentController@documentFormNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/{id}/document/grid', [
+	'uses' => 'App\Http\Controllers\Image\DocumentController@documentGrid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('image/{id}/document/new', [
+	'uses' => 'App\Http\Controllers\Image\DocumentController@documentNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('image/{id}/document/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Image\DocumentController@delete',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('user', [
 	'uses' => 'App\Http\Controllers\User\ResourceController@resource',
 	'as' => NULL,
@@ -2360,6 +2504,126 @@ $router->post('annotation/dynamicMode/splitSentence', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/staticBBox', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@browse',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/grid', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@grid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/staticBBox/objectFE/{idFrame}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@objectFE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/staticBBox/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@annotation',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/formObject', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@formObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/staticBBox/formObject/{idDynamicObject}/{order}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@getFormObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/staticBBox/gridObjects/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@objectsForGrid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/updateObject', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@updateObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/updateObjectAnnotation', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@updateObjectAnnotation',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/cloneObject', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@cloneObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/staticBBox/{idStaticObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@deleteObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/updateBBox', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@updateBBox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/staticBBox/fes/{idFrame}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@feCombobox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/staticBBox/sentences/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@gridSentences',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/comment', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@annotationComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/staticFrameMode2', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticFrameMode2Controller@browse',
 	'as' => NULL,
@@ -2712,7 +2976,7 @@ $router->get('fe/{id}/entries', [
 	'domain' => NULL,
 ]);
 
-$router->get('fe/relations/{idEntityRelation}', [
+$router->get('fe/relations/{idEntityRelation}/frame/{idFrameBase}', [
 	'uses' => 'App\Http\Controllers\FE\RelationController@relations',
 	'as' => NULL,
 	'middleware' => ['auth'],

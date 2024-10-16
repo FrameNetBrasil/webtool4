@@ -9,17 +9,17 @@ use Spatie\LaravelData\Data;
 class CreateLemmaData extends Data
 {
     public function __construct(
-        public ?string $lemma = '',
+        public ?string $name = '',
         public ?int $idPOS = null,
         public ?int $idLanguage = null,
         public ?string $addName = '',
         public string $_token = '',
     )
     {
-        if ($this->lemma == '') {
-            $this->lemma = $this->addName;
+        if ($this->name == '') {
+            $this->name = $this->addName;
         } else {
-            $this->addName = $this->lemma;
+            $this->addName = $this->name;
         }
         if (is_null($this->idLanguage)) {
             $this->idLanguage = AppService::getCurrentIdLanguage();

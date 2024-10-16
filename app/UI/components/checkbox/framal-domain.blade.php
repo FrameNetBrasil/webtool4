@@ -1,10 +1,22 @@
-<div class="form-field">
+@if($label != '')
     <label for="{{$id}}">{{$label}}</label>
-    <div {{$attributes}} id="{{$id}}">
+@endif
+<div class="ui form">
+    <div class="grouped fields">
         @foreach($options as $i => $option)
-            <div>
-                <input type="checkbox" name="{{$id}}[{{$i}}]" value="{{$option['value']}}" {{$option['checked']}}><span>{{$option['name']}}</span>
+            <div class="field">
+                <div class="ui checkbox {{$option['checked']}}">
+                    <input type="checkbox" name="{{$id}}[{{$i}}]" value="{{$option['value']}}" {{$option['checked']}}>
+                    <label>{{$option['name']}}</label>
+                </div>
             </div>
         @endforeach
     </div>
 </div>
+<script>
+    $(function() {
+        $(".ui.checkbox")
+            .checkbox()
+        ;
+    });
+</script>

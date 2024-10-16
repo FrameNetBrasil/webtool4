@@ -1,13 +1,9 @@
-<x-layout.index-full>
-    <header class="flex">
-        <div class="col-8 md:col-6">
-            <h1>
-                {{$title}}
-            </h1>
-        </div>
+<x-layout.page>
+    <header>
+        {{$head}}
     </header>
-    <section id="work" class="flex flex-row align-content-start flex-wrap">
-        <div class="col-12 sm:col-12 md:col-4 lg:col-3 xl:col-2 h-full" >
+    <section id="work" class="h-full w-full flex flex-row align-content-start flex-wrap">
+        <div class="col-12 sm:col-12 md:col-4 lg:col-3 xl:col-3 h-full" >
             <div class="flex flex-column align-content-start h-full">
                 <div class="h-3rem">
                     {{$search}}
@@ -18,10 +14,10 @@
             </div>
 
         </div>
-        <div class="col-12 sm:col-12 md:col-8 lg:col-9 xl:col-10 pl-3 h-full">
+        <div class="col-12 sm:col-12 md:col-8 lg:col-9 xl:col-9 pl-3 h-full">
             <div class="flex flex-column align-content-start h-full">
             {{$pane}}
             </div>
         </div>
     </section>
-</x-layout.index-full>
+</x-layout.page>
