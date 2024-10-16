@@ -5,12 +5,6 @@
     :border="true"
 >
     <x-slot:fields>
-        {{--        <x-hidden-field--}}
-        {{--            id="trigger"--}}
-        {{--            :value="$trigger ?? ''"--}}
-        {{--        ></x-hidden-field>--}}
-        {{--        <hx-tabset>--}}
-
         <div id="frmEntries" class="ui secondary menu">
             @foreach($languages as $language)
                 @php
@@ -30,18 +24,22 @@
                     id="idEntry[{{$idLanguage}}]"
                     :value="$entries[$idLanguage]->idEntry"
                 ></x-hidden-field>
-                <x-text-field
-                    label="Name"
-                    id="name[{{$idLanguage}}]"
-                    :value="$entries[$idLanguage]->name"
-                ></x-text-field>
-                <x-multiline-field
-                    label="Definition"
-                    id="description[{{$idLanguage}}]"
-                    value="{!! $description !!}"
-                    rows="12"
-                >
-                </x-multiline-field>
+                <div class="field">
+                    <x-text-field
+                        label="Name"
+                        id="name[{{$idLanguage}}]"
+                        :value="$entries[$idLanguage]->name"
+                    ></x-text-field>
+                </div>
+                <div class="field">
+                    <x-multiline-field
+                        label="Definition"
+                        id="description[{{$idLanguage}}]"
+                        value="{!! $description !!}"
+                        rows="12"
+                    >
+                    </x-multiline-field>
+                </div>
             </div>
         @endforeach
 

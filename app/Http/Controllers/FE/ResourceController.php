@@ -28,6 +28,7 @@ class ResourceController extends Controller
     #[Post(path: '/fe')]
     public function newFE(CreateData $data)
     {
+        debug($data);
         try {
             Criteria::function('fe_create(?, ?, ?, ?, ?)', [
                 $data->idFrame,

@@ -1,18 +1,16 @@
-<x-layout.edit-full>
-    <x-slot:title>
-        Dynamic Annotation
-    </x-slot:title>
-    <x-slot:actions>
-        <x-button
-            id="btnBuildSentences"
-            label="Build Sentences"
-            color="secondary"
-            href="/annotation/dynamicMode/buildSentences/{{$idDocument}}"
-        >
-        </x-button>
-    </x-slot:actions>
+<x-layout.annotation>
+    <x-slot:head>
+        <x-breadcrumb
+            :sections="[['/','Home'],['/annotation/dynamicMode','Dynamic Annotation'],['',$document->name]]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:main>
-        <div id="dynamicAnnotationPane" class="dynamicAnnotationPane">
+        <div
+            id="dynamicAnnotationPane"
+            class="dynamicAnnotationPane"
+            @keydown.arrow-left="console.log('1')"
+            @keydown.arrow-right="console.log('2')"
+            @keydown.enter="console.log('3')"
+        >
             <div class="west">
                 <div class="video">
                     @include("Annotation.DynamicMode.Panes.videoPane")
@@ -25,23 +23,37 @@
                 </div>
             </div>
             <div class="center">
-                <div class="header">
-                    <div class="tag">
-                        <div class="ui label tag wt-tag-id">
-                            {{$corpus->name}}
+                <div class="header flex w-full">
+                    <div class="font-bold">
+                        <x-icon.video></x-icon.video>{{$video->title}}
+                    </div>
+                    <div class="flex flex-grow-1 justify-content-end">
+                        <div class="tag pr-2">
+                            <div class="ui label tag wt-tag-id">
+                                #{{$idDocument}}
+                            </div>
+                            {{--                            <div class="ui label tag wt-tag-id">--}}
+                            {{--                                {{$document->name}}--}}
+                            {{--                            </div>--}}
+                            {{--                        <div class="ui label tag wt-tag-id">--}}
+                            {{--                            {{$corpus->name}}--}}
+                            {{--                        </div>--}}
+                            {{--                        <div class="ui label tag wt-tag-id">--}}
+                            {{--                            <x-icon.video></x-icon.video>{{$video->title}}--}}
+                            {{--                        </div>--}}
                         </div>
-                        <div class="ui label tag wt-tag-id">
-                            {{$document->name}}
-                        </div>
-                        <div class="ui label tag wt-tag-id">
-                            <x-icon.video></x-icon.video>{{$video->title}}
-                        </div>
-                        <div class="ui label tag wt-tag-id">
-                            #{{$idDocument}}
+                        <div>
+                            <x-button
+                                id="btnBuildSentences"
+                                label="Build Sentences"
+                                color="secondary"
+                                href="/annotation/dynamicMode/buildSentences/{{$idDocument}}"
+                            >
+                            </x-button>
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-column flex-grow-1" x-data="$store.doStore">
+                <div class="flex flex-column flex-grow-1 pt-2" x-data="$store.doStore">
                     <div
                         id="formObject"
                         class="form"
@@ -70,27 +82,18 @@
                         _token: "{{ csrf_token() }}",
                         document: {{ Js::from($document) }},
                         video: {{ Js::from($video) }},
-                        objectList: [],
-                    }
+                        objectList: []
+                    };
                     @include("Annotation.DynamicMode.Scripts.api")
                     @include("Annotation.DynamicMode.Scripts.video")
                     @include("Annotation.DynamicMode.Scripts.drawBox")
                     @include("Annotation.DynamicMode.Scripts.objects")
-{{--                    @include("Annotation.DynamicMode.Scripts.gridObjects")--}}
-{{--                    @include("Annotation.DynamicMode.Scripts.gridSentences")--}}
-{{--                    @include("Annotation.DynamicMode.Scripts.formObject")--}}
                     @include("Annotation.DynamicMode.Scripts.store")
-
-
-                    $(function() {
-
-
-                    })
                 </script>
 
             </div>
         </div>
     </x-slot:main>
-</x-layout.edit-full>
+</x-layout.annotation>
 
 

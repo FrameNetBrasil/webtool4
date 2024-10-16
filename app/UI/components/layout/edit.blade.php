@@ -1,15 +1,8 @@
-<x-layout.index>
-    <header class="flex">
-        <div class="col-7">
-            <h1>
-                {{$title}}
-            </h1>
-        </div>
-        <div class="col-5 actions">
-            {{$actions}}
-        </div>
+<x-layout.page>
+    <header>
+        {{$head}}
     </header>
-    <section id="work" class="flex flex-column align-content-start">
-            {{$main}}
+    <section id="work" class="h-full w-full">
+        {{$main}}
     </section>
-</x-layout.index>
+</x-layout.page>

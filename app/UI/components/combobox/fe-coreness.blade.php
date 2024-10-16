@@ -1,23 +1,20 @@
-<div class="form-field field">
-    <label for="{{$id}}">{{$label}}</label>
-    <select {{$attributes}} id="{{$id}}" name="{{$id}}" class="ui small dropdown">
+<label for="{{$id}}">{{$label}}</label>
+<div id="{{$id}}_dropdown" class="ui mini clearable selection dropdown" style="overflow:initial;">
+    <input type="hidden" id="{{$id}}" name="{{$id}}" value="{{$value}}">
+    <i class="dropdown icon"></i>
+    <div class="default text">Select Coreness</div>
+    <div class="menu">
         @foreach($options as $entry => $coreType)
-            <option value="{{$entry}}">{{$coreType}}</option>
+            <div
+                data-value="{{$entry}}"
+                class="item"
+            >{{$coreType}}
+            </div>
         @endforeach
-    </select>
+    </div>
 </div>
-{{--<script>--}}
-{{--    $('#{{$id}}').combobox({--}}
-{{--        width:200,--}}
-{{--        valueField: 'id',--}}
-{{--        textField: 'name',--}}
-{{--        editable: false,--}}
-{{--        data: {{ Js::from($options) }},--}}
-{{--        @if($value != '')--}}
-{{--        value: '{{$value}}',--}}
-{{--        @endif--}}
-{{--        formatter: function (row) {--}}
-{{--            return `<span>${row.name}</span>`;--}}
-{{--        },--}}
-{{--    });--}}
-{{--</script>--}}
+<script>
+    $(function() {
+        $('#{{$id}}_dropdown').dropdown();
+    });
+</script>

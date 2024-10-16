@@ -1,28 +1,17 @@
-<div
-    {{$attributes->class(["ui form wt-form","wt-container-center-content" => $center,"wt-form-noborder" => !$border])->whereDoesntStartWith('hx-')}} style="overflow:initial">
-    <form id="{{$id}}" name="{{$id}}" {{$attributes}}>
-        @if(isset($header))
-            <div class="form-header">
-                {{ $header }}
-            </div>
-        @else
-            @if($title != '')
-                <div class="form-header">
-                    <div class="form-title">{{$title}}</div>
+<form id="{{$id}}" name="{{$id}}" {{$attributes}} class="ui form">
+    <div class="ui card h-full w-full mb-2">
+        @if($title != '')
+            <div class="flex-grow-0 content h-4rem bg-gray-100">
+                <div class="flex flex align-items-center justify-content-between">
+                    <div><h3 class="ui header line-height-4">{{$title}}</h3></div>
                 </div>
-            @endif
+            </div>
         @endif
-        <div class="form-toolbar">
-            {{$toolbar}}
-        </div>
-        <div id="{{$id}}_fields" class="form-fields">
+        <div class="flex-grow-1 content bg-white">
             {{$fields}}
         </div>
-            @if(isset($buttons))
-        <div class="form-buttons">
+        <div class="flex-grow-0 content h-4rem bg-gray-100">
             {{$buttons}}
         </div>
-            @endif
-    </form>
-</div>
-
+    </div>
+</form>

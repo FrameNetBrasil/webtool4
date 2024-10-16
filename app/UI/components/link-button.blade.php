@@ -1,11 +1,11 @@
-<a href="{{$href}}" id="{{$id}}" {{$attributes}}>{{$label}}</a>
-<script>
-    $(function () {
-        $('#{{$id}}').linkbutton({
-            plain: {{$plain}},
-            @if($icon != '')
-            iconCls: "material-icons wt-button-icon wt-icon-{{$icon}}"
-            @endif
-        });
-    });
-</script>
+<a href="{{$href}}">
+<button
+    class = "ui medium {{$color}} button"
+>
+    @if($icon != '')
+        <i class="icon material">{{$icon}}</i>
+    @endif
+    {{$label}}
+    {{$slot}}
+</button>
+</a>

@@ -15,7 +15,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="ui label tag wt-tag-id">
+                    <div class="ui label wt-tag-id">
                         #{{$idAnnotationSet}}
                     </div>
                 </div>

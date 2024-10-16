@@ -6,9 +6,9 @@
     @if($title != '')
         <div class=" card-header">
             <div class="flex justify-content-between">
-                <div>
+                <h3 class="ui header mb-0">
                     {!! $title !!}
-                </div>
+                </h3>
                 @if(!is_null($open))
                 <div class="cursor-pointer text-right"
                          x-on:click="open = ! open"

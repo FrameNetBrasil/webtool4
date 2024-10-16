@@ -1,40 +1,41 @@
-<x-layout.content>
-    <x-inline-form
-        id="formNew"
-        title="New LU"
-        center="true"
-        hx-post="/lu"
-    >
-        <x-slot:fields>
-            <x-hidden-field
-                id="idFrame"
-                :value="$idFrame"
-            ></x-hidden-field>
-            <x-combobox.lemma
-                id="idLemma"
-                label="Lemma [min: 3 chars]"
-                value=""
-            ></x-combobox.lemma>
-            <div class="w-30rem">
-            <x-text-field
-                label="Sense Description"
-                id="senseDescription"
-                value=""
-            ></x-text-field>
+<x-form>
+    <x-slot:fields>
+        <x-hidden-field
+            id="idFrame"
+            :value="$idFrame"
+        ></x-hidden-field>
+        <div class="three fields">
+            <div class="field">
+                <x-combobox.lemma
+                    id="idLemma"
+                    label="Lemma [min: 3 chars]"
+                    value=""
+                ></x-combobox.lemma>
             </div>
-            <x-combobox.fe-frame
-                id="incorporatedFE"
-                label="Incorporated FE"
-                :value="-1"
-                :idFrame="$idFrame"
-                nullName="No incorporated FE"
-                :hasNull="true"
-            ></x-combobox.fe-frame>
-        </x-slot:fields>
-        <x-slot:buttons>
-            <x-submit
-                label="Add LU"
-            ></x-submit>
-        </x-slot:buttons>
-    </x-inline-form>
-</x-layout.content>
+            <div class="field">
+                <x-text-field
+                    label="Sense Description"
+                    id="senseDescription"
+                    value=""
+                ></x-text-field>
+            </div>
+            <div class="field">
+                <x-combobox.fe-frame
+                    id="incorporatedFE"
+                    label="Incorporated FE"
+                    :value="-1"
+                    :idFrame="$idFrame"
+                    nullName="No incorporated FE"
+                    :hasNull="true"
+                ></x-combobox.fe-frame>
+            </div>
+        </div>
+    </x-slot:fields>
+    <x-slot:buttons>
+        <x-button
+            label="Add LU"
+            hx-post="/lu"
+        ></x-button>
+    </x-slot:buttons>
+</x-form>
+

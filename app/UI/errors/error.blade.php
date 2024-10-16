@@ -4,13 +4,13 @@
             Error
         </div>
         <p>
-            {{$message}}
+           {{$message}}
         </p>
-        <x-button
+        <x-link-button
             href="{{$goto}}"
             color="negative"
             label="{{$gotoLabel}}"
         >
-        </x-button>
+        </x-link-button>
     </div>
 </x-layout.index>

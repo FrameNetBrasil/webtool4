@@ -2,6 +2,7 @@
 <div class="wt-datagrid flex flex-column" style="height:100%">
     <div class="datagrid-header">
         <div class="datagrid-title">
+            LU
         </div>
     </div>
     <div class="table" style="position:relative;height:100%">

@@ -1,3 +1,3 @@
-<button type="submit" class="ui {{$color}} button" {{$attributes}}>
+<button type="submit" class="ui medium {{$color}} button" {{$attributes}}>
     {{$label}}
 </button>

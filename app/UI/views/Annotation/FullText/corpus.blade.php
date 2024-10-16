@@ -33,29 +33,43 @@
         ], $documents);
     }
 @endphp
-<div class="wt-datagrid flex flex-column h-full">
-    <div class="datagrid-header">
-        <div class="datagrid-title">
-            Corpus/Document
+<div
+    class="h-full"
+>
+    <div class="relative h-full overflow-auto">
+        <div id="corpusTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
+            @fragment('search')
+                <ul id="corpusTree">
+                </ul>
+                <script>
+                    $(function() {
+                        $("#corpusTree").treegrid({
+                            data: {{Js::from($data)}},
+                            fit: true,
+                            showHeader: false,
+                            rownumbers: false,
+                            idField: "id",
+                            treeField: "text",
+                            showFooter: false,
+                            border: false,
+                            columns: [[
+                                {
+                                    field: "text",
+                                    width: "100%",
+                                }
+                            ]],
+                            onClickRow: (row) => {
+                                if (row.type === "corpus") {
+                                    $("#corpusTree").treegrid("toggle", row.id);
+                                }
+                                if (row.type === "document") {
+                                    htmx.ajax("GET",`/annotation/fullText/grid/${row.id}/sentences`,"#sentenceTableContainer");
+                                }
+                            }
+                        });
+                    });
+                </script>
+            @endfragment
         </div>
     </div>
-    <div id="corpusTreeWrapper">
-        <ul id="corpusTree" class="wt-treegrid">
-        </ul>
-    </div>
 </div>
-<script>
-    $(function() {
-        $("#corpusTree").tree({
-            data: {{Js::from($data)}},
-            onClick: function(node) {
-                if (node.type === 'corpus') {
-                    $("#corpusTree").tree('toggle', node.target);
-                }
-                if (node.type === 'document') {
-                    htmx.ajax("GET",`/annotation/fullText/grid/${node.id}/sentences`,"#sentenceTableContainer");
-                }
-            }
-        });
-    });
-</script>

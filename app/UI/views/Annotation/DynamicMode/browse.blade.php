@@ -1,32 +1,46 @@
 <x-layout.browser>
-    <x-slot:title>
-        Dynamic Annotation
-    </x-slot:title>
-    <x-slot:actions>
-    </x-slot:actions>
-    <x-slot:search>
-        <x-form-search
-            id="corpusFormSearch"
-            hx-post="/annotation/dynamic/grid"
-            hx-target="#gridPanel"
-        >
-            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-            <x-search-field
-                id="corpus"
-                value="{{$search->corpus}}"
-                placeholder="Search Corpus"
-            ></x-search-field>
-            <x-search-field
-                id="document"
-                value="{{$search->document}}"
-                placeholder="Search Document"
-            ></x-search-field>
-            <x-submit label="Search"></x-submit>
-        </x-form-search>
-    </x-slot:search>
-    <x-slot:grid>
-        <div id="gridPanel">
-            @include('Annotation.DynamicMode.grid')
+    <x-slot:head>
+        <x-breadcrumb :sections="[['/','Home'],['','Dynamic Annotation']]"></x-breadcrumb>
+    </x-slot:head>
+    <x-slot:main>
+        <div class="ui card h-full w-full">
+            <div class="flex-grow-0 content h-4rem bg-gray-100">
+                <div class="flex flex align-items-center justify-content-between">
+                    <div><h2 class="ui header">Dynamic Annotation</h2></div>
+                </div>
+            </div>
+            <div class="flex-grow-0 content h-4rem bg-gray-100">
+                <x-form-search
+                    hx-post="/annotation/dynamicMode/grid"
+                    hx-target="#gridArea"
+                >
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                    <div class="field">
+                        <x-search-field
+                            id="corpus"
+                            value="{{$search->corpus}}"
+                            placeholder="Search Corpus"
+                        ></x-search-field>
+                    </div>
+                    <div class="field">
+                        <x-search-field
+                            id="document"
+                            value="{{$search->document}}"
+                            placeholder="Search Document"
+                        ></x-search-field>
+                    </div>
+                    <x-submit label="Search"></x-submit>
+                </x-form-search>
+            </div>
+            <div class="flex-grow-1 content h-full">
+                <div
+                    id="gridArea"
+                    class="h-full"
+                    hx-trigger="load"
+                    hx-post="/annotation/dynamicMode/grid"
+                >
+                </div>
+            </div>
         </div>
-    </x-slot:grid>
+    </x-slot:main>
 </x-layout.browser>

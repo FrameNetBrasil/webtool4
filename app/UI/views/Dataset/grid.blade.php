@@ -1,37 +1,13 @@
 <div
-    class="wt-datagrid flex flex-column"
-    style="height:100%"
+    class="h-full"
     hx-trigger="reload-gridDataset from:body"
     hx-target="this"
     hx-swap="outerHTML"
     hx-get="/dataset/grid"
 >
-    <div class="datagrid-header-search flex">
-        <div style="padding:4px 0px 4px 4px">
-            <x-search-field
-                id="project"
-                placeholder="Search Project"
-                hx-post="/dataset/grid/search"
-                hx-trigger="input changed delay:500ms, search"
-                hx-target="#gridDataset"
-                hx-swap="innerHTML"
-            ></x-search-field>
-        </div>
-        <div style="padding:4px 0px 4px 4px">
-            <x-search-field
-                id="dataset"
-                placeholder="Search Dataset"
-                hx-post="/dataset/grid/search"
-                hx-trigger="input changed delay:500ms, search"
-                hx-target="#gridDataset"
-                hx-swap="innerHTML"
-            ></x-search-field>
-        </div>
-    </div>
-    <div class="table" style="position:relative;height:100%">
-        <table id="gridDataset">
-            <tbody
-            >
+    <div class="relative h-full overflow-auto">
+        <table class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
+            <tbody>
             @fragment('search')
                 @foreach($projects as $idProject => $project)
                     <tr
@@ -59,7 +35,7 @@
                                 class="cursor-pointer"
                                 style="min-width:120px"
                             >
-                                <span>{{$dataset->name}}</span>
+                                <span class="pl-4">{{$dataset->name}}</span>
                             </td>
                         </tr>
                     @endforeach

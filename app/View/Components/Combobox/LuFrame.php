@@ -17,9 +17,9 @@ class LuFrame extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string  $id,
-        public string  $label,
         public int     $idFrame,
+        public string  $id = '',
+        public string  $label = '',
         public ?string $value = null
     )
     {

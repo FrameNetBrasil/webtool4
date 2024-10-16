@@ -27,7 +27,7 @@ class ResourceController extends Controller
     #[Post(path: '/corpus/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
-        $view = view("Corpus.grids",[
+        $view = view("Corpus.grid",[
             'search' => $search,
             'sentences' => [],
         ]);

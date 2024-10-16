@@ -34,7 +34,7 @@ class BrowseController extends Controller
     public function grid(SearchData $search)
     {
         debug($search);
-        return view("Network.grids", [
+        return view("Network.grid", [
             'search' => $search
         ]);
     }
@@ -170,21 +170,4 @@ class BrowseController extends Controller
         return $domain;
     }
 
-//    #[Get(path: '/network/ferelation/{idEntityRelation}')]
-//    public function gridRelationsFE(int $idEntityRelation)
-//    {
-//        $relation = Relation::getById($idEntityRelation);
-//        debug($relation);
-//        $config = config('webtool.relations');
-//        return view("Network.feRelationGrid",[
-//            'idEntityRelation' => $idEntityRelation,
-//            'frame' => Frame::getByIdEntity($relation->idEntity1),
-//            'relatedFrame' => Frame::getByIdEntity($relation->idEntity2),
-//            'relation' => (object)[
-//                'name' => $config[$relation->entry]['direct'],
-//                'entry' => $relation->entry
-//            ],
-//            'relations' => RelationService::listRelationsFE($idEntityRelation)
-//        ]);
-//    }
 }

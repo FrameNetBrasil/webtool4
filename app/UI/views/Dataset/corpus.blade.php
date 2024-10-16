@@ -1,4 +1,3 @@
-<h2>Corpus</h2>
 <div
     hx-trigger="load"
     hx-target="this"

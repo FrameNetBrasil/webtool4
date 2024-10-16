@@ -1,15 +1,9 @@
-<x-layout.index>
-    <header class="flex">
-        <div class="hxSpan-8">
-            <h1>
-                {{$title}}
-            </h1>
-        </div>
-        <div class="hxSpan-4 text-right">
-            {{$actions}}
-        </div>
+<x-layout.page>
+    <header>
+        {{$head}}
     </header>
-    <section id="full" class="flex flex-column align-content-start">
+    <section id="work" class="h-full w-full">
         {{$main}}
     </section>
-</x-layout.index>
+</x-layout.page>
+

@@ -8,7 +8,7 @@ return [
     'defaultPassword' => 'default',
     'pageTitle' => 'Webtool 4.0',
     'mainTitle' => 'FrameNet Brasil Webtool 4.0',
-    'headerTitle' => 'FNBr Webtool 4.0',
+    'headerTitle' => 'Webtool',
     'footer' => '&copy; 2014-2024 FrameNet Brasil Lab, UFJF.',
     'login' => [
         'handler' => env('APP_AUTH'),
@@ -44,6 +44,7 @@ return [
             'fe' => ['FE', '/annotation/fe', 'MASTER', []],
             'dynamicMode' => ['Dynamic Mode', '/annotation/dynamicMode', 'MASTER', []],
             'fullText' => ['Full text', '/annotation/fullText', 'MASTER', []],
+            'staticBBox' => ['Static BBox', '/annotation/staticBBox', 'MASTER', []],
 //            'layers' => ['Manage Layers', '/layer/formManager', 'fa fa-list fa16px', 'JUNIOR', 1, []],
         ]],
         'structure' => ['Structure', '/structure', 'MASTER', [
@@ -65,6 +66,7 @@ return [
             'taskUser' => ['Task/User', '/task', 'ADMIN', []],
             'corpusDocument' => ['Corpus/Document', '/corpus', 'ADMIN', []],
             'videoDocument' => ['Video/Document', '/video', 'ADMIN', []],
+            'imageDocument' => ['Image/Document', '/image', 'ADMIN', []],
 //            'type' => ['Types', '/type', 'ADMIN', []],
 //            'relation' => ['Relations', '/relationgroup', 'ADMIN', []],
 //            'genre' => ['Genres', '/genre', 'ADMIN', []],

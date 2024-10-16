@@ -431,7 +431,8 @@ annotation.objects = {
     deleteObject: async (idDynamicObject) => {
         console.log('deletting', idDynamicObject);
         // await annotation.api.deleteObject(idDynamicObject);
-        htmx.ajax('DELETE', '/annotation/dynamicMode/' + idDynamicObject);
+        await manager.confirmDelete("Removing object #" + idDynamicObject + '.', "/annotation/dynamicMode/" + idDynamicObject);
+        //htmx.ajax('DELETE', '/annotation/dynamicMode/' + idDynamicObject);
         await Alpine.store('doStore').updateObjectList();
     },
     async tracking(canGoOn) {

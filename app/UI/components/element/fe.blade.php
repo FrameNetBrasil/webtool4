@@ -1,4 +1,3 @@
-<span style="display:inline-block;padding:2px 4px;" {{$attributes->merge(['class' => 'color_'. $idColor])}}>
-    <span class="color_{{$idColor}} vertical-align-baseline"><i class="{{$icon}} icon" style="visibility: visible;"></i></span>
-    <span class="inline-block">{{$name}}</span>
+<span style="display:inline-block;padding:0px 4px;" {{$attributes->merge(['class' => 'color_'. $idColor])}}>
+    <span class="inline-block"><i class="{{$icon}} icon" style="visibility: visible;font-size:0.875em"></i>{{$name}}</span>
 </span>

@@ -20,16 +20,19 @@ class FeFrame extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string  $id,
-        public string  $label,
         public int     $idFrame,
+        public string  $id = '',
+        public string  $label = '',
         public ?string $value = null,
         public ?string $name = null,
         public ?string $nullName = null,
         public ?array  $coreType = [],
-        public bool    $hasNull = false
+        public bool    $hasNull = false,
+        public ?string  $defaultText = '',
+        public ?string $onChange = null,
     )
     {
+        debug("========== defaultText = " . $defaultText);
         if (is_null($this->name)) {
             $this->name = $this->id;
         }

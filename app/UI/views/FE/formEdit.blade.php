@@ -1,33 +1,31 @@
-<x-layout.content>
-    <x-inline-form
-        id="feFormEdit"
-        title="Edit Element"
-        center="true"
-        hx-trigger="reload-objectFE from:body"
-        hx-target="#editMainArea"
-        hx-get="/fe/{{$frameElement->idFrameElement}}/edit"
-    >
-        <x-slot:fields>
-            <x-hidden-field
-                id="idFrameElement"
-                :value="$frameElement->idFrameElement"
-            ></x-hidden-field>
-            <x-combobox.fe-coreness
-                id="coreTypeEdit"
-                label="Coreness"
-                :value="$frameElement->coreType"
-            ></x-combobox.fe-coreness>
-            <x-combobox.color
-                id="idColorEdit"
-                label="Color"
-                :value="$frameElement->idColor"
-            ></x-combobox.color>
-        </x-slot:fields>
-        <x-slot:buttons>
-            <x-submit
-                label="Save"
-                hx-put="/fe/{{$frameElement->idFrameElement}}"
-            ></x-submit>
-        </x-slot:buttons>
-    </x-inline-form>
-</x-layout.content>
+<x-form>
+    <x-slot:fields>
+        <x-hidden-field
+            id="idFrameElement"
+            :value="$frameElement->idFrameElement"
+        ></x-hidden-field>
+        <div class="two fields">
+            <div class="field max-w-15rem">
+                <x-combobox.fe-coreness
+                    id="coreTypeEdit"
+                    label="Coreness"
+                    :value="$frameElement->coreType"
+                ></x-combobox.fe-coreness>
+            </div>
+            <div class="field  max-w-15rem">
+                <x-combobox.color
+                    id="idColorEdit"
+                    label="Color"
+                    :value="$frameElement->idColor"
+                ></x-combobox.color>
+            </div>
+        </div>
+    </x-slot:fields>
+    <x-slot:buttons>
+        <x-submit
+            label="Save"
+            hx-put="/fe/{{$frameElement->idFrameElement}}"
+        ></x-submit>
+    </x-slot:buttons>
+</x-form>
+

@@ -25,8 +25,8 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware(name: 'auth')]
 class RelationController extends Controller
 {
-    #[Get(path: '/fe/relations/{idEntityRelation}')]
-    public function relations(string $idEntityRelation)
+    #[Get(path: '/fe/relations/{idEntityRelation}/frame/{idFrameBase}')]
+    public function relations(string $idEntityRelation, string $idFrameBase)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $relation = Criteria::byId("view_relation","idEntityRelation", $idEntityRelation);
@@ -41,6 +41,7 @@ class RelationController extends Controller
             ->first();
         return view("Relation.feChild",[
             'idEntityRelation' => $idEntityRelation,
+            'idFrameBase' => $idFrameBase,
             'frame' => $frame,
             'relatedFrame' => $relatedFrame,
             'relation' => (object)[

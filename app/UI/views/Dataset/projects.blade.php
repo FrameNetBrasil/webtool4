@@ -1,4 +1,3 @@
-<h2>Projects</h2>
 <div
     hx-trigger="load"
     hx-target="this"

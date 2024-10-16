@@ -1,58 +1,65 @@
-{{--<div id="form" x-data="$store.doStore">--}}
 <div class="form">
-    {{--    <template x-if="currentObject?.object?.order">--}}
-    <x-form id="formObject" title="" center="true">
-        <x-slot:fields>
-            <div class="field ">
+    <x-form>
+        <x-slot:title>
+            @if($order == 0)
                 <div class="flex">
-                    @if($order == 0)
-                        <div class="field title">Current Object: #none</div>
-                        <div class="frame">
-                        </div>
-                    @else
-                        <div class="field title">Current Object: #{{$order}}</div>
-                        <div class="frame">
-                            <span>{{$object->startFrame}}</span>
-                            <span>/</span>
-                            <span>{{$object->endFrame}}</span>
-                        </div>
-                        <div class="frame">
-                            <span>#{{$object->idDynamicObject}}</span>
-                        </div>
-                    @endif
+                    <div class="title">Current Object: #none</div>
                 </div>
-            </div>
-            <div class="flex flex-row flex-wrap gap-2">
-                <x-combobox.frame
-                    id="idFrame"
-                    label="Frame"
-                    placeholder="Frame (min: 3 chars)"
-                    style="width:250px"
-                    class="mb-2"
-                    :value="$object?->idFrame ?? 0"
-                    :name="$object->frame ?? ''"
-                    :hasDescription="false"
-                    onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
-                ></x-combobox.frame>
+            @else
+                <div class="flex gap-2">
+                    <div class="title">Current Object: #{{$order}}</div>
+                    <div class="flex h-2rem gap-2">
+                        <div class="ui label">
+                            Range
+                            <div class="detail">{{$object->startFrame}}/{{$object->endFrame}}</div>
+                        </div>
+                        <div class="ui label tag wt-tag-id">
+                            #{{$object->idDynamicObject}}
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </x-slot:title>
+        <x-slot:fields>
+            <div class="formgroup-inline">
+                <div class="field mr-1">
+                    <x-combobox.frame
+                        id="idFrame"
+                        label="Frame"
+                        placeholder="Frame (min: 3 chars)"
+                        style="width:250px"
+                        class="mb-2"
+                        :value="$object?->idFrame ?? 0"
+                        :name="$object->frame ?? ''"
+                        :hasDescription="false"
+                        onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
+                    ></x-combobox.frame>
+                </div>
                 <div id="fes">
-                    <x-combobox.fe-frame
-                        id="idFrameElement"
-                        name="idFrameElement"
-                        label="FE"
-                        :value="$object?->idFrameElement ?? 0"
-                        :idFrame="$object?->idFrame ?? 0"
-                        :hasNull="false"
-                    ></x-combobox.fe-frame>
+                    <div class="field mr-1">
+                        <x-combobox.fe-frame
+                            id="idFrameElement"
+                            name="idFrameElement"
+                            label="FE"
+                            :value="$object?->idFrameElement ?? 0"
+                            :idFrame="$object?->idFrame ?? 0"
+                            :hasNull="false"
+                        ></x-combobox.fe-frame>
+                    </div>
                 </div>
-                <x-combobox.lu
-                    id="idLU"
-                    label="LU"
-                    placeholder="LU (min: 2 chars)"
-                    class="w-23rem mb-2"
-                    :value="$object?->idLU"
-                    :name="$object?->lu ?? ''"
-                ></x-combobox.lu>
+                <div class="field mr-1">
+                    <x-combobox.lu
+                        id="idLU"
+                        label="LU"
+                        placeholder="LU (min: 2 chars)"
+                        class="w-23rem mb-2"
+                        :value="$object?->idLU"
+                        :name="$object?->lu ?? ''"
+                    ></x-combobox.lu>
+                </div>
             </div>
+        </x-slot:fields>
+        <x-slot:buttons>
             <x-button
                 type="button"
                 label="Save"
@@ -64,6 +71,6 @@
                 color="secondary"
                 onclick="annotation.objects.cloneCurrentObject()"
             ></x-button>
-        </x-slot:fields>
+        </x-slot:buttons>
     </x-form>
 </div>

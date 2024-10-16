@@ -1,4 +1,4 @@
-<x-layout.object :center="false">
+<x-layout.object>
     <x-slot:name>
         <span class="color_user">{{$task->name}}</span>
     </x-slot:name>
@@ -14,26 +14,7 @@
     </x-slot:detail>
     <x-slot:description>
     </x-slot:description>
-    <x-slot:nav>
-        <div class="ui vertical menu w-auto">
-            <a
-                class="item"
-                hx-get="/task/{{$task->idTask}}/formEdit"
-                hx-target="#objectMainArea"
-            >
-                Edit
-            </a>
-            <a
-                class="item"
-                hx-get="/task/{{$task->idTask}}/users"
-                hx-target="#objectMainArea"
-            >
-                Users
-            </a>
-        </div>
-    </x-slot:nav>
     <x-slot:main>
-        <div id="objectMainArea" class="objectMainArea">
-        </div>
+        @include("Task.menu")
     </x-slot:main>
 </x-layout.object>

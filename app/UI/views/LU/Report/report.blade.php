@@ -1,15 +1,15 @@
 <div id="luReport" class="flex flex-column h-full">
-    <div class="flex flex-row align-content-start h-3rem">
-        <div class="col">
+    <div class="flex flex-row align-content-start">
+        <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
                 <x-element.lu frame="{{$lu->frameName}}" name="{{$lu->name}}"></x-element.lu>
             </h1>
         </div>
-        <div class="col text-right">
-            <div class="ui label tag wt-tag-en">
+        <div class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
+            <div class="ui label wt-tag-en">
                 {{$language->language}}
             </div>
-            <div class="ui label tag wt-tag-id">
+            <div class="ui label wt-tag-id">
                 #{{$lu->idLU}}
             </div>
             <x-button color="secondary" href="/report/frame/{{$lu->idFrame}}" label="{{$lu->frameName}}"></x-button>
