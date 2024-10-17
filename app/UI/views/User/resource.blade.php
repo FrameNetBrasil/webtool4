@@ -1,7 +1,34 @@
 <x-layout.resource>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['/','Home'],['','Group/User']]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:title>
         Group/User
     </x-slot:title>
+    <x-slot:search>
+        <x-form-search>
+            <div class="field">
+                <x-search-field
+                    id="group"
+                    placeholder="Search Group"
+                    hx-post="/user/grid/search"
+                    hx-trigger="input changed delay:500ms, search"
+                    hx-target="#userTreeWrapper"
+                    hx-swap="innerHTML"
+                ></x-search-field>
+            </div>
+            <div class="field">
+                <x-search-field
+                    id="user"
+                    placeholder="Search Login/Email/Name"
+                    hx-post="/user/grid/search"
+                    hx-trigger="input changed delay:500ms, search"
+                    hx-target="#userTreeWrapper"
+                    hx-swap="innerHTML"
+                ></x-search-field>
+            </div>
+        </x-form-search>
+    </x-slot:search>
     <x-slot:actions>
         <x-button
             label="New Group"

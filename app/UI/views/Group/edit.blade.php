@@ -1,9 +1,11 @@
-<x-layout.object :center="false">
+<x-layout.object>
     <x-slot:name>
-        <h1><span class="color_user">{{$group->name}}</span></h1>
+        <span>{{$group->name}}</span>
     </x-slot:name>
     <x-slot:detail>
-        <x-tag label="#{{$group->idGroup}}"></x-tag>
+        <div class="ui label wt-tag-id">
+            #{{$group->idGroup}}
+        </div>
         <x-button
             label="Delete"
             color="danger"
@@ -13,16 +15,7 @@
     <x-slot:description>
         {{$group->description}}
     </x-slot:description>
-    <x-slot:nav>
-        <x-link-button
-            id="menuEdit"
-            label="Edit"
-            hx-get="/group/{{$group->idGroup}}/formEdit"
-            hx-target="#objectMainArea"
-        ></x-link-button>
-    </x-slot:nav>
     <x-slot:main>
-        <div id="objectMainArea" class="objectMainArea">
-        </div>
+        @include("Group.menu")
     </x-slot:main>
 </x-layout.object>
