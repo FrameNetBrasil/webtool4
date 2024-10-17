@@ -2080,6 +2080,14 @@ $router->put('user/{id}/authorize', [
 	'domain' => NULL,
 ]);
 
+$router->put('user/{id}/deauthorize', [
+	'uses' => 'App\Http\Controllers\User\ResourceController@deauthorizeUser',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('user', [
 	'uses' => 'App\Http\Controllers\User\ResourceController@update',
 	'as' => NULL,
