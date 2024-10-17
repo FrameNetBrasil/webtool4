@@ -1,16 +1,8 @@
-<x-layout.edit-full>
-    <x-slot:title>
-        Dynamic Annotation - Build Sentences
-    </x-slot:title>
-    <x-slot:actions>
-        <x-button
-            id="btnAnnotation"
-            label="Annotation"
-            color="secondary"
-            href="/annotation/dynamicMode/{{$idDocument}}"
-        >
-        </x-button>
-    </x-slot:actions>
+<x-layout.edit>
+    <x-slot:head>
+        <x-breadcrumb
+            :sections="[['/','Home'],['/annotation/dynamicMode','Dynamic Annotation'],['/annotation/dynamicMode/'.$document->idDocument,$document->name],['','Build sentences']]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:main>
         <div id="dynamicAnnotationBuildSentencesPane" class="dynamicAnnotationBuildSentencesPane">
             <div class="west">
@@ -29,28 +21,34 @@
                     </button>
                     <button
                         id="btnClear selection"
-                        class="ui button primary"
+                        class="ui button secondary"
                         x-data @click="$store.doStore.clearSelection()"
                     >
+                        <i class="redo icon"></i>
                         <span x-data x-text="'Clear selection'"></span>
                     </button>
                 </div>
                 @include("Annotation.DynamicMode.Panes.gridWordPane")
             </div>
             <div class="center">
-                <div class="header">
-                    <div class="tag">
-                        <div class="ui label tag wt-tag-id">
-                            {{$corpus->name}}
+                <div class="header flex w-full">
+                    <div class="font-bold">
+                        <x-icon.video></x-icon.video>{{$video->title}}
+                    </div>
+                    <div class="flex flex-grow-1 justify-content-end">
+                        <div class="tag pr-2">
+                            <div class="ui label wt-tag-id">
+                                #{{$idDocument}}
+                            </div>
                         </div>
-                        <div class="ui label tag wt-tag-id">
-                            {{$document->name}}
-                        </div>
-                        <div class="ui label tag wt-tag-id">
-                            <x-icon.video></x-icon.video>{{$video->title}}
-                        </div>
-                        <div class="ui label tag wt-tag-id">
-                            #{{$idDocument}}
+                        <div>
+                            <x-link-button
+                                id="btnAnnotation"
+                                label="Annotation"
+                                color="secondary"
+                                href="/annotation/dynamicMode/{{$idDocument}}"
+                            >
+                            </x-link-button>
                         </div>
                     </div>
                 </div>
@@ -86,6 +84,6 @@
             </div>
         </div>
     </x-slot:main>
-</x-layout.edit-full>
+</x-layout.edit>
 
 
