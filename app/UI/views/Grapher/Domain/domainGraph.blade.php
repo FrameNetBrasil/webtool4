@@ -8,7 +8,7 @@
                 var elements = [];
                 var links = [];
                 let rect, text, w;
-                let connector = $('#connector').combobox('getValue');
+                let connector = $('#connector').val();
                 for (var index in this.nodes) {
                     let node = this.nodes[index]
                     if (node['type'] === 'frame') {
@@ -105,6 +105,12 @@
                 return elements.concat(links);
             },
             cellDblClick: function (cellView) {
+                var currentElement = cellView.model;
+                if (cellView.model.isElement()) {
+                    htmx.ajax('POST', '/grapher/domain/graph/' + currentElement.id, {target: '#frameGraph'})
+                } else if (cellView.model.isLink()) {
+                    console.log(currentElement.source(), currentElement.target());
+                }
             },
             linkEnter: function (linkView) {
                 let infoButton;

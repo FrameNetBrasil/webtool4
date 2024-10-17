@@ -2,7 +2,7 @@
     <div class="form-field field" style="overflow:initial">
         <label for="{{$id}}">{{$label}}</label>
         <div id="{{$id}}_dropdown" class="ui tiny selection dropdown" style="overflow:initial">
-            <input type="hidden" name="{{$id}}" value="{{$value}}">
+            <input type="hidden" id="{{$id}}" name="{{$id}}" value="{{$value}}">
             <i class="dropdown icon"></i>
             <div class="default text"></div>
             <div class="menu">
@@ -19,6 +19,6 @@
 </div>
 <script>
     $(function() {
-        $('#{{$id}}_dropdown').dropdown();
+        $('#{{$id}}_dropdown').dropdown({});
     });
 </script>

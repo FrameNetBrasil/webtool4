@@ -1,10 +1,8 @@
 <x-layout.grapher>
-    <x-slot:header>
-        <h1>
-            Domain Grapher
-        </h1>
-    </x-slot:header>
-    <x-slot:menu>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['/','Home'],['','Domain Grapher']]"></x-breadcrumb>
+    </x-slot:head>
+    <x-slot:main>
         <form>
             <div class="flex flex-row gap-2 pl-2 pt-2">
                 <x-combobox.frame-domain
@@ -46,5 +44,5 @@
                 </div>
             </div>
         </form>
-    </x-slot:menu>
+    </x-slot:main>
 </x-layout.grapher>

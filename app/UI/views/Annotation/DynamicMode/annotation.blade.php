@@ -29,27 +29,18 @@
                     </div>
                     <div class="flex flex-grow-1 justify-content-end">
                         <div class="tag pr-2">
-                            <div class="ui label tag wt-tag-id">
+                            <div class="ui label wt-tag-id">
                                 #{{$idDocument}}
                             </div>
-                            {{--                            <div class="ui label tag wt-tag-id">--}}
-                            {{--                                {{$document->name}}--}}
-                            {{--                            </div>--}}
-                            {{--                        <div class="ui label tag wt-tag-id">--}}
-                            {{--                            {{$corpus->name}}--}}
-                            {{--                        </div>--}}
-                            {{--                        <div class="ui label tag wt-tag-id">--}}
-                            {{--                            <x-icon.video></x-icon.video>{{$video->title}}--}}
-                            {{--                        </div>--}}
                         </div>
                         <div>
-                            <x-button
+                            <x-link-button
                                 id="btnBuildSentences"
                                 label="Build Sentences"
                                 color="secondary"
                                 href="/annotation/dynamicMode/buildSentences/{{$idDocument}}"
                             >
-                            </x-button>
+                            </x-link-button>
                         </div>
                     </div>
                 </div>

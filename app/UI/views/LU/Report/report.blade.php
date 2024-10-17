@@ -12,7 +12,7 @@
             <div class="ui label wt-tag-id">
                 #{{$lu->idLU}}
             </div>
-            <x-button color="secondary" href="/report/frame/{{$lu->idFrame}}" label="{{$lu->frameName}}"></x-button>
+            <x-link-button color="secondary" href="/report/frame/{{$lu->idFrame}}" label="{{$lu->frameName}}"></x-link-button>
         </div>
     </div>
     <x-card title="Definition" class="luReport__card">
