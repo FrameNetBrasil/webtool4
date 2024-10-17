@@ -35,6 +35,12 @@ class User
             ->where("idUser", $idUser)
             ->update(["status" => 1]);
     }
+    public static function deauthorize(int $idUser): void
+    {
+        DB::table("user")
+            ->where("idUser", $idUser)
+            ->update(["status" => 0]);
+    }
     public static function getUserLevel(object $user)
     {
         $userLevel = '';

@@ -79,6 +79,18 @@ class ResourceController extends Controller
         }
     }
 
+    #[Put(path: '/user/{id}/deauthorize')]
+    public function deauthorizeUser(string $id)
+    {
+        try {
+            User::deauthorize($id);
+            $this->trigger("reload-gridUser");
+            return $this->renderNotify("success", "User deauthorized.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
     #[Post(path: '/user')]
     public function update(UpdateData $data)
     {
