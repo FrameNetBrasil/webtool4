@@ -15,6 +15,14 @@ class Group
     {
         return Criteria::byId("group", 'idGroup', $id);
     }
+    public static function listForSelect(): array
+    {
+        return Criteria::table("group")
+            ->select(['idGroup','name'])
+            ->orderBy('name')
+            ->all();
+    }
+
 //    public static function map(ClassMap $classMap): void
 //    {
 //        $classMap->table('group')
@@ -42,13 +50,6 @@ class Group
 //        ]);
 //    }
 //
-//    public static function listForSelect(): array
-//    {
-//        return self::getCriteria()
-//            ->select(['idGroup','name'])
-//            ->orderBy('name')
-//            ->all();
-//    }
 //
 //    public static function listForGrid(string $name = ''): array
 //    {
