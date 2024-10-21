@@ -29,7 +29,7 @@ class ResourceController extends Controller
     #[Post(path: '/video/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
-        $view = view("Video.grids",[
+        $view = view("Video.grid",[
             'search' => $search
         ]);
         return (is_null($fragment) ? $view : $view->fragment('search'));

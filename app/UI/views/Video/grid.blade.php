@@ -46,7 +46,7 @@
                             ]],
                             onClickRow: (row) => {
                                 if (row.type === "video") {
-                                    htmx.ajax("GET", `/video/${node.id}/edit`, "#editArea");
+                                    htmx.ajax("GET", `/video/${row.id}/edit`, "#editArea");
                                 }
                             }
                         });
