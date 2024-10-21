@@ -84,10 +84,7 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
-            Criteria::function('dataset_delete(?, ?)', [
-                $id,
-                AppService::getCurrentIdUser()
-            ]);
+            Criteria::deleteById("corpus","idCorpus",$id);
             return $this->clientRedirect("/corpus");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());

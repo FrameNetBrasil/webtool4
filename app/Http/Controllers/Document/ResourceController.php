@@ -8,6 +8,7 @@ use App\Data\Document\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Document;
+use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
@@ -59,6 +60,17 @@ class ResourceController extends Controller
             Criteria::function('document_create(?)', [$data->toJson()]);
             $this->trigger("reload-gridCorpus");
             return $this->renderNotify("success", "Document created.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/document/{id}')]
+    public function delete(string $id)
+    {
+        try {
+            Criteria::deleteById("document","idDocument",$id);
+            return $this->clientRedirect("/corpus");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
