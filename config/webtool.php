@@ -79,15 +79,15 @@ return [
 //            'cxneditor' => ['CxN Relation', '/visualeditor/cxn/main', 'fa fa-list-alt fa16px', 'MASTER', 1, []],
 //            'cxnframeeditor' => ['CxN-Frame Relation', '/visualeditor/cxnframe/main', 'fa fa-list-alt fa16px', 'MASTER', 1, []],
 //        ]],
-//        'utils' => ['Utils', '/utils', 'construction', 'MASTER', 1, [
+        'utils' => ['Utils', '/utils', 'ADMIN', [
 //            'importLexWf' => ['Import Wf-Lexeme', '/utils/importLexWf', 'utilimport', 'MASTER', 1, []],
 //            'wflex' => ['Search Wf-Lexeme', '/admin/wflex', 'utilwflex', '', 1, []],
 //            'registerWfLex' => ['Register Wf-Lexeme', '/utils/registerLexWf', 'registerwflex', 'MASTER', 1, []],
 //            'registerLemma' => ['Register Lemma', '/utils/registerLemma', 'registerlemma', 'MASTER', 1, []],
-//            'importFullText' => ['Import FullText', '/utils/importFullText', 'importfulltext', 'MASTER', 1, []],
+            'importFullText' => ['Import FullText', '/utils/importFullText', 'MASTER', []],
 //            'exportCxnFS' => ['Export Cxn as FS', '/utils/exportCxnFS', 'exportcxnfs', 'ADMIN', 1, []],
 //            'exportCxnJson' => ['Export Cxn', '/utils/exportCxn', 'exportcxnjson', 'ADMIN', 1, []],
-//        ]],
+        ]],
     ],
     'user' => ['userPanel', '/admin/user/main', '', [
         'language' => ['Language', '/language', '', [
