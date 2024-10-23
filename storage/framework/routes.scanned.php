@@ -400,6 +400,14 @@ $router->post('document/new', [
 	'domain' => NULL,
 ]);
 
+$router->delete('document/{id}', [
+	'uses' => 'App\Http\Controllers\Document\ResourceController@delete',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('document/listForSelect', [
 	'uses' => 'App\Http\Controllers\Document\ResourceController@listForSelect',
 	'as' => NULL,
@@ -620,6 +628,46 @@ $router->post('report/lu/sentences', [
 	'uses' => 'App\Http\Controllers\LU\ReportController@sentences',
 	'as' => NULL,
 	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('utils/importFullText', [
+	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@resource',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('utils/importFullText/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('utils/importFullText/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('utils/importFullText/{id}/formImportFullText', [
+	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@formEdit',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('utils/importFullText', [
+	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@update',
+	'as' => NULL,
+	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);

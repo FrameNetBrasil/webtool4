@@ -12,6 +12,7 @@
                     <x-combobox.frame
                         id="idFrameRelated"
                         label="Related Frame [min: 3 chars]"
+                        :hasDescription="false"
                     ></x-combobox.frame>
                 </div>
             </div>

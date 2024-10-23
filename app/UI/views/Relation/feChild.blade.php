@@ -1,5 +1,5 @@
 <div class="flex w-full mb-2">
-    <div class="flex-grow-1">
+    <div class="flex-grow-0">
         <i
             hx-target="#gridFrameRelations"
             hx-swap="outerHTML"
