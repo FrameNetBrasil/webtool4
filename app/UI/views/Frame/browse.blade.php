@@ -50,12 +50,11 @@
                         </x-form-search>
                     </div>
                     <div>
-                        <x-button
+                        <x-link-button
                             label="Create frame"
                             color="secondary"
-                            hx-get="/frame/new"
-                        ></x-button>
-
+                            href="/frame/new"
+                        ></x-link-button>
                     </div>
                 </div>
             </div>
