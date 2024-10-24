@@ -41,6 +41,8 @@ class FrameController extends Controller
     public function frameGraph(FrameData $data, int $idEntity = null)
     {
         $nodes = session("graphNodes") ?? [];
+        debug($data);
+        debug($idEntity);
         if (!is_null($data->idFrame)) {
             $frame = Frame::byId($data->idFrame);
             $nodes = [$frame->idEntity];
@@ -57,7 +59,7 @@ class FrameController extends Controller
         }
         session([
             "graphNodes" => $nodes,
-            "idRelationType" => $data->frameRelation
+            "frameRelation" => $data->frameRelation
         ]);
         return view('Grapher.Frame.frameGraph', [
             'graph' => RelationService::listFrameRelationsForGraph($nodes, $data->frameRelation)

@@ -58,7 +58,7 @@ return [
 //            'qualia' => ['Qualia', '/qualia', 'menu-qualia', 'MASTER', 1, []],
 //            'constrainttype' => ['Constraint Type', '/constrainttype', 'menu-constraint', 'MASTER', 1, []],
 //            'conceptstructure' => ['Concept', '/concept', 'menu-concept', '', 1, []],
-//            'semantictypetructure' => ['Semantic Type', '/semantictype', 'MASTER', []],
+            'semantictypetructure' => ['Semantic Type', '/semanticType', 'MASTER', []],
         ]],
         'admin' => ['Admin', '/admin', 'ADMIN', [
             'groupUser' => ['Group/User', '/user', 'ADMIN', []],

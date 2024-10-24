@@ -219,6 +219,7 @@ class RelationService extends Controller
     {
         $nodes = [];
         $links = [];
+        debug($idRelationType);
         $idLanguage = AppService::getCurrentIdLanguage();
         foreach ($idArray as $idEntity) {
             $partial =  Criteria::table("view_relation as r")
