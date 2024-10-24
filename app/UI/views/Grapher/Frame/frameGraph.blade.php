@@ -107,7 +107,7 @@
             cellDblClick: function (cellView) {
                 var currentElement = cellView.model;
                 if (cellView.model.isElement()) {
-                    htmx.ajax('POST', '/grapher/frame/graph/' + currentElement.id, {target: '#frameGraph'})
+                    htmx.ajax('POST', '/grapher/frame/graph/' + currentElement.id, {target: '#graph'})
                 } else if (cellView.model.isLink()) {
                     console.log(currentElement.source(), currentElement.target());
                 }
@@ -128,7 +128,7 @@
                         distance: '50%',
                         offset: 0,
                         action: function (evt) {
-                            htmx.ajax('POST', `/grapher/framefe/graph/${data.id}`, {target: '#frameGraph'})
+                            htmx.ajax('POST', `/grapher/framefe/graph/${data.id}`, {target: '#graph'})
                         }
                     });
                 } else {
