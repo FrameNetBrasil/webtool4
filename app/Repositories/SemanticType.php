@@ -20,6 +20,10 @@ class SemanticType
     {
         return Criteria::byFilterLanguage("view_semantictype", ['idSemanticType', '=', $id])->first();
     }
+    public static function byIdEntity(int $idEntity): object
+    {
+        return Criteria::byFilterLanguage("view_semantictype", ['idEntity', '=', $idEntity])->first();
+    }
     public static function listFrameDomain(): array
     {
         return Criteria::byFilterLanguage("view_semantictype", ['entry', 'startswith', 'sty\_fd'])
@@ -48,6 +52,17 @@ class SemanticType
     }
 
     public static function listChildren(int $idEntity)
+    {
+        return Criteria::table("view_relation")
+            ->join("view_semantictype", "view_relation.idEntity1", "=", "view_semantictype.idEntity")
+            ->filter([
+                ["view_relation.idEntity2", "=", $idEntity],
+                ["view_relation.relationType", "=", "rel_subtypeof"],
+                ["view_semantictype.idLanguage", "=", AppService::getCurrentIdLanguage()]
+            ])->orderBy("view_semantictype.name")->all();
+    }
+
+    public static function listTree()
     {
         return Criteria::table("view_relation")
             ->join("view_semantictype", "view_relation.idEntity1", "=", "view_semantictype.idEntity")

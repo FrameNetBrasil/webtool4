@@ -1,50 +1,29 @@
 @php
-    use App\Database\Criteria;use App\Repositories\Project;
-    $projectIcon = view('components.icon.project')->render();
+    use App\Database\Criteria;use App\Services\AnnotationFEService;
     $corpusIcon = view('components.icon.corpus')->render();
     $documentIcon = view('components.icon.document')->render();
-    // get the documents allowed to this user
-    $taskDocs = Project::getAllowedDocsForUser([
-        'Corpus prime',
-    ]);
-    $projects = array_map(fn($item) => [
-       'id'=> 'p'.$item->idProject,
-       'text' => $projectIcon . $item->projectName,
-       'state' => 'open',
-       'type' => 'project'
-    ], $taskDocs ?? []);
-    $allowedCorpus = collect($taskDocs)->pluck('idCorpus')->unique()->all();
-    $allowedDocuments = collect($taskDocs)->pluck('idDocument')->all();
     if ($search->document == '') {
         $corpus = Criteria::byFilterLanguage("view_corpus",["name","startswith", $search->corpus])
-            ->whereIn("idCorpus", $allowedCorpus)
-            ->orderBy("name")->get()->keyBy("idCorpus")->all();
-        $ids = array_keys($corpus);
-        $documents = Criteria::byFilterLanguage("view_document",["idCorpus","IN", $ids])
-            ->whereIn("idDocument", $allowedDocuments)
-            ->orderBy("name")
-            ->get()->groupBy("idCorpus")
-            ->toArray();
+            ->orderBy("name")->all();
         $data = [];
         foreach($corpus as $c) {
-           $children = array_map(fn($item) => [
-             'id'=> $item->idDocument,
-             'text' => $documentIcon . $item->name,
-             'state' => 'closed',
-             'type' => 'document'
-            ], $documents[$c->idCorpus] ?? []);
+            $documents = array_map(fn($item) => [
+                    'id'=> $item->idDocument,
+                    'text' => $documentIcon . $item->name,
+                    'state' => 'closed',
+                    'type' => 'document'
+            ], Criteria::byFilterLanguage("view_document",["idCorpus","=", $c->idCorpus])->orderBy("name")->all());
             $data[] = [
-                'id' => $c->idCorpus,
+                'id' => 'c' . $c->idCorpus,
                 'text' => $corpusIcon . $c->name,
                 'state' => 'closed',
                 'type' => 'corpus',
-                'children' => $children
+                'children' => $documents
             ];
         }
     } else {
         $documents = Criteria::byFilterLanguage("view_document",["name","startswith", $search->document])
             ->select('idDocument','name','corpusName')
-            ->whereIn("idDocuments", $allowedDocuments)
             ->orderBy("corpusName")->orderBy("name")->all();
         $data = array_map(fn($item) => [
            'id'=> $item->idDocument,
@@ -54,32 +33,43 @@
         ], $documents);
     }
 @endphp
-<div class="wt-datagrid flex flex-column h-full">
-    <div class="datagrid-header">
-        <div class="datagrid-title">
-            Corpus/Document
+<div
+    class="h-full"
+>
+    <div class="relative h-full overflow-auto">
+        <div id="corpusTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
+            @fragment('search')
+                <ul id="corpusTree">
+                </ul>
+                <script>
+                    $(function() {
+                        $("#corpusTree").treegrid({
+                            data: {{Js::from($data)}},
+                            fit: true,
+                            showHeader: false,
+                            rownumbers: false,
+                            idField: "id",
+                            treeField: "text",
+                            showFooter: false,
+                            border: false,
+                            columns: [[
+                                {
+                                    field: "text",
+                                    width: "100%",
+                                }
+                            ]],
+                            onClickRow: (row) => {
+                                if (row.type === "corpus") {
+                                    $("#corpusTree").treegrid("toggle", row.id);
+                                }
+                                if (row.type === "document") {
+                                    htmx.ajax("GET",`/annotation/staticEvent/grid/${row.id}/sentences`,"#sentenceTableContainer");
+                                }
+                            }
+                        });
+                    });
+                </script>
+            @endfragment
         </div>
     </div>
-    <div id="corpusTreeWrapper">
-        <ul id="corpusTree" class="wt-treegrid">
-        </ul>
-    </div>
 </div>
-<script>
-    $(function() {
-        $("#corpusTree").tree({
-            data: {{Js::from($data)}},
-            onClick: function(node) {
-                if (node.type === 'project') {
-                    $("#corpusTree").tree('toggle', node.target);
-                }
-                if (node.type === 'corpus') {
-                    $("#corpusTree").tree('toggle', node.target);
-                }
-                if (node.type === 'document') {
-                    htmx.ajax("GET", `/annotation/staticEvent/grid/${node.id}/sentences`, "#sentenceTableContainer");
-                }
-            }
-        });
-    });
-</script>

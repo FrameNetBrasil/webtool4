@@ -8,9 +8,11 @@ use Spatie\LaravelData\Data;
 class CreateData extends Data
 {
     public function __construct(
-        public int $idSemanticType,
-        public int $idEntity,
-        public ?int $idUser
+        public ?int $idSemanticType = null,
+        public ?int $idEntity = null,
+        public ?int $idUser = null,
+        public ?int $idDomain = null,
+        public ?string $semanticTypeName = ''
     )
     {
         $user = AppService::getCurrentUser();

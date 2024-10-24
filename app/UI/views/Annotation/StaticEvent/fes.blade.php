@@ -3,12 +3,11 @@
     $words = explode(' ', $sentence);
     $title = "";//($idFrame ? "Frame: " . $frame->name : "No Frame")
 @endphp
-<x-layout.content>
-    <div id="annotationStaticFrameMode1FETabs" class="grid pl-2">
-        @if(count($frames) > 0)
+<div id="annotationStaticFrameMode1FETabs" class="grid pl-2">
+    @if(count($frames) > 0)
 
-            @foreach($frames as $idFrame => $frame)
-                @php($idObject = 0)
+        @foreach($frames as $idFrame => $frame)
+            @php($idObject = 0)
             <div class="col-fixed">
                 <div class="ui card w-full">
                     <div class="content">
@@ -31,9 +30,9 @@
                                 @foreach($objects as $i => $object)
                                     @php($phrase = '')
                                     @if($type != 'No Text')
-                                    @for($w = $object->startWord - 1; $w < $object->endWord; $w++)
-                                        @php($phrase .= ' '. $words[$w])
-                                    @endfor
+                                        @for($w = $object->startWord - 1; $w < $object->endWord; $w++)
+                                            @php($phrase .= ' '. $words[$w])
+                                        @endfor
                                     @endif
                                     @if((count($object->bboxes) > 0) || ($object->name == 'scene'))
                                         <x-card class="m-2 font-bold"
@@ -68,11 +67,10 @@
 
 
             </div>
-            @endforeach
-        @else
-            <div class="col-fixed">
-                No frame.
-            </div>
-        @endif
-    </div>
-</x-layout.content>
+        @endforeach
+    @else
+        <div class="col-fixed">
+            No frame.
+        </div>
+    @endif
+</div>

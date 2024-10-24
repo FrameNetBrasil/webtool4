@@ -15,7 +15,7 @@ class EntryController extends Controller
     #[Get(path: '/semanticType/{id}/entries')]
     public function entries(string $id)
     {
-        $semanticType = SemanticType::getById($id);
+        $semanticType = SemanticType::byId($id);
         return view("Entry.edit", [
             'entries' => Entry::listByIdEntity($semanticType->idEntity),
             'languages' => AppService::availableLanguages()
