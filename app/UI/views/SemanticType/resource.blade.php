@@ -7,7 +7,7 @@
     </x-slot:title>
     <x-slot:actions>
         <x-button
-            label="New SemanticType"
+            label="New Root SemanticType"
             color="secondary"
             hx-get="/semanticType/new"
             hx-target="#editArea"
@@ -15,15 +15,16 @@
         ></x-button>
     </x-slot:actions>
     <x-slot:search>
-        <x-form-search>
+        <x-form-search
+            hx-post="/semanticType/grid/search"
+            hx-target="#semanticTypeTreeWrapper"
+            hx-swap="innerHTML"
+        >
             <div class="field">
                 <x-search-field
                     id="semanticType"
                     placeholder="Search SemanticType"
-                    hx-post="/semanticType/grid"
                     hx-trigger="input changed delay:500ms, search"
-                    hx-target="#semanticTypeTreeWrapper"
-                    hx-swap="innerHTML"
                 ></x-search-field>
             </div>
         </x-form-search>
@@ -33,7 +34,7 @@
             hx-trigger="load"
             hx-target="this"
             hx-swap="outerHTML"
-            hx-post="/semanticType/grid"
+            hx-get="/semanticType/grid"
         ></div>
     </x-slot:grid>
     <x-slot:edit>

@@ -13,15 +13,13 @@
                 <script>
                     $(function() {
                         $("#semanticTypeTree").treegrid({
+                            data: {{Js::from($data)}},
                             fit: true,
-                            url: "/semanticType/listForTree",
-                            queryParams: {{ Js::from(['_token' => $search->_token,'semanticType' => $search->semanticType,'domain' => $search->domain]) }},
-                            method:"post",
                             showHeader: false,
                             rownumbers: false,
-                            idField: 'id',
-                            treeField: 'text',
-                            showFooter:false,
+                            idField: "id",
+                            treeField: "text",
+                            showFooter: false,
                             border: false,
                             columns: [[
                                 {
@@ -29,14 +27,14 @@
                                     width: "100%",
                                 }
                             ]],
-                            // onClickRow: (row) => {
-                            //     if (row.type === "domain") {
-                            //         $("#semanticTypeTree").treegrid("toggle", row.id);
-                            //     }
-                            //     if (row.type === "semanticType") {
-                            //         htmx.ajax("GET", `/semanticType/${row.id}/edit`, "#editArea");
-                            //     }
-                            // }
+                            onClickRow: (row) => {
+                                if (row.type === "domain") {
+                                    $("#semanticTypeTree").treegrid("toggle", row.id);
+                                }
+                                if (row.type === "semanticType") {
+                                    htmx.ajax("GET", `/semanticType/${row.idSemanticType}/edit`, "#editArea");
+                                }
+                            }
                         });
                     });
                 </script>

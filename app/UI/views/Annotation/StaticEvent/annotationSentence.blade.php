@@ -2,12 +2,11 @@
     $panelWestWidth = $image->width + 30;
     $panelImageHeight = $image->height + 40;
 @endphp
-<x-layout.edit-full>
-    <x-slot:title>
-        Static Event
-    </x-slot:title>
-    <x-slot:actions>
-    </x-slot:actions>
+<x-layout.edit>
+    <x-slot:head>
+        <x-breadcrumb
+            :sections="[['/','Home'],['/annotation/staticEvent','StaticEvent Annotation'],['',$document->name]]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:main>
         @include('Annotation.StaticEvent.Panes.annotation')
         <div id="staticEventAnnotationPane" class="staticEventAnnotationPane">
@@ -27,16 +26,16 @@
             <div class="center">
                 <div class="header">
                     <div class="tag">
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             {{$corpus->name}}
                         </div>
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             {{$document->name}}
                         </div>
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             <x-icon.image></x-icon.image>{{$image->name}}
                         </div>
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             #{{$idDocumentSentence}}
                         </div>
                     </div>
@@ -60,4 +59,4 @@
             </div>
         </div>
     </x-slot:main>
-</x-layout.edit-full>
+</x-layout.edit>

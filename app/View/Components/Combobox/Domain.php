@@ -2,6 +2,8 @@
 
 namespace App\View\Components\Combobox;
 
+use App\Database\Criteria;
+use App\Services\AppService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -14,13 +16,18 @@ class Domain extends Component
      */
     public function __construct(
         public string $id,
-        public string $value,
-        public string $label = '',
-        public string $placeholder = ''
+        public ?string $value = "",
+        public ?string $label = '',
+        public ?string $placeholder = ''
     )
     {
-        $domain = new \App\Repositories\Domain();
-        $this->options = $domain->listForSelection()->getResult();
+        $this->options = Criteria::table("view_domain")
+            ->select("idDomain","name")
+            ->distinct()
+            ->where("idLanguage",AppService::getCurrentIdLanguage())
+            ->orderBy("name")
+            ->keyBy("idDomain")
+            ->toArray();
     }
 
     /**

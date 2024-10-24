@@ -12,7 +12,7 @@
 @import "webtool/colors/_idcolor.less";
 @import "webtool/colors/_elements.less";
 @import "webtool/colors/_relations.less";
-@import "webtool/colors/_annotation";
+@import "webtool/colors/_annotation.less";
 
 //@import "webtool/layouts/_reset";
 @import "webtool/layouts/_index.less";
@@ -34,7 +34,7 @@
 @import "webtool/pages/_lu";
 @import "webtool/pages/_corpus";
 @import "webtool/pages/_video";
-@import "webtool/pages/_annotation_event";
+@import "webtool/pages/_annotation_event.less";
 @import "webtool/pages/_annotation_fe.less";
 @import "webtool/pages/_annotation_dynamic.less";
 @import "webtool/pages/_annotation_fulltext.less";
