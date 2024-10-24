@@ -2976,6 +2976,30 @@ $router->put('annotation/corpus/annotationSet/feLayer', [
 	'domain' => NULL,
 ]);
 
+$router->get('decisiontree', [
+	'uses' => 'App\Http\Controllers\DecisionTree\BrowseController@browse',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('decisiontree/grid', [
+	'uses' => 'App\Http\Controllers\DecisionTree\BrowseController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('decisiontree/frame/{entry}', [
+	'uses' => 'App\Http\Controllers\DecisionTree\BrowseController@entry',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('fe', [
 	'uses' => 'App\Http\Controllers\FE\ResourceController@newFE',
 	'as' => NULL,

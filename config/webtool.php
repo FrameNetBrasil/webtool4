@@ -59,6 +59,7 @@ return [
 //            'constrainttype' => ['Constraint Type', '/constrainttype', 'menu-constraint', 'MASTER', 1, []],
 //            'conceptstructure' => ['Concept', '/concept', 'menu-concept', '', 1, []],
             'semantictypetructure' => ['Semantic Type', '/semanticType', 'MASTER', []],
+            'decisiontree' => ['Decision tree', '/decisiontree', 'MASTER', []],
         ]],
         'admin' => ['Admin', '/admin', 'ADMIN', [
             'groupUser' => ['Group/User', '/user', 'ADMIN', []],
