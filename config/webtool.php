@@ -58,7 +58,6 @@ return [
 //            'qualia' => ['Qualia', '/qualia', 'menu-qualia', 'MASTER', 1, []],
 //            'constrainttype' => ['Constraint Type', '/constrainttype', 'menu-constraint', 'MASTER', 1, []],
 //            'conceptstructure' => ['Concept', '/concept', 'menu-concept', '', 1, []],
-            'semantictypetructure' => ['Semantic Type', '/semanticType', 'MASTER', []],
             'decisiontree' => ['Decision tree', '/decisiontree', 'MASTER', []],
         ]],
         'admin' => ['Admin', '/admin', 'ADMIN', [
@@ -68,6 +67,7 @@ return [
             'corpusDocument' => ['Corpus/Document', '/corpus', 'ADMIN', []],
             'videoDocument' => ['Video/Document', '/video', 'ADMIN', []],
             'imageDocument' => ['Image/Document', '/image', 'ADMIN', []],
+            'domainSemantictype' => ['Domain/Semantic Type', '/semanticType', 'MASTER', []],
 //            'type' => ['Types', '/type', 'ADMIN', []],
 //            'relation' => ['Relations', '/relationgroup', 'ADMIN', []],
 //            'genre' => ['Genres', '/genre', 'ADMIN', []],

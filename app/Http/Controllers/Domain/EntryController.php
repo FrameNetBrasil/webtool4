@@ -15,7 +15,7 @@ class EntryController extends Controller
     #[Get(path: '/domain/{id}/entries')]
     public function entries(string $id)
     {
-        $domain = Domain::getById($id);
+        $domain = Domain::byId($id);
         return view("Entry.edit", [
             'trigger' => 'reload-gridDomain',
             'entries' => Entry::listByIdEntity($domain->idEntity),

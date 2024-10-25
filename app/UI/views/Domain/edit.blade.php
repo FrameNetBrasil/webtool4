@@ -1,9 +1,11 @@
-<x-layout.object :center="false">
+<x-layout.object>
     <x-slot:name>
-        <h1><span class="color_domain">{{$domain->name}}</span></h1>
+        <span>{{$domain?->name}}</span>
     </x-slot:name>
     <x-slot:detail>
-        <x-tag label="#{{$domain->idDomain}}"></x-tag>
+        <div class="ui label tag wt-tag-id">
+            #{{$domain->idDomain}}
+        </div>
         <x-button
             label="Delete"
             color="danger"
@@ -13,16 +15,7 @@
     <x-slot:description>
         {{$domain->description}}
     </x-slot:description>
-    <x-slot:nav>
-        <x-link-button
-            id="menuEntries"
-            label="Translations"
-            hx-get="/domain/{{$domain->idDomain}}/entries"
-            hx-target="#objectMainArea"
-        ></x-link-button>
-    </x-slot:nav>
     <x-slot:main>
-        <div id="objectMainArea" class="objectMainArea">
-        </div>
+        @include("Domain.menu")
     </x-slot:main>
 </x-layout.object>
