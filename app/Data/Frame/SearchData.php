@@ -13,6 +13,7 @@ class SearchData extends Data
         public ?string $listBy = '',
         public ?int $idFramalDomain = null,
         public ?int $idFramalType = null,
+        public ?int $idFrameScenario = null,
         public ?string $id = '',
         public ?int    $idFrame = 0,
         public ?int    $idFramePrevious = 0,

@@ -384,6 +384,14 @@ $router->get('semanticType/{idEntity}/childSubTypeGrid', [
 	'domain' => NULL,
 ]);
 
+$router->get('report/semanticType/{idSemanticType?}/{lang?}', [
+	'uses' => 'App\Http\Controllers\SemanticType\ReportController@report',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('semanticType/{id}/entries', [
 	'uses' => 'App\Http\Controllers\SemanticType\EntryController@entries',
 	'as' => NULL,

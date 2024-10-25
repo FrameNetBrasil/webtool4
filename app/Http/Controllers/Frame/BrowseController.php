@@ -56,8 +56,8 @@ class BrowseController extends Controller
                     $display = 'domainTableContainer';
                 }
                 if ($search->byGroup == 'scenario') {
-                    $search->idFrame = array_key_first($groups);
-                    $currentGroup = $groups[$search->idFrame]['name'];
+                    $search->idFrameScenario ??= array_key_first($groups);
+                    $currentGroup = $groups[$search->idFrameScenario]['name'];
                     $group = 'Scenarios';
                     $display = 'domainTableContainer';
                 }
@@ -131,6 +131,8 @@ class BrowseController extends Controller
                 ->where("c.idSemanticType", $search->idFramalType)
                 ->select("f.idFrame", "f.name", "f.description")
                 ->orderby("f.name")->all();
+        } else if (!is_null($search->idFrameScenario)) {
+            $frames = Frame::listScenarioFrames($search->idFrameScenario);
         } else {
             $frames = Criteria::byFilterLanguage("view_frame", ['name', "startswith", $search->frame])
                 ->orderBy('name')->all();

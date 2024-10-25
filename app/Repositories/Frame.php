@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Database\Criteria;
 use App\Services\AppService;
+use App\Services\RelationService;
 use Illuminate\Support\Facades\DB;
 
 class Frame
@@ -17,8 +18,8 @@ class Frame
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $result = Criteria::table("view_fe_internal_relation")
-            ->where("relationType",'rel_coreset')
-            ->where("fe1IdFrame",$idFrame)
+            ->where("relationType", 'rel_coreset')
+            ->where("fe1IdFrame", $idFrame)
             ->where("idLanguage", $idLanguage)
             ->all();
         $index = [];
@@ -39,6 +40,24 @@ class Frame
             $feCoreSet[$i][] = $fe;
         }
         return $feCoreSet;
+    }
+
+    public static function listScenarioFrames(int $idFrameScenario): array
+    {
+        $children = [];
+        self::listScenarioChildren($idFrameScenario, $children);
+        return $children;
+    }
+
+    private static function listScenarioChildren(int $idFrame, &$children = [])
+    {
+        $frames = RelationService::listFrameChildren($idFrame);
+        foreach ($frames as $frame) {
+            if (($frame->relationType == 'rel_inheritance') || ($frame->relationType == 'rel_subframe') || ($frame->relationType == 'rel_perspective_on')) {
+                self::listScenarioChildren($frame->idFrame, $children);
+                $children[$frame->name] = $frame;
+            }
+        }
     }
 
 
@@ -439,7 +458,7 @@ class Frame
             }
         }
         $classification['id'][] = "#" . $idFrame;
-        $frame = Criteria::byFilterLanguage("view_frame",['idFrame', '=', $idFrame],'idLanguage', 2)->first();
+        $frame = Criteria::byFilterLanguage("view_frame", ['idFrame', '=', $idFrame], 'idLanguage', 2)->first();
         $classification['en'][] = $frame->name . " [en]";
         return $classification;
     }

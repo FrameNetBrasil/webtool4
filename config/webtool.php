@@ -24,6 +24,7 @@ return [
             'reportframe' => ['Frame', '/report/frame', '', []],
             'reportlu' => ['LU', '/report/lu', '', []],
             'networkstructure' => ['Network', '/network', 'MASTER', []],
+            'reportst' => ['SemanticType', '/report/semanticType', '', []],
 //            'cxnreport' => ['Constructions', '/cxn/report', 'cxnreport', '', '', []],
 //            'corpusAnnotationReport' => ['Corpus Panes', '/corpus/report', 'corpusreport', '', 1, []],
         ]],

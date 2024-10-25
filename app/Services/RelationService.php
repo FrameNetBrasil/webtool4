@@ -136,6 +136,30 @@ class RelationService extends Controller
         return $result;
     }
 
+    public static function listFrameChildren(int $idFrame)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $result = [];
+        $relations = Criteria::table("view_frame_relation as fr")
+            ->join("view_frame as f","fr.f2IdFrame","=","f.idFrame")
+            ->select("fr.idEntityRelation","fr.relationType","f.idFrame","f.name","f.description")
+            ->where("fr.f1IdFrame", $idFrame)
+            ->where("fr.idLanguage", $idLanguage)
+            ->where("f.idLanguage", $idLanguage)
+            ->orderBy("f.name")
+            ->all();
+        foreach ($relations as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'idFrame' => $relation->idFrame,
+                'name' => $relation->name,
+                'description' => $relation->description,
+            ];
+        }
+        return $result;
+    }
+
 
 //    static public function createForIdRelationType(int $idRelationType, int $idEntity1, int $idEntity2, ?int $idEntity3 = null, ?int $idRelation = null): ?int
 //    {
