@@ -1,7 +1,10 @@
 <form
     id="appSearch"
-    hx-post="/app/search"
-    hx-target="#work"
+    action="/app/search"
+    method="post"
+
+    {{--    hx-post="/app/search"--}}
+    {{--    hx-target="#work"--}}
 >
     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
     <x-search-field

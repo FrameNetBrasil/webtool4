@@ -29,13 +29,7 @@ class BrowseController extends Controller
     #[Post(path: '/frame/grid')]
     public function grid(SearchData $search)
     {
-        //$search = session('searchFrame') ?? $search;
-//        debug("starting ================");
-//        debug($search);
-//        if ($search->isEdit) {
-//            return $this->clientRedirect("/frame/{$search->idFrame}");
-//        } else {
-        //session('searchFrame', $search);
+        debug($search);
         $display = 'frameTableContainer';
         if ($search->lu != '') {
             $display = 'luTableContainer';
@@ -48,12 +42,6 @@ class BrowseController extends Controller
             ]);
         } else {
             $groups = self::listGroup($search->byGroup);
-//            debug($search->idFramalDomain);
-//            debug($search->idFramalType);
-//            if (!(is_null($search->idFramalDomain) && is_null($search->idFramalType))) {
-//                $display = 'frameTableContainer';
-//                debug('===============');
-//            }
             if ($search->frame == '') {
                 if ($search->byGroup == 'domain') {
                     $search->idFramalDomain ??= array_key_first($groups);
@@ -67,59 +55,61 @@ class BrowseController extends Controller
                     $group = 'Types';
                     $display = 'domainTableContainer';
                 }
+                if ($search->byGroup == 'scenario') {
+                    $search->idFrame = array_key_first($groups);
+                    $currentGroup = $groups[$search->idFrame]['name'];
+                    $group = 'Scenarios';
+                    $display = 'domainTableContainer';
+                }
             }
-//            if ($search->idFrame != 0) {
-//                $display = 'feluTableContainer';
-//                $search->idFramalDomain = null;
-//                $search->idFramalType = null;
-//            }
             $frames = self::listFrame($search);
-            //debug($frames);
-//            if (!empty($frames)) {
-//                $frame = Frame::byId(array_key_first($frames));
-//                $fes = self::listFE($frame->idFrame);
-//                $lus = self::listLU($frame->idFrame);
-//            } else {
-//                $fes = $lus = [];
-//            }
-//                debug([
-//                    'search' => $search,
-//                    'display' => $display,
-//                    'currentGroup' => $currentGroup ?? '',
-//                    'currentFrame' => $frame?->name ?? '',
-//                    'group' => $group ?? '',
-//                ]);
             return view("Frame.grids", [
                 'search' => $search,
                 'display' => $display,
                 'currentGroup' => $currentGroup ?? '',
                 'currentFrame' => $frame?->name ?? '',
-                'group' => $group ?? '',
+                'groupName' => $group ?? '',
                 'groups' => $groups ?? [],
                 'frames' => $frames,
-//                'fes' => $fes,
-//                'lus' => $lus,
             ]);
-//            }
         }
     }
 
     public static function listGroup(string $group)
     {
         $result = [];
-        if ($group == 'domain') {
-            $groups = SemanticType::listFrameDomain();
+        if ($group == 'scenario') {
+            $scenarios = Criteria::table("view_relation as r")
+                ->join("view_frame as f","r.idEntity1","=","f.idEntity")
+                ->join("semantictype as st","r.idEntity2","=","st.idEntity")
+                ->where("f.idLanguage","=", AppService::getCurrentIdLanguage())
+                ->where("st.entry","=","sty_ft_scenario")
+                ->select("f.idFrame","f.idEntity","f.name")
+                ->orderby("f.name")
+                ->all();
+            foreach ($scenarios as $row) {
+                $result[$row->idFrame] = [
+                    'id' => $row->idFrame,
+                    'type' => 'scenario',
+                    'name' => $row->name,
+                    'iconCls' => 'material-icons-outlined wt-tree-icon wt-icon-domain'
+                ];
+            }
         } else {
-            $groups = SemanticType::listFrameType();
-        }
-        foreach ($groups as $row) {
-            $result[$row->idSemanticType] = [
-                'id' => $row->idSemanticType,
-                'idDomain' => $row->idSemanticType,
-                'type' => $group,
-                'name' => $row->name,
-                'iconCls' => 'material-icons-outlined wt-tree-icon wt-icon-domain'
-            ];
+            if ($group == 'domain') {
+                $groups = SemanticType::listFrameDomain();
+            } else {
+                $groups = SemanticType::listFrameType();
+            }
+            foreach ($groups as $row) {
+                $result[$row->idSemanticType] = [
+                    'id' => $row->idSemanticType,
+                    'idDomain' => $row->idSemanticType,
+                    'type' => $group,
+                    'name' => $row->name,
+                    'iconCls' => 'material-icons-outlined wt-tree-icon wt-icon-domain'
+                ];
+            }
         }
         return $result;
     }
@@ -131,15 +121,15 @@ class BrowseController extends Controller
             $frames = Criteria::table("view_frame as f")
                 ->join("view_frame_classification as c", "f.idFrame", "=", "c.idFrame")
                 ->where("f.idLanguage", AppService::getCurrentIdLanguage())
-                ->where("c.idSemanticType",$search->idFramalDomain)
-                ->select("f.idFrame","f.name","f.description")
+                ->where("c.idSemanticType", $search->idFramalDomain)
+                ->select("f.idFrame", "f.name", "f.description")
                 ->orderby("f.name")->all();
         } else if (!is_null($search->idFramalType)) {
             $frames = Criteria::table("view_frame as f")
                 ->join("view_frame_classification as c", "f.idFrame", "=", "c.idFrame")
                 ->where("f.idLanguage", AppService::getCurrentIdLanguage())
-                ->where("c.idSemanticType",$search->idFramalType)
-                ->select("f.idFrame","f.name","f.description")
+                ->where("c.idSemanticType", $search->idFramalType)
+                ->select("f.idFrame", "f.name", "f.description")
                 ->orderby("f.name")->all();
         } else {
             $frames = Criteria::byFilterLanguage("view_frame", ['name', "startswith", $search->frame])

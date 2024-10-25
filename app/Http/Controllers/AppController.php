@@ -83,6 +83,7 @@ class AppController extends Controller
             $result[$lu->idLU] = [
                 'id' => 'l' . $lu->idLU,
                 'idLU' => $lu->idLU,
+                'idFrame' => $lu->idFrame,
                 'type' => 'lu',
                 'name' => [$lu->name, $lu->senseDescription],
                 'frameName' => $lu->frameName,
