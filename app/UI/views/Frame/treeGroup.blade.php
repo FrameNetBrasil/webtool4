@@ -1,8 +1,8 @@
-@php($field = ($search->byGroup == 'domain') ? "idFramalDomain" : "idFramalType")
+@php($field = ($search->byGroup == 'domain') ? "idFramalDomain" : (($search->byGroup == 'type') ? "idFramalType" : "idFrame"))
 <div class="wt-datagrid flex flex-column" style="height:100%">
     <div class="datagrid-header">
         <div class="datagrid-title">
-            {{$group}}
+            {{$groupName}}
         </div>
     </div>
     <div class="table" style="position:relative;height:100%">
@@ -19,7 +19,11 @@
                         hx-vals='{"{{$field}}":{{$idGroup}}, "byGroup" : "{{$search->byGroup}}"}'
                         class="cursor-pointer"
                     >
+                        @if($groupName == 'Scenarios')
+                            <x-element.frame :name="$group['name']"></x-element.frame>
+                        @else
                         {{$group['name']}}
+                        @endif
                     </td>
                 </tr>
             @endforeach

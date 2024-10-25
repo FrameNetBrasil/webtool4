@@ -30,7 +30,16 @@
                             href="/report/lu/{{$idLU}}"
                             >
                         <div>
-                            <x-element.lu :name="$lu['name'][0]" :frame="$lu['frameName']"></x-element.lu>
+                            <div class="flex">
+                                <a href="/report/frame/{{$lu['idFrame']}}">
+                                <x-element.frame :name="$lu['frameName']"></x-element.frame>
+                                </a>
+                                <div class="font-medium">
+                                <x-element.lu :name="$lu['name'][0]"></x-element.lu>
+                                </div>
+                            </div>
+
+
                             <div class='definition'>{{$lu['name'][1]}}</div>
                         </div>
                         </a>

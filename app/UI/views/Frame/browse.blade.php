@@ -47,6 +47,13 @@
                                 hx-target="#gridArea"
                                 hx-on:htmx:before-request="$('#frame').val('');$('#lu').val('');"
                             ></x-button>
+                            <x-button
+                                label="Scenarios"
+                                hx-post="/frame/grid"
+                                hx-vals="js:{frame:'',lu:'',byGroup:'scenario'}"
+                                hx-target="#gridArea"
+                                hx-on:htmx:before-request="$('#frame').val('');$('#lu').val('');"
+                            ></x-button>
                         </x-form-search>
                     </div>
                     <div>
