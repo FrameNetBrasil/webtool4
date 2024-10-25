@@ -1,4 +1,4 @@
-@php($field = ($search->byGroup == 'domain') ? "idFramalDomain" : (($search->byGroup == 'type') ? "idFramalType" : "idFrame"))
+@php($field = ($search->byGroup == 'domain') ? "idFramalDomain" : (($search->byGroup == 'type') ? "idFramalType" : "idFrameScenario"))
 <div class="wt-datagrid flex flex-column" style="height:100%">
     <div class="datagrid-header">
         <div class="datagrid-title">
