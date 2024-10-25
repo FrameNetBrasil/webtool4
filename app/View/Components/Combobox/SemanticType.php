@@ -3,6 +3,7 @@
 namespace App\View\Components\Combobox;
 
 use App\Database\Criteria;
+use App\Services\AppService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Blade;
@@ -24,28 +25,40 @@ class SemanticType extends Component
     )
     {
         $result = [];
-        $list = $this->buildTree($root);
-        foreach ($list as $i => $row) {
-            $node = (array)$row;
-//            $node['name'] = view('components.element.semantictype',['name' => $row->name])->render();
-//            $node['state'] = 'closed';
-//            $node['iconCls'] = '';
-            $children = $this->buildTree($row['name']);
-            $node['children'] = !empty($children) ? $children : null;
-            $result[] = $node;
+        if ($root == '') {
+            $list = Criteria::table("view_domain_semantictype as dst")
+                ->join("semantictype as st", "st.idEntity", "=", "dst.stIdEntity")
+                ->selectRaw("st.idSemanticType, concat(dst.stName,':',dst.domainName) as name")
+                ->where("dst.idLanguage", "=", AppService::getCurrentIdLanguage())
+                ->orderBy("dst.stName")
+                ->all();
+            foreach ($list as $row) {
+                $result[] = [
+                    'idSemanticType' => $row->idSemanticType,
+                    'name' => $row->name,
+                    'html' => view('components.element.semantictype', ['name' => $row->name])->render(),
+                    'state' => 'open',
+                    'iconCls' => ''
+                ];
+            }
+        } else {
+            $list = $this->buildTree($root);
+            foreach ($list as $i => $row) {
+                $node = (array)$row;
+                $children = $this->buildTree($row['name']);
+                $node['children'] = !empty($children) ? $children : null;
+                $result[] = $node;
+            }
         }
-        debug($result);
         $this->list = $result;
     }
 
     public function buildTree(string $root): array
     {
-        //$list = SemanticTypeRepository::listForComboGrid($root);
-        $st = Criteria::byFilterLanguage("view_semantictype",["name","=",$root])->first();
+        $st = Criteria::byFilterLanguage("view_semantictype", ["name", "=", $root])->first();
         $list = SemanticTypeRepository::listChildren($st->idEntity);
         $result = [];
         foreach ($list as $row) {
-            debug($row);
             $result[] = [
                 'idSemanticType' => $row->idSemanticType,
                 'name' => $row->name,

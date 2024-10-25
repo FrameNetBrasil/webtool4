@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Domain;
 use App\Data\Domain\CreateData;
 use App\Data\Domain\SearchData;
 use App\Data\Domain\UpdateData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Domain;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -35,7 +36,7 @@ class ResourceController extends Controller
         debug($search);
         $domains = Domain::listToGrid($search);
         //debug($users);
-        $view = view("Domain.grid",[
+        $view = view("Domain.grid", [
             'domains' => $domains
         ]);
         return (is_null($fragment) ? $view : $view->fragment('search'));
@@ -44,16 +45,15 @@ class ResourceController extends Controller
     #[Get(path: '/domain/{id}/edit')]
     public function edit(string $id)
     {
-        debug($id);
-        return view("Domain.edit",[
-            'domain' => Domain::getById($id)
+        return view("Domain.edit", [
+            'domain' => Domain::byId($id)
         ]);
     }
 
     #[Get(path: '/domain/{id}/formEdit')]
     public function formEdit(string $id)
     {
-        return view("Domain.formEdit",[
+        return view("Domain.formEdit", [
             'domain' => Domain::getById($id)
         ]);
     }
@@ -70,11 +70,11 @@ class ResourceController extends Controller
     }
 
     #[Post(path: '/domain/new')]
-    public function create(CreateData $domain)
+    public function create(CreateData $data)
     {
         try {
-            Domain::create($domain);
-            $this->trigger("reload-gridDomain");
+            $idDomain = Criteria::function('domain_create(?)', [$data->toJson()]);
+            $this->trigger("reload-gridSemanticType");
             return $this->renderNotify("success", "Domain created.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -85,8 +85,8 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
-            Domain::delete($id);
-            return $this->clientRedirect("/domain");
+            Criteria::deleteById("domain","idDomain", $id);
+            return $this->clientRedirect("/semanticType");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

@@ -1,7 +1,7 @@
 @php
 $items = [
     ['entries','Translations'],
-    ['semanticTypes','SemanticTypes'],
+    ['subTypes','SubTypes'],
 ];
 @endphp
 <x-objectmenu

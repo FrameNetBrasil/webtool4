@@ -1,13 +1,20 @@
 <x-layout.resource>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','SemanticType']]"></x-breadcrumb>
+        <x-breadcrumb :sections="[['/','Home'],['','Domain/SemanticType']]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:title>
-        SemanticType
+        Domain/SemanticType
     </x-slot:title>
     <x-slot:actions>
         <x-button
-            label="New Root SemanticType"
+            label="New Domain"
+            color="secondary"
+            hx-get="/domain/new"
+            hx-target="#editArea"
+            hx-swap="innerHTML"
+        ></x-button>
+        <x-button
+            label="New ST"
             color="secondary"
             hx-get="/semanticType/new"
             hx-target="#editArea"

@@ -1,5 +1,5 @@
 <x-form
-    title="Root SemanticType"
+    title="New SemanticType"
 >
     <x-slot:fields>
         <div class="field">

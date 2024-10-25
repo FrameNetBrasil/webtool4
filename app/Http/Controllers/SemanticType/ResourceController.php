@@ -39,7 +39,7 @@ class ResourceController extends Controller
     }
     private function listForTree(SearchData $search)
     {
-        $domainIcon = view('components.icon.corpus')->render();
+        $domainIcon = view('components.icon.domain')->render();
         $stIcon = view('components.icon.semantictype')->render();
         $tree = [];
         if ($search->semanticType != '') {
@@ -105,7 +105,7 @@ class ResourceController extends Controller
     }
 
 
-    #[Get(path: '/semanticType/{id}/semanticTypes')]
+    #[Get(path: '/semanticType/{id}/subTypes')]
     public function semanticTypes(string $id)
     {
         $semanticType = SemanticType::byId($id);
@@ -228,15 +228,7 @@ class ResourceController extends Controller
     {
         try {
             $parent = SemanticType::byIdEntity($data->idEntity);
-            debug($parent);
-            $json = json_encode([
-                'idDomain' => $parent->idDomain,
-                'nameEn' => $data->semanticTypeName,
-                'idUser' => $data->idUser
-            ]);
-            $idSemanticType = Criteria::function('semantictype_create(?)', [$json]);
-            $child = SemanticType::byId($idSemanticType);
-            debug($child);
+            $child = SemanticType::byId($data->idSemanticType);
             RelationService::create(
                 'rel_subtypeof',
                 $child->idEntity,

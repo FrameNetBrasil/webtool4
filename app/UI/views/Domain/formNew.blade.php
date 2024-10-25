@@ -1,12 +1,19 @@
-<x-form id="formNew" title="New Domain" :center="false"  hx-post="/domain/new">
+<x-form
+    title="New Domain"
+>
     <x-slot:fields>
-        <x-text-field
-            label="English Name"
-            id="nameEn"
-            value=""
-        ></x-text-field>
+        <div class="field">
+            <x-text-field
+                label="English Name"
+                id="nameEn"
+                value=""
+            ></x-text-field>
+        </div>
     </x-slot:fields>
     <x-slot:buttons>
-        <x-submit label="Save"></x-submit>
+        <x-submit
+            label="Add Domain"
+            hx-post="/domain/new"
+        ></x-submit>
     </x-slot:buttons>
 </x-form>

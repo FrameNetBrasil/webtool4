@@ -76,11 +76,9 @@ class SemanticType
     public static function listDomains(): array
     {
         return Criteria::table("view_domain")
-            ->distinct()
             ->select("idDomain","name")
-            ->filter([
-                ["idLanguage", "=", AppService::getCurrentIdLanguage()]
-            ])->orderBy("name")->get()->keyBy("idDomain")->all();
+            ->where("idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->orderBy("name")->get()->keyBy("idDomain")->all();
     }
 
     public static function listRootByDomain(int $idDomain) : array
@@ -94,6 +92,19 @@ class SemanticType
             ->filter([
                 ['idLanguage', '=', AppService::getCurrentIdLanguage()],
                 ['idDomain', '=', $idDomain],
+            ])->orderBy("name")->all();
+    }
+
+    public static function listRoots() : array
+    {
+        $criteriaER = Criteria::table("view_relation")
+            ->select('idEntity1')
+            ->where("relationType", "=", 'rel_subtypeof');
+        return Criteria::table("view_semanticType")
+            ->select("idSemanticType", "idEntity", "name")
+            ->where("idEntity", "NOT IN", $criteriaER)
+            ->filter([
+                ['idLanguage', '=', AppService::getCurrentIdLanguage()],
             ])->orderBy("name")->all();
     }
 

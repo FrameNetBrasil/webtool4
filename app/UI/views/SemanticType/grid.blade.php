@@ -29,7 +29,7 @@
                             ]],
                             onClickRow: (row) => {
                                 if (row.type === "domain") {
-                                    $("#semanticTypeTree").treegrid("toggle", row.id);
+                                    htmx.ajax("GET", `/domain/${row.idDomain}/edit`, "#editArea");
                                 }
                                 if (row.type === "semanticType") {
                                     htmx.ajax("GET", `/semanticType/${row.idSemanticType}/edit`, "#editArea");
