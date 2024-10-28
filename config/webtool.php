@@ -52,6 +52,7 @@ return [
             'framestructure' => ['Frame', '/frame', 'MASTER', []],
 //            'corpusstructure' => ['Corpus', '/corpus', 'MASTER', []],
             'lexiconstructure' => ['Lexicon', '/lexicon', 'MASTER', []],
+            'sentence' => ['Sentence', '/sentence', 'MASTER', []],
 //            'tqr2structure' => ['TQR2', '/tqr2', 'MASTER', []],
 //            'cxnstructure' => ['Construction', '/cxn', 'MASTER', []],
 //            'lemmastructure' => ['Lemma', '/lemma', 'MASTER', []],
@@ -59,7 +60,7 @@ return [
 //            'qualia' => ['Qualia', '/qualia', 'menu-qualia', 'MASTER', 1, []],
 //            'constrainttype' => ['Constraint Type', '/constrainttype', 'menu-constraint', 'MASTER', 1, []],
 //            'conceptstructure' => ['Concept', '/concept', 'menu-concept', '', 1, []],
-            'decisiontree' => ['Decision tree', '/decisiontree', 'MASTER', []],
+//            'decisiontree' => ['Decision tree', '/decisiontree', 'MASTER', []],
         ]],
         'admin' => ['Admin', '/admin', 'ADMIN', [
             'groupUser' => ['Group/User', '/user', 'ADMIN', []],

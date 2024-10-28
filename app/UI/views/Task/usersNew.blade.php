@@ -15,13 +15,13 @@
         <div class="two fields">
             <div class="field">
                 <div class="ui checkbox">
-                    <input type="checkbox" name="isActive" value="1" class="hidden">
+                    <input type="checkbox" name="isActive" value="1">
                     <label for="isActive">Is Active?</label>
                 </div>
             </div>
             <div class="field">
                 <div class="ui checkbox">
-                    <input type="checkbox" name="isIgnore" value="1" class="hidden">
+                    <input type="checkbox" name="isIgnore" value="1">
                     <label for="isIgnore">Is Ignore?</label>
                 </div>
             </div>

@@ -3,7 +3,7 @@
     $projectIcon = view('components.icon.project')->render();
     $corpusIcon = view('components.icon.corpus')->render();
     $documentIcon = view('components.icon.document')->render();
-    // get projects for documents that has videos
+    // get projects for documents that has images
     $listProjects = Criteria::table("view_document_image as i")
         ->join("view_project_docs as p","i.idDocument","=","p.idDocument")
         ->where("p.idLanguage",\App\Services\AppService::getCurrentIdLanguage())

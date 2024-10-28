@@ -160,6 +160,22 @@ class RelationService extends Controller
         return $result;
     }
 
+    public static function listFEST(int $idFrame)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $relations = Criteria::table("view_relation as r")
+            ->join("view_frameelement as fe","r.idEntity1","=","fe.idEntity")
+            ->join("view_semantictype as st","r.idEntity2","=","st.idEntity")
+            ->select("fe.idFrameElement","fe.name","st.name")
+            ->where("fe.idFrame", $idFrame)
+            ->where("fe.idLanguage", $idLanguage)
+            ->where("st.idLanguage", $idLanguage)
+            ->orderBy("fe.idFrameElement")
+            ->keyBy("idFrameElement")
+            ->all();
+        return $relations;
+    }
+
 
 //    static public function createForIdRelationType(int $idRelationType, int $idEntity1, int $idEntity2, ?int $idEntity3 = null, ?int $idRelation = null): ?int
 //    {

@@ -5,7 +5,8 @@
                 <x-element.frame name="{{$frame->name}}"></x-element.frame>
             </h1>
         </div>
-        <div class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
+        <div
+            class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
             @foreach ($classification as $name => $values)
                 @foreach ($values as $value)
                     <div
@@ -17,54 +18,70 @@
                     </div>
                 @endforeach
             @endforeach
-{{--            <i id="btnDownload" class="icon material text-2xl cursor-pointer" title="Save as PDF">picture_as_pdf</i>--}}
-                <button
-                    id="btnDownload"
-                    class="ui button mini basic secondary"
-                ><i class="icon material">download</i>PDF
-                </button>
+            {{--            <i id="btnDownload" class="icon material text-2xl cursor-pointer" title="Save as PDF">picture_as_pdf</i>--}}
+            <button
+                id="btnDownload"
+                class="ui button mini basic secondary"
+            ><i class="icon material">download</i>PDF
+            </button>
         </div>
     </div>
     <x-card title="Definition" class="frameReport__card frameReport__card--main">
         {!! str_replace('ex>','code>',nl2br($frame->description)) !!}
     </x-card>
     <x-card title="Frame Elements" class="frameReport__card frameReport__card--main">
-        <x-card title="Core" class="frameReport__card  frameReport__card--internal">
-            <table id="feNuclear" class="frameReport__table">
+        <table class="ui celled striped table">
+            <thead>
+            <tr>
+                <th colspan="4">Core</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach ($fe['core'] as $feObj)
+                <tr>
+                    <td class="collapsing">
+                        <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>
+                    </td>
+                    <td class="pl-2">{!! $feObj->description !!}</td>
+                    <td>
+                        @foreach ($feObj->relations as $relation)
+                            <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
+                        @endforeach
+                    </td>
+                    <td class="right aligned collapsing">
+                        {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+
+        @if ($fe['core_unexpressed'])
+            <table class="ui celled striped table">
+                <thead>
+                <tr>
+                    <th colspan="4">Core-Unexpressed</th>
+                </tr>
+                </thead>
                 <tbody>
-                @foreach ($fe['core'] as $feCore)
+                @foreach ($fe['core_unexpressed'] as $feObj)
                     <tr>
+                        <td class="collapsing">
+                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>
+                        </td>
+                        <td class="pl-2">{!! $feObj->description !!}</td>
                         <td>
-                            <span class="color_{{$feCore->idColor}}">{{$feCore->name}}</span>
-                            @foreach ($feCore->relations as $relation)
-                                <br><b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
+                            @foreach ($feObj->relations as $relation)
+                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
                             @endforeach
                         </td>
-                        <td class="pl-2">{!! $feCore->description !!}</td>
+                        <td class="right aligned collapsing">
+                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
-        </x-card>
-        @if ($fe['core_unexpressed'])
-            <x-card title="Core-Unexpressed" class="frameReport__card frameReport__card--internal">
-                <table id="feCoreUnexpressed" class="frameReport__table">
-                    <tbody>
-                    @foreach ($fe['core_unexpressed'] as $feCoreUn)
-                        <tr>
-                            <td>
-                                <span class="color_{{$feCoreUn->idColor}}">{{$feCoreUn->name}}</span>
-                                @foreach ($feCoreUn->relations as $relation)
-                                    <br><b>{{$relation['name']}}
-                                        :&nbsp;</b>{{$relation['relatedFEName']}}
-                                @endforeach
-                            </td>
-                            <td class="pl-2">{!! $feCoreUn->description !!}</td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </x-card>
         @endif
         @if ($fecoreset)
             <x-card title="FE Core set(s)" class="frameReport__card frameReport__card--internal">
@@ -77,24 +94,60 @@
                 </table>
             </x-card>
         @endif
-
-        <x-card title="Non-Core" class="frameReport__card frameReport__card--internal" open="true">
-            <table id="feNonNuclear" class="frameReport__table">
+        @if ($fe['peripheral'])
+            <table class="ui celled striped table">
+                <thead>
+                <tr>
+                    <th colspan="4">Peripheral</th>
+                </tr>
+                </thead>
                 <tbody>
-                @foreach ($fe['noncore'] as $feNN)
+                @foreach ($fe['peripheral'] as $feObj)
                     <tr>
+                        <td class="collapsing">
+                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>
+                        </td>
+                        <td class="pl-2">{!! $feObj->description !!}</td>
                         <td>
-                            <span class="color_{{$feNN->idColor}}">{{$feNN->name}}</span>
-                            @foreach ($feNN->relations as $relation)
-                                <br><b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
+                            @foreach ($feObj->relations as $relation)
+                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
                             @endforeach
                         </td>
-                        <td class="pl-2">{!! $feNN->description !!}</td>
+                        <td class="right aligned collapsing">
+                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
-        </x-card>
+        @endif
+        @if ($fe['extra_thematic'])
+            <table class="ui celled striped table">
+                <thead>
+                <tr>
+                    <th colspan="4">Extra-thematic</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($fe['extra_thematic'] as $feObj)
+                    <tr>
+                        <td class="collapsing">
+                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>
+                        </td>
+                        <td class="pl-2">{!! $feObj->description !!}</td>
+                        <td>
+                            @foreach ($feObj->relations as $relation)
+                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
+                            @endforeach
+                        </td>
+                        <td class="right aligned collapsing">
+                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        @endif
     </x-card>
     <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main" open="true">
         @php($i = 0)
