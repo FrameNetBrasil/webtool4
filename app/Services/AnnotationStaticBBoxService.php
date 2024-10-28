@@ -276,13 +276,11 @@ class AnnotationStaticBBoxService
     {
         $sentences = Criteria::table("sentence")
             ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
-            ->join("view_sentence_timespan as st", "sentence.idSentence", "=", "st.idSentence")
             ->join("document as d", "ds.idDocument", "=", "d.idDocument")
             ->leftJoin("originmm as o", "sentence.idOriginMM", "=", "o.idOriginMM")
             ->where("d.idDocument", $idDocument)
-            ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence", "st.startTime", "st.endTime", "o.origin", "d.idDocument")
-            ->orderBy("st.startTime")
-            ->orderBy("st.endTime")
+            ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence", "o.origin", "d.idDocument")
+            ->orderBy("sentence.idSentence")
             ->limit(1000)
             ->get()->keyBy("idDocumentSentence")->all();
         if (!empty($sentences)) {

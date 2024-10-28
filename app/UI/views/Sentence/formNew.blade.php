@@ -1,8 +1,11 @@
-<x-form id="formNewCorpus" title="New Corpus" :center="false" hx-post="/corpus/new">
+<x-form
+    title="New Lemma"
+    hx-post="/lexicon/lemma/new"
+>
     <x-slot:fields>
         <div class="field">
             <x-text-field
-                label="Name"
+                label="Lemma (format: lemmaName.pos)"
                 id="name"
                 value=""
             ></x-text-field>

@@ -44,6 +44,8 @@ class ReportFrameService
             ->all();
         $core = [];
         $coreun = [];
+        $coreper = [];
+        $coreext = [];
         $noncore = [];
         $feByEntry = [];
         foreach ($fes as $fe) {
@@ -60,6 +62,8 @@ class ReportFrameService
                 'color' => $config[$relation->relationType]['color'],
             ];
         }
+        $semanticTypes = RelationService::listFEST($frame->idFrame);
+        debug($semanticTypes);
         $styles = [];
         foreach ($fes as $fe) {
             $styles[strtolower($fe->name)] = "color_{$fe->idColor}";
@@ -73,6 +77,12 @@ class ReportFrameService
             } else if ($fe->coreType == 'cty_core-unexpressed') {
                 $coreun[] = $fe;
             } else {
+                if ($fe->coreType == 'cty_peripheral') {
+                    $coreper[] = $fe;
+                }
+                if ($fe->coreType == 'cty_extra-thematic') {
+                    $coreext[] = $fe;
+                }
                 $noncore[] = $fe;
             }
         }
@@ -80,7 +90,10 @@ class ReportFrameService
             'styles' => $styles,
             'core' => $core,
             'core_unexpressed' => $coreun,
-            'noncore' => $noncore
+            'peripheral' => $coreper,
+            'extra_thematic' => $coreext,
+            'noncore' => $noncore,
+            'semanticTypes' => $semanticTypes
         ];
     }
 
