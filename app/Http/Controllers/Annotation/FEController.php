@@ -19,7 +19,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
-#[Middleware("master")]
+#[Middleware("auth")]
 class FEController extends Controller
 {
     #[Get(path: '/annotation/fe')]
