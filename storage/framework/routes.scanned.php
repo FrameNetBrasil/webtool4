@@ -2323,7 +2323,7 @@ $router->get('user/listForSelect', [
 $router->get('annotation/fe', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@browse',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2331,7 +2331,7 @@ $router->get('annotation/fe', [
 $router->post('annotation/fe/grid', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@grid',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2339,7 +2339,7 @@ $router->post('annotation/fe/grid', [
 $router->get('annotation/fe/grid/{idDocument}/sentences', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@documentSentences',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2347,7 +2347,7 @@ $router->get('annotation/fe/grid/{idDocument}/sentences', [
 $router->get('annotation/fe/sentence/{idDocumentSentence}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@sentence',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2355,7 +2355,7 @@ $router->get('annotation/fe/sentence/{idDocumentSentence}', [
 $router->get('annotation/fe/annotations/{idSentence}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@annotations',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2363,7 +2363,7 @@ $router->get('annotation/fe/annotations/{idSentence}', [
 $router->get('annotation/fe/as/{idAS}/{token}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@annotationSet',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2371,7 +2371,7 @@ $router->get('annotation/fe/as/{idAS}/{token}', [
 $router->get('annotation/fe/lus/{idDocumentSentence}/{idWord}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@getLUs',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2379,7 +2379,7 @@ $router->get('annotation/fe/lus/{idDocumentSentence}/{idWord}', [
 $router->post('annotation/fe/annotate', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@annotate',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2387,7 +2387,7 @@ $router->post('annotation/fe/annotate', [
 $router->delete('annotation/fe/frameElement', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@deleteFE',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2395,7 +2395,7 @@ $router->delete('annotation/fe/frameElement', [
 $router->post('annotation/fe/create', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@createAS',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2403,7 +2403,7 @@ $router->post('annotation/fe/create', [
 $router->delete('annotation/fe/annotationset/{idAnnotationSet}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@deleteAS',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2899,7 +2899,7 @@ $router->delete('annotation/staticFrameMode2/fes/{idStaticSentenceMM}/{idFrame}'
 $router->get('annotation/fullText', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@browse',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2907,7 +2907,7 @@ $router->get('annotation/fullText', [
 $router->post('annotation/fullText/grid', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@grid',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2915,7 +2915,7 @@ $router->post('annotation/fullText/grid', [
 $router->get('annotation/fullText/grid/{idDocument}/sentences', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@documentSentences',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2923,7 +2923,7 @@ $router->get('annotation/fullText/grid/{idDocument}/sentences', [
 $router->get('annotation/fullText/sentence/{idDocumentSentence}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@sentence',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2931,7 +2931,7 @@ $router->get('annotation/fullText/sentence/{idDocumentSentence}', [
 $router->get('annotation/fullText/annotations/{idSentence}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@annotations',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2939,7 +2939,7 @@ $router->get('annotation/fullText/annotations/{idSentence}', [
 $router->get('annotation/fullText/spans/{idAS}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@getSpans',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2947,7 +2947,7 @@ $router->get('annotation/fullText/spans/{idAS}', [
 $router->get('annotation/fullText/as/{idAS}/{token}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@annotationSet',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2955,7 +2955,7 @@ $router->get('annotation/fullText/as/{idAS}/{token}', [
 $router->get('annotation/fullText/lus/{idDocumentSentence}/{idWord}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@getLUs',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2963,7 +2963,7 @@ $router->get('annotation/fullText/lus/{idDocumentSentence}/{idWord}', [
 $router->post('annotation/fullText/annotate', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@annotate',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2971,7 +2971,7 @@ $router->post('annotation/fullText/annotate', [
 $router->delete('annotation/fullText/label', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteFE',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2979,7 +2979,7 @@ $router->delete('annotation/fullText/label', [
 $router->post('annotation/fullText/create', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@createAS',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2987,7 +2987,7 @@ $router->post('annotation/fullText/create', [
 $router->delete('annotation/fullText/annotationset/{idAnnotationSet}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteAS',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
