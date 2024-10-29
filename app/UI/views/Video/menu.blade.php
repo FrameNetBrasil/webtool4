@@ -2,6 +2,7 @@
 $items = [
     ['formEdit','Edit'],
     ['document','Documents'],
+    ['formUpload','Upload'],
 ];
 @endphp
 <x-objectmenu
