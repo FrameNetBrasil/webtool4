@@ -1848,6 +1848,22 @@ $router->post('video', [
 	'domain' => NULL,
 ]);
 
+$router->get('video/{id}/formUpload', [
+	'uses' => 'App\Http\Controllers\Video\ResourceController@formUpload',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('video/upload', [
+	'uses' => 'App\Http\Controllers\Video\ResourceController@upload',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('video/new', [
 	'uses' => 'App\Http\Controllers\Video\ResourceController@new',
 	'as' => NULL,
