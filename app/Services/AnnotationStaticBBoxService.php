@@ -56,6 +56,23 @@ class AnnotationStaticBBoxService
             ->delete();
     }
 
+    public static function getPrevious(object $document)
+    {
+        $i = Criteria::table("view_document")
+            ->where("idCorpus", "=", $document->idCorpus)
+            ->where("idDocument", "<", $document->idDocument)
+            ->max('idDocument');
+        return $i ?? null;
+    }
+
+    public static function getNext(object $document)
+    {
+        $i = Criteria::table("view_document")
+            ->where("idCorpus", "=", $document->idCorpus)
+            ->where("idDocument", ">", $document->idDocument)
+            ->min('idDocument');
+        return $i ?? null;
+    }
     public static function getObject(int $idStaticObject): object|null
     {
         $idLanguage = AppService::getCurrentIdLanguage();
