@@ -118,6 +118,7 @@ annotation.api = {
     },
     cloneObject: async (params) => {
         params._token = annotation._token;
+        console.log(params);
         let result = null;
         await $.ajax({
             url: "/annotation/dynamicMode/cloneObject",
