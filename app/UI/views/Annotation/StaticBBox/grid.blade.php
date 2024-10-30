@@ -11,7 +11,7 @@
         ->select("p.projectName")
         ->chunkResult("projectName","projectName");
     // get the documents allowed to this user
-    debug($listProjects);
+    //debug($listProjects);
     $taskDocs = Project::getAllowedDocsForUser($listProjects);
     $projects = array_map(fn($item) => [
        'id'=> 'p'.$item->idProject,
