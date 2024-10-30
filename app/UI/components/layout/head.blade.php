@@ -10,7 +10,7 @@
     $currentLanguage = session('currentLanguage');
     $languages = config('webtool.user')[3]['language'][3];
     $profile = config('webtool.user')[3]['profile'][3];
-    $hrefLogin = (env('AUTH0_CLIENT_ID') == 'auth0') ? '/auth0Login' : '/';
+    $hrefLogin = (env('APP_AUTH') == 'auth0') ? '/auth0Login' : '/';
 
 @endphp
 <header id="head" class="flex justify-content-between">
@@ -54,11 +54,11 @@
             </div>
         @else
             <div class="pl-2">
-                <x-button
-                    hx-get="{{$hrefLogin}}"
+                <x-link-button
+                    href="{{$hrefLogin}}"
                     label="Login"
                     color="secondary"
-                ></x-button>
+                ></x-link-button>
             </div>
         @endif
     </div>

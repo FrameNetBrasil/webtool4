@@ -66,7 +66,9 @@ class StaticBBoxController extends Controller
             'corpus' => $corpus,
             'image' => $image,
             'fragment' => 'fe',
-            'comment' => $comment->comment ?? ''
+            'comment' => $comment->comment ?? '',
+            'idPrevious' => AnnotationStaticBBoxService::getPrevious($document),
+            'idNext' => AnnotationStaticBBoxService::getNext($document),
         ]);
     }
 

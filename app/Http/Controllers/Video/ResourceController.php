@@ -6,6 +6,7 @@ use App\Data\ComboBox\QData;
 use App\Data\Video\CreateData;
 use App\Data\Video\SearchData;
 use App\Data\Video\UpdateData;
+use App\Data\Video\UploadData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
@@ -68,6 +69,30 @@ class ResourceController extends Controller
         }
     }
 
+    #[Get(path: '/video/{id}/formUpload')]
+    public function formUpload(string $id)
+    {
+        return view("Video.formUpload",[
+            'video' => Video::byId($id)
+        ]);
+    }
+
+    #[Post(path: '/video/upload')]
+    public function upload(UploadData $data)
+    {
+        try {
+            Criteria::table("video")
+                ->where("idVideo",$data->idVideo)
+                ->update([
+                    "originalFile" => $data->originalFile,
+                    'sha1Name' => $data->sha1Name
+                ]);
+            return $this->renderNotify("success", "Video uploaded.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
     #[Get(path: '/video/new')]
     public function new()
     {
@@ -78,7 +103,6 @@ class ResourceController extends Controller
     public function create(CreateData $data)
     {
         try {
-            debug($data);
             Criteria::function('video_create(?)', [$data->toJson()]);
             $this->trigger("reload-gridVideo");
             return $this->renderNotify("success", "Video created.");

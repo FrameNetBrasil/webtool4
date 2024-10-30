@@ -1,4 +1,3 @@
-
 @php
     $originalWidth = intval($image->width);
     $originalHeight = intval($image->height);
@@ -20,7 +19,7 @@
         <div
             id="staticBBoxAnnotationPane"
             class="staticBBoxAnnotationPane"
-{{--            x-data="$store.doStore"--}}
+            {{--            x-data="$store.doStore"--}}
         >
             <div class="west">
                 <div class="controls">
@@ -29,9 +28,9 @@
                 <div class="image">
                     @include("Annotation.StaticBBox.Panes.imagePane")
                 </div>
-{{--                <div class="comment">--}}
-{{--                    @include("Annotation.StaticBBox.Panes.commentPane")--}}
-{{--                </div>--}}
+                {{--                <div class="comment">--}}
+                {{--                    @include("Annotation.StaticBBox.Panes.commentPane")--}}
+                {{--                </div>--}}
             </div>
             <div class="center">
                 <div class="header flex w-full">
@@ -40,13 +39,23 @@
                     </div>
                     <div class="flex flex-grow-1 justify-content-end">
                         <div class="tag pr-2">
-                            <div class="ui label tag wt-tag-id">
+                            <div class="ui label wt-tag-id">
                                 #{{$idDocument}}
                             </div>
                         </div>
+                        @if($idPrevious)
+                            <x-element.previous
+                                url="/annotation/staticBBox/{{$idPrevious}}"
+                            ></x-element.previous>
+                            <div class="w-1rem">&nbsp;</div>
+                        @endif
+                        @if($idNext)
+                            <x-element.next url="/annotation/staticBBox/{{$idNext}}"
+                            ></x-element.next>
+                        @endif
                     </div>
                 </div>
-                <div class="flex flex-column flex-grow-1 pt-2" >
+                <div class="flex flex-column flex-grow-1 pt-2">
                     <div
                         id="formObject"
                         class="form"
