@@ -1920,7 +1920,7 @@ $router->post('usertask/documents/new', [
 	'domain' => NULL,
 ]);
 
-$router->delete('usertask/{idUserTask}/documents/{idDocument}', [
+$router->delete('usertask/{idUserTask}/documents/{idUserTaskDocument}', [
 	'uses' => 'App\Http\Controllers\Task\UserTaskController@delete',
 	'as' => NULL,
 	'middleware' => ['master'],

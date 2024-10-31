@@ -1,37 +1,6 @@
 @php
-    use App\Database\Criteria;use App\Services\AnnotationFEService;
-    $corpusIcon = view('components.icon.corpus')->render();
-    $documentIcon = view('components.icon.document')->render();
-    if ($search->document == '') {
-        $corpus = Criteria::byFilterLanguage("view_corpus",["name","startswith", $search->corpus])
-            ->orderBy("name")->all();
-        $data = [];
-        foreach($corpus as $c) {
-            $documents = array_map(fn($item) => [
-                    'id'=> $item->idDocument,
-                    'text' => $documentIcon . $item->name,
-                    'state' => 'closed',
-                    'type' => 'document'
-            ], Criteria::byFilterLanguage("view_document",["idCorpus","=", $c->idCorpus])->orderBy("name")->all());
-            $data[] = [
-                'id' => 'c' . $c->idCorpus,
-                'text' => $corpusIcon . $c->name,
-                'state' => 'closed',
-                'type' => 'corpus',
-                'children' => $documents
-            ];
-        }
-    } else {
-        $documents = Criteria::byFilterLanguage("view_document",["name","startswith", $search->document])
-            ->select('idDocument','name','corpusName')
-            ->orderBy("corpusName")->orderBy("name")->all();
-        $data = array_map(fn($item) => [
-           'id'=> $item->idDocument,
-           'text' => $documentIcon . $item->corpusName . ' / ' . $item->name,
-           'state' => 'closed',
-           'type' => 'document'
-        ], $documents);
-    }
+    use App\Services\AnnotationService;
+    $data = AnnotationService::browseCorpusDocumentBySearch($search, []);
 @endphp
 <div
     class="h-full"
