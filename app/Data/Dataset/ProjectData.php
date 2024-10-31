@@ -10,6 +10,7 @@ class ProjectData extends Data
     public function __construct(
         public ?int $idProject = null,
         public ?int $idDataset = null,
+        public ?int $isSource = 0,
     )
     {
     }

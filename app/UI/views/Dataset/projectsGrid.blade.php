@@ -23,6 +23,9 @@
                     </div>
                     <div class="description">
                         {{$project->description}}
+                        @if($project->isSource)
+                            [Source]
+                        @endif
                     </div>
                 </div>
             </div>
