@@ -25,6 +25,7 @@ return [
             'reportlu' => ['LU', '/report/lu', '', []],
             'networkstructure' => ['Network', '/network', 'MASTER', []],
             'reportst' => ['SemanticType', '/report/semanticType', '', []],
+            'reportc5' => ['C5', '/report/c5', '', []],
 //            'cxnreport' => ['Constructions', '/cxn/report', 'cxnreport', '', '', []],
 //            'corpusAnnotationReport' => ['Corpus Panes', '/corpus/report', 'corpusreport', '', 1, []],
         ]],
@@ -64,7 +65,7 @@ return [
         ]],
         'admin' => ['Admin', '/admin', 'ADMIN', [
             'groupUser' => ['Group/User', '/user', 'ADMIN', []],
-            'projectDataset' => ['Project/Dataset', '/dataset', 'ADMIN', []],
+            'projectDataset' => ['Project/Dataset', '/project', 'ADMIN', []],
             'taskUser' => ['Task/User', '/task', 'ADMIN', []],
             'corpusDocument' => ['Corpus/Document', '/corpus', 'ADMIN', []],
             'videoDocument' => ['Video/Document', '/video', 'ADMIN', []],
@@ -162,6 +163,16 @@ return [
         'rel_standsfor' => [
             'direct' => "Stands for",
             'inverse' => "Has as stands_for",
+            'color' => '#9e1fee'
+        ],
+        'rel_partwhole' => [
+            'direct' => "Part of",
+            'inverse' => "Has as part",
+            'color' => '#9e1fee'
+        ],
+        'rel_hasconcept' => [
+            'direct' => "Has concept",
+            'inverse' => "Is concept of",
             'color' => '#9e1fee'
         ],
         'rel_coreset' => [
