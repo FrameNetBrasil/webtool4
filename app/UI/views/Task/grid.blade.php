@@ -35,7 +35,9 @@
                                 class="cursor-pointer"
                                 style="min-width:120px"
                             >
-                                <span class="pl-4">{{$user->name}}</span>
+                                <span class="pl-4">
+                                    #{{$user->idUser}}  {{$user->name}} [{{$user->email}}]
+                                </span>
                             </td>
                         </tr>
                     @endforeach

@@ -15,13 +15,13 @@ class Corpus extends Component
     public function __construct(
         public string $id,
         public string $label,
-        public ?string $value = null,
+        public ?string $value = '',
         public string $placeholder = '',
         public ?string $onChange = '',
         public ?string $onSelect = '',
     )
     {
-        if(!is_null($this->value)) {
+        if($this->value != '') {
             $corpus = CorpusRepository::byId($this->value);
             $this->placeholder = $corpus->name;
         } else {

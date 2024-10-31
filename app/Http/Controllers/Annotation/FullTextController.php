@@ -12,7 +12,6 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
-use App\Repositories\WordForm;
 use App\Services\AnnotationFullTextService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;

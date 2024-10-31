@@ -29,7 +29,7 @@ class Dataset
         return Criteria::table("project")
             ->select('idProject','name')
             ->where('name', 'startswith', $name)
-            ->orderBy('idProject')
+            ->orderBy('name')
             ->keyBy('idProject')
             ->all();
     }
