@@ -1,12 +1,4 @@
 services:
-#    caddy:
-#        image: caddy
-#        restart: unless-stopped
-#        volumes:
-#            - caddy_data:/data
-#            - caddy_config:/config
-#            - ./Caddyfile:/etc/caddy/Caddyfile
-#            - .:/www
     php: &laravel
         build:
             context: .
