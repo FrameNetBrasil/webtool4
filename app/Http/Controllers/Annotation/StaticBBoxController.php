@@ -138,9 +138,8 @@ class StaticBBoxController extends Controller
         debug($data);
         try {
             $idStaticObject = AnnotationStaticBBoxService::cloneObject($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idStaticObject);
+            return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
         } catch (\Exception $e) {
-            debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
         }
     }
