@@ -16,8 +16,8 @@ services:
             - 'host.docker.internal:host-gateway'
 #        ports:
 #            - '${FORWARD_PHP_PORT}:8000'
-#        volumes:
-#            - '.:/www'
+        volumes:
+            - '.:/www'
 #            - ./php.dev.ini:/usr/local/etc/php/conf.d/xdebug.ini
 #        command: php artisan serve --host=0.0.0.0
         user: 'sail'
