@@ -60,7 +60,7 @@
             <x-multiline-field
                 id="text"
                 label="Text"
-                value="{{$sentence?->text}}"
+                :value="$sentence?->text"
                 class="h-4rem"
             ></x-multiline-field>
         </div>
