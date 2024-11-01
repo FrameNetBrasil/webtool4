@@ -11,6 +11,7 @@ use App\Data\Task\UserTaskDocumentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Dataset;
+use App\Repositories\Document;
 use App\Repositories\UserTask;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -64,6 +65,10 @@ class UserTaskController extends Controller
     public function create(UserTaskDocumentData $data)
     {
         try {
+            if (is_null($data->idCorpus)) {
+                $document= Document::byId($data->idDocument);
+                $data->idCorpus = $document->idCorpus;
+            }
             Criteria::table("usertask_document")
                 ->insert($data->toArray());
             $this->trigger("reload-gridUserTaskDocuments");
