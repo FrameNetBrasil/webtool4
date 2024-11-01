@@ -563,7 +563,6 @@ $router->post('annotation/fe/create', [
 $router->delete('annotation/fe/annotationset/{idAnnotationSet}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@deleteAS',
 	'as' => NULL,
-<<<<<<< HEAD
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
@@ -628,8 +627,6 @@ $router->put('annotation/staticFrameMode1/fes/{idStaticSentenceMM}/{idFrame}', [
 $router->delete('annotation/staticFrameMode1/fes/{idStaticSentenceMM}/{idFrame}', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticFrameMode1Controller@annotationSentenceFesDelete',
 	'as' => NULL,
-=======
->>>>>>> 5705a809206b5b845d322ad0f46ab432588d5955
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
