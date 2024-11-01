@@ -16,7 +16,7 @@ class Project
     {
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
-        if (User::isManager($user) || (User::isMemberOf($user,'MASTER'))) {
+        if (User::isManager($user)) {
             $criteria = Criteria::table("view_project_docs");
         } else {
             $criteria = Criteria::table("view_alloweddocs");
@@ -24,7 +24,7 @@ class Project
         }
         return $criteria->where("idLanguage", AppService::getCurrentIdLanguage())
             ->whereIn('projectName', $projects)
-            ->orderBy("projectName")
+            ->select("idCorpus","corpusName","idDocument","documentName")
             ->orderBy("corpusName")
             ->orderBy("documentName")
             ->all();

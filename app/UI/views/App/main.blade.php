@@ -8,14 +8,14 @@
             $idUser = AppService::getCurrentIdUser();
             $user = User::byId($idUser);
             $isManager = User::isManager($user);
-            $rows = Criteria::table("view_usertask_docs as ud")
-                ->join("view_project_docs as pd","pd.idDocument","=","ud.idDocument")
-                ->select("pd.projectName","ud.taskName","ud.name as documentName")
+            $rows = Criteria::table("view_usertask_docs as utd")
+                ->join("view_project_docs as pd","pd.idCorpus","=","utd.idCorpus")
+                ->select("pd.projectName","utd.taskName","utd.documentName","utd.corpusName")
                 ->distinct()
-                ->where("ud.idUser",$idUser)
+                ->where("utd.idUser",$idUser)
                 ->where("pd.idProject","<>", 1)
                 ->where("pd.idLanguage",AppService::getCurrentIdLanguage())
-                ->where("ud.idLanguage",AppService::getCurrentIdLanguage())
+                ->where("utd.idLanguage",AppService::getCurrentIdLanguage())
                 ->all();
             $projects = collect($rows)->groupBy('projectName')->toArray();
         @endphp

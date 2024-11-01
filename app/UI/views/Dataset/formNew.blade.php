@@ -14,14 +14,14 @@
                     value=""
                 ></x-multiline-field>
             </div>
-            <div class="field">
-                <x-combobox.project
-                    id="idProject"
-                    label="Source project"
-                    value="0"
-                >
-                </x-combobox.project>
-            </div>
+{{--            <div class="field">--}}
+{{--                <x-combobox.project--}}
+{{--                    id="idProject"--}}
+{{--                    label="Source project"--}}
+{{--                    value="0"--}}
+{{--                >--}}
+{{--                </x-combobox.project>--}}
+{{--            </div>--}}
     </x-slot:fields>
     <x-slot:buttons>
         <x-submit label="Save"></x-submit>

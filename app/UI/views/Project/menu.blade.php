@@ -1,6 +1,7 @@
 @php
 $items = [
     ['formEdit','Edit'],
+    ['users','Managers'],
 ];
 @endphp
 <x-objectmenu

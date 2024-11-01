@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Data\Dataset\SearchData;
+use App\Data\Project\SearchData;
 use App\Database\Criteria;
 class Dataset
 {
@@ -14,9 +14,8 @@ class Dataset
     public static function listToGrid(SearchData $search): array
     {
         $criteria = Criteria::table("dataset")
-//            ->join("project_dataset","dataset.idDataset","=","project_dataset.idDataset")
-//            ->join("project","project_dataset.idProject","=","project.idProject")
-            ->join("project","dataset.idProject","=","project.idProject")
+            ->join("project_dataset","dataset.idDataset","=","project_dataset.idDataset")
+            ->join("project","project_dataset.idProject","=","project.idProject")
             ->select('project.idProject', 'dataset.idDataset', 'dataset.name')
             ->orderBy('project.idProject')
             ->orderBy('dataset.name');
@@ -30,7 +29,7 @@ class Dataset
         return Criteria::table("project")
             ->select('idProject','name')
             ->where('name', 'startswith', $name)
-            ->orderBy('idProject')
+            ->orderBy('name')
             ->keyBy('idProject')
             ->all();
     }

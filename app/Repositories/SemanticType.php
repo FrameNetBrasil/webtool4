@@ -86,7 +86,7 @@ class SemanticType
         $criteriaER = Criteria::table("view_relation")
             ->select('idEntity1')
             ->where("relationType", "=", 'rel_subtypeof');
-        return Criteria::table("view_semanticType")
+        return Criteria::table("view_semantictype")
             ->select("idSemanticType", "idEntity", "name")
             ->where("idEntity", "NOT IN", $criteriaER)
             ->filter([
@@ -100,7 +100,7 @@ class SemanticType
         $criteriaER = Criteria::table("view_relation")
             ->select('idEntity1')
             ->where("relationType", "=", 'rel_subtypeof');
-        return Criteria::table("view_semanticType")
+        return Criteria::table("view_semantictype")
             ->select("idSemanticType", "idEntity", "name")
             ->where("idEntity", "NOT IN", $criteriaER)
             ->filter([
