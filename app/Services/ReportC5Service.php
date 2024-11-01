@@ -29,7 +29,25 @@ class ReportC5Service
                 ->first();
         }
         $report['concept'] = $concept;
+        $report['relations'] = self::getRelations($concept);
         return $report;
+    }
+
+    public static function getRelations($concept): array
+    {
+        $relations = [];
+        $result = RelationService::listRelationsConcept($concept->idConcept);
+        foreach ($result as $row) {
+            $relationName = $row->relationType . '|' . $row->name;
+            $relations[$relationName][$row->idConceptRelated] = [
+                'idEntityRelation' => $row->idEntityRelation,
+                'idConcept' => $row->idConceptRelated,
+                'name' => $row->related,
+                'color' => $row->color
+            ];
+        }
+        ksort($relations);
+        return $relations;
     }
 
 }
