@@ -16,18 +16,25 @@ class Project
     {
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
+        debug($projects);
         if (User::isManager($user)) {
             $criteria = Criteria::table("view_project_docs as pd")
                 ->where("idLanguage", AppService::getCurrentIdLanguage())
-                ->whereIn('projectName', $projects)
+                ->where("idProject","<>", 1)
                 ->select("idCorpus","corpusName","idDocument","documentName")
                 ->orderBy("corpusName")
-                ->orderBy("documentName")
+                ->orderBy("documentName");
+            if (!empty($projects)) {
+                $criteria = $criteria
+                    ->whereIn('projectName', $projects);
+            }
+            $criteria = $criteria
                 ->all();
         } else {
             $criteria = Criteria::table("view_alloweddocs as ad")
                 ->join("view_project_docs as pd","pd.idCorpus","=","ad.idCorpus")
                 ->where("ad.idUser", $idUser)
+                ->where("pd.idProject","<>", 1)
                 ->where("ad.idLanguage", AppService::getCurrentIdLanguage())
                 ->where("pd.idLanguage", AppService::getCurrentIdLanguage())
                 ->whereIn('pd.projectName', $projects)
