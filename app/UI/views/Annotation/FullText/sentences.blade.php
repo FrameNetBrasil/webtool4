@@ -2,6 +2,7 @@
     use App\Services\AnnotationFEService;
     if (($search->idSentence ?? '') != '') {
         $sentences = AnnotationFEService::getSentence($search->idSentence);
+        debug($sentences);
     }
 @endphp
 <div class="wt-datagrid flex flex-column" style="height:100%">
