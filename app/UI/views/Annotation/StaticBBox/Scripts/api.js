@@ -68,18 +68,18 @@ annotation.api = {
         });
         return result;
     },
-    cloneObject: async (params) => {
+    cloneObject: async (params, callback) => {
         params._token = annotation._token;
-        let result = null;
+        console.log("before clone", params);
         await $.ajax({
             url: "/annotation/staticBBox/cloneObject",
             method: "POST",
             dataType: "json",
             data: params,
             success: (response) => {
-                result = response;
+                console.log("response",response);
+                callback(response);
             }
         });
-        return result;
     },
 };

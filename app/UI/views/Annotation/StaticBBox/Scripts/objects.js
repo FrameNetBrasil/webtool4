@@ -4,26 +4,26 @@ Annotation Objects
 annotation.objects = {
     list: [],
     colors: [
-    "#ffff00",
-    "#f21f26",
-    "#91c879",
-    "#5780d4",
-    "#cdeb2d",
-    "#4a3c44",
-    "#69e2da",
-    "#012aaf",
-    "#f88006",
-    "#53e052",
-    "#199601",
-    "#ff31d5",
-    "#bf5e70",
-    "#84059a",
-    "#999867",
-    "#f8b90d"
+        "#ffff00",
+        "#f21f26",
+        "#91c879",
+        "#5780d4",
+        "#cdeb2d",
+        "#4a3c44",
+        "#69e2da",
+        "#012aaf",
+        "#f88006",
+        "#53e052",
+        "#199601",
+        "#ff31d5",
+        "#bf5e70",
+        "#84059a",
+        "#999867",
+        "#f8b90d"
     ],
-    boxesContainer: document.querySelector('#boxesContainer'),
+    boxesContainer: document.querySelector("#boxesContainer"),
     init: () => {
-        console.error('initing objectManager');
+        console.error("initing objectManager");
         annotation.objects.clearAll();
     },
     add: (annotatedObject) => {
@@ -44,7 +44,7 @@ annotation.objects = {
         //bbox.addClass('bbox');
         let createHandleDiv = (className, content = null) => {
             //console.log('className = ' + className + '  content = ' + content);
-            let handle = document.createElement('div');
+            let handle = document.createElement("div");
             handle.className = className;
             bbox.append(handle);
             if (content !== null) {
@@ -52,20 +52,20 @@ annotation.objects = {
             }
             return handle;
         };
-        let x = createHandleDiv('handle center-drag');
-        let i = createHandleDiv('objectId', annotatedObject.idObject);
+        let x = createHandleDiv("handle center-drag");
+        let i = createHandleDiv("objectId", annotatedObject.idObject);
         bbox.resizable({
             handles: "n, e, s, w",
             onStopResize: (e) => {
                 let position = bbox.position();
-                console.error('resize position', position);
+                console.error("resize position", position);
                 onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
             }
         });
-        i.addEventListener("click", function () {
+        i.addEventListener("click", function() {
             //dynamicStore.dispatch('selectObject', parseInt(this.innerHTML))
             let idObject = parseInt(this.innerHTML);
-            Alpine.store('doStore').selectObject(idObject);
+            Alpine.store("doStore").selectObject(idObject);
             //let currentObject = Alpine.store('doStore').currentObject;
             //htmx.ajax("GET","/annotation/dynamicMode/formObject/" + currentObject.object.idStaticObject + "/" + idObject, "#formObject");
         });
@@ -88,15 +88,15 @@ annotation.objects = {
             },
             onStopDrag: (e) => {
                 let position = bbox.position();
-                console.error('stopdrag position', position);
+                console.error("stopdrag position", position);
                 onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
             }
         });
-        bbox.css('display', 'none');
+        bbox.css("display", "none");
     },
     newBboxElement: () => {
-        let dom = document.createElement('div');
-        dom.className = 'bbox';
+        let dom = document.createElement("div");
+        dom.className = "bbox";
         annotation.objects.boxesContainer.appendChild(dom);
         return dom;
     },
@@ -112,20 +112,20 @@ annotation.objects = {
             }
             annotation.objects.add(annotatedObject);
             annotation.objects.interactify(
-                    annotatedObject,
-                    (x, y, width, height) => {
-                        annotatedObject.bbox = new BoundingBox(x, y, width, height);
-                        annotation.api.updateBBox({
-                            idStaticObject: annotatedObject.object.idStaticObject,
-                            bbox: annotatedObject.getScaledBBox()
-                        });
-                    }
+                annotatedObject,
+                (x, y, width, height) => {
+                    annotatedObject.bbox = new BoundingBox(x, y, width, height);
+                    annotation.api.updateBBox({
+                        idStaticObject: annotatedObject.object.idStaticObject,
+                        bbox: annotatedObject.getScaledBBox()
+                    });
+                }
             );
         }
-        console.log('objects annotated');
+        console.log("objects annotated");
     },
-    clearBBoxes: function () {
-        $('.bbox').css("display", "none");
+    clearBBoxes: function() {
+        $(".bbox").css("display", "none");
     },
     // drawImageObject: function () {
     //     // desenha a box do objeto atual
@@ -142,11 +142,11 @@ annotation.objects = {
     //         manager.messager('error', e.message);
     //     }
     // },
-    drawBoxes: function () {
+    drawBoxes: function() {
         // show/hide todas as boxes
-        let state = Alpine.store('doStore').showHideBoxesState;
-        if (state === 'hide') {
-            $('.bbox').css("display", "none");
+        let state = Alpine.store("doStore").showHideBoxesState;
+        if (state === "hide") {
+            $(".bbox").css("display", "none");
         } else {
             let objects = annotation.objects.list;
             console.log(objects);
@@ -176,27 +176,27 @@ annotation.objects = {
     creatingObject() {
         annotation.drawBox.init();
         console.log("creating new object");
-        document.querySelector('#canvas').style.cursor = 'crosshair';
-        $("#canvas").on('mousedown', function (e) {
+        document.querySelector("#canvas").style.cursor = "crosshair";
+        $("#canvas").on("mousedown", function(e) {
             annotation.drawBox.handleMouseDown(e);
         });
-        $("#canvas").on('mousemove', function (e) {
+        $("#canvas").on("mousemove", function(e) {
             annotation.drawBox.handleMouseMove(e);
         });
-        $("#canvas").on('mouseup', function (e) {
+        $("#canvas").on("mouseup", function(e) {
             annotation.drawBox.handleMouseUp(e);
         });
-        $("#canvas").on('mouseout', function (e) {
+        $("#canvas").on("mouseout", function(e) {
             annotation.drawBox.handleMouseOut(e);
         });
     },
     async createdObject() {
         console.log("new box created");
-        document.querySelector('#canvas').style.cursor = 'default';
-        $("#canvas").off('mousedown');
-        $("#canvas").off('mousemove');
-        $("#canvas").off('mouseup');
-        $("#canvas").off('mouseout');
+        document.querySelector("#canvas").style.cursor = "default";
+        $("#canvas").off("mousedown");
+        $("#canvas").off("mousemove");
+        $("#canvas").off("mouseup");
+        $("#canvas").off("mouseout");
         console.log(annotation.drawBox.box);
         let tempObject = {
             bbox: new BoundingBox(
@@ -207,26 +207,26 @@ annotation.objects = {
             ),
             dom: annotation.objects.newBboxElement()
         };
-        console.log('tempObject',tempObject);
+        console.log("tempObject", tempObject);
         let data = await annotation.objects.createNewObject(tempObject);
-        console.log('after createNewObject', data);
+        console.log("after createNewObject", data);
     },
     initializeNewObject: (annotatedObject) => {
         annotatedObject.object = {
             idFrame: -1,
-            frame: '',
+            frame: "",
             idFE: -1,
-            fe: '',
+            fe: ""
         };
         annotatedObject.scale = annotation.dimensions.scale;
         annotatedObject.visible = true;
         annotatedObject.hidden = false;
         annotatedObject.locked = false;
-        annotatedObject.color = 'white';
+        annotatedObject.color = "white";
     },
     createNewObject: async (tempObject) => {
         try {
-            console.log('createNewObject', tempObject);
+            console.log("createNewObject", tempObject);
             let annotatedObject = new StaticBBoxObject(null);
             annotatedObject.dom = tempObject.dom;
             annotatedObject.bbox = tempObject.bbox;
@@ -234,27 +234,27 @@ annotation.objects = {
             annotation.objects.interactify(
                 annotatedObject,
                 (x, y, width, height, idBoundingBox) => {
-                    console.error('interactify', x, y, width, height);
+                    console.error("interactify", x, y, width, height);
                     annotatedObject.bbox = new BoundingBox(x, y, width, height);
                     annotation.objects.saveRawObject(annotatedObject);
                 }
             );
-            console.log('##### creating newObject');
+            console.log("##### creating newObject");
             let params = {
                 idStaticObject: null,
                 idFrame: null,
                 idFrameElement: null,
                 idLU: null
             };
-            console.log('createNewObject', annotatedObject);
+            console.log("createNewObject", annotatedObject);
             let data = await annotation.objects.saveObject(annotatedObject, params);
-            Alpine.store('doStore').selectObjectByIdStaticObject(data.idStaticObject);
-            Alpine.store('doStore').newObjectState = 'showing';
+            Alpine.store("doStore").selectObjectByIdStaticObject(data.idStaticObject);
+            Alpine.store("doStore").newObjectState = "showing";
             manager.notify("success", "New object created.");
             return data;
         } catch (e) {
-            Alpine.store('doStore').newObjectState = 'none';
-            manager.notify('error', e.message);
+            Alpine.store("doStore").newObjectState = "none";
+            manager.notify("error", e.message);
             console.log(e.message);
             return null;
         }
@@ -263,15 +263,15 @@ annotation.objects = {
         params.idDocument = annotation.document.idDocument;
         params.idStaticObject = currentObject.idStaticObject;
         params.bbox = currentObject.getScaledBBox();
-        console.log('saveObject', currentObject, params);
+        console.log("saveObject", currentObject, params);
         let data = await annotation.api.updateObject(params);
-        console.log('object updated', data);
-        await Alpine.store('doStore').updateObjectList();
+        console.log("object updated", data);
+        await Alpine.store("doStore").updateObjectList();
         return data;
     },
     saveRawObject: async (currentObject) => {
         try {
-            console.log('saving raw object #', currentObject.idObject);
+            console.log("saving raw object #", currentObject.idObject);
             let params = {
                 idDocument: annotation.document.idDocument,
                 idStaticObject: currentObject.object.idStaticObject,
@@ -279,58 +279,65 @@ annotation.objects = {
                 idFrameElement: currentObject.object.idFrameElement,
                 idLU: currentObject.object.idLU,
                 origin: 2,
-                frames: [],
+                frames: []
             };
             annotation.objects.saveObject(currentObject, params);
         } catch (e) {
-            Alpine.store('doStore').newObjectState = 'none';
+            Alpine.store("doStore").newObjectState = "none";
             console.log(e.message);
             return null;
         }
 
     },
     updateObject: async (data) => {
-        let currentObject = Alpine.store('doStore').currentObject;
+        let currentObject = Alpine.store("doStore").currentObject;
         let params = {
             idDocument: annotation.document.idDocument,
             idStaticObject: currentObject.object.idStaticObject,
             idFrameElement: parseInt(data.idFrameElement),
-            idLU: parseInt(data.idLU),
+            idLU: parseInt(data.idLU)
         };
         await annotation.api.updateObject(params);
-        await Alpine.store('doStore').updateObjectList();
-        Alpine.store('doStore').selectObject(currentObject.idObject);
+        await Alpine.store("doStore").updateObjectList();
+        Alpine.store("doStore").selectObject(currentObject.idObject);
     },
     updateObjectAnnotation: async (data) => {
-        let currentObject = Alpine.store('doStore').currentObject;
+        let currentObject = Alpine.store("doStore").currentObject;
         let params = {
             idDocument: annotation.document.idDocument,
             idStaticObject: currentObject.object.idStaticObject,
             idFrameElement: parseInt(data.idFrameElement),
-            idLU: data.idLU ? parseInt(data.idLU) : null,
+            idLU: data.idLU ? parseInt(data.idLU) : null
         };
         await annotation.api.updateObjectAnnotation(params);
-        await Alpine.store('doStore').updateObjectList();
-        Alpine.store('doStore').selectObject(currentObject.idObject);
+        await Alpine.store("doStore").updateObjectList();
+        Alpine.store("doStore").selectObject(currentObject.idObject);
     },
     deleteObject: async (idStaticObject) => {
-        console.log('deleting', idStaticObject);
+        console.log("deleting", idStaticObject);
         manager.confirmDelete(
-            "Removing object #" + idStaticObject + '.',
+            "Removing object #" + idStaticObject + ".",
             "/annotation/staticBBox/" + idStaticObject,
-            async () => await Alpine.store('doStore').updateObjectList()
+            async () => await Alpine.store("doStore").updateObjectList()
         );
     },
     cloneCurrentObject: async () => {
-        let currentObject = Alpine.store('doStore').currentObject;
-        let params = {
-            idDocument: annotation.document.idDocument,
-            idStaticObject: currentObject.object.idStaticObject,
-        };
-        let object = await annotation.api.cloneObject(params);
-        await Alpine.store('doStore').updateObjectList();
-        manager.notify("success", "Cloned object : #" + object.idStaticObject);
-        Alpine.store('doStore').selectObjectByIdStaticObject(object.idStaticObject);
-    },
+        try {
+            let currentObject = Alpine.store("doStore").currentObject;
+            let params = {
+                idDocument: annotation.document.idDocument,
+                idStaticObject: currentObject.object.idStaticObject
+            };
+            annotation.api.cloneObject(params, async (object) => {
+                console.log("after clone", object);
+                await Alpine.store("doStore").updateObjectList();
+                manager.notify("success", "Cloned object : #" + object.idStaticObject);
+                Alpine.store("doStore").selectObjectByIdStaticObject(object.idStaticObject);
+            });
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    }
 
 };

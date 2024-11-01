@@ -84,7 +84,7 @@ class ResourceController extends Controller
     {
         try {
             User::deauthorize($id);
-            $this->trigger("reload-gridUser");
+//            $this->trigger("reload-gridUser");
             return $this->renderNotify("success", "User deauthorized.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
