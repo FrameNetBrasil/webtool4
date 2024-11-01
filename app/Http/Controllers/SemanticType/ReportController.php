@@ -18,108 +18,72 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 class ReportController extends Controller
 {
 
-//    #[Post(path: '/report/semanticType/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        $data = $this->listForTree($search);
-//        $view = view("SemanticType.grid",[
-//            'search' => $search,
-//            'data' => $data,
-//        ]);
-//        return $view;
-//    }
-
-    #[Get(path: '/report/semanticType/{idSemanticType?}/{lang?}')]
-    public function report(int|string $idSemanticType = '', string $lang = '')
+    #[Get(path: '/report/semanticType')]
+    public function main(int|string $idConcept = '', string $lang = '')
     {
-        $search = session('searchFrame') ?? SearchData::from();
-        $data = $this->listForTree($search);
-        if (($idSemanticType == 'list') || ($idSemanticType == '')) {
-            return view("SemanticType.Report.main", [
-                'search' => $search,
-                'idSemanticType' => null,
-                'data' => $data,
-            ]);
-        } else {
-            $data = ReportSTService::report($idSemanticType, $lang);
-            $data['search'] = $search;
-            $data['idSemanticType'] = $idSemanticType;
-            $data['data'] = $data;
-            return view("SemanticType.Report.report", $data);
-        }
+        $search = session('searchSemanticType') ?? SearchData::from();
+        $data = [];
+        return view("SemanticType.Report.main", [
+            'search' => $search,
+            'idSemanticType' => null,
+            'data' => $data,
+        ]);
     }
 
-    private function listForTree(SearchData $search)
+    #[Get(path: '/report/semanticType/data')]
+    public function data(SearchData $search)
     {
         $domainIcon = view('components.icon.domain')->render();
         $stIcon = view('components.icon.semantictype')->render();
         $tree = [];
         if ($search->semanticType != '') {
-            $st = Criteria::table("view_semanticType")
-                ->select("idSemanticType", "idEntity", "name")
-                ->where("name","startswith",'@'.$search->semanticType)
-                ->where('idLanguage', '=', AppService::getCurrentIdLanguage())
-                ->orderBy("name")->all();
-            foreach ($st as $row) {
-                $node = [];
-                $node['id'] = 't' . $row->idEntity;
-                $node['idSemanticType'] = $row->idSemanticType;
-                $node['type'] = 'semanticType';
-                $node['text'] = $stIcon . $row->name;
-                $node['state'] = 'closed';
-                $node['children'] = $this->getChildren($row->idEntity);
-                $tree[] = $node;
-            }
+            $semanticTypes = SemanticType::listTree($search->semanticType);
         } else {
-            $domains = SemanticType::listDomains();
-            foreach ($domains as $row) {
-                $count = Criteria::table("semantictype")
-                    ->where("idDomain",$row->idDomain)
-                    ->count();
-                if ($count > 0) {
-                    $node = [];
-                    $node['id'] = $row->idDomain;
-                    $node['idDomain'] = $row->idDomain;
-                    $node['type'] = 'domain';
-                    $node['text'] = $domainIcon . $row->name;
-                    $node['state'] = 'closed';
-                    $roots = SemanticType::listRootByDomain($row->idDomain);
-                    $children = [];
-                    foreach ($roots as $root) {
-                        $n = [];
-                        $n['id'] = $root->idEntity;
-                        $n['idSemanticType'] = $root->idSemanticType;
-                        $n['type'] = 'semanticType';
-                        $n['text'] = $stIcon . $root->name;
-                        $n['state'] = 'closed';
-                        $n['children'] = $this->getChildren($root->idEntity);
-                        $children[] = $n;
-                    }
-                    $node['children'] = $children;
-                    $tree[] = $node;
+            if ($search->id == '') {
+                $domains = SemanticType::listDomains();
+                foreach ($domains as $row) {
+                    $count = Criteria::table("semantictype")
+                        ->where("idDomain", $row->idDomain)
+                        ->count();
+                    $n = [];
+                    $n['id'] = 'd' . $row->idDomain;
+                    $n['idDomain'] = $row->idDomain;
+                    $n['type'] = 'domain';
+                    $n['text'] = $domainIcon . $row->name;
+                    $n['state'] = ($count > 0) ? 'closed' : 'open';
+                    $n['children'] = [];
+                    $tree[] = $n;
                 }
+                return $tree;
             }
+            if ($search->idDomain > 0) {
+                $semanticTypes = SemanticType::listRootByDomain($search->idDomain);
+            } else if ($search->idSemanticType > 0) {
+                $semanticTypes = SemanticType::listChildren($search->idSemanticType);
+            }
+        }
+        foreach ($semanticTypes as $semanticType) {
+            $n = [];
+            $n['id'] = 't' . $semanticType->idEntity;
+            $n['idSemanticType'] = $semanticType->idSemanticType;
+            $n['type'] = 'semanticType';
+            $n['text'] = $stIcon . $semanticType->name;
+            $n['state'] = ($semanticType->n > 0) ? 'closed' : 'open';
+            $n['children'] = [];
+            $tree[] = $n;
         }
         return $tree;
     }
 
-    private function getChildren(int $idEntity): array
+    #[Get(path: '/report/semanticType/{idSemanticType?}/{lang?}')]
+    public function report(int|string $idSemanticType = '', string $lang = '')
     {
-        $stIcon = view('components.icon.semantictype')->render();
-        $children = [];
-        $st = SemanticType::listChildren($idEntity);
-        foreach ($st as $row) {
-            $n = [];
-            $n['id'] = $row->idEntity;
-            $n['idSemanticType'] = $row->idSemanticType;
-            $n['type'] = 'semanticType';
-            $n['text'] = $stIcon . $row->name;
-            $n['state'] = 'closed';
-            $n['children'] = $this->getChildren($row->idEntity);;
-            $children[] = $n;
-        }
-        return $children;
+        $search = session('searchSemanticType') ?? SearchData::from();
+        $data = ReportSTService::report($idSemanticType, $lang);
+        $data['search'] = $search;
+        $data['idSemanticType'] = $idSemanticType;
+        $data['data'] = $data;
+        return view("SemanticType.Report.report", $data);
     }
-
 
 }
