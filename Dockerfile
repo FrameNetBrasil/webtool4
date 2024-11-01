@@ -8,7 +8,7 @@ RUN addgroup -g $WWWGROUP www \
     && touch /var/log/laravel/laravel.log \
     && chown -R sail:www /var/log/laravel
 
-COPY . /www
+#COPY . /www
 #RUN chown -R sail:www /www
 
 USER sail
