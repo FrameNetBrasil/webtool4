@@ -73,7 +73,7 @@ class ReportController extends Controller
         } else {
             $domains = SemanticType::listDomains();
             foreach ($domains as $row) {
-                $count = Criteria::table("semanticType")
+                $count = Criteria::table("semantictype")
                     ->where("idDomain",$row->idDomain)
                     ->count();
                 if ($count > 0) {

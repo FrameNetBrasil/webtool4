@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Data\Project\SearchData;
 use App\Data\Project\CreateData;
 use App\Data\Project\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Repositories\Dataset;
 use App\Repositories\Project;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -16,36 +18,30 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware("master")]
 class ResourceController extends Controller
 {
-//    #[Get(path: '/project')]
-//    public function resource()
-//    {
-//        return view("Project.resource");
-//    }
+    #[Get(path: '/project')]
+    public function resource()
+    {
+        return view("Project.resource");
+    }
+
+    #[Get(path: '/project/grid/{fragment?}')]
+    #[Post(path: '/project/grid/{fragment?}')]
+    public function grid(SearchData $search, ?string $fragment = null)
+    {
+        $datasets = Dataset::listToGrid($search);
+        $projects = Dataset::listProjectForGrid($search?->project ?? '');
+        $view = view("Project.grid",[
+            'projects' => $projects,
+            'datasets' => $datasets
+        ]);
+        return (is_null($fragment) ? $view : $view->fragment('search'));
+    }
 
     #[Get(path: '/project/new')]
     public function new()
     {
         return view("Project.formNew");
     }
-
-//    #[Get(path: '/project/grid/{fragment?}')]
-//    #[Post(path: '/project/grid/{fragment?}')]
-//    public function grid(SearchData $search, ?string $fragment = null)
-//    {
-//        debug($search);
-//        $users = User::listToGrid($search);
-//        //debug($users);
-//        $groups = array_filter(
-//            User::listGroupForGrid($search?->group ?? ''),
-//            fn($key) => isset($users[$key]),
-//            ARRAY_FILTER_USE_KEY
-//        );
-//        $view = view("Project.grid",[
-//            'groups' => $groups,
-//            'users' => $users
-//        ]);
-//        return (is_null($fragment) ? $view : $view->fragment('search'));
-//    }
 
     #[Get(path: '/project/{id}/edit')]
     public function edit(string $id)
@@ -95,8 +91,6 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
-            //project::delete($id);
-            //Criteria::function('user_delete(?)', [$id]);
             return $this->clientRedirect("/project");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());

@@ -288,6 +288,70 @@ $router->get('video/listForSelect', [
 	'domain' => NULL,
 ]);
 
+$router->get('project/{id}/users', [
+	'uses' => 'App\Http\Controllers\Project\UserController@users',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('project/{id}/users/formNew', [
+	'uses' => 'App\Http\Controllers\Project\UserController@usersFormNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('project/{id}/users/grid', [
+	'uses' => 'App\Http\Controllers\Project\UserController@usersGrid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('project/{id}/users/new', [
+	'uses' => 'App\Http\Controllers\Project\UserController@projectsNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('project/{id}/users/{idUser}', [
+	'uses' => 'App\Http\Controllers\Project\UserController@delete',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('project', [
+	'uses' => 'App\Http\Controllers\Project\ResourceController@resource',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('project/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Project\ResourceController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('project/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Project\ResourceController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('project/new', [
 	'uses' => 'App\Http\Controllers\Project\ResourceController@new',
 	'as' => NULL,
@@ -1920,7 +1984,7 @@ $router->post('usertask/documents/new', [
 	'domain' => NULL,
 ]);
 
-$router->delete('usertask/{idUserTask}/documents/{idDocument}', [
+$router->delete('usertask/{idUserTask}/documents/{idUserTaskDocument}', [
 	'uses' => 'App\Http\Controllers\Task\UserTaskController@delete',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -2780,6 +2844,38 @@ $router->delete('qualia/semanticTypes/{idEntityRelation}', [
 	'uses' => 'App\Http\Controllers\Qualia\QualiaController@deleteSemanticType',
 	'as' => NULL,
 	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/c5', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@main',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/c5/data', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@data',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/c5/{idConcept}/{lang?}', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@report',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('report/c5/search', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@search',
+	'as' => NULL,
+	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);

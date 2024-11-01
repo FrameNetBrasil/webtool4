@@ -1,31 +1,27 @@
 <div
-    id="gridDatasetProjects"
     class="grid"
-    hx-trigger="reload-gridDatasetProjects from:body"
+    hx-trigger="reload-gridManagers from:body"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/dataset/{{$idDataset}}/projects/grid"
+    hx-get="/project/{{$idProject}}/users/grid"
 >
-    @foreach($projects as $project)
+    @foreach($managers as $manager)
         <div class="col-4">
             <div class="ui card w-full">
                 <div class="content">
                     <span class="right floated">
                         <x-delete
                             title="delete Project"
-                            onclick="manager.confirmDelete(`Removing association to Project '{{$project->name}}'.`, '/dataset/{{$idDataset}}/projects/{{$project->idProject}}')"
+                            onclick="manager.confirmDelete(`Removing manager '{{$manager->name}}' from project.`, '/project/{{$idProject}}/users/{{$manager->idUser}}')"
                         ></x-delete>
                     </span>
                     <div
                         class="header"
                     >
-                        {{$project->name}}
+                        #{{$manager->idUser}}
                     </div>
                     <div class="description">
-                        {{$project->description}}
-                        @if($project->isSource)
-                            [Source]
-                        @endif
+                        {{$manager->name}}
                     </div>
                 </div>
             </div>

@@ -50,7 +50,7 @@ class UserTaskController extends Controller
     public function documentsGrid(string $id)
     {
         $documents = Criteria::table("view_usertask_docs as utd")
-            ->select("utd.idDocument","utd.name")
+            ->select("utd.idUserTaskDocument","utd.idDocument","utd.documentName","utd.idCorpus","utd.corpusName")
             ->where("utd.idUserTask", $id)
             ->where("utd.idLanguage","=", AppService::getCurrentIdLanguage())
             ->all();
@@ -73,13 +73,12 @@ class UserTaskController extends Controller
         }
     }
 
-    #[Delete(path: '/usertask/{idUserTask}/documents/{idDocument}')]
-    public function delete(string $idUserTask, string $idDocument)
+    #[Delete(path: '/usertask/{idUserTask}/documents/{idUserTaskDocument}')]
+    public function delete(string $idUserTask, string $idUserTaskDocument)
     {
         try {
             Criteria::table("usertask_document")
-                ->where("idUserTask", $idUserTask)
-                ->where("idDocument", $idDocument)
+                ->where("idUserTaskDocument", $idUserTaskDocument)
                 ->delete();
             $this->trigger("reload-gridUserTaskDocuments");
             return $this->renderNotify("success", "Document removed from UserTask.");

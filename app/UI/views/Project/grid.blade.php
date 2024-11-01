@@ -1,43 +1,41 @@
 <div
     class="h-full"
-    hx-trigger="reload-gridTask from:body"
+    hx-trigger="reload-gridProject from:body"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/task/grid"
+    hx-get="/project/grid"
 >
     <div class="relative h-full overflow-auto">
         <table class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
             <tbody>
             @fragment('search')
-                @foreach($tasks as $idTask => $task)
+                @foreach($projects as $idProject => $project)
                     <tr
                         hx-target="#editArea"
                         hx-swap="innerHTML"
                         class="subheader"
                     >
                         <td
-                            hx-get="/task/{{$idTask}}/edit"
+                            hx-get="/project/{{$idProject}}/edit"
                             class="cursor-pointer"
                             style="min-width:120px"
                             colspan="3"
                         >
-                            <span class="text-blue-900 font-bold">{{$task->name}}</span>
+                            <span class="text-blue-900 font-bold">P: {{$project->name}}</span>
                         </td>
                     </tr>
-                    @php($usersForTask = $users[$idTask] ?? [])
-                    @foreach($usersForTask as $user)
+                    @php($datasetForProject = $datasets[$idProject] ?? [])
+                    @foreach($datasetForProject as $dataset)
                         <tr
                             hx-target="#editArea"
                             hx-swap="innerHTML"
                         >
                             <td
-                                hx-get="/usertask/{{$user->idUserTask}}/edit"
+                                hx-get="/dataset/{{$dataset->idDataset}}/edit"
                                 class="cursor-pointer"
                                 style="min-width:120px"
                             >
-                                <span class="pl-4">
-                                    #{{$user->idUser}}  {{$user->name}} [{{$user->email}}]
-                                </span>
+                                <span class="pl-4">{{$dataset->name}}</span>
                             </td>
                         </tr>
                     @endforeach

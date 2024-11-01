@@ -2,44 +2,20 @@
 
 namespace App\Repositories;
 
-//use App\Data\SemanticType\CreateData;
-//use App\Data\SemanticType\SearchData;
-//use App\Services\AppService;
-//use App\Services\RelationService;
-//use Orkester\Persistence\Enum\Key;
-//use Orkester\Persistence\Enum\Type;
-//use Orkester\Persistence\Map\ClassMap;
-//use Orkester\Persistence\Repository;
-
 use App\Database\Criteria;
 use App\Services\AppService;
+use Illuminate\Support\Facades\DB;
 
-class SemanticType
+class Concept
 {
     public static function byId(int $id): object
     {
-        return Criteria::byFilterLanguage("view_semantictype", ['idSemanticType', '=', $id])->first();
+        return Criteria::byFilterLanguage("view_concept", ['idConcept', '=', $id])->first();
     }
     public static function byIdEntity(int $idEntity): object
     {
-        return Criteria::byFilterLanguage("view_semantictype", ['idEntity', '=', $idEntity])->first();
+        return Criteria::byFilterLanguage("view_concept", ['idEntity', '=', $idEntity])->first();
     }
-    public static function listFrameDomain(): array
-    {
-        return Criteria::byFilterLanguage("view_semantictype", ['entry', 'startswith', 'sty\_fd'])
-            ->select('idSemanticType', 'name')
-            ->orderBy('name')
-            ->all();
-    }
-
-    public static function listFrameType()
-    {
-        return Criteria::byFilterLanguage("view_semantictype", ['entry', 'startswith', 'sty\_ft'])
-            ->select('idSemanticType', 'name')
-            ->orderBy('name')
-            ->all();
-    }
-
     public static function listRelations(int $idEntity)
     {
         return Criteria::table("view_relation")
@@ -51,48 +27,39 @@ class SemanticType
             ])->orderBy("view_semantictype.name")->all();
     }
 
+    public static function listTree(string $concept)
+    {
+        $rows = Criteria::table("view_concept")
+            ->filter([
+                ["view_concept.name", "startswith", $concept],
+                ["view_concept.idLanguage", "=", AppService::getCurrentIdLanguage()]
+            ])->select("view_concept.idConcept", "view_concept.idEntity", "view_concept.name")
+            ->orderBy("view_concept.name")->all();
+        foreach($rows as $row) {
+            $row->n = Criteria::table("view_relation")
+                ->where("view_relation.idEntity2", "=", $row->idEntity)
+                ->where("view_relation.relationType", "=", "rel_subtypeof")
+                ->count();
+        }
+        return $rows;
+    }
     public static function listChildren(int $idEntity)
     {
-        return Criteria::table("view_relation")
-            ->join("view_semantictype", "view_relation.idEntity1", "=", "view_semantictype.idEntity")
+        $rows = Criteria::table("view_relation")
+            ->join("view_concept", "view_relation.idEntity1", "=", "view_concept.idEntity")
             ->filter([
                 ["view_relation.idEntity2", "=", $idEntity],
                 ["view_relation.relationType", "=", "rel_subtypeof"],
-                ["view_semantictype.idLanguage", "=", AppService::getCurrentIdLanguage()]
-            ])->orderBy("view_semantictype.name")->all();
-    }
-
-    public static function listTree()
-    {
-        return Criteria::table("view_relation")
-            ->join("view_semantictype", "view_relation.idEntity1", "=", "view_semantictype.idEntity")
-            ->filter([
-                ["view_relation.idEntity2", "=", $idEntity],
-                ["view_relation.relationType", "=", "rel_subtypeof"],
-                ["view_semantictype.idLanguage", "=", AppService::getCurrentIdLanguage()]
-            ])->orderBy("view_semantictype.name")->all();
-    }
-
-    public static function listDomains(): array
-    {
-        return Criteria::table("view_domain")
-            ->select("idDomain","name")
-            ->where("idLanguage", "=", AppService::getCurrentIdLanguage())
-            ->orderBy("name")->get()->keyBy("idDomain")->all();
-    }
-
-    public static function listRootByDomain(int $idDomain) : array
-    {
-        $criteriaER = Criteria::table("view_relation")
-            ->select('idEntity1')
-            ->where("relationType", "=", 'rel_subtypeof');
-        return Criteria::table("view_semantictype")
-            ->select("idSemanticType", "idEntity", "name")
-            ->where("idEntity", "NOT IN", $criteriaER)
-            ->filter([
-                ['idLanguage', '=', AppService::getCurrentIdLanguage()],
-                ['idDomain', '=', $idDomain],
-            ])->orderBy("name")->all();
+                ["view_concept.idLanguage", "=", AppService::getCurrentIdLanguage()]
+            ])->select("view_concept.idConcept", "view_concept.idEntity", "view_concept.name")
+            ->orderBy("view_concept.name")->all();
+        foreach($rows as $row) {
+            $row->n = Criteria::table("view_relation")
+                ->where("view_relation.idEntity2", "=", $row->idEntity)
+                ->where("view_relation.relationType", "=", "rel_subtypeof")
+                ->count();
+        }
+        return $rows;
     }
 
     public static function listRoots() : array
@@ -100,12 +67,19 @@ class SemanticType
         $criteriaER = Criteria::table("view_relation")
             ->select('idEntity1')
             ->where("relationType", "=", 'rel_subtypeof');
-        return Criteria::table("view_semantictype")
-            ->select("idSemanticType", "idEntity", "name")
-            ->where("idEntity", "NOT IN", $criteriaER)
+        $rows = Criteria::table("view_concept")
+            ->where("view_concept.idEntity", "NOT IN", $criteriaER)
             ->filter([
-                ['idLanguage', '=', AppService::getCurrentIdLanguage()],
-            ])->orderBy("name")->all();
+                ['view_concept.idLanguage', '=', AppService::getCurrentIdLanguage()],
+            ])->select("view_concept.idConcept", "view_concept.idEntity", "view_concept.name")
+            ->orderBy("view_concept.name")->all();
+        foreach($rows as $row) {
+            $row->n = Criteria::table("view_relation")
+                ->where("view_relation.idEntity2", "=", $row->idEntity)
+                ->where("view_relation.relationType", "=", "rel_subtypeof")
+                ->count();
+        }
+        return $rows;
     }
 
 //    public static function getById(int $id): object

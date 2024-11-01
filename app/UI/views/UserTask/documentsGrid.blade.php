@@ -10,20 +10,37 @@
         <div class="col-4">
             <div class="ui card w-full">
                 <div class="content">
-                    <span class="right floated">
+                    @if($document->idDocument)
+                        <span class="right floated">
                         <x-delete
-                            title="delete Project"
-                            onclick="manager.confirmDelete(`Removing document '{{$document->name}}' from user.`, '/usertask/{{$idUserTask}}/documents/{{$document->idDocument}}')"
+                            title="delete Document"
+                            onclick="manager.confirmDelete(`Removing document '{{$document->documentName}}' from user.`, '/usertask/{{$idUserTask}}/documents/{{$document->idUserTaskDocument}}')"
                         ></x-delete>
                     </span>
-                    <div
-                        class="header"
-                    >
-                        #{{$document->idDocument}}
-                    </div>
-                    <div class="description">
-                        {{$document->name}}
-                    </div>
+                        <div
+                            class="header"
+                        >
+                            #{{$document->idUserTaskDocument}} - Document
+                        </div>
+                        <div class="description">
+                            [#{{$document->idDocument}}] {{$document->documentName}}
+                        </div>
+                    @else
+                        <span class="right floated">
+                            <x-delete
+                                title="delete Corpus"
+                                onclick="manager.confirmDelete(`Removing corpus '{{$document->corpusName}}' from user.`, '/usertask/{{$idUserTask}}/corpus/{{$document->idUserTaskDocument}}')"
+                            ></x-delete>
+                    </span>
+                        <div
+                            class="header"
+                        >
+                            #{{$document->idUserTaskDocument}} - Corpus
+                        </div>
+                        <div class="description">
+                            [#{{$document->idCorpus}}] {{$document->corpusName}}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
