@@ -14,7 +14,15 @@
         </div>
     </div>
     <footer>
-        @include("components.layout.footer")
+        <div class="flex justify-content-between w-full">
+            <div>
+                @include("components.layout.footer")
+            </div>
+            <div>
+                {!! config('webtool.version') !!}
+            </div>
+        </div>
+
     </footer>
     <script>
         $(".menuLeft")

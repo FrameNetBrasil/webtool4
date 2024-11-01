@@ -73,6 +73,7 @@ class AnnotationStaticBBoxService
             ->min('idDocument');
         return $i ?? null;
     }
+
     public static function getObject(int $idStaticObject): object|null
     {
         $idLanguage = AppService::getCurrentIdLanguage();
@@ -106,7 +107,7 @@ class AnnotationStaticBBoxService
             $bboxObjects = Criteria::table("view_staticobject_boundingbox")
                 ->whereIN("idStaticObject", $oMM)
                 ->all();
-            foreach($bboxObjects as $bboxObject) {
+            foreach ($bboxObjects as $bboxObject) {
                 $bbox[$bboxObject->idStaticObject] = $bboxObject;
             }
         }
@@ -217,8 +218,8 @@ class AnnotationStaticBBoxService
         $sob = self::getObject($idStaticObject);
         $clone = json_encode([
             'name' => $sob->name,
-            'scene' => (int)$sob->scene,
-            'nobdnbox' => (int)$sob->nobdnbox,
+            'scene' => 0,
+            'nobdnbox' => 0,
             'idUser' => $idUser
         ]);
         $idStaticObjectClone = Criteria::function("staticobject_create(?)", [$clone]);
@@ -235,23 +236,21 @@ class AnnotationStaticBBoxService
         ]);
         $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
         // cloning bboxes
-        $bboxes = Criteria::table("view_staticobject_boundingbox")
+        $bbox = Criteria::table("view_staticobject_boundingbox")
             ->where("idStaticObject", $idStaticObject)
-            ->all();
-        foreach ($bboxes as $bbox) {
-            $json = json_encode([
-                'frameNumber' => 0,
-                'frameTime' => 0,
-                'x' => (int)$bbox->x,
-                'y' => (int)$bbox->y,
-                'width' => (int)$bbox->width,
-                'height' => (int)$bbox->height,
-                'blocked' => (int)$bbox->blocked,
-                'idStaticObject' => (int)$idStaticObject
-            ]);
-            $idBoundingBox = Criteria::function("boundingbox_static_create(?)", [$json]);
-        }
-        return $idStaticObject;
+            ->first();
+        $json = json_encode([
+            'frameNumber' => 0,
+            'frameTime' => 0,
+            'x' => (int)$bbox->x,
+            'y' => (int)$bbox->y,
+            'width' => (int)$bbox->width,
+            'height' => (int)$bbox->height,
+            'blocked' => (int)$bbox->blocked,
+            'idStaticObject' => (int)$idStaticObjectClone
+        ]);
+        $idBoundingBox = Criteria::function("boundingbox_static_create(?)", [$json]);
+        return $idStaticObjectClone;
     }
 
     public static function deleteObject(int $idStaticObject): void

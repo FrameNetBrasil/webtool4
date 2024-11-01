@@ -10,6 +10,7 @@ return [
     'mainTitle' => 'FrameNet Brasil Webtool 4.0',
     'headerTitle' => 'Webtool',
     'footer' => '&copy; 2014-2024 FrameNet Brasil Lab, UFJF.',
+    'version' => 'v.4.01',
     'login' => [
         'handler' => env('APP_AUTH'),
         'AUTH0_CLIENT_ID' => env('AUTH0_CLIENT_ID'),
