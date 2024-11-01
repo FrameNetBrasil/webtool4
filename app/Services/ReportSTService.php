@@ -28,13 +28,25 @@ class ReportSTService
                 ->first();
         }
         $report['semanticType'] = $semanticType;
-//        $report['fe'] = self::getFEData($frame, $idLanguage);
-//        $report['fecoreset'] = self::getFECoreSet($frame);
-//        $report['frame']->description = self::decorate($frame->description, $report['fe']['styles']);
-//        $report['relations'] = self::getRelations($frame);
-//        $report['classification'] = Frame::getClassificationLabels($idFrame);
-//        $report['lus'] = self::getLUs($frame, $idLanguage);
+        $report['relations'] = self::getRelations($semanticType);
         return $report;
+    }
+
+    public static function getRelations($semanticType): array
+    {
+        $relations = [];
+        $result = RelationService::listRelationsSemanticType($semanticType->idSemanticType);
+        foreach ($result as $row) {
+            $relationName = $row->relationType . '|' . $row->name;
+            $relations[$relationName][$row->idSTRelated] = [
+                'idEntityRelation' => $row->idEntityRelation,
+                'idConcept' => $row->idSTRelated,
+                'name' => $row->related,
+                'color' => $row->color
+            ];
+        }
+        ksort($relations);
+        return $relations;
     }
 
 }

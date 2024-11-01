@@ -438,5 +438,45 @@ class RelationService extends Controller
         return $result;
     }
 
+    public static function listRelationsSemanticType(int $idSemanticType)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $config = config('webtool.relations');
+        $result = [];
+        $relations = Criteria::table("view_semantictype_relation")
+            ->where("st1IdSemanticType", $idSemanticType)
+            ->where("idLanguage", $idLanguage)
+            ->orderBy("relationType")
+            ->orderBy("st2Name")
+            ->all();
+        foreach ($relations as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $config[$relation->relationType]['direct'],
+                'color' => $config[$relation->relationType]['color'],
+                'idSTRelated' => $relation->st2IdSemanticType,
+                'related' => $relation->st2Name,
+                'direction' => 'direct'
+            ];
+        }
+        $inverse = Criteria::table("view_semantictype_relation")
+            ->where("st2IdSemanticType", $idSemanticType)
+            ->where("idLanguage", $idLanguage)
+            ->all();
+        foreach ($inverse as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $config[$relation->relationType]['inverse'],
+                'color' => $config[$relation->relationType]['color'],
+                'idSTRelated' => $relation->st1IdSemanticType,
+                'related' => $relation->st1Name,
+                'direction' => 'inverse'
+            ];
+        }
+        return $result;
+    }
+
 
 }
