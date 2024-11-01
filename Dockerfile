@@ -3,12 +3,13 @@ FROM framenetbrasil/php-fpm:8.3
 ARG WWWGROUP=1001
 ARG WWWUSER=1000
 RUN addgroup -g $WWWGROUP www \
-    && adduser -s /usr/bin/fish -D -G www -u $WWWUSER sail
-#    && mkdir /var/log/laravel \
-#    && touch /var/log/laravel/laravel.log \
-#    && chown -R sail:www /var/log/laravel \
+    && adduser -s /usr/bin/fish -D -G www -u $WWWUSER sail \
+    && mkdir /var/log/laravel \
+    && touch /var/log/laravel/laravel.log \
+    && chown -R sail:www /var/log/laravel
 
-RUN chown -R sail:www /www
+COPY . /www
+#RUN chown -R sail:www /www
 
 USER sail
 WORKDIR /www
