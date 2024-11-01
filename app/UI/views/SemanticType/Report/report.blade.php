@@ -11,30 +11,30 @@
     <x-card title="Definition" class="frameReport__card frameReport__card--main">
         {!! str_replace('ex>','code>',nl2br($semanticType->description)) !!}
     </x-card>
-{{--    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main" open="true">--}}
-{{--        @php($i = 0)--}}
-{{--        @foreach ($relations as $nameEntry => $relations1)--}}
-{{--            @php([$entry, $name] = explode('|', $nameEntry))--}}
-{{--            @php($relId = str_replace(' ', '_', $name))--}}
-{{--            <x-card-plain--}}
-{{--                title="<span class='color_{{$entry}}'>{{$name}}</span>"--}}
-{{--                @class(["frameReport__card" => (++$i < count($report['relations']))])--}}
-{{--                class="frameReport__card--internal">--}}
-{{--                <div class="flex flex-wrap gap-1">--}}
-{{--                    @foreach ($relations1 as $idFrame => $relation)--}}
-{{--                        <button--}}
-{{--                            id="btnRelation_{{$relId}}_{{$idFrame}}"--}}
-{{--                            class="ui button basic"--}}
-{{--                        >--}}
-{{--                            <a--}}
-{{--                                href="/report/frame/{{$idFrame}}"--}}
-{{--                            >--}}
-{{--                                <x-element.frame name="{{$relation['name']}}"></x-element.frame>--}}
-{{--                            </a>--}}
-{{--                        </button>--}}
-{{--                    @endforeach--}}
-{{--                </div>--}}
-{{--            </x-card-plain>--}}
-{{--        @endforeach--}}
-{{--    </x-card>--}}
+    <x-card title="Relations" class="frameReport__card frameReport__card--main" open="true">
+        @php($i = 0)
+        @foreach ($relations as $nameEntry => $relations1)
+            @php([$entry, $name] = explode('|', $nameEntry))
+            @php($relId = str_replace(' ', '_', $name))
+            <x-card-plain
+                title="<span class='color_{{$entry}}'>{{$name}}</span>"
+                @class(["frameReport__card" => (++$i < count($report['relations']))])
+                class="frameReport__card--internal">
+                <div class="flex flex-wrap gap-1">
+                    @foreach ($relations1 as $idSemanticType => $relation)
+                        <button
+                            id="btnRelation_{{$relId}}_{{$idSemanticType}}"
+                            class="ui button basic"
+                        >
+                            <a
+                                href="/report/semanticType/{{$idSemanticType}}"
+                            >
+                                <x-element.semantictype name="{{$relation['name']}}"></x-element.semantictype>
+                            </a>
+                        </button>
+                    @endforeach
+                </div>
+            </x-card-plain>
+        @endforeach
+    </x-card>
 </div>

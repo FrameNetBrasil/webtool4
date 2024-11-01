@@ -13,7 +13,11 @@
                 <script>
                     $(function() {
                         $("#semanticTypeTree").treegrid({
-                            data: {{Js::from($data)}},
+                            url:"/report/semanticType/data",
+                            queryParams: {
+                                semanticType: '{{$search->semanticType}}'
+                            },
+                            method:'get',
                             fit: true,
                             showHeader: false,
                             rownumbers: false,
