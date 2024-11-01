@@ -398,4 +398,45 @@ class RelationService extends Controller
         ];
     }
 
+    public static function listRelationsConcept(int $idConcept)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $config = config('webtool.relations');
+        $result = [];
+        $relations = Criteria::table("view_concept_relation")
+            ->where("c1IdConcept", $idConcept)
+            ->where("idLanguage", $idLanguage)
+            ->orderBy("relationType")
+            ->orderBy("c2Name")
+            ->all();
+        foreach ($relations as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $config[$relation->relationType]['direct'],
+                'color' => $config[$relation->relationType]['color'],
+                'idConceptRelated' => $relation->c2IdConcept,
+                'related' => $relation->c2Name,
+                'direction' => 'direct'
+            ];
+        }
+        $inverse = Criteria::table("view_concept_relation")
+            ->where("c2IdConcept", $idConcept)
+            ->where("idLanguage", $idLanguage)
+            ->all();
+        foreach ($inverse as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $config[$relation->relationType]['inverse'],
+                'color' => $config[$relation->relationType]['color'],
+                'idConceptRelated' => $relation->c1IdConcept,
+                'related' => $relation->c1Name,
+                'direction' => 'inverse'
+            ];
+        }
+        return $result;
+    }
+
+
 }
