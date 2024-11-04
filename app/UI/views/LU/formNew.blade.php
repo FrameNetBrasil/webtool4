@@ -21,8 +21,8 @@
             </div>
             <div class="field">
                 <x-combobox.fe-frame
-                    id="incorporatedFE"
-                    label="Incorporated FE"
+                    id="idFrame"
+                    label="Suggested frame"
                     :value="-1"
                     :idFrame="$idFrame"
                     nullName="No incorporated FE"
