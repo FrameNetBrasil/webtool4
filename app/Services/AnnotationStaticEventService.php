@@ -35,7 +35,7 @@ class AnnotationStaticEventService
             ->where("d.idDocument", $idDocument)
             ->select("sentence.idSentence", "sentence.text", "i.name as imageName", "ds.idDocumentSentence")
             ->orderBy("ds.idDocumentSentence")
-            ->limit(1000)
+            ->limit(1500)
             ->get()->keyBy("idSentence")->all();
         return $sentences;
     }
@@ -94,6 +94,7 @@ class AnnotationStaticEventService
             ];
         }
         $task = Task::byId($usertask->idTask);
+        debug($task);
         //objects for document_sentence
         $criteria = Criteria::table("view_staticobject_textspan")
             ->where("idDocument", $idDocument)
