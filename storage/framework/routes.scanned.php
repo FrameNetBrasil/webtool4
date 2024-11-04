@@ -672,6 +672,86 @@ $router->get('lu/{id}/constraints/grid', [
 	'domain' => NULL,
 ]);
 
+$router->get('luCandidate', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@resource',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('luCandidate/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@grid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('luCandidate/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@grid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('luCandidate/new', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@new',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('luCandidate', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@newLU',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('luCandidate/{id}/edit', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@edit',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('luCandidate/{id}/object', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@object',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('luCandidate/{id}', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@delete',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('luCandidate/{id}/formEdit', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@formEdit',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->put('luCandidate/{id}', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@update',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('lu/list/forEvent', [
 	'uses' => 'App\Http\Controllers\LU\BrowseController@listForEvent',
 	'as' => NULL,
