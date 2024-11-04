@@ -7,13 +7,13 @@
     $data = array_map(fn($item) => [
            'id'=> $item->idLUCandidate,
            'text' => $luIcon . $item->name,
-           'state'=> 'closed',
+           'state'=> 'open',
            'type' => 'lu'
     ], $lus);
 @endphp
 <div
         class="h-full"
-        hx-trigger="reload-gridLuCandidate from:body"
+        hx-trigger="reload-gridLUCandidate from:body"
         hx-target="this"
         hx-swap="outerHTML"
         hx-get="/luCandidate/grid"

@@ -720,8 +720,8 @@ $router->get('luCandidate/{id}/edit', [
 	'domain' => NULL,
 ]);
 
-$router->get('luCandidate/{id}/object', [
-	'uses' => 'App\Http\Controllers\LU\LUCandidateController@object',
+$router->get('luCandidate/{id}/formEdit', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@formEdit',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -736,16 +736,16 @@ $router->delete('luCandidate/{id}', [
 	'domain' => NULL,
 ]);
 
-$router->get('luCandidate/{id}/formEdit', [
-	'uses' => 'App\Http\Controllers\LU\LUCandidateController@formEdit',
+$router->put('luCandidate/{id}', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@update',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->put('luCandidate/{id}', [
-	'uses' => 'App\Http\Controllers\LU\LUCandidateController@update',
+$router->post('luCandidate/createLU', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@createLU',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

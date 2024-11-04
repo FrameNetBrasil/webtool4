@@ -5,6 +5,7 @@ namespace App\View\Components\Combobox;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Repositories\Frame as FrameRepository;
 
 class Frame extends Component
 {
@@ -30,6 +31,12 @@ class Frame extends Component
      */
     public function render(): View|Closure|string
     {
+        if($this->value != '') {
+            $frame = FrameRepository::byId($this->value);
+            $this->placeholder = $frame->name;
+        } else {
+            $this->placeholder = "Search Corpus";
+        }
         $this->description = $this->hasDescription ? 'description' : '';
         return view('components.combobox.frame');
     }
