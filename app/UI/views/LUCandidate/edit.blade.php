@@ -6,11 +6,13 @@
         <div class="ui label tag wt-tag-id">
             #{{$luCandidate->idLUCandidate}}
         </div>
+        @if($isManager)
         <x-button
             label="Delete"
             color="danger"
             onclick="manager.confirmDelete(`Removing LU candidate '{{$luCandidate->name}}'.`, '/luCandidate/{{$luCandidate->idLUCandidate}}')"
         ></x-button>
+        @endif
     </x-slot:detail>
     <x-slot:description>
     </x-slot:description>
