@@ -29,7 +29,7 @@
                         <span class="right floated">
                             <x-delete
                                 title="delete Corpus"
-                                onclick="manager.confirmDelete(`Removing corpus '{{$document->corpusName}}' from user.`, '/usertask/{{$idUserTask}}/corpus/{{$document->idUserTaskDocument}}')"
+                                onclick="manager.confirmDelete(`Removing corpus '{{$document->corpusName}}' from user.`, '/usertask/{{$idUserTask}}/documents/{{$document->idUserTaskDocument}}')"
                             ></x-delete>
                     </span>
                         <div
