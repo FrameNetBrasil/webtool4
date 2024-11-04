@@ -67,8 +67,12 @@ class LUCandidateController extends Controller
     #[Get(path: '/luCandidate/{id}/edit')]
     public function edit(string $id)
     {
+        $idUser = AppService::getCurrentIdUser();
+        $user = User::byId($idUser);
+        $isManager = User::isManager($user);
         return view("LUCandidate.edit", [
             'luCandidate' => LUCandidate::byId($id),
+            'isManager' => $isManager,
         ]);
     }
 
@@ -81,6 +85,14 @@ class LUCandidateController extends Controller
         return view("LUCandidate.formEdit", [
             'luCandidate' => LUCandidate::byId($id),
             'isManager' => $isManager,
+        ]);
+    }
+
+    #[Get(path: '/luCandidate/fes/{idFrame}')]
+    public function feCombobox(int $idFrame)
+    {
+        return view("LUCandidate.fes", [
+            'idFrame' => $idFrame
         ]);
     }
 

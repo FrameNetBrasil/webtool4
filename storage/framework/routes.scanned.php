@@ -728,6 +728,14 @@ $router->get('luCandidate/{id}/formEdit', [
 	'domain' => NULL,
 ]);
 
+$router->get('luCandidate/fes/{idFrame}', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@feCombobox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->delete('luCandidate/{id}', [
 	'uses' => 'App\Http\Controllers\LU\LUCandidateController@delete',
 	'as' => NULL,
