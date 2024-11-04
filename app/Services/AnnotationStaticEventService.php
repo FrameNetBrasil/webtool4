@@ -34,6 +34,7 @@ class AnnotationStaticEventService
             ->join("image as i", "is.idImage", "=", "i.idImage")
             ->where("d.idDocument", $idDocument)
             ->select("sentence.idSentence", "sentence.text", "i.name as imageName", "ds.idDocumentSentence")
+            ->distinct()
             ->orderBy("ds.idDocumentSentence")
             ->limit(1500)
             ->get()->keyBy("idSentence")->all();
