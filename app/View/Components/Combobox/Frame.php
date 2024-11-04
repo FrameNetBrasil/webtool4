@@ -31,7 +31,7 @@ class Frame extends Component
      */
     public function render(): View|Closure|string
     {
-        if($this->value != '') {
+        if (($this->value != '') && ($this->value != 0)) {
             $frame = FrameRepository::byId($this->value);
             $this->placeholder = $frame->name;
         } else {
