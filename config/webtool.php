@@ -55,7 +55,7 @@ return [
 //            'corpusstructure' => ['Corpus', '/corpus', 'MASTER', []],
             'lexiconstructure' => ['Lexicon', '/lexicon', 'MASTER', []],
             //'sentence' => ['Sentence', '/sentence', 'MASTER', []],
-            //'lucandidate' => ['LU candidate', '/luCandidate', 'MASTER', []],
+            'lucandidate' => ['LU candidate', '/luCandidate', 'MASTER', []],
 //            'tqr2structure' => ['TQR2', '/tqr2', 'MASTER', []],
 //            'cxnstructure' => ['Construction', '/cxn', 'MASTER', []],
 //            'lemmastructure' => ['Lemma', '/lemma', 'MASTER', []],
