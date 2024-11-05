@@ -71,16 +71,16 @@ class AnnotationStaticEventService
             ->select("ut.idUserTask","ut.idTask")
             ->first();
         if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-            if (User::isManager($user)) {
-                $usertask = Criteria::table("usertask_document")
-                    ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-                    ->where("usertask_document.idDocument", $idDocument)
-                    ->where("ut.idUser", -2)
-                    ->select("ut.idUserTask","ut.idTask")
-                    ->first();
-            } else {
+//            if (User::isManager($user)) {
+//                $usertask = Criteria::table("usertask_document")
+//                    ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
+//                    ->where("usertask_document.idDocument", $idDocument)
+//                    ->where("ut.idUser", -2)
+//                    ->select("ut.idUserTask","ut.idTask")
+//                    ->first();
+//            } else {
                 $usertask = null;
-            }
+//            }
         }
         return $usertask;
     }

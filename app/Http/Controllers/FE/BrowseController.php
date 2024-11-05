@@ -17,6 +17,14 @@ class BrowseController extends Controller
             ->all();
     }
 
+    public static function listForGridByFrame(int $idFrame)
+    {
+        return Criteria::byFilterLanguage("view_frameelement", ['idFrame', "=", $idFrame])
+            ->get()
+            ->groupBy('coreType')
+            ->toArray();
+    }
+
     public static function listForTreeByName(string $name)
     {
         $result = [];

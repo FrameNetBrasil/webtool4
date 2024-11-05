@@ -35,7 +35,7 @@ class Frame extends Component
             $frame = FrameRepository::byId($this->value);
             $this->placeholder = $frame->name;
         } else {
-            $this->placeholder = "Search Corpus";
+            $this->placeholder = "Search Frame";
         }
         $this->description = $this->hasDescription ? 'description' : '';
         return view('components.combobox.frame');

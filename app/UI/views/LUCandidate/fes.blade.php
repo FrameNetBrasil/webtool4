@@ -1,7 +1,7 @@
 <div class="field" class="w-20rem">
     <x-combobox.fe-frame
         id="incorporatedFE"
-        name="Incorporated FE"
+        name="incorporatedFE"
         label="FE"
         value=""
         :idFrame="$idFrame"

@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 <x-layout.object>
     <x-slot:name>
         <span>{{$luCandidate->name}}</span>
@@ -15,6 +16,7 @@
         @endif
     </x-slot:detail>
     <x-slot:description>
+        Created by {{$luCandidate->userName}} [{{$luCandidate->email}}] at {!! $luCandidate->createdAt ? Carbon::parse($luCandidate->createdAt)->format("d/m/Y") : '-' !!}
     </x-slot:description>
     <x-slot:main>
         @include("LUCandidate.menu")
