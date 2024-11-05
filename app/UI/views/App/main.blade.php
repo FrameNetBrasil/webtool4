@@ -1,4 +1,4 @@
-@php use App\Database\Criteria;use App\Repositories\User;use App\Services\AppService; @endphp
+@php use App\Database\Criteria;use App\Repositories\User;use App\Services\AppService; use App\Services\MessageService; @endphp
 <x-layout.main>
     <x-slot:head>
         <x-breadcrumb :sections="[['','Home']]"></x-breadcrumb>
@@ -8,6 +8,7 @@
             $idUser = AppService::getCurrentIdUser();
             $user = User::byId($idUser);
             $isManager = User::isManager($user);
+            $messages = MessageService::getMessagesToUser($idUser);
             $rows = Criteria::table("view_usertask_docs as utd")
                 ->join("view_project_docs as pd","pd.idCorpus","=","utd.idCorpus")
                 ->select("pd.projectName","utd.taskName","utd.documentName","utd.corpusName")
@@ -19,6 +20,7 @@
                 ->all();
             $projects = collect($rows)->groupBy('projectName')->toArray();
         @endphp
+        @include("App.messages")
         @if(!$isManager)
         <div class="ui container">
             <div class="ui card w-full">

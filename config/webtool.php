@@ -226,7 +226,7 @@ return [
         'coreness' => [
             "cty_core" => "Core",
             "cty_core-unexpressed" => "Core-Unexpressed",
-            "cty_peripheral" => "Non-core",
+            "cty_peripheral" => "Peripheral",
             "cty_extra-thematic" => "Extra-thematic",
         ]
     ]

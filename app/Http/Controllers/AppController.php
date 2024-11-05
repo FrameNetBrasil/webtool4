@@ -61,7 +61,9 @@ class AppController extends Controller
         $result = [];
         $frames = Criteria::byFilterLanguage("view_frame",[
             ["name","startswith", $name]
-        ])->all();
+        ])
+            ->orderBy("name")
+            ->all();
         foreach ($frames as $row) {
             $result[$row->idFrame] = [
                 'id' => 'f' . $row->idFrame,
@@ -78,7 +80,9 @@ class AppController extends Controller
         $result = [];
         $lus = Criteria::byFilterLanguage("view_lu",[
             ["name","startswith", $name]
-        ])->all();
+        ])
+            ->orderBy("name")
+            ->all();
         foreach ($lus as $lu) {
             $result[$lu->idLU] = [
                 'id' => 'l' . $lu->idLU,
@@ -92,5 +96,9 @@ class AppController extends Controller
         return $result;
     }
 
-
+    #[Get(path: '/messages')]
+    public function messages()
+    {
+        return view('App.messages');
+    }
 }
