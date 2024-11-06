@@ -140,7 +140,7 @@ class LUCandidateController extends Controller
                 $link = "/annotation/staticBBox/{$luCandidate->idDocument}";
             }
             if ($link != '') {
-                $link = "<a href=\"{$link}\">Link to annotation.</a>."
+                $link = "<a href=\"{$link}\">Link to annotation.</a>.";
             }
             MessageService::sendMessage((object)[
                 'idUserFrom' => AppService::getCurrentIdUser(),
