@@ -20,13 +20,6 @@
 {{--                <i class="window close outline icon"></i>--}}
 {{--                <span x-data x-text="'End at frame #' + ($store.doStore.currentFrame || '')"></span>--}}
 {{--            </button>--}}
-            <button
-                id="btnShowHideObjects"
-                class="ui toggle button secondary"
-                x-data @click="$store.doStore.showHideObjects()"
-            >
-                Show/Hide
-            </button>
         </div>
     </div>
 {{--    <div class="flex flex-column">--}}
@@ -57,6 +50,13 @@
             &nbsp;
         </div>
         <div class="mt-1">
+            <button
+                id="btnShowHideObjects"
+                class="ui toggle button secondary"
+                x-data @click="$store.doStore.showHideObjects()"
+            >
+                Show/Hide All
+            </button>
             <button
                 id="btnClear"
                 class="ui button secondary"
