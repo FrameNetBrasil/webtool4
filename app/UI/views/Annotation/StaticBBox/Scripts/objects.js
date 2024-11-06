@@ -155,6 +155,17 @@ annotation.objects = {
             });
         }
     },
+    hideBoxes: function() {
+        $(".bbox").css("display", "none");
+    },
+    showBoxes: function() {
+        let objects = annotation.objects.list;
+        console.log(objects);
+        objects.forEach(o => {
+            o.drawBox();
+        });
+
+    },
     // drawFrameBoxes: function (frameNumber) {
     //     // show/hide todas as boxes existentes no frame frameNumber
     //     //let that = this;
@@ -210,6 +221,7 @@ annotation.objects = {
         console.log("tempObject", tempObject);
         let data = await annotation.objects.createNewObject(tempObject);
         console.log("after createNewObject", data);
+        annotation.objects.showBoxes();
     },
     initializeNewObject: (annotatedObject) => {
         annotatedObject.object = {

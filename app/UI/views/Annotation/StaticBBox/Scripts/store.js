@@ -48,6 +48,7 @@ document.addEventListener('alpine:init', () => {
         createObject() {
             this.selectObject(null);
             this.newObjectState = 'creating';
+            annotation.objects.hideBoxes();
             annotation.objects.creatingObject();
         },
         // async deleteObject(idStaticObject) {
