@@ -33,7 +33,7 @@ class CreateLexemeEntryData extends Data
             $this->headWord = 0;
         }
         $lexeme = Criteria::table("lexeme")
-            ->where("name", "=", $this->lexeme)
+            ->whereRaw("name = '{$this->lexeme}' collate 'utf8mb4_bin'")
             ->where("idPOS", "=", $this->idPOSLexeme)
             ->where("idLanguage", "=", AppService::getCurrentIdLanguage())
             ->first();
