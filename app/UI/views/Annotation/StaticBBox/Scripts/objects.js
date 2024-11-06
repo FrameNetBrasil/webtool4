@@ -315,7 +315,7 @@ annotation.objects = {
     },
     deleteObject: async (idStaticObject) => {
         console.log("deleting", idStaticObject);
-        manager.confirmDelete(
+        await manager.confirmDelete(
             "Removing object #" + idStaticObject + ".",
             "/annotation/staticBBox/" + idStaticObject,
             async () => await Alpine.store("doStore").updateObjectList()
