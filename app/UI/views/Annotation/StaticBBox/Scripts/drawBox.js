@@ -32,7 +32,7 @@ annotation.drawBox = {
         $canvas.style.top = '0px';
         $canvas.style.left = '0px';
         $canvas.style.backgroundColor = "transparent";
-        $canvas.style.zIndex = 5;
+        $canvas.style.zIndex = 3;
         console.log('drawBox config', annotation.drawBox, rect);
     },
     init() {
