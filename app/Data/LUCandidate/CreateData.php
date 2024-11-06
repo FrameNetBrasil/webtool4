@@ -30,6 +30,9 @@ class CreateData extends Data
         if (is_null($this->discussion)) {
             $this->discussion = '';
         }
+        if ($this->idFrame == 0) {
+            $this->idFrame = null;
+        }
         $this->idUser = AppService::getCurrentIdUser();
         $this->createdAt = Carbon::now();
         $lemma = Lemma::byId($this->idLemma);
