@@ -6,46 +6,46 @@
     hx-get="/frame/{{$idFrame}}/fes/grid"
 >
     <div class="flex-grow-1 content bg-white">
-        <div
-            id="gridFE"
-            class="grid"
-        >
-
-            @foreach($fes as $fe)
-                <div class="col-3">
-                    <div class="ui card w-full">
-                        <div class="content">
+        @php(debug($fes))
+        @php($coreType = ['cty_core','cty_core-unexpressed','cty_peripheral','cty_extra-thematic'])
+        @foreach($coreType as $ct)
+            @php($array = $fes[$ct] ?? [])
+            @if(!empty($array))
+            <h3 class="ui header">{!! config("webtool.fe.coreness.{$ct}") !!}</h3>
+            <div
+                id="gridFE"
+                class="grid"
+            >
+                @foreach($array as $fe)
+                    <div class="col-3">
+                        <div class="ui card w-full">
+                            <div class="content">
                     <span class="right floated">
                         <x-delete
                             title="delete FE"
                             onclick="manager.confirmDelete(`Removing FrameElement '{{$fe->name}}'.`, '/fe/{{$fe->idFrameElement}}')"
                         ></x-delete>
                     </span>
-                            <div
-                                class="header"
-                            >
-                                <a href="/fe/{{$fe->idFrameElement}}/edit">
-{{--                                <div--}}
-{{--                                    hx-target="#editMainArea"--}}
-{{--                                    hx-swap="innerHTML"--}}
-{{--                                    hx-get="/fe/{{$fe->idFrameElement}}/edit"--}}
-{{--                                    class="cursor-pointer"--}}
-{{--                                >--}}
-                                    <x-element.fe
-                                        name="{{$fe->name}}"
-                                        type="{{$fe->coreType}}"
-                                        idColor="{{$fe->idColor}}"
-                                    ></x-element.fe>
-{{--                                </div>--}}
-                                </a>
-                            </div>
-                            <div class="description">
-                                {{$fe->description}}
+                                <div
+                                    class="header"
+                                >
+                                    <a href="/fe/{{$fe->idFrameElement}}/edit">
+                                        <x-element.fe
+                                            name="{{$fe->name}}"
+                                            type="{{$fe->coreType}}"
+                                            idColor="{{$fe->idColor}}"
+                                        ></x-element.fe>
+                                    </a>
+                                </div>
+                                <div class="description">
+                                    {{$fe->description}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
-        </div>
+                @endforeach
+            </div>
+            @endif
+        @endforeach
     </div>
 </div>

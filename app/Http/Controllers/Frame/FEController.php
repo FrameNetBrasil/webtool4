@@ -31,7 +31,7 @@ class FEController extends Controller
     {
         return view("FE.grid",[
             'idFrame' => $id,
-            'fes' => FEBrowseController::listForTreeByFrame($id)
+            'fes' => FEBrowseController::listForGridByFrame($id)
         ]);
     }
 

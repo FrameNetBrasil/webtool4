@@ -592,6 +592,14 @@ $router->post('app/search', [
 	'domain' => NULL,
 ]);
 
+$router->get('messages', [
+	'uses' => 'App\Http\Controllers\AppController@messages',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('lu', [
 	'uses' => 'App\Http\Controllers\LU\ResourceController@newLU',
 	'as' => NULL,
@@ -728,6 +736,14 @@ $router->get('luCandidate/{id}/formEdit', [
 	'domain' => NULL,
 ]);
 
+$router->get('luCandidate/fes/{idFrame}', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@feCombobox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->delete('luCandidate/{id}', [
 	'uses' => 'App\Http\Controllers\LU\LUCandidateController@delete',
 	'as' => NULL,
@@ -736,7 +752,7 @@ $router->delete('luCandidate/{id}', [
 	'domain' => NULL,
 ]);
 
-$router->put('luCandidate/{id}', [
+$router->put('luCandidate', [
 	'uses' => 'App\Http\Controllers\LU\LUCandidateController@update',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -2172,6 +2188,14 @@ $router->post('grapher/framefe/graph/{idEntityRelation}', [
 	'uses' => 'App\Http\Controllers\Grapher\FrameController@frameFeGraph',
 	'as' => NULL,
 	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('message/{id}', [
+	'uses' => 'App\Http\Controllers\Message\ResourceController@delete',
+	'as' => NULL,
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
