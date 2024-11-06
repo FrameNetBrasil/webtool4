@@ -94,7 +94,7 @@ class ResourceController extends Controller
     {
         try {
             $exists = Criteria::table("lemma")
-                ->where("name", $data->name)
+                ->whereRaw("name = '{$data->name}' collate 'utf8mb4_bin'")
                 ->where("idPOS", $data->idPOS)
                 ->where("idLanguage", $data->idLanguage)
                 ->first();
@@ -198,7 +198,7 @@ class ResourceController extends Controller
     {
         try {
             $exists = Criteria::table("lexeme")
-                ->where("name", $data->name)
+                ->whereRaw("name = '{$data->name}' collate 'utf8mb4_bin'")
                 ->where("idPOS", $data->idPOS)
                 ->where("idLanguage", $data->idLanguage)
                 ->first();
