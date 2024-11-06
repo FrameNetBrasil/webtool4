@@ -21,6 +21,9 @@ class UpdateData extends Data
         public ?string $frameCandidate = '',
     )
     {
+        if ($this->idFrame == 0) {
+            $this->idFrame = null;
+        }
         $lemma = Lemma::byId($this->idLemma);
         $this->name = $lemma->name;
     }
