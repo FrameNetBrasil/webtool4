@@ -24,6 +24,12 @@ class CreateData extends Data
         public ?string $createdAt = ''
     )
     {
+        if (is_null($this->senseDescription)) {
+            $this->senseDescription = '';
+        }
+        if (is_null($this->discussion)) {
+            $this->discussion = '';
+        }
         $this->idUser = AppService::getCurrentIdUser();
         $this->createdAt = Carbon::now();
         $lemma = Lemma::byId($this->idLemma);
