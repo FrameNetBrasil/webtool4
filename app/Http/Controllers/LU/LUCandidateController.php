@@ -132,17 +132,21 @@ class LUCandidateController extends Controller
         try {
             Criteria::function('lu_create(?)', [$data->toJson()]);
             $luCandidate = LUCandidate::byId($data->idLUCandidate);
+            $link = '';
             if ($luCandidate->idDocumentSentence) {
                 $link = "/annotation/fullText/{$luCandidate->idDocumentSentence}";
             }
             if ($luCandidate->idDocument) {
                 $link = "/annotation/staticBBox/{$luCandidate->idDocument}";
             }
+            if ($link != '') {
+                $link = "<a href=\"{$link}\">Link to annotation.</a>."
+            }
             MessageService::sendMessage((object)[
                 'idUserFrom' => AppService::getCurrentIdUser(),
                 'idUserTo' => $luCandidate->idUser,
                 'class' => 'success',
-                'text' => "LU candidate {$luCandidate->name} has been created as LU.  <a href=\"{$link}\">Link to annotation.</a>.",
+                'text' => "LU candidate {$luCandidate->name} has been created as LU.  {$link} ",
             ]);
             Criteria::deleteById("lucandidate", "idLUCandidate", $data->idLUCandidate);
             return $this->renderNotify("success", "LU created.");
