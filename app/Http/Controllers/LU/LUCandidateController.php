@@ -11,6 +11,7 @@ use App\Repositories\Lemma;
 use App\Repositories\LUCandidate;
 use App\Repositories\User;
 use App\Services\AppService;
+use App\Services\MessageService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -31,7 +32,7 @@ class LUCandidateController extends Controller
     #[Post(path: '/luCandidate/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
-        $view = view("LUCandidate.grid",[
+        $view = view("LUCandidate.grid", [
             'search' => $search,
         ]);
         return (is_null($fragment) ? $view : $view->fragment('search'));
@@ -47,16 +48,9 @@ class LUCandidateController extends Controller
     public function newLU(CreateData $data)
     {
         try {
-            $lemma = Lemma::byId($data->idLemma);
-            $data->name = $lemma->name;
+            debug($data);
             Criteria::table("lucandidate")
-                ->insert([
-                    'idLemma' => $data->idLemma,
-                    'name' => $data->name,
-                    'idFrame' => $data->idFrame,
-                    'frameCandidate' => $data->frameCandidate,
-                    'senseDescription' => $data->senseDescription
-                ]);
+                ->insert($data->toArray());
             $this->trigger('reload-gridLUCandidate');
             return $this->renderNotify("success", "LU Candidate created.");
         } catch (\Exception $e) {
@@ -67,8 +61,12 @@ class LUCandidateController extends Controller
     #[Get(path: '/luCandidate/{id}/edit')]
     public function edit(string $id)
     {
+        $idUser = AppService::getCurrentIdUser();
+        $user = User::byId($idUser);
+        $isManager = User::isManager($user);
         return view("LUCandidate.edit", [
             'luCandidate' => LUCandidate::byId($id),
+            'isManager' => $isManager,
         ]);
     }
 
@@ -84,11 +82,26 @@ class LUCandidateController extends Controller
         ]);
     }
 
+    #[Get(path: '/luCandidate/fes/{idFrame}')]
+    public function feCombobox(int $idFrame)
+    {
+        return view("LUCandidate.fes", [
+            'idFrame' => $idFrame
+        ]);
+    }
+
     #[Delete(path: '/luCandidate/{id}')]
     public function delete(string $id)
     {
         try {
-            Criteria::deleteById("lucandidate","idLUCandidate",$id);
+            $luCandidate = LUCandidate::byId($id);
+            MessageService::sendMessage((object)[
+                'idUserFrom' => AppService::getCurrentIdUser(),
+                'idUserTo' => $luCandidate->idUser,
+                'class' => 'error',
+                'text' => "LU candidate {$luCandidate->name} has been deleted.",
+            ]);
+            Criteria::deleteById("lucandidate", "idLUCandidate", $id);
             $this->trigger('reload-gridLUCandidate');
             return $this->renderNotify("success", "LU candidate deleted.");
         } catch (\Exception $e) {
@@ -96,14 +109,19 @@ class LUCandidateController extends Controller
         }
     }
 
-    #[Put(path: '/luCandidate/{id}')]
+    #[Put(path: '/luCandidate')]
     public function update(UpdateData $data)
     {
-//        if ($data->idFrame == '') {
-//            $lu = LU::byId($data->idLU);
-//            $data->idFrame = $lu->idFrame;
-//        }
-//        LU::update($data);
+        Criteria::table("lucandidate")
+            ->where("idLUCandidate", $data->idLUCandidate)
+            ->update($data->toArray());
+        $luCandidate = LUCandidate::byId($data->idLUCandidate);
+        MessageService::sendMessage((object)[
+            'idUserFrom' => AppService::getCurrentIdUser(),
+            'idUserTo' => $luCandidate->idUser,
+            'class' => 'warning',
+            'text' => "LU candidate {$luCandidate->name} has been updated.",
+        ]);
         $this->trigger('reload-gridLUCandidate');
         return $this->renderNotify("success", "LU candidate updated.");
     }
@@ -112,15 +130,25 @@ class LUCandidateController extends Controller
     public function createLU(UpdateData $data)
     {
         try {
-            $lemma = Lemma::byId($data->idLemma);
-            $data->name = $lemma->name;
             Criteria::function('lu_create(?)', [$data->toJson()]);
-            Criteria::deleteById("lucandidate","idLUCandidate",$data->idLUCandidate);
+            $luCandidate = LUCandidate::byId($data->idLUCandidate);
+            if ($luCandidate->idDocumentSentence) {
+                $link = "/annotation/fullText/{$luCandidate->idDocumentSentence}";
+            }
+            if ($luCandidate->idDocument) {
+                $link = "/annotation/staticBBox/{$luCandidate->idDocument}";
+            }
+            MessageService::sendMessage((object)[
+                'idUserFrom' => AppService::getCurrentIdUser(),
+                'idUserTo' => $luCandidate->idUser,
+                'class' => 'success',
+                'text' => "LU candidate {$luCandidate->name} has been created as LU.  <a href=\"{$link}\">Link to annotation.</a>.",
+            ]);
+            Criteria::deleteById("lucandidate", "idLUCandidate", $data->idLUCandidate);
             return $this->renderNotify("success", "LU created.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
-        return $this->renderNotify("success", "LU created.");
     }
 
 }
