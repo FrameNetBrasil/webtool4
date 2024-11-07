@@ -101,7 +101,7 @@ class ObjectsTracker {
             //console.log(annotatedObject);
             try {
                 let i = this.startFrameObject(frameNumber, annotatedObject);
-                console.log(' getFrameWithObjects startFrame = ' + i + '  annotatedObject = ' + annotatedObject.idObject);
+                //console.log(' getFrameWithObjects startFrame = ' + i + '  annotatedObject = ' + annotatedObject.idObject);
 //console.log('getFrameWithObjects frameNumber = ' + frameNumber + '  i = ' + i);
                 let trackNextFrameObject = () => {
                     console.log(' ###### tracking frame ' + i);
@@ -285,16 +285,16 @@ class ObjectsTracker {
                             let result = [];
                             let toCompute = [];
                             //if (annotatedObject.inFrame(frameNumber)) {
-                            console.log('** tracking object ' + annotatedObject.idObject + '  frameNumber = ' + frameNumber)
+                            // console.log('** tracking object ' + annotatedObject.idObject + '  frameNumber = ' + frameNumber)
                             let frameObject = annotatedObject.getFrameAt(frameNumber);
                             //console.log(annotatedFrame);
                             if (frameObject === null) {
                                 //não existe o AnnotatedObject no frame frameNumber
-                                console.log('    não existe no frame ' + frameNumber);
+                                // console.log('    não existe no frame ' + frameNumber);
                                 frameObject = annotatedObject.getFrameAt(frameNumber - 1);
                                 if (frameObject == null) {
                                     // também não existe no anterior
-                                    console.log('    não existe no frame anterior' + (frameNumber - 1));
+                                    // console.log('    não existe no frame anterior' + (frameNumber - 1));
                                     throw new Error("Tracking must be done sequentially!");
                                     //throw 'tracking must be done sequentially';
                                     //continue; // passa para o próximo AnnotatedObject
@@ -303,20 +303,20 @@ class ObjectsTracker {
                                     //console.log(annotatedFrame.bbox)
                                     // existe no frame anterior mas não no current,
                                     // então é preciso calcular a nova box
-                                    console.log('    existe no frame anterior mas não no corrente - calcular nova box');
-                                    console.log(frameObject.bbox);
+                                    // console.log('    existe no frame anterior mas não no corrente - calcular nova box');
+                                    // console.log(frameObject.bbox);
                                     toCompute.push({annotatedObject: annotatedObject, bbox: frameObject.bbox});
                                 }
                             } else {
                                 // existe o AnnotatedObject no frame frameNumber
-                                console.log('    existe no frame corrente');
-                                console.log(frameObject.bbox);
+                                // console.log('    existe no frame corrente');
+                                // console.log(frameObject.bbox)
                                 if (frameObject.bbox == null) {
-                                    console.log('    existe no frame corrente com bbox null - calcular nova box');
+                                    // console.log('    existe no frame corrente com bbox null - calcular nova box');
                                     frameObject = annotatedObject.get(frameNumber - 1);
                                     if (frameObject == null) {
                                         // não existe no anterior
-                                        console.log('    não existe no frame anterior ' + (frameNumber - 1));
+                                        // console.log('    não existe no frame anterior ' + (frameNumber - 1));
                                         throw new Error("Tracking must be done sequentially!");
                                         //throw 'tracking must be done sequentially';
                                         //continue; // passa para o próximo AnnotatedObject
@@ -324,11 +324,11 @@ class ObjectsTracker {
                                     //console.log('to compute');
                                     //console.log(annotatedFrame.bbox)
                                     // existe no frame anterior mas não no corrent, então é preciso calcular a nova box
-                                    console.log('    existe no frame anterior - calcular nova box');
-                                    console.log(frameObject.bbox);
+                                    // console.log('    existe no frame anterior - calcular nova box');
+                                    // console.log(frameObject.bbox);
                                     toCompute.push({annotatedObject: annotatedObject, bbox: frameObject.bbox});
                                 } else {
-                                    console.log('    existe no frame corrente, então coloco no result');
+                                    // console.log('    existe no frame corrente, então coloco no result');
                                     result.push({annotatedObject: annotatedObject, frameObject: frameObject});
                                 }
                             }

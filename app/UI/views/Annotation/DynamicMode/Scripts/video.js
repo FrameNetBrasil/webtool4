@@ -9,7 +9,8 @@ annotation.video = {
     },
     player: null,
     frameFromTime(timeSeconds) {
-        return parseInt(timeSeconds * annotation.video.fps) + 1;
+        let frame= parseInt((parseInt(timeSeconds * 1000) * 25) / 1000) + 1;
+        return frame;
     },
     timeFromFrame(frameNumber) {
         return ((frameNumber - 1) * annotation.video.timeInterval);
@@ -21,6 +22,7 @@ annotation.video = {
     playingRange: null,
     gotoFrame(frameNumber) {
         let time = annotation.video.timeFromFrame(frameNumber);
+        console.log("gotoFrame", frameNumber, time);
         annotation.video.player.currentTime(time);
     },
     gotoTime(time) {
