@@ -3128,7 +3128,7 @@ $router->delete('annotation/staticFrameMode2/fes/{idStaticSentenceMM}/{idFrame}'
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fullText', [
+$router->get('annotation/fullText/{idDocument?}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@browse',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -3136,7 +3136,7 @@ $router->get('annotation/fullText', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/fullText/grid', [
+$router->post('annotation/fullText/grid/{idDocument?}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@grid',
 	'as' => NULL,
 	'middleware' => ['auth'],

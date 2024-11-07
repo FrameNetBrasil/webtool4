@@ -87,7 +87,7 @@
                 console.log('timeupdate currentTime', currentTime);
                 let currentFrame = annotation.video.frameFromTime(currentTime);
                 console.log("timeupdate currentFrame ", currentFrame);
-                currentTime = annotation.video.timeFromFrame(currentFrame);
+                //currentTime = annotation.video.timeFromFrame(currentFrame);
                 //console.log('time update', currentTime);
                 Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
                 console.log("timeupdate timecount ", Alpine.store('doStore').timeCount);
@@ -116,7 +116,7 @@
                 }
             })
             player.on('pause', () => {
-                player.currentTime(Alpine.store('doStore').timeCount);
+                //player.currentTime(Alpine.store('doStore').timeCount);
                 let currentTime = player.currentTime();
                 console.log('currentTime', currentTime);
                 Alpine.store('doStore').currentVideoState = 'paused';
