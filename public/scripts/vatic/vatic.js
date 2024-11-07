@@ -38,14 +38,12 @@ let vatic = {
 
    blobToImage: function (blob) {
         return new Promise((result, _) => {
-            console.log('===============================');
             let img = new Image();
             img.crossOrigin = "anonymous";
             img.onload = function () {
                 result(img);
                 URL.revokeObjectURL(this.src);
             };
-            console.log(blob);
             img.src = URL.createObjectURL(blob);
         });
     },

@@ -31,7 +31,7 @@ document.addEventListener('alpine:init', () => {
             await annotation.api.loadObjects();
         },
         updateCurrentFrame(frameNumber) {
-            //console.log('updateCurrentFrame',this.currentVideoState,this.newObjectState);
+            console.log('updateCurrentFrame',frameNumber,this.currentVideoState,this.newObjectState);
             this.frameCount = this.currentFrame = frameNumber;
             if ((this.currentVideoState === 'paused') ||
                 (this.newObjectState === 'tracking') ||
@@ -96,7 +96,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         startTracking() {
-            console.log('start tracking');
+            console.log('*** start tracking');
             this.newObjectState = 'tracking';
             this.currentVideoState = 'playing';
             annotation.objects.tracking(true);
