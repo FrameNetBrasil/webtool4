@@ -1,4 +1,4 @@
-<div class="controls flex flex-row gap-3 justify-content-between mr-5">
+<div class="controls flex flex-row gap-1 justify-content-between mr-5">
     <div class="flex flex-column">
         <div class="mr-1 font-bold border-bottom-1">
             Object
@@ -19,13 +19,6 @@
             >
                 <i class="window close outline icon"></i>
                 <span x-data x-text="'End at frame #' + ($store.doStore.currentFrame || '')"></span>
-            </button>
-            <button
-                id="btnShowHideObjects"
-                class="ui toggle button secondary"
-                x-data @click="$store.doStore.showHideObjects()"
-            >
-                Show/Hide
             </button>
         </div>
     </div>
@@ -56,7 +49,14 @@
         <div class="mr-1 font-bold">
             &nbsp;
         </div>
-        <div class="mt-1">
+        <div class="mr-1 font-bold">
+            <button
+                id="btnShowHideObjects"
+                class="ui toggle button secondary"
+                x-data @click="$store.doStore.showHideObjects()"
+            >
+                Show/Hide All
+            </button>
             <button
                 id="btnClear"
                 class="ui button secondary"
