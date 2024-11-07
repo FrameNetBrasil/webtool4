@@ -120,13 +120,27 @@ document.addEventListener('alpine:init', () => {
             htmx.ajax("GET","/annotation/dynamicMode/formObject/0/0", "#formObject");
         },
         showHideObjects() {
-            console.log('show/hide objects');
+            console.log('show/hide objects',this.showHideBoxesState);
             if (this.showHideBoxesState === 'show') {
                 this.showHideBoxesState = 'hide';
             } else {
                 this.showHideBoxesState = 'show';
             }
-            annotation.objects.drawFrameBoxes(this.currentFrame);
+            //this.clear();
+            //annotation.objects.drawFrameBoxes(this.currentFrame);
+            // show/hide todas as boxes existentes no currentFrame
+            if (this.currentFrame < 1) {
+                return;
+            }
+            if (this.showHideBoxesState === "hide") {
+                $(".bbox").css("display", "none");
+            } else {
+                let objects = annotation.objects.tracker.annotatedObjects.filter(o => o.inFrame(this.currentFrame));
+                console.log(objects);
+                objects.forEach(o => {
+                    o.drawBoxInFrame(this.currentFrame, "showing");
+                });
+            }
         },
     });
 
@@ -150,9 +164,7 @@ document.addEventListener('alpine:init', () => {
                 $('#btnShowHideObjects').addClass('disabled');
                 $('#btnClear').addClass('disabled');
                 let rate =  annotation.video.player.playbackRate();
-                console.log("======== rate ", rate);
                 if (rate > 0.9) {
-                    //Alpine.store('doStore').newObjectState = 'none';
                     Alpine.store('doStore').selectObject(null);
                 }
             }
@@ -172,7 +184,6 @@ document.addEventListener('alpine:init', () => {
             $('#btnCreateObject').addClass('disabled');
             $('#btnStartTracking').addClass('disabled');
             $('#btnPauseTracking').addClass('disabled');
-            // $('#btnStopTracking').addClass('disabled');
             $('#btnEndObject').addClass('disabled');
             $('#btnShowHideObjects').addClass('disabled');
             annotation.video.disablePlayPause();
@@ -190,7 +201,7 @@ document.addEventListener('alpine:init', () => {
             $('#btnPauseTracking').addClass('disabled');
             // $('#btnStopTracking').addClass('disabled');
             $('#btnEndObject').addClass('disabled');
-            $('#btnShowHideObjects').addClass('disabled');
+            //$('#btnShowHideObjects').addClass('disabled');
             annotation.video.enablePlayPause();
             annotation.video.enableSkipFrame();
         }

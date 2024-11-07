@@ -46,10 +46,10 @@ var manager = {
                     console.log('no');
                     return true;
                 },
-                onApprove : function() {
+                onApprove : async function() {
                     //$.toast({message:'Approved'});
                     console.log('yes');
-                    htmx.ajax('DELETE', action, null);
+                    await htmx.ajax('DELETE', action, null);
                     // if (event) {
                     //     $("#" + event[0]).trigger(event[1]);
                     // }
