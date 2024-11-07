@@ -21,21 +21,30 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware("auth")]
 class FullTextController extends Controller
 {
-    #[Get(path: '/annotation/fullText')]
-    public function browse()
+    #[Get(path: '/annotation/fullText/{idDocument?}')]
+    public function browse(int $idDocument = null)
     {
         $search = session('searchFEAnnotation') ?? SearchData::from();
         return view("Annotation.FullText.browse", [
+            'idDocument' => $idDocument,
             'search' => $search
         ]);
     }
 
-    #[Post(path: '/annotation/fullText/grid')]
-    public function grid(SearchData $search)
+    #[Post(path: '/annotation/fullText/grid/{idDocument?}')]
+    public function grid(SearchData $search, int $idDocument = null)
     {
+        $sentences = [];
+        $document = null;
+        if (!is_null($idDocument)) {
+            $document = Document::byId($idDocument);
+            $sentences = AnnotationFullTextService::listSentences($idDocument);
+        }
         return view("Annotation.FullText.grids", [
+            'idDocument' => $idDocument,
             'search' => $search,
-            'sentences' => [],
+            'document' => $document,
+            'sentences' => $sentences,
         ]);
     }
 
@@ -144,7 +153,7 @@ class FullTextController extends Controller
     public function deleteAS(int $idAnnotationSet)
     {
         try {
-            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $idAnnotationSet);
+            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $idAnnotationSet);
             AnnotationSet::delete($idAnnotationSet);
             return $this->clientRedirect("/annotation/fullText/sentence/{$annotationSet->idDocumentSentence}");
         } catch (\Exception $e) {

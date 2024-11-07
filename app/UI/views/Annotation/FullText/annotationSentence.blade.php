@@ -12,7 +12,7 @@
                             {{$corpus->name}}
                         </div>
                         <div class="ui label wt-tag-id">
-                            {{$document->name}}
+                            <a href="/annotation/fullText/{{$document->idDocument}}">{{$document->name}}</a>
                         </div>
                         <div class="ui label wt-tag-id">
                             #{{$idDocumentSentence}}
