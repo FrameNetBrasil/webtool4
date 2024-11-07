@@ -86,9 +86,11 @@
                 let currentTime = player.currentTime();
                 console.log('timeupdate currentTime', currentTime);
                 let currentFrame = annotation.video.frameFromTime(currentTime);
+                console.log("timeupdate currentFrame ", currentFrame);
                 currentTime = annotation.video.timeFromFrame(currentFrame);
                 //console.log('time update', currentTime);
                 Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
+                console.log("timeupdate timecount ", Alpine.store('doStore').timeCount);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 if (annotation.video.playingRange) {
                     if (currentFrame > annotation.video.playingRange.endFrame) {
