@@ -134,7 +134,7 @@ class LUCandidateController extends Controller
             $luCandidate = LUCandidate::byId($data->idLUCandidate);
             $link = '';
             if ($luCandidate->idDocumentSentence) {
-                $link = "/annotation/fullText/{$luCandidate->idDocumentSentence}";
+                $link = "/annotation/fullText/sentence/{$luCandidate->idDocumentSentence}";
             }
             if ($luCandidate->idDocument) {
                 $link = "/annotation/staticBBox/{$luCandidate->idDocument}";
