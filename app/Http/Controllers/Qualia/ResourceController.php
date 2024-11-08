@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SemanticType;
+namespace App\Http\Controllers\Qualia;
 
 use App\Data\Domain\SearchData as DomainSearchData;
 use App\Data\SemanticType\CreateData;
