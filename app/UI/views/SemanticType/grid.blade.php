@@ -1,9 +1,9 @@
 <div
-        class="h-full"
-        hx-trigger="reload-gridSemanticType from:body"
-        hx-target="this"
-        hx-swap="outerHTML"
-        hx-get="/semanticType/grid"
+    class="h-full"
+    hx-trigger="reload-gridSemanticType from:body"
+    hx-target="this"
+    hx-swap="outerHTML"
+    hx-get="/semanticType/grid"
 >
     <div class="relative h-full overflow-auto">
         <div id="semanticTypeTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
@@ -13,7 +13,11 @@
                 <script>
                     $(function() {
                         $("#semanticTypeTree").treegrid({
-                            data: {{Js::from($data)}},
+                            url:"/report/semanticType/data",
+                            queryParams: {
+                                semanticType: '{{$search->semanticType}}'
+                            },
+                            method:'get',
                             fit: true,
                             showHeader: false,
                             rownumbers: false,

@@ -21,11 +21,30 @@ class ResourceController extends Controller
 {
 
     #[Get(path: '/semanticType')]
-    public function resource()
+    public function resource(int|string $idConcept = '', string $lang = '')
     {
-        return view("SemanticType.resource");
+        $search = session('searchSemanticType') ?? SearchData::from();
+        $data = [];
+        return view("SemanticType.resource", [
+            'search' => $search,
+            'idSemanticType' => null,
+            'data' => $data,
+        ]);
     }
 
+    #[Get(path: '/semanticType/grid')]
+    public function grid()
+    {
+        $search = session('searchSemanticType') ?? SearchData::from();
+        $data = [];
+        return view("SemanticType.grid", [
+            'search' => $search,
+            'idSemanticType' => null,
+            'data' => $data,
+        ]);
+    }
+
+    /*
     #[Get(path: '/semanticType/grid/{fragment?}')]
     #[Post(path: '/semanticType/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
@@ -104,12 +123,12 @@ class ResourceController extends Controller
         return $children;
     }
 
-
+    */
     #[Get(path: '/semanticType/{id}/subTypes')]
     public function semanticTypes(string $id)
     {
         $semanticType = SemanticType::byId($id);
-        return view("SemanticType.childSubType",[
+        return view("SemanticType.childSubType", [
             'idEntity' => $semanticType->idEntity,
             'root' => $semanticType->name
         ]);
@@ -132,7 +151,7 @@ class ResourceController extends Controller
     public function masterDelete(int $idSemanticType)
     {
         try {
-            Criteria::deleteById("semantictype","idSemanticType", $idSemanticType);
+            Criteria::deleteById("semantictype", "idSemanticType", $idSemanticType);
             return $this->clientRedirect("/semanticType");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -223,6 +242,7 @@ class ResourceController extends Controller
             'root' => $root
         ]);
     }
+
     #[Post(path: '/semanticType/{idEntity}/addSubType')]
     public function childAddSubType(CreateData $data)
     {
@@ -247,9 +267,11 @@ class ResourceController extends Controller
     #[Get(path: '/semanticType/{idEntity}/childSubTypeGrid')]
     public function childGridSubType(string $idEntity)
     {
+        $relations = SemanticType::listChildren($idEntity);
+        debug($relations);
         return view("SemanticType.childSubTypeGrid", [
             'idEntity' => $idEntity,
-            'relations' => SemanticType::listChildren($idEntity)
+            'relations' => $relations
         ]);
     }
 
