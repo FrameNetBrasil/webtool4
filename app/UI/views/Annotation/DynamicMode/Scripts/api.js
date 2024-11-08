@@ -84,6 +84,9 @@ annotation.api = {
             data: params,
             success: (response) => {
                 result = response;
+            },
+            error: (xhr,status,error) => {
+                console.error(error);
             }
         });
         return result;

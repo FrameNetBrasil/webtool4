@@ -201,7 +201,7 @@ annotation.objects = {
         }
     },
     creatingObject() {
-        annotation.video.player.currentTime(Alpine.store('doStore').timeCount);
+        //annotation.video.player.currentTime(Alpine.store('doStore').timeCount);
         annotation.drawBox.init();
         console.log("creating new object");
         document.querySelector("#canvas").style.cursor = "crosshair";
@@ -443,8 +443,8 @@ annotation.objects = {
                 currentFrame = currentFrame + 1;
                 console.log("tracking....", currentFrame);
                 annotation.video.gotoFrame(currentFrame);
-                Alpine.store("doStore").updateCurrentFrame(currentFrame);
-                await new Promise(r => setTimeout(r, 1000));
+                //Alpine.store("doStore").updateCurrentFrame(currentFrame);
+                await new Promise(r => setTimeout(r, 800));
                 return annotation.objects.tracking(Alpine.store("doStore").currentVideoState === "playing");
             }
         }
