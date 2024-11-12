@@ -2632,6 +2632,182 @@ $router->delete('annotation/fe/annotationset/{idAnnotationSet}', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/deixis', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@browse',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/grid', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@grid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/objectFE/{idFrame}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@objectFE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@annotation',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/formObject', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@formObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/formObject/{idDynamicObject}/{order}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@getFormObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/gridObjects/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@objectsForGrid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/updateObject', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/updateObjectAnnotation', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObjectAnnotation',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/cloneObject', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@cloneObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/deixis/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/updateBBox', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateBBox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/fes/{idFrame}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@feCombobox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/sentences/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@gridSentences',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/comment', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@annotationComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/buildSentences/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@buildSentences',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/formSentence/{idDocument}/{idSentence}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@formSentence',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/formSentence', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@sentence',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/words/{idVideo}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@words',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/joinWords', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@joinWords',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/buildSentences/sentences/{idDocument}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@buildSentenceSentences',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/splitSentence', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@splitSentence',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/staticFrameMode1', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticFrameMode1Controller@browse',
 	'as' => NULL,
