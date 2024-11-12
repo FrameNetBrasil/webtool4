@@ -38,11 +38,11 @@
     </x-slot:search>
     <x-slot:grid>
         <div
-            hx-trigger="load"
-            hx-target="this"
-            hx-swap="outerHTML"
-            hx-get="/semanticType/grid"
-        ></div>
+            id="gridArea"
+            class="h-full"
+        >
+            @include("SemanticType.grid")
+        </div>
     </x-slot:grid>
     <x-slot:edit>
         <div id="editArea">

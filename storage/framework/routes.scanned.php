@@ -304,15 +304,7 @@ $router->get('semanticType', [
 	'domain' => NULL,
 ]);
 
-$router->get('semanticType/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\SemanticType\ResourceController@grid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('semanticType/grid/{fragment?}', [
+$router->get('semanticType/grid', [
 	'uses' => 'App\Http\Controllers\SemanticType\ResourceController@grid',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -3464,258 +3456,138 @@ $router->get('fe/relations/{idEntityRelation}/grid', [
 	'domain' => NULL,
 ]);
 
-$router->get('qualia', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@browse',
+$router->get('semanticType', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@resource',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/new', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@new',
+$router->get('semanticType/grid', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@grid',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('qualia', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@newQualiaStructure',
+$router->get('semanticType/{id}/subTypes', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@semanticTypes',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('qualia/grid', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@grid',
+$router->get('semanticType/{id}/edit', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@get',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/listRelationsForSelect', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@listRelationsForSelect',
+$router->delete('semanticType/{idSemanticType}', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@masterDelete',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/listTypesForSelect', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@listTypesForSelect',
+$router->get('semanticType/new', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@formNew',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('qualia/listForGrid', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@listForGrid',
+$router->post('semanticType/new', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@new',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{id}/edit', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@edit',
+$router->get('semanticType/{idEntity}/childAdd/{root}', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@childFormAdd',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{idFrame}/formEntries', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@formEntries',
+$router->get('semanticType/{idEntity}/childGrid', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@childGrid',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->put('qualia/{idFrame}/entries', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@entries',
+$router->post('semanticType/{idEntity}/add', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@childAdd',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{idFrame}/fes', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@fes',
+$router->delete('semanticType/relation/{idEntityRelation}', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@childDelete',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{idFrame}/fes/formNew', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@formNewFE',
+$router->get('semanticType/{idEntity}/childSubTypeAdd/{root}', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@childFormAddSubType',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{idFrame}/fes/grid', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@gridFE',
+$router->post('semanticType/{idEntity}/addSubType', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@childAddSubType',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{idFrame}/lus', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@lus',
+$router->get('semanticType/{idEntity}/childSubTypeGrid', [
+	'uses' => 'App\Http\Controllers\Qualia\ResourceController@childGridSubType',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{idFrame}/lus/formNew', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@formNewLU',
+$router->get('report/qualia', [
+	'uses' => 'App\Http\Controllers\Qualia\ReportController@main',
 	'as' => NULL,
-	'middleware' => ['auth'],
+	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{idFrame}/lus/grid', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@gridLU',
+$router->get('report/qualia/data', [
+	'uses' => 'App\Http\Controllers\Qualia\ReportController@data',
 	'as' => NULL,
-	'middleware' => ['auth'],
+	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('qualia/{id}/classification', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@classification',
+$router->get('report/qualia/{idQualia?}/{lang?}', [
+	'uses' => 'App\Http\Controllers\Qualia\ReportController@report',
 	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/relations', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@relations',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/relations/formNew', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@formNewRelation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/relations/grid', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@gridRelation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('qualia/{idFrame}/relations', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@newRelation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('qualia/relations/{idEntityRelation}', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@deleteRelation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/fes/relations', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@fesRelations',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/fes/relations/formNew', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@fesRelationsFormNew',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/fes/relations/grid', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@fesRelationsGrid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('qualia/{idFrame}/fes/relations', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@feRelationsNewn',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('qualia/fes/relations/{idEntityRelation}', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@fesRelationDelete',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/semanticTypes', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@semanticTypes',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/semanticTypes/formAdd', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@semanticTypesAdd',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('qualia/{idFrame}/semanticTypes/grid', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@semanticTypesGrid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('qualia/{idFrame}/semanticTypes', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@addSemanticType',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('qualia/semanticTypes/{idEntityRelation}', [
-	'uses' => 'App\Http\Controllers\Qualia\QualiaController@deleteSemanticType',
-	'as' => NULL,
-	'middleware' => ['auth'],
+	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);
