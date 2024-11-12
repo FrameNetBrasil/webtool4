@@ -19,7 +19,7 @@ class AuthenticateMaster
     protected function authenticate($request)
     {
         if (MAuth::isLogged()) {
-            if(session('isAdmin') || session('isMaster')) {
+            if(session('isAdmin') || session('isMaster') || session('isManager')) {
                 return true;
             }
             else {
