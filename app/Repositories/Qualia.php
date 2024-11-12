@@ -74,24 +74,20 @@ class Qualia
             ->orderBy("name")->get()->keyBy("idTypeInstance")->all();
     }
 
-    public static function listRootByDomain(int $idDomain): array
+    public static function listByType(int $idTypeInstance): array
     {
-        $criteriaER = Criteria::table("view_relation")
-            ->select('idEntity1')
-            ->where("relationType", "=", 'rel_subtypeof');
         $rows = Criteria::table("view_qualia")
-            ->where("view_qualia.idEntity", "NOT IN", $criteriaER)
             ->filter([
-                ['idDomain', '=', $idDomain],
+                ['idTypeInstance', '=', $idTypeInstance],
                 ['view_qualia.idLanguage', '=', AppService::getCurrentIdLanguage()],
-            ])->select("view_qualia.idSemanticType", "view_qualia.idEntity", "view_qualia.name")
-            ->orderBy("view_qualia.name")->all();
-        foreach ($rows as $row) {
-            $row->n = Criteria::table("view_relation")
-                ->where("view_relation.idEntity2", "=", $row->idEntity)
-                ->where("view_relation.relationType", "=", "rel_subtypeof")
-                ->count();
-        }
+            ])->select("view_qualia.idQualia", "view_qualia.idEntity", "view_qualia.name", "view_qualia.info", "view_qualia.frameName")
+            ->orderBy("view_qualia.info")->all();
+//        foreach ($rows as $row) {
+//            $row->n = Criteria::table("view_relation")
+//                ->where("view_relation.idEntity2", "=", $row->idEntity)
+//                ->where("view_relation.relationType", "=", "rel_subtypeof")
+//                ->count();
+//        }
         return $rows;
     }
 

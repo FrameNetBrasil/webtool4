@@ -24,6 +24,12 @@ class UpdateData extends Data
         if ($this->idFrame == 0) {
             $this->idFrame = null;
         }
+        if (is_null($this->senseDescription)) {
+            $this->senseDescription = '';
+        }
+        if (is_null($this->discussion)) {
+            $this->discussion = '';
+        }
         $lemma = Lemma::byId($this->idLemma);
         $this->name = $lemma->name;
     }
