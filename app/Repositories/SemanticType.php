@@ -2,15 +2,6 @@
 
 namespace App\Repositories;
 
-//use App\Data\SemanticType\CreateData;
-//use App\Data\SemanticType\SearchData;
-//use App\Services\AppService;
-//use App\Services\RelationService;
-//use Orkester\Persistence\Enum\Key;
-//use Orkester\Persistence\Enum\Type;
-//use Orkester\Persistence\Map\ClassMap;
-//use Orkester\Persistence\Repository;
-
 use App\Database\Criteria;
 use App\Services\AppService;
 
@@ -59,7 +50,7 @@ class SemanticType
                 ["view_relation.idEntity2", "=", $idEntity],
                 ["view_relation.relationType", "=", "rel_subtypeof"],
                 ["view_semantictype.idLanguage", "=", AppService::getCurrentIdLanguage()]
-            ])->select("view_semantictype.idSemanticType", "view_semantictype.idEntity", "view_semantictype.name")
+            ])->select("view_semantictype.idSemanticType", "view_semantictype.idEntity", "view_semantictype.name","view_relation.idEntityRelation")
             ->orderBy("view_semantictype.name")->all();
         foreach($rows as $row) {
             $row->n = Criteria::table("view_relation")

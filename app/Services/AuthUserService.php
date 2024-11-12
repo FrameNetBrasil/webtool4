@@ -38,6 +38,7 @@ class AuthUserService
                 session(['userLevel' => User::getUserLevel($user)]);
                 session(['isAdmin' => User::isMemberOf($user, 'ADMIN')]);
                 session(['isMaster' => User::isMemberOf($user, 'MASTER')]);
+                session(['isManager' => User::isMemberOf($user, 'MANAGER')]);
                 session(['isAnno' => User::isMemberOf($user, 'ANNO')]);
                 debug("[LOGIN] Authenticated {$user->login}");
                 return 'logged';
@@ -70,6 +71,7 @@ class AuthUserService
                     session(['userLevel' => User::getUserLevel($user)]);
                     session(['isAdmin' => User::isMemberOf($user, 'ADMIN')]);
                     session(['isMaster' => User::isMemberOf($user, 'MASTER')]);
+                    session(['isManager' => User::isMemberOf($user, 'MANAGER')]);
                     session(['isAnno' => User::isMemberOf($user, 'ANNO')]);
                     debug("[LOGIN] Authenticated {$user->login}");
                     return 'logged';
