@@ -112,6 +112,7 @@ class LUCandidateController extends Controller
     #[Put(path: '/luCandidate')]
     public function update(UpdateData $data)
     {
+        debug($data);
         Criteria::table("lucandidate")
             ->where("idLUCandidate", $data->idLUCandidate)
             ->update($data->toArray());
