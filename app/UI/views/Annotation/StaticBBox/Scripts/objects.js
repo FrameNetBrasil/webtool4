@@ -117,7 +117,7 @@ annotation.objects = {
                     annotatedObject.bbox = new BoundingBox(x, y, width, height);
                     annotation.api.updateBBox({
                         idStaticObject: annotatedObject.object.idStaticObject,
-                        bbox: annotatedObject.getScaledBBox()
+                        bbox: annotatedObject.getBBox()
                     });
                 }
             );
