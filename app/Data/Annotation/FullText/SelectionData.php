@@ -10,17 +10,10 @@ class SelectionData extends Data
     public function __construct(
         public ?string $type = '',
         public ?string $id = '',
-        public ?string $start = '',
-        public ?string $end = '',
+        public ?int $start = -1,
+        public ?int $end = -1,
     )
     {
     }
-
-//    public static function normalizers(): array
-//    {
-//        return [
-//            JsonNormalizer::class,
-//        ];
-//    }
 
 }

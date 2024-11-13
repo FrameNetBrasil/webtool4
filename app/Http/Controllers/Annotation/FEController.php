@@ -93,6 +93,9 @@ class FEController extends Controller
     {
         try {
             $input->range = SelectionData::from(request("selection"));
+            if ($input->range->end < $input->range->start) {
+                throw new \Exception("Wrong selection.");
+            }
             if ($input->range->type != '') {
                 $data = AnnotationFEService::annotateFE($input);
                 //$data['alternativeLU'] = [];

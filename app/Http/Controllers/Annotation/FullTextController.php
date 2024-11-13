@@ -103,10 +103,11 @@ class FullTextController extends Controller
             debug($input);
             debug(request("selection"));
             $input->range = SelectionData::from(request("selection"));
+            if ($input->range->end < $input->range->start) {
+                throw new \Exception("Wrong selection.");
+            }
             if ($input->range->type != '') {
-                $data = AnnotationFullTextService::annotateEntity($input);
-                //return view("Annotation.FullText.Panes.annotationSet", $data);
-                //return $data;
+                AnnotationFullTextService::annotateEntity($input);
                 return $input->idAnnotationSet;
             } else {
                 throw new \Exception("No selection.");
