@@ -198,9 +198,10 @@
     }
 
     .south {
-        flex-grow: 0;
-        width: 100%;
         background-color: lightsteelblue;
+        flex-grow:1;
+        height:100%;
+        width:100%;
 
         .tl-container {
             width: 100%;
@@ -214,9 +215,9 @@
 
             #timeline {
                 box-sizing: border-box;
-                flex-grow: 8;
-                width: 100%;
-                height: 100%;
+                //flex-grow: 8;
+                width: calc(100% - 250px);
+                //height: 100%;
                 scrollbar-color: gray #161616;
             }
 
@@ -238,6 +239,13 @@
                 /*grid-template-columns: ;*/
                 height: 100%;
                 width: 100%;
+            }
+
+            main {
+                flex-grow: 4;
+                height: 0px;
+                display: grid;
+                grid-template-rows: auto minmax(0, 1fr) auto;
             }
 
             .button {
@@ -263,19 +271,14 @@
                 border: none;
             }
 
-            main {
-                flex-grow: 4;
-                height: 0px;
-                display: grid;
-                grid-template-rows: auto minmax(0, 1fr) auto;
-            }
 
             .footer {
                 display: flex;
                 //height: 45%;
                 //max-height: 70%;
                 //height:100%;
-                flex-grow:1;
+                //flex-grow:1;
+                height:calc(100% - 36px);
             }
 
             .toolbar {
