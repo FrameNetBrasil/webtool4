@@ -387,7 +387,7 @@ class AnnotationFullTextService
                                 }
                             } else {
                                 if ($span->layerTypeEntry == 'lty_fe') {
-                                    $nis[$span->idInstantiationType][] = [
+                                    $nis[$span->idInstantiationType][$span->idEntity] = [
                                         'idEntityFE' => $span->idEntity,
                                         'label' => $span->name,
                                         'idColor' => $span->idColor,
