@@ -77,9 +77,6 @@
             </div>
             <div class="south">
                 @include("Annotation.Deixis.Panes.timelinePane")
-                <script type="text/javascript">
-                    @include("Annotation.Deixis.Scripts.timeline")
-                </script>
             </div>
         </div>
     </x-slot:main>
