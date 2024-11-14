@@ -84,13 +84,15 @@
             })
             player.on('timeupdate', () => {
                 let currentTime = player.currentTime();
-                console.log('timeupdate currentTime', currentTime);
+                // console.log(" ** player current time - timeupdate", currentTime);
+                // console.log('timeupdate currentTime', currentTime);
                 let currentFrame = annotation.video.frameFromTime(currentTime);
-                console.log("timeupdate currentFrame ", currentFrame);
+                // console.log("timeupdate currentFrame ", currentFrame);
                 //currentTime = annotation.video.timeFromFrame(currentFrame);
                 //console.log('time update', currentTime);
-                Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
-                console.log("timeupdate timecount ", Alpine.store('doStore').timeCount);
+                //Alpine.store('doStore').timeByFrame = Math.floor(currentTime * 1000) /1000;
+                Alpine.store('doStore').timeByFrame = annotation.video.timeFromFrame(currentFrame);
+                // console.log("timeupdate timeByFrame ", Alpine.store('doStore').timeByFrame);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 if (annotation.video.playingRange) {
                     if (currentFrame > annotation.video.playingRange.endFrame) {
@@ -116,9 +118,14 @@
                 }
             })
             player.on('pause', () => {
-                //player.currentTime(Alpine.store('doStore').timeCount);
-                let currentTime = player.currentTime();
-                console.log('currentTime', currentTime);
+                // let currentTime = player.currentTime();
+                // let currentFrame = annotation.video.frameFromTime(currentTime);
+                // Alpine.store('doStore').timeByFrame = annotation.video.timeFromFrame(currentFrame);
+                // Alpine.store('doStore').updateCurrentFrame(currentFrame);
+
+                // let currentTime = player.currentTime();
+                // console.log(" ** player current time - pause", currentTime);
+
                 Alpine.store('doStore').currentVideoState = 'paused';
                 $btn = document.querySelector("#btnBackward");
                 if ($btn) {
@@ -152,7 +159,7 @@
     <div x-data class="info flex flex-row justify-content-between">
         <div style="width:200px; text-align:left">
             <div class="ui label">
-            <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeCount"></span>s]
+            <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeByFrame"></span>s]
             </div>
         </div>
         <div>

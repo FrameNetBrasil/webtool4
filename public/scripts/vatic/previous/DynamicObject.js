@@ -1,5 +1,7 @@
+"use strict";
+
 /**
- * Represents a dynamic object that has bounding boxes throughout the entire frame sequence.
+ * Represents an object bounding boxes throughout the entire frame sequence.
  */
 class DynamicObject {
     constructor(object) {
@@ -16,48 +18,36 @@ class DynamicObject {
         this.hidden = false;
         this.locked = false;
         this.dom = null;
-        //this.frames = [];
-        this.bboxes = [];
+        this.frames = [];
     }
 
     inFrame(frameNumber) {
         return (this.object.startFrame <= frameNumber) && (this.object.endFrame >= frameNumber);
     }
 
-    getBoundingBoxAt(frameNumber) {
-        for (let i = 0; i < this.bboxes.length; i++) {
-            let currentBBox = this.bboxes[i];
-            if (currentBBox.frameNumber > frameNumber) {
+
+    getFrameAt(frameNumber) {
+        for (let i = 0; i < this.frames.length; i++) {
+            let currentFrame = this.frames[i];
+            if (currentFrame.frameNumber > frameNumber) {
                 break;
             }
-            if (currentBBox.frameNumber === frameNumber) {
-                return currentBBox;
+            if (currentFrame.frameNumber === frameNumber) {
+                return currentFrame;
             }
         }
         return null;
     }
 
-    // getFrameAt(frameNumber) {
-    //     for (let i = 0; i < this.frames.length; i++) {
-    //         let currentFrame = this.frames[i];
-    //         if (currentFrame.frameNumber > frameNumber) {
-    //             break;
-    //         }
-    //         if (currentFrame.frameNumber === frameNumber) {
-    //             return currentFrame;
-    //         }
-    //     }
-    //     return null;
-    // }
-
     drawBoxInFrame(frameNumber, state) {
         this.dom.style.display = 'none';
-        console.log("drawBoxInFrame",this.bboxes);
-        let bbox = this.getBoundingBoxAt(frameNumber);
-        if (bbox) {
+        let frameObject = this.getFrameAt(frameNumber);
+
+        if (frameObject) {
             console.log(state, this.hidden ? ' hidden': ' not hidden');
             if (!this.hidden) {
-                if (bbox.isVisible()) {
+                if (frameObject.isVisible()) {
+                    let bbox = frameObject.bbox;
                     this.dom.style.position = 'absolute';
                     this.dom.style.display = 'block';
                     this.dom.style.width = bbox.width + 'px';
@@ -83,7 +73,7 @@ class DynamicObject {
                     this.dom.style.backgroundColor = 'transparent';
                     this.dom.style.opacity = 1;
                     this.visible = true;
-                    if (bbox.blocked) {
+                    if (frameObject.blocked) {
                         this.dom.style.opacity = 0.5;
                         this.dom.style.backgroundColor = 'white';
                         this.dom.style.borderStyle = 'dashed';
@@ -133,27 +123,27 @@ class DynamicObject {
 
 */
 
-    // cloneFrom(sourceObject) {
-    //     // this.idObject is unique
-    //     this.object = sourceObject.object;
-    //     this.object.idDynamicObject = null;
-    //     this.object.idFrame = null;
-    //     this.object.frame = '';
-    //     this.object.idFE = null;
-    //     this.object.fe = '';
-    //     this.object.idLU = null;
-    //     this.object.lu = '';
-    //     this.idObject = 0;
-    //     this.color = vatic.getColor(1);
-    //     this.visible = sourceObject.visible;
-    //     this.hidden = sourceObject.hidden;
-    //     this.locked = sourceObject.locked;
-    //     this.dom = sourceObject.dom;
-    //     this.frames = [];
-    //     for (var frame of sourceObject.frames) {
-    //         this.frames.push(frame);
-    //     }
-    // }
+    cloneFrom(sourceObject) {
+        // this.idObject is unique
+        this.object = sourceObject.object;
+        this.object.idDynamicObject = null;
+        this.object.idFrame = null;
+        this.object.frame = '';
+        this.object.idFE = null;
+        this.object.fe = '';
+        this.object.idLU = null;
+        this.object.lu = '';
+        this.idObject = 0;
+        this.color = vatic.getColor(1);
+        this.visible = sourceObject.visible;
+        this.hidden = sourceObject.hidden;
+        this.locked = sourceObject.locked;
+        this.dom = sourceObject.dom;
+        this.frames = [];
+        for (var frame of sourceObject.frames) {
+            this.frames.push(frame);
+        }
+    }
 
     /*
     setState(state) {
@@ -189,45 +179,26 @@ class DynamicObject {
     }
     */
 
-    addBBox(bbox) {
-        for (let i = 0; i < this.bboxes.length; i++) {
-            if (this.bboxes[i].frameNumber === bbox.frameNumber) {
-                bbox.idBoundingBox = this.bboxes[i].idBoundingBox;
-                this.bboxes[i] = bbox;
+    addToFrame(frameObject) {
+        // console.log('annotatedFrame', annotatedFrame);
+        // console.debug('adding frame in annotated object ' + this.idObject);
+        // console.log(this.frames.length + '  frame number = ' + frame.frameNumber);
+        for (let i = 0; i < this.frames.length; i++) {
+            if (this.frames[i].frameNumber === frameObject.frameNumber) {
+                this.frames[i] = frameObject;
                 // console.log(i, annotatedFrame);
                 this.removeFromFrameToBeRecomputedFrom(i + 1);
                 return;
-            } else if (this.bboxes[i].frameNumber > bbox.frameNumber) {
-                this.bboxes.splice(i, 0, bbox);
+            } else if (this.frames[i].frameNumber > frameObject.frameNumber) {
+                this.frames.splice(i, 0, frameObject);
                 this.removeFromFrameToBeRecomputedFrom(i + 1);
                 this.injectInvisibleFrameAtOrigin();
                 return;
             }
         }
-        this.bboxes.push(bbox);
+        this.frames.push(frameObject);
         this.injectInvisibleFrameAtOrigin();
     }
-
-    // addToFrame(frameObject) {
-    //     // console.log('annotatedFrame', annotatedFrame);
-    //     // console.debug('adding frame in annotated object ' + this.idObject);
-    //     // console.log(this.frames.length + '  frame number = ' + frame.frameNumber);
-    //     for (let i = 0; i < this.frames.length; i++) {
-    //         if (this.frames[i].frameNumber === frameObject.frameNumber) {
-    //             this.frames[i] = frameObject;
-    //             // console.log(i, annotatedFrame);
-    //             this.removeFromFrameToBeRecomputedFrom(i + 1);
-    //             return;
-    //         } else if (this.frames[i].frameNumber > frameObject.frameNumber) {
-    //             this.frames.splice(i, 0, frameObject);
-    //             this.removeFromFrameToBeRecomputedFrom(i + 1);
-    //             this.injectInvisibleFrameAtOrigin();
-    //             return;
-    //         }
-    //     }
-    //     this.frames.push(frameObject);
-    //     this.injectInvisibleFrameAtOrigin();
-    // }
 
     /*
     get(frameNumber) {
@@ -258,24 +229,23 @@ class DynamicObject {
     }
 
     */
-    removeFromFrameToBeRecomputedFrom(bboxIndex) {
+    removeFromFrameToBeRecomputedFrom(frameNumber) {
         let count = 0;
-        for (let i = bboxIndex; i < this.bboxes.length; i++) {
-            if (this.bboxes[i].isGroundTruth) {
+        for (let i = frameNumber; i < this.frames.length; i++) {
+            if (this.frames[i].isGroundTruth) {
                 break;
             }
             count++;
         }
         if (count > 0) {
-            this.bboxes.splice(bboxIndex, count);
+            this.frames.splice(frameNumber, count);
         }
     }
 
     injectInvisibleFrameAtOrigin() {
-        if (this.bboxes.length === 0 || this.bboxes[0].frameNumber > 0) {
-            let bbox = new BoundingBox(0, null, null, null,null, false);
-            bbox.visible = false;
-            this.bboxes.splice(0, 0, bbox);
+        if (this.frames.length === 0 || this.frames[0].frameNumber > 0) {
+            let frameObject = new Frame(0, null, false);
+            this.frames.splice(0, 0, frameObject);
         }
     }
 }

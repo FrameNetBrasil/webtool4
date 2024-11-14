@@ -14,7 +14,7 @@ annotation.video = {
         return frame;
     },
     timeFromFrame(frameNumber) {
-        return ((frameNumber - 1) * annotation.video.timeInterval);
+        return Math.floor(((frameNumber - 1) * annotation.video.timeInterval) * 1000) /1000;
     },
     framesRange: {
         first: 1,
@@ -22,12 +22,13 @@ annotation.video = {
     },
     playingRange: null,
     gotoFrame(frameNumber) {
-        let time = annotation.video.timeFromFrame(frameNumber) + 1e-3;
+        let time = annotation.video.timeFromFrame(frameNumber) + 2e-2;
         console.log("gotoFrame", frameNumber, time);
         annotation.video.player.currentTime(time);
     },
     gotoTime(time) {
-        annotation.video.player.currentTime(parseFloat(time));
+        let frame = annotation.video.frameFromTime(time);
+        annotation.video.gotoFrame(frame);
     },
     enablePlayPause() {
         $btn = document.querySelector(".vjs-play-control");

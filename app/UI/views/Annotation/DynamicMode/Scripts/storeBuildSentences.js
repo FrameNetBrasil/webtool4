@@ -1,7 +1,7 @@
 document.addEventListener("alpine:init", () => {
     window.doStore = Alpine.store("doStore", {
         dataState: "",
-        timeCount: 0,
+        timeByFrame: 0,
         frameCount: 1,
         timeDuration: 0,
         frameDuration: 0,
@@ -115,7 +115,7 @@ document.addEventListener("alpine:init", () => {
     });
 
     Alpine.effect(() => {
-        const timeCount = Alpine.store("doStore").timeCount;
+        const timeByFrame = Alpine.store("doStore").timeByFrame;
     });
     Alpine.effect(() => {
         const frameCount = Alpine.store("doStore").frameCount;
