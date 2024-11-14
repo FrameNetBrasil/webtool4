@@ -86,7 +86,7 @@
                 let currentTime = player.currentTime();
                 let currentFrame = annotation.video.frameFromTime(currentTime);
                 //console.log('time update', currentTime);
-                Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
+                Alpine.store('doStore').timeByFrame = Math.floor(currentTime * 1000) /1000;
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 if (annotation.video.playingRange) {
                     if (currentFrame > annotation.video.playingRange.endFrame) {
@@ -142,7 +142,7 @@
     <div x-data class="info flex flex-row justify-content-between pt-1">
         <div style="text-align:left">
             <div class="ui label">
-                <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeCount"></span>s]
+                <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeByFrame"></span>s]
             </div>
         </div>
         <div>
