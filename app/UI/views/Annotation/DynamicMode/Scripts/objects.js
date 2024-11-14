@@ -423,6 +423,8 @@ annotation.objects = {
             idDocument: annotation.document.idDocument,
             idDynamicObject: currentObject.object.idDynamicObject,
             idFrameElement: parseInt(data.idFrameElement),
+            startFrame: parseInt(data.startFrame),
+            endFrame: parseInt(data.endFrame),
             idLU: data.idLU ? parseInt(data.idLU) : null
         };
         await annotation.api.updateObjectAnnotation(params);

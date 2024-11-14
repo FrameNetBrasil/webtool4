@@ -12,14 +12,6 @@
                 <i class="plus square outline icon"></i>
                 Create
             </button>
-            <button
-                id="btnEndObject"
-                class="ui button primary"
-                x-data @click="$store.doStore.endObject()"
-            >
-                <i class="window close outline icon"></i>
-                <span x-data x-text="'End at frame #' + ($store.doStore.currentFrame || '')"></span>
-            </button>
         </div>
     </div>
     <div class="flex flex-column">
@@ -42,6 +34,14 @@
             >
                 <i class="pause icon"></i>
                 Pause
+            </button>
+            <button
+                id="btnEndObject"
+                class="ui button primary"
+                x-data @click="$store.doStore.endObject()"
+            >
+                <i class="window close outline icon"></i>
+                <span x-data x-text="'End at frame #' + ($store.doStore.currentFrame || '')"></span>
             </button>
         </div>
     </div>

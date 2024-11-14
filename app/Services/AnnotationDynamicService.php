@@ -153,6 +153,27 @@ class AnnotationDynamicService
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         }
+        if (($data->startFrame) && ($data->endFrame)) {
+            $idUser = AppService::getCurrentIdUser();
+            $bboxes = Criteria::table("view_dynamicobject_boundingbox")
+                ->where("idDynamicObject", $data->idDynamicObject)
+                ->orderBy("frameNumber")
+                ->all();
+            $max = -1;
+            foreach($bboxes as $bbox) {
+                if ($bbox->frameNumber < $data->startFrame) {
+                    $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
+                } else if ($bbox->frameNumber > $data->endFrame) {
+                    $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
+                } else if ($bbox->frameNumber > $max) {
+                    $max = $bbox->frameNumber;
+                }
+            }
+            
+
+
+
+        }
         return $data->idDynamicObject;
     }
 

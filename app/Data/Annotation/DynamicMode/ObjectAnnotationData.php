@@ -12,6 +12,8 @@ class ObjectAnnotationData extends Data
         public ?int   $idLU = null,
         public ?int   $idDocument = null,
         public string $_token = '',
+        public ?int   $startFrame = null,
+        public ?int   $endFrame = null,
     )
     {
         $this->_token = csrf_token();
