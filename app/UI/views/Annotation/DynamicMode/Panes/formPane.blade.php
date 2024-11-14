@@ -58,12 +58,30 @@
                     ></x-combobox.lu>
                 </div>
             </div>
+            <div class="formgroup-inline">
+                <div class="field mr-1">
+                    <x-number-field
+                        id="startFrame"
+                        label="Start frame"
+                        :value="$object?->startFrame ?? 0"
+                    ></x-number-field>
+                </div>
+                <div id="fes">
+                    <div class="field mr-1">
+                        <x-number-field
+                            id="endFrame"
+                            label="End frame"
+                            :value="$object?->endFrame ?? 0"
+                        ></x-number-field>
+                    </div>
+                </div>
+            </div>
         </x-slot:fields>
         <x-slot:buttons>
             <x-button
                 type="button"
                 label="Save"
-                onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
+                onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),startFrame: $('#startFrame').attr('value'),endFrame: $('#endFrame').attr('value')})"
             ></x-button>
             <x-button
                 type="button"

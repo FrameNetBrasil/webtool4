@@ -88,8 +88,12 @@ annotation.objects = {
             },
             onStopDrag: (e) => {
                 let position = bbox.position();
-                console.error("stopdrag position", position);
-                onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
+                let width =  Math.round(bbox.width()) + 8; // width + 2*border-size
+                let height =  Math.round(bbox.height()) + 8; // height + 2*border-size
+                //console.error("stopdrag position", position);
+                //onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
+                onChange(Math.round(position.left), Math.round(position.top),width,height);
+
             }
         });
         bbox.css("display", "none");
@@ -117,7 +121,7 @@ annotation.objects = {
                     annotatedObject.bbox = new BoundingBox(x, y, width, height);
                     annotation.api.updateBBox({
                         idStaticObject: annotatedObject.object.idStaticObject,
-                        bbox: annotatedObject.getBBox()
+                        bbox: annotatedObject.getScaledBBox()
                     });
                 }
             );
