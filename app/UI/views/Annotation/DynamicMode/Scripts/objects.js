@@ -143,7 +143,7 @@ annotation.objects = {
     clearFrameObject: function() {
         $(".bbox").css("display", "none");
     },
-    drawFrameObject: function(frameNumber) {
+    drawFrameObject: async function(frameNumber) {
         // desenha a box do objeto atual correspondente ao frame indicado por frameNumber
         //let that = this;
         frameNumber = parseInt(frameNumber);
@@ -165,42 +165,48 @@ annotation.objects = {
                     // em ambos os casos, passa os parâmetros para o tracker e deixa ele resolver
 
                     let tracker = annotation.objects.tracker;
-                    tracker.getFrameWithObject(frameNumber, currentObject)
-                        .then(async (frameWithObjects) => {
-                            console.log("frameWithObject", frameWithObjects);
-                            console.log("frameNumber", frameNumber);
-                            currentObject.drawBoxInFrame(frameNumber, "tracking");
-                            // let frameObject = currentObject.getFrameAt(frameNumber);
-                            // let bbox = frameObject.bbox;
-                            //bbox.blocked = frameObject.blocked;
-                            //let bbox = currentObject.getBoundingBoxAt(frameNumber);
-                            let bbox = frameWithObjects[0].bbox;
-                            currentObject.addBBox(bbox);
-                            console.log("***  tracker then ", bbox);
-                            if (bbox.idBoundingBox) {
-                                await annotation.api.updateBBox({
-                                    idBoundingBox: bbox.idBoundingBox,
-                                    bbox: bbox
-                                });
-                            } else {
-                                let params = {
-                                    idDynamicObject: currentObject.object.idDynamicObject,
-                                    frameNumber: bbox.frameNumber,
-                                    bbox: bbox
-                                };
-                                await annotation.api.createBBox(params, async(idBoundingBox) => {
-                                    console.log(idBoundingBox);
-                                    console.log("new BoundingBox", idBoundingBox);
-                                    bbox.idBoundingBox = idBoundingBox;
-                                });
-                            }
-                            console.log('==========');
-                        });
+                    await tracker.setBBoxForObject(currentObject, frameNumber);
+                    console.log("returning from tracker");
+                    currentObject.drawBoxInFrame(frameNumber, "showing");
+
+
+                    // tracker.getFrameWithObject(frameNumber, currentObject)
+                    //     .then(async (frameWithObjects) => {
+                    //         console.log("frameWithObject", frameWithObjects);
+                    //         console.log("frameNumber", frameNumber);
+                    //         currentObject.drawBoxInFrame(frameNumber, "tracking");
+                    //         // let frameObject = currentObject.getFrameAt(frameNumber);
+                    //         // let bbox = frameObject.bbox;
+                    //         //bbox.blocked = frameObject.blocked;
+                    //         //let bbox = currentObject.getBoundingBoxAt(frameNumber);
+                    //         let bbox = frameWithObjects[0].bbox;
+                    //         currentObject.addBBox(bbox);
+                    //         console.log("***  tracker then ", bbox);
+                    //         if (bbox.idBoundingBox) {
+                    //             await annotation.api.updateBBox({
+                    //                 idBoundingBox: bbox.idBoundingBox,
+                    //                 bbox: bbox
+                    //             });
+                    //         } else {
+                    //             let params = {
+                    //                 idDynamicObject: currentObject.object.idDynamicObject,
+                    //                 frameNumber: bbox.frameNumber,
+                    //                 bbox: bbox
+                    //             };
+                    //             await annotation.api.createBBox(params, async(idBoundingBox) => {
+                    //                 console.log(idBoundingBox);
+                    //                 console.log("new BoundingBox", idBoundingBox);
+                    //                 bbox.idBoundingBox = idBoundingBox;
+                    //             });
+                    //         }
+                    //         console.log('==========');
+                    //     });
                     //that.$store.commit('redrawFrame', false);
                 } else {
                     console.log("drawFrame not tracking", currentObject);
                     currentObject.drawBoxInFrame(frameNumber, "showing");
                 }
+                console.log("%%%%%%  end drawFrameObject in ", frameNumber);
             }
         } catch (e) {
             console.error(e.message);
@@ -336,6 +342,7 @@ annotation.objects = {
             //Alpine.store("doStore").newObjectState = "tracking";
             //Alpine.store("doStore").newObjectState = "created";
             //manager.messager("success", "New object created.");
+            annotation.objects.tracker.getFrameImage(currentFrame);
             manager.notify("success", "New object created.");
             return data;
         } catch (e) {

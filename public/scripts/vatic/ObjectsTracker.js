@@ -26,6 +26,27 @@ class ObjectsTracker {
         this.annotatedObjects = [];
     }
 
+    async getFrameImage(frameNumber) {
+        await this.framesManager.getFrameImage(frameNumber);
+    }
+
+    async setBBoxForObject(annotatedObject, frameNumber) {
+        try {
+            let startFrame = this.startFrameObject(frameNumber, annotatedObject);
+            console.log("startFrame inicial", startFrame);
+            if (startFrame !== frameNumber) {
+                while (startFrame < frameNumber) {
+                    startFrame++;
+                    await this.trackObject(startFrame, annotatedObject);
+                    console.log("startFrame", startFrame);
+                }
+            }
+        } catch (e) {
+            console.error(e.message);
+            manager.notify("error", e.message);
+        }
+    }
+
     // obtem os dados de um AnnotatedObject especifico, no frame frameNumber
     getFrameWithObject(frameNumber, annotatedObject) {
         return new Promise((resolve, _) => {
@@ -83,7 +104,39 @@ class ObjectsTracker {
         return start;
     }
 
-    trackObject(frameNumber, annotatedObject) {
+    async trackObject(frameNumber, annotatedObject) {
+        let currentImageData = await this.framesManager.getFrameImage(frameNumber);
+        // let currentImageData = await vatic.blobToImage(blob);
+        //let previousImageData = this.imageData();
+        let bbox = annotatedObject.getBoundingBoxAt(frameNumber);
+        if (bbox === null) {
+            //não existe bbox para o AnnotatedObject no frame frameNumber
+            bbox = annotatedObject.getBoundingBoxAt(frameNumber - 1);
+            if (bbox == null) {
+                // também não existe bbox no frame no anterior
+                throw new Error("Tracking must be done sequentially!");
+            } else {
+                this.opticalFlow.reset();
+                let previousImageData = await this.framesManager.getFrameImage(frameNumber - 1);
+                //let previousImageData = await vatic.blobToImage(blob);
+                // let previousImageData = this.imageData();
+                this.opticalFlow.init(previousImageData);
+                let bboxes = [{x:bbox.x,y:bbox.y,width:bbox.width,height:bbox.height}];
+                let newBboxes = this.opticalFlow.track(currentImageData, bboxes);
+                console.log("previous bboxes",bboxes);
+                console.log("new bboxes",newBboxes);
+                let newBbox = new BoundingBox(frameNumber,newBboxes[0].x,newBboxes[0].y,newBboxes[0].width,newBboxes[0].height,false);
+                console.log("newBbox",newBbox);
+                annotatedObject.addBBox(newBbox);
+                console.log("object.bboxes", annotatedObject.bboxes);
+                //toCompute.push({ annotatedObject: annotatedObject, bbox: bbox });
+
+            }
+        }
+    }
+
+
+    trackObject_old(frameNumber, annotatedObject) {
         return new Promise((resolve, _) => {
             this.framesManager
                 .getFrame(frameNumber)
@@ -175,7 +228,7 @@ class ObjectsTracker {
                                     //console.log(newBboxes);
                                     for (let i = 0; i < toCompute.length; i++) {
                                         let annotatedObject = toCompute[i].annotatedObject;
-                                        let bbox = new BoundingBox(frameNumber,newBboxes[i].x,newBboxes[i].y,newBboxes[i].width,newBboxes[i].height, false);
+                                        let bbox = new BoundingBox(frameNumber, newBboxes[i].x, newBboxes[i].y, newBboxes[i].width, newBboxes[i].height, false);
                                         // let frameObject = new Frame(frameNumber, newBboxes[i], false);
                                         // annotatedObject.addToFrame(frameObject);
                                         // result.push({ annotatedObject: annotatedObject, frameObject: frameObject });
@@ -211,7 +264,7 @@ class ObjectsTracker {
         });
     }
 
-    imageData(img) {
+    imageData() {
         return this.framesManager.ctx.getImageData(0, 0, this.framesManager.canvas.width, this.framesManager.canvas.height);
     }
 

@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Tracks point between two consecutive frames using optical flow.
  */
@@ -11,6 +9,7 @@ class OpticalFlow {
     }
 
     init(imageData) {
+        console.log(imageData);
         this.previousPyramid.allocate(imageData.width, imageData.height, jsfeat.U8_t | jsfeat.C1_t);
         this.currentPyramid.allocate(imageData.width, imageData.height, jsfeat.U8_t | jsfeat.C1_t);
         jsfeat.imgproc.grayscale(imageData.data, imageData.width, imageData.height, this.previousPyramid.data[0]);
@@ -101,10 +100,12 @@ class OpticalFlow {
 
                     if (newWidth > 0 && newHeight > 0) {
                         //console.log('!!! changing box');
-                        newBbox = new BoundingBox(minX, minY, newWidth, newHeight);
+                        //newBbox = new BoundingBox(minX, minY, newWidth, newHeight);
+                        newBbox = {x:minX, y:minY, width:newWidth, height:newHeight};
                     }
                 } else {
-                    newBbox = new BoundingBox(bbox.x, bbox.y, bbox.width, bbox.height);
+                    //newBbox = new BoundingBox(bbox.x, bbox.y, bbox.width, bbox.height);
+                    newBbox = {x:bbox.x, y:bbox.y, width:bbox.width, height:bbox.height};
                 }
 
             }
@@ -120,5 +121,5 @@ class OpticalFlow {
 
         return newBboxes;
     }
-};
+}
 

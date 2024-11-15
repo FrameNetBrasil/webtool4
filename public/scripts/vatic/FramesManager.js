@@ -30,21 +30,22 @@ class FramesManager {
         // considera que o frame de video está sendo exibido no canvas
         this.video.crossOrigin = "*";
         this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
-        return new Promise((resolve, reject) => {
-            this.canvas.toBlob(
-                (blob) => {
-                    resolve(blob);
-                },
-                this.config.imageMimeType
-            );
-        });
+        return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        // return new Promise((resolve, reject) => {
+        //     this.canvas.toBlob(
+        //         (blob) => {
+        //             resolve(blob);
+        //         },
+        //         this.config.imageMimeType
+        //     );
+        // });
     }
 
     addFrame(frameNumber, frameImage) {
         this.frames[frameNumber] = frameImage;
     }
 
-    async getFrame(frameNumber) {
+    async getFrameImage(frameNumber) {
         let frameImage = this.frames[frameNumber];
         if (typeof frameImage === "undefined") {
             let frameImage = await this.getFrameFromVideo();
