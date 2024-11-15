@@ -53,7 +53,6 @@ class DynamicObject {
     drawBoxInFrame(frameNumber, state) {
         this.dom.style.display = 'none';
         let bbox = this.getBoundingBoxAt(frameNumber);
-        console.log("drawBoxInFrame",frameNumber,this.bboxes,bbox);
         if (bbox) {
             console.log(state, this.hidden ? ' hidden': ' not hidden');
             if (!this.hidden) {

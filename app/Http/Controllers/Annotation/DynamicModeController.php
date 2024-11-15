@@ -138,7 +138,9 @@ class DynamicModeController extends Controller
         debug($data);
         try {
             $idDynamicObject = AnnotationDynamicService::updateObjectAnnotation($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            $this->trigger('updateObjectAnnotationEvent');
+            //return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            return $this->renderNotify("success", "Object updated.");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());

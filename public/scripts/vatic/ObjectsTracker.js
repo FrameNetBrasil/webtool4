@@ -32,14 +32,11 @@ class ObjectsTracker {
 
     async setBBoxForObject(annotatedObject, frameNumber) {
         try {
-            let startFrame = this.startFrameObject(frameNumber, annotatedObject);
-            console.log("startFrame inicial", startFrame);
-            if (startFrame !== frameNumber) {
-                while (startFrame < frameNumber) {
-                    startFrame++;
-                    await this.trackObject(startFrame, annotatedObject);
-                    console.log("startFrame", startFrame);
-                }
+            let bbox = annotatedObject.getBoundingBoxAt(frameNumber - 1);
+            if (bbox) {
+                await this.trackObject(frameNumber, annotatedObject);
+            } else {
+                throw new Error("Tracking must be done sequentially!");
             }
         } catch (e) {
             console.error(e.message);
