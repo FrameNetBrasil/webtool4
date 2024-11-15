@@ -75,6 +75,12 @@
                         video: {{ Js::from($video) }},
                         objectList: []
                     };
+
+                    document.body.addEventListener("updateObjectAnnotationEvent", function(evt){
+                        console.log("event updateObjectAnnotationEvent");
+                        annotation.objects.updateObjectAnnotationEvent();
+                    })
+
                     @include("Annotation.DynamicMode.Scripts.api")
                     @include("Annotation.DynamicMode.Scripts.video")
                     @include("Annotation.DynamicMode.Scripts.drawBox")

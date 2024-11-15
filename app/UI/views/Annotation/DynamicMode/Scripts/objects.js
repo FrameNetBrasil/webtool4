@@ -162,13 +162,26 @@ annotation.objects = {
                     // se está tracking, a box:
                     // - ou já existe (foi criada antes)
                     // - ou precisa ser criada
-                    // em ambos os casos, passa os parâmetros para o tracker e deixa ele resolver
-
-                    let tracker = annotation.objects.tracker;
-                    await tracker.setBBoxForObject(currentObject, frameNumber);
-                    console.log("returning from tracker");
-                    currentObject.drawBoxInFrame(frameNumber, "showing");
-
+                    let bbox = currentObject.getBoundingBoxAt(frameNumber);
+                    if (bbox) {
+                        currentObject.drawBoxInFrame(frameNumber, "showing");
+                    } else {
+                        let tracker = annotation.objects.tracker;
+                        await tracker.setBBoxForObject(currentObject, frameNumber);
+                        let bbox = currentObject.getBoundingBoxAt(frameNumber);
+                        let paramsBBox = {
+                            idDynamicObject: currentObject.object.idDynamicObject,
+                            frameNumber: frameNumber,
+                            bbox: bbox
+                        };
+                        await annotation.api.createBBox(paramsBBox, async(idBoundingBox) => {
+                            console.log(idBoundingBox);
+                            console.log("new BoundingBox", idBoundingBox);
+                            bbox.idBoundingBox = idBoundingBox;
+                        });
+                        console.log("returning from tracker");
+                        currentObject.drawBoxInFrame(frameNumber, "showing");
+                    }
 
                     // tracker.getFrameWithObject(frameNumber, currentObject)
                     //     .then(async (frameWithObjects) => {
@@ -456,10 +469,16 @@ annotation.objects = {
         await Alpine.store("doStore").updateObjectList();
         Alpine.store("doStore").selectObject(currentObject.idObject);
     },
+    updateObjectAnnotationEvent: async () => {
+        let currentObject = Alpine.store("doStore").currentObject;
+        await Alpine.store("doStore").updateObjectList();
+        Alpine.store("doStore").selectObject(currentObject.idObject);
+    },
     deleteObject: async (idDynamicObject) => {
         console.log("deletting", idDynamicObject);
         await manager.confirmDelete("Removing object #" + idDynamicObject + ".", "/annotation/dynamicMode/" + idDynamicObject, async () => {
             await Alpine.store("doStore").updateObjectList();
+            Alpine.store("doStore").selectObject(null);
         });
     },
     async tracking(canGoOn) {

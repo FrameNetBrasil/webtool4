@@ -44,6 +44,7 @@ document.addEventListener('alpine:init', () => {
             if (idObject === null) {
                 this.currentObject = null;
                 this.newObjectState = 'none';
+                htmx.ajax("GET","/annotation/dynamicMode/formObject/0/0", "#formObject");
             } else {
                 console.log(" ** player current time - selectObject", annotation.video.player.currentTime());
                 let object = annotation.objects.get(idObject);

@@ -84,7 +84,7 @@ class AnnotationDynamicService
         $do = Criteria::table("view_annotation_dynamic")
             ->where("idLanguage", "left", $idLanguage)
             ->where("idDynamicObject", $idDynamicObject)
-            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color")
+            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color","idDocument")
             ->orderBy("startFrame")
             ->orderBy("endFrame")
             ->first();
@@ -187,6 +187,9 @@ class AnnotationDynamicService
                         ]);
                         $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
                     }
+                    Criteria::table("dynamicobject")
+                        ->where("idDynamicObject", $data->idDynamicObject)
+                        ->update(["endFrame" => $data->endFrame]);
                 }
             } else {
                 throw new \Exception("First BBox must be created mannualy.");
