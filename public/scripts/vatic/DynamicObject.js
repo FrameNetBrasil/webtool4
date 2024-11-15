@@ -52,8 +52,8 @@ class DynamicObject {
 
     drawBoxInFrame(frameNumber, state) {
         this.dom.style.display = 'none';
-        console.log("drawBoxInFrame",this.bboxes);
         let bbox = this.getBoundingBoxAt(frameNumber);
+        console.log("drawBoxInFrame",frameNumber,this.bboxes,bbox);
         if (bbox) {
             console.log(state, this.hidden ? ' hidden': ' not hidden');
             if (!this.hidden) {
@@ -195,7 +195,7 @@ class DynamicObject {
                 bbox.idBoundingBox = this.bboxes[i].idBoundingBox;
                 this.bboxes[i] = bbox;
                 // console.log(i, annotatedFrame);
-                this.removeFromFrameToBeRecomputedFrom(i + 1);
+                //this.removeFromFrameToBeRecomputedFrom(i + 1);
                 return;
             } else if (this.bboxes[i].frameNumber > bbox.frameNumber) {
                 this.bboxes.splice(i, 0, bbox);
