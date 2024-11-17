@@ -2,6 +2,7 @@
     @include('components.layout.head')
     <div id="content">
         <div class="contentContainer ui pushable">
+            @include('Grapher.report')
             @include('Grapher.controls')
             <div class="menuLeft ui left vertical menu sidebar">
                 @include("components.layout.menu")
@@ -44,6 +45,9 @@
             $("#graph-drawer").flyout({
                 context: $('.main')
             });
+            $("#graph-report").flyout({
+                context: $('.main')
+            });
             window.Grapher = joint.mvc.View.extend({
                 options: {
                     nodes: [],
@@ -83,6 +87,8 @@
                     });
 
                     this.paper.on("cell:pointerdblclick", options.cellDblClick);
+
+                    this.paper.on("cell:pointerclick", options.cellClick);
 
                     this.paper.on("link:mouseenter", options.linkEnter);
 
