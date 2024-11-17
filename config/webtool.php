@@ -33,6 +33,7 @@ return [
         'grapher' => ['Grapher', '/grapher', '', [
             'framegrapher' => ['Frames', '/grapher/frame', '', []],
             'domaingrapher' => ['Domain', '/grapher/domain', '', []],
+            'scenariographer' => ['Scenario', '/grapher/scenario', '', []],
 //            'fullgrapher' => ['Frames & CxN', '/grapher', 'fullgrapher', '', '', []],
 //            'domaingrapher' => ['Frames by Domain', '/domain/grapher', 'domaingrapher', '', '', []],
 //            'ccngrapher' => ['Constructicon', '/ccn/grapher', 'ccngrapher', '', '', []],

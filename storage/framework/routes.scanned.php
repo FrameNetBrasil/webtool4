@@ -3296,6 +3296,22 @@ $router->post('grapher/framefe/graph/{idEntityRelation}', [
 	'domain' => NULL,
 ]);
 
+$router->get('grapher/scenario', [
+	'uses' => 'App\Http\Controllers\Grapher\ScenarioController@scenario',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('grapher/scenario/graph/{idEntity?}', [
+	'uses' => 'App\Http\Controllers\Grapher\ScenarioController@scenarioGraph',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('grapher/frame', [
 	'uses' => 'App\Http\Controllers\Grapher\FrameController@frame',
 	'as' => NULL,
@@ -3722,6 +3738,14 @@ $router->get('report/frame/{idFrame?}/{lang?}', [
 
 $router->get('frame/list/forSelect', [
 	'uses' => 'App\Http\Controllers\Frame\ReportController@listForSelect',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/listScenario/forSelect', [
+	'uses' => 'App\Http\Controllers\Frame\ReportController@listScenarioForSelect',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],

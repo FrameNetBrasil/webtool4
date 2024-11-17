@@ -6,6 +6,7 @@ use App\Data\ComboBox\QData;
 use App\Data\Frame\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Services\AppService;
 use App\Services\ReportFrameService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -57,6 +58,21 @@ class ReportController extends Controller
     {
         $name = (strlen($data->q) > 2) ? $data->q : 'none';
         return ['results' => Criteria::byFilterLanguage("view_frame",["name","startswith",$name])->orderby("name")->all()];
+    }
+
+    #[Get(path: '/frame/listScenario/forSelect')]
+    public function listScenarioForSelect(QData $data)
+    {
+        $name = (strlen($data->q) > 2) ? $data->q : 'none';
+        return ['results' => Criteria::table("view_relation as r")
+            ->join("view_frame as f","r.idEntity1","=","f.idEntity")
+            ->join("semantictype as st","r.idEntity2","=","st.idEntity")
+            ->where("f.idLanguage","=", AppService::getCurrentIdLanguage())
+            ->where("st.entry","=","sty_ft_scenario")
+            ->where("f.name","startswith",$name)
+            ->select("f.idFrame","f.idEntity","f.name")
+            ->orderby("f.name")
+            ->all()];
     }
 
 }
