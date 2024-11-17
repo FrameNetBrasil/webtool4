@@ -426,7 +426,6 @@ class RelationService extends Controller
         $links = [];
         $relations = [];
         self::listRecursiveDirectFrameRelations($idFrame, $frameRelation, $relations);
-        debug($relations);
         foreach ($relations as $relation) {
             if (in_array($relation->idRelationType, $frameRelation)) {
                 $nodes[$relation->f1IdEntity] = [

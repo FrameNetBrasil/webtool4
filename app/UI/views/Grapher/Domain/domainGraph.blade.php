@@ -112,6 +112,13 @@
                     console.log(currentElement.source(), currentElement.target());
                 }
             },
+            cellClick: function (cellView) {
+                var currentElement = cellView.model;
+                if (cellView.model.isElement()) {
+                    htmx.ajax("GET","/grapher/frame/report/" + currentElement.id, {target: '#frameReport'});
+                    $('#graph-report').flyout('toggle');
+                }
+            },
             linkEnter: function (linkView) {
                 let infoButton;
                 let data = linkView.model.prop('data');

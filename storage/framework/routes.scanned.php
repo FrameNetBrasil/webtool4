@@ -3336,6 +3336,14 @@ $router->post('grapher/framefe/graph/{idEntityRelation}', [
 	'domain' => NULL,
 ]);
 
+$router->get('grapher/frame/report/{idEntityFrame}', [
+	'uses' => 'App\Http\Controllers\Grapher\FrameController@frameReport',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('sentence/{id}/document', [
 	'uses' => 'App\Http\Controllers\Sentence\DocumentController@document',
 	'as' => NULL,
