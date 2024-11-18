@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Lexicon;
 
-use App\Data\Lexicon\CreateLemmaData;
+use App\Data\Lexicon\CreateLayerGroupData;
 use App\Data\Lexicon\CreateLexemeData;
 use App\Data\Lexicon\CreateLexemeEntryData;
 use App\Data\Lexicon\CreateWordformData;
 use App\Data\Lexicon\SearchData;
-use App\Data\Lexicon\UpdateLemmaData;
+use App\Data\Lexicon\UpdateLayerGroupData;
 use App\Data\Lexicon\UpdateLexemeData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
@@ -90,7 +90,7 @@ class ResourceController extends Controller
     }
 
     #[Post(path: '/lexicon/lemma/new')]
-    public function newLemma(CreateLemmaData $data)
+    public function newLemma(CreateLayerGroupData $data)
     {
         try {
             $exists = Criteria::table("lemma")
@@ -125,7 +125,7 @@ class ResourceController extends Controller
     }
 
     #[Put(path: '/lexicon/lemma/{idLemma}')]
-    public function updateLemma(UpdateLemmaData $data)
+    public function updateLemma(UpdateLayerGroupData $data)
     {
         try {
             Criteria::table("lemma")
