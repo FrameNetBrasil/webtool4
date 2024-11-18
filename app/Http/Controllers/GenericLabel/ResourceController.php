@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\GenericLabel;
 
-use App\Data\GenericLabel\CreateData;
+use App\Data\GenericLabel\CreateGenericLabelData;
 use App\Data\GenericLabel\SearchData;
-use App\Data\GenericLabel\UpdateData;
+use App\Data\GenericLabel\UpdateGenericLabelData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\GenericLabel;
@@ -103,7 +103,7 @@ class ResourceController extends Controller
     }
 
     #[Post(path: '/genericlabel/new')]
-    public function new(CreateData $data)
+    public function new(CreateGenericLabelData $data)
     {
         try {
             $json = json_encode([
@@ -119,7 +119,7 @@ class ResourceController extends Controller
     }
 
     #[Put(path: '/genericlabel')]
-    public function update(UpdateData $data)
+    public function update(UpdateGenericLabelData $data)
     {
         try {
             Criteria::table("genericlabel")

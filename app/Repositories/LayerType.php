@@ -6,6 +6,10 @@ use App\Database\Criteria;
 
 class LayerType
 {
+    public static function byId(int $id): object
+    {
+        return Criteria::byFilter("layertype", ["idLayerType","=", $id])->first();
+    }
     public static function listToLU(object $lu): array
     {
         $array = ['lty_fe', 'lty_gf', 'lty_pt', 'lty_other', 'lty_target', 'lty_sent'];
