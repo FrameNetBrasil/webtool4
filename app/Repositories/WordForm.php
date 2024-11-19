@@ -146,11 +146,11 @@ class WordForm
             return [];
         }
         $idLanguage = AppService::getCurrentIdLanguage();
-        $wf1 = str_replace("'", "\'", $wordform);
+        $wf1 = strtolower(str_replace("'", "\'", $wordform));
         $criteria = Criteria::table("view_lexicon as l")
             ->select("idLU","lu","senseDescription","frame.name as frameName")
             ->join("view_frame as frame", "l.idFrame","=","frame.idFrame")
-            ->where("l.form","=",$wf1)
+            ->where("l.form",$wf1)
             ->where("l.idLanguageLM","=",$idLanguage)
             ->where("l.lexemeOrder","=",1)
             ->where("frame.idLanguage","=",$idLanguage)
