@@ -201,7 +201,7 @@ class ResourceController extends Controller
     public function deleteLayerType(string $idLayerType)
     {
         try {
-            Criteria::deleteById("layertype", "idLayerType", $idLayerType);
+            Criteria::function("layertype_delete(?,?)", [$idLayerType, AppService::getCurrentIdUser()]);
             $this->trigger('clear-editarea', ['target' => '#editArea']);
             $this->trigger("reload-gridLayers", ['target' => '#editArea']);
             return $this->renderNotify("success", "LayerType removed.");
@@ -217,17 +217,25 @@ class ResourceController extends Controller
     #[Get(path: '/layers/genericlabel/new')]
     public function formNewGenericLabel()
     {
-        return view("Layers.formNewLayerType");
+        return view("Layers.formNewGenericLabel");
     }
 
-    #[Get(path: '/layers/genericlabel/{idLayerType}/{fragment?}')]
-    public function genericLabel(int $idLayerType, string $fragment = null)
+    #[Get(path: '/layers/genericlabel/{idGenericLabel}/edit')]
+    public function genericlabel(int $idGenericLabel)
     {
-        $layerType = LayerType::byId($idLayerType);
-        $view = view("Layers.layerType", [
-            'layerType' => $layerType,
+        $genericLabel = GenericLabel::byId($idGenericLabel);
+        return view("Layers.editGenericLabel", [
+            'genericLabel' => $genericLabel,
         ]);
-        return (is_null($fragment) ? $view : $view->fragment($fragment));
+    }
+
+    #[Get(path: '/layers/genericlabel/{idGenericLabel}/formEdit')]
+    public function formEditGenericLabel(int $idGenericLabel)
+    {
+        $genericLabel = GenericLabel::byId($idGenericLabel);
+        return view("Layers.formEditGenericLabel", [
+            'genericLabel' => $genericLabel,
+        ]);
     }
 
     #[Post(path: '/layers/genericlabel/new')]
@@ -236,33 +244,38 @@ class ResourceController extends Controller
         try {
             $exists = Criteria::table("genericlabel")
                 ->whereRaw("name = '{$data->name}' collate 'utf8mb4_bin'")
+                ->where("idLanguage", $data->idLanguage)
+                ->where("idLayerType", $data->idLayerType)
                 ->first();
             if (!is_null($exists)) {
                 throw new \Exception("GenericLabel already exists.");
             }
-            $newGenericLabel = [
+            $json = json_encode((object)[
                 'name' => $data->name,
-            ];
-            $idGenericLabel = Criteria::create("genericlabel", $newGenericLabel);
-            $genericLabel = GenericLabel::byId($idGenericLabel);
-            $view = view("Layers.genericLabel", [
-                'genricLabel' => $genericLabel,
+                'idColor' => $data->idColor,
+                'idLanguage' => $data->idLanguage,
+                'definition' => $data->definition,
+                'example' => '',
+                'idLayerType' => $data->idLayerType,
+                'idUser' => $data->idUser
             ]);
-            return $view->fragment("content");
+            $idGenericLabel = Criteria::function("genericlabel_create(?)", [$json]);
+            $genericLabel = GenericLabel::byId($idGenericLabel);
+            return $this->render("Layers.editGenericLabel", [
+                'genericLabel' => $genericLabel,
+            ]);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
 
-    #[Put(path: '/layers/genericlabel/{idLayerType}')]
+    #[Put(path: '/layers/genericlabel')]
     public function updateGenericLabel(UpdateGenericLabelData $data)
     {
         try {
             Criteria::table("genericlabel")
                 ->where("idGenericLabel", $data->idGenericLabel)
-                ->update([
-                    'name' => $data->name,
-                ]);
+                ->update($data->toArray());
             return $this->renderNotify("success", "GenericLabel updated.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -273,8 +286,9 @@ class ResourceController extends Controller
     public function deleteGenericLabel(string $idGenericLabel)
     {
         try {
-            Criteria::deleteById("genericlabel", "idGenericLabel", $idGenericLabel);
-            $this->trigger('reload-gridLayers');
+            Criteria::function("genericlabel_delete(?,?)", [$idGenericLabel, AppService::getCurrentIdUser()]);
+            $this->trigger('clear-editarea', ['target' => '#editArea']);
+            $this->trigger("reload-gridLayers", ['target' => '#editArea']);
             return $this->renderNotify("success", "GenericLabel removed.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
