@@ -9,6 +9,7 @@ class UpdateLayerGroupData extends Data
     public function __construct(
         public int $idLayerGroup,
         public string $name,
+        public string $type,
         public string $_token = '',
     )
     {

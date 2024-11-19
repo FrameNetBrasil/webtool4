@@ -44,15 +44,6 @@ class DeixisController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/deixis/objectFE/{idFrame}')]
-    public function objectFE($idFrame)
-    {
-        $frame = new Frame($idFrame);
-        data('idFrame', $idFrame);
-        data('frameName', $frame->name ?? '');
-        return $this->render("Annotation.Deixis.Panes.objectFEPane");
-    }
-
     private function getData(int $idDocument): DocumentData
     {
         $idLanguage = AppService::getCurrentIdLanguage();

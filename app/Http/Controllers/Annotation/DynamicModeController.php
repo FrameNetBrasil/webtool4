@@ -45,15 +45,6 @@ class DynamicModeController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/dynamicMode/objectFE/{idFrame}')]
-    public function objectFE($idFrame)
-    {
-        $frame = new Frame($idFrame);
-        data('idFrame', $idFrame);
-        data('frameName', $frame->name ?? '');
-        return $this->render("Annotation.DynamicMode.Panes.objectFEPane");
-    }
-
     private function getData(int $idDocument): DocumentData
     {
         $idLanguage = AppService::getCurrentIdLanguage();
