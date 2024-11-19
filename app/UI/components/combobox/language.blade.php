@@ -4,7 +4,7 @@
         <div id="{{$id}}_dropdown" class="ui tiny selection dropdown" style="overflow:initial">
             <input type="hidden" name="{{$id}}" value="{{$value}}">
             <i class="dropdown icon"></i>
-            <div class="default text"></div>
+            <div class="default text">Language</div>
             <div class="menu">
                 @foreach($options as $idOption => $option)
                     <div data-value="{{$idOption}}"
@@ -19,6 +19,10 @@
 </div>
 <script>
     $(function() {
-        $('#{{$id}}_dropdown').dropdown();
+        $('#{{$id}}_dropdown').dropdown({
+            onChange: function(value, text, $choice) {
+                $('#{{$id}}').val($(value).data("value"));
+            }
+        })
     });
 </script>

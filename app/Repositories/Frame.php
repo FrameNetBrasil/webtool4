@@ -14,6 +14,10 @@ class Frame
         return Criteria::byFilterLanguage("view_frame", ['idFrame', '=', $id])->first();
     }
 
+    public static function byIdEntity(int $idEntity): object
+    {
+        return Criteria::byFilterLanguage("view_frame", ['idEntity', '=', $idEntity])->first();
+    }
     public static function listFECoreSet(int $idFrame): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();

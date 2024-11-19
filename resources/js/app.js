@@ -7,7 +7,6 @@ import svgPanZoom from "svg-pan-zoom";
 import ky from 'ky';
 import Split from 'split.js'
 
-
 // import '../css/fomantic-ui/semantic.less';
 import 'primeflex/primeflex.css';
 import '../css/app.less';

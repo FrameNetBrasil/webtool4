@@ -4,12 +4,14 @@ namespace App\Services;
 
 use App\Database\Criteria;
 use App\Repositories\Frame;
+use App\Repositories\FrameElement;
+use App\Repositories\Qualia;
 use App\Repositories\SemanticType;
 
 class ReportQualiaService
 {
 
-    public static function report(int|string $idSemanticType, string $lang = ''): array
+    public static function report(int|string $idQualia, string $lang = ''): array
     {
         $report = [];
         if ($lang != '') {
@@ -19,34 +21,19 @@ class ReportQualiaService
         } else {
             $idLanguage = AppService::getCurrentIdLanguage();
         }
-        if (is_numeric($idSemanticType)) {
-            $semanticType = SemanticType::byId($idSemanticType);
+        if (is_numeric($idQualia)) {
+            $qualia = Qualia::byId($idQualia);
         } else {
-            $semanticType = Criteria::table("view_semantictype")
-                ->where("name", $idSemanticType)
+            $qualia = Criteria::table("view_qualia")
+                ->where("name", $idQualia)
                 ->where("idLanguage", $idLanguage)
                 ->first();
         }
-        $report['semanticType'] = $semanticType;
-        $report['relations'] = self::getRelations($semanticType);
+        $report['qualia'] = $qualia;
+        $report['fe1'] = FrameElement::byId($qualia->idFrameElement1);
+        $report['fe2'] = FrameElement::byId($qualia->idFrameElement2);
+        //$report['relations'] = self::getRelations($semanticType);
         return $report;
-    }
-
-    public static function getRelations($semanticType): array
-    {
-        $relations = [];
-        $result = RelationService::listRelationsSemanticType($semanticType->idSemanticType);
-        foreach ($result as $row) {
-            $relationName = $row->relationType . '|' . $row->name;
-            $relations[$relationName][$row->idSTRelated] = [
-                'idEntityRelation' => $row->idEntityRelation,
-                'idConcept' => $row->idSTRelated,
-                'name' => $row->related,
-                'color' => $row->color
-            ];
-        }
-        ksort($relations);
-        return $relations;
     }
 
 }

@@ -302,7 +302,6 @@ class AnnotationStaticBBoxService
         if (!empty($sentences)) {
             $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
             foreach ($targets as $idDocumentSentence => $spans) {
-                debug($spans);
                 $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);
             }
         }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\DynamicMode\AnnotationCommentData;
 use App\Data\Annotation\DynamicMode\CloneData;
+use App\Data\Annotation\DynamicMode\CreateBBoxData;
 use App\Data\Annotation\DynamicMode\DocumentData;
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
@@ -137,7 +138,9 @@ class DynamicModeController extends Controller
         debug($data);
         try {
             $idDynamicObject = AnnotationDynamicService::updateObjectAnnotation($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            $this->trigger('updateObjectAnnotationEvent');
+            //return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            return $this->renderNotify("success", "Object updated.");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -177,6 +180,18 @@ class DynamicModeController extends Controller
             debug($data);
             $idBoundingBox = AnnotationDynamicService::updateBBox($data);
             return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/dynamicMode/createBBox')]
+    public function createBBox(CreateBBoxData $data)
+    {
+        try {
+            debug($data);
+            return AnnotationDynamicService::createBBox($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());

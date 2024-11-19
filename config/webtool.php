@@ -33,6 +33,7 @@ return [
         'grapher' => ['Grapher', '/grapher', '', [
             'framegrapher' => ['Frames', '/grapher/frame', '', []],
             'domaingrapher' => ['Domain', '/grapher/domain', '', []],
+            'scenariographer' => ['Scenario', '/grapher/scenario', '', []],
 //            'fullgrapher' => ['Frames & CxN', '/grapher', 'fullgrapher', '', '', []],
 //            'domaingrapher' => ['Frames by Domain', '/domain/grapher', 'domaingrapher', '', '', []],
 //            'ccngrapher' => ['Constructicon', '/ccn/grapher', 'ccngrapher', '', '', []],
@@ -72,7 +73,8 @@ return [
             'corpusDocument' => ['Corpus/Document', '/corpus', 'ADMIN', []],
             'videoDocument' => ['Video/Document', '/video', 'ADMIN', []],
             'imageDocument' => ['Image/Document', '/image', 'ADMIN', []],
-            'domainSemantictype' => ['Domain/Semantic Type', '/semanticType', 'MASTER', []],
+            'domainSemantictype' => ['Domain/SemanticType', '/semanticType', 'ADMIN', []],
+            'layerGenericlabel' => ['Layer/GenericLabel', '/layers', 'ADMIN', []],
 //            'type' => ['Types', '/type', 'ADMIN', []],
 //            'relation' => ['Relations', '/relationgroup', 'ADMIN', []],
 //            'genre' => ['Genres', '/genre', 'ADMIN', []],

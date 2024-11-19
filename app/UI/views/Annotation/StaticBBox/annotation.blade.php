@@ -8,7 +8,7 @@
     $scale = ($scaleHeight < $scaleWidth) ? $scaleHeight : $scaleWidth;
     $imageWidth = intval($originalWidth * $scale);
     $imageHeight = intval($originalHeight * $scale);
-    debug($originalWidth,$originalHeight,$scaleWidth ,$scaleHeight,$imageWidth,$imageHeight );
+    debug($scale, $originalWidth,$originalHeight,$scaleWidth ,$scaleHeight,$imageWidth,$imageHeight );
 @endphp
 <x-layout.annotation>
     <x-slot:head>

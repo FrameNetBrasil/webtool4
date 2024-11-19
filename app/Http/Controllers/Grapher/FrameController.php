@@ -9,6 +9,7 @@ use App\Repositories\Frame;
 use App\Repositories\RelationType;
 use App\Services\FrameService;
 use App\Services\RelationService;
+use App\Services\ReportFrameService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
@@ -83,6 +84,15 @@ class FrameController extends Controller
         }
         data('graph', $graph);
         return $this->render('frameGraph');
+    }
+
+    #[Get(path: '/grapher/frame/report/{idEntityFrame}')]
+    public function frameReport(int $idEntityFrame)
+    {
+        $frame = Frame::byIdEntity($idEntityFrame);
+        $data = ReportFrameService::report($frame->idFrame);
+        debug($data);
+        return view('Grapher.frameReport', $data);
     }
 
 }

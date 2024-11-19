@@ -41,9 +41,9 @@ annotation.drawBox = {
 
         // set a flag indicating the drag has begun
         annotation.drawBox.isDown = true;
-        console.log('offset', annotation.drawBox.offsetX, annotation.drawBox.offsetY);
-        console.log('client', e.clientX, e.clientY);
-        console.log('down', annotation.drawBox.startX, annotation.drawBox.startY);
+        // console.log('offset', annotation.drawBox.offsetX, annotation.drawBox.offsetY);
+        // console.log('client', e.clientX, e.clientY);
+        // console.log('down', annotation.drawBox.startX, annotation.drawBox.startY);
     },
     handleMouseUp(e) {
         e.preventDefault();
@@ -69,7 +69,7 @@ annotation.drawBox = {
 
         // the drag is over, clear the dragging flag
         annotation.drawBox.isDown = false;
-        console.log('out');
+        // console.log('out');
     },
     handleMouseMove(e) {
         e.preventDefault();
@@ -77,7 +77,7 @@ annotation.drawBox = {
 
         // if we're not dragging, just return
         if (!annotation.drawBox.isDown) {
-            console.log('not dragging');
+            // console.log('not dragging');
             return;
         }
 

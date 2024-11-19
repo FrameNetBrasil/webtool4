@@ -141,8 +141,8 @@ class RelationService extends Controller
         $idLanguage = AppService::getCurrentIdLanguage();
         $result = [];
         $relations = Criteria::table("view_frame_relation as fr")
-            ->join("view_frame as f","fr.f2IdFrame","=","f.idFrame")
-            ->select("fr.idEntityRelation","fr.relationType","f.idFrame","f.name","f.description")
+            ->join("view_frame as f", "fr.f2IdFrame", "=", "f.idFrame")
+            ->select("fr.idEntityRelation", "fr.relationType", "f.idFrame", "f.name", "f.description")
             ->where("fr.f1IdFrame", $idFrame)
             ->where("fr.idLanguage", $idLanguage)
             ->where("f.idLanguage", $idLanguage)
@@ -164,9 +164,9 @@ class RelationService extends Controller
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $relations = Criteria::table("view_relation as r")
-            ->join("view_frameelement as fe","r.idEntity1","=","fe.idEntity")
-            ->join("view_semantictype as st","r.idEntity2","=","st.idEntity")
-            ->select("fe.idFrameElement","fe.name","st.name")
+            ->join("view_frameelement as fe", "r.idEntity1", "=", "fe.idEntity")
+            ->join("view_semantictype as st", "r.idEntity2", "=", "st.idEntity")
+            ->select("fe.idFrameElement", "fe.name", "st.name")
             ->where("fe.idFrame", $idFrame)
             ->where("fe.idLanguage", $idLanguage)
             ->where("st.idLanguage", $idLanguage)
@@ -262,10 +262,10 @@ class RelationService extends Controller
         debug($idRelationType);
         $idLanguage = AppService::getCurrentIdLanguage();
         foreach ($idArray as $idEntity) {
-            $partial =  Criteria::table("view_relation as r")
-                ->join("view_frame as f1","r.idEntity1","=","f1.idEntity")
-                ->join("view_frame as f2","r.idEntity2","=","f2.idEntity")
-                ->select('r.idEntityRelation','r.idRelationType', 'r.relationType', 'r.entity1Type', 'r.entity2Type', 'r.idEntity1', 'r.idEntity2',
+            $partial = Criteria::table("view_relation as r")
+                ->join("view_frame as f1", "r.idEntity1", "=", "f1.idEntity")
+                ->join("view_frame as f2", "r.idEntity2", "=", "f2.idEntity")
+                ->select('r.idEntityRelation', 'r.idRelationType', 'r.relationType', 'r.entity1Type', 'r.entity2Type', 'r.idEntity1', 'r.idEntity2',
                     'f1.name as frame1Name',
                     'f2.name as frame2Name',
                 )->where('f1.idLanguage', '=', $idLanguage)
@@ -347,7 +347,7 @@ class RelationService extends Controller
         if ($idSemanticType > 0) {
             $semanticType = SemanticType::byId($idSemanticType);
             $frames = Criteria::table("view_relation as r")
-                ->join("view_frame as f","r.idEntity1","=","f.idEntity")
+                ->join("view_frame as f", "r.idEntity1", "=", "f.idEntity")
                 ->select("r.idEntity1 as idEntity", "f.name")
                 ->where("r.relationType", "=", "rel_framal_domain")
                 ->where("r.idEntity2", "=", $semanticType->idEntity)
@@ -361,9 +361,9 @@ class RelationService extends Controller
             foreach ($frames as $frame) {
                 $idEntity = $frame->idEntity;
                 $partial = Criteria::table("view_relation as r")
-                    ->join("view_frame as f1","r.idEntity1","=","f1.idEntity")
-                    ->join("view_frame as f2","r.idEntity2","=","f2.idEntity")
-                    ->select('r.idEntityRelation','r.idRelationType', 'r.relationType', 'r.entity1Type', 'r.entity2Type', 'r.idEntity1', 'r.idEntity2',
+                    ->join("view_frame as f1", "r.idEntity1", "=", "f1.idEntity")
+                    ->join("view_frame as f2", "r.idEntity2", "=", "f2.idEntity")
+                    ->select('r.idEntityRelation', 'r.idRelationType', 'r.relationType', 'r.entity1Type', 'r.entity2Type', 'r.idEntity1', 'r.idEntity2',
                         'f1.name as frame1Name',
                         'f2.name as frame2Name',
                     )->where('f1.idLanguage', '=', $idLanguage)
@@ -390,6 +390,57 @@ class RelationService extends Controller
                         }
                     }
                 }
+            }
+        }
+        return [
+            'nodes' => $nodes,
+            'links' => $links
+        ];
+    }
+
+    private static function listRecursiveDirectFrameRelations(int $idFrame, array $frameRelation, &$relations = [], &$handled = [], int $level = 0): void
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        if ($level > 3) {
+            $frameRelation = [1,2,12];
+        }
+        $r = Criteria::table("view_frame_relation")
+            ->where("f1IdFrame", $idFrame)
+            ->where("idLanguage", $idLanguage)
+            ->whereIn("idRelationType", $frameRelation)
+            ->orderBy("relationType")
+            ->orderBy("f2Name")
+            ->all();
+        foreach ($r as $relation) {
+            $relations[] = $relation;
+            if (!isset($handled[$relation->f2IdFrame])) {
+                $handled[$relation->f2IdFrame] = true;
+                self::listRecursiveDirectFrameRelations($relation->f2IdFrame, $frameRelation, $relations, $handled, $level + 1);
+            }
+        }
+    }
+
+    public static function listScenarioForGraph(int $idFrame, array $frameRelation): array
+    {
+        $nodes = [];
+        $links = [];
+        $relations = [];
+        self::listRecursiveDirectFrameRelations($idFrame, $frameRelation, $relations);
+        foreach ($relations as $relation) {
+            if (in_array($relation->idRelationType, $frameRelation)) {
+                $nodes[$relation->f1IdEntity] = [
+                    'type' => 'frame',
+                    'name' => $relation->f1Name
+                ];
+                $nodes[$relation->f2IdEntity] = [
+                    'type' => 'frame',
+                    'name' => $relation->f2Name
+                ];
+                $links[$relation->f1IdEntity][$relation->f2IdEntity] = [
+                    'type' => 'ff',
+                    'idEntityRelation' => $relation->idEntityRelation,
+                    'relationEntry' => $relation->relationType,
+                ];
             }
         }
         return [

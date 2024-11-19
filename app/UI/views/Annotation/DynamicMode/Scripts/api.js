@@ -108,6 +108,7 @@ annotation.api = {
     updateBBox: async (params) => {
         params._token = annotation._token;
         let result = null;
+        params.bbox.blocked = (params.bbox.blocked ? 1 : 0);
         await $.ajax({
             url: "/annotation/dynamicMode/updateBBox",
             method: "POST",
@@ -118,6 +119,19 @@ annotation.api = {
             }
         });
         return result;
+    },
+    createBBox: async (params, callback) => {
+        params._token = annotation._token;
+        params.bbox.blocked = (params.bbox.blocked ? 1 : 0);
+        await $.ajax({
+            url: "/annotation/dynamicMode/createBBox",
+            method: "POST",
+            dataType: "json",
+            data: params,
+            success: (response) => {
+                callback(response);
+            }
+        });
     },
     cloneObject: async (params) => {
         params._token = annotation._token;
