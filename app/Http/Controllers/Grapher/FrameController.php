@@ -70,9 +70,12 @@ class FrameController extends Controller
     #[Post(path: '/grapher/framefe/graph/{idEntityRelation}')]
     public function frameFeGraph(int $idEntityRelation = null)
     {
+        if (empty($data->frameRelation)) {
+            $frameRelation = session('frameRelation') ?? [];
+        }
         $nodes = session("graphNodes") ?? [];
         $idRelationType = session('idRelationType');
-        $graph = RelationService::listFrameRelationsForGraph($nodes, $idRelationType);
+        $graph = RelationService::listFrameRelationsForGraph($nodes, $frameRelation);
         $feGraph = RelationService::listFrameFERelationsForGraph($idEntityRelation);
         foreach($feGraph['nodes'] as $idNode => $node) {
             $graph['nodes'][$idNode] = $node;
@@ -82,8 +85,9 @@ class FrameController extends Controller
                 $graph['links'][$idSource][$idTarget] = $link;
             }
         }
-        data('graph', $graph);
-        return $this->render('frameGraph');
+        return view('Grapher.Frame.frameGraph', [
+            'graph' => $graph
+        ]);
     }
 
     #[Get(path: '/grapher/frame/report/{idEntityFrame}')]

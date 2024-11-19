@@ -64,8 +64,15 @@
         ></div>
     </x-slot:grid>
     <x-slot:edit>
-        <div id="editArea">
-
+        <div
+            id="editArea"
+            hx-trigger="reload-gridLayers from:body"
+            hx-target="#gridLayers"
+            hx-swap-oob="outerHTML"
+            hx-post="/layers/grid"
+{{--            hx-on::clear-editarea = "console.log(this)"--}}
+            x-data @clear-editarea.document="$el.innerHTML=''"
+        >
         </div>
     </x-slot:edit>
 </x-layout.resource>

@@ -7,7 +7,7 @@
     $idLanguage = \App\Services\AppService::getCurrentIdLanguage();
     $data = [];
     $layergroups = Criteria::table("layergroup")
-        ->select("layergroup.idLayerGroup","layergroup.name")
+        ->select("layergroup.idLayerGroup","layergroup.name","layergroup.type")
         ->orderBy("name")
         ->all();
     if ($search->genericlabel == '') {
@@ -31,14 +31,14 @@
                     ->all();
                 foreach($gls as $g) {
                      $gl[] = [
-                        'id' => $g->idGenericLabel,
+                        'id' => 'l'. $g->idGenericLabel,
                         'text' => $labelIcon . $g->name,
                         'state' => 'open',
                         'type' => 'genericlabel',
                     ];
                 }
                 $lt[] = [
-                    'id' => $layer->idLayerType,
+                    'id' => 't'. $layer->idLayerType,
                     'text' => $layerIcon . $layer->name,
                     'state' => 'closed',
                     'type' => 'layertype',
@@ -46,8 +46,8 @@
                 ];
             }
             $data[] = [
-                    'id' => $layergroup->idLayerGroup,
-                    'text' => $groupIcon . $layergroup->name,
+                    'id' => 'g'. $layergroup->idLayerGroup,
+                    'text' => $groupIcon . $layergroup->name . ' [' . $layergroup->type . ']',
                     'state' => 'closed',
                     'type' => 'layergroup',
                     'children' => $lt
@@ -82,10 +82,11 @@
     }
 @endphp
 <div
+        id="gridLayers"
         class="h-full"
         hx-trigger="reload-gridLayers from:body"
         hx-target="this"
-        hx-swap="innerHTML"
+        hx-swap="outerHTML"
         hx-post="/layers/grid"
 >
     <div class="relative h-full overflow-auto">
@@ -111,14 +112,15 @@
                                 }
                             ]],
                             onClickRow: (row) => {
+                                let id = row.id.substr(1);
                                 if (row.type === "layergroup") {
-                                    htmx.ajax("GET", `/layers/layergroup/${row.id}/edit`, "#editArea");
+                                    htmx.ajax("GET", `/layers/layergroup/${id}/edit`, "#editArea");
                                 }
                                 if (row.type === "layertype") {
-                                    htmx.ajax("GET", `/layers/layertype/${row.id}/edit`, "#editArea");
+                                    htmx.ajax("GET", `/layers/layertype/${id}/edit`, "#editArea");
                                 }
                                 if (row.type === "genericlabel") {
-                                    htmx.ajax("GET", `/layers/genericlabel/${row.id}/edit`, "#editArea");
+                                    htmx.ajax("GET", `/layers/genericlabel/${id}/edit`, "#editArea");
                                 }
                             }
                         });
