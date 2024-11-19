@@ -856,78 +856,6 @@ $router->post('utils/importFullText', [
 	'domain' => NULL,
 ]);
 
-$router->get('genericlabel', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@resource',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/grid', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@grid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/data', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@data',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/{id}/edit', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@get',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/{id}/formEdit', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@formEdit',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('genericlabel/{idGenericLabel}', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@delete',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/new', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@formNew',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('genericlabel/new', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@new',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->put('genericlabel', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@update',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('lexicon', [
 	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@browse',
 	'as' => NULL,
@@ -2352,8 +2280,16 @@ $router->get('layers/genericlabel/new', [
 	'domain' => NULL,
 ]);
 
-$router->get('layers/genericlabel/{idLayerType}/{fragment?}', [
-	'uses' => 'App\Http\Controllers\Layers\ResourceController@genericLabel',
+$router->get('layers/genericlabel/{idGenericLabel}/edit', [
+	'uses' => 'App\Http\Controllers\Layers\ResourceController@genericlabel',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('layers/genericlabel/{idGenericLabel}/formEdit', [
+	'uses' => 'App\Http\Controllers\Layers\ResourceController@formEditGenericLabel',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -2368,7 +2304,7 @@ $router->post('layers/genericlabel/new', [
 	'domain' => NULL,
 ]);
 
-$router->put('layers/genericlabel/{idLayerType}', [
+$router->put('layers/genericlabel', [
 	'uses' => 'App\Http\Controllers\Layers\ResourceController@updateGenericLabel',
 	'as' => NULL,
 	'middleware' => ['master'],
