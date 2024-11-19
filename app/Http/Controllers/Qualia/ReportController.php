@@ -6,6 +6,7 @@ use App\Data\Qualia\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Qualia;
+use App\Services\ReportQualiaService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 
@@ -58,11 +59,15 @@ class ReportController extends Controller
             }
         }
         foreach ($qualias as $qualia) {
+            $frameName = '';
+            if ($qualia->frameName != '') {
+                $frameName = '<span class="color_frame"> ['. $qualia->frameName . '] </span>';
+            }
             $n = [];
             $n['id'] = 't' . $qualia->idEntity;
             $n['idQualia'] = $qualia->idQualia;
             $n['type'] = 'qualia';
-            $n['text'] = $qualia . $qualia->info;
+            $n['text'] = $qualiaIcon . $qualia->info . $frameName;
             $n['state'] = 'open';
             $n['children'] = [];
             $tree[] = $n;

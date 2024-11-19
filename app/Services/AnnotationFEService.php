@@ -349,7 +349,7 @@ class AnnotationFEService
                             }
                         } else {
                             $name = $fes[$span->idEntity]->name;
-                            $nis[$span->idInstantiationType][] = [
+                            $nis[$span->idInstantiationType][$span->idEntity] = [
                                 'idEntityFE' => $span->idEntity,
                                 'label' => $name
                             ];

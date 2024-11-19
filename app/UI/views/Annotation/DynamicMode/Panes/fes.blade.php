@@ -1,4 +1,3 @@
-<div class="field">
     <x-combobox.fe-frame
         id="idFrameElement"
         name="idFrameElement"
@@ -7,4 +6,3 @@
         :idFrame="$idFrame"
         :hasNull="false"
     ></x-combobox.fe-frame>
-</div>

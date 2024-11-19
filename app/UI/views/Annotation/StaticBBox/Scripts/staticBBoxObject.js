@@ -37,6 +37,18 @@ class StaticBBoxObject {
         return bbox;
     }
 
+    getBBox() {
+        console.log('getBBox',this.bbox);
+        let bbox = new BoundingBox(
+            this.bbox.x,
+            this.bbox.y,
+            this.bbox.width,
+            this.bbox.height
+        );
+        console.log(this.bbox, bbox);
+        return bbox;
+    }
+
     loadBBox(bbox) {
         this.bbox = new BoundingBox(
             bbox.x,

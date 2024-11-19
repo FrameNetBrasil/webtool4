@@ -32,6 +32,9 @@
                                 }
                             ]],
                             onClickRow: (row) => {
+                                if (row.type === "type") {
+                                    $("#qualiaTree").treegrid("toggle", row.id);
+                                }
                                 if (row.type === "qualia") {
                                     htmx.ajax("GET", `/report/qualia/${row.idQualia}`, "#reportArea");
                                 }
