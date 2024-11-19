@@ -41,15 +41,6 @@ class StaticBBoxController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/staticBBox/objectFE/{idFrame}')]
-    public function objectFE($idFrame)
-    {
-        $frame = new Frame($idFrame);
-        data('idFrame', $idFrame);
-        data('frameName', $frame->name ?? '');
-        return $this->render("Annotation.StaticBBox.Panes.objectFEPane");
-    }
-
     private function getData(int $idDocument): DocumentData
     {
         $document = Document::byId($idDocument);

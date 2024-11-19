@@ -128,9 +128,11 @@ class RelationService extends Controller
                 'feName' => $relation->fe1Name,
                 'feCoreType' => $relation->fe1CoreType,
                 'feIdColor' => $relation->fe1IdColor,
+                'feIdEntity' => $relation->fe1IdEntity,
                 'relatedFEName' => $relation->fe2Name,
                 'relatedFECoreType' => $relation->fe2CoreType,
                 'relatedFEIdColor' => $relation->fe2IdColor,
+                'relatedFEIdEntity' => $relation->fe2IdEntity,
             ];
         }
         return $result;
@@ -300,37 +302,36 @@ class RelationService extends Controller
     {
         $nodes = [];
         $links = [];
-        $baseRelation = new ViewRelation($idEntityRelation);
-        $icon = config('webtool.fe.icon.grapher');
-        $frame = new Frame();
-        $relations = $frame->listFEDirectRelations($idEntityRelation);
+        $baseRelation = Relation::byId($idEntityRelation);
+        $icon = config('webtool.fe.icon');
+        $relations = self::listRelationsFE($idEntityRelation);
         foreach ($relations as $relation) {
-            $nodes[$relation['feIdEntity']] = [
+            $nodes[$relation->feIdEntity] = [
                 'type' => 'fe',
-                'name' => $relation['feName'],
-                'icon' => $icon[$relation['feCoreType']],
-                'idColor' => $relation['feIdColor']
+                'name' => $relation->feName,
+                'icon' => $icon[$relation->feCoreType],
+                'idColor' => $relation->feIdColor
             ];
-            $nodes[$relation['relatedFEIdEntity']] = [
+            $nodes[$relation->relatedFEIdEntity] = [
                 'type' => 'fe',
-                'name' => $relation['relatedFEName'],
-                'icon' => $icon[$relation['relatedFECoreType']],
-                'idColor' => $relation['relatedFEIdColor']
+                'name' => $relation->relatedFEName,
+                'icon' => $icon[$relation->relatedFECoreType],
+                'idColor' => $relation->relatedFEIdColor
             ];
-            $links[$baseRelation->idEntity1][$relation['feIdEntity']] = [
+            $links[$baseRelation->idEntity1][$relation->feIdEntity] = [
                 'type' => 'ffe',
                 'idEntityRelation' => $idEntityRelation,
                 'relationEntry' => 'rel_has_element',
             ];
-            $links[$relation['relatedFEIdEntity']][$baseRelation->idEntity2] = [
+            $links[$relation->relatedFEIdEntity][$baseRelation->idEntity2] = [
                 'type' => 'ffe',
                 'idEntityRelation' => $idEntityRelation,
                 'relationEntry' => 'rel_has_element',
             ];
-            $links[$relation['feIdEntity']][$relation['relatedFEIdEntity']] = [
+            $links[$relation->feIdEntity][$relation->relatedFEIdEntity] = [
                 'type' => 'fefe',
-                'idEntityRelation' => $relation['idEntityRelation'],
-                'relationEntry' => $relation['entry'],
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationEntry' => $relation->entry,
             ];
         }
         return [

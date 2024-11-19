@@ -1,6 +1,9 @@
 <x-layout.object>
     <x-slot:name>
         <span>{{$layerGroup->name}}</span>
+        <div class="ui label wt-tag-type">
+            LayerGroup
+        </div>
     </x-slot:name>
     <x-slot:detail>
         <div class="ui label wt-tag-id">
