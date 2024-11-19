@@ -190,7 +190,8 @@ class AnnotationFullTextService
         }
         $lu = LU::byId($as->idLU);
         $pos = Criteria::byId("pos", "idPOS", $lu->idPOS);
-        $layerPOS = ['pos_n' => 'lty_noun', 'pos_v' => 'lty_verb', 'pos_a' => 'lty_adj', 'pos_prep' => 'lty_prep', 'pos_adv' => 'lty_adv', 'pos_num' => 'lty_num', 'pos_pron' => 'lty_pron'];
+        $layerPOS = ['pos_n' => 'lty_noun', 'pos_v' => 'lty_verb', 'pos_a' => 'lty_adj', 'pos_prep' => 'lty_prep',
+            'pos_adv' => 'lty_adv', 'pos_num' => 'lty_num', 'pos_pron' => 'lty_pron', 'pos_ccon' => 'lty_ccon', 'pos_scon' => 'lty_scon'];
         $labels = [];
         $labels['lty_fe'] = Criteria::table("view_frameelement")
             ->where('idLanguage', $idLanguage)

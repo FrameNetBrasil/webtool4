@@ -222,17 +222,17 @@ document.addEventListener('alpine:init', () => {
             $('#btnCreateObject').addClass('disabled');
             if (pausedTracking) {
                 $('#btnStartTracking').removeClass('disabled');
-                // $('#btnStopTracking').removeClass('disabled');
+                //$('#btnStopTracking').removeClass('disabled');
                 $('#btnPauseTracking').addClass('disabled');
-                $('#btnEndObject').removeClass('disabled');
-                $('#btnStopObject').addClass('disabled');
+                //$('#btnEndObject').removeClass('disabled');
+                $('#btnStopObject').removeClass('disabled');
                 $('#btnShowHideObjects').removeClass('disabled');
             } else {
                 $('#btnStartTracking').addClass('disabled');
                 // $('#btnStopTracking').removeClass('disabled');
                 $('#btnPauseTracking').removeClass('disabled');
                 $('#btnEndObject').addClass('disabled');
-                $('#btnStopObject').removeClass('disabled');
+                $('#btnStopObject').addClass('disabled');
                 $('#btnShowHideObjects').addClass('disabled');
             }
             annotation.video.disablePlayPause();

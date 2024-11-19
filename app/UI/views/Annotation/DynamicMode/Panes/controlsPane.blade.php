@@ -28,6 +28,14 @@
                 Start
             </button>
             <button
+                id="btnPauseTracking"
+                class="ui button primary"
+                x-data @click="$store.doStore.pauseTracking()"
+            >
+                <i class="pause icon"></i>
+                Pause
+            </button>
+            <button
                 id="btnStopObject"
                 class="ui button primary"
                 x-data @click="$store.doStore.stopTracking()"

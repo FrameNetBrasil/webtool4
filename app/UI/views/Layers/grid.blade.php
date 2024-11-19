@@ -7,11 +7,7 @@
     $idLanguage = \App\Services\AppService::getCurrentIdLanguage();
     $data = [];
     $layergroups = Criteria::table("layergroup")
-        ->join("layertype","layergroup.idLayerGroup","=","layerType.idLayerGroup")
         ->select("layergroup.idLayerGroup","layergroup.name")
-        ->selectRaw("count(layertype.idLayerType) as n")
-        ->groupBy("layergroup.idLayerGroup","layergroup.name")
-        ->having("n",">",0)
         ->orderBy("name")
         ->all();
     if ($search->genericlabel == '') {
@@ -35,29 +31,28 @@
                     ->all();
                 foreach($gls as $g) {
                      $gl[] = [
-                        'id' => 'g'. $g->idGenericLabel,
+                        'id' => $g->idGenericLabel,
                         'text' => $labelIcon . $g->name,
                         'state' => 'open',
                         'type' => 'genericlabel',
                     ];
                 }
                 $lt[] = [
-                    'id' => 'l' . $layer->idLayerType,
+                    'id' => $layer->idLayerType,
                     'text' => $layerIcon . $layer->name,
                     'state' => 'closed',
-                    'type' => 'layer',
+                    'type' => 'layertype',
                     'children' => $gl
                 ];
             }
             $data[] = [
-                    'id' => 'lg' . $layergroup->idLayerGroup,
+                    'id' => $layergroup->idLayerGroup,
                     'text' => $groupIcon . $layergroup->name,
                     'state' => 'closed',
                     'type' => 'layergroup',
                     'children' => $lt
             ];
         }
-        debug($data);
     } else {
         $genericlabels = Criteria::table("genericlabel as gl")
             ->join("view_layerType lt","lt.idLayterType","=","gl.idLayerType")
@@ -116,11 +111,14 @@
                                 }
                             ]],
                             onClickRow: (row) => {
-                                if (row.type === "layer") {
-                                    htmx.ajax("GET", `/layers/layer/${row.id}/content`, "#editArea");
+                                if (row.type === "layergroup") {
+                                    htmx.ajax("GET", `/layers/layergroup/${row.id}/edit`, "#editArea");
+                                }
+                                if (row.type === "layertype") {
+                                    htmx.ajax("GET", `/layers/layertype/${row.id}/edit`, "#editArea");
                                 }
                                 if (row.type === "genericlabel") {
-                                    htmx.ajax("GET", `/layers/genericlabel/${row.id}/content`, "#editArea");
+                                    htmx.ajax("GET", `/layers/genericlabel/${row.id}/edit`, "#editArea");
                                 }
                             }
                         });

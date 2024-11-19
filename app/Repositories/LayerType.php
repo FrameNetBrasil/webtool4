@@ -8,7 +8,7 @@ class LayerType
 {
     public static function byId(int $id): object
     {
-        return Criteria::byFilter("layertype", ["idLayerType","=", $id])->first();
+        return Criteria::byFilterLanguage("view_layertype", ["idLayerType","=", $id])->first();
     }
     public static function listToLU(object $lu): array
     {
