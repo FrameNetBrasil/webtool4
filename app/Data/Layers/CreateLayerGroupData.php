@@ -10,6 +10,7 @@ class CreateLayerGroupData extends Data
 {
     public function __construct(
         public ?string $name = '',
+        public ?string $type = '',
         public string $_token = '',
     )
     {

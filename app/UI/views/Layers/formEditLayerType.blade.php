@@ -1,30 +1,22 @@
 <x-form
-    title="New LayerType"
-    title="New LayerType"
-    hx-post="/layers/layertype/new"
-    hx-target="#editArea"
+    title="Edit LayerType"
+    hx-put="/layers/layertype"
 >
     <x-slot:fields>
-        <div class="field">
-            <x-text-field
-                label="English Name"
-                id="nameEn"
-                value=""
-            ></x-text-field>
-        </div>
+        <x-hidden-field id="idLayerType" value="{{$layerType->idLayerType}}"></x-hidden-field>
         <div class="fields">
             <div class="field">
                 <x-combobox.layer-group
                     label="LayerGroup"
                     id="idLayerGroup"
-                    :value="0"
+                    :value="$layerType->idLayerGroup"
                 ></x-combobox.layer-group>
             </div>
             <div class="field">
                 <x-number-field
                     label="LayerOrder"
                     id="layerOrder"
-                    :value="0"
+                    :value="$layerType->layerOrder"
                 ></x-number-field>
             </div>
         </div>
@@ -33,14 +25,14 @@
                 <x-checkbox
                     label="Allows Apositional"
                     id="allowsApositional"
-                    :active="false"
+                    :active="$layerType->allowsApositional"
                 ></x-checkbox>
             </div>
             <div class="field">
                 <x-checkbox
                     label="Is Annotation"
                     id="isAnnotation"
-                    :active="false"
+                    :active="$layerType->isAnnotation"
                 ></x-checkbox>
             </div>
         </div>
