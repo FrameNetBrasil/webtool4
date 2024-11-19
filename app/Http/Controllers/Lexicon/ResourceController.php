@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Lexicon;
 
+use App\Data\ComboBox\QData;
 use App\Data\Lexicon\CreateLayerGroupData;
 use App\Data\Lexicon\CreateLexemeData;
 use App\Data\Lexicon\CreateLexemeEntryData;
@@ -47,6 +48,15 @@ class ResourceController extends Controller
     /*------
       Lemma
       ------ */
+
+    #[Get(path: '/lexicon/lemma/listForSelect')]
+    public function listForSelect(QData $data)
+    {
+        $name = (strlen($data->q) > 2) ? $data->q : 'none';
+        return ['results' => Criteria::byFilterLanguage("view_lemma",["name","startswith", trim($name)])
+            ->select('idLemma','fullName as name')
+            ->orderby("name")->all()];
+    }
 
     #[Get(path: '/lexicon/lemma/new')]
     public function formNewLemma()
