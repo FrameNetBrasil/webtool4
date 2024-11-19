@@ -53,14 +53,22 @@ class ResourceController extends Controller
         return view("Layers.formNewLayerGroup");
     }
 
-    #[Get(path: '/layers/layergroup/{idLayerGroup}/{fragment?}')]
-    public function layergroup(int $idLayerGroup, string $fragment = null)
+    #[Get(path: '/layers/layergroup/{idLayerGroup}/edit')]
+    public function layergroup(int $idLayerGroup)
     {
         $layerGroup = LayerGroup::byId($idLayerGroup);
-        $view = view("Layers.layerGroup", [
+        return view("Layers.editLayerGroup", [
             'layerGroup' => $layerGroup,
         ]);
-        return (is_null($fragment) ? $view : $view->fragment($fragment));
+    }
+
+    #[Get(path: '/layers/layergroup/{idLayerGroup}/formEdit')]
+    public function formEditLayerGroup(int $idLayerGroup)
+    {
+        $layerGroup = LayerGroup::byId($idLayerGroup);
+        return view("Layers.formEditLayerGroup", [
+            'layerGroup' => $layerGroup,
+        ]);
     }
 
     #[Post(path: '/layers/layergroup/new')]
@@ -87,7 +95,7 @@ class ResourceController extends Controller
         }
     }
 
-    #[Put(path: '/layers/layergroup/{idLayerGroup}')]
+    #[Put(path: '/layers/layergroup')]
     public function updateLayerGroup(UpdateLayerGroupData $data)
     {
         try {
@@ -125,14 +133,22 @@ class ResourceController extends Controller
         return view("Layers.formNewLayerType");
     }
 
-    #[Get(path: '/layers/layertype/{idLayerType}/{fragment?}')]
-    public function layerType(int $idLayerType, string $fragment = null)
+    #[Get(path: '/layers/layertype/{idLayerType}/edit')]
+    public function layertype(int $idLayerType)
     {
         $layerType = LayerType::byId($idLayerType);
-        $view = view("Layers.layerType", [
+        return view("Layers.editLayerType", [
             'layerType' => $layerType,
         ]);
-        return (is_null($fragment) ? $view : $view->fragment($fragment));
+    }
+
+    #[Get(path: '/layers/layertype/{idLayerType}/formEdit')]
+    public function formEditLayerType(int $idLayerType)
+    {
+        $layerType = LayerType::byId($idLayerType);
+        return view("Layers.formEditLayerType", [
+            'layerType' => $layerType,
+        ]);
     }
 
     #[Post(path: '/layers/layertype/new')]

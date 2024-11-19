@@ -7,9 +7,9 @@ use Spatie\LaravelData\Data;
 class UpdateLayerGroupData extends Data
 {
     public function __construct(
-        public string $idLemma,
+        public int $idLayerGroup,
         public string $name,
-        public int $idPOS,
+        public string $_token = '',
     )
     {
     }

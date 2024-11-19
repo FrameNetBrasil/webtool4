@@ -14,9 +14,9 @@
             hx-swap="innerHTML"
         ></x-button>
         <x-button
-            label="New Layer"
+            label="New LayerType"
             color="secondary"
-            hx-get="/layers/layer/new"
+            hx-get="/layers/layertype/new"
             hx-target="#editArea"
             hx-swap="innerHTML"
         ></x-button>
