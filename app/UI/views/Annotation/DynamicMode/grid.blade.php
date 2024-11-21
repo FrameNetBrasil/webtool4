@@ -8,6 +8,7 @@
         ->select("p.projectName")
         ->chunkResult("projectName","projectName");
     $data = AnnotationService::browseCorpusDocumentBySearch($search, $listProjects);
+    $id = uniqid("corpusTree");
 @endphp
 <div
     class="h-full"
@@ -15,11 +16,11 @@
     <div class="relative h-full overflow-auto">
         <div id="corpusTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
             @fragment('search')
-                <ul id="corpusTree">
+                <ul id="{{$id}}">
                 </ul>
                 <script>
                     $(function() {
-                        $("#corpusTree").treegrid({
+                        $("#{{$id}}").treegrid({
                             data: {{Js::from($data)}},
                             fit: true,
                             showHeader: false,

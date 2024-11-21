@@ -80,6 +80,7 @@
             'type' => 'result',
         ];
     }
+    $id = uniqid("layersTree");
 @endphp
 <div
         id="gridLayers"
@@ -92,11 +93,11 @@
     <div class="relative h-full overflow-auto">
         <div id="layersTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
             @fragment('search')
-                <ul id="layersTree">
+                <ul id="{{$id}}">
                 </ul>
                 <script>
                     $(function() {
-                        $("#layersTree").treegrid({
+                        $("#{{$id}}").treegrid({
                             data: {{Js::from($data)}},
                             fit: true,
                             showHeader: false,

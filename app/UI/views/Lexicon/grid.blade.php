@@ -57,26 +57,27 @@
             'type' => 'result',
         ];
     }
+    $id = uniqid("lexiconTree");
 @endphp
 <div
         class="h-full"
         hx-trigger="reload-gridLexicon from:body"
         hx-target="this"
-        hx-swap="innerHTML"
+        hx-swap="outerHTML"
         hx-post="/lexicon/grid"
 >
     <div class="relative h-full overflow-auto">
         <div id="lexiconTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
             @fragment('search')
-                <ul id="lexiconTree">
+                <ul id="{{$id}}">
                 </ul>
                 <script>
                     $(function() {
-                        $("#lexiconTree").treegrid({
+                        $("#{{$id}}").treegrid({
                             data: {{Js::from($data)}},
                             fit: true,
                             showHeader: false,
-                            rownumbers: false,
+                            rowNumbers: false,
                             idField: "id",
                             treeField: "text",
                             showFooter: false,
