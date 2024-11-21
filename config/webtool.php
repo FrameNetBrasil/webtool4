@@ -27,6 +27,7 @@ return [
             'networkstructure' => ['Network', '/network', 'MASTER', []],
             'reportst' => ['SemanticType', '/report/semanticType', '', []],
             'reportc5' => ['C5', '/report/c5', '', []],
+            'reporttqr' => ['TQR', '/report/qualia', '', []],
 //            'cxnreport' => ['Constructions', '/cxn/report', 'cxnreport', '', '', []],
 //            'corpusAnnotationReport' => ['Corpus Panes', '/corpus/report', 'corpusreport', '', 1, []],
         ]],
@@ -66,17 +67,19 @@ return [
 //            'conceptstructure' => ['Concept', '/concept', 'menu-concept', '', 1, []],
 //            'decisiontree' => ['Decision tree', '/decisiontree', 'MASTER', []],
         ]],
+        'manager' => ['Manager', '/manager', 'MANAGER', [
+            'projectDataset' => ['Project/Dataset', '/project', 'MANAGER', []],
+            'taskUser' => ['Task/User', '/task', 'MANAGER', []],
+        ]],
         'admin' => ['Admin', '/admin', 'ADMIN', [
             'groupUser' => ['Group/User', '/user', 'ADMIN', []],
-            'projectDataset' => ['Project/Dataset', '/project', 'ADMIN', []],
-            'taskUser' => ['Task/User', '/task', 'ADMIN', []],
             'corpusDocument' => ['Corpus/Document', '/corpus', 'ADMIN', []],
             'videoDocument' => ['Video/Document', '/video', 'ADMIN', []],
             'imageDocument' => ['Image/Document', '/image', 'ADMIN', []],
             'domainSemantictype' => ['Domain/SemanticType', '/semanticType', 'ADMIN', []],
             'layerGenericlabel' => ['Layer/GenericLabel', '/layers', 'ADMIN', []],
+            'relations' => ['Relations', '/relations', 'ADMIN', []],
 //            'type' => ['Types', '/type', 'ADMIN', []],
-//            'relation' => ['Relations', '/relationgroup', 'ADMIN', []],
 //            'genre' => ['Genres', '/genre', 'ADMIN', []],
 //            'layer' => ['Layers', '/layer', 'ADMIN', []],
 //            'constraint' => ['Constraints', '/constraint', 'ADMIN', []],
@@ -182,7 +185,7 @@ return [
         'rel_coreset' => [
             'direct' => "CoreSet",
             'inverse' => "CoreSet",
-            'color' => '#000'
+            'color' => '##000'
         ],
         'rel_excludes' => [
             'direct' => "Excludes",
@@ -206,24 +209,6 @@ return [
             "cty_core-unexpressed" => "black dot circle",
             "cty_peripheral" => "black stop circle outline",
             "cty_extra-thematic" => "black circle outline",
-//            'tree' => [
-//                "cty_core" => "material-icons wt-tree-icon wt-icon-fe-core",
-//                "cty_core-unexpressed" => "material-icons-outlined wt-tree-icon wt-icon-fe-core-unexpressed",
-//                "cty_peripheral" => "material-icons-outlined wt-tree-icon wt-icon-fe-peripheral",
-//                "cty_extra-thematic" => "material-icons-outlined wt-tree-icon wt-icon-fe-extra-thematic",
-//            ],
-//            'grid' => [
-//                "cty_core" => "material-icons wt-icon wt-icon-fe-core",
-//                "cty_core-unexpressed" => "material-icons-outlined wt-icon wt-icon-fe-core-unexpressed",
-//                "cty_peripheral" => "material-icons-outlined wt-icon wt-icon-fe-peripheral",
-//                "cty_extra-thematic" => "material-icons-outlined wt-icon wt-icon-fe-extra-thematic",
-//            ],
-//            'grapher' => [
-//                "cty_core" => "material-icons wt-grapher-icon wt-icon-fe-core",
-//                "cty_core-unexpressed" => "material-icons-outlined wt-grapher-icon wt-icon-fe-core-unexpressed",
-//                "cty_peripheral" => "material-icons-outlined wt-grapher-icon wt-icon-fe-peripheral",
-//                "cty_extra-thematic" => "material-icons-outlined wt-grapher-icon wt-icon-fe-extra-thematic",
-//            ],
         ],
         'coreness' => [
             "cty_core" => "Core",

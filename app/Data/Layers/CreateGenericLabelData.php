@@ -8,10 +8,10 @@ use Spatie\LaravelData\Data;
 class CreateGenericLabelData extends Data
 {
     public function __construct(
-        public ?int $idGenericLabel = null,
         public ?string $name = null,
         public ?int $idLanguage = null,
         public ?int $idColor = null,
+        public ?int $idLayerType = null,
         public ?string $definition = '',
         public ?int $idUser = null,
     )

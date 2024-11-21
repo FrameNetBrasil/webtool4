@@ -2,31 +2,25 @@
 
 namespace App\Services;
 
-use App\Data\CreateRelationFEInternalData;
 use App\Data\Frame\UpdateClassificationData;
 use App\Data\Relation\CreateData;
-use App\Data\UpdateFrameClassificationData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\EntityRelation;
 use App\Repositories\Frame;
-use App\Repositories\FrameElement;
 use App\Repositories\Relation;
-use App\Repositories\RelationType;
 use App\Repositories\SemanticType;
-use App\Repositories\ViewRelation;
 
 class RelationService extends Controller
 {
-    public static function delete(int $id)
-    {
-        Relation::delete($id);
-    }
-
-    public static function newRelation(CreateData $data): ?int
-    {
-        return Relation::save($data);
-    }
+//    public static function delete(int $id)
+//    {
+//        Relation::delete($id);
+//    }
+//
+//    public static function newRelation(CreateData $data): ?int
+//    {
+//        return Relation::save($data);
+//    }
 
     static public function create(string $relationTypeEntry, int $idEntity1, int $idEntity2, ?int $idEntity3 = null, ?int $idRelation = null): ?int
     {
@@ -45,7 +39,7 @@ class RelationService extends Controller
     public static function listRelationsFrame(int $idFrame)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $result = [];
         $relations = Criteria::table("view_frame_relation")
             ->where("f1IdFrame", $idFrame)
@@ -57,8 +51,8 @@ class RelationService extends Controller
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
                 'relationType' => $relation->relationType,
-                'name' => $config[$relation->relationType]['direct'],
-                'color' => $config[$relation->relationType]['color'],
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
                 'idFrameRelated' => $relation->f2IdFrame,
                 'related' => $relation->f2Name,
                 'direction' => 'direct'
@@ -72,8 +66,8 @@ class RelationService extends Controller
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
                 'relationType' => $relation->relationType,
-                'name' => $config[$relation->relationType]['inverse'],
-                'color' => $config[$relation->relationType]['color'],
+                'name' => $relation->nameInverse,
+                'color' => $relation->color,
                 'idFrameRelated' => $relation->f1IdFrame,
                 'related' => $relation->f1Name,
                 'direction' => 'inverse'
@@ -85,7 +79,7 @@ class RelationService extends Controller
     public static function listRelationsFEInternal(int $idFrame)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $relations = Criteria::table("view_fe_internal_relation")
             ->where("fe1IdFrame", $idFrame)
             ->where("idLanguage", $idLanguage)
@@ -103,8 +97,8 @@ class RelationService extends Controller
                 'relatedFEName' => $relation->fe2Name,
                 'relatedFEIdColor' => $relation->fe2IdColor,
                 'relatedFECoreType' => $relation->fe2CoreType,
-                'name' => $config[$relation->relationType]['direct'],
-                'color' => $config[$relation->relationType]['color'],
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
             ];
         }
         return $result;
@@ -113,7 +107,7 @@ class RelationService extends Controller
     public static function listRelationsFE(int $idEntityRelationBase)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $relations = Criteria::table("view_fe_relation")
             ->where("idRelation", $idEntityRelationBase)
             ->where("idLanguage", $idLanguage)
@@ -123,8 +117,8 @@ class RelationService extends Controller
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
                 'entry' => $relation->relationType,
-                'relationName' => $config[$relation->relationType]['direct'],
-                'color' => $config[$relation->relationType]['color'],
+                'relationName' => $relation->nameDirect,
+                'color' => $relation->color,
                 'feName' => $relation->fe1Name,
                 'feCoreType' => $relation->fe1CoreType,
                 'feIdColor' => $relation->fe1IdColor,
@@ -177,44 +171,6 @@ class RelationService extends Controller
             ->all();
         return $relations;
     }
-
-
-//    static public function createForIdRelationType(int $idRelationType, int $idEntity1, int $idEntity2, ?int $idEntity3 = null, ?int $idRelation = null): ?int
-//    {
-//        $relationData = CreateData::from([
-//            'idRelationType' => $idRelationType,
-//            'idEntity1' => $idEntity1,
-//            'idEntity2' => $idEntity2,
-//            'idEntity3' => $idEntity3,
-//            'idRelation' => $idRelation
-//        ]);
-//        return self::newRelation($relationData);
-//    }
-//
-//    static public function deleteAll(int $idEntity)
-//    {
-//        $subCriteria = Relation::getCriteria()
-//            ->select('idEntityRelation')
-//            ->orWhere('idEntity1',$idEntity)
-//            ->orWhere('idEntity2',$idEntity)
-//            ->orWhere('idEntity3',$idEntity);
-//        Relation::getCriteria()
-//            ->where('idRelation', 'IN', $subCriteria)
-//            ->delete();
-//        Relation::getCriteria()
-//            ->where('idEntity3', '=', $idEntity)
-//            ->delete();
-//        Relation::getCriteria()
-//            ->where('idEntity2', '=', $idEntity)
-//            ->delete();
-//        Relation::getCriteria()
-//            ->where('idEntity1', '=', $idEntity)
-//            ->delete();
-//    }
-
-//
-
-//
 
 
     public static function updateFramalDomain(UpdateClassificationData $data)
@@ -453,7 +409,7 @@ class RelationService extends Controller
     public static function listRelationsConcept(int $idConcept)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $result = [];
         $relations = Criteria::table("view_concept_relation")
             ->where("c1IdConcept", $idConcept)
@@ -465,8 +421,8 @@ class RelationService extends Controller
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
                 'relationType' => $relation->relationType,
-                'name' => $config[$relation->relationType]['direct'],
-                'color' => $config[$relation->relationType]['color'],
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
                 'idConceptRelated' => $relation->c2IdConcept,
                 'related' => $relation->c2Name,
                 'direction' => 'direct'
@@ -480,8 +436,8 @@ class RelationService extends Controller
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
                 'relationType' => $relation->relationType,
-                'name' => $config[$relation->relationType]['inverse'],
-                'color' => $config[$relation->relationType]['color'],
+                'name' => $relation->nameInverse,
+                'color' => $relation->color,
                 'idConceptRelated' => $relation->c1IdConcept,
                 'related' => $relation->c1Name,
                 'direction' => 'inverse'
@@ -493,7 +449,7 @@ class RelationService extends Controller
     public static function listRelationsSemanticType(int $idSemanticType)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $result = [];
         $relations = Criteria::table("view_semantictype_relation")
             ->where("st1IdSemanticType", $idSemanticType)
@@ -505,8 +461,8 @@ class RelationService extends Controller
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
                 'relationType' => $relation->relationType,
-                'name' => $config[$relation->relationType]['direct'],
-                'color' => $config[$relation->relationType]['color'],
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
                 'idSTRelated' => $relation->st2IdSemanticType,
                 'related' => $relation->st2Name,
                 'direction' => 'direct'
@@ -520,8 +476,8 @@ class RelationService extends Controller
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
                 'relationType' => $relation->relationType,
-                'name' => $config[$relation->relationType]['inverse'],
-                'color' => $config[$relation->relationType]['color'],
+                'name' => $relation->nameInverse,
+                'color' => $relation->color,
                 'idSTRelated' => $relation->st1IdSemanticType,
                 'related' => $relation->st1Name,
                 'direction' => 'inverse'

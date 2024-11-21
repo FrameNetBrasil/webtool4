@@ -688,6 +688,14 @@ $router->get('luCandidate', [
 	'domain' => NULL,
 ]);
 
+$router->get('luCandidate/data', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@data',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('luCandidate/grid/{fragment?}', [
 	'uses' => 'App\Http\Controllers\LU\LUCandidateController@grid',
 	'as' => NULL,
@@ -856,78 +864,6 @@ $router->post('utils/importFullText', [
 	'domain' => NULL,
 ]);
 
-$router->get('genericlabel', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@resource',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/grid', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@grid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/data', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@data',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/{id}/edit', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@get',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/{id}/formEdit', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@formEdit',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('genericlabel/{idGenericLabel}', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@delete',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genericlabel/new', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@formNew',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('genericlabel/new', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@new',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->put('genericlabel', [
-	'uses' => 'App\Http\Controllers\GenericLabel\ResourceController@update',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('lexicon', [
 	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@browse',
 	'as' => NULL,
@@ -1082,102 +1018,6 @@ $router->post('lexicon/wordform/new', [
 
 $router->delete('lexicon/wordform/{idWordForm}', [
 	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@deleteWordform',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('tqr2', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@resource',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('tqr2/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@grid',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('tqr2/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@grid',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('tqr2/{id}/edit', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@edit',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('tqr2/new', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@new',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('tqr2/new', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@create',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('tqr2/{id}', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@delete',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('tqr2/argument/new', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@createArgument',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('tqr2/{id}/arguments', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@arguments',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('tqr2/arguments/{id}', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@deleteArgument',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('tqr2/qualialu/new', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@formNewQualiaLU',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('tqr2/list/forSelect', [
-	'uses' => 'App\Http\Controllers\TQR2\ResourceController@listForSelect',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -1984,6 +1824,142 @@ $router->get('sandbox/tree/frame/{idFrame}', [
 	'domain' => NULL,
 ]);
 
+$router->get('relations', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@browse',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('relations/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/relationgroup/new', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@formNewRelationGroup',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/relationgroup/{idRelationGroup}/edit', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@relationgroup',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/relationgroup/{idRelationGroup}/formEdit', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@formEditRelationGroup',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('relations/relationgroup/new', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@newRelationGroup',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->put('relations/relationgroup', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@updateRelationGroup',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('relations/relationgroup/{idRelationGroup}', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@deleteRelationGroup',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/relationtype/new', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@formNewRelationType',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/relationtype/{idRelationType}/edit', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@relationtype',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/relationtype/{idRelationType}/formEdit', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@formEditRelationType',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('relations/relationtype/new', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@newRelationType',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->put('relations/relationtype', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@updateRelationType',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('relations/relationtype/{idRelationType}', [
+	'uses' => 'App\Http\Controllers\Relations\ResourceController@deleteRelationType',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/relationgroup/{id}/entries', [
+	'uses' => 'App\Http\Controllers\Relations\EntryController@entriesRGP',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('relations/relationtype/{id}/entries', [
+	'uses' => 'App\Http\Controllers\Relations\EntryController@entriesRTY',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('video', [
 	'uses' => 'App\Http\Controllers\Video\ResourceController@resource',
 	'as' => NULL,
@@ -2352,8 +2328,16 @@ $router->get('layers/genericlabel/new', [
 	'domain' => NULL,
 ]);
 
-$router->get('layers/genericlabel/{idLayerType}/{fragment?}', [
-	'uses' => 'App\Http\Controllers\Layers\ResourceController@genericLabel',
+$router->get('layers/genericlabel/{idGenericLabel}/edit', [
+	'uses' => 'App\Http\Controllers\Layers\ResourceController@genericlabel',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('layers/genericlabel/{idGenericLabel}/formEdit', [
+	'uses' => 'App\Http\Controllers\Layers\ResourceController@formEditGenericLabel',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -2368,7 +2352,7 @@ $router->post('layers/genericlabel/new', [
 	'domain' => NULL,
 ]);
 
-$router->put('layers/genericlabel/{idLayerType}', [
+$router->put('layers/genericlabel', [
 	'uses' => 'App\Http\Controllers\Layers\ResourceController@updateGenericLabel',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -3544,30 +3528,6 @@ $router->put('annotation/corpus/annotationSet/feLayer', [
 	'domain' => NULL,
 ]);
 
-$router->get('decisiontree', [
-	'uses' => 'App\Http\Controllers\DecisionTree\BrowseController@browse',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('decisiontree/grid', [
-	'uses' => 'App\Http\Controllers\DecisionTree\BrowseController@grid',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('decisiontree/frame/{entry}', [
-	'uses' => 'App\Http\Controllers\DecisionTree\BrowseController@entry',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->post('fe', [
 	'uses' => 'App\Http\Controllers\FE\ResourceController@newFE',
 	'as' => NULL,
@@ -3820,30 +3780,6 @@ $router->get('empty', [
 	'uses' => 'App\Http\Controllers\Controller@empty',
 	'as' => NULL,
 	'middleware' => [],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('genre', [
-	'uses' => 'App\Http\Controllers\Genre\GenreController@browse',
-	'as' => NULL,
-	'middleware' => ['admin'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('genre/grid', [
-	'uses' => 'App\Http\Controllers\Genre\GenreController@grid',
-	'as' => NULL,
-	'middleware' => ['admin'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('genre/listForGrid', [
-	'uses' => 'App\Http\Controllers\Genre\GenreController@listForGrid',
-	'as' => NULL,
-	'middleware' => ['admin'],
 	'where' => [],
 	'domain' => NULL,
 ]);

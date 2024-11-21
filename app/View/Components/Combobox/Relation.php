@@ -34,19 +34,21 @@ class Relation extends Component
             ->where('idLanguage', $idLanguage)
             ->all();
         $this->options = [];
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         if ($group == 'frame') {
             $this->options[] = [
                 'value' => 'header',
                 'entry' => '0',
                 'name' => 'Direct relation',
+                'color' => '#000',
             ];
         }
         foreach($relations as $relation) {
             $this->options[] = [
                 'value' => 'd' . $relation->idRelationType,
                 'entry' => $relation->entry,
-                'name' => $config[$relation->entry]['direct'],
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
             ];
         }
         if ($group == 'frame') {
@@ -54,12 +56,14 @@ class Relation extends Component
                 'value' => 'header',
                 'entry' => '0',
                 'name' => 'Inverse relation',
+                'color' => '#000',
             ];
             foreach ($relations as $relation) {
                 $this->options[] = [
                     'value' => 'i' . $relation->idRelationType,
                     'entry' => $relation->entry,
-                    'name' => $config[$relation->entry]['inverse'],
+                    'name' => $relation->nameInverse,
+                    'color' => $relation->color,
                 ];
             }
         }

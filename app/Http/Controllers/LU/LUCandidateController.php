@@ -12,6 +12,7 @@ use App\Repositories\LUCandidate;
 use App\Repositories\User;
 use App\Services\AppService;
 use App\Services\MessageService;
+use Carbon\Carbon;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -26,6 +27,26 @@ class LUCandidateController extends Controller
     public function resource()
     {
         return view("LUCandidate.resource");
+    }
+
+    #[Get(path: '/luCandidate/data')]
+    public function data(SearchData $search)
+    {
+        debug($search);
+        $luIcon = view('components.icon.lu')->render();
+        $lus = Criteria::byFilterLanguage("view_lucandidate",["name","startswith", $search->lu])
+            ->select('idLUCandidate','name','createdAt')
+            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
+            ->orderBy($search->sort,$search->order)->all();
+        $data = array_map(fn($item) => [
+            'id'=> $item->idLUCandidate,
+            'name' => $luIcon . $item->name,
+            'frameName' => $item->frameName,
+            'createdAt' => $item->createdAt ? Carbon::parse($item->createdAt)->format("d/m/Y") : '-',
+            'state'=> 'open',
+            'type' => 'lu'
+        ], $lus);
+        return $data;
     }
 
     #[Get(path: '/luCandidate/grid/{fragment?}')]
