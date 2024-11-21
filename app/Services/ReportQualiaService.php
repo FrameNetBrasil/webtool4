@@ -30,8 +30,8 @@ class ReportQualiaService
                 ->first();
         }
         $report['qualia'] = $qualia;
-        $report['fe1'] = FrameElement::byId($qualia->idFrameElement1);
-        $report['fe2'] = FrameElement::byId($qualia->idFrameElement2);
+        $report['fe1'] = $qualia->idFrameElement1 ? FrameElement::byId($qualia->idFrameElement1) : null;
+        $report['fe2'] = $qualia->idFrameElement2 ? FrameElement::byId($qualia->idFrameElement2) : null;
         //$report['relations'] = self::getRelations($semanticType);
         return $report;
     }

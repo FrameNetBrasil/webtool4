@@ -27,6 +27,7 @@ return [
             'networkstructure' => ['Network', '/network', 'MASTER', []],
             'reportst' => ['SemanticType', '/report/semanticType', '', []],
             'reportc5' => ['C5', '/report/c5', '', []],
+            'reporttqr' => ['TQR', '/report/qualia', '', []],
 //            'cxnreport' => ['Constructions', '/cxn/report', 'cxnreport', '', '', []],
 //            'corpusAnnotationReport' => ['Corpus Panes', '/corpus/report', 'corpusreport', '', 1, []],
         ]],
