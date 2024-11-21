@@ -4,7 +4,7 @@ $items = [
 ];
 @endphp
 <x-objectmenu
-    id="genericLabelMenu"
+    id="genericLabelMenu_{{$genericLabel->idGenericLabel}}"
     :items="$items"
     :path="'layers/genericlabel/' . $genericLabel->idGenericLabel"
 ></x-objectmenu>

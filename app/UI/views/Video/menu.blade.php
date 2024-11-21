@@ -6,7 +6,7 @@ $items = [
 ];
 @endphp
 <x-objectmenu
-    id="videoMenu"
+    id="videoMenu_{{$video->idVideo}}"
     :items="$items"
     :path="'video/' . $video->idVideo"
 ></x-objectmenu>
