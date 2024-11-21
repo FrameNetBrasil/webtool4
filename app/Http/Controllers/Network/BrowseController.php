@@ -94,14 +94,14 @@ class BrowseController extends Controller
         $result = [];
         $frameBase = Frame::byId($idFrame);
         $idLanguage = AppService::getCurrentIdLanguage();
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $relations = Criteria::table("view_frame_relation")
             ->where("f1IdFrame", $idFrame)
             ->where("idLanguage", $idLanguage)
             ->orderBy("relationType")
             ->all();
         foreach ($relations as $row) {
-            $relationName = $config[$row->relationType]['direct'];
+            $relationName = $row->nameDirect;
             $frame = Frame::byId($row->f2IdFrame);
             $domain = $this->getDomain($frame->idFrame);
             $node = [];
@@ -132,7 +132,7 @@ class BrowseController extends Controller
             ->orderBy("relationType")
             ->all();
         foreach ($relations as $row) {
-            $relationName = $config[$row->relationType]['inverse'];
+            $relationName = $row->nameInverse;
             $frame = Frame::byId($row->f1IdFrame);
             $domain = $this->getDomain($frame->idFrame);
             $node = [];

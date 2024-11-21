@@ -1,5 +1,4 @@
 <x-form
-    title="Edit LayerGroup"
     hx-put="/layers/layergroup"
 >
     <x-slot:fields>

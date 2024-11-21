@@ -30,7 +30,7 @@ class RelationController extends Controller
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $relation = Criteria::byId("view_relation","idEntityRelation", $idEntityRelation);
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $frame = Criteria::table("view_frame")
             ->where("idEntity", $relation->idEntity1)
             ->where("idLanguage", $idLanguage)
@@ -45,7 +45,7 @@ class RelationController extends Controller
             'frame' => $frame,
             'relatedFrame' => $relatedFrame,
             'relation' => (object)[
-                'name' => $config[$relation->relationType]['direct'],
+                'name' => $relation->nameDirect,
                 'relationType' => $relation->relationType
             ],
         ]);
@@ -56,7 +56,7 @@ class RelationController extends Controller
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $relation = Criteria::byId("view_relation","idEntityRelation", $idEntityRelation);
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $frame = Criteria::table("view_frame")
             ->where("idEntity", $relation->idEntity1)
             ->where("idLanguage", $idLanguage)
@@ -70,7 +70,7 @@ class RelationController extends Controller
             'frame' => $frame,
             'relatedFrame' => $relatedFrame,
             'relation' => (object)[
-                'name' => $config[$relation->relationType]['direct'],
+                'name' => $relation->nameDirect,
                 'entry' => $relation->relationType
             ]
         ]);
@@ -81,7 +81,7 @@ class RelationController extends Controller
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $relation = Criteria::byId("view_relation","idEntityRelation", $idEntityRelation);
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $frame = Criteria::table("view_frame")
             ->where("idEntity", $relation->idEntity1)
             ->where("idLanguage", $idLanguage)
@@ -95,7 +95,7 @@ class RelationController extends Controller
             'frame' => $frame,
             'relatedFrame' => $relatedFrame,
             'relation' => (object)[
-                'name' => $config[$relation->relationType]['direct'],
+                'name' => $relation->nameDirect,
                 'relationType' => $relation->relationType
             ],
             'relations' => RelationService::listRelationsFE($idEntityRelation)

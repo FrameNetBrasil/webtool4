@@ -51,19 +51,18 @@ class ReportFrameService
         foreach ($fes as $fe) {
             $feByEntry[$fe->entry] = $fe;
         }
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         $relations = RelationService::listRelationsFEInternal($frame->idFrame);
         $relationsByIdFE = [];
         foreach ($relations as $relation) {
             $relationsByIdFE[$relation->feIdFrameElement][] = [
                 'relatedFEName' => $relation->relatedFEName,
                 'relatedFEIdColor' => $relation->relatedFEIdColor,
-                'name' => $config[$relation->relationType]['direct'],
-                'color' => $config[$relation->relationType]['color'],
+                'name' => $relation->name,
+                'color' => $relation->color,
             ];
         }
         $semanticTypes = RelationService::listFEST($frame->idFrame);
-        debug($semanticTypes);
         $styles = [];
         foreach ($fes as $fe) {
             $styles[strtolower($fe->name)] = "color_{$fe->idColor}";

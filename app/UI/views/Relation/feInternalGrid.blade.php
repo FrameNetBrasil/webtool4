@@ -22,7 +22,8 @@
                             <div
                                 class="header"
                             >
-                                <span class="color_{{$relation->relationType}}">{{$relation->name}}</span>
+{{--                                <span class="color_{{$relation->relationType}}">{{$relation->name}}</span>--}}
+                                <span style="color:{{$relation->color}}">{{$relation->name}}</span>
                             </div>
                             <x-element.fe
                                 name="{{$relation->feName}}"

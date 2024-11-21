@@ -2,18 +2,9 @@
 
 namespace App\Http\Controllers\Relation;
 
-use App\Data\CreateRelationFEData;
-use App\Data\CreateRelationFrameData;
-use App\Data\Relation\CreateData;
-use App\Data\Relation\FEData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\EntityRelation;
-use App\Repositories\Frame;
 use App\Repositories\FrameElement;
-use App\Repositories\Relation;
-use App\Repositories\RelationType;
-use App\Services\AppService;
 use App\Services\RelationService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;

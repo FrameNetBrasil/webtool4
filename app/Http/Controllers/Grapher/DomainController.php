@@ -24,12 +24,13 @@ class DomainController extends Controller
             'rgEntry',"=",'rgp_frame_relations'
         ])->all();
         $dataRelations = [];
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         foreach($relations as $relation) {
             $dataRelations[] = (object)[
                 'idRelationType' => $relation->idRelationType,
-                'name' => $config[$relation->entry]['direct'],
+                'name' => $relation->nameDirect,
                 'entry' => $relation->entry,
+                'color' => $relation->color,
             ];
         }
         return view('Grapher.Domain.domain', [
@@ -44,8 +45,8 @@ class DomainController extends Controller
         if (is_null($data->idSemanticType)) {
             $data->idSemanticType = 0;
         }
-        if (empty($data->idRelationType)) {
-            $data->idRelationType = session('frameRelation') ?? [];
+        if (empty($data->frameRelation)) {
+            $data->frameRelation = session('frameRelation') ?? [];
         }
         if (!is_null($idEntity)) {
             if ($idEntity == 0) {
