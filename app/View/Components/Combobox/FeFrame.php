@@ -32,7 +32,6 @@ class FeFrame extends Component
         public ?string $onChange = null,
     )
     {
-        debug("========== defaultText = " . $defaultText);
         if (is_null($this->name)) {
             $this->name = $this->id;
         }

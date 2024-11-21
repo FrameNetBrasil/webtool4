@@ -1,24 +1,24 @@
 <x-layout.object>
     <x-slot:name>
-        <span>{{$layerType->name}}</span>
+        <span>{{$relationType->name}}</span>
         <div class="ui label wt-tag-type">
-            LayerType
+            RelationType
         </div>
     </x-slot:name>
     <x-slot:detail>
         <div class="ui label wt-tag-id">
-            #{{$layerType->idLayerType}}
+            #{{$relationType->idRelationType}}
         </div>
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing LayerType '{{$layerType->name}}'.`, '/layers/layertype/{{$layerType->idLayerType}}')"
+            onclick="manager.confirmDelete(`Removing RelationType '{{$relationType->nameCanonical}}'.`, '/relations/relationtype/{{$relationType->idRelationType}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>
 
     </x-slot:description>
     <x-slot:main>
-        @include("Layers.menuLayerType")
+        @include("Relations.menuRelationType")
     </x-slot:main>
 </x-layout.object>

@@ -1,29 +1,22 @@
 <x-layout.resource>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','Layers']]"></x-breadcrumb>
+        <x-breadcrumb :sections="[['/','Home'],['','Relations']]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:title>
-        Layers
+        Relations
     </x-slot:title>
     <x-slot:actions>
         <x-button
-            label="New LayerGroup"
+            label="New RelationGroup"
             color="secondary"
-            hx-get="/layers/layergroup/new"
+            hx-get="/relations/relationgroup/new"
             hx-target="#editarea"
             hx-swap="innerHTML"
         ></x-button>
         <x-button
-            label="New LayerType"
+            label="New RelationType"
             color="secondary"
-            hx-get="/layers/layertype/new"
-            hx-target="#editarea"
-            hx-swap="innerHTML"
-        ></x-button>
-        <x-button
-            label="New GenericLabel"
-            color="secondary"
-            hx-get="/layers/genericlabel/new"
+            hx-get="/relations/relationtype/new"
             hx-target="#editarea"
             hx-swap="innerHTML"
         ></x-button>
@@ -33,23 +26,23 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}" />
             <div class="field">
                 <x-search-field
-                    id="layer"
-                    value="{{$search->layer}}"
-                    placeholder="Search Layer"
-                    hx-post="/layers/grid/search"
+                    id="relationGroup"
+                    value="{{$search->relationGroup}}"
+                    placeholder="Search RelationGroup"
+                    hx-post="/relations/grid/search"
                     hx-trigger="input changed delay:500ms, search"
-                    hx-target="#layersTreeWrapper"
+                    hx-target="#relationsTreeWrapper"
                     hx-swap="innerHTML"
                 ></x-search-field>
             </div>
             <div class="field">
                 <x-search-field
-                    id="genericlabel"
-                    value="{{$search->genericlabel}}"
-                    placeholder="Search GenericLabel"
-                    hx-post="/lexicon/grid/search"
+                    id="relationType"
+                    value="{{$search->relationType}}"
+                    placeholder="Search RelationType"
+                    hx-post="/relations/grid/search"
                     hx-trigger="input changed delay:500ms, search"
-                    hx-target="#layersTreeWrapper"
+                    hx-target="#relationsTreeWrapper"
                     hx-swap="innerHTML"
                 ></x-search-field>
             </div>
@@ -60,12 +53,12 @@
             hx-trigger="load"
             hx-target="this"
             hx-swap="outerHTML"
-            hx-post="/layers/grid"
+            hx-post="/relations/grid"
         ></div>
     </x-slot:grid>
     <x-slot:edit>
         <div
-            id="editarea"
+            id="editArea"
             hx-on:clear-editarea="this.innerHTML=''"
         >
         </div>

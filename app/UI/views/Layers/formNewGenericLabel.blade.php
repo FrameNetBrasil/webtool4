@@ -1,7 +1,7 @@
 <x-form
     title="New GenericLabel"
     hx-post="/layers/genericlabel/new"
-    hx-target="#editArea"
+    hx-target="#editarea"
 >
     <x-slot:fields>
         <div class="field">

@@ -25,12 +25,13 @@ class FrameController extends Controller
             'rgEntry',"=",'rgp_frame_relations'
         ])->all();
         $dataRelations = [];
-        $config = config('webtool.relations');
+        //$config = config('webtool.relations');
         foreach($relations as $relation) {
             $dataRelations[] = (object)[
                 'idRelationType' => $relation->idRelationType,
-                'name' => $config[$relation->entry]['direct'],
+                'name' => $relation->nameDirect,
                 'entry' => $relation->entry,
+                'color' => $relation->color,
             ];
         }
         return view('Grapher.Frame.frame', [
@@ -42,8 +43,6 @@ class FrameController extends Controller
     public function frameGraph(FrameData $data, int $idEntity = null)
     {
         $nodes = session("graphNodes") ?? [];
-        debug($data);
-        debug($idEntity);
         if (!is_null($data->idFrame)) {
             $frame = Frame::byId($data->idFrame);
             $nodes = [$frame->idEntity];
@@ -95,7 +94,6 @@ class FrameController extends Controller
     {
         $frame = Frame::byIdEntity($idEntityFrame);
         $data = ReportFrameService::report($frame->idFrame);
-        debug($data);
         return view('Grapher.frameReport', $data);
     }
 

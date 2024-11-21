@@ -14,7 +14,8 @@
                         </div>
                     @else
                         <div data-value="{{$r['value']}}"
-                             class="item p-1 min-h-0 color_{{$r['entry']}}"
+                             class="item p-1 min-h-0"
+                             style="color:{{$r['color']}}"
                         >
                             {{$r['name']}}
                         </div>

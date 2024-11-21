@@ -1,5 +1,4 @@
 <x-form
-    title="Edit GenericLabel"
     hx-put="/layers/genericlabel"
 >
     <x-slot:fields>

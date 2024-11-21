@@ -117,8 +117,8 @@ class ResourceController extends Controller
     {
         try {
             Criteria::deleteById("layergroup", "idLayerGroup", $idLayerGroup);
-            $this->trigger('clear-editarea', ['target' => '#editArea']);
-            $this->trigger("reload-gridLayers", ['target' => '#editArea']);
+            $this->trigger('clear-editarea', ['target' => '#editarea']);
+            $this->trigger("reload-gridLayers", ['target' => '#editarea']);
             return $this->renderNotify("success", "LayerGroup removed.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
