@@ -1,4 +1,5 @@
 <x-form
+    id="formEditLUCandidate"
 >
     <x-slot:fields>
         <x-hidden-field id="idLUCandidate" :value="$luCandidate->idLUCandidate"></x-hidden-field>
@@ -7,7 +8,7 @@
             <x-multiline-field
                 label="Sense Description"
                 id="senseDescription"
-                :value="$luCandidate->senseDescription"
+                :value="$luCandidate->senseDescription ?? ''"
             ></x-multiline-field>
         </div>
         <div class="formgroup-inline">
@@ -42,14 +43,14 @@
             <x-text-field
                 label="OR suggest new frame"
                 id="frameCandidate"
-                :value="$luCandidate->frameCandidate"
+                :value="$luCandidate->frameCandidate ?? ''"
             ></x-text-field>
         </div>
         <div class="field">
             <x-multiline-field
                 label="Discussion"
                 id="discussion"
-                :value="$luCandidate->discussion"
+                :value="$luCandidate->discussion ?? ''"
             ></x-multiline-field>
         </div>
         <div class="field">

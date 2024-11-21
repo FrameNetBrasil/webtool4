@@ -2304,6 +2304,14 @@ $router->get('luCandidate', [
 	'domain' => NULL,
 ]);
 
+$router->get('luCandidate/data', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@data',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('luCandidate/grid/{fragment?}', [
 	'uses' => 'App\Http\Controllers\LU\LUCandidateController@grid',
 	'as' => NULL,
