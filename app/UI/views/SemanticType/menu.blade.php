@@ -5,7 +5,7 @@ $items = [
 ];
 @endphp
 <x-objectmenu
-    id="semanticTypeMenu"
+    id="semanticTypeMenu_{{$semanticType->idSemanticType}}"
     :items="$items"
     :path="'semanticType/' . $semanticType->idSemanticType"
 ></x-objectmenu>

@@ -29,9 +29,9 @@
                     id="lemma"
                     value="{{$search->lemma}}"
                     placeholder="Search Lemma"
-                    hx-post="/lexicon/grid/search"
+                    hx-post="/lexicon/grid"
                     hx-trigger="input changed delay:500ms, search"
-                    hx-target="#lexiconTreeWrapper"
+                    hx-target="#gridArea"
                     hx-swap="innerHTML"
                 ></x-search-field>
             </div>
@@ -49,12 +49,14 @@
         </x-form-search>
     </x-slot:search>
     <x-slot:grid>
-        <div
-            hx-trigger="load"
-            hx-target="this"
-            hx-swap="outerHTML"
-            hx-post="/lexicon/grid"
-        ></div>
+        <div id="gridArea" class="h-full">
+            <div
+                hx-trigger="load"
+                hx-target="this"
+                hx-swap="outerHTML"
+                hx-post="/lexicon/grid"
+            ></div>
+        </div>
     </x-slot:grid>
     <x-slot:edit>
         <div id="editArea">

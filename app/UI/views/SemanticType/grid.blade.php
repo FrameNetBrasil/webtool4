@@ -1,3 +1,6 @@
+@php
+$id = uniqid("videoTree");
+@endphp
 <div
     class="h-full"
     hx-trigger="reload-gridSemanticType from:body"
@@ -8,11 +11,11 @@
     <div class="relative h-full overflow-auto">
         <div id="semanticTypeTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
             @fragment('search')
-                <ul id="semanticTypeTree">
+                <ul id="{{$id}}">
                 </ul>
                 <script>
                     $(function() {
-                        $("#semanticTypeTree").treegrid({
+                        $("#{{$id}}").treegrid({
                             url:"/report/semanticType/data",
                             queryParams: {
                                 semanticType: '{{$search->semanticType}}'

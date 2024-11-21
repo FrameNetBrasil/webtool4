@@ -5,7 +5,7 @@ $items = [
 ];
 @endphp
 <x-objectmenu
-    id="imageMenu"
+    id="imageMenu_{{$image->idImage}}"
     :items="$items"
     :path="'image/' . $image->idImage"
 ></x-objectmenu>
