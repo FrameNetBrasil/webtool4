@@ -14,10 +14,10 @@
 <script>
     $(function() {
         $('#{{$id}} .item').tab({
-            onFirstLoad: (tabPath, parameterArray, historyEvent) => {
+            onLoad: (tabPath, parameterArray, historyEvent) => {
                 let tab = "#{{$id}}_" + tabPath + "_tab"
                 htmx.ajax("GET", "{{$path}}/" + tabPath , tab);
-            }
+            },
         });
     });
 </script>
