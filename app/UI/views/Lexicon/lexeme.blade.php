@@ -5,9 +5,12 @@
                 <x-layout.object>
                     <x-slot:name>
                         <span>{{$lexeme->name}}</span>
+                        <div class="ui label">
+                            Lexeme
+                        </div>
                     </x-slot:name>
                     <x-slot:detail>
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             #{{$lexeme->idLexeme}}
                         </div>
                         <x-button
