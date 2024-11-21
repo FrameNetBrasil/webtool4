@@ -6,9 +6,6 @@
         </div>
     </x-slot:name>
     <x-slot:detail>
-        <div class="ui label wt-tag-type">
-            LayerType
-        </div>
         <div class="ui label wt-tag-id">
             #{{$layerType->idLayerType}}
         </div>

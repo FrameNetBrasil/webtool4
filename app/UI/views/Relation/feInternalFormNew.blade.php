@@ -18,7 +18,7 @@
                 </div>
                 <div class="field">
                     <x-combobox.relation
-                        id="relationType"
+                        id="relationTypeFEInternal"
                         group="fe"
                         :value="$relationType ?? null"
                     ></x-combobox.relation>

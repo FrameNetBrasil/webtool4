@@ -2,21 +2,12 @@
 
 namespace App\Http\Controllers\Relation;
 
-use App\Data\CreateRelationFEData;
-use App\Data\CreateRelationFrameData;
-use App\Data\Relation\CreateData;
-use App\Data\Relation\FEData;
 use App\Data\Relation\FEInternalData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\EntityRelation;
-use App\Repositories\Frame;
 use App\Repositories\FrameElement;
-use App\Repositories\Relation;
-use App\Repositories\RelationType;
 use App\Services\RelationService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
-use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
@@ -27,7 +18,7 @@ class FEInternalController extends Controller
     public function deleteFERelation(int $idEntityRelation)
     {
         try {
-            Criteria::deleteById("entityrelation","idEntityRelation", $idEntityRelation);
+            Criteria::deleteById("entityrelation", "idEntityRelation", $idEntityRelation);
             $this->trigger('reload-gridFEInternalRelation');
             return $this->renderNotify("success", "Relation deleted.");
         } catch (\Exception $e) {
@@ -38,6 +29,7 @@ class FEInternalController extends Controller
     #[Post(path: '/relation/feinternal')]
     public function newFERelation(FEInternalData $data)
     {
+        debug($data);
         try {
             $idFrameElementRelated = (array)$data->idFrameElementRelated;
             if (count($idFrameElementRelated)) {
@@ -48,15 +40,17 @@ class FEInternalController extends Controller
                     RelationService::create($data->relationTypeEntry, $first->idEntity, $next->idEntity);
                 }
             }
-            return response()
-                ->view("Relation.feInternalFormNew", [
-                    'idFrame' => $data->idFrame,
-                    'idFrameElementRelated' => $data->idFrameElementRelated,
-                    'relationType' => $data->relationType
-                ])->header('HX-Trigger', $this->notify("success", "Relation created."))
-                ->header('HX-Trigger','reload-gridFEInternalRelation');
+            $this->notify("success", "Relation created.");
+            $this->trigger('reload-gridFEInternalRelation');
+            return $this->render(
+                "Relation.feInternalFormNew", [
+                'idFrame' => $data->idFrame,
+                'idFrameElementRelated' => $data->idFrameElementRelated,
+                'relationType' => $data->relationTypeFEInternal
+            ]);
 
         } catch (\Exception $e) {
+            debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
         }
     }

@@ -17,7 +17,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
 
+    <!--
     <script type="text/javascript" src="/scripts/htmx/htmx.min.js"></script>
+    -->
+
+    <script type="text/javascript" src="https://unpkg.com/htmx.org@2.0.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
     <script type="text/javascript" src="/scripts/maestro/manager.js"></script>

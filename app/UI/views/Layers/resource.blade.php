@@ -10,21 +10,21 @@
             label="New LayerGroup"
             color="secondary"
             hx-get="/layers/layergroup/new"
-            hx-target="#editArea"
+            hx-target="#editarea"
             hx-swap="innerHTML"
         ></x-button>
         <x-button
             label="New LayerType"
             color="secondary"
             hx-get="/layers/layertype/new"
-            hx-target="#editArea"
+            hx-target="#editarea"
             hx-swap="innerHTML"
         ></x-button>
         <x-button
             label="New GenericLabel"
             color="secondary"
             hx-get="/layers/genericlabel/new"
-            hx-target="#editArea"
+            hx-target="#editarea"
             hx-swap="innerHTML"
         ></x-button>
     </x-slot:actions>
@@ -65,13 +65,8 @@
     </x-slot:grid>
     <x-slot:edit>
         <div
-            id="editArea"
-            hx-trigger="reload-gridLayers from:body"
-            hx-target="#gridLayers"
-            hx-swap-oob="outerHTML"
-            hx-post="/layers/grid"
-{{--            hx-on::clear-editarea = "console.log(this)"--}}
-            x-data @clear-editarea.document="$el.innerHTML=''"
+            id="editarea"
+            hx-on:clear-editarea="this.innerHTML=''"
         >
         </div>
     </x-slot:edit>

@@ -1,7 +1,7 @@
 <x-form
     title="New LayerGroup"
     hx-post="/layers/layergroup/new"
-    hx-target="#editArea"
+    hx-target="#editarea"
 >
     <x-slot:fields>
         <div class="field">

@@ -1,8 +1,7 @@
 <x-form
     title="New LayerType"
-    title="New LayerType"
     hx-post="/layers/layertype/new"
-    hx-target="#editArea"
+    hx-target="#editarea"
 >
     <x-slot:fields>
         <div class="field">

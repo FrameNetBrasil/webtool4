@@ -1,18 +1,18 @@
 @php
-    use App\Database\Criteria;use Carbon\Carbon;
-    $luIcon = view('components.icon.lu')->render();
-    $lus = Criteria::byFilterLanguage("view_lucandidate",["name","startswith", $search->lu])
-            ->select('idLUCandidate','name','createdAt')
-            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
-            ->orderBy("name")->orderBy("name")->all();
-    $data = array_map(fn($item) => [
-           'id'=> $item->idLUCandidate,
-           'text' => $luIcon . $item->name,
-           'frame' => $item->frameName,
-           'createdAt' => $item->createdAt ? Carbon::parse($item->createdAt)->format("d/m/Y") : '-',
-           'state'=> 'open',
-           'type' => 'lu'
-    ], $lus);
+//    use App\Database\Criteria;use Carbon\Carbon;
+//    $luIcon = view('components.icon.lu')->render();
+//    $lus = Criteria::byFilterLanguage("view_lucandidate",["name","startswith", $search->lu])
+//            ->select('idLUCandidate','name','createdAt')
+//            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
+//            ->orderBy("name")->orderBy("name")->all();
+//    $data = array_map(fn($item) => [
+//           'id'=> $item->idLUCandidate,
+//           'text' => $luIcon . $item->name,
+//           'frame' => $item->frameName,
+//           'createdAt' => $item->createdAt ? Carbon::parse($item->createdAt)->format("d/m/Y") : '-',
+//           'state'=> 'open',
+//           'type' => 'lu'
+//    ], $lus);
 @endphp
 <div
     class="h-full"
@@ -28,10 +28,12 @@
                 </ul>
                 <script>
                     $(function() {
-                        $("#luTree").treegrid({
-                            data: {{Js::from($data)}},
+                        $("#luTree").datagrid({
+                            url:"/luCandidate/data",
+                            method:"get",
                             fit: true,
-                            showHeader: false,
+                            singleSelect:true,
+                            showHeader: true,
                             rownumbers: false,
                             idField: "id",
                             treeField: "text",
@@ -39,19 +41,25 @@
                             border: false,
                             columns: [[
                                 {
-                                    field: "text",
+                                    field: "name",
                                     width: "30%",
+                                    title:"LU candidate",
+                                    sortable: true,
                                 },
                                 {
-                                    field: "frame",
+                                    field: "frameName",
                                     width: "40%",
+                                    title:"Suggested frame",
+                                    sortable: true,
                                 },
                                 {
                                     field: "createdAt",
                                     width: "30%",
+                                    title: "Created At",
+                                    sortable: true,
                                 },
                             ]],
-                            onClickRow: (row) => {
+                            onClickRow: (index, row) => {
                                 if (row.type === "lu") {
                                     htmx.ajax("GET", `/luCandidate/${row.id}/edit`, "#editArea");
                                 }

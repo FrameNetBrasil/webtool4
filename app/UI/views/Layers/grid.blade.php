@@ -114,13 +114,13 @@
                             onClickRow: (row) => {
                                 let id = row.id.substr(1);
                                 if (row.type === "layergroup") {
-                                    htmx.ajax("GET", `/layers/layergroup/${id}/edit`, "#editArea");
+                                    htmx.ajax("GET", `/layers/layergroup/${id}/edit`, "#editarea");
                                 }
                                 if (row.type === "layertype") {
-                                    htmx.ajax("GET", `/layers/layertype/${id}/edit`, "#editArea");
+                                    htmx.ajax("GET", `/layers/layertype/${id}/edit`, "#editarea");
                                 }
                                 if (row.type === "genericlabel") {
-                                    htmx.ajax("GET", `/layers/genericlabel/${id}/edit`, "#editArea");
+                                    htmx.ajax("GET", `/layers/genericlabel/${id}/edit`, "#editarea");
                                 }
                             }
                         });

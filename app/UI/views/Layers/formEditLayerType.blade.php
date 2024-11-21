@@ -1,5 +1,4 @@
 <x-form
-    title="Edit LayerType"
     hx-put="/layers/layertype"
 >
     <x-slot:fields>
