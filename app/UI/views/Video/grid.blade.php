@@ -13,6 +13,7 @@
             'children' => null
         ];
     }
+    $id = uniqid("videoTree");
 @endphp
 <div
     id="videoGrid"
@@ -25,11 +26,11 @@
     <div class="relative h-full overflow-auto">
         <div id="videoTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
             @fragment('search')
-                <ul id="videoTree">
+                <ul id="{{$id}}">
                 </ul>
                 <script>
                     $(function() {
-                        $("#videoTree").treegrid({
+                        $("#{{$id}}").datagrid({
                             data: {{Js::from($data)}},
                             fit: true,
                             showHeader: false,
@@ -44,7 +45,7 @@
                                     width: "100%",
                                 }
                             ]],
-                            onClickRow: (row) => {
+                            onClickRow: (index, row) => {
                                 if (row.type === "video") {
                                     htmx.ajax("GET", `/video/${row.id}/edit`, "#editArea");
                                 }

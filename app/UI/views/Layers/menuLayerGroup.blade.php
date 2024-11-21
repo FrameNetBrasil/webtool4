@@ -4,7 +4,7 @@ $items = [
 ];
 @endphp
 <x-objectmenu
-    id="layerGroupMenu"
+    id="layerGroupMenu_{{$layerGroup->idLayerGroup}}"
     :items="$items"
     :path="'layers/layergroup/' . $layerGroup->idLayerGroup"
 ></x-objectmenu>

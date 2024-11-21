@@ -5,7 +5,7 @@ $items = [
 ];
 @endphp
 <x-objectmenu
-    id="relationTypeMenu"
+    id="relationTypeMenu_{{$relationType->idRelationType}}"
     :items="$items"
     :path="'relations/relationtype/' . $relationType->idRelationType"
 ></x-objectmenu>
