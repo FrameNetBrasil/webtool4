@@ -504,16 +504,16 @@ $router->get('annotation/deixis/{idDocument}', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/deixis/formObject', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@formObject',
+$router->post('annotation/deixis/formAnnotation', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@formAnnotation',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/deixis/formObject/{idDynamicObject}/{order}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@getFormObject',
+$router->get('annotation/deixis/formAnnotation/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@getFormAnnotation',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -521,7 +521,7 @@ $router->get('annotation/deixis/formObject/{idDynamicObject}/{order}', [
 ]);
 
 $router->get('annotation/deixis/gridObjects/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@objectsForGrid',
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@gridObjects',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

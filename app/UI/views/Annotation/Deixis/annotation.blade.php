@@ -17,11 +17,6 @@
                         @include("Annotation.Deixis.Panes.videoPane")
                     </div>
                 </div>
-                <div class="center">
-                    <div class="controls">
-                        @include("Annotation.Deixis.Panes.controlsPane")
-                    </div>
-                </div>
                 <div class="east">
                     <div class="header flex w-full">
                         <div class="font-bold">
@@ -35,15 +30,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="flex flex-column flex-grow-0 pt-2" x-data="$store.doStore">
+                        @include("Annotation.Deixis.Panes.newObject")
+                    </div>
                     <div class="flex flex-column flex-grow-1 pt-2" x-data="$store.doStore">
                         <div
                             id="formObject"
                             class="form"
                             hx-trigger="load"
-                            hx-get="/annotation/deixis/formObject/0/0"
+                            hx-get="/annotation/deixis/formAnnotation/0"
                         >
                         </div>
-                        {{--                    @include("Annotation.Deixis.Panes.gridsPane")--}}
                     </div>
                     <script type="text/javascript" src="/scripts/vatic/dist/compatibility.js"></script>
                     <script type="text/javascript" src="/scripts/vatic/dist/jszip.js"></script>
@@ -67,7 +64,6 @@
                         };
 
                         document.body.addEventListener("updateObjectAnnotationEvent", function(evt){
-                            console.log("event updateObjectAnnotationEvent");
                             annotation.objects.updateObjectAnnotationEvent();
                         })
 

@@ -2,7 +2,7 @@ annotation.objects = {
     tracker: null,
     boxesContainer: document.querySelector("#boxesContainer"),
     init: () => {
-        console.log("initing objectManager");
+        console.error("initing objectManager");
         annotation.objects.tracker = new ObjectsTracker();
     },
     config: (config) => {

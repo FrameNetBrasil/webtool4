@@ -1,7 +1,7 @@
 annotation.api = {
     loadObjects: async function () {
         await $.ajax({
-            url: "/annotation/dynamicMode/gridObjects/" + annotation.document.idDocument,
+            url: "/annotation/deixis/gridObjects/" + annotation.document.idDocument,
             method: "GET",
             dataType: "json",
             success: (response) => {

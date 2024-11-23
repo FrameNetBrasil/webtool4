@@ -1,13 +1,13 @@
 <div class="form">
     <x-form>
         <x-slot:title>
-            @if($order == 0)
+            @if(is_null($object))
                 <div class="flex">
                     <div class="title">Current Object: #none</div>
                 </div>
             @else
                 <div class="flex gap-2">
-                    <div class="title">Current Object: #{{$order}}</div>
+                    <div class="title">Current Object: #{{$object->idDynamicObject}}</div>
                     <div class="flex h-2rem gap-2">
                         <div class="ui label">
                             Range
@@ -21,6 +21,7 @@
             @endif
         </x-slot:title>
         <x-slot:fields>
+            @if(!is_null($object))
             <div class="formgroup-inline">
                 <div class="field mr-1">
                     <x-combobox.frame
@@ -58,19 +59,16 @@
                     ></x-combobox.lu>
                 </div>
             </div>
+                @endif
         </x-slot:fields>
         <x-slot:buttons>
+            @if(is_null(!$object))
             <x-button
                 type="button"
                 label="Save"
                 onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
             ></x-button>
-            <x-button
-                type="button"
-                label="Clone"
-                color="secondary"
-                onclick="annotation.objects.cloneCurrentObject()"
-            ></x-button>
+            @endif
         </x-slot:buttons>
     </x-form>
 </div>
