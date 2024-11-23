@@ -95,46 +95,49 @@ annotation.objects = {
 
     annotateObjects: (objectsFromServer) => {
         annotation.objects.clearAll();
-        for (var object of objectsFromServer) {
-            if ((object.startFrame >= annotation.video.framesRange.first) && (object.startFrame <= annotation.video.framesRange.last)) {
-                let annotatedObject = new DynamicObject(object);
-                annotatedObject.dom = annotation.objects.newBboxElement();
-                annotation.objects.add(annotatedObject);
-                annotation.objects.interactify(
-                    annotatedObject,
-                    (x, y, width, height) => {
-                        let currentFrame = Alpine.store("doStore").currentFrame;
-                        //let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
-                        //let frameObject = new Frame(currentFrame, bbox, true, idDynamicBBoxMM);
-                        // let frameObject = annotatedObject.getFrameAt(currentFrame);
-                        // frameObject.bbox = bbox;
-                        // frameObject.isGroundTruth = true;
-                        //annotatedObject.addToFrame(frameObject);
-                        //console.log(frameObject.idBoundingBox, bbox);
-                        //annotation.objects.saveRawObject(annotatedObject);
-                        let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
-                        annotatedObject.addBBox(bbox);
-                        console.log("annotated object bbox", bbox);
-                        annotation.api.updateBBox({
-                            idBoundingBox: bbox.idBoundingBox,
-                            bbox: bbox
-                        });
+        for(var layer in objectsFromServer) {
+            let objects = objectsFromServer[layer];
+            for (var object of objects) {
+                if ((object.startFrame >= annotation.video.framesRange.first) && (object.startFrame <= annotation.video.framesRange.last)) {
+                    let annotatedObject = new DynamicObject(object);
+                    annotatedObject.dom = annotation.objects.newBboxElement();
+                    annotation.objects.add(annotatedObject);
+                    annotation.objects.interactify(
+                        annotatedObject,
+                        (x, y, width, height) => {
+                            let currentFrame = Alpine.store("doStore").currentFrame;
+                            //let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
+                            //let frameObject = new Frame(currentFrame, bbox, true, idDynamicBBoxMM);
+                            // let frameObject = annotatedObject.getFrameAt(currentFrame);
+                            // frameObject.bbox = bbox;
+                            // frameObject.isGroundTruth = true;
+                            //annotatedObject.addToFrame(frameObject);
+                            //console.log(frameObject.idBoundingBox, bbox);
+                            //annotation.objects.saveRawObject(annotatedObject);
+                            let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
+                            annotatedObject.addBBox(bbox);
+                            console.log("annotated object bbox", bbox);
+                            annotation.api.updateBBox({
+                                idBoundingBox: bbox.idBoundingBox,
+                                bbox: bbox
+                            });
+                        }
+                    );
+                    let bboxes = object.bboxes;
+                    for (let j = 0; j < bboxes.length; j++) {
+                        let bbox = object.bboxes[j];
+                        let frameNumber = parseInt(bbox.frameNumber);
+                        let isGroundThrough = true;// parseInt(topLeft.find('l').text()) == 1;
+                        let x = parseInt(bbox.x);
+                        let y = parseInt(bbox.y);
+                        let w = parseInt(bbox.width);
+                        let h = parseInt(bbox.height);
+                        let newBBox = new BoundingBox(frameNumber, x, y, w, h, isGroundThrough, parseInt(bbox.idBoundingBox));
+                        //let idBoundingBox = parseInt(polygon.idBoundingBox);
+                        //let frameObject = new Frame(frameNumber, bbox, isGroundThrough, idBoundingBox);
+                        newBBox.blocked = (parseInt(bbox.blocked) === 1);
+                        annotatedObject.addBBox(newBBox);
                     }
-                );
-                let bboxes= object.bboxes;
-                for (let j = 0; j < bboxes.length; j++) {
-                    let bbox = object.bboxes[j];
-                    let frameNumber = parseInt(bbox.frameNumber);
-                    let isGroundThrough = true;// parseInt(topLeft.find('l').text()) == 1;
-                    let x = parseInt(bbox.x);
-                    let y = parseInt(bbox.y);
-                    let w = parseInt(bbox.width);
-                    let h = parseInt(bbox.height);
-                    let newBBox = new BoundingBox(frameNumber, x, y, w, h,isGroundThrough,parseInt(bbox.idBoundingBox));
-                    //let idBoundingBox = parseInt(polygon.idBoundingBox);
-                    //let frameObject = new Frame(frameNumber, bbox, isGroundThrough, idBoundingBox);
-                    newBBox.blocked = (parseInt(bbox.blocked) === 1);
-                    annotatedObject.addBBox(newBBox);
                 }
             }
         }
