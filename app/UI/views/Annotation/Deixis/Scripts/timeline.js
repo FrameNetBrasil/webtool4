@@ -8,10 +8,10 @@ var outlineContainer = document.getElementById('outline-container');
 
 var keyframeWithCustomImage = {
     val: 500
-}
+};
 
 function generateModel() {
-    /** @type {import('../lib/animation-timeline').TimelineGroupStyle} */
+    /*
     const groupA = {
         style: {
             fillColor: '#6B9080',
@@ -21,13 +21,11 @@ function generateModel() {
             shape: 'rect',
         },
     };
-    /** @type {import('../lib/animation-timeline').TimelineGroupStyle} */
     const groupB = {
         style: {
             marginTop: 6,
         },
     };
-    /** @type {import('../lib/animation-timeline').TimelineGroupStyle} */
     const groupC = {
         style: {
             strokeColor: "white",
@@ -36,7 +34,6 @@ function generateModel() {
             shape: 'none',
         },
     };
-    /** @type {import('../lib/animation-timeline').TimelineGroupStyle} */
     const groupD = {
         style: {
             fillColor: "transparent",
@@ -48,7 +45,6 @@ function generateModel() {
             }
         },
     };
-    /** @type {import('../lib/animation-timeline').TimelineGroupStyle} */
     const groupWhite1 = {
         style: {
             fillColor: "white",
@@ -60,7 +56,6 @@ function generateModel() {
             }
         },
     };
-    /** @type {import('../lib/animation-timeline').TimelineGroupStyle} */
     const groupWhite2 = {
         style: {
             fillColor: "white",
@@ -72,7 +67,6 @@ function generateModel() {
             }
         },
     };
-    /** @type {import('../lib/animation-timeline').TimelineModel} */
     let timelineModel = {
         rows: [
             {
@@ -379,31 +373,55 @@ function generateModel() {
             },
         ]
     };
+
+     */
+    let timelineModel = {
+        rows: [
+            {
+                selected: false,
+                draggable: false,
+
+                keyframes: [
+                    {
+                        val: 40,
+                        shape: 'rhomb',
+                    },
+                    {
+                        shape: 'rhomb',
+                        val: 940000,
+                        selected: false,
+                    },
+                ],
+            },
+    ]};
     return timelineModel;
 }
 const timelineModel = generateModel();
 
 
 // Log message to the screen
-var logMessage = function (message, logPanel = 1) {
-    if (message) {
-        let el = document.getElementById('output' + logPanel);
-        if (el) {
-            el.innerHTML = message + '<br/>' + el.innerHTML;
-        }
-    }
-};
+// var logMessage = function (message, logPanel = 1) {
+//     if (message) {
+//         let el = document.getElementById('output' + logPanel);
+//         if (el) {
+//             el.innerHTML = message + '<br/>' + el.innerHTML;
+//         }
+//     }
+// };
 
-var logDraggingMessage = function (object, eventName) {
-    if (object.elements) {
-        logMessage('Keyframe value: ' + object.elements[0].val + '. Selected (' + object.elements.length + ').' + eventName);
-    }
-};
-/** @type {import('../lib/animation-timeline').Timeline} */
-// @ts-ignore
+// var logDraggingMessage = function (object, eventName) {
+//     if (object.elements) {
+//         logMessage('Keyframe value: ' + object.elements[0].val + '. Selected (' + object.elements.length + ').' + eventName);
+//     }
+//};
+
 var timeline = new timelineModule.Timeline();
 
 const defaultKeyframesRenderer = timeline._renderKeyframe.bind(timeline);
+
+const existingModel = timeline.getModel();
+// existingModel.rows[0].keyframes.append({ val: 20 });
+// timeline.setModel(existingModel);
 
 // Custom Image
 const image = new Image();
@@ -454,15 +472,15 @@ function showActivePositionInformation() {
 }
 
 timeline.onSelected(function (obj) {
-    logMessage('Selected Event: (' + obj.selected.length + '). changed selection :' + obj.changed.length, 2);
+    console.log('Selected Event: (' + obj.selected.length + '). changed selection :' + obj.changed.length, 2);
 });
 
 timeline.onDragStarted(function (obj) {
-    logDraggingMessage(obj, 'dragstarted');
+    console.log(obj, 'dragstarted');
 });
 
 timeline.onDrag(function (obj) {
-    logDraggingMessage(obj, 'drag');
+    console.log(obj, 'drag');
 });
 
 timeline.onKeyframeChanged(function (obj) {
@@ -470,14 +488,14 @@ timeline.onKeyframeChanged(function (obj) {
 });
 
 timeline.onDragFinished(function (obj) {
-    logDraggingMessage(obj, 'dragfinished');
+    console.log(obj, 'dragfinished');
 });
 
 timeline.onContextMenu(function (obj) {
     if (obj.args) {
         obj.args.preventDefault();
     }
-    logDraggingMessage(obj, 'addKeyframe');
+    console.log(obj, 'addKeyframe');
 
     obj.elements.forEach(p => {
         if (p.type === "row" && p.row) {
@@ -493,14 +511,14 @@ timeline.onContextMenu(function (obj) {
 timeline.onMouseDown(function (obj) {
     var type = obj.target ? obj.target.type : '';
     if (obj.pos) {
-        logMessage('mousedown:' + obj.val + '.  target:' + type + '. ' + Math.floor(obj.pos.x) + 'x' + Math.floor(obj.pos.y), 2);
+        console.log('mousedown:' + obj.val + '.  target:' + type + '. ' + Math.floor(obj.pos.x) + 'x' + Math.floor(obj.pos.y), 2);
     }
 });
 
 timeline.onDoubleClick(function (obj) {
     var type = obj.target ? obj.target.type : '';
     if (obj.pos) {
-        logMessage('doubleclick:' + obj.val + '.  target:' + type + '. ' + Math.floor(obj.pos.x) + 'x' + Math.floor(obj.pos.y), 2);
+        console.log('doubleclick:' + obj.val + '.  target:' + type + '. ' + Math.floor(obj.pos.x) + 'x' + Math.floor(obj.pos.y), 2);
     }
 });
 
@@ -521,7 +539,7 @@ timeline.onScroll(function (obj) {
 
 timeline.onScrollFinished(function (_) {
     // Stop move component screen to the timeline when user start manually scrolling.
-    logMessage('on scroll finished', 2);
+    console.log('on scroll finished', 2);
 });
 
 generateHTMLOutlineListNodes(timelineModel.rows);
