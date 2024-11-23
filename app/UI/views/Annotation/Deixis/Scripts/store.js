@@ -13,7 +13,7 @@ document.addEventListener('alpine:init', () => {
         showHideBoxesState: 'hide',
         objects: [],
         init() {
-            annotation.objects.init();
+           annotation.objects.init();
         },
         config() {
             let config = {
@@ -189,7 +189,7 @@ document.addEventListener('alpine:init', () => {
     });
     Alpine.effect(async () => {
         const newObjectState = Alpine.store('doStore').newObjectState;
-        console.log("newobjectstate = " + newObjectState);
+        console.error("newobjectstate = " + newObjectState);
         if (newObjectState === 'creating') {
             $('#btnCreateObject').addClass('disabled');
             $('#btnStartTracking').addClass('disabled');

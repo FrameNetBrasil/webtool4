@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
+use App\Services\AnnotationDeixisService;
 use App\Services\AnnotationDynamicService;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -82,8 +83,8 @@ class DeixisController extends Controller
         return view("Annotation.Deixis.annotation", $data->toArray());
     }
 
-    #[Post(path: '/annotation/deixis/formObject')]
-    public function formObject(ObjectData $data)
+    #[Post(path: '/annotation/deixis/formAnnotation')]
+    public function formAnnotation(ObjectData $data)
     {
         debug($data);
         $object = AnnotationDynamicService::getObject($data->idDynamicObject ?? 0);
@@ -93,20 +94,19 @@ class DeixisController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/deixis/formObject/{idDynamicObject}/{order}')]
-    public function getFormObject(int $idDynamicObject, int $order)
+    #[Get(path: '/annotation/deixis/formAnnotation/{idDynamicObject}')]
+    public function getFormAnnotation(int $idDynamicObject)
     {
-        $object = AnnotationDynamicService::getObject($idDynamicObject ?? 0);
-        return view("Annotation.Deixis.Panes.formPane", [
-            'order' => $order,
+        $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
+        return view("Annotation.Deixis.Panes.formAnnotation", [
             'object' => $object
         ]);
     }
 
     #[Get(path: '/annotation/deixis/gridObjects/{idDocument}')]
-    public function objectsForGrid(int $idDocument)
+    public function gridObjects(int $idDocument)
     {
-        return AnnotationDynamicService::getObjectsByDocument($idDocument);
+        return AnnotationDeixisService::getObjectsByDocument($idDocument);
     }
 
     #[Post(path: '/annotation/deixis/updateObject')]
