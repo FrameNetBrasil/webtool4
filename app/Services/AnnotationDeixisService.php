@@ -81,12 +81,12 @@ class AnnotationDeixisService
     public static function getObject(int $idDynamicObject): object|null
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $do = Criteria::table("view_annotation_dynamic")
-            ->where("idLanguage", "left", $idLanguage)
+        $do = Criteria::table("view_annotation_deixis")
+            ->where("idLanguageLT", "left", $idLanguage)
             ->where("idDynamicObject", $idDynamicObject)
-            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color","idDocument")
-            ->orderBy("startFrame")
-            ->orderBy("endFrame")
+            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idLayerType","nameLayerType","idLanguageLT",
+                "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE","idLanguageFE",
+                "idAnnotationGL","idGenericLabel","gl","colorGL","idLanguageGL","idDocument")
             ->first();
         return $do;
     }
@@ -125,6 +125,8 @@ class AnnotationDeixisService
         $objectsRows = [];
         foreach ($result as $i => $row) {
             $row->order = $i + 1;
+            $row->startTime = (int)($row->startTime * 1000);
+            $row->endTime = (int)($row->endTime * 1000);
             $row->bboxes = $bboxes[$row->idDynamicObject] ?? [];
             $objectsRows[] = $row;
         }
