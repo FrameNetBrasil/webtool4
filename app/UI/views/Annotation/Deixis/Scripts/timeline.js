@@ -2,6 +2,12 @@
 var keyframeWithCustomImage = {
     val: 500
 };
+// Custom Image
+const image = new Image();
+image.src = "https://material-icons.github.io/material-icons-png/png/white/public/baseline-2x.png"; // replace with your image path
+image.onload = () => {
+    annotation.timeline.timeline.redraw();
+};
 annotation.timeline = {
     model: null,
     timeline: null,
@@ -15,35 +21,35 @@ annotation.timeline = {
         var group = [];
         group[0] = {
             style: {
-                fillColor: '#6B9080',
-                marginTop: 4,
+                fillColor: "#6B9080",
+                marginTop: 4
             },
             keyframesStyle: {
-                shape: 'rect',
-            },
+                shape: "rect"
+            }
         };
         group[1] = {
             style: {
-                marginTop: 6,
-            },
+                marginTop: 6
+            }
         };
         var object;
         let rows = [];
         let groups = {};
-        for(var layer in annotation.objectList) {
+        for (var layer in annotation.objectList) {
             let element = {
                 title: layer,
-                draggable: false,
+                draggable: false
             };
             let objects = annotation.objectList[layer];
             // create groups
             groups[0] = {
                 style: {
-                    fillColor: '#FFFFFF',
-                    marginTop: 4,
+                    fillColor: "#FFFFFF",
+                    marginTop: 4
                 },
                 keyframesStyle: {
-                    shape: 'rect',
+                    shape: "rect"
                 }
             };
             for (object of objects) {
@@ -51,11 +57,11 @@ annotation.timeline = {
                     // groups[object.idDynamicObject] = group[0];
                     groups[object.idDynamicObject] = {
                         style: {
-                            fillColor: '#' + object.colorGL,
-                            marginTop: 4,
+                            fillColor: "#" + object.colorGL,
+                            marginTop: 4
                         },
                         keyframesStyle: {
-                            shape: 'rect'
+                            shape: "rect"
                         }
                     };
                 } else {
@@ -70,12 +76,16 @@ annotation.timeline = {
                 keyframes.push({
                     val: object.startTime,
                     group: groups[object.idDynamicObject],
-                    idDynamicObject:object.idDynamicObject
+                    idDynamicObject: object.idDynamicObject,
+                    position: "start",
+                    max: object.endTime,
                     //group: object.idDynamicObject
                 });
                 keyframes.push({
                     val: object.endTime,
-                    group: groups[object.idDynamicObject]
+                    group: groups[object.idDynamicObject],
+                    idDynamicObject: object.idDynamicObject,
+                    position: "end"
                     //group: object.idDynamicObject
                 });
             }
@@ -121,17 +131,23 @@ annotation.timeline = {
     },
     config: function() {
 // Set custom keyframes renderer
-        annotation.timeline.timeline._renderKeyframe = (ctx, keyframeViewModel) => {
-            //if (keyframeViewModel.model === keyframeWithCustomImage) {
-                //ctx.drawImage(image, keyframeViewModel.size.x - 5, keyframeViewModel.size.y - 5, keyframeViewModel.size.width + 5, keyframeViewModel.size.height + 5);
-            //} else {
-                // Use default renderer
-                annotation.timeline.defaultKeyframesRenderer(ctx, keyframeViewModel);
-            //}
-        };
+//         annotation.timeline.timeline._renderKeyframe = (ctx, keyframeViewModel) => {
+//             console.log(keyframeViewModel);
+//             //if (keyframeViewModel.model === keyframeWithCustomImage) {
+//             //ctx.drawImage(image, keyframeViewModel.size.x - 5, keyframeViewModel.size.y - 5, keyframeViewModel.size.width + 5, keyframeViewModel.size.height + 5);
+//             //} else {
+//             // Use default renderer
+//             annotation.timeline.timeline._renderKeyframe(ctx, keyframeViewModel);
+//             //annotation.timeline.defaultKeyframesRenderer(ctx, keyframeViewModel);
+//             //}
+//         };
         annotation.timeline.timeline.onTimeChanged(function(event) {
-
-            annotation.timeline.showActivePositionInformation();
+            console.log("Time changed !");
+                let timeline = annotation.timeline.timeline;
+                let time = timeline.getTime();
+                console.log('time',time);
+            annotation.video.gotoTime(time/1000);
+            //annotation.timeline.showActivePositionInformation();
         });
         annotation.timeline.timeline.onSelected(function(obj) {
             console.log("Selected Event: (" + obj.selected.length + "). changed selection :" + obj.changed.length, 2);
@@ -150,7 +166,16 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onDragFinished(function(obj) {
-            console.log(obj, "dragfinished");
+            if (obj.elements[0].type === "keyframe") {
+                let timeline = annotation.timeline.timeline;
+                const currentModel = timeline.getModel();
+
+                console.log(obj.elements[0].keyframe);
+                timeline.setModel(currentModel);
+
+                // timeline.redraw();
+            }
+            console.log("dragfinished");
         });
 
         annotation.timeline.timeline.onContextMenu(function(obj) {
@@ -174,9 +199,11 @@ annotation.timeline = {
             var type = obj.target ? obj.target.type : "";
             if (obj.pos) {
                 //console.log("mousedown:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
-                console.log(obj.elements[1].keyframes[0].idDynamicObject);
-                let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
-                Alpine.store('doStore').selectObjectByIdDynamicObject(idDynamicObject);
+                if (type !== "timeline") {
+                    console.log(obj.elements[1].keyframes[0].idDynamicObject);
+                    let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
+                    Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
+                }
             }
         });
 
@@ -219,19 +246,19 @@ annotation.timeline = {
             annotation.timeline.timeline.redraw();
         };
 
-        annotation.timeline.defaultKeyframesRenderer = annotation.timeline.timeline._renderKeyframe.bind(annotation.timeline.timeline);
+        //annotation.timeline.defaultKeyframesRenderer = annotation.timeline.timeline._renderKeyframe.bind(annotation.timeline.timeline);
         annotation.timeline.timeline.initialize({ id: "timeline", headerHeight: 45 }, annotation.timeline.model);
         annotation.timeline.config();
         annotation.timeline.timeline.setOptions({
             groupsDraggable: false,
             keyframesDraggable: true,
-            timelineDraggable: false
+            timelineDraggable: true
         });
         annotation.timeline.generateHTMLOutlineListNodes(annotation.timeline.model.rows);
     },
-    setTime: function(timeMiliSeconds) {
+    setTime: function(timeMilliSeconds) {
         let timeline = annotation.timeline.timeline;
-        timeline.setTime(timeMiliSeconds);
+        timeline.setTime(timeMilliSeconds);
         annotation.timeline.moveTimelineIntoTheBounds();
     },
     showActivePositionInformation: function() {
@@ -382,7 +409,7 @@ annotation.timeline = {
     },
 
     moveTimelineIntoTheBounds: function() {
-        console.log('moveTimelineIntoTheBounds');
+        console.log("moveTimelineIntoTheBounds");
         let timeline = annotation.timeline.timeline;
         if (timeline) {
             // console.log(timeline._startPosMouseArgs, timeline._scrollAreaClickOrDragStarted);
@@ -396,12 +423,12 @@ annotation.timeline = {
 
             let positionInPixels = timeline.valToPx(timeline.getTime()) + timeline._leftMargin();
             // Scroll to timeline position if timeline is out of the bounds:
-            console.log(timeline.getTime(),positionInPixels,fromPx,toPx);
+            console.log(timeline.getTime(), positionInPixels, fromPx, toPx);
             if (positionInPixels <= fromPx || positionInPixels >= toPx) {
                 this.timeline.scrollLeft = positionInPixels;
             }
         }
-    },
+    }
 
     // initPlayer: function() {
     //     let timeline = annotation.timeline.timeline;
@@ -415,12 +442,7 @@ annotation.timeline = {
     //     }, annotation.timeline.playStep);
     // }
 };
-// Custom Image
-// const image = new Image();
-// image.src = "https://material-icons.github.io/material-icons-png/png/white/public/baseline-2x.png"; // replace with your image path
-// image.onload = () => {
-//     timeline.redraw();
-// };
+
 
 
 // timeline.initialize({ id: "timeline", headerHeight: 45 }, timelineModel);
