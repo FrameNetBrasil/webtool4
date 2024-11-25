@@ -3,6 +3,7 @@ document.addEventListener('alpine:init', () => {
         dataState: '',
         timeByFrame: 0,
         frameCount: 1,
+        timeCount: 0,
         timeDuration: 0,
         frameDuration: 0,
         currentVideoState: 'paused',
@@ -22,6 +23,15 @@ document.addEventListener('alpine:init', () => {
             };
             annotation.objects.config(config);
             annotation.drawBox.config(config);
+        },
+        timeFormated: (timeSeconds) => {
+            console.log(timeSeconds);
+            let minute = Math.trunc(timeSeconds / 60);
+            let seconds = Math.trunc(timeSeconds - (minute * 60));
+            return minute + ':' + seconds;
+        },
+        setTimelineTime: (timeMiliSeconds) => {
+            annotation.timeline.setTime(timeMiliSeconds);
         },
         setObjects(objects) {
             this.objects = objects;
@@ -44,19 +54,15 @@ document.addEventListener('alpine:init', () => {
             if (idObject === null) {
                 this.currentObject = null;
                 this.newObjectState = 'none';
-                htmx.ajax("GET","/annotation/dynamicMode/formObject/0/0", "#formObject");
+                htmx.ajax("GET","/annotation/deixis/formAnnotation/0", "#formObject");
             } else {
                 console.log(" ** player current time - selectObject", annotation.video.player.currentTime());
                 let object = annotation.objects.get(idObject);
                 this.currentObject = object;
-                //console.log(object);
-                //let time = annotation.video.timeFromFrame(object.object.startFrame);
-                //console.log(time, object.object.startFrame);
-                //annotation.video.player.currentTime(time);
                 annotation.video.gotoFrame(object.object.startFrame);
-                annotation.objects.drawFrameObject(object.object.startFrame);
+                annotation.timeline.setTime(Math.trunc((object.object.startTime * 1000)/1000));
                 this.newObjectState = 'showing';
-                htmx.ajax("GET","/annotation/dynamicMode/formObject/" + object.object.idDynamicObject + "/" + idObject, "#formObject");
+                htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.object.idDynamicObject, "#formObject");
             }
             // annotationGridObject.selectRowByObject(idObject);
         },
@@ -66,16 +72,6 @@ document.addEventListener('alpine:init', () => {
             //console.log('after', object);
             this.selectObject(object.idObject);
         },
-        // selectObjectFrame(idObject, frameNumber) {
-        //     this.currentObject = annotation.objects.get(idObject);
-        //     // annotationGridObject.selectRowByObject(idObject);
-        //     //let time = annotation.video.timeFromFrame(frameNumber);
-        //     //annotation.video.player.currentTime(time);
-        //     annotation.video.gotoFrame(frameNumber);
-        //     //this.timeByFrame = time;
-        //     annotation.objects.drawFrameObject(frameNumber);
-        //     this.newObjectState = 'showing';
-        // },
         createObject() {
             if (this.currentVideoState === 'paused') {
                 //console.log('create object');
@@ -255,6 +251,7 @@ document.addEventListener('alpine:init', () => {
             console.log('Data Loaded');
             console.log(annotation.objectList);
             window.annotation.objects.annotateObjects(annotation.objectList);
+            window.annotation.timeline.init();
             Alpine.store('doStore').setObjects(annotation.objectList);
             Alpine.store('doStore').newObjectState = 'none';
             Alpine.store('doStore').currentVideoState = 'paused';

@@ -67,6 +67,7 @@
                             annotation.objects.updateObjectAnnotationEvent();
                         })
 
+                        @include("Annotation.Deixis.Scripts.timeline")
                         @include("Annotation.Deixis.Scripts.api")
                         @include("Annotation.Deixis.Scripts.video")
                         @include("Annotation.Deixis.Scripts.drawBox")

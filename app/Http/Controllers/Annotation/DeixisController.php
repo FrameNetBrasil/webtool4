@@ -87,7 +87,7 @@ class DeixisController extends Controller
     public function formAnnotation(ObjectData $data)
     {
         debug($data);
-        $object = AnnotationDynamicService::getObject($data->idDynamicObject ?? 0);
+        $object = AnnotationDeixisService::getObject($data->idDynamicObject ?? 0);
         return view("Annotation.Deixis.Panes.formPane", [
             'order' => $data->order,
             'object' => $object
