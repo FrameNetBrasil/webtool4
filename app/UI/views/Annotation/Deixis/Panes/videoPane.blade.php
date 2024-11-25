@@ -92,6 +92,7 @@
                 Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
                 console.log("timeupdate timecount ", Alpine.store('doStore').timeCount);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
+                annotation.timeline.setTime(Math.trunc(currentTime * 1000));
                 if (annotation.video.playingRange) {
                     if (currentFrame > annotation.video.playingRange.endFrame) {
                         annotation.video.player.pause();
@@ -152,7 +153,7 @@
     <div x-data class="info flex flex-row justify-content-between">
         <div style="width:200px; text-align:left">
             <div class="ui label">
-            <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeCount"></span>s]
+            <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeFormated($store.doStore.timeCount)"></span>]
             </div>
         </div>
         <div>
@@ -172,7 +173,7 @@
         </div>
         <div style="width:120px; text-align:right">
             <div class="ui label">
-            <span x-text="$store.doStore.frameDuration"></span> [<span x-text="$store.doStore.timeDuration"></span>s]
+            <span x-text="$store.doStore.frameDuration"></span> [<span x-text="$store.doStore.timeFormated($store.doStore.timeDuration)"></span>]
             </div>
         </div>
     </div>
