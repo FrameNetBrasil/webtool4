@@ -25,13 +25,12 @@ document.addEventListener('alpine:init', () => {
             annotation.drawBox.config(config);
         },
         timeFormated: (timeSeconds) => {
-            console.log(timeSeconds);
             let minute = Math.trunc(timeSeconds / 60);
             let seconds = Math.trunc(timeSeconds - (minute * 60));
             return minute + ':' + seconds;
         },
-        setTimelineTime: (timeMiliSeconds) => {
-            annotation.timeline.setTime(timeMiliSeconds);
+        setTimelineTime: (timeMilliSeconds) => {
+            annotation.timeline.setTime(timeMilliSeconds);
         },
         setObjects(objects) {
             this.objects = objects;
@@ -60,7 +59,7 @@ document.addEventListener('alpine:init', () => {
                 let object = annotation.objects.get(idObject);
                 this.currentObject = object;
                 annotation.video.gotoFrame(object.object.startFrame);
-                annotation.timeline.setTime(Math.trunc((object.object.startTime * 1000)/1000));
+                //annotation.timeline.setTime(Math.trunc((object.object.startTime * 1000)/1000));
                 this.newObjectState = 'showing';
                 htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.object.idDynamicObject, "#formObject");
             }

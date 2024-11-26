@@ -7,23 +7,30 @@
         if ($search->lemma == '') {
             $search->lemma = '--none';
         }
-        $lemmas = Criteria::byFilter("view_lexicon", [
-            ["lemma", "startswith", $search->lemma],
-            ['idLanguageLM', "=", $idLanguage]
-        ])->select("idLemma", "lemma","idLexeme","lexeme","posLX")
+        $lemmas = Criteria::table("lemma as lm")
+            ->leftJoin("lexemeentry as le", "lm.idLemma","=","le.idLemma")
+            ->leftJoin("lexeme as lx","le.idLexeme","=","lx.idLexeme")
+            ->leftJoin("pos","lx.idPOS","=","pos.idPOS")
+            ->where("lm.idLanguage", $idLanguage)
+            ->whereRaw("lm.name LIKE '{$search->lemma}%' collate 'utf8mb4_bin'")
+            ->select("lm.idLemma", "lm.name as lemma","lx.idLexeme","lx.name as lexeme","pos.pos as posLX")
             ->distinct()
             ->limit($limit)
             ->orderBy("lemma")->get()->groupBy(["idLemma","lemma"])->toArray();
         $data = [];
         foreach($lemmas as $idLemma => $lemma) {
-           $name = array_key_first($lemma);
-           $children = array_map(fn($item) => [
-             'id'=> $item->idLexeme,
-             'text' => $item->lexeme . " [{$item->posLX}]",
-             'state' => 'closed',
-             'type' => 'lexeme',
-             'children' => []
-            ], $lemma[$name] ?? []);
+            debug($lemma);
+            $name = array_key_first($lemma);
+            $children = [];
+            if ($lemma[$name][0]->idLexeme) {
+                $children = array_map(fn($item) => [
+                    'id'=> $item->idLexeme,
+                    'text' => $item->lexeme . " [{$item->posLX}]",
+                    'state' => 'closed',
+                    'type' => 'lexeme',
+                    'children' => []
+                ], $lemma[$name] ?? []);
+            }
             $data[] = [
                 'id' => $idLemma,
                 'text' => $name,
@@ -60,11 +67,11 @@
     $id = uniqid("lexiconTree");
 @endphp
 <div
-        class="h-full"
-        hx-trigger="reload-gridLexicon from:body"
-        hx-target="this"
-        hx-swap="outerHTML"
-        hx-post="/lexicon/grid"
+    class="h-full"
+    hx-trigger="reload-gridLexicon from:body"
+    hx-target="this"
+    hx-swap="outerHTML"
+    hx-post="/lexicon/grid"
 >
     <div class="relative h-full overflow-auto">
         <div id="lexiconTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">

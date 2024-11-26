@@ -84,7 +84,7 @@
             })
             player.on('timeupdate', () => {
                 let currentTime = player.currentTime();
-                console.log('timeupdate currentTime', currentTime);
+                console.error('timeupdate currentTime', currentTime);
                 let currentFrame = annotation.video.frameFromTime(currentTime);
                 console.log("timeupdate currentFrame ", currentFrame);
                 //currentTime = annotation.video.timeFromFrame(currentFrame);
