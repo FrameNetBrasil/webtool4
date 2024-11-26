@@ -150,7 +150,7 @@ class WordForm
         $criteria = Criteria::table("view_lexicon as l")
             ->select("idLU","lu","senseDescription","frame.name as frameName")
             ->join("view_frame as frame", "l.idFrame","=","frame.idFrame")
-            ->where("l.form",$wf1)
+            ->where("l.md5",md5($wf1))
             ->where("l.idLanguageLM","=",$idLanguageBase ?? $idLanguage)
             ->where("l.lexemeOrder","=",1)
             ->where("frame.idLanguage","=",$idLanguage)
