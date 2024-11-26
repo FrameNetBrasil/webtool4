@@ -45,18 +45,27 @@
                                     width: "30%",
                                     title:"LU candidate",
                                     sortable: true,
+                                    hstyler: () => {
+                                        return "font-weight:bold;";
+                                    },
                                 },
                                 {
                                     field: "frameName",
                                     width: "40%",
                                     title:"Suggested frame",
                                     sortable: true,
+                                    hstyler: () => {
+                                        return "font-weight:bold;";
+                                    },
                                 },
                                 {
                                     field: "createdAt",
                                     width: "30%",
                                     title: "Created At",
                                     sortable: true,
+                                    hstyler: () => {
+                                        return "font-weight:bold;";
+                                    },
                                 },
                             ]],
                             onClickRow: (index, row) => {
