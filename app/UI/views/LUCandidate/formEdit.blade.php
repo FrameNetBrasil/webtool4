@@ -1,9 +1,22 @@
+@php
+    $id = uniqid("formEditLUCandidate");
+@endphp
 <x-form
-    id="formEditLUCandidate"
+    id="{{$id}}"
 >
     <x-slot:fields>
         <x-hidden-field id="idLUCandidate" :value="$luCandidate->idLUCandidate"></x-hidden-field>
-        <x-hidden-field id="idLemma" :value="$luCandidate->idLemma"></x-hidden-field>
+        @if($isManager)
+        <div class="field">
+            <x-combobox.lemma
+                id="idLemma"
+                label="Lemma [min: 3 chars]"
+                :value="$luCandidate->idLemma"
+            ></x-combobox.lemma>
+        </div>
+        @else
+           <x-hidden-field id="idLemma" :value="$luCandidate->idLemma"></x-hidden-field>
+        @endif
         <div class="field">
             <x-multiline-field
                 label="Sense Description"

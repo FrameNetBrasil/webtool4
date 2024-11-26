@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Lexicon;
 
 use App\Data\ComboBox\QData;
 use App\Data\Lexicon\CreateLayerGroupData;
+use App\Data\Lexicon\CreateLemmaData;
 use App\Data\Lexicon\CreateLexemeData;
 use App\Data\Lexicon\CreateLexemeEntryData;
 use App\Data\Lexicon\CreateWordformData;
@@ -100,7 +101,7 @@ class ResourceController extends Controller
     }
 
     #[Post(path: '/lexicon/lemma/new')]
-    public function newLemma(CreateLayerGroupData $data)
+    public function newLemma(CreateLemmaData $data)
     {
         try {
             $exists = Criteria::table("lemma")
