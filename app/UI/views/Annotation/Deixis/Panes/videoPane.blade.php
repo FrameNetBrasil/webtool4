@@ -104,16 +104,17 @@
                 let state = Alpine.store('doStore').currentVideoState;
                 if (state === 'paused') {
                     Alpine.store('doStore').currentVideoState = 'playing';
-                }
-                $btn = document.querySelector("#btnBackward");
-                if ($btn) {
-                    $btn.style.color = "grey";
-                    $btn.style.cursor = "default";
-                }
-                $btn = document.querySelector("#btnForward");
-                if ($btn) {
-                    $btn.style.color = "grey";
-                    $btn.style.cursor = "default";
+                    annotation.timeline.onPlayClick();
+                    $btn = document.querySelector("#btnBackward");
+                    if ($btn) {
+                        $btn.style.color = "grey";
+                        $btn.style.cursor = "default";
+                    }
+                    $btn = document.querySelector("#btnForward");
+                    if ($btn) {
+                        $btn.style.color = "grey";
+                        $btn.style.cursor = "default";
+                    }
                 }
             })
             player.on('pause', () => {
@@ -121,6 +122,7 @@
                 let currentTime = player.currentTime();
                 console.log('currentTime', currentTime);
                 Alpine.store('doStore').currentVideoState = 'paused';
+                annotation.timeline.onPauseClick();
                 $btn = document.querySelector("#btnBackward");
                 if ($btn) {
                     $btn.style.color = "white";
