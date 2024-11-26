@@ -36,12 +36,14 @@ annotation.timeline = {
         var object;
         let rows = [];
         let groups = {};
-        for (var layer in annotation.objectList) {
+        console.log(annotation.objectList);
+        for (var layer of annotation.objectList) {
             let element = {
-                title: layer,
+                title: layer.layer,
                 draggable: false
             };
-            let objects = annotation.objectList[layer];
+            //let objects = annotation.objectList[layer];
+            let objects = layer.objects;
             // create groups
             groups[0] = {
                 style: {
@@ -142,11 +144,11 @@ annotation.timeline = {
 //             //}
 //         };
         annotation.timeline.timeline.onTimeChanged(function(event) {
-            console.log("Time changed !");
+            console.log("Time changed !!!!!!!!!!!!!!!!!");
                 let timeline = annotation.timeline.timeline;
                 let time = timeline.getTime();
                 console.log('time',time);
-            annotation.video.gotoTime(time/1000);
+            //annotation.video.gotoTime(time/1000);
             //annotation.timeline.showActivePositionInformation();
         });
         annotation.timeline.timeline.onSelected(function(obj) {
@@ -162,7 +164,8 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onKeyframeChanged(function(obj) {
-            console.log("keyframe: " + obj.val);
+            console.log("keyframe: " + obj.val, obj.val/1000);
+            annotation.video.gotoTime(obj.val/1000);
         });
 
         annotation.timeline.timeline.onDragFinished(function(obj) {
@@ -196,10 +199,11 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onMouseDown(function(obj) {
+            console.log(obj.target);
             var type = obj.target ? obj.target.type : "";
             if (obj.pos) {
                 //console.log("mousedown:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
-                if (type !== "timeline") {
+                if (type === "") {
                     console.log(obj.elements[1].keyframes[0].idDynamicObject);
                     let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
                     Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
@@ -252,7 +256,7 @@ annotation.timeline = {
         annotation.timeline.timeline.setOptions({
             groupsDraggable: false,
             keyframesDraggable: true,
-            timelineDraggable: true
+            timelineDraggable: false
         });
         annotation.timeline.generateHTMLOutlineListNodes(annotation.timeline.model.rows);
     },

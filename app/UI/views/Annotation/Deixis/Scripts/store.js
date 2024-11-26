@@ -58,7 +58,7 @@ document.addEventListener('alpine:init', () => {
                 console.log(" ** player current time - selectObject", annotation.video.player.currentTime());
                 let object = annotation.objects.get(idObject);
                 this.currentObject = object;
-                annotation.video.gotoFrame(object.object.startFrame);
+                //annotation.video.gotoFrame(object.object.startFrame);
                 //annotation.timeline.setTime(Math.trunc((object.object.startTime * 1000)/1000));
                 this.newObjectState = 'showing';
                 htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.object.idDynamicObject, "#formObject");
@@ -66,9 +66,9 @@ document.addEventListener('alpine:init', () => {
             // annotationGridObject.selectRowByObject(idObject);
         },
         selectObjectByIdDynamicObject(idDynamicObject) {
-            //console.log('getting', idDynamicObject);
+            console.log('getting', idDynamicObject);
             let object = annotation.objects.getByIdDynamicObject(idDynamicObject);
-            //console.log('after', object);
+            console.log('after', object);
             this.selectObject(object.idObject);
         },
         createObject() {

@@ -95,9 +95,8 @@ annotation.objects = {
 
     annotateObjects: (objectsFromServer) => {
         annotation.objects.clearAll();
-        for(var layer in objectsFromServer) {
-            let objects = objectsFromServer[layer];
-            for (var object of objects) {
+        for(var layer of objectsFromServer) {
+            for (var object of layer['objects']) {
                 if ((object.startFrame >= annotation.video.framesRange.first) && (object.startFrame <= annotation.video.framesRange.last)) {
                     let annotatedObject = new DynamicObject(object);
                     annotatedObject.dom = annotation.objects.newBboxElement();

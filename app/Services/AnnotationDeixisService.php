@@ -94,7 +94,7 @@ class AnnotationDeixisService
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $result = Criteria::table("view_annotation_deixis as ad")
+        $objects = Criteria::table("view_annotation_deixis as ad")
             ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
             ->where("ad.idLanguageFE", "left", $idLanguage)
@@ -108,51 +108,62 @@ class AnnotationDeixisService
             ->orderBy("ad.startFrame")
             ->orderBy("ad.endFrame")
             ->orderBy("ad.idDynamicObject")
+            ->keyBy("idDynamicObject")
             ->all();
-        $oMM = [];
         $bboxes = [];
-        foreach ($result as $row) {
-            $oMM[] = $row->idDynamicObject;
-            $row->startTime = (int)($row->startTime * 1000);
-            $row->endTime = (int)($row->endTime * 1000);
-        }
-        if (count($result) > 0) {
+        $idDynamicObjectList = array_keys($objects);
+        if (count($idDynamicObjectList) > 0) {
             $bboxList = Criteria::table("view_dynamicobject_boundingbox")
-                ->whereIN("idDynamicObject", $oMM)
+                ->whereIN("idDynamicObject", $idDynamicObjectList)
                 ->all();
             foreach ($bboxList as $bbox) {
                 $bboxes[$bbox->idDynamicObject][] = $bbox;
             }
         }
+        $order = 0;
+        foreach ($objects as $object) {
+            $object->order = ++$order;
+            $object->startTime = (int)($object->startTime * 1000);
+            $object->endTime = (int)($object->endTime * 1000);
+            $object->bboxes = $bboxes[$object->idDynamicObject] ?? [];
+        }
         $objectsRows = [];
+        $objectsRowsEnd = [];
         $idLayerTypeCurrent = 0;
-        $start = $end = -1;
-        foreach ($result as $i => $row) {
-            if ($row->idLayerType != $idLayerTypeCurrent) {
-                $idLayerTypeCurrent = $row->idLayerType;
-                $idLayer = 0;
-                $objectsRows[$row->idLayerType][$idLayer][] = $row;
-                $start = $row->startFrame;
-                $end = $end->endFrame;
+        foreach ($objects as $i => $object) {
+            if ($object->idLayerType != $idLayerTypeCurrent) {
+                $idLayerTypeCurrent = $object->idLayerType;
+                $objectsRows[$object->idLayerType][0][] = $object;
+                $objectsRowsEnd[$object->idLayerType][0] = $object->endFrame;
             } else {
-                foreach($objectsRows[$row->idLayerType] as $idLayer => $objectRow) {
-                    if ($row->startFrame >= $end) {
-                        $objectsRows[$row->idLayerType][$idLayer]= $row;
-                        $start = $row->startFrame;
-                        $end = $end->endFrame;
+                $allocated = false;
+                foreach($objectsRows[$object->idLayerType] as $idLayer => $objectRow) {
+                    if ($object->startFrame > $objectsRowsEnd[$object->idLayerType][$idLayer]) {
+                        $objectsRows[$object->idLayerType][$idLayer][] = $object;
+                        $objectsRowsEnd[$object->idLayerType][$idLayer] = $object->endFrame;
+                        $allocated = true;
+                        break;
                     }
+                }
+                if (!$allocated) {
+                    $idLayer = count($objectsRows[$object->idLayerType]);
+                    $objectsRows[$object->idLayerType][$idLayer][] = $object;
+                    $objectsRowsEnd[$object->idLayerType][$idLayer] = $object->endFrame;
                 }
 
             }
-
-
-
-//            $row->order = $i + 1;
-//            $row->bboxes = $bboxes[$row->idDynamicObject] ?? [];
-//            $objectsRows[] = $row;
         }
-        $objects = collect($objectsRows)->groupBy("nameLayerType")->toArray();
-        return $objects;
+
+        $result = [];
+        foreach($objectsRows as $idLayerType => $layers) {
+            foreach($layers as $idLayer => $objects) {
+               $result[] = [
+                  'layer' => $objects[0]->nameLayerType,
+                  'objects' => $objects
+               ];
+            }
+        }
+        return $result;
     }
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int

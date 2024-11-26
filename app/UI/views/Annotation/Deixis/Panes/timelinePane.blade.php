@@ -50,7 +50,7 @@
                 <div class="outline">
                     <div class="outline-header" id="outline-header"></div>
                     <div class="outline-scroll-container" id="outline-scroll-container"
-                         onwheel="outlineMouseWheel(arguments[0])">
+                         onwheel="annotation.timeline.outlineMouseWheel(arguments[0])">
                         <div class="outline-items" id="outline-container"></div>
                     </div>
                 </div>
