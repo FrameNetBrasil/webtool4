@@ -71,16 +71,13 @@ class AnnotationStaticEventService
             ->select("ut.idUserTask","ut.idTask")
             ->first();
         if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-//            if (User::isManager($user)) {
-//                $usertask = Criteria::table("usertask_document")
-//                    ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-//                    ->where("usertask_document.idDocument", $idDocument)
-//                    ->where("ut.idUser", -2)
-//                    ->select("ut.idUserTask","ut.idTask")
-//                    ->first();
-//            } else {
+            if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
+                $usertask = (object)[
+                    "idUserTask" => 1
+                ];
+            } else {
                 $usertask = null;
-//            }
+            }
         }
         return $usertask;
     }
@@ -94,8 +91,8 @@ class AnnotationStaticEventService
                 'frames' => []
             ];
         }
-        $task = Task::byId($usertask->idTask);
-        debug($task);
+//        $task = Task::byId($usertask->idTask);
+//        debug($task);
         //objects for document_sentence
         $criteria = Criteria::table("view_staticobject_textspan")
             ->where("idDocument", $idDocument)
@@ -143,7 +140,7 @@ class AnnotationStaticEventService
             }
         }
         return [
-            'type' => $task->type,
+            'type' => 'annotation',
             'objects' => $objects,
             'frames' => $frames
         ];
