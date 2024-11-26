@@ -35,8 +35,6 @@ class CreateData extends Data
         }
         $this->idUser = AppService::getCurrentIdUser();
         $this->createdAt = Carbon::now();
-        $lemma = Lemma::byId($this->idLemma);
-        $this->name = $lemma->name;
     }
 
 

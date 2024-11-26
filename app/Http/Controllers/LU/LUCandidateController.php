@@ -34,16 +34,16 @@ class LUCandidateController extends Controller
     {
         debug($search);
         $luIcon = view('components.icon.lu')->render();
-        $lus = Criteria::byFilterLanguage("view_lucandidate",["name","startswith", $search->lu])
-            ->select('idLUCandidate','name','createdAt')
+        $lus = Criteria::byFilterLanguage("view_lucandidate", ["name", "startswith", $search->lu])
+            ->select('idLUCandidate', 'name', 'createdAt')
             ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
-            ->orderBy($search->sort,$search->order)->all();
+            ->orderBy($search->sort, $search->order)->all();
         $data = array_map(fn($item) => [
-            'id'=> $item->idLUCandidate,
+            'id' => $item->idLUCandidate,
             'name' => $luIcon . $item->name,
             'frameName' => $item->frameName,
             'createdAt' => $item->createdAt ? Carbon::parse($item->createdAt)->format("d/m/Y") : '-',
-            'state'=> 'open',
+            'state' => 'open',
             'type' => 'lu'
         ], $lus);
         return $data;
@@ -70,10 +70,16 @@ class LUCandidateController extends Controller
     {
         try {
             debug($data);
-            Criteria::table("lucandidate")
-                ->insert($data->toArray());
-            $this->trigger('reload-gridLUCandidate');
-            return $this->renderNotify("success", "LU Candidate created.");
+            if (is_null($data->idLemma)) {
+                throw new \Exception("Lemma is required");
+            } else {
+                $lemma = Lemma::byId($data->idLemma);
+                $data->name = $lemma->name;
+                Criteria::table("lucandidate")
+                    ->insert($data->toArray());
+                $this->trigger('reload-gridLUCandidate');
+                return $this->renderNotify("success", "LU Candidate created.");
+            }
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
