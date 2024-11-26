@@ -110,7 +110,7 @@ class AnnotationSet
             LEFT JOIN view_instantiationtype it ON (ts.idInstantiationType = it.idTypeInstance)
         WHERE (l.idLanguage = {$idLanguage})
             AND (a.idAnnotationSet = {$idAnnotationSet})
-            AND ((gl.idLanguage = {$idLanguage}) or (gl.idLanguage is null))
+
             AND ((fe.idLanguage = {$idLanguage}) or (fe.idLanguage is null))
             AND ((ce.idLanguage = {$idLanguage}) or (ce.idLanguage is null))
             AND ((it.idLanguage = {$idLanguage}) or (it.idLanguage is null))
