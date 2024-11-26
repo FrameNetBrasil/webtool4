@@ -84,9 +84,9 @@ class AnnotationDeixisService
         $do = Criteria::table("view_annotation_deixis")
             ->where("idLanguageLT", "left", $idLanguage)
             ->where("idDynamicObject", $idDynamicObject)
-            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idLayerType","nameLayerType","idLanguageLT",
-                "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE","idLanguageFE",
-                "idAnnotationGL","idGenericLabel","gl","colorGL","idLanguageGL","idDocument")
+            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idLayerType", "nameLayerType", "idLanguageLT",
+                "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE", "idLanguageFE",
+                "idAnnotationGL", "idGenericLabel", "gl", "colorGL", "idLanguageGL", "idDocument")
             ->first();
         return $do;
     }
@@ -100,9 +100,9 @@ class AnnotationDeixisService
             ->where("ad.idLanguageFE", "left", $idLanguage)
             ->where("ad.idLanguageLT", "=", $idLanguage)
             ->where("ad.idDocument", $idDocument)
-            ->where("view_frame.idLanguage","left",$idLanguage)
-            ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin", "ad.idLayerType","ad.nameLayerType",
-                "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName","idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.colorFE",
+            ->where("view_frame.idLanguage", "left", $idLanguage)
+            ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin", "ad.idLayerType", "ad.nameLayerType",
+                "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.colorFE",
                 "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.colorGL")
             ->orderBy("ad.nameLayerType")
             ->orderBy("ad.startFrame")
@@ -113,6 +113,8 @@ class AnnotationDeixisService
         $bboxes = [];
         foreach ($result as $row) {
             $oMM[] = $row->idDynamicObject;
+            $row->startTime = (int)($row->startTime * 1000);
+            $row->endTime = (int)($row->endTime * 1000);
         }
         if (count($result) > 0) {
             $bboxList = Criteria::table("view_dynamicobject_boundingbox")
@@ -123,12 +125,31 @@ class AnnotationDeixisService
             }
         }
         $objectsRows = [];
+        $idLayerTypeCurrent = 0;
+        $start = $end = -1;
         foreach ($result as $i => $row) {
-            $row->order = $i + 1;
-            $row->startTime = (int)($row->startTime * 1000);
-            $row->endTime = (int)($row->endTime * 1000);
-            $row->bboxes = $bboxes[$row->idDynamicObject] ?? [];
-            $objectsRows[] = $row;
+            if ($row->idLayerType != $idLayerTypeCurrent) {
+                $idLayerTypeCurrent = $row->idLayerType;
+                $idLayer = 0;
+                $objectsRows[$row->idLayerType][$idLayer][] = $row;
+                $start = $row->startFrame;
+                $end = $end->endFrame;
+            } else {
+                foreach($objectsRows[$row->idLayerType] as $idLayer => $objectRow) {
+                    if ($row->startFrame >= $end) {
+                        $objectsRows[$row->idLayerType][$idLayer]= $row;
+                        $start = $row->startFrame;
+                        $end = $end->endFrame;
+                    }
+                }
+
+            }
+
+
+
+//            $row->order = $i + 1;
+//            $row->bboxes = $bboxes[$row->idDynamicObject] ?? [];
+//            $objectsRows[] = $row;
         }
         $objects = collect($objectsRows)->groupBy("nameLayerType")->toArray();
         return $objects;

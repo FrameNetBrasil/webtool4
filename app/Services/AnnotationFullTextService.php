@@ -233,6 +233,7 @@ class AnnotationFullTextService
         }
         $layers = AnnotationSet::getLayers($idAS);
         $target = array_filter($layers, fn($x) => ($x->layerTypeEntry == 'lty_target'));
+        debug('target', $target);
         foreach ($target as $tg) {
             $tg->startWord = $wordsChars->chars[$tg->startChar]['order'];
             $tg->endWord = $wordsChars->chars[$tg->endChar]['order'];
@@ -288,7 +289,7 @@ class AnnotationFullTextService
         $alternativeLU = [];
         if ($token != '') {
             $idLU = $lu->idLU;
-            foreach (WordForm::getLUs($token) as $altLU) {
+            foreach (WordForm::getLUs($token, $lu->idLanguage) as $altLU) {
                 if ($altLU->idLU != $idLU) {
                     $alternativeLU[] = $altLU;
                 }

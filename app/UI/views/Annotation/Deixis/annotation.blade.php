@@ -7,9 +7,7 @@
         <div
             id="deixisAnnotationPane"
             class="deixisAnnotationPane"
-            @keydown.arrow-left="console.log('1')"
-            @keydown.arrow-right="console.log('2')"
-            @keydown.enter="console.log('3')"
+            x-data="$store.doStore"
         >
             <div class="north">
                 <div class="west">
@@ -30,10 +28,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-column flex-grow-0 pt-2" x-data="$store.doStore">
+                    <div class="flex flex-column flex-grow-0 pt-2" >
                         @include("Annotation.Deixis.Panes.newObject")
                     </div>
-                    <div class="flex flex-column flex-grow-1 pt-2" x-data="$store.doStore">
+                    <div class="flex flex-column flex-grow-1 pt-2">
                         <div
                             id="formObject"
                             class="form"
@@ -67,11 +65,11 @@
                             annotation.objects.updateObjectAnnotationEvent();
                         })
 
-                        @include("Annotation.Deixis.Scripts.timeline")
                         @include("Annotation.Deixis.Scripts.api")
                         @include("Annotation.Deixis.Scripts.video")
                         @include("Annotation.Deixis.Scripts.drawBox")
                         @include("Annotation.Deixis.Scripts.objects")
+                        @include("Annotation.Deixis.Scripts.timeline")
                         @include("Annotation.Deixis.Scripts.store")
                     </script>
 
