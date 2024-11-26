@@ -10,7 +10,7 @@ class LU
 {
     public static function byId(int $id): object
     {
-        $lu = Criteria::byFilterLanguage("view_lu", ['idLU', '=', $id])->first();
+        $lu = Criteria::byFilter("view_lu", ['idLU', '=', $id])->first();
         $lu->frame = Frame::byId($lu->idFrame);
         return $lu;
     }
