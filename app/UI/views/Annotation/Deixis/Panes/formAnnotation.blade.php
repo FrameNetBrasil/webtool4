@@ -12,10 +12,10 @@
                         <div class="ui label">
                             <div class="detail">{{$object->nameLayerType}}</div>
                         </div>
-{{--                        <div class="ui label">--}}
-{{--                            Range--}}
-{{--                            <div class="detail">{{$object->startFrame}}/{{$object->endFrame}}</div>--}}
-{{--                        </div>--}}
+                        {{--                        <div class="ui label">--}}
+                        {{--                            Range--}}
+                        {{--                            <div class="detail">{{$object->startFrame}}/{{$object->endFrame}}</div>--}}
+                        {{--                        </div>--}}
                         <div class="ui label wt-tag-id">
                             #{{$object->idDynamicObject}}
                         </div>
@@ -25,9 +25,9 @@
         </x-slot:title>
         <x-slot:fields>
             @if(!is_null($object))
-                @if(!is_null($object->idGenericLabel))
+                @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
                     <div class="fields">
-                        <div class="field mr-2">
+                        <div class="field  w-15rem mr-2">
                             <x-combobox.gl
                                 id="idGenericLabel"
                                 name="idGenericLabel"
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 @endif
-                @if(!is_null($object->idAnnotationLU))
+                @if(!is_null($object->idAnnotationLU)  || ($object->layerGroup == 'Deixis_lexical'))
                     <div class="formgroup-inline">
                         <div class="field mr-1">
                             <x-combobox.frame
@@ -97,11 +97,25 @@
             @endif
         </x-slot:fields>
         <x-slot:buttons>
-            @if(is_null(!$object))
+            @if(!is_null($object))
+                @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
+                    <x-button
+                        type="button"
+                        label="Save"
+                        onclick="annotation.objects.updateObjectAnnotation({idGenericLabel: $('#idGenericLabel').attr('value')})"
+                    ></x-button>
+                @endif
+                @if(!is_null($object->idAnnotationLU)  || ($object->layerGroup == 'Deixis_lexical'))
+                    <x-button
+                        type="button"
+                        label="Save"
+                        onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
+                    ></x-button>
+                @endif
                 <x-button
-                    type="button"
-                    label="Save"
-                    onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
+                    label="Delete"
+                    color="danger"
+                    @click.prevent="annotation.objects.deleteObject({{$object->idDynamicObject}})"
                 ></x-button>
             @endif
         </x-slot:buttons>

@@ -9,7 +9,7 @@
         @foreach($options as $option)
             <div data-value="{{$option['idGenricLabel']}}"
                  class="item p-1 min-h-0">
-                 <span>{{$option['name']}}</span>
+                <x-element.gl name="{{$option['name']}}" idColor="{{$option['idColor']}}"></x-element.gl>
             </div>
         @endforeach
     </div>
