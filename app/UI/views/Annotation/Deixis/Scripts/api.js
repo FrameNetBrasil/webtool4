@@ -1,5 +1,5 @@
 annotation.api = {
-    loadObjects: async function () {
+    loadObjects: async function() {
         await $.ajax({
             url: "/annotation/deixis/gridObjects/" + annotation.document.idDocument,
             method: "GET",
@@ -7,12 +7,12 @@ annotation.api = {
             success: (response) => {
                 annotation.objectList = response;
                 //document.dispatchEvent(evtDOObjects);
-                Alpine.store('doStore').dataState = 'loaded';
+                Alpine.store("doStore").dataState = "loaded";
             }
         });
     },
     deleteObject: async (idDynamicObject) => {
-        console.log('deletting api', idDynamicObject, annotation._token);
+        console.log("deletting api", idDynamicObject, annotation._token);
 
         let result = null;
         await $.ajax({
@@ -31,19 +31,19 @@ annotation.api = {
 
     deleteObjects: (toDelete) => {
         let params = {
-            toDelete: toDelete,
+            toDelete: toDelete
         };
         try {
             let url = "/index.php/webtool/annotation/multimodal/deleteObjects";
             manager.doAjax(url, (response) => {
-                if (response.type === 'success') {
+                if (response.type === "success") {
                     // $.messager.alert('Ok', 'Objects deleted.','info');
-                } else if (response.type === 'error') {
+                } else if (response.type === "error") {
                     throw new Error(response.message);
                 }
             }, params);
         } catch (e) {
-            $.messager.alert('Error', e.message, 'error');
+            $.messager.alert("Error", e.message, "error");
         }
     },
     loadSentences: async () => {
@@ -85,25 +85,23 @@ annotation.api = {
             success: (response) => {
                 result = response;
             },
-            error: (xhr,status,error) => {
+            error: (xhr, status, error) => {
                 console.error(error);
             }
         });
         return result;
     },
-    updateObjectAnnotation: async (params) => {
+    updateObjectAnnotation: async (params, callback) => {
         params._token = annotation._token;
-        let result = null;
         await $.ajax({
-            url: "/annotation/dynamicMode/updateObjectAnnotation",
+            url: "/annotation/deixis/updateObjectAnnotation",
             method: "POST",
             dataType: "json",
             data: params,
             success: (response) => {
-                result = response;
+                callback(response);
             }
         });
-        return result;
     },
     updateBBox: async (params) => {
         params._token = annotation._token;
@@ -151,68 +149,32 @@ annotation.api = {
     updateObjectData: (params) => {
         return new Promise((resolve, reject) => {
             try {
-                let result = {};
                 let url = "/index.php/webtool/annotation/dynamic/updateObjectData";
                 manager.doAjax(url, (response) => {
-                    if (response.type === 'success') {
+                    if (response.type === "success") {
                         resolve(response.data);
-                    } else if (response.type === 'error') {
+                    } else if (response.type === "error") {
                         throw new Error(response.message);
                     }
                 }, params);
 
             } catch (e) {
-                $.messager.alert('Error', e.message, 'error');
+                $.messager.alert("Error", e.message, "error");
             }
         });
     },
 
-    loadWords: async function () {
-        console.log(annotation.videoObject);
-        await $.ajax({
-            url: "/annotation/dynamicMode/words/" + annotation.videoObject.idVideo,
-            method: "GET",
-            dataType: "json",
-            success: (response) => {
-                annotation.wordList = response;
-                Alpine.store('doStore').dataState = 'loaded';
-            }
-        });
-    },
-
-    joinWords: async function (params) {
+    createNewObjectAtLayer: async (params, callback) => {
         params._token = annotation._token;
-        params.idVideo  = annotation.videoObject.idVideo;
-        params.idLanguage  = annotation.videoObject.idLanguage;
-        params.idDocument  = annotation.document.idDocument;
-        let result = null;
         await $.ajax({
-            url: "/annotation/dynamicMode/joinWords",
+            url: "/annotation/deixis/createNewObjectAtLayer",
             method: "POST",
             dataType: "json",
             data: params,
             success: (response) => {
-                result = response;
-                console.log(result);
+                callback(response);
             }
         });
-        return result;
-    },
-
-    splitSentence: async function (params) {
-        params._token = annotation._token;
-        let result = null;
-        await $.ajax({
-            url: "/annotation/dynamicMode/splitSentence",
-            method: "POST",
-            dataType: "json",
-            data: params,
-            success: (response) => {
-                result = response;
-                console.log(result);
-            }
-        });
-        return result;
-    },
+    }
 
 };

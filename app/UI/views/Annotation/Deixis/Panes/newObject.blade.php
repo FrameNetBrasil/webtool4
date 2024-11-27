@@ -18,6 +18,7 @@
             <x-button
                 type="button"
                 label="Create New Object"
+                onclick="annotation.objects.createNewObjectAtLayer({idLayerType: document.getElementById('idLayerType').value,currentFrame: Alpine.store('doStore').currentFrame})"
             ></x-button>
         </x-slot:buttons>
     </x-form>

@@ -1,4 +1,5 @@
 //var outlineContainer = document.getElementById("outline-container");
+
 var keyframeWithCustomImage = {
     val: 500
 };
@@ -18,55 +19,74 @@ annotation.timeline = {
     trackTimelineMovement: false,
     outlineContainer: null,
     generateModel: function() {
-        var group = [];
-        group[0] = {
+        var object;
+        let rows = [];
+        let groups = {};
+        let groupsEmpty = {
             style: {
-                fillColor: "#6B9080",
-                marginTop: 4
+                fillColor: "transparent",
+                marginTop: 3,
+                cursor: "pointer",
+                strokeColor: "white",
+                strokeThickness: 1,
             },
             keyframesStyle: {
                 shape: "rect"
             }
         };
-        group[1] = {
-            style: {
-                marginTop: 6
-            }
-        };
-        var object;
-        let rows = [];
-        let groups = {};
-        for (var layer in annotation.objectList) {
+        console.log(annotation.objectList);
+        for (var layer of annotation.objectList) {
             let element = {
-                title: layer,
+                title: layer.layer,
                 draggable: false
             };
-            let objects = annotation.objectList[layer];
+            //let objects = annotation.objectList[layer];
+            let objects = layer.objects;
             // create groups
-            groups[0] = {
-                style: {
-                    fillColor: "#FFFFFF",
-                    marginTop: 4
-                },
-                keyframesStyle: {
-                    shape: "rect"
-                }
-            };
             for (object of objects) {
                 if (object.idGenericLabel) {
-                    // groups[object.idDynamicObject] = group[0];
                     groups[object.idDynamicObject] = {
                         style: {
-                            fillColor: "#" + object.colorGL,
-                            marginTop: 4
+                            fillColor: object.bgColorGL,
+                            textColor: object.fgColorGL,
+                            marginTop: 3,
+                            cursor: "pointer",
                         },
                         keyframesStyle: {
                             shape: "rect"
-                        }
+                        },
+                        label: object.gl
+                    };
+                } else if (object.idLU) {
+                    groups[object.idDynamicObject] = {
+                        style: {
+                            fillColor: "white",
+                            textColor: "black",
+                            marginTop: 3,
+                            cursor: "pointer",
+                        },
+                        keyframesStyle: {
+                            shape: "rect"
+                        },
+                        label: object.lu
                     };
                 } else {
                     // groups[object.idDynamicObject] = group[1];
-                    groups[object.idDynamicObject] = groups[0];
+                    groups[object.idDynamicObject] = {
+                        style: {
+                            fillColor: "transparent",
+                            marginTop: 3,
+                            cursor: "pointer",
+                            strokeColor: "white",
+                            strokeThickness: 1,
+                            textColor: "white",
+
+                        },
+                        keyframesStyle: {
+                            shape: "rect"
+                        },
+                        label: object.idDynamicObject
+                    };
                 }
 
             }
@@ -142,11 +162,11 @@ annotation.timeline = {
 //             //}
 //         };
         annotation.timeline.timeline.onTimeChanged(function(event) {
-            console.log("Time changed !");
+            console.log("Time changed !!!!!!!!!!!!!!!!!");
                 let timeline = annotation.timeline.timeline;
                 let time = timeline.getTime();
                 console.log('time',time);
-            annotation.video.gotoTime(time/1000);
+            //annotation.video.gotoTime(time/1000);
             //annotation.timeline.showActivePositionInformation();
         });
         annotation.timeline.timeline.onSelected(function(obj) {
@@ -162,16 +182,25 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onKeyframeChanged(function(obj) {
-            console.log("keyframe: " + obj.val);
+            console.log("keyframe: " + obj.val, obj.val/1000);
+            annotation.video.gotoTime(obj.val/1000);
         });
 
         annotation.timeline.timeline.onDragFinished(function(obj) {
             if (obj.elements[0].type === "keyframe") {
-                let timeline = annotation.timeline.timeline;
-                const currentModel = timeline.getModel();
-
-                console.log(obj.elements[0].keyframe);
-                timeline.setModel(currentModel);
+                let keyframe = obj.elements[0].keyframe;
+                console.log("keyframe",keyframe);
+                if (keyframe.position === "start") {
+                    Alpine.store("doStore").currentStartFrame = Alpine.store("doStore").currentFrame;
+                }
+                if (keyframe.position === "end") {
+                    Alpine.store("doStore").currentEndFrame = Alpine.store("doStore").currentFrame;
+                }
+                // let timeline = annotation.timeline.timeline;
+                // const currentModel = timeline.getModel();
+                //
+                // console.log(obj.elements[0].keyframe);
+                // timeline.setModel(currentModel);
 
                 // timeline.redraw();
             }
@@ -196,10 +225,18 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onMouseDown(function(obj) {
+            console.log(obj.target,obj.val);
             var type = obj.target ? obj.target.type : "";
             if (obj.pos) {
                 //console.log("mousedown:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
-                if (type !== "timeline") {
+                if (type === "") {
+                    Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
+                    console.log(obj.elements[1].keyframes[0].idDynamicObject);
+                    let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
+                    Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
+                }
+                if (type === "keyframe") {
+                    Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
                     console.log(obj.elements[1].keyframes[0].idDynamicObject);
                     let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
                     Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
@@ -248,12 +285,15 @@ annotation.timeline = {
 
         //annotation.timeline.defaultKeyframesRenderer = annotation.timeline.timeline._renderKeyframe.bind(annotation.timeline.timeline);
         annotation.timeline.timeline.initialize({ id: "timeline", headerHeight: 45 }, annotation.timeline.model);
-        annotation.timeline.config();
         annotation.timeline.timeline.setOptions({
             groupsDraggable: false,
             keyframesDraggable: true,
-            timelineDraggable: true
+            timelineDraggable: false,
+            rowsStyle: {
+                height: 24
+            }
         });
+        annotation.timeline.config();
         annotation.timeline.generateHTMLOutlineListNodes(annotation.timeline.model.rows);
     },
     setTime: function(timeMilliSeconds) {
@@ -297,19 +337,19 @@ annotation.timeline = {
             return;
         }
         annotation.timeline.outlineContainer.innerHTML = "";
-
+        let marginBottom = ((options.rowsStyle ? options.rowsStyle.marginBottom : 0) || 0);
         rows.forEach(function(row, index) {
             var div = document.createElement("div");
             div.classList.add("outline-node");
             const h = (row.style ? row.style.height : 0) || (options.rowsStyle ? options.rowsStyle.height : 0);
             div.style.maxHeight = div.style.minHeight = h + "px";
-            div.style.marginBottom = ((options.rowsStyle ? options.rowsStyle.marginBottom : 0) || 0) + "px";
+            div.style.marginBottom = marginBottom + "px";
             div.innerText = row.title || "Track " + index;
             div.id = div.innerText;
             var alreadyAddedWithSuchNameElement = document.getElementById(div.innerText);
             // Combine outlines with the same name:
             if (alreadyAddedWithSuchNameElement) {
-                var increaseSize = Number.parseInt(alreadyAddedWithSuchNameElement.style.maxHeight) + h;
+                var increaseSize = Number.parseInt(alreadyAddedWithSuchNameElement.style.maxHeight) + h + marginBottom;
                 alreadyAddedWithSuchNameElement.style.maxHeight = alreadyAddedWithSuchNameElement.style.minHeight = increaseSize + "px";
 
                 return;

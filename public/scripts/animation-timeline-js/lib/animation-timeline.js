@@ -438,7 +438,7 @@ var TimelineUtils = /*#__PURE__*/function () {
       var toArg = TimelineUtils.cloneOptions(previousOptions);
       // Merge options with the default.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      var mergeOptionsDeep = function mergeOptionsDeep(to, from) {
+      var _mergeOptionsDeep = function mergeOptionsDeep(to, from) {
         if (!to || !from) {
           return;
         }
@@ -455,7 +455,7 @@ var TimelineUtils = /*#__PURE__*/function () {
                   if (!to[key]) {
                     to[key] = from[key];
                   } else {
-                    mergeOptionsDeep(to[key], from[key]);
+                    _mergeOptionsDeep(to[key], from[key]);
                   }
                 }
               } else {
@@ -465,7 +465,7 @@ var TimelineUtils = /*#__PURE__*/function () {
           }
         }
       };
-      mergeOptionsDeep(toArg, newOptions);
+      _mergeOptionsDeep(toArg, newOptions);
       return toArg;
     }
     /**
@@ -802,37 +802,54 @@ var TimelineStyleUtils = /*#__PURE__*/function () {
       options === null || options === void 0 || (_options$rowsStyle19 = options.rowsStyle) === null || _options$rowsStyle19 === void 0 || (_options$rowsStyle19 = _options$rowsStyle19.groupsStyle) === null || _options$rowsStyle19 === void 0 ? void 0 : _options$rowsStyle19.fillColor);
     }
   }, {
-    key: "groupStrokeColor",
-    value: function groupStrokeColor(options, group, rowStyle) {
+    key: "groupTextColor",
+    value: function groupTextColor(options, group, rowStyle) {
       var _TimelineStyleUtils$g13, _rowStyle$groupsStyle12, _options$rowsStyle20;
       return TimelineStyleUtils.getFirstSet(
       // default value
+      defaultGroupStyle.textColor || '', // exact style
+      (_TimelineStyleUtils$g13 = TimelineStyleUtils.getGroupStyle(group)) === null || _TimelineStyleUtils$g13 === void 0 ? void 0 : _TimelineStyleUtils$g13.textColor, // Row row style
+      rowStyle === null || rowStyle === void 0 || (_rowStyle$groupsStyle12 = rowStyle.groupsStyle) === null || _rowStyle$groupsStyle12 === void 0 ? void 0 : _rowStyle$groupsStyle12.textColor, // global styles
+      options === null || options === void 0 || (_options$rowsStyle20 = options.rowsStyle) === null || _options$rowsStyle20 === void 0 || (_options$rowsStyle20 = _options$rowsStyle20.groupsStyle) === null || _options$rowsStyle20 === void 0 ? void 0 : _options$rowsStyle20.textColor);
+    }
+  }, {
+    key: "groupLabel",
+    value: function groupLabel(group) {
+      var _TimelineStyleUtils$g14;
+      return ((_TimelineStyleUtils$g14 = TimelineStyleUtils.getGroup(group)) === null || _TimelineStyleUtils$g14 === void 0 ? void 0 : _TimelineStyleUtils$g14.label) || '';
+    }
+  }, {
+    key: "groupStrokeColor",
+    value: function groupStrokeColor(options, group, rowStyle) {
+      var _TimelineStyleUtils$g15, _rowStyle$groupsStyle13, _options$rowsStyle21;
+      return TimelineStyleUtils.getFirstSet(
+      // default value
       defaultGroupStyle.strokeColor || '', // exact style
-      (_TimelineStyleUtils$g13 = TimelineStyleUtils.getGroupStyle(group)) === null || _TimelineStyleUtils$g13 === void 0 ? void 0 : _TimelineStyleUtils$g13.strokeColor, // Row row style
-      rowStyle === null || rowStyle === void 0 || (_rowStyle$groupsStyle12 = rowStyle.groupsStyle) === null || _rowStyle$groupsStyle12 === void 0 ? void 0 : _rowStyle$groupsStyle12.strokeColor, // global styles
-      options === null || options === void 0 || (_options$rowsStyle20 = options.rowsStyle) === null || _options$rowsStyle20 === void 0 || (_options$rowsStyle20 = _options$rowsStyle20.groupsStyle) === null || _options$rowsStyle20 === void 0 ? void 0 : _options$rowsStyle20.strokeColor);
+      (_TimelineStyleUtils$g15 = TimelineStyleUtils.getGroupStyle(group)) === null || _TimelineStyleUtils$g15 === void 0 ? void 0 : _TimelineStyleUtils$g15.strokeColor, // Row row style
+      rowStyle === null || rowStyle === void 0 || (_rowStyle$groupsStyle13 = rowStyle.groupsStyle) === null || _rowStyle$groupsStyle13 === void 0 ? void 0 : _rowStyle$groupsStyle13.strokeColor, // global styles
+      options === null || options === void 0 || (_options$rowsStyle21 = options.rowsStyle) === null || _options$rowsStyle21 === void 0 || (_options$rowsStyle21 = _options$rowsStyle21.groupsStyle) === null || _options$rowsStyle21 === void 0 ? void 0 : _options$rowsStyle21.strokeColor);
     }
   }, {
     key: "groupStrokeThickness",
     value: function groupStrokeThickness(options, group, rowStyle) {
-      var _TimelineStyleUtils$g14, _rowStyle$groupsStyle13, _options$rowsStyle21;
+      var _TimelineStyleUtils$g16, _rowStyle$groupsStyle14, _options$rowsStyle22;
       return TimelineStyleUtils.getFirstSet(
       // default value
       defaultGroupStyle.strokeThickness || '', // exact style
-      (_TimelineStyleUtils$g14 = TimelineStyleUtils.getGroupStyle(group)) === null || _TimelineStyleUtils$g14 === void 0 ? void 0 : _TimelineStyleUtils$g14.strokeThickness, // Row row style
-      rowStyle === null || rowStyle === void 0 || (_rowStyle$groupsStyle13 = rowStyle.groupsStyle) === null || _rowStyle$groupsStyle13 === void 0 ? void 0 : _rowStyle$groupsStyle13.strokeThickness, // global styles
-      options === null || options === void 0 || (_options$rowsStyle21 = options.rowsStyle) === null || _options$rowsStyle21 === void 0 || (_options$rowsStyle21 = _options$rowsStyle21.groupsStyle) === null || _options$rowsStyle21 === void 0 ? void 0 : _options$rowsStyle21.strokeThickness) || 0;
+      (_TimelineStyleUtils$g16 = TimelineStyleUtils.getGroupStyle(group)) === null || _TimelineStyleUtils$g16 === void 0 ? void 0 : _TimelineStyleUtils$g16.strokeThickness, // Row row style
+      rowStyle === null || rowStyle === void 0 || (_rowStyle$groupsStyle14 = rowStyle.groupsStyle) === null || _rowStyle$groupsStyle14 === void 0 ? void 0 : _rowStyle$groupsStyle14.strokeThickness, // global styles
+      options === null || options === void 0 || (_options$rowsStyle22 = options.rowsStyle) === null || _options$rowsStyle22 === void 0 || (_options$rowsStyle22 = _options$rowsStyle22.groupsStyle) === null || _options$rowsStyle22 === void 0 ? void 0 : _options$rowsStyle22.strokeThickness) || 0;
     }
   }, {
     key: "groupsRadii",
     value: function groupsRadii(options, group, rowStyle) {
-      var _TimelineStyleUtils$g15, _rowStyle$groupsStyle14, _options$rowsStyle22;
+      var _TimelineStyleUtils$g17, _rowStyle$groupsStyle15, _options$rowsStyle23;
       return TimelineStyleUtils.getFirstSet(
       // default value
       defaultGroupStyle.radii || '', // exact style
-      (_TimelineStyleUtils$g15 = TimelineStyleUtils.getGroupStyle(group)) === null || _TimelineStyleUtils$g15 === void 0 ? void 0 : _TimelineStyleUtils$g15.radii, // Row row style
-      rowStyle === null || rowStyle === void 0 || (_rowStyle$groupsStyle14 = rowStyle.groupsStyle) === null || _rowStyle$groupsStyle14 === void 0 ? void 0 : _rowStyle$groupsStyle14.radii, // global styles
-      options === null || options === void 0 || (_options$rowsStyle22 = options.rowsStyle) === null || _options$rowsStyle22 === void 0 || (_options$rowsStyle22 = _options$rowsStyle22.groupsStyle) === null || _options$rowsStyle22 === void 0 ? void 0 : _options$rowsStyle22.radii) || 0;
+      (_TimelineStyleUtils$g17 = TimelineStyleUtils.getGroupStyle(group)) === null || _TimelineStyleUtils$g17 === void 0 ? void 0 : _TimelineStyleUtils$g17.radii, // Row row style
+      rowStyle === null || rowStyle === void 0 || (_rowStyle$groupsStyle15 = rowStyle.groupsStyle) === null || _rowStyle$groupsStyle15 === void 0 ? void 0 : _rowStyle$groupsStyle15.radii, // global styles
+      options === null || options === void 0 || (_options$rowsStyle23 = options.rowsStyle) === null || _options$rowsStyle23 === void 0 || (_options$rowsStyle23 = _options$rowsStyle23.groupsStyle) === null || _options$rowsStyle23 === void 0 ? void 0 : _options$rowsStyle23.radii) || 0;
     }
 
     /**
@@ -841,35 +858,35 @@ var TimelineStyleUtils = /*#__PURE__*/function () {
   }, {
     key: "getRowHeight",
     value: function getRowHeight(rowStyle, options) {
-      var _options$rowsStyle23;
+      var _options$rowsStyle24;
       var defaultValue = defaultTimelineRowStyle.height || 0;
       return TimelineStyleUtils.getFirstSet(
       // default value
       defaultValue, // exact style
       rowStyle === null || rowStyle === void 0 ? void 0 : rowStyle.height, // Style set by global options
-      options === null || options === void 0 || (_options$rowsStyle23 = options.rowsStyle) === null || _options$rowsStyle23 === void 0 ? void 0 : _options$rowsStyle23.height);
+      options === null || options === void 0 || (_options$rowsStyle24 = options.rowsStyle) === null || _options$rowsStyle24 === void 0 ? void 0 : _options$rowsStyle24.height);
     }
   }, {
     key: "getRowMarginBottom",
     value: function getRowMarginBottom(rowStyle, options) {
-      var _options$rowsStyle24;
+      var _options$rowsStyle25;
       var defaultValue = defaultTimelineRowStyle.marginBottom || 0;
       return TimelineStyleUtils.getFirstSet(
       // default value
       defaultValue, // exact style
       rowStyle === null || rowStyle === void 0 ? void 0 : rowStyle.marginBottom, // Style set by global options
-      options === null || options === void 0 || (_options$rowsStyle24 = options.rowsStyle) === null || _options$rowsStyle24 === void 0 ? void 0 : _options$rowsStyle24.marginBottom);
+      options === null || options === void 0 || (_options$rowsStyle25 = options.rowsStyle) === null || _options$rowsStyle25 === void 0 ? void 0 : _options$rowsStyle25.marginBottom);
     }
   }, {
     key: "getRowFillColor",
     value: function getRowFillColor(rowStyle, options) {
-      var _options$rowsStyle25;
+      var _options$rowsStyle26;
       var defaultValue = defaultTimelineRowStyle.fillColor || '';
       return TimelineStyleUtils.getFirstSet(
       // default value
       defaultValue, // exact style
       rowStyle === null || rowStyle === void 0 ? void 0 : rowStyle.fillColor, // Style set by global options
-      options === null || options === void 0 || (_options$rowsStyle25 = options.rowsStyle) === null || _options$rowsStyle25 === void 0 ? void 0 : _options$rowsStyle25.fillColor);
+      options === null || options === void 0 || (_options$rowsStyle26 = options.rowsStyle) === null || _options$rowsStyle26 === void 0 ? void 0 : _options$rowsStyle26.fillColor);
     }
   }, {
     key: "headerHeight",
@@ -880,12 +897,12 @@ var TimelineStyleUtils = /*#__PURE__*/function () {
   }, {
     key: "keyframeDraggable",
     value: function keyframeDraggable(keyframe, group, row, options) {
-      var _TimelineStyleUtils$g16;
+      var _TimelineStyleUtils$g18;
       var defaultValue = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
       var findFirstNegativeBool = true;
       var boolResult = TimelineStyleUtils.getValue(defaultValue, findFirstNegativeBool, // Keyframe settings
       keyframe === null || keyframe === void 0 ? void 0 : keyframe.draggable, // Group settings
-      (_TimelineStyleUtils$g16 = TimelineStyleUtils.getGroup(group)) === null || _TimelineStyleUtils$g16 === void 0 ? void 0 : _TimelineStyleUtils$g16.keyframesDraggable, // Row settings
+      (_TimelineStyleUtils$g18 = TimelineStyleUtils.getGroup(group)) === null || _TimelineStyleUtils$g18 === void 0 ? void 0 : _TimelineStyleUtils$g18.keyframesDraggable, // Row settings
       row === null || row === void 0 ? void 0 : row.keyframesDraggable, // Start from global settings first.
       options === null || options === void 0 ? void 0 : options.keyframesDraggable);
       return boolResult;
@@ -893,10 +910,10 @@ var TimelineStyleUtils = /*#__PURE__*/function () {
   }, {
     key: "groupDraggable",
     value: function groupDraggable(group, row, options) {
-      var _TimelineStyleUtils$g17;
+      var _TimelineStyleUtils$g19;
       var findFirstNegativeBool = true;
       var boolResult = TimelineStyleUtils.getValue(true, findFirstNegativeBool, // Group settings
-      (_TimelineStyleUtils$g17 = TimelineStyleUtils.getGroup(group)) === null || _TimelineStyleUtils$g17 === void 0 ? void 0 : _TimelineStyleUtils$g17.draggable, // Row settings
+      (_TimelineStyleUtils$g19 = TimelineStyleUtils.getGroup(group)) === null || _TimelineStyleUtils$g19 === void 0 ? void 0 : _TimelineStyleUtils$g19.draggable, // Row settings
       row === null || row === void 0 ? void 0 : row.groupsDraggable, // Start from global settings first.
       options === null || options === void 0 ? void 0 : options.groupsDraggable);
       return boolResult;
@@ -934,17 +951,27 @@ var TimelineDraggableData = /*#__PURE__*/timelineDraggableData_createClass(funct
    */
   timelineDraggableData_defineProperty(this, "changed", false);
   /**
+   * Drag initial click target.
+   */
+  timelineDraggableData_defineProperty(this, "target", void 0);
+  /**
+   * Elements to be dragged.
+   * Can be multiple elements, but drag will be started with target.
+   */
+  timelineDraggableData_defineProperty(this, "elements", void 0);
+  /**
    * Dragging type.
    */
   timelineDraggableData_defineProperty(this, "type", TimelineElementType.None);
-}
-/**
- * Prev value.
- */
-/**
- * Prev value.
- */
-);
+  /**
+   * Prev value.
+   */
+  timelineDraggableData_defineProperty(this, "val", void 0);
+  /**
+   * Prev value.
+   */
+  timelineDraggableData_defineProperty(this, "prevVal", void 0);
+});
 ;// CONCATENATED MODULE: ./src/utils/events/timelineBaseEvent.ts
 function timelineBaseEvent_typeof(o) { "@babel/helpers - typeof"; return timelineBaseEvent_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, timelineBaseEvent_typeof(o); }
 function timelineBaseEvent_classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
@@ -981,8 +1008,6 @@ var TimelineBaseEvent = /*#__PURE__*/function () {
 function timelineKeyframeChangedEvent_typeof(o) { "@babel/helpers - typeof"; return timelineKeyframeChangedEvent_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, timelineKeyframeChangedEvent_typeof(o); }
 function timelineKeyframeChangedEvent_defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, timelineKeyframeChangedEvent_toPropertyKey(o.key), o); } }
 function timelineKeyframeChangedEvent_createClass(e, r, t) { return r && timelineKeyframeChangedEvent_defineProperties(e.prototype, r), t && timelineKeyframeChangedEvent_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function timelineKeyframeChangedEvent_toPropertyKey(t) { var i = timelineKeyframeChangedEvent_toPrimitive(t, "string"); return "symbol" == timelineKeyframeChangedEvent_typeof(i) ? i : i + ""; }
-function timelineKeyframeChangedEvent_toPrimitive(t, r) { if ("object" != timelineKeyframeChangedEvent_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != timelineKeyframeChangedEvent_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function timelineKeyframeChangedEvent_classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
 function _possibleConstructorReturn(t, e) { if (e && ("object" == timelineKeyframeChangedEvent_typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
@@ -991,11 +1016,35 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
 function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
 function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function timelineKeyframeChangedEvent_defineProperty(e, r, t) { return (r = timelineKeyframeChangedEvent_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function timelineKeyframeChangedEvent_toPropertyKey(t) { var i = timelineKeyframeChangedEvent_toPrimitive(t, "string"); return "symbol" == timelineKeyframeChangedEvent_typeof(i) ? i : i + ""; }
+function timelineKeyframeChangedEvent_toPrimitive(t, r) { if ("object" != timelineKeyframeChangedEvent_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != timelineKeyframeChangedEvent_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 var TimelineKeyframeChangedEvent = /*#__PURE__*/function (_TimelineBaseEvent) {
   function TimelineKeyframeChangedEvent() {
+    var _this;
     timelineKeyframeChangedEvent_classCallCheck(this, TimelineKeyframeChangedEvent);
-    return _callSuper(this, TimelineKeyframeChangedEvent, arguments);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, TimelineKeyframeChangedEvent, [].concat(args));
+    /**
+     * Value to be used.
+     */
+    timelineKeyframeChangedEvent_defineProperty(_this, "val", void 0);
+    /**
+     * Previous value.
+     */
+    timelineKeyframeChangedEvent_defineProperty(_this, "prevVal", void 0);
+    /**
+     * Target element
+     */
+    timelineKeyframeChangedEvent_defineProperty(_this, "target", void 0);
+    /**
+     * Event source.
+     */
+    timelineKeyframeChangedEvent_defineProperty(_this, "source", void 0);
+    return _this;
   }
   _inherits(TimelineKeyframeChangedEvent, _TimelineBaseEvent);
   return timelineKeyframeChangedEvent_createClass(TimelineKeyframeChangedEvent);
@@ -1475,6 +1524,7 @@ function timeline_assertThisInitialized(e) { if (void 0 === e) throw new Referen
 function timeline_isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (timeline_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
 function timeline_inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && timeline_setPrototypeOf(t, e); }
 function timeline_setPrototypeOf(t, e) { return timeline_setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, timeline_setPrototypeOf(t, e); }
+function _superPropGet(t, o, e, r) { var p = _get(timeline_getPrototypeOf(1 & r ? t.prototype : t), o, e); return 2 & r && "function" == typeof p ? function (t) { return p.apply(e, t); } : p; }
 function _get() { return _get = "undefined" != typeof Reflect && Reflect.get ? Reflect.get.bind() : function (e, t, r) { var p = _superPropBase(e, t); if (p) { var n = Object.getOwnPropertyDescriptor(p, t); return n.get ? n.get.call(arguments.length < 3 ? e : r) : n.value; } }, _get.apply(null, arguments); }
 function _superPropBase(t, o) { for (; !{}.hasOwnProperty.call(t, o) && null !== (t = timeline_getPrototypeOf(t));); return t; }
 function timeline_getPrototypeOf(t) { return timeline_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, timeline_getPrototypeOf(t); }
@@ -1553,6 +1603,10 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
      * Rendering context
      */
     timeline_defineProperty(_this, "_ctx", null);
+    /**
+     * Components settings
+     */
+    timeline_defineProperty(_this, "_options", void 0);
     /**
      * Drag start position.
      */
@@ -1967,7 +2021,7 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
       event.elements = elements;
       // target element.
       event.target = target;
-      _get((_this, timeline_getPrototypeOf(Timeline.prototype)), "emit", _this).call(_this, TimelineEvents.ContextMenu, event);
+      _superPropGet((_this, Timeline), "emit", _this, 3)([TimelineEvents.ContextMenu, event]);
     });
     /**
      * @param args
@@ -2011,10 +2065,10 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
       // target element.
       event.target = target;
       if (isDoubleClick) {
-        _get((_this, timeline_getPrototypeOf(Timeline.prototype)), "emit", _this).call(_this, TimelineEvents.DoubleClick, event);
+        _superPropGet((_this, Timeline), "emit", _this, 3)([TimelineEvents.DoubleClick, event]);
         return;
       }
-      _get((_this, timeline_getPrototypeOf(Timeline.prototype)), "emit", _this).call(_this, TimelineEvents.MouseDown, event);
+      _superPropGet((_this, Timeline), "emit", _this, 3)([TimelineEvents.MouseDown, event]);
       _this._clickTimeout = Date.now();
       _this._lastClickTime = Date.now();
       if (event.isPrevented()) {
@@ -2850,7 +2904,7 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
         return;
       }
       rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$groupsV2 = rowViewModel.groupsViewModels) === null || _rowViewModel$groupsV2 === void 0 || _rowViewModel$groupsV2.forEach(function (groupsViewModels) {
-        var _groupsViewModels$key, _rowViewModel$model, _rowViewModel$model2, _rowViewModel$model3, _rowViewModel$model4;
+        var _groupsViewModels$key, _rowViewModel$model, _rowViewModel$model2, _rowViewModel$model3, _rowViewModel$model4, _rowViewModel$model5;
         if (!_this._ctx) {
           return;
         }
@@ -2858,9 +2912,11 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
           return;
         }
         var groupFillColor = TimelineStyleUtils.groupFillColor(_this._options, groupsViewModels.groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model = rowViewModel.model) === null || _rowViewModel$model === void 0 ? void 0 : _rowViewModel$model.style);
-        var strokeColor = TimelineStyleUtils.groupStrokeColor(_this._options, groupsViewModels.groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model2 = rowViewModel.model) === null || _rowViewModel$model2 === void 0 ? void 0 : _rowViewModel$model2.style);
-        var groupStrokeThickness = TimelineStyleUtils.groupStrokeThickness(_this._options, groupsViewModels.groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model3 = rowViewModel.model) === null || _rowViewModel$model3 === void 0 ? void 0 : _rowViewModel$model3.style);
-        var groupsRadii = TimelineStyleUtils.groupsRadii(_this._options, groupsViewModels.groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model4 = rowViewModel.model) === null || _rowViewModel$model4 === void 0 ? void 0 : _rowViewModel$model4.style);
+        var groupTextColor = TimelineStyleUtils.groupTextColor(_this._options, groupsViewModels.groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model2 = rowViewModel.model) === null || _rowViewModel$model2 === void 0 ? void 0 : _rowViewModel$model2.style);
+        var groupLabel = TimelineStyleUtils.groupLabel(groupsViewModels.groupModel);
+        var strokeColor = TimelineStyleUtils.groupStrokeColor(_this._options, groupsViewModels.groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model3 = rowViewModel.model) === null || _rowViewModel$model3 === void 0 ? void 0 : _rowViewModel$model3.style);
+        var groupStrokeThickness = TimelineStyleUtils.groupStrokeThickness(_this._options, groupsViewModels.groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model4 = rowViewModel.model) === null || _rowViewModel$model4 === void 0 ? void 0 : _rowViewModel$model4.style);
+        var groupsRadii = TimelineStyleUtils.groupsRadii(_this._options, groupsViewModels.groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model5 = rowViewModel.model) === null || _rowViewModel$model5 === void 0 ? void 0 : _rowViewModel$model5.style);
         if (!groupsViewModels.size) {
           console.log('Size of the group cannot be calculated');
           return;
@@ -2883,6 +2939,9 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
             _this._ctx.beginPath();
             _this._ctx.roundRect(rect.x + groupStrokeThickness, rect.y + groupStrokeThickness, rect.width - groupStrokeThickness, rect.height - groupStrokeThickness, groupsRadii);
             _this._ctx.fill();
+            _this._ctx.fillStyle = groupTextColor;
+            _this._ctx.font = "bold";
+            _this._ctx.fillText(groupLabel || '', rect.x + 8, rect.y + 12);
             if (groupStrokeThickness > 0) {
               _this._ctx.stroke();
             }
@@ -2943,12 +3002,12 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
      * @param rowY row screen coords y position
      */
     timeline_defineProperty(_this, "_getKeyframesGroupSize", function (groupViewModel, rowViewModel) {
-      var _rowViewModel$model5, _rowViewModel$model6;
+      var _rowViewModel$model6, _rowViewModel$model7;
       var rowY = rowViewModel.size.y;
       var rowHeight = rowViewModel.size.height;
       var groupModel = groupViewModel.groupModel || null;
-      var groupHeight = TimelineStyleUtils.groupHeight(_this._options, groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model5 = rowViewModel.model) === null || _rowViewModel$model5 === void 0 ? void 0 : _rowViewModel$model5.style);
-      var marginTop = TimelineStyleUtils.groupMarginTop(_this._options, groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model6 = rowViewModel.model) === null || _rowViewModel$model6 === void 0 ? void 0 : _rowViewModel$model6.style);
+      var groupHeight = TimelineStyleUtils.groupHeight(_this._options, groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model6 = rowViewModel.model) === null || _rowViewModel$model6 === void 0 ? void 0 : _rowViewModel$model6.style);
+      var marginTop = TimelineStyleUtils.groupMarginTop(_this._options, groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model7 = rowViewModel.model) === null || _rowViewModel$model7 === void 0 ? void 0 : _rowViewModel$model7.style);
       var isAutoHeight = groupHeight === 'auto';
       if (!groupHeight || isAutoHeight) {
         groupHeight = Math.floor(rowHeight);
@@ -2983,7 +3042,7 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
       };
     });
     timeline_defineProperty(_this, "_getKeyframePosition", function (keyframe, groupViewModel, rowViewModel, keyframeShape) {
-      var _rowViewModel$model7, _rowViewModel$model8;
+      var _rowViewModel$model8, _rowViewModel$model9;
       if (!keyframe) {
         console.log('keyframe should be defined.');
         return null;
@@ -2996,8 +3055,8 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
       // get center of the lane:
       var y = rowSize.y + rowSize.height / 2;
       var groupModel = (groupViewModel === null || groupViewModel === void 0 ? void 0 : groupViewModel.groupModel) || null;
-      var height = TimelineStyleUtils.keyframeHeight(keyframe, groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model7 = rowViewModel.model) === null || _rowViewModel$model7 === void 0 ? void 0 : _rowViewModel$model7.style, _this._options);
-      var width = TimelineStyleUtils.keyframeWidth(keyframe, groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model8 = rowViewModel.model) === null || _rowViewModel$model8 === void 0 ? void 0 : _rowViewModel$model8.style, _this._options);
+      var height = TimelineStyleUtils.keyframeHeight(keyframe, groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model8 = rowViewModel.model) === null || _rowViewModel$model8 === void 0 ? void 0 : _rowViewModel$model8.style, _this._options);
+      var width = TimelineStyleUtils.keyframeWidth(keyframe, groupModel, rowViewModel === null || rowViewModel === void 0 || (_rowViewModel$model9 = rowViewModel.model) === null || _rowViewModel$model9 === void 0 ? void 0 : _rowViewModel$model9.style, _this._options);
       if (height === 'auto') {
         height = rowSize.height / 3;
       }
@@ -3763,7 +3822,7 @@ var Timeline = /*#__PURE__*/function (_TimelineEventsEmitte) {
         scrollHeight: ((_this$_scrollContaine4 = _this._scrollContainer) === null || _this$_scrollContaine4 === void 0 ? void 0 : _this$_scrollContaine4.scrollHeight) || 0,
         scrollWidth: ((_this$_scrollContaine5 = _this._scrollContainer) === null || _this$_scrollContaine5 === void 0 ? void 0 : _this$_scrollContaine5.scrollWidth) || 0
       };
-      _get((_this, timeline_getPrototypeOf(Timeline.prototype)), "emit", _this).call(_this, eventType, scrollEvent);
+      _superPropGet((_this, Timeline), "emit", _this, 3)([eventType, scrollEvent]);
       return scrollEvent;
     });
     timeline_defineProperty(_this, "_emitKeyframeChanged", function (element) {
