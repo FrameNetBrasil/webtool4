@@ -29,6 +29,9 @@ export interface TimelineGroupStyle {
    */
   fillColor?: string;
   /**
+   * Group text fill color.
+   */
+  textColor?: string;  /**
    * Group mouse over cursor style.
    */
   cursor?: TimelineCursorType;

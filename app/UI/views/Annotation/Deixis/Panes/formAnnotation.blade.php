@@ -12,10 +12,10 @@
                         <div class="ui label">
                             <div class="detail">{{$object->nameLayerType}}</div>
                         </div>
-                        <div class="ui label">
-                            Range
-                            <div class="detail">{{$object->startFrame}}/{{$object->endFrame}}</div>
-                        </div>
+{{--                        <div class="ui label">--}}
+{{--                            Range--}}
+{{--                            <div class="detail">{{$object->startFrame}}/{{$object->endFrame}}</div>--}}
+{{--                        </div>--}}
                         <div class="ui label wt-tag-id">
                             #{{$object->idDynamicObject}}
                         </div>
@@ -26,8 +26,8 @@
         <x-slot:fields>
             @if(!is_null($object))
                 @if(!is_null($object->idGenericLabel))
-                    <div class="formgroup-inline">
-                        <div class="field mr-1">
+                    <div class="fields">
+                        <div class="field mr-2">
                             <x-combobox.gl
                                 id="idGenericLabel"
                                 name="idGenericLabel"
@@ -36,6 +36,14 @@
                                 :idLayerType="$object?->idLayerType ?? 0"
                                 :hasNull="false"
                             ></x-combobox.gl>
+                        </div>
+                        <div class="field mr-2">
+                            <label>Start Frame</label>
+                            <div x-text="currentStartFrame"></div>
+                        </div>
+                        <div class="field mr-2">
+                            <label>End Frame</label>
+                            <div x-text="currentEndFrame"></div>
                         </div>
                     </div>
                 @endif
@@ -54,17 +62,15 @@
                                 onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
                             ></x-combobox.frame>
                         </div>
-                        <div id="fes">
-                            <div class="field mr-1">
-                                <x-combobox.fe-frame
-                                    id="idFrameElement"
-                                    name="idFrameElement"
-                                    label="FE"
-                                    :value="$object?->idFrameElement ?? 0"
-                                    :idFrame="$object?->idFrame ?? 0"
-                                    :hasNull="false"
-                                ></x-combobox.fe-frame>
-                            </div>
+                        <div id="fes" class="field w-15rem mr-1">
+                            <x-combobox.fe-frame
+                                id="idFrameElement"
+                                name="idFrameElement"
+                                label="FE"
+                                :value="$object?->idFrameElement ?? 0"
+                                :idFrame="$object?->idFrame ?? 0"
+                                :hasNull="false"
+                            ></x-combobox.fe-frame>
                         </div>
                         <div class="field mr-1">
                             <x-combobox.lu
@@ -75,6 +81,16 @@
                                 :value="$object?->idLU"
                                 :name="$object?->lu ?? ''"
                             ></x-combobox.lu>
+                        </div>
+                    </div>
+                    <div class="fields">
+                        <div class="field mr-2">
+                            <label>Start Frame</label>
+                            <div x-text="currentStartFrame"></div>
+                        </div>
+                        <div class="field mr-2">
+                            <label>End Frame</label>
+                            <div x-text="currentEndFrame"></div>
                         </div>
                     </div>
                 @endif
