@@ -39,39 +39,49 @@
                         </div>
                         <div class="field mr-2">
                             <label>Start Frame</label>
-                            <div x-text="currentStartFrame"></div>
+                            <div
+                                class="ui label cursor-pointer"
+                                @click.prevent="annotation.video.gotoFrame(Alpine.store('doStore').currentStartFrame)"
+                            >
+                                <div class="detail" x-text="currentStartFrame"></div>
+                            </div>
                         </div>
-                        <div class="field mr-2">
+                        <div
+                            class="field mr-2"
+                            @click.prevent="annotation.video.gotoFrame(Alpine.store('doStore').currentEndFrame)"
+                        >
                             <label>End Frame</label>
-                            <div x-text="currentEndFrame"></div>
+                            <div class="ui label cursor-pointer">
+                                <div class="detail" x-text="currentEndFrame"></div>
+                            </div>
                         </div>
                     </div>
                 @endif
                 @if(!is_null($object->idAnnotationLU)  || ($object->layerGroup == 'Deixis_lexical'))
-                    <div class="formgroup-inline">
-                        <div class="field mr-1">
-                            <x-combobox.frame
-                                id="idFrame"
-                                label="Frame"
-                                placeholder="Frame (min: 3 chars)"
-                                style="width:250px"
-                                class="mb-2"
-                                :value="$object?->idFrame ?? 0"
-                                :name="$object->frame ?? ''"
-                                :hasDescription="false"
-                                onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
-                            ></x-combobox.frame>
-                        </div>
-                        <div id="fes" class="field w-15rem mr-1">
-                            <x-combobox.fe-frame
-                                id="idFrameElement"
-                                name="idFrameElement"
-                                label="FE"
-                                :value="$object?->idFrameElement ?? 0"
-                                :idFrame="$object?->idFrame ?? 0"
-                                :hasNull="false"
-                            ></x-combobox.fe-frame>
-                        </div>
+                    <div class="fields">
+                        {{--                        <div class="field mr-1">--}}
+                        {{--                            <x-combobox.frame--}}
+                        {{--                                id="idFrame"--}}
+                        {{--                                label="Frame"--}}
+                        {{--                                placeholder="Frame (min: 3 chars)"--}}
+                        {{--                                style="width:250px"--}}
+                        {{--                                class="mb-2"--}}
+                        {{--                                :value="$object?->idFrame ?? 0"--}}
+                        {{--                                :name="$object->frame ?? ''"--}}
+                        {{--                                :hasDescription="false"--}}
+                        {{--                                onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"--}}
+                        {{--                            ></x-combobox.frame>--}}
+                        {{--                        </div>--}}
+                        {{--                        <div id="fes" class="field w-15rem mr-1">--}}
+                        {{--                            <x-combobox.fe-frame--}}
+                        {{--                                id="idFrameElement"--}}
+                        {{--                                name="idFrameElement"--}}
+                        {{--                                label="FE"--}}
+                        {{--                                :value="$object?->idFrameElement ?? 0"--}}
+                        {{--                                :idFrame="$object?->idFrame ?? 0"--}}
+                        {{--                                :hasNull="false"--}}
+                        {{--                            ></x-combobox.fe-frame>--}}
+                        {{--                        </div>--}}
                         <div class="field mr-1">
                             <x-combobox.lu
                                 id="idLU"
@@ -82,15 +92,23 @@
                                 :name="$object?->lu ?? ''"
                             ></x-combobox.lu>
                         </div>
-                    </div>
-                    <div class="fields">
                         <div class="field mr-2">
                             <label>Start Frame</label>
-                            <div x-text="currentStartFrame"></div>
+                            <div
+                                class="ui label cursor-pointer"
+                                @click.prevent="annotation.video.gotoFrame(Alpine.store('doStore').currentStartFrame)"
+                            >
+                                <div class="detail" x-text="currentStartFrame"></div>
+                            </div>
                         </div>
-                        <div class="field mr-2">
+                        <div
+                            class="field mr-2"
+                            @click.prevent="annotation.video.gotoFrame(Alpine.store('doStore').currentEndFrame)"
+                        >
                             <label>End Frame</label>
-                            <div x-text="currentEndFrame"></div>
+                            <div class="ui label cursor-pointer">
+                                <div class="detail" x-text="currentEndFrame"></div>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -117,7 +135,16 @@
                     color="danger"
                     @click.prevent="annotation.objects.deleteObject({{$object->idDynamicObject}})"
                 ></x-button>
+                <x-button
+                    label="Play range"
+                    color="secondary"
+                    @click.prevent="annotation.video.playByFrameRange({{$object->startFrame}},{{$object->endFrame}},0)"
+                ></x-button>
             @endif
         </x-slot:buttons>
     </x-form>
 </div>
+@if(!is_null($object))
+@include("Annotation.Deixis.Panes.controlsPane")
+@endif
+
