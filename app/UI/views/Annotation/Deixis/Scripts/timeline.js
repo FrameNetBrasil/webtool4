@@ -1,4 +1,5 @@
 //var outlineContainer = document.getElementById("outline-container");
+
 var keyframeWithCustomImage = {
     val: 500
 };
@@ -22,7 +23,7 @@ annotation.timeline = {
         group[0] = {
             style: {
                 fillColor: "#6B9080",
-                marginTop: 4
+                marginTop: 0
             },
             keyframesStyle: {
                 shape: "rect"
@@ -30,7 +31,7 @@ annotation.timeline = {
         };
         group[1] = {
             style: {
-                marginTop: 6
+                marginTop: 0
             }
         };
         var object;
@@ -48,7 +49,8 @@ annotation.timeline = {
             groups[0] = {
                 style: {
                     fillColor: "#FFFFFF",
-                    marginTop: 4
+                    marginTop: 0,
+                    cursor: "pointer",
                 },
                 keyframesStyle: {
                     shape: "rect"
@@ -60,11 +62,14 @@ annotation.timeline = {
                     groups[object.idDynamicObject] = {
                         style: {
                             fillColor: "#" + object.colorGL,
-                            marginTop: 4
+                            textColor: "black",
+                            marginTop: 3,
+                            cursor: "pointer",
                         },
                         keyframesStyle: {
                             shape: "rect"
-                        }
+                        },
+                        label: "Teste"
                     };
                 } else {
                     // groups[object.idDynamicObject] = group[1];
@@ -170,11 +175,19 @@ annotation.timeline = {
 
         annotation.timeline.timeline.onDragFinished(function(obj) {
             if (obj.elements[0].type === "keyframe") {
-                let timeline = annotation.timeline.timeline;
-                const currentModel = timeline.getModel();
-
-                console.log(obj.elements[0].keyframe);
-                timeline.setModel(currentModel);
+                let keyframe = obj.elements[0].keyframe;
+                console.log("keyframe",keyframe);
+                if (keyframe.position === "start") {
+                    Alpine.store("doStore").currentStartFrame = Alpine.store("doStore").currentFrame;
+                }
+                if (keyframe.position === "end") {
+                    Alpine.store("doStore").currentEndFrame = Alpine.store("doStore").currentFrame;
+                }
+                // let timeline = annotation.timeline.timeline;
+                // const currentModel = timeline.getModel();
+                //
+                // console.log(obj.elements[0].keyframe);
+                // timeline.setModel(currentModel);
 
                 // timeline.redraw();
             }
@@ -199,11 +212,18 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onMouseDown(function(obj) {
-            console.log(obj.target);
+            console.log(obj.target,obj.val);
             var type = obj.target ? obj.target.type : "";
             if (obj.pos) {
                 //console.log("mousedown:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
                 if (type === "") {
+                    Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
+                    console.log(obj.elements[1].keyframes[0].idDynamicObject);
+                    let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
+                    Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
+                }
+                if (type === "keyframe") {
+                    Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
                     console.log(obj.elements[1].keyframes[0].idDynamicObject);
                     let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
                     Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);

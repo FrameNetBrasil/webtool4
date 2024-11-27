@@ -278,6 +278,21 @@ export class TimelineStyleUtils {
       options?.rowsStyle?.groupsStyle?.fillColor,
     );
   }
+  static groupTextColor(options: TimelineOptions | null | undefined, group: TimelineGroup | string | null | undefined, rowStyle: TimelineRowStyle | null | undefined): string {
+    return TimelineStyleUtils.getFirstSet(
+      // default value
+      defaultGroupStyle.textColor || '',
+      // exact style
+      TimelineStyleUtils.getGroupStyle(group)?.textColor,
+      // Row row style
+      rowStyle?.groupsStyle?.textColor,
+      // global styles
+      options?.rowsStyle?.groupsStyle?.textColor,
+    );
+  }
+  static groupLabel(group: TimelineGroup | string | null | undefined): string|undefined {
+    return TimelineStyleUtils.getGroup(group)?.label || '';
+  }
   static groupStrokeColor(options: TimelineOptions | null | undefined, group: TimelineGroup | string | null | undefined, rowStyle: TimelineRowStyle | null | undefined): string {
     return TimelineStyleUtils.getFirstSet(
       // default value

@@ -1811,6 +1811,8 @@ export class Timeline extends TimelineEventsEmitter {
         return;
       }
       const groupFillColor = TimelineStyleUtils.groupFillColor(this._options, groupsViewModels.groupModel, rowViewModel?.model?.style);
+      const groupTextColor = TimelineStyleUtils.groupTextColor(this._options, groupsViewModels.groupModel, rowViewModel?.model?.style);
+      const groupLabel = TimelineStyleUtils.groupLabel(groupsViewModels.groupModel);
       const strokeColor = TimelineStyleUtils.groupStrokeColor(this._options, groupsViewModels.groupModel, rowViewModel?.model?.style);
       let groupStrokeThickness = TimelineStyleUtils.groupStrokeThickness(this._options, groupsViewModels.groupModel, rowViewModel?.model?.style);
       const groupsRadii = TimelineStyleUtils.groupsRadii(this._options, groupsViewModels.groupModel, rowViewModel?.model?.style);
@@ -1837,6 +1839,9 @@ export class Timeline extends TimelineEventsEmitter {
           this._ctx.beginPath();
           this._ctx.roundRect(rect.x + groupStrokeThickness, rect.y + groupStrokeThickness, rect.width - groupStrokeThickness, rect.height - groupStrokeThickness, groupsRadii);
           this._ctx.fill();
+          this._ctx.fillStyle = groupTextColor;
+          this._ctx.font = "bold";
+          this._ctx.fillText(groupLabel||'',rect.x + 8, rect.y + 12);
           if (groupStrokeThickness > 0) {
             this._ctx.stroke();
           }
