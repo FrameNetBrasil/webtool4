@@ -12,10 +12,10 @@
                         <div class="ui label">
                             <div class="detail">{{$object->nameLayerType}}</div>
                         </div>
-                        <div class="ui label">
-                            Range
-                            <div class="detail">{{$object->startFrame}}/{{$object->endFrame}}</div>
-                        </div>
+                        {{--                        <div class="ui label">--}}
+                        {{--                            Range--}}
+                        {{--                            <div class="detail">{{$object->startFrame}}/{{$object->endFrame}}</div>--}}
+                        {{--                        </div>--}}
                         <div class="ui label wt-tag-id">
                             #{{$object->idDynamicObject}}
                         </div>
@@ -25,9 +25,9 @@
         </x-slot:title>
         <x-slot:fields>
             @if(!is_null($object))
-                @if(!is_null($object->idGenericLabel))
-                    <div class="formgroup-inline">
-                        <div class="field mr-1">
+                @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
+                    <div class="fields">
+                        <div class="field  w-15rem mr-2">
                             <x-combobox.gl
                                 id="idGenericLabel"
                                 name="idGenericLabel"
@@ -37,9 +37,17 @@
                                 :hasNull="false"
                             ></x-combobox.gl>
                         </div>
+                        <div class="field mr-2">
+                            <label>Start Frame</label>
+                            <div x-text="currentStartFrame"></div>
+                        </div>
+                        <div class="field mr-2">
+                            <label>End Frame</label>
+                            <div x-text="currentEndFrame"></div>
+                        </div>
                     </div>
                 @endif
-                @if(!is_null($object->idAnnotationLU))
+                @if(!is_null($object->idAnnotationLU)  || ($object->layerGroup == 'Deixis_lexical'))
                     <div class="formgroup-inline">
                         <div class="field mr-1">
                             <x-combobox.frame
@@ -54,17 +62,15 @@
                                 onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
                             ></x-combobox.frame>
                         </div>
-                        <div id="fes">
-                            <div class="field mr-1">
-                                <x-combobox.fe-frame
-                                    id="idFrameElement"
-                                    name="idFrameElement"
-                                    label="FE"
-                                    :value="$object?->idFrameElement ?? 0"
-                                    :idFrame="$object?->idFrame ?? 0"
-                                    :hasNull="false"
-                                ></x-combobox.fe-frame>
-                            </div>
+                        <div id="fes" class="field w-15rem mr-1">
+                            <x-combobox.fe-frame
+                                id="idFrameElement"
+                                name="idFrameElement"
+                                label="FE"
+                                :value="$object?->idFrameElement ?? 0"
+                                :idFrame="$object?->idFrame ?? 0"
+                                :hasNull="false"
+                            ></x-combobox.fe-frame>
                         </div>
                         <div class="field mr-1">
                             <x-combobox.lu
@@ -77,15 +83,39 @@
                             ></x-combobox.lu>
                         </div>
                     </div>
+                    <div class="fields">
+                        <div class="field mr-2">
+                            <label>Start Frame</label>
+                            <div x-text="currentStartFrame"></div>
+                        </div>
+                        <div class="field mr-2">
+                            <label>End Frame</label>
+                            <div x-text="currentEndFrame"></div>
+                        </div>
+                    </div>
                 @endif
             @endif
         </x-slot:fields>
         <x-slot:buttons>
-            @if(is_null(!$object))
+            @if(!is_null($object))
+                @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
+                    <x-button
+                        type="button"
+                        label="Save"
+                        onclick="annotation.objects.updateObjectAnnotation({idGenericLabel: $('#idGenericLabel').attr('value')})"
+                    ></x-button>
+                @endif
+                @if(!is_null($object->idAnnotationLU)  || ($object->layerGroup == 'Deixis_lexical'))
+                    <x-button
+                        type="button"
+                        label="Save"
+                        onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
+                    ></x-button>
+                @endif
                 <x-button
-                    type="button"
-                    label="Save"
-                    onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
+                    label="Delete"
+                    color="danger"
+                    @click.prevent="annotation.objects.deleteObject({{$object->idDynamicObject}})"
                 ></x-button>
             @endif
         </x-slot:buttons>

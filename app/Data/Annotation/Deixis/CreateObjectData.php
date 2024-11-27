@@ -4,14 +4,12 @@ namespace App\Data\Annotation\Deixis;
 
 use Spatie\LaravelData\Data;
 
-class ObjectAnnotationData extends Data
+class CreateObjectData extends Data
 {
     public function __construct(
-        public ?int   $idDynamicObject = null,
-        public ?int   $idFrameElement = null,
-        public ?int   $idLU = null,
-        public ?int   $idGenericLabel = null,
+        public ?int   $idLayerType = null,
         public ?int   $idDocument = null,
+        public ?int   $currentFrame = null,
         public string $_token = '',
     )
     {

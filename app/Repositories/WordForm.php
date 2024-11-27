@@ -146,7 +146,8 @@ class WordForm
             return [];
         }
         $idLanguage = AppService::getCurrentIdLanguage();
-        $wf1 = strtolower(str_replace("'", "\'", $wordform));
+        $wf1 = mb_strtolower(str_replace("'", "\'", $wordform));
+        debug($wf1,md5($wf1));
         $criteria = Criteria::table("view_lexicon as l")
             ->select("idLU","lu","senseDescription","frame.name as frameName")
             ->join("view_frame as frame", "l.idFrame","=","frame.idFrame")

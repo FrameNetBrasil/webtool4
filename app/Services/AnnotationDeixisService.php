@@ -2,31 +2,13 @@
 
 namespace App\Services;
 
-use App\Data\Annotation\DynamicMode\CloneData;
-use App\Data\Annotation\DynamicMode\CreateBBoxData;
-use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
-use App\Data\Annotation\DynamicMode\ObjectData;
-use App\Data\Annotation\DynamicMode\SentenceData;
-use App\Data\Annotation\DynamicMode\UpdateBBoxData;
-use App\Data\Annotation\DynamicMode\WordData;
+use App\Data\Annotation\Deixis\CreateObjectData;
+use App\Data\Annotation\Deixis\ObjectAnnotationData;
 use App\Database\Criteria;
-use App\Repositories\AnnotationSet;
-use App\Repositories\Base;
-use App\Repositories\Corpus;
-use App\Repositories\Document;
-use App\Repositories\DynamicSentenceMM;
-use App\Repositories\Label;
-use App\Repositories\LayerType;
-use App\Repositories\Sentence;
 use App\Repositories\Timeline;
 use App\Repositories\User;
-use App\Repositories\UserAnnotation;
 use App\Repositories\Video;
-use App\Repositories\ViewAnnotationSet;
-use App\Repositories\WordForm;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use Orkester\Manager;
 
 
 class AnnotationDeixisService
@@ -78,6 +60,38 @@ class AnnotationDeixisService
             ->delete();
     }
 
+    public static function createNewObjectAtLayer(CreateObjectData $data): object
+    {
+        $idUser = AppService::getCurrentIdUser();
+        $do = json_encode([
+            'name' => "",
+            'startFrame' => $data->currentFrame,
+            'endFrame' => $data->currentFrame + 4,
+            'startTime' => ($data->currentFrame - 1) * 0.040,
+            'endTime' => ($data->currentFrame + 3) * 0.040,
+            'status' => 0,
+            'origin' => 5,
+            'idUser' => $idUser
+        ]);
+        $idDynamicObject = Criteria::function("dynamicobject_create(?)", [$do]);
+        $dynamicObject = Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+        Criteria::table("dynamicobject")
+            ->where("idDynamicObject", $idDynamicObject)
+            ->update(['idLayerType' => $data->idLayerType]);
+        $documentVideo = Criteria::table("view_document_video")
+            ->where("idDocument", $data->idDocument)
+            ->first();
+        $video = Video::byId($documentVideo->idVideo);
+        // create annotationobjectrelation for rel_video_dynobj
+        $relation = json_encode([
+            'idAnnotationObject1' => $video->idAnnotationObject,
+            'idAnnotationObject2' => $dynamicObject->idAnnotationObject,
+            'relationType' => 'rel_video_dynobj'
+        ]);
+        $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
+        return $dynamicObject;
+    }
+
     public static function getObject(int $idDynamicObject): object|null
     {
         $idLanguage = AppService::getCurrentIdLanguage();
@@ -86,7 +100,7 @@ class AnnotationDeixisService
             ->where("idDynamicObject", $idDynamicObject)
             ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idLayerType", "nameLayerType", "idLanguageLT",
                 "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE", "idLanguageFE",
-                "idAnnotationGL", "idGenericLabel", "gl", "colorGL", "idLanguageGL", "idDocument")
+                "idAnnotationGL", "idGenericLabel", "gl", "bgColorGL", "fgColorGL","idLanguageGL", "layerGroup", "idDocument")
             ->first();
         return $do;
     }
@@ -94,7 +108,7 @@ class AnnotationDeixisService
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $result = Criteria::table("view_annotation_deixis as ad")
+        $objects = Criteria::table("view_annotation_deixis as ad")
             ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
             ->where("ad.idLanguageFE", "left", $idLanguage)
@@ -103,59 +117,72 @@ class AnnotationDeixisService
             ->where("view_frame.idLanguage", "left", $idLanguage)
             ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin", "ad.idLayerType", "ad.nameLayerType",
                 "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.colorFE",
-                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.colorGL")
+                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.bgColorGL", "ad.fgColorGL","ad.layerGroup")
             ->orderBy("ad.nameLayerType")
             ->orderBy("ad.startFrame")
             ->orderBy("ad.endFrame")
             ->orderBy("ad.idDynamicObject")
+            ->keyBy("idDynamicObject")
             ->all();
-        $oMM = [];
         $bboxes = [];
-        foreach ($result as $row) {
-            $oMM[] = $row->idDynamicObject;
-            $row->startTime = (int)($row->startTime * 1000);
-            $row->endTime = (int)($row->endTime * 1000);
-        }
-        if (count($result) > 0) {
+        $idDynamicObjectList = array_keys($objects);
+        if (count($idDynamicObjectList) > 0) {
             $bboxList = Criteria::table("view_dynamicobject_boundingbox")
-                ->whereIN("idDynamicObject", $oMM)
+                ->whereIN("idDynamicObject", $idDynamicObjectList)
                 ->all();
             foreach ($bboxList as $bbox) {
                 $bboxes[$bbox->idDynamicObject][] = $bbox;
             }
         }
+        $order = 0;
+        foreach ($objects as $object) {
+            $object->order = ++$order;
+            $object->bgColorGL = '#' . $object->bgColorGL;
+            $object->fgColorGL = '#' . $object->fgColorGL;
+            $object->startTime = (int)($object->startTime * 1000);
+            $object->endTime = (int)($object->endTime * 1000);
+            $object->bboxes = $bboxes[$object->idDynamicObject] ?? [];
+        }
         $objectsRows = [];
+        $objectsRowsEnd = [];
         $idLayerTypeCurrent = 0;
-        $start = $end = -1;
-        foreach ($result as $i => $row) {
-            if ($row->idLayerType != $idLayerTypeCurrent) {
-                $idLayerTypeCurrent = $row->idLayerType;
-                $idLayer = 0;
-                $objectsRows[$row->idLayerType][$idLayer][] = $row;
-                $start = $row->startFrame;
-                $end = $end->endFrame;
+        foreach ($objects as $i => $object) {
+            if ($object->idLayerType != $idLayerTypeCurrent) {
+                $idLayerTypeCurrent = $object->idLayerType;
+                $objectsRows[$object->idLayerType][0][] = $object;
+                $objectsRowsEnd[$object->idLayerType][0] = $object->endFrame;
             } else {
-                foreach($objectsRows[$row->idLayerType] as $idLayer => $objectRow) {
-                    if ($row->startFrame >= $end) {
-                        $objectsRows[$row->idLayerType][$idLayer]= $row;
-                        $start = $row->startFrame;
-                        $end = $end->endFrame;
+                $allocated = false;
+                foreach($objectsRows[$object->idLayerType] as $idLayer => $objectRow) {
+                    if ($object->startFrame > $objectsRowsEnd[$object->idLayerType][$idLayer]) {
+                        $objectsRows[$object->idLayerType][$idLayer][] = $object;
+                        $objectsRowsEnd[$object->idLayerType][$idLayer] = $object->endFrame;
+                        $allocated = true;
+                        break;
                     }
+                }
+                if (!$allocated) {
+                    $idLayer = count($objectsRows[$object->idLayerType]);
+                    $objectsRows[$object->idLayerType][$idLayer][] = $object;
+                    $objectsRowsEnd[$object->idLayerType][$idLayer] = $object->endFrame;
                 }
 
             }
-
-
-
-//            $row->order = $i + 1;
-//            $row->bboxes = $bboxes[$row->idDynamicObject] ?? [];
-//            $objectsRows[] = $row;
         }
-        $objects = collect($objectsRows)->groupBy("nameLayerType")->toArray();
-        return $objects;
+
+        $result = [];
+        foreach($objectsRows as $idLayerType => $layers) {
+            foreach($layers as $idLayer => $objects) {
+               $result[] = [
+                  'layer' => $objects[0]->nameLayerType,
+                  'objects' => $objects
+               ];
+            }
+        }
+        return $result;
     }
 
-    public static function updateObjectAnnotation(ObjectAnnotationData $data): int
+    public static function updateObjectAnnotation(ObjectAnnotationData $data): object
     {
         $usertask = self::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
@@ -182,48 +209,59 @@ class AnnotationDeixisService
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         }
-        if (($data->startFrame) && ($data->endFrame)) {
-            $idUser = AppService::getCurrentIdUser();
-            $bboxes = Criteria::table("view_dynamicobject_boundingbox")
-                ->where("idDynamicObject", $data->idDynamicObject)
-                ->orderBy("frameNumber")
-                ->all();
-            $iFirst = array_key_first($bboxes);
-            $firstBBox = $bboxes[$iFirst];
-            if ($data->startFrame >= $firstBBox->frameNumber) {
-                $iLast = array_key_last($bboxes);
-                $lastBBox = $bboxes[$iLast];
-                $lastFrame = $lastBBox->frameNumber;
-                foreach ($bboxes as $bbox) {
-                    if ($bbox->frameNumber < $data->startFrame) {
-                        $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
-                    } else if ($bbox->frameNumber > $data->endFrame) {
-                        $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
-                    }
-                }
-                if ($lastFrame < $data->endFrame) {
-                    for ($i = ($lastFrame + 1); $i <= $data->endFrame; $i++) {
-                        $json = json_encode([
-                            'frameNumber' => $i,
-                            'frameTime' => ($i - 1) * 0.04,
-                            'x' => (int)$lastBBox->x,
-                            'y' => (int)$lastBBox->y,
-                            'width' => (int)$lastBBox->width,
-                            'height' => (int)$lastBBox->height,
-                            'blocked' => (int)$lastBBox->blocked,
-                            'idDynamicObject' => $data->idDynamicObject
-                        ]);
-                        $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
-                    }
-                    Criteria::table("dynamicobject")
-                        ->where("idDynamicObject", $data->idDynamicObject)
-                        ->update(["endFrame" => $data->endFrame]);
-                }
-            } else {
-                throw new \Exception("First BBox must be created mannualy.");
-            }
+        if ($data->idGenericLabel) {
+            $gl = Criteria::byId("genericlabel", "idGenericLabel", $data->idGenericLabel);
+            $json = json_encode([
+                'idEntity' => $gl->idEntity,
+                'idAnnotationObject' => $do->idAnnotationObject,
+                'relationType' => 'rel_annotation',
+                'idUserTask' => $usertask->idUserTask
+            ]);
+            $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
+            Timeline::addTimeline("annotation", $idAnnotation, "C");
         }
-        return $data->idDynamicObject;
+//        if (($data->startFrame) && ($data->endFrame)) {
+//            $idUser = AppService::getCurrentIdUser();
+//            $bboxes = Criteria::table("view_dynamicobject_boundingbox")
+//                ->where("idDynamicObject", $data->idDynamicObject)
+//                ->orderBy("frameNumber")
+//                ->all();
+//            $iFirst = array_key_first($bboxes);
+//            $firstBBox = $bboxes[$iFirst];
+//            if ($data->startFrame >= $firstBBox->frameNumber) {
+//                $iLast = array_key_last($bboxes);
+//                $lastBBox = $bboxes[$iLast];
+//                $lastFrame = $lastBBox->frameNumber;
+//                foreach ($bboxes as $bbox) {
+//                    if ($bbox->frameNumber < $data->startFrame) {
+//                        $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
+//                    } else if ($bbox->frameNumber > $data->endFrame) {
+//                        $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
+//                    }
+//                }
+//                if ($lastFrame < $data->endFrame) {
+//                    for ($i = ($lastFrame + 1); $i <= $data->endFrame; $i++) {
+//                        $json = json_encode([
+//                            'frameNumber' => $i,
+//                            'frameTime' => ($i - 1) * 0.04,
+//                            'x' => (int)$lastBBox->x,
+//                            'y' => (int)$lastBBox->y,
+//                            'width' => (int)$lastBBox->width,
+//                            'height' => (int)$lastBBox->height,
+//                            'blocked' => (int)$lastBBox->blocked,
+//                            'idDynamicObject' => $data->idDynamicObject
+//                        ]);
+//                        $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
+//                    }
+//                    Criteria::table("dynamicobject")
+//                        ->where("idDynamicObject", $data->idDynamicObject)
+//                        ->update(["endFrame" => $data->endFrame]);
+//                }
+//            } else {
+//                throw new \Exception("First BBox must be created mannualy.");
+//            }
+//        }
+        return $do;
     }
 
     public static function updateObject(ObjectData $data): int
