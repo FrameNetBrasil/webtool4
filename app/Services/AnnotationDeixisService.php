@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Data\Annotation\Deixis\CreateObjectData;
 use App\Data\Annotation\Deixis\ObjectAnnotationData;
+use App\Data\Annotation\Deixis\ObjectFrameData;
 use App\Database\Criteria;
 use App\Repositories\Timeline;
 use App\Repositories\User;
@@ -105,7 +106,7 @@ class AnnotationDeixisService
         return $do;
     }
 
-    public static function getObjectsByDocument(int $idDocument): array
+    public static function getLayersByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $objects = Criteria::table("view_annotation_deixis as ad")
@@ -408,6 +409,14 @@ class AnnotationDeixisService
             $idUser = AppService::getCurrentIdUser();
             Criteria::function("dynamicobject_delete(?,?)", [$idDynamicObject, $idUser]);
         });
+    }
+
+    public static function updateObjectFrame(ObjectFrameData $data): int
+    {
+        Criteria::table("dynamicobject")
+            ->where("idDynamicObject", $data->idDynamicObject)
+            ->update($data->toArray());
+        return $data->idDynamicObject;
     }
 
     public static function updateBBox(UpdateBBoxData $data): int

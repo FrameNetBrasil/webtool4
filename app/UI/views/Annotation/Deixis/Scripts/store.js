@@ -14,9 +14,11 @@ document.addEventListener('alpine:init', () => {
         currentObjectState: 'none',
         newObjectState: 'none',
         showHideBoxesState: 'hide',
-        objects: [],
+        // objects: [],
+        layers: [],
         init() {
            annotation.objects.init();
+           annotation.timeline.init();
         },
         config() {
             let config = {
@@ -31,18 +33,25 @@ document.addEventListener('alpine:init', () => {
             let seconds = Math.trunc(timeSeconds - (minute * 60));
             return minute + ':' + seconds;
         },
-        setTimelineTime: (timeMilliSeconds) => {
-            annotation.timeline.setTime(timeMilliSeconds);
+        // setTimelineTime: (timeMilliSeconds) => {
+        //     annotation.timeline.setTime(timeMilliSeconds);
+        // },
+        // setObjects(objects) {
+        //     this.objects = objects;
+        // },
+        setLayers(layerList) {
+            this.layers = layerList;
         },
-        setObjects(objects) {
-            this.objects = objects;
-        },
-        async updateObjectList() {
+        async loadLayerList() {
             this.dataState = 'loading';
-            await annotation.api.loadObjects();
+            await annotation.api.loadLayerList();
         },
+        // async updateObjectList() {
+        //     this.dataState = 'loading';
+        //     await annotation.api.loadObjects();
+        // },
         updateCurrentFrame(frameNumber) {
-            console.log('updateCurrentFrame',frameNumber,this.currentVideoState,this.newObjectState);
+            //console.log('updateCurrentFrame',frameNumber,this.currentVideoState,this.newObjectState);
             this.frameCount = this.currentFrame = frameNumber;
             if ((this.currentVideoState === 'paused') ||
                 (this.newObjectState === 'tracking') ||
@@ -57,21 +66,21 @@ document.addEventListener('alpine:init', () => {
                 this.newObjectState = 'none';
                 htmx.ajax("GET","/annotation/deixis/formAnnotation/0", "#formObject");
             } else {
-                console.log(" ** player current time - selectObject", annotation.video.player.currentTime());
+                //console.log(" ** player current time - selectObject", annotation.video.player.currentTime());
                 let object = annotation.objects.get(idObject);
                 this.currentObject = object;
-                this.currentStartFrame = object.object.startFrame;
-                this.currentEndFrame = object.object.endFrame;
+                this.currentStartFrame = object.startFrame;
+                this.currentEndFrame = object.endFrame;
                 annotation.video.gotoFrame(this.currentFrame);
                 this.newObjectState = 'showing';
-                htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.object.idDynamicObject, "#formObject");
+                htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.idDynamicObject, "#formObject");
             }
             // annotationGridObject.selectRowByObject(idObject);
         },
         selectObjectByIdDynamicObject(idDynamicObject) {
-            console.log('getting', idDynamicObject);
+            //console.log('getting', idDynamicObject);
             let object = annotation.objects.getByIdDynamicObject(idDynamicObject);
-            console.log('after', object);
+            //console.log('after', object);
             this.selectObject(object.idObject);
         },
         createObject() {
@@ -171,10 +180,10 @@ document.addEventListener('alpine:init', () => {
                 $('#btnStopObject').addClass('disabled');
                 $('#btnShowHideObjects').addClass('disabled');
                 $('#btnClear').addClass('disabled');
-                let rate =  annotation.video.player.playbackRate();
-                if (rate > 0.9) {
-                    Alpine.store('doStore').selectObject(null);
-                }
+                // let rate =  annotation.video.player.playbackRate();
+                // if (rate > 0.9) {
+                //     Alpine.store('doStore').selectObject(null);
+                // }
             }
         }
         if (currentVideoState === 'paused') {
@@ -251,10 +260,10 @@ document.addEventListener('alpine:init', () => {
         const dataState = Alpine.store('doStore').dataState;
         if (dataState === 'loaded') {
             console.log('Data Loaded');
-            console.log(annotation.objectList);
-            window.annotation.objects.annotateObjects(annotation.objectList);
-            window.annotation.timeline.init();
-            Alpine.store('doStore').setObjects(annotation.objectList);
+            //console.log(annotation.objectList);
+            window.annotation.objects.annotateObjects(annotation.layerList);
+            window.annotation.timeline.updateModel();
+            Alpine.store('doStore').setLayers(annotation.layerList);
             Alpine.store('doStore').newObjectState = 'none';
             Alpine.store('doStore').currentVideoState = 'paused';
         }

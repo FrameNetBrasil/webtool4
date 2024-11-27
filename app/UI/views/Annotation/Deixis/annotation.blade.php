@@ -51,20 +51,21 @@
                     <script type="text/javascript" src="/scripts/vatic/FramesManager.js"></script>
                     <script type="text/javascript" src="/scripts/vatic/OpticalFlow.js"></script>
                     <script type="text/javascript" src="/scripts/vatic/BoundingBox.js"></script>
-                    <script type="text/javascript" src="/scripts/vatic/DynamicObject.js"></script>
+{{--                    <script type="text/javascript" src="/scripts/vatic/DynamicObject.js"></script>--}}
                     <script type="text/javascript" src="/scripts/vatic/ObjectsTracker.js"></script>
                     <script type="text/javascript">
                         window.annotation = {
                             _token: "{{ csrf_token() }}",
                             document: {{ Js::from($document) }},
                             video: {{ Js::from($video) }},
-                            objectList: []
+                            layerList: []
                         };
 
                         document.body.addEventListener("updateObjectAnnotationEvent", function(evt){
                             annotation.objects.updateObjectAnnotationEvent();
                         })
 
+                        @include("Annotation.Deixis.Scripts.DeixisObject")
                         @include("Annotation.Deixis.Scripts.api")
                         @include("Annotation.Deixis.Scripts.video")
                         @include("Annotation.Deixis.Scripts.drawBox")

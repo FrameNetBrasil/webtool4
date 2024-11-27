@@ -80,17 +80,18 @@
                 let lastFrame = annotation.video.frameFromTime(duration);
                 Alpine.store('doStore').frameDuration = lastFrame;
                 annotation.video.framesRange.last = lastFrame;
-                Alpine.store('doStore').updateObjectList();
+                //Alpine.store('doStore').updateObjectList();
+                Alpine.store('doStore').loadLayerList();
             })
             player.on('timeupdate', () => {
                 let currentTime = player.currentTime();
-                console.error('timeupdate currentTime', currentTime);
+                // console.error('timeupdate currentTime', currentTime);
                 let currentFrame = annotation.video.frameFromTime(currentTime);
-                console.log("timeupdate currentFrame ", currentFrame);
+                // console.log("timeupdate currentFrame ", currentFrame);
                 //currentTime = annotation.video.timeFromFrame(currentFrame);
                 //console.log('time update', currentTime);
                 Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
-                console.log("timeupdate timecount ", Alpine.store('doStore').timeCount);
+                // console.log("timeupdate timecount ", Alpine.store('doStore').timeCount);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 annotation.timeline.setTime(Math.trunc(currentTime * 1000));
                 if (annotation.video.playingRange) {
