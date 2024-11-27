@@ -19,24 +19,21 @@ annotation.timeline = {
     trackTimelineMovement: false,
     outlineContainer: null,
     generateModel: function() {
-        var group = [];
-        group[0] = {
+        var object;
+        let rows = [];
+        let groups = {};
+        let groupsEmpty = {
             style: {
-                fillColor: "#6B9080",
-                marginTop: 0
+                fillColor: "transparent",
+                marginTop: 3,
+                cursor: "pointer",
+                strokeColor: "white",
+                strokeThickness: 1,
             },
             keyframesStyle: {
                 shape: "rect"
             }
         };
-        group[1] = {
-            style: {
-                marginTop: 0
-            }
-        };
-        var object;
-        let rows = [];
-        let groups = {};
         console.log(annotation.objectList);
         for (var layer of annotation.objectList) {
             let element = {
@@ -46,22 +43,24 @@ annotation.timeline = {
             //let objects = annotation.objectList[layer];
             let objects = layer.objects;
             // create groups
-            groups[0] = {
-                style: {
-                    fillColor: "#FFFFFF",
-                    marginTop: 0,
-                    cursor: "pointer",
-                },
-                keyframesStyle: {
-                    shape: "rect"
-                }
-            };
             for (object of objects) {
                 if (object.idGenericLabel) {
-                    // groups[object.idDynamicObject] = group[0];
                     groups[object.idDynamicObject] = {
                         style: {
-                            fillColor: "#" + object.colorGL,
+                            fillColor: object.bgColorGL,
+                            textColor: object.fgColorGL,
+                            marginTop: 3,
+                            cursor: "pointer",
+                        },
+                        keyframesStyle: {
+                            shape: "rect"
+                        },
+                        label: object.gl
+                    };
+                } else if (object.idLU) {
+                    groups[object.idDynamicObject] = {
+                        style: {
+                            fillColor: "white",
                             textColor: "black",
                             marginTop: 3,
                             cursor: "pointer",
@@ -69,11 +68,25 @@ annotation.timeline = {
                         keyframesStyle: {
                             shape: "rect"
                         },
-                        label: "Teste"
+                        label: object.lu
                     };
                 } else {
                     // groups[object.idDynamicObject] = group[1];
-                    groups[object.idDynamicObject] = groups[0];
+                    groups[object.idDynamicObject] = {
+                        style: {
+                            fillColor: "transparent",
+                            marginTop: 3,
+                            cursor: "pointer",
+                            strokeColor: "white",
+                            strokeThickness: 1,
+                            textColor: "white",
+
+                        },
+                        keyframesStyle: {
+                            shape: "rect"
+                        },
+                        label: object.idDynamicObject
+                    };
                 }
 
             }
@@ -272,12 +285,15 @@ annotation.timeline = {
 
         //annotation.timeline.defaultKeyframesRenderer = annotation.timeline.timeline._renderKeyframe.bind(annotation.timeline.timeline);
         annotation.timeline.timeline.initialize({ id: "timeline", headerHeight: 45 }, annotation.timeline.model);
-        annotation.timeline.config();
         annotation.timeline.timeline.setOptions({
             groupsDraggable: false,
             keyframesDraggable: true,
-            timelineDraggable: false
+            timelineDraggable: false,
+            rowsStyle: {
+                height: 24
+            }
         });
+        annotation.timeline.config();
         annotation.timeline.generateHTMLOutlineListNodes(annotation.timeline.model.rows);
     },
     setTime: function(timeMilliSeconds) {
@@ -321,19 +337,19 @@ annotation.timeline = {
             return;
         }
         annotation.timeline.outlineContainer.innerHTML = "";
-
+        let marginBottom = ((options.rowsStyle ? options.rowsStyle.marginBottom : 0) || 0);
         rows.forEach(function(row, index) {
             var div = document.createElement("div");
             div.classList.add("outline-node");
             const h = (row.style ? row.style.height : 0) || (options.rowsStyle ? options.rowsStyle.height : 0);
             div.style.maxHeight = div.style.minHeight = h + "px";
-            div.style.marginBottom = ((options.rowsStyle ? options.rowsStyle.marginBottom : 0) || 0) + "px";
+            div.style.marginBottom = marginBottom + "px";
             div.innerText = row.title || "Track " + index;
             div.id = div.innerText;
             var alreadyAddedWithSuchNameElement = document.getElementById(div.innerText);
             // Combine outlines with the same name:
             if (alreadyAddedWithSuchNameElement) {
-                var increaseSize = Number.parseInt(alreadyAddedWithSuchNameElement.style.maxHeight) + h;
+                var increaseSize = Number.parseInt(alreadyAddedWithSuchNameElement.style.maxHeight) + h + marginBottom;
                 alreadyAddedWithSuchNameElement.style.maxHeight = alreadyAddedWithSuchNameElement.style.minHeight = increaseSize + "px";
 
                 return;

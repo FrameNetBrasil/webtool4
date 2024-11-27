@@ -95,8 +95,8 @@ annotation.objects = {
 
     annotateObjects: (objectsFromServer) => {
         annotation.objects.clearAll();
-        for(var layer of objectsFromServer) {
-            for (var object of layer['objects']) {
+        for (var layer of objectsFromServer) {
+            for (var object of layer["objects"]) {
                 if ((object.startFrame >= annotation.video.framesRange.first) && (object.startFrame <= annotation.video.framesRange.last)) {
                     let annotatedObject = new DynamicObject(object);
                     annotatedObject.dom = annotation.objects.newBboxElement();
@@ -176,7 +176,7 @@ annotation.objects = {
                             frameNumber: frameNumber,
                             bbox: bbox
                         };
-                        await annotation.api.createBBox(paramsBBox, async(idBoundingBox) => {
+                        await annotation.api.createBBox(paramsBBox, async (idBoundingBox) => {
                             console.log(idBoundingBox);
                             console.log("new BoundingBox", idBoundingBox);
                             bbox.idBoundingBox = idBoundingBox;
@@ -273,7 +273,7 @@ annotation.objects = {
         $("#canvas").off("mouseout");
         // console.log(annotation.drawBox.box);
         let tempObject = {
-            bbox: new BoundingBox(0,annotation.drawBox.box.x, annotation.drawBox.box.y, annotation.drawBox.box.width, annotation.drawBox.box.height),
+            bbox: new BoundingBox(0, annotation.drawBox.box.x, annotation.drawBox.box.y, annotation.drawBox.box.width, annotation.drawBox.box.height),
             dom: annotation.objects.newBboxElement()
         };
         let data = await annotation.objects.createNewObject(tempObject);
@@ -304,7 +304,7 @@ annotation.objects = {
             console.log("createNewObject", tempObject, currentFrame);
             let annotatedObject = new DynamicObject(null);
             annotatedObject.dom = tempObject.dom;
-            let bbox = new BoundingBox(currentFrame,tempObject.bbox.x, tempObject.bbox.y, tempObject.bbox.width, tempObject.bbox.height, true, null);
+            let bbox = new BoundingBox(currentFrame, tempObject.bbox.x, tempObject.bbox.y, tempObject.bbox.width, tempObject.bbox.height, true, null);
             // let frameObject = new Frame(currentFrame, tempObject.bbox, true, null);
             // annotatedObject.addToFrame(frameObject);
             annotatedObject.addBBox(bbox);
@@ -346,7 +346,7 @@ annotation.objects = {
                 bbox: bbox
             };
             console.log("##### creating new BBox");
-            await annotation.api.createBBox(paramsBBox, async(idBoundingBox) => {
+            await annotation.api.createBBox(paramsBBox, async (idBoundingBox) => {
                 console.log(idBoundingBox);
                 console.log("new BoundingBox", idBoundingBox);
                 bbox.idBoundingBox = idBoundingBox;
@@ -462,14 +462,16 @@ annotation.objects = {
         let params = {
             idDocument: annotation.document.idDocument,
             idDynamicObject: currentObject.object.idDynamicObject,
-            idFrameElement: parseInt(data.idFrameElement),
-            startFrame: parseInt(data.startFrame),
-            endFrame: parseInt(data.endFrame),
-            idLU: data.idLU ? parseInt(data.idLU) : null
+            // startFrame: parseInt(data.startFrame),
+            // endFrame: parseInt(data.endFrame),
+            idFrameElement: data.idFrameElement ? parseInt(data.idFrameElement) : null,
+            idLU: data.idLU ? parseInt(data.idLU) : null,
+            idGenericLabel: data.idGenericLabel ? parseInt(data.idGenericLabel) : null
         };
-        await annotation.api.updateObjectAnnotation(params);
-        await Alpine.store("doStore").updateObjectList();
-        Alpine.store("doStore").selectObject(currentObject.idObject);
+        annotation.api.updateObjectAnnotation(params, async (dynamicObject) => {
+            await Alpine.store("doStore").updateObjectList();
+            Alpine.store("doStore").selectObjectByIdDynamicObject(dynamicObject.idDynamicObject);
+        });
     },
     updateObjectAnnotationEvent: async () => {
         let currentObject = Alpine.store("doStore").currentObject;
@@ -477,8 +479,8 @@ annotation.objects = {
         Alpine.store("doStore").selectObject(currentObject.idObject);
     },
     deleteObject: async (idDynamicObject) => {
-        console.log("deletting", idDynamicObject);
-        await manager.confirmDelete("Removing object #" + idDynamicObject + ".", "/annotation/dynamicMode/" + idDynamicObject, async () => {
+        console.log("delete " , idDynamicObject);
+        await manager.confirmDelete("Removing object #" + idDynamicObject + ".", "/annotation/deixis/" + idDynamicObject, async () => {
             await Alpine.store("doStore").updateObjectList();
             Alpine.store("doStore").selectObject(null);
         });
@@ -508,28 +510,16 @@ annotation.objects = {
         await Alpine.store("doStore").updateObjectList();
         manager.notify("success", "Cloned object : #" + object.idDynamicObject);
         Alpine.store("doStore").selectObjectByIdDynamicObject(object.idDynamicObject);
+    },
+    createNewObjectAtLayer: async (params) => {
+        params.idDocument = annotation.document.idDocument;
+        annotation.api.createNewObjectAtLayer(params, async (object) => {
+            console.log("after create new", object);
+            await Alpine.store("doStore").updateObjectList();
+            manager.notify("success", "New Object : #" + object.idDynamicObject);
+            Alpine.store("doStore").selectObjectByIdDynamicObject(object.idDynamicObject);
+        });
     }
 
-    // async cloneObject(idObject) {
-    //     let sourceObject = annotation.objects.get(idObject);
-    //     let cloneObject = new DynamicObject(sourceObject.object);
-    //     cloneObject.cloneFrom(sourceObject);
-    //     let params = {
-    //         idDocument: annotation.document.idDocument,
-    //         //idObjectMM: null,
-    //         idDynamicObject: null,
-    //         startFrame: cloneObject.object.startFrame,
-    //         endFrame: cloneObject.object.endFrame,
-    //         idFrame: null,
-    //         idFrameElement: null,
-    //         idLU: null,
-    //         startTime: annotation.video.timeFromFrame(cloneObject.object.startFrame),
-    //         endTime: annotation.video.timeFromFrame(cloneObject.object.endFrame),
-    //         origin: 2,
-    //         frames: cloneObject.object.frames,
-    //     };
-    //     let data = await annotation.objects.saveObject(cloneObject, params);
-    //     Alpine.store('doStore').selectObjectByIdDynamicObject(data.idDynamicObject);
-    //     manager.messager("success", "Object cloned.");
-    // }
+
 };

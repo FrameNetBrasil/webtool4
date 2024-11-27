@@ -2,22 +2,16 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Annotation\DynamicMode\AnnotationCommentData;
-use App\Data\Annotation\DynamicMode\CloneData;
-use App\Data\Annotation\DynamicMode\DocumentData;
-use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
-use App\Data\Annotation\DynamicMode\ObjectData;
-use App\Data\Annotation\DynamicMode\SearchData;
-use App\Data\Annotation\DynamicMode\SentenceData;
-use App\Data\Annotation\DynamicMode\UpdateBBoxData;
-use App\Data\Annotation\DynamicMode\WordData;
+use App\Data\Annotation\Deixis\CreateObjectData;
+use App\Data\Annotation\Deixis\DocumentData;
+use App\Data\Annotation\Deixis\ObjectAnnotationData;
+use App\Data\Annotation\Deixis\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
 use App\Services\AnnotationDeixisService;
-use App\Services\AnnotationDynamicService;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -83,6 +77,17 @@ class DeixisController extends Controller
         return view("Annotation.Deixis.annotation", $data->toArray());
     }
 
+    #[Post(path: '/annotation/deixis/createNewObjectAtLayer')]
+    public function createNewObjectAtLayer(CreateObjectData $data)
+    {
+        debug($data);
+        try {
+            return AnnotationDeixisService::createNewObjectAtLayer($data);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
     #[Post(path: '/annotation/deixis/formAnnotation')]
     public function formAnnotation(ObjectData $data)
     {
@@ -114,7 +119,7 @@ class DeixisController extends Controller
     {
         debug($data);
         try {
-            $idDynamicObject = AnnotationDynamicService::updateObject($data);
+            $idDynamicObject = AnnotationDeixisService::updateObject($data);
             return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -127,8 +132,7 @@ class DeixisController extends Controller
     {
         debug($data);
         try {
-            $idDynamicObject = AnnotationDynamicService::updateObjectAnnotation($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            return AnnotationDeixisService::updateObjectAnnotation($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -152,8 +156,7 @@ class DeixisController extends Controller
     public function deleteObject(int $idDynamicObject)
     {
         try {
-            debug("========== deleting {$idDynamicObject}");
-            AnnotationDynamicService::deleteObject($idDynamicObject);
+            AnnotationDeixisService::deleteObject($idDynamicObject);
             return $this->renderNotify("success", "Object removed.");
         } catch (\Exception $e) {
             debug($e->getMessage());
