@@ -18,7 +18,7 @@ annotation.timeline = {
     // Automatic tracking should be turned off when user interaction happened.
     trackTimelineMovement: false,
     outlineContainer: null,
-    generateModel: function() {
+    generateModel: function(layerList) {
         var object;
         let rows = [];
         let groups = {};
@@ -28,14 +28,13 @@ annotation.timeline = {
                 marginTop: 3,
                 cursor: "pointer",
                 strokeColor: "white",
-                strokeThickness: 1,
+                strokeThickness: 1
             },
             keyframesStyle: {
                 shape: "rect"
             }
         };
-        console.log(annotation.objectList);
-        for (var layer of annotation.objectList) {
+        for (var layer of layerList) {
             let element = {
                 title: layer.layer,
                 draggable: false
@@ -50,7 +49,7 @@ annotation.timeline = {
                             fillColor: object.bgColorGL,
                             textColor: object.fgColorGL,
                             marginTop: 3,
-                            cursor: "pointer",
+                            cursor: "pointer"
                         },
                         keyframesStyle: {
                             shape: "rect"
@@ -63,7 +62,7 @@ annotation.timeline = {
                             fillColor: "white",
                             textColor: "black",
                             marginTop: 3,
-                            cursor: "pointer",
+                            cursor: "pointer"
                         },
                         keyframesStyle: {
                             shape: "rect"
@@ -79,7 +78,7 @@ annotation.timeline = {
                             cursor: "pointer",
                             strokeColor: "white",
                             strokeThickness: 1,
-                            textColor: "white",
+                            textColor: "white"
 
                         },
                         keyframesStyle: {
@@ -98,7 +97,7 @@ annotation.timeline = {
                     group: groups[object.idDynamicObject],
                     idDynamicObject: object.idDynamicObject,
                     position: "start",
-                    max: object.endTime,
+                    max: object.endTime
                     //group: object.idDynamicObject
                 });
                 keyframes.push({
@@ -112,62 +111,22 @@ annotation.timeline = {
             element.keyframes = keyframes;
             rows.push(element);
         }
-        //
-        // for (var object of objects) {
-        //     let element = {
-        //         title: "3 Lanes For One Node",
-        //         keyframesDraggable: false,
-        //         style: {
-        //             fillColor: "black",
-        //
-        //             marginBottom: 0,
-        //             keyframesStyle: {
-        //                 shape: "none"
-        //             },
-        //             groupsStyle: {
-        //                 marginTop: 0,
-        //                 height: 10,
-        //                 fillColor: "lightgray"
-        //             },
-        //             height: 10
-        //         },
-        //         keyframes: [
-        //             {
-        //                 val: 500
-        //             },
-        //             {
-        //                 val: 1800
-        //             }
-        //         ]
-        //     };
-
-
-        // }
         console.log(rows);
         let timelineModel = {
             rows: rows
         };
         return timelineModel;
     },
+    updateModel: function() {
+        let timelineModel = annotation.timeline.generateModel(annotation.layerList);
+        let timeline = annotation.timeline.timeline;
+        timeline.setModel(timelineModel);
+        annotation.timeline.generateHTMLOutlineListNodes(timelineModel.rows);
+    },
     config: function() {
-// Set custom keyframes renderer
-//         annotation.timeline.timeline._renderKeyframe = (ctx, keyframeViewModel) => {
-//             console.log(keyframeViewModel);
-//             //if (keyframeViewModel.model === keyframeWithCustomImage) {
-//             //ctx.drawImage(image, keyframeViewModel.size.x - 5, keyframeViewModel.size.y - 5, keyframeViewModel.size.width + 5, keyframeViewModel.size.height + 5);
-//             //} else {
-//             // Use default renderer
-//             annotation.timeline.timeline._renderKeyframe(ctx, keyframeViewModel);
-//             //annotation.timeline.defaultKeyframesRenderer(ctx, keyframeViewModel);
-//             //}
-//         };
         annotation.timeline.timeline.onTimeChanged(function(event) {
-            console.log("Time changed !!!!!!!!!!!!!!!!!");
-                let timeline = annotation.timeline.timeline;
-                let time = timeline.getTime();
-                console.log('time',time);
-            //annotation.video.gotoTime(time/1000);
-            //annotation.timeline.showActivePositionInformation();
+            let timeline = annotation.timeline.timeline;
+            let time = timeline.getTime();
         });
         annotation.timeline.timeline.onSelected(function(obj) {
             console.log("Selected Event: (" + obj.selected.length + "). changed selection :" + obj.changed.length, 2);
@@ -178,78 +137,81 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onDrag(function(obj) {
-            console.log(obj, "drag");
+            //console.log(obj, "drag");
         });
 
         annotation.timeline.timeline.onKeyframeChanged(function(obj) {
-            console.log("keyframe: " + obj.val, obj.val/1000);
-            annotation.video.gotoTime(obj.val/1000);
+            console.log("keyframe: " + obj.val, obj.val / 1000);
+            annotation.video.gotoTime(obj.val / 1000);
         });
 
         annotation.timeline.timeline.onDragFinished(function(obj) {
             if (obj.elements[0].type === "keyframe") {
                 let keyframe = obj.elements[0].keyframe;
-                console.log("keyframe",keyframe);
+                //console.log("keyframe", keyframe);
+                let currentFrame = Alpine.store("doStore").currentFrame;
+                let currentObject = Alpine.store("doStore").currentObject;
                 if (keyframe.position === "start") {
-                    Alpine.store("doStore").currentStartFrame = Alpine.store("doStore").currentFrame;
+                    Alpine.store("doStore").currentStartFrame = currentFrame;
+                    currentObject.startFrame = currentFrame;
                 }
                 if (keyframe.position === "end") {
-                    Alpine.store("doStore").currentEndFrame = Alpine.store("doStore").currentFrame;
+                    obj.elements[0].row.keyframes[0].max = obj.elements[0].row.keyframes[1].val;
+                    Alpine.store("doStore").currentEndFrame = currentFrame;
+                    currentObject.endFrame = currentFrame;
                 }
-                // let timeline = annotation.timeline.timeline;
-                // const currentModel = timeline.getModel();
-                //
-                // console.log(obj.elements[0].keyframe);
-                // timeline.setModel(currentModel);
-
-                // timeline.redraw();
+                annotation.objects.updateObjectFrame();
             }
             console.log("dragfinished");
         });
 
-        annotation.timeline.timeline.onContextMenu(function(obj) {
-            if (obj.args) {
-                obj.args.preventDefault();
-            }
-            console.log(obj, "addKeyframe");
-
-            obj.elements.forEach(p => {
-                if (p.type === "row" && p.row) {
-                    if (!p.row?.keyframes) {
-                        p.row.keyframes = [];
-                    }
-                    p.row?.keyframes?.push({ val: obj.point?.val || 0 });
-                }
-            });
-            timeline.redraw();
-        });
+        // annotation.timeline.timeline.onContextMenu(function(obj) {
+        //     if (obj.args) {
+        //         obj.args.preventDefault();
+        //     }
+        //     console.log(obj, "addKeyframe");
+        //
+        //     obj.elements.forEach(p => {
+        //         if (p.type === "row" && p.row) {
+        //             if (!p.row?.keyframes) {
+        //                 p.row.keyframes = [];
+        //             }
+        //             p.row?.keyframes?.push({ val: obj.point?.val || 0 });
+        //         }
+        //     });
+        //     timeline.redraw();
+        // });
 
         annotation.timeline.timeline.onMouseDown(function(obj) {
-            console.log(obj.target,obj.val);
+            //console.log(obj.target, obj.val);
             var type = obj.target ? obj.target.type : "";
             if (obj.pos) {
                 //console.log("mousedown:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
                 if (type === "") {
-                    Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
-                    console.log(obj.elements[1].keyframes[0].idDynamicObject);
-                    let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
-                    Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
+                    //console.log(obj.elements[1].keyframes[0].idDynamicObject);
+                    if (obj.elements[1]) {
+                        Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
+                        let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
+                        Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
+                    } else {
+                        Alpine.store("doStore").selectObject(null);
+                    }
                 }
                 if (type === "keyframe") {
                     Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
-                    console.log(obj.elements[1].keyframes[0].idDynamicObject);
+                    //console.log(obj.elements[1].keyframes[0].idDynamicObject);
                     let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
                     Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
                 }
             }
         });
 
-        annotation.timeline.timeline.onDoubleClick(function(obj) {
-            var type = obj.target ? obj.target.type : "";
-            if (obj.pos) {
-                console.log("doubleclick:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
-            }
-        });
+        // annotation.timeline.timeline.onDoubleClick(function(obj) {
+        //     var type = obj.target ? obj.target.type : "";
+        //     if (obj.pos) {
+        //         //console.log("doubleclick:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
+        //     }
+        // });
 
         // Synchronize component scroll renderer with HTML list of the nodes.
         annotation.timeline.timeline.onScroll(function(obj) {
@@ -269,22 +231,18 @@ annotation.timeline = {
 
         annotation.timeline.timeline.onScrollFinished(function(_) {
             // Stop move component screen to the timeline when user start manually scrolling.
-            console.log("on scroll finished", 2);
+            //console.log("on scroll finished", 2);
         });
 
     },
     init: function() {
         annotation.timeline.outlineContainer = document.getElementById("outline-container");
-        annotation.timeline.model = annotation.timeline.generateModel();
+        //annotation.timeline.model = annotation.timeline.generateModel();
         annotation.timeline.timeline = new timelineModule.Timeline();
-        const image = new Image();
-        image.src = "https://material-icons.github.io/material-icons-png/png/white/public/baseline-2x.png"; // replace with your image path
-        image.onload = () => {
-            annotation.timeline.timeline.redraw();
+        let timelineModel = {
+            rows: []
         };
-
-        //annotation.timeline.defaultKeyframesRenderer = annotation.timeline.timeline._renderKeyframe.bind(annotation.timeline.timeline);
-        annotation.timeline.timeline.initialize({ id: "timeline", headerHeight: 45 }, annotation.timeline.model);
+        annotation.timeline.timeline.initialize({ id: "timeline", headerHeight: 45 }, timelineModel);
         annotation.timeline.timeline.setOptions({
             groupsDraggable: false,
             keyframesDraggable: true,
@@ -294,7 +252,6 @@ annotation.timeline = {
             }
         });
         annotation.timeline.config();
-        annotation.timeline.generateHTMLOutlineListNodes(annotation.timeline.model.rows);
     },
     setTime: function(timeMilliSeconds) {
         let timeline = annotation.timeline.timeline;
@@ -449,7 +406,7 @@ annotation.timeline = {
     },
 
     moveTimelineIntoTheBounds: function() {
-        console.log("moveTimelineIntoTheBounds");
+        // console.log("moveTimelineIntoTheBounds");
         let timeline = annotation.timeline.timeline;
         if (timeline) {
             // console.log(timeline._startPosMouseArgs, timeline._scrollAreaClickOrDragStarted);
@@ -463,7 +420,7 @@ annotation.timeline = {
 
             let positionInPixels = timeline.valToPx(timeline.getTime()) + timeline._leftMargin();
             // Scroll to timeline position if timeline is out of the bounds:
-            console.log(timeline.getTime(), positionInPixels, fromPx, toPx);
+            //console.log(timeline.getTime(), positionInPixels, fromPx, toPx);
             if (positionInPixels <= fromPx || positionInPixels >= toPx) {
                 this.timeline.scrollLeft = positionInPixels;
             }
@@ -482,7 +439,6 @@ annotation.timeline = {
     //     }, annotation.timeline.playStep);
     // }
 };
-
 
 
 // timeline.initialize({ id: "timeline", headerHeight: 45 }, timelineModel);

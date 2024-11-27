@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\DynamicMode;
+namespace App\Data\Annotation\Deixis;
 
 use Spatie\LaravelData\Data;
 
@@ -13,6 +13,7 @@ class ObjectData extends Data
         public ?int   $idFrame = null,
         public ?int   $idFrameElement = null,
         public ?int   $idLU = null,
+        public ?int   $idGenericLabel = null,
         public ?int   $startTime = null,
         public ?int   $endTime = null,
         public ?int   $origin = null,
