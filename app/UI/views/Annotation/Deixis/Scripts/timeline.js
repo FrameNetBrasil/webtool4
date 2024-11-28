@@ -252,6 +252,10 @@ annotation.timeline = {
             }
         });
         annotation.timeline.config();
+        annotation.timeline.timeline._formatUnitsText = (val)=> {
+
+            return annotation.video.frameFromTime(Math.trunc(val /1000));
+        };
     },
     setTime: function(timeMilliSeconds) {
         let timeline = annotation.timeline.timeline;

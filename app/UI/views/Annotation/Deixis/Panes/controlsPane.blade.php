@@ -1,13 +1,13 @@
 <div class="controls flex flex-row gap-1 justify-content-between mr-5 mt-5">
     <div class="flex flex-column">
         <div class="mr-1 font-bold border-bottom-1">
-            Object
+            BBox
         </div>
         <div class="mt-1">
             <button
                 id="btnCreateObject"
                 class="ui button primary"
-                x-data @click="$store.doStore.createObject()"
+                x-data @click="$store.doStore.createBBox()"
             >
                 <i class="plus square outline icon"></i>
                 Create
@@ -16,7 +16,7 @@
     </div>
     <div class="flex flex-column">
         <div class="mr-1 font-bold border-bottom-1">
-            Tracking
+            BBox Tracking
         </div>
         <div class="mt-1">
             <button
