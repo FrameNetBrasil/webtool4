@@ -14,9 +14,11 @@ document.addEventListener('alpine:init', () => {
         currentObjectState: 'none',
         newObjectState: 'none',
         showHideBoxesState: 'hide',
-        objects: [],
+        // objects: [],
+        layers: [],
         init() {
            annotation.objects.init();
+           annotation.timeline.init();
         },
         config() {
             let config = {
@@ -31,18 +33,25 @@ document.addEventListener('alpine:init', () => {
             let seconds = Math.trunc(timeSeconds - (minute * 60));
             return minute + ':' + seconds;
         },
-        setTimelineTime: (timeMilliSeconds) => {
-            annotation.timeline.setTime(timeMilliSeconds);
+        // setTimelineTime: (timeMilliSeconds) => {
+        //     annotation.timeline.setTime(timeMilliSeconds);
+        // },
+        // setObjects(objects) {
+        //     this.objects = objects;
+        // },
+        setLayers(layerList) {
+            this.layers = layerList;
         },
-        setObjects(objects) {
-            this.objects = objects;
-        },
-        async updateObjectList() {
+        async loadLayerList() {
             this.dataState = 'loading';
-            await annotation.api.loadObjects();
+            await annotation.api.loadLayerList();
         },
+        // async updateObjectList() {
+        //     this.dataState = 'loading';
+        //     await annotation.api.loadObjects();
+        // },
         updateCurrentFrame(frameNumber) {
-            console.log('updateCurrentFrame',frameNumber,this.currentVideoState,this.newObjectState);
+            //console.log('updateCurrentFrame',frameNumber,this.currentVideoState,this.newObjectState);
             this.frameCount = this.currentFrame = frameNumber;
             if ((this.currentVideoState === 'paused') ||
                 (this.newObjectState === 'tracking') ||
@@ -57,46 +66,64 @@ document.addEventListener('alpine:init', () => {
                 this.newObjectState = 'none';
                 htmx.ajax("GET","/annotation/deixis/formAnnotation/0", "#formObject");
             } else {
-                console.log(" ** player current time - selectObject", annotation.video.player.currentTime());
+                //console.log(" ** player current time - selectObject", annotation.video.player.currentTime());
                 let object = annotation.objects.get(idObject);
                 this.currentObject = object;
-                this.currentStartFrame = object.object.startFrame;
-                this.currentEndFrame = object.object.endFrame;
+                this.currentStartFrame = object.startFrame;
+                this.currentEndFrame = object.endFrame;
                 annotation.video.gotoFrame(this.currentFrame);
                 this.newObjectState = 'showing';
-                htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.object.idDynamicObject, "#formObject");
+                htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.idDynamicObject, "#formObject");
             }
             // annotationGridObject.selectRowByObject(idObject);
         },
         selectObjectByIdDynamicObject(idDynamicObject) {
-            console.log('getting', idDynamicObject);
+            //console.log('getting', idDynamicObject);
             let object = annotation.objects.getByIdDynamicObject(idDynamicObject);
-            console.log('after', object);
+            //console.log('after', object);
             this.selectObject(object.idObject);
         },
-        createObject() {
+        // createObject() {
+        //     if (this.currentVideoState === 'paused') {
+        //         //console.log('create object');
+        //         this.selectObject(null);
+        //         this.newObjectState = 'creating';
+        //         annotation.objects.creatingObject();
+        //     }
+        // },
+        // async endObject() {
+        //     if (this.currentVideoState === 'paused') {
+        //         //console.log('end object');
+        //         this.currentObject.object.endFrame = this.currentFrame;
+        //         await annotation.objects.saveObject(this.currentObject);
+        //         this.selectObject(null);
+        //     }
+        // },
+
+        createBBox() {
             if (this.currentVideoState === 'paused') {
                 //console.log('create object');
-                this.selectObject(null);
+                //this.selectObject(null);
                 this.newObjectState = 'creating';
-                annotation.objects.creatingObject();
+                annotation.objects.creatingBBox();
             }
         },
-        async endObject() {
+        async endBBox() {
             if (this.currentVideoState === 'paused') {
                 //console.log('end object');
                 this.currentObject.object.endFrame = this.currentFrame;
-                await annotation.objects.saveObject(this.currentObject);
-                this.selectObject(null);
+                await annotation.objects.saveBBox(this.currentObject);
+                //this.selectObject(null);
             }
         },
-        async deleteObject(idDynamicObject) {
-            if (this.currentVideoState === 'paused') {
-                await annotation.api.deleteObject(idDynamicObject);
-                await this.updateObjectList();
-                this.selectObject(null);
-            }
-        },
+
+        // async deleteObject(idDynamicObject) {
+        //     if (this.currentVideoState === 'paused') {
+        //         await annotation.api.deleteObject(idDynamicObject);
+        //         await this.updateObjectList();
+        //         this.selectObject(null);
+        //     }
+        // },
 
         startTracking() {
             console.log('*** start tracking');
@@ -115,17 +142,17 @@ document.addEventListener('alpine:init', () => {
             this.currentVideoState = 'paused';
             this.newObjectState = 'showing';
             console.log("stopTracking ", this.currentObject);
-            this.currentObject.object.endFrame = this.currentFrame;
-            await annotation.objects.saveObject(this.currentObject);
-            await this.updateObjectList();
-            this.selectObject(this.currentObject.idObject);
+            this.currentObject.endFrame = this.currentFrame;
+            await annotation.objects.updateObjectFrame();
+            //await this.updateObjectList();
+            //this.selectObject(this.currentObject.idObject);
         },
-        clear() {
-            console.log('clear');
-            this.newObjectState = 'none';
-            this.selectObject(null);
-            htmx.ajax("GET","/annotation/dynamicMode/formObject/0/0", "#formObject");
-        },
+        // clear() {
+        //     console.log('clear');
+        //     this.newObjectState = 'none';
+        //     this.selectObject(null);
+        //     htmx.ajax("GET","/annotation/dynamicMode/formObject/0/0", "#formObject");
+        // },
         showHideObjects() {
             console.log('show/hide objects',this.showHideBoxesState);
             if (this.showHideBoxesState === 'show') {
@@ -171,10 +198,10 @@ document.addEventListener('alpine:init', () => {
                 $('#btnStopObject').addClass('disabled');
                 $('#btnShowHideObjects').addClass('disabled');
                 $('#btnClear').addClass('disabled');
-                let rate =  annotation.video.player.playbackRate();
-                if (rate > 0.9) {
-                    Alpine.store('doStore').selectObject(null);
-                }
+                // let rate =  annotation.video.player.playbackRate();
+                // if (rate > 0.9) {
+                //     Alpine.store('doStore').selectObject(null);
+                // }
             }
         }
         if (currentVideoState === 'paused') {
@@ -199,7 +226,7 @@ document.addEventListener('alpine:init', () => {
             annotation.video.disableSkipFrame();
         }
         if (newObjectState === 'created') {
-            await annotation.objects.createdObject();
+            await annotation.objects.createdBBox();
             //Alpine.store('doStore').newObjectState = 'tracking';
             Alpine.store('doStore').currentVideoState = 'paused';
             annotation.video.enableSkipFrame();
@@ -251,10 +278,10 @@ document.addEventListener('alpine:init', () => {
         const dataState = Alpine.store('doStore').dataState;
         if (dataState === 'loaded') {
             console.log('Data Loaded');
-            console.log(annotation.objectList);
-            window.annotation.objects.annotateObjects(annotation.objectList);
-            window.annotation.timeline.init();
-            Alpine.store('doStore').setObjects(annotation.objectList);
+            //console.log(annotation.objectList);
+            window.annotation.objects.annotateObjects(annotation.layerList);
+            window.annotation.timeline.updateModel();
+            Alpine.store('doStore').setLayers(annotation.layerList);
             Alpine.store('doStore').newObjectState = 'none';
             Alpine.store('doStore').currentVideoState = 'paused';
         }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Annotation;
 use App\Data\Annotation\Deixis\CreateObjectData;
 use App\Data\Annotation\Deixis\DocumentData;
 use App\Data\Annotation\Deixis\ObjectAnnotationData;
+use App\Data\Annotation\Deixis\ObjectFrameData;
 use App\Data\Annotation\Deixis\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
@@ -114,6 +115,12 @@ class DeixisController extends Controller
         return AnnotationDeixisService::getObjectsByDocument($idDocument);
     }
 
+    #[Get(path: '/annotation/deixis/loadLayerList/{idDocument}')]
+    public function loadLayerList(int $idDocument)
+    {
+        return AnnotationDeixisService::getLayersByDocument($idDocument);
+    }
+
     #[Post(path: '/annotation/deixis/updateObject')]
     public function updateObject(ObjectData $data)
     {
@@ -121,6 +128,18 @@ class DeixisController extends Controller
         try {
             $idDynamicObject = AnnotationDeixisService::updateObject($data);
             return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/deixis/updateObjectFrame')]
+    public function updateObjectFrame(ObjectFrameData $data)
+    {
+        debug("========= updateObjectFrame", $data);
+        try {
+            return AnnotationDeixisService::updateObjectFrame($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -183,143 +202,6 @@ class DeixisController extends Controller
         return view("Annotation.Deixis.Panes.fes", [
             'idFrame' => $idFrame
         ]);
-    }
-
-    #[Get(path: '/annotation/deixis/sentences/{idDocument}')]
-    public function gridSentences(int $idDocument)
-    {
-        $sentences = AnnotationDynamicService::listSentencesByDocument($idDocument);
-        return view("Annotation.Deixis.Panes.sentences", [
-            'sentences' => $sentences
-        ]);
-    }
-
-    #[Post(path: '/annotation/deixis/comment')]
-    public function annotationComment(AnnotationCommentData $data)
-    {
-        debug($data);
-        try {
-            $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $data->idDocumentVideo])->first();
-            if (!is_null($comment)) {
-                Criteria::table("annotationcomment")
-                    ->where("idAnnotationComment", "=", $comment->idAnnotationComment)
-                    ->update([
-                        "type" => "StaticEvent",
-                        "id1" => $data->idDocumentVideo,
-                        "comment" => $data->comment
-                    ]);
-            } else {
-                Criteria::table("annotationcomment")
-                    ->insert([
-                        "type" => "StaticEvent",
-                        "id1" => $data->idDocumentVideo,
-                        "comment" => $data->comment
-                    ]);
-            }
-            return $this->renderNotify("success", "Comment added.");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Get(path: '/annotation/deixis/buildSentences/{idDocument}')]
-    public function buildSentences(int $idDocument)
-    {
-        $data = $this->getData($idDocument);
-        return view("Annotation.Deixis.buildSentences", $data->toArray());
-    }
-
-    #[Get(path: '/annotation/deixis/formSentence/{idDocument}/{idSentence}')]
-    public function formSentence(int $idDocument, int $idSentence)
-    {
-        $sentence = Criteria::byId("sentence", "idSentence", $idSentence);
-        if (is_null($sentence)) {
-            $sentence = (object)[
-                "idSentence" => 0,
-                "text" => ''
-            ];
-        } else {
-            $ts = Criteria::byId("view_sentence_timespan", "idSentence", $idSentence);
-            $sentence->startTime = $ts->startTime;
-            $sentence->endTime = $ts->endTime;
-        }
-        $documentVideo = Criteria::table("view_document_video")
-            ->where("idDocument", $idDocument)
-            ->first();
-        $video = Video::byId($documentVideo->idVideo);
-        return view("Annotation.Deixis.Panes.formSentencePane", [
-            'idDocument' => $idDocument,
-            "sentence" => $sentence,
-            'idLanguage' => $video->idLanguage
-        ]);
-    }
-
-    #[Post(path: '/annotation/deixis/formSentence')]
-    public function sentence(SentenceData $data)
-    {
-        try {
-            if ($data->text == "") {
-                return $this->renderNotify("error", "No data.");
-            }
-            debug($data);
-            if ($data->idSentence == 0) {
-                AnnotationDynamicService::createSentence($data);
-            } else {
-                AnnotationDynamicService::updateSentence($data);
-            }
-            $this->trigger('reload-gridSentence');
-            return $this->renderNotify("success", "Sentence updated.");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Get(path: '/annotation/deixis/words/{idVideo}')]
-    public function words(int $idVideo)
-    {
-        $words = Criteria::table("view_video_wordmm")
-            ->where("idVideo", "=", $idVideo)
-            ->whereNull("idDocumentSentence")
-            ->all();
-        return $words;
-    }
-
-    #[Post(path: '/annotation/deixis/joinWords')]
-    public function joinWords(WordData $data)
-    {
-        try {
-            debug($data);
-            $idSentence = AnnotationDynamicService::buildSentenceFromWords($data);
-            if ($idSentence == 0) {
-                throw new \Exception("Error joining words.");
-            }
-            return $idSentence;
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Get(path: '/annotation/deixis/buildSentences/sentences/{idDocument}')]
-    public function buildSentenceSentences(int $idDocument)
-    {
-
-        $sentences = AnnotationDynamicService::listSentencesByDocument($idDocument);
-        return view("Annotation.Deixis.Panes.buildSentences", [
-            'idDocument' => $idDocument,
-            'sentences' => $sentences
-        ]);
-    }
-
-    #[Post(path: '/annotation/deixis/splitSentence')]
-    public function splitSentence(SentenceData $data)
-    {
-        try {
-            AnnotationDynamicService::splitSentence($data);
-            $this->trigger('reload-gridSentence');
-            return $this->renderNotify("success", "Sentence updated.");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
     }
 
 

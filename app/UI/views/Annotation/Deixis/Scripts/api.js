@@ -1,4 +1,15 @@
 annotation.api = {
+    loadLayerList: async function() {
+        await $.ajax({
+            url: "/annotation/deixis/loadLayerList/" + annotation.document.idDocument,
+            method: "GET",
+            dataType: "json",
+            success: (response) => {
+                annotation.layerList = response;
+                Alpine.store("doStore").dataState = "loaded";
+            }
+        });
+    },
     loadObjects: async function() {
         await $.ajax({
             url: "/annotation/deixis/gridObjects/" + annotation.document.idDocument,
@@ -6,7 +17,6 @@ annotation.api = {
             dataType: "json",
             success: (response) => {
                 annotation.objectList = response;
-                //document.dispatchEvent(evtDOObjects);
                 Alpine.store("doStore").dataState = "loaded";
             }
         });
@@ -146,24 +156,6 @@ annotation.api = {
         return result;
     },
 
-    updateObjectData: (params) => {
-        return new Promise((resolve, reject) => {
-            try {
-                let url = "/index.php/webtool/annotation/dynamic/updateObjectData";
-                manager.doAjax(url, (response) => {
-                    if (response.type === "success") {
-                        resolve(response.data);
-                    } else if (response.type === "error") {
-                        throw new Error(response.message);
-                    }
-                }, params);
-
-            } catch (e) {
-                $.messager.alert("Error", e.message, "error");
-            }
-        });
-    },
-
     createNewObjectAtLayer: async (params, callback) => {
         params._token = annotation._token;
         await $.ajax({
@@ -175,6 +167,20 @@ annotation.api = {
                 callback(response);
             }
         });
+    },
+
+    updateObjectFrame: async (params, callback) => {
+        params._token = annotation._token;
+        await $.ajax({
+            url: "/annotation/deixis/updateObjectFrame",
+            method: "POST",
+            dataType: "json",
+            data: params,
+            success: (response) => {
+                callback(response);
+            }
+        });
     }
+
 
 };

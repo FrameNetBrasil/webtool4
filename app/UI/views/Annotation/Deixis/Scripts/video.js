@@ -23,7 +23,7 @@ annotation.video = {
     playingRange: null,
     gotoFrame(frameNumber) {
         let time = annotation.video.timeFromFrame(frameNumber) + 2e-2;
-        console.log("gotoFrame", frameNumber, time);
+        //console.log("gotoFrame", frameNumber, time);
         annotation.video.player.currentTime(time);
     },
     gotoTime(time) {
@@ -71,11 +71,16 @@ annotation.video = {
         }
     },
     playByRange(startTime, endTime, offset) {
-        console.log('startTime',startTime);
-        console.log('offset',offset);
         let playRange = {
             startFrame: annotation.video.frameFromTime(startTime - offset),
             endFrame: annotation.video.frameFromTime(endTime + offset)
+        };
+        annotation.video.playRange(playRange);
+    },
+    playByFrameRange(startFrame, endFrame, offset) {
+        let playRange = {
+            startFrame: startFrame,
+            endFrame: endFrame
         };
         annotation.video.playRange(playRange);
     },

@@ -1,30 +1,22 @@
-<div class="controls flex flex-column gap-1 justify-content-between mr-5">
+<div class="controls flex flex-row gap-1 justify-content-between mr-5 mt-5">
     <div class="flex flex-column">
         <div class="mr-1 font-bold border-bottom-1">
-            Object
+            BBox
         </div>
         <div class="mt-1">
             <button
                 id="btnCreateObject"
                 class="ui button primary"
-                x-data @click="$store.doStore.createObject()"
+                x-data @click="$store.doStore.createBBox()"
             >
                 <i class="plus square outline icon"></i>
                 Create
-            </button>
-            <button
-                id="btnEndObject"
-                class="ui button primary"
-                x-data @click="$store.doStore.endObject()"
-            >
-                <i class="window close outline icon"></i>
-                <span x-data x-text="'End at frame #' + ($store.doStore.currentFrame || '')"></span>
             </button>
         </div>
     </div>
     <div class="flex flex-column">
         <div class="mr-1 font-bold border-bottom-1">
-            Tracking
+            BBox Tracking
         </div>
         <div class="mt-1">
             <button
@@ -43,28 +35,36 @@
                 <i class="pause icon"></i>
                 Pause
             </button>
-        </div>
-    </div>
-    <div class="flex flex-column">
-        <div class="mr-1 font-bold">
-            &nbsp;
-        </div>
-        <div class="mr-1 font-bold">
             <button
-                id="btnShowHideObjects"
-                class="ui toggle button secondary"
-                x-data @click="$store.doStore.showHideObjects()"
+                id="btnStopObject"
+                class="ui button primary"
+                x-data @click="$store.doStore.stopTracking()"
             >
-                Show/Hide All
-            </button>
-            <button
-                id="btnClear"
-                class="ui button secondary"
-                x-data @click="$store.doStore.clear()"
-            >
-                <i class="redo icon"></i>
-                Clear
+                <i class="window stop icon"></i>
+                <span x-data x-text="'Stop at frame #' + ($store.doStore.currentFrame || '')"></span>
             </button>
         </div>
     </div>
+{{--    <div class="flex flex-column">--}}
+{{--        <div class="mr-1 font-bold">--}}
+{{--            &nbsp;--}}
+{{--        </div>--}}
+{{--        <div class="mr-1 font-bold">--}}
+{{--            <button--}}
+{{--                id="btnShowHideObjects"--}}
+{{--                class="ui toggle button secondary"--}}
+{{--                x-data @click="$store.doStore.showHideObjects()"--}}
+{{--            >--}}
+{{--                Show/Hide All--}}
+{{--            </button>--}}
+{{--            <button--}}
+{{--                id="btnClear"--}}
+{{--                class="ui button secondary"--}}
+{{--                x-data @click="$store.doStore.clear()"--}}
+{{--            >--}}
+{{--                <i class="redo icon"></i>--}}
+{{--                Clear--}}
+{{--            </button>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 </div>
