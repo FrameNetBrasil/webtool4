@@ -4,17 +4,11 @@
 class DeixisObject {
     constructor(object) {
         // this.object = object;
-        // if (object === null) {
-        //     // new Object
-        //     this.idObject = 0;
-        //     this.color = vatic.getColor(1);
-        // } else {
-        //     this.idObject = parseInt(object.order);
-        //     this.color = vatic.getColor(object.order);
-        // }
         Object.assign(this, object);
-        this.idObject = parseInt(object.order);
-        this.color = vatic.getColor(object.order);
+        if (object.order > 0) {
+            this.idObject = parseInt(object.order);
+            this.color = vatic.getColor(object.order);
+        }
         this.visible = true;
         this.hidden = false;
         this.locked = false;
