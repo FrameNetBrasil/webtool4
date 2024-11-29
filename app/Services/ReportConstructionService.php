@@ -29,6 +29,7 @@ class ReportConstructionService
         $report['construction'] = $cxn;
         $report['ce'] = [];//self::getFEData($frame, $idLanguage);
         //$report['construction']->description = self::decorate($cxn->description, $report['ce']['styles']);
+        $report['concepts'] = self::getConcepts($cxn);
         $report['relations'] = self::getRelations($cxn);
         return $report;
     }
@@ -121,28 +122,17 @@ class ReportConstructionService
         return $relations;
     }
 
-    public static function getLUs($frame, $idLanguage)
+    public static function getConcepts($cxn): array
     {
-        $lus = Criteria::table("view_lu as lu")
-            ->join("pos","lu.idPOS","=","pos.idPOS")
-            ->where("idFrame", $frame->idFrame)
-            ->where("idLanguage", $idLanguage)
-            ->treeResult("POS")->all();
-        ksort($lus);
-        return $lus;
-    }
-
-    public static function getClassification($frame)
-    {
-        $classification = [];
-        $result = Frame::getClassification($frame->idFrame);
-        foreach ($result as $framal => $values) {
-            foreach ($values as $row) {
-                $classification[$framal][] = $row->name;
-            }
-        }
-        $classification['id'][] = "#" . $frame->idFrame;
-        return $classification;
+        $concepts = Criteria::table("view_relation as r")
+            ->join("view_concept as c", "r.idEntity2", "=", "c.idEntity")
+            ->where("r.idEntity1", $cxn->idEntity)
+            ->where("r.relationType","rel_hasconcept")
+            ->where("c.idLanguage", AppService::getCurrentIdLanguage())
+            ->select("r.relationType","c.idConcept","c.name")
+            ->orderBy("c.name")
+            ->all();
+        return $concepts;
     }
 
 
