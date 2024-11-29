@@ -23,22 +23,22 @@
     <x-card title="Construction Elements" class="frameReport__card frameReport__card--main">
         <table class="ui celled striped table">
             <tbody>
-{{--            @foreach ($ce as $ceObj)--}}
-{{--                <tr>--}}
-{{--                    <td class="collapsing">--}}
-{{--                        <span class="color_{{$ceObj->idColor}}">{{$ceObj->name}}</span>--}}
-{{--                    </td>--}}
-{{--                    <td class="pl-2">{!! $ceObj->description !!}</td>--}}
-{{--                    <td>--}}
-{{--                        @foreach ($ceObj->relations as $relation)--}}
-{{--                            <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}--}}
-{{--                        @endforeach--}}
-{{--                    </td>--}}
-{{--                    <td class="right aligned collapsing">--}}
-{{--                        {{$ce['semanticTypes'][$ceObj->idFrameElement]->name ?? ''}}--}}
-{{--                    </td>--}}
-{{--                </tr>--}}
-{{--            @endforeach--}}
+            {{--            @foreach ($ce as $ceObj)--}}
+            {{--                <tr>--}}
+            {{--                    <td class="collapsing">--}}
+            {{--                        <span class="color_{{$ceObj->idColor}}">{{$ceObj->name}}</span>--}}
+            {{--                    </td>--}}
+            {{--                    <td class="pl-2">{!! $ceObj->description !!}</td>--}}
+            {{--                    <td>--}}
+            {{--                        @foreach ($ceObj->relations as $relation)--}}
+            {{--                            <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}--}}
+            {{--                        @endforeach--}}
+            {{--                    </td>--}}
+            {{--                    <td class="right aligned collapsing">--}}
+            {{--                        {{$ce['semanticTypes'][$ceObj->idFrameElement]->name ?? ''}}--}}
+            {{--                    </td>--}}
+            {{--                </tr>--}}
+            {{--            @endforeach--}}
             </tbody>
         </table>
     </x-card>
@@ -66,6 +66,21 @@
                     @endforeach
                 </div>
             </x-card-plain>
+        @endforeach
+    </x-card>
+    <x-card title="Comparative concepts" class="frameReport__card frameReport__card--main" open="true">
+        @php($i = 0)
+        @foreach ($concepts as $concept)
+            <button
+                id="btnRelation_concept_{{$concept->idConcept}}"
+                class="ui button basic"
+            >
+                <a
+                    href="/report/c5/{{$concept->idConcept}}"
+                >
+                    <x-element.concept name="{{$concept->name}}"></x-element.concept>
+                </a>
+            </button>
         @endforeach
     </x-card>
 </div>
