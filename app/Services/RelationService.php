@@ -210,6 +210,49 @@ class RelationService extends Controller
     }
 
     /*
+     * Cxn
+     */
+    public static function listRelationsCxn(int $idConstruction)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $result = [];
+        $relations = Criteria::table("view_construction_relation")
+            ->where("c1IdConstruction", $idConstruction)
+            ->where("idLanguage", $idLanguage)
+            ->orderBy("relationType")
+            ->orderBy("c2Name")
+            ->all();
+        foreach ($relations as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
+                'idCxnRelated' => $relation->c2IdConstruction,
+                'related' => $relation->c2Name,
+                'direction' => 'direct'
+            ];
+        }
+        $inverse = Criteria::table("view_construction_relation")
+            ->where("c2IdConstruction", $idConstruction)
+            ->where("idLanguage", $idLanguage)
+            ->all();
+        foreach ($inverse as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $relation->nameInverse,
+                'color' => $relation->color,
+                'idCxnRelated' => $relation->c1IdConstruction,
+                'related' => $relation->c1Name,
+                'direction' => 'inverse'
+            ];
+        }
+        return $result;
+    }
+
+
+    /*
  * Graph
  */
 

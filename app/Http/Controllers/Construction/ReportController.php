@@ -29,57 +29,58 @@ class ReportController extends Controller
     {
         $languageIcon = view('components.icon.language')->render();
         $cxnIcon = view('components.icon.construction')->render();
+        $showLanguage = false;
         $tree = [];
-        if ($search->cxn != '') {
-            $cxn = Construction::listTree($search->cxn);
-        } else if ($search->idLanguage == '') {
-
-        }
-            if ($search->idLanguage == '') {
-                $domains = SemanticType::listDomains();
-                foreach ($domains as $row) {
-                    $count = Criteria::table("semantictype")
-                        ->where("idDomain", $row->idDomain)
-                        ->count();
-                    $n = [];
-                    $n['id'] = 'd' . $row->idDomain;
-                    $n['idDomain'] = $row->idDomain;
-                    $n['type'] = 'domain';
-                    $n['text'] = $domainIcon . $row->name;
-                    $n['state'] = ($count > 0) ? 'closed' : 'open';
-                    $n['children'] = [];
-                    $tree[] = $n;
-                }
-                return $tree;
+        if (($search->cxn != '') || ($search->idLanguage != 0)) {
+            $cxns = Construction::listTree($search->cxn,$search->idLanguage);
+            $showLanguage = ($search->idLanguage == 0);
+        } else {
+            $languages = Construction::listRoots();
+            foreach ($languages as $language) {
+                $n = [];
+                $n['id'] = 'l' . $language->idLanguage;
+                $n['idLanguage'] = $language->idLanguage;
+                $n['type'] = 'language';
+                $n['text'] = $languageIcon . $language->description;
+                $n['state'] = ($language->n > 0) ? 'closed' : 'open';
+                $n['children'] = [];
+                $tree[] = $n;
             }
-            if ($search->idDomain > 0) {
-                $semanticTypes = SemanticType::listRootByDomain($search->idDomain);
-            } else if ($search->idSemanticType > 0) {
-                $semanticTypes = SemanticType::listChildren($search->idSemanticType);
-            }
+            return $tree;
         }
-        foreach ($semanticTypes as $semanticType) {
+        foreach ($cxns as $cxn) {
             $n = [];
-            $n['id'] = 't' . $semanticType->idEntity;
-            $n['idSemanticType'] = $semanticType->idSemanticType;
-            $n['type'] = 'semanticType';
-            $n['text'] = $stIcon . $semanticType->name;
-            $n['state'] = ($semanticType->n > 0) ? 'closed' : 'open';
+            $n['id'] = $cxn->idConstruction;
+            $n['idConstruction'] = $cxn->idConstruction;
+            $n['type'] = 'construction';
+            $n['text'] = $cxnIcon . $cxn->name . ($showLanguage ? ' [' . $cxn->language . ']' : '');
+            $n['state'] = 'open';
             $n['children'] = [];
             $tree[] = $n;
         }
         return $tree;
     }
 
-    #[Get(path: '/report/cxn/{idConstruction?}/{lang?}')]
-    public function report(int|string $idConstruction = '', string $lang = '')
+    #[Get(path: '/report/cxn/{idConstruction?}/{view?}')]
+    public function report(int|string $idConstruction = '', string $view = '')
     {
-        $search = session('searchConstruction') ?? SearchData::from();
-        $data = ReportConstructionService::report($idConstruction, $lang);
-        $data['search'] = $search;
-        $data['idConstruction'] = $idConstruction;
-        $data['data'] = $data;
-        return view("Construction.Report.report", $data);
+        $search = session('searchCxn') ?? SearchData::from();
+        if ($idConstruction == '') {
+            return view("Construction.Report.main", [
+                'search' => $search,
+                'idConstruction' => null
+            ]);
+        } else {
+            $data = ReportConstructionService::report($idConstruction);
+            $data['search'] = $search;
+            $data['idConstruction'] = $idConstruction;
+            if ($view != '') {
+                return view("Construction.Report.report", $data);
+            } else {
+                return view("Construction.Report.main", $data);
+            }
+
+        }
     }
 
     #[Get(path: '/construction/list/forSelect')]

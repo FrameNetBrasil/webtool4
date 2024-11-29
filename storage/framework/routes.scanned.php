@@ -2640,7 +2640,7 @@ $router->get('report/cxn/data', [
 	'domain' => NULL,
 ]);
 
-$router->get('report/cxn/{idConstruction?}/{lang?}', [
+$router->get('report/cxn/{idConstruction?}/{view?}', [
 	'uses' => 'App\Http\Controllers\Construction\ReportController@report',
 	'as' => NULL,
 	'middleware' => ['web'],

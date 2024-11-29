@@ -11,10 +11,12 @@ class Construction
     {
         return Criteria::byFilterLanguage("view_construction", ['idConstruction', '=', $id])->first();
     }
+
     public static function byIdEntity(int $idEntity): object
     {
         return Criteria::byFilterLanguage("view_construction", ['idEntity', '=', $idEntity])->first();
     }
+
     public static function listRelations(int $idEntity)
     {
         return Criteria::table("view_relation")
@@ -34,9 +36,9 @@ class Construction
                 ["view_relation.idEntity2", "=", $idEntity],
                 ["view_relation.relationType", "=", "rel_subtypeof"],
                 ["view_semantictype.idLanguage", "=", AppService::getCurrentIdLanguage()]
-            ])->select("view_semantictype.idSemanticType", "view_semantictype.idEntity", "view_semantictype.name","view_relation.idEntityRelation")
+            ])->select("view_semantictype.idSemanticType", "view_semantictype.idEntity", "view_semantictype.name", "view_relation.idEntityRelation")
             ->orderBy("view_semantictype.name")->all();
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $row->n = Criteria::table("view_relation")
                 ->where("view_relation.idEntity2", "=", $row->idEntity)
                 ->where("view_relation.relationType", "=", "rel_subtypeof")
@@ -45,32 +47,33 @@ class Construction
         return $rows;
     }
 
-    public static function listTree(string $cxn)
+    public static function listTree(?string $cxn = '',  ?int $idLanguage = 0)
     {
-        $rows = Criteria::table("view_construction as cxn")
-            ->join("language as l", "cxn.cxIdLanguage", "=", "l.idLanguage")
-            ->where("cxn.name", "startswith", $cxn)
-            ->where("cxn.idLanguage", "=", AppService::getCurrentIdLanguage())
-            ->select("cxn.idConstruction", "cxn.idEntity", "cxn.name","l.language")
-            ->orderBy("cxn.name.name")->all();
+        $criteria = Criteria::table("view_construction as cxn")
+            ->join("language as l", "cxn.cxIdLanguage", "=", "l.idLanguage");
+        if ($cxn != '') {
+            $criteria = $criteria->where("cxn.name", "startswith", $cxn);
+        }
+        if ($idLanguage != 0) {
+            $criteria = $criteria->where("cxn.cxIdLanguage", "=", $idLanguage);
+        }
+        $rows = $criteria->where("cxn.idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->select("cxn.idConstruction", "cxn.idEntity", "cxn.name", "l.language")
+            ->orderBy("cxn.name")->all();
         return $rows;
     }
 
-    public static function listRoots() : array
+    public static function listRoots(): array
     {
-        $criteriaER = Criteria::table("view_relation")
-            ->select('idEntity1')
-            ->where("relationType", "=", 'rel_subtypeof');
-        $rows = Criteria::table("view_semantictype")
-            ->where("view_semantictype.idEntity", "NOT IN", $criteriaER)
-            ->filter([
-                ['view_semantictype.idLanguage', '=', AppService::getCurrentIdLanguage()],
-            ])->select("view_semantictype.idSemanticType", "view_semantictype.idEntity", "view_semantictype.name")
-            ->orderBy("view_semantictype.name")->all();
-        foreach($rows as $row) {
-            $row->n = Criteria::table("view_relation")
-                ->where("view_relation.idEntity2", "=", $row->idEntity)
-                ->where("view_relation.relationType", "=", "rel_subtypeof")
+        $rows = Criteria::table("view_construction as cxn")
+            ->distinct(true)
+            ->join("language as l", "cxn.cxIdLanguage", "=", "l.idLanguage")
+            ->select("l.idLanguage", "l.description")
+            ->orderBy("l.description")
+            ->all();
+        foreach ($rows as $row) {
+            $row->n = Criteria::table("view_construction")
+                ->where("view_construction.cxIdLanguage", "=", $row->idLanguage)
                 ->count();
         }
         return $rows;
