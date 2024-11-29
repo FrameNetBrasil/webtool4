@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Frame;
 
 use App\Data\ComboBox\QData;
-use App\Data\Frame\FrameData;
+use App\Data\Frame\CxnData;
 use App\Data\Frame\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;

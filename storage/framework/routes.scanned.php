@@ -136,6 +136,14 @@ $router->post('report/frame/grid', [
 	'domain' => NULL,
 ]);
 
+$router->get('report/frame/data', [
+	'uses' => 'App\Http\Controllers\Frame\ReportController@data',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('report/frame/{idFrame?}/{lang?}', [
 	'uses' => 'App\Http\Controllers\Frame\ReportController@report',
 	'as' => NULL,
@@ -1824,6 +1832,118 @@ $router->get('sandbox/tree/frame/{idFrame}', [
 	'domain' => NULL,
 ]);
 
+$router->post('fe', [
+	'uses' => 'App\Http\Controllers\FE\ResourceController@newFE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/{id}/edit', [
+	'uses' => 'App\Http\Controllers\FE\ResourceController@edit',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/{id}/main', [
+	'uses' => 'App\Http\Controllers\FE\ResourceController@main',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('fe/{id}', [
+	'uses' => 'App\Http\Controllers\FE\ResourceController@delete',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/{id}/formEdit', [
+	'uses' => 'App\Http\Controllers\FE\ResourceController@formEdit',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->put('fe/{id}', [
+	'uses' => 'App\Http\Controllers\FE\ResourceController@update',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/{id}/semanticTypes', [
+	'uses' => 'App\Http\Controllers\FE\SemanticTypeController@semanticTypes',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/{id}/constraints', [
+	'uses' => 'App\Http\Controllers\FE\ConstraintController@constraints',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/{id}/constraints/formNew', [
+	'uses' => 'App\Http\Controllers\FE\ConstraintController@constraintsFormNew',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/{id}/constraints/grid', [
+	'uses' => 'App\Http\Controllers\FE\ConstraintController@constraintsGrid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/{id}/entries', [
+	'uses' => 'App\Http\Controllers\FE\EntryController@entries',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/relations/{idEntityRelation}/frame/{idFrameBase}', [
+	'uses' => 'App\Http\Controllers\FE\RelationController@relations',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/relations/{idEntityRelation}/formNew', [
+	'uses' => 'App\Http\Controllers\FE\RelationController@relationsFEFormNew',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('fe/relations/{idEntityRelation}/grid', [
+	'uses' => 'App\Http\Controllers\FE\RelationController@gridRelationsFE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('relations', [
 	'uses' => 'App\Http\Controllers\Relations\ResourceController@browse',
 	'as' => NULL,
@@ -2370,6 +2490,238 @@ $router->delete('layers/genericlabel/{idGenericLabel}', [
 
 $router->get('layers/layertype/{id}/entries', [
 	'uses' => 'App\Http\Controllers\Layers\EntryController@entries',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/new', [
+	'uses' => 'App\Http\Controllers\Frame\ResourceController@new',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('frame', [
+	'uses' => 'App\Http\Controllers\Frame\ResourceController@store',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('frame/{idFrame}', [
+	'uses' => 'App\Http\Controllers\Frame\ResourceController@delete',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}', [
+	'uses' => 'App\Http\Controllers\Frame\ResourceController@get',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/fes', [
+	'uses' => 'App\Http\Controllers\Frame\FEController@fes',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/fes/formNew', [
+	'uses' => 'App\Http\Controllers\Frame\FEController@formNewFE',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/fes/grid', [
+	'uses' => 'App\Http\Controllers\Frame\FEController@gridFE',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/semanticTypes', [
+	'uses' => 'App\Http\Controllers\Frame\SemanticTypeController@semanticTypes',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/feRelations', [
+	'uses' => 'App\Http\Controllers\Frame\FEInternalRelationController@feRelations',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/feRelations/formNew/{error?}', [
+	'uses' => 'App\Http\Controllers\Frame\FEInternalRelationController@formNewFERelations',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/feRelations/grid', [
+	'uses' => 'App\Http\Controllers\Frame\FEInternalRelationController@gridFERelations',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/lus', [
+	'uses' => 'App\Http\Controllers\Frame\LUController@lus',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/lus/formNew', [
+	'uses' => 'App\Http\Controllers\Frame\LUController@formNewLU',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/lus/grid', [
+	'uses' => 'App\Http\Controllers\Frame\LUController@gridLU',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('cxn', [
+	'uses' => 'App\Http\Controllers\Construction\BrowseController@browse',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('cxn/grid', [
+	'uses' => 'App\Http\Controllers\Construction\BrowseController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('report/cxn/grid', [
+	'uses' => 'App\Http\Controllers\Construction\ReportController@grid',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/cxn/data', [
+	'uses' => 'App\Http\Controllers\Construction\ReportController@data',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/cxn/{idConstruction?}/{lang?}', [
+	'uses' => 'App\Http\Controllers\Construction\ReportController@report',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('construction/list/forSelect', [
+	'uses' => 'App\Http\Controllers\Construction\ReportController@listForSelect',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/classification', [
+	'uses' => 'App\Http\Controllers\Frame\ClassificationController@classification',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/classification/formFramalType', [
+	'uses' => 'App\Http\Controllers\Frame\ClassificationController@formFramalType',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/classification/formFramalDomain', [
+	'uses' => 'App\Http\Controllers\Frame\ClassificationController@formFramalDomain',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('frame/classification/domain', [
+	'uses' => 'App\Http\Controllers\Frame\ClassificationController@framalDomain',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('frame/classification/type', [
+	'uses' => 'App\Http\Controllers\Frame\ClassificationController@framalType',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/entries', [
+	'uses' => 'App\Http\Controllers\Frame\EntryController@entries',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/relations', [
+	'uses' => 'App\Http\Controllers\Frame\RelationController@relations',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/relations/formNew', [
+	'uses' => 'App\Http\Controllers\Frame\RelationController@formNewRelation',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('frame/{id}/relations/grid', [
+	'uses' => 'App\Http\Controllers\Frame\RelationController@gridRelation',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
