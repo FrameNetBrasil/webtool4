@@ -37,6 +37,11 @@ class AppController extends Controller
         return $this->redirect($currentURL);
     }
 
+    #[Get(path: '/app/search')]
+    public function appSearchGet()
+    {
+        return $this->main();
+    }
     #[Post(path: '/app/search')]
     public function appSearch(SearchData $search)
     {

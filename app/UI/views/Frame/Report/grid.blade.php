@@ -1,29 +1,40 @@
-<div class="h-full">
-    <div style="position:relative;height:100%;overflow:auto">
-        <table class="ui striped small compact table" style="position:absolute;top:0;left:0;bottom:0;right:0">
-            <tbody>
-            @foreach($frames as $idFrame => $frame)
-                <tr
-                >
-                    <td
-                    >
-                        <a
-                            href="/report/frame/{{$idFrame}}"
-                        >
-                            <div>
-                                <div class="flex justify-content-between">
-                                    <div class='color_frame'
-                                         style="height:1rem;line-height: 1rem;margin:2px 0 2px 0">
-                                        <span class="{{$frame['iconCls']}}"></span>
-                                        <span>{{$frame['name'][0]}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+@php
+    $id = uniqid("frameGrid");
+@endphp
+<div
+    class="h-full"
+>
+    <div class="relative h-full overflow-auto">
+        <div id="frameTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
+            @fragment('search')
+                <ul id="{{$id}}">
+                </ul>
+                <script>
+                    $(function() {
+                        $("#{{$id}}").datagrid({
+                            url:"/report/frame/data",
+                            queryParams: {
+                                frame: '{{$search->frame}}'
+                            },
+                            method:'get',
+                            fit: true,
+                            showHeader: false,
+                            rownumbers: false,
+                            showFooter: false,
+                            border: false,
+                            columns: [[
+                                {
+                                    field: "text",
+                                    width: "100%",
+                                }
+                            ]],
+                            onClickRow: (index,row) => {
+                                htmx.ajax("GET", `/report/frame/${row.idFrame}`, "#reportArea");
+                            }
+                        });
+                    });
+                </script>
+            @endfragment
+        </div>
     </div>
 </div>
