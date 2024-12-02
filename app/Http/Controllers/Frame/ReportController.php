@@ -15,43 +15,51 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'web')]
 class ReportController extends Controller
 {
-//    #[Get(path: '/report/frame/content/{idFrame?}/{lang?}')]
-//    public function reportContent(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
-//    {
-//        $data = ReportFrameService::report($idFrame, $lang);
-//        return view("Frame.Report.report", $data);
-//    }
-
     #[Post(path: '/report/frame/grid')]
     public function grid(SearchData $search)
     {
-        $frames = BrowseController::listFrame($search);
         return view("Frame.Report.grid", [
             'search' => $search,
-            'frames' => $frames,
         ]);
+    }
+
+    #[Get(path: '/report/frame/data')]
+    public function data(SearchData $search)
+    {
+        $rows = [];
+        $frameIcon = view('components.icon.frame')->render();
+        $frames = Criteria::byFilterLanguage("view_frame",
+                ['name', "startswith", $search->frame])
+            ->orderBy('name')
+            ->all();
+        foreach ($frames as $frame) {
+            $n = [];
+            $n['id'] = $frame->idFrame;
+            $n['idFrame'] = $frame->idFrame;
+            $n['type'] = 'frame';
+            $n['text'] = $frameIcon . $frame->name;
+            $n['state'] = 'open';
+            $rows[] = $n;
+        }
+        return $rows;
     }
 
     #[Get(path: '/report/frame/{idFrame?}/{lang?}')]
     public function report(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
     {
         $search = session('searchFrame') ?? SearchData::from();
-        $frames = BrowseController::listFrame($search);
-        if (($idFrame == 'list') || ($idFrame == '')) {
+        if ($idFrame == '') {
             return view("Frame.Report.main", [
                 'search' => $search,
-                'idFrame' => null,
-                'frames' => $frames
+                'idFrame' => null
             ]);
         } else {
             $data = ReportFrameService::report($idFrame, $lang);
             $data['search'] = $search;
             $data['idFrame'] = $idFrame;
-            $data['frames'] = $frames;
-            return view("Frame.Report.main", $data);
+            return view("Frame.Report.report", $data);
         }
     }
-
 
     #[Get(path: '/frame/list/forSelect')]
     public function listForSelect(QData $data)

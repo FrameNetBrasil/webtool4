@@ -1,15 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Frame;
+namespace App\Http\Controllers\Construction;
 
-use App\Data\ComboBox\QData;
-use App\Data\Frame\CxnData;
-use App\Data\Frame\SearchData;
+use App\Data\Construction\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\Frame;
-use App\Repositories\SemanticType;
-use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
@@ -17,16 +12,16 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware("master")]
 class BrowseController extends Controller
 {
-    #[Get(path: '/frame')]
+    #[Get(path: '/cxn')]
     public function browse()
     {
-        $search = session('searchFrame') ?? SearchData::from();
-        return view("Frame.browse", [
+        $search = session('searchCxn') ?? SearchData::from();
+        return view("Construction.browse", [
             'search' => $search
         ]);
     }
 
-    #[Post(path: '/frame/grid')]
+    #[Post(path: '/cxn/grid')]
     public function grid(SearchData $search)
     {
         debug($search);
@@ -34,7 +29,7 @@ class BrowseController extends Controller
         if ($search->lu != '') {
             $display = 'luTableContainer';
             $lus = self::listLUSearch($search->lu);
-            return view("Frame.grids", [
+            return view("Construction.grids", [
                 'search' => $search,
                 'display' => $display,
                 'currentFrame' => $search->lu . '*',
@@ -63,7 +58,7 @@ class BrowseController extends Controller
                 }
             }
             $frames = self::listFrame($search);
-            return view("Frame.grids", [
+            return view("Construction.grids", [
                 'search' => $search,
                 'display' => $display,
                 'currentGroup' => $currentGroup ?? '',
@@ -146,78 +141,6 @@ class BrowseController extends Controller
                 'type' => 'frame',
                 'name' => [$row->name, $row->description],
                 'iconCls' => 'material-icons-outlined wt-icon wt-icon-frame',
-            ];
-        }
-        return $result;
-    }
-
-    public static function listFE(int $idFrame)
-    {
-//        $icon = config('webtool.fe.icon');
-//        $coreness = config('webtool.fe.coreness');
-//        $fes = FrameElement::listByFrame($idFrame)->getResult();
-//        $orderedFe = [];
-//        foreach ($icon as $i => $j) {
-//            foreach ($fes as $fe) {
-//                if ($fe->coreType == $i) {
-//                    $orderedFe[] = $fe;
-//                }
-//            }
-//        }
-        $fes = Criteria::byFilterLanguage("view_frameelement", ['idFrame', "=", $idFrame])
-            ->orderBy('name')->all();
-        $result = [];
-        foreach ($fes as $fe) {
-            $result[$fe->idFrameElement] = [
-                'id' => 'e' . $fe->idFrameElement,
-                'idFrameElement' => $fe->idFrameElement,
-                'type' => 'fe',
-                'name' => [$fe->name, $fe->description],
-                'idColor' => $fe->idColor,
-//                'iconCls' => $icon[$fe->coreType],
-//                'coreness' => $coreness[$fe->coreType],
-            ];
-        }
-        return $result;
-    }
-
-    public static function listLU(int $idFrame)
-    {
-        $result = [];
-//        $lus = ViewLU::listByFrame($idFrame, AppService::getCurrentIdLanguage())->all();
-        $lus = Criteria::byFilter("view_lu", ['idFrame', "=", $idFrame])
-            ->orderBy('name')->all();
-        foreach ($lus as $lu) {
-            $result[$lu->idLU] = [
-                'id' => 'l' . $lu->idLU,
-                'idLU' => $lu->idLU,
-                'type' => 'lu',
-                'name' => [$lu->name, $lu->senseDescription],
-//                'iconCls' => 'material-icons-outlined wt-tree-icon wt-icon-lu',
-            ];
-        }
-        return $result;
-    }
-
-    public static function listLUSearch(string $lu)
-    {
-        $result = [];
-        $lus = Criteria::byFilterLanguage("view_lu", ['name', "startswith", $lu], 'idLanguage')
-            ->orderBy('name')->all();
-//
-//        $lus = ViewLU::listByFilter((object)[
-//            'lu' => $lu,
-//            'idLanguage' => AppService::getCurrentIdLanguage()
-//        ])->all();
-        foreach ($lus as $lu) {
-//            debug($lu);
-            $result[$lu->idLU] = [
-                'id' => 'l' . $lu->idLU,
-                'idLU' => $lu->idLU,
-                'type' => 'lu',
-                'name' => [$lu->name, $lu->senseDescription],
-                'frameName' => $lu->frameName,
-//                'iconCls' => 'material-icons-outlined wt-icon wt-icon-lu',
             ];
         }
         return $result;
