@@ -1,4 +1,4 @@
-<div id="frameReport" class="flex flex-column h-full">
+<div id="cxnReport" class="flex flex-column h-full">
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
@@ -17,40 +17,124 @@
             </button>
         </div>
     </div>
-    <x-card title="Definition" class="frameReport__card frameReport__card--main">
+    <x-card title="Definition" class="cxnReport__card cxnReport__card--main">
         {!! str_replace('ex>','code>',nl2br($construction->description)) !!}
     </x-card>
-    <x-card title="Construction Elements" class="frameReport__card frameReport__card--main">
-        <table class="ui celled striped table">
-            <tbody>
-            {{--            @foreach ($ce as $ceObj)--}}
-            {{--                <tr>--}}
-            {{--                    <td class="collapsing">--}}
-            {{--                        <span class="color_{{$ceObj->idColor}}">{{$ceObj->name}}</span>--}}
-            {{--                    </td>--}}
-            {{--                    <td class="pl-2">{!! $ceObj->description !!}</td>--}}
-            {{--                    <td>--}}
-            {{--                        @foreach ($ceObj->relations as $relation)--}}
-            {{--                            <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}--}}
-            {{--                        @endforeach--}}
-            {{--                    </td>--}}
-            {{--                    <td class="right aligned collapsing">--}}
-            {{--                        {{$ce['semanticTypes'][$ceObj->idFrameElement]->name ?? ''}}--}}
-            {{--                    </td>--}}
-            {{--                </tr>--}}
-            {{--            @endforeach--}}
-            </tbody>
-        </table>
+    <x-card title="Construction Elements" class="cxnReport__card cxnReport__card--main">
+        @foreach ($ces['ces'] as $ceObj)
+            <x-card
+                title="<span class='color_{{$ceObj->idColor}}'>{{$ceObj->name}}</span>"
+                class="cxnReport__card cxnReport__card--main"
+            >
+                <x-card title="" class="cxnReport__card cxnReport__card--main">
+                    {!! str_replace('ex>','code>',nl2br($ceObj->description)) !!}
+                </x-card>
+
+                {{--                <x-card title="Relations" class="cxnReport__card cxnReport__card--main" open="true">--}}
+                {{--                    @php($i = 0)--}}
+                {{--                    @foreach ($relationsCE[$ceObj->idConstructionElement] as $nameEntry => $relations1)--}}
+                {{--                        @php([$entry, $name] = explode('|', $nameEntry))--}}
+                {{--                        @php($relId = str_replace(' ', '_', $name))--}}
+                {{--                        <x-card-plain--}}
+                {{--                            title="<span class='color_{{$entry}}'>{{$name}}</span>"--}}
+                {{--                            @class(["cxnReport__card" => (++$i < count($report['relations']))])--}}
+                {{--                            class="cxnReport__card--internal"--}}
+                {{--                        >--}}
+                {{--                            <div class="flex flex-wrap gap-1">--}}
+                {{--                                @foreach ($relations1 as $idConstruction => $relation)--}}
+                {{--                                    <button--}}
+                {{--                                        id="btnRelation_{{$relId}}_{{$idConstruction}}"--}}
+                {{--                                        class="ui button basic"--}}
+                {{--                                    >--}}
+                {{--                                        <a--}}
+                {{--                                            href="/report/cxn/{{$idConstruction}}"--}}
+                {{--                                        >--}}
+                {{--                                            <x-element.construction name="{{$relation['name']}}"></x-element.construction>--}}
+                {{--                                        </a>--}}
+                {{--                                    </button>--}}
+                {{--                                @endforeach--}}
+                {{--                            </div>--}}
+                {{--                        </x-card-plain>--}}
+                {{--                    @endforeach--}}
+                <x-card
+                    title="Comparative concepts"
+                    class="cxnReport__card--internal"
+                    open="true"
+                >
+                    @php($i = 0)
+                    @foreach ($conceptsCE[$ceObj->idConstructionElement] as $concept)
+                        <button
+                            id="btnRelation_concept_{{$concept->idConcept}}"
+                            class="ui button basic"
+                        >
+                            <a
+                                href="/report/c5/{{$concept->idConcept}}"
+                            >
+                                <x-element.concept name="{{$concept->name}}"></x-element.concept>
+                            </a>
+                        </button>
+                    @endforeach
+                </x-card>
+
+                <x-card
+                    title="Evokes"
+                    class="cxnReport__card--internal"
+                    open="true"
+                >
+                    @php($i = 0)
+                    @foreach ($evokesCE[$ceObj->idConstructionElement] as $frame)
+                        <button
+                            id="btnRelation_evokes_{{$frame->idFrame}}"
+                            class="ui button basic"
+                        >
+                            <a
+                                href="/report/frame/{{$frame->idFrame}}"
+                            >
+                                <x-element.frame name="{{$frame->name}}"></x-element.frame>
+                            </a>
+                        </button>
+                    @endforeach
+                </x-card>
+
+                <x-card
+                    title="Constraints"
+                    class="cxnReport__card--internal"
+                    open="true"
+                >
+                    @foreach ($constraintsCE[$ceObj->idConstructionElement] as $conName => $constraints)
+                        <div class="flex">
+                            <div class="font-bold">
+                                {{$conName}}:
+                            </div>
+                            @foreach ($constraints as $constraint)
+                                <div
+                                    class="ml-2"
+                                    id="btnRelation_constraint_{{$constraint->idConstraint}}"
+                                >
+                                    {{$constraint->name}}
+                                </div>
+                            @endforeach
+                        </div>
+                    @endforeach
+                </x-card>
+
+            </x-card>
+
+
+
+
+            {{--            </x-card>--}}
+        @endforeach
     </x-card>
-    <x-card title="Relations" class="frameReport__card frameReport__card--main" open="true">
+    <x-card title="Relations" class="cxnReport__card cxnReport__card--main" open="true">
         @php($i = 0)
         @foreach ($relations as $nameEntry => $relations1)
             @php([$entry, $name] = explode('|', $nameEntry))
             @php($relId = str_replace(' ', '_', $name))
             <x-card-plain
                 title="<span class='color_{{$entry}}'>{{$name}}</span>"
-                @class(["frameReport__card" => (++$i < count($report['relations']))])
-                class="frameReport__card--internal"
+                @class(["cxnReport__card" => (++$i < count($report['relations']))])
+                class="cxnReport__card--internal"
             >
                 <div class="flex flex-wrap gap-1">
                     @foreach ($relations1 as $idConstruction => $relation)
@@ -70,7 +154,7 @@
         @endforeach
         <x-card-plain
             title="Comparative concepts"
-            class="frameReport__card--internal"
+            class="cxnReport__card--internal"
             open="true"
         >
             @php($i = 0)
@@ -90,7 +174,7 @@
 
         <x-card-plain
             title="Evokes"
-            class="frameReport__card--internal"
+            class="cxnReport__card--internal"
             open="true"
         >
             @php($i = 0)
@@ -131,7 +215,7 @@
         };
 
         e.preventDefault();
-        const element = document.getElementById("frameReport");
+        const element = document.getElementById("cxnReport");
         html2pdf().from(element).set(options).save();
     });
 </script>
