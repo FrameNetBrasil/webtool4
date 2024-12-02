@@ -29,7 +29,8 @@ class ReportConstructionService
         $report['construction'] = $cxn;
         $report['ce'] = [];//self::getFEData($frame, $idLanguage);
         //$report['construction']->description = self::decorate($cxn->description, $report['ce']['styles']);
-        $report['concepts'] = self::getConcepts($cxn);
+        $report['concepts'] = self::getConcepts($cxn->idEntity);
+        $report['evokes'] = self::getEvokes($cxn->idEntity);
         $report['relations'] = self::getRelations($cxn);
         return $report;
     }
@@ -122,11 +123,11 @@ class ReportConstructionService
         return $relations;
     }
 
-    public static function getConcepts($cxn): array
+    public static function getConcepts(int $idEntity): array
     {
         $concepts = Criteria::table("view_relation as r")
             ->join("view_concept as c", "r.idEntity2", "=", "c.idEntity")
-            ->where("r.idEntity1", $cxn->idEntity)
+            ->where("r.idEntity1", $idEntity)
             ->where("r.relationType","rel_hasconcept")
             ->where("c.idLanguage", AppService::getCurrentIdLanguage())
             ->select("r.relationType","c.idConcept","c.name")
@@ -135,6 +136,18 @@ class ReportConstructionService
         return $concepts;
     }
 
+    public static function getEvokes(int $idEntity): array
+    {
+        $evokes = Criteria::table("view_relation as r")
+            ->join("view_frame as f", "r.idEntity2", "=", "f.idEntity")
+            ->where("r.idEntity1", $idEntity)
+            ->where("r.relationType","rel_evokes")
+            ->where("f.idLanguage", AppService::getCurrentIdLanguage())
+            ->select("r.relationType","f.idFrame","f.name")
+            ->orderBy("f.name")
+            ->all();
+        return $evokes;
+    }
 
     public static function decorate($description, $styles)
     {
