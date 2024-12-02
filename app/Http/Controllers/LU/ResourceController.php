@@ -27,6 +27,13 @@ class ResourceController extends Controller
     public function newLU(CreateData $data)
     {
         try {
+            $exists = Criteria::table("lu")
+                ->where("idLemma",$data->idLemma)
+                ->where("idFrame",$data->idFrame)
+                ->first();
+            if (!is_null($exists)) {
+                throw new \Exception("LU already exists.");
+            }
             Criteria::function('lu_create(?)', [$data->toJson()]);
             $this->trigger('reload-gridLU');
             return $this->renderNotify("success", "LU created.");

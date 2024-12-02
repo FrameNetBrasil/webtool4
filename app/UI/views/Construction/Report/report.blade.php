@@ -50,7 +50,8 @@
             <x-card-plain
                 title="<span class='color_{{$entry}}'>{{$name}}</span>"
                 @class(["frameReport__card" => (++$i < count($report['relations']))])
-                class="frameReport__card--internal">
+                class="frameReport__card--internal"
+            >
                 <div class="flex flex-wrap gap-1">
                     @foreach ($relations1 as $idConstruction => $relation)
                         <button
@@ -67,22 +68,48 @@
                 </div>
             </x-card-plain>
         @endforeach
-    </x-card>
-    <x-card title="Comparative concepts" class="frameReport__card frameReport__card--main" open="true">
-        @php($i = 0)
-        @foreach ($concepts as $concept)
-            <button
-                id="btnRelation_concept_{{$concept->idConcept}}"
-                class="ui button basic"
-            >
-                <a
-                    href="/report/c5/{{$concept->idConcept}}"
+        <x-card-plain
+            title="Comparative concepts"
+            class="frameReport__card--internal"
+            open="true"
+        >
+            @php($i = 0)
+            @foreach ($concepts as $concept)
+                <button
+                    id="btnRelation_concept_{{$concept->idConcept}}"
+                    class="ui button basic"
                 >
-                    <x-element.concept name="{{$concept->name}}"></x-element.concept>
-                </a>
-            </button>
-        @endforeach
+                    <a
+                        href="/report/c5/{{$concept->idConcept}}"
+                    >
+                        <x-element.concept name="{{$concept->name}}"></x-element.concept>
+                    </a>
+                </button>
+            @endforeach
+        </x-card-plain>
+
+        <x-card-plain
+            title="Evokes"
+            class="frameReport__card--internal"
+            open="true"
+        >
+            @php($i = 0)
+            @foreach ($evokes as $frame)
+                <button
+                    id="btnRelation_evokes_{{$frame->idFrame}}"
+                    class="ui button basic"
+                >
+                    <a
+                        href="/report/frame/{{$frame->idFrame}}"
+                    >
+                        <x-element.frame name="{{$frame->name}}"></x-element.frame>
+                    </a>
+                </button>
+            @endforeach
+        </x-card-plain>
+
     </x-card>
+
 </div>
 <script>
     $("#btnDownload").click(function(e) {

@@ -32,7 +32,6 @@ class LUCandidateController extends Controller
     #[Get(path: '/luCandidate/data')]
     public function data(SearchData $search)
     {
-        debug($search);
         $luIcon = view('components.icon.lu')->render();
         $lus = Criteria::byFilterLanguage("view_lucandidate", ["name", "startswith", $search->lu])
             ->select('idLUCandidate', 'name', 'createdAt')
@@ -70,7 +69,7 @@ class LUCandidateController extends Controller
     {
         try {
             debug($data);
-            if (is_null($data->idLemma)) {
+            if ((is_null($data->idLemma) || ($data->idLemma == 0))) {
                 throw new \Exception("Lemma is required");
             } else {
                 $lemma = Lemma::byId($data->idLemma);
@@ -158,6 +157,13 @@ class LUCandidateController extends Controller
     public function createLU(UpdateData $data)
     {
         try {
+            $exists = Criteria::table("lu")
+                ->where("idLemma",$data->idLemma)
+                ->where("idFrame",$data->idFrame)
+                ->first();
+            if (!is_null($exists)) {
+                throw new \Exception("LU already exists.");
+            }
             Criteria::function('lu_create(?)', [$data->toJson()]);
             $luCandidate = LUCandidate::byId($data->idLUCandidate);
             $link = '';

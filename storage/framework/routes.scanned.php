@@ -592,6 +592,14 @@ $router->get('changeLanguage/{language}', [
 	'domain' => NULL,
 ]);
 
+$router->get('app/search', [
+	'uses' => 'App\Http\Controllers\AppController@appSearchGet',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('app/search', [
 	'uses' => 'App\Http\Controllers\AppController@appSearch',
 	'as' => NULL,
