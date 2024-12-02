@@ -29,7 +29,7 @@ class ReportController extends Controller
         $rows = [];
         $frameIcon = view('components.icon.frame')->render();
         $frames = Criteria::byFilterLanguage("view_frame",
-                ['name', "startswith", $search->frame])
+            ['name', "startswith", $search->frame])
             ->orderBy('name')
             ->all();
         foreach ($frames as $frame) {
@@ -42,6 +42,17 @@ class ReportController extends Controller
             $rows[] = $n;
         }
         return $rows;
+    }
+
+    #[Get(path: '/report/frame/content/{idFrame}/{lang?}')]
+    public function reportContent(int|string $idFrame = '',string $lang = '')
+    {
+        debug($idFrame, $lang);
+        $search = session('searchFrame') ?? SearchData::from();
+        $data = ReportFrameService::report($idFrame, $lang);
+        $data['search'] = $search;
+        $data['idFrame'] = $idFrame;
+        return view("Frame.Report.report", $data);
     }
 
     #[Get(path: '/report/frame/{idFrame?}/{lang?}')]
@@ -65,7 +76,7 @@ class ReportController extends Controller
     public function listForSelect(QData $data)
     {
         $name = (strlen($data->q) > 2) ? $data->q : 'none';
-        return ['results' => Criteria::byFilterLanguage("view_frame",["name","startswith",$name])->orderby("name")->all()];
+        return ['results' => Criteria::byFilterLanguage("view_frame", ["name", "startswith", $name])->orderby("name")->all()];
     }
 
     #[Get(path: '/frame/listScenario/forSelect')]
@@ -73,12 +84,12 @@ class ReportController extends Controller
     {
         $name = (strlen($data->q) > 2) ? $data->q : 'none';
         return ['results' => Criteria::table("view_relation as r")
-            ->join("view_frame as f","r.idEntity1","=","f.idEntity")
-            ->join("semantictype as st","r.idEntity2","=","st.idEntity")
-            ->where("f.idLanguage","=", AppService::getCurrentIdLanguage())
-            ->where("st.entry","=","sty_ft_scenario")
-            ->where("f.name","startswith",$name)
-            ->select("f.idFrame","f.idEntity","f.name")
+            ->join("view_frame as f", "r.idEntity1", "=", "f.idEntity")
+            ->join("semantictype as st", "r.idEntity2", "=", "st.idEntity")
+            ->where("f.idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->where("st.entry", "=", "sty_ft_scenario")
+            ->where("f.name", "startswith", $name)
+            ->select("f.idFrame", "f.idEntity", "f.name")
             ->orderby("f.name")
             ->all()];
     }
