@@ -26,84 +26,38 @@ class ReportConstructionService
                 ->where("idLanguage", $idLanguage)
                 ->first();
         }
+        $ces = Criteria::table("view_constructionelement")
+            ->where("idLanguage", "=", $idLanguage)
+            ->where("idConstruction", "=", $cxn->idConstruction)
+            ->all();
         $report['construction'] = $cxn;
-        $report['ce'] = [];//self::getFEData($frame, $idLanguage);
-        //$report['construction']->description = self::decorate($cxn->description, $report['ce']['styles']);
+        $report['ces'] = self::getCEData($ces);
+        $report['construction']->description = self::decorate($cxn->description, $report['ces']['styles']);
         $report['concepts'] = self::getConcepts($cxn->idEntity);
         $report['evokes'] = self::getEvokes($cxn->idEntity);
         $report['relations'] = self::getRelations($cxn);
+        foreach ($ces as $ce) {
+            $report['conceptsCE'][$ce->idConstructionElement] = self::getConcepts($ce->idEntity);
+            $report['evokesCE'][$ce->idConstructionElement] = self::getEvokesCE($ce->idEntity);
+            $report['constraintsCE'][$ce->idConstructionElement] = self::getConstraints($ce->idEntity);
+        }
+        debug($report['constraintsCE']);
         return $report;
     }
 
-    public static function getFEData($frame, int $idLanguage): array
+    public static function getCEData($ces): array
     {
-        $fes = Criteria::table("view_frameelement")
-            ->where("idLanguage", "=", $idLanguage)
-            ->where("idFrame", "=", $frame->idFrame)
-            ->all();
-        $core = [];
-        $coreun = [];
-        $coreper = [];
-        $coreext = [];
-        $noncore = [];
-        $feByEntry = [];
-        foreach ($fes as $fe) {
-            $feByEntry[$fe->entry] = $fe;
+        foreach ($ces as $ce) {
+            $styles[strtolower($ce->name)] = "color_{$ce->idColor}";
         }
-        //$config = config('webtool.relations');
-        $relations = RelationService::listRelationsFEInternal($frame->idFrame);
-        $relationsByIdFE = [];
-        foreach ($relations as $relation) {
-            $relationsByIdFE[$relation->feIdFrameElement][] = [
-                'relatedFEName' => $relation->relatedFEName,
-                'relatedFEIdColor' => $relation->relatedFEIdColor,
-                'name' => $relation->name,
-                'color' => $relation->color,
-            ];
-        }
-        $semanticTypes = RelationService::listFEST($frame->idFrame);
-        $styles = [];
-        foreach ($fes as $fe) {
-            $styles[strtolower($fe->name)] = "color_{$fe->idColor}";
-        }
-        foreach ($fes as $fe) {
-            $fe->relations = $relationsByIdFE[$fe->idFrameElement] ?? [];
-            $fe->lower = strtolower($fe->name);
-            $fe->description = self::decorate($fe->description, $styles);
-            if ($fe->coreType == 'cty_core') {
-                $core[] = $fe;
-            } else if ($fe->coreType == 'cty_core-unexpressed') {
-                $coreun[] = $fe;
-            } else {
-                if ($fe->coreType == 'cty_peripheral') {
-                    $coreper[] = $fe;
-                }
-                if ($fe->coreType == 'cty_extra-thematic') {
-                    $coreext[] = $fe;
-                }
-                $noncore[] = $fe;
-            }
+        foreach ($ces as $ce) {
+            $ce->lower = strtolower($ce->name);
+            $ce->description = self::decorate($ce->description, $styles);
         }
         return [
             'styles' => $styles,
-            'core' => $core,
-            'core_unexpressed' => $coreun,
-            'peripheral' => $coreper,
-            'extra_thematic' => $coreext,
-            'noncore' => $noncore,
-            'semanticTypes' => $semanticTypes
+            'ces' => $ces
         ];
-    }
-
-    public static function getFECoreSet($frame): string
-    {
-        $feCoreSet = Frame::listFECoreSet($frame->idFrame);
-        $s = [];
-        foreach ($feCoreSet as $i => $cs) {
-            $s[$i] = "{" . implode(',', $cs) . "}";
-        }
-        $result = implode(', ', $s);
-        return $result;
     }
 
     public static function getRelations($cxn): array
@@ -115,6 +69,23 @@ class ReportConstructionService
             $relations[$relationName][$row->idCxnRelated] = [
                 'idEntityRelation' => $row->idEntityRelation,
                 'idConstruction' => $row->idCxnRelated,
+                'name' => $row->related,
+                'color' => $row->color
+            ];
+        }
+        ksort($relations);
+        return $relations;
+    }
+
+    public static function getRelationsCE($ce): array
+    {
+        $relations = [];
+        $result = RelationService::listRelationsCE($ce->idConstructionElement);
+        foreach ($result as $row) {
+            $relationName = $row->relationType . '|' . $row->name;
+            $relations[$relationName][$row->idCERelated] = [
+                'idEntityRelation' => $row->idEntityRelation,
+                'idConstructionElement' => $row->idCERelated,
                 'name' => $row->related,
                 'color' => $row->color
             ];
@@ -147,6 +118,29 @@ class ReportConstructionService
             ->orderBy("f.name")
             ->all();
         return $evokes;
+    }
+
+    public static function getEvokesCE(int $idEntity): array
+    {
+        $evokes = Criteria::table("view_relation as r")
+            ->join("view_frameelement as f", "r.idEntity2", "=", "f.idEntity")
+            ->where("r.idEntity1", $idEntity)
+            ->where("r.relationType","rel_evokes")
+            ->where("f.idLanguage", AppService::getCurrentIdLanguage())
+            ->select("r.relationType","f.idFrame","f.name","f.frameName")
+            ->orderBy("f.name")
+            ->all();
+        return $evokes;
+    }
+
+    public static function getConstraints(int $idEntity): array
+    {
+        $constraints = Criteria::table("view_constrainedby as c")
+            ->where("c.idConstrained", $idEntity)
+            ->where("c.idLanguage", AppService::getCurrentIdLanguage())
+            ->select("c.conName","c.idConstraint","c.name")
+            ->get()->groupBy("conName")->toArray();
+        return $constraints;
     }
 
     public static function decorate($description, $styles)

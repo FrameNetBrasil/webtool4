@@ -22,6 +22,7 @@ class Constraint
             ];
         }
         return $result;
+    }
 
 ////        $idLanguage = AppService::getCurrentIdLanguage();
 ////        $cmd = <<<HERE
@@ -157,7 +158,7 @@ class Constraint
 //            $result[$i]['idConstraintInstance'] = $constraint->idConstraintInstance;
 //        }
 //        return $result;
-    }
+
 
 //    public function getByIdConstrainedSet($idConstrainedSet)
 //    {

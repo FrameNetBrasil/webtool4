@@ -28,7 +28,7 @@ return [
             'reportst' => ['SemanticType', '/report/semanticType', '', []],
             'reportc5' => ['C5', '/report/c5', '', []],
             'reporttqr' => ['TQR', '/report/qualia', '', []],
-//            'cxnreport' => ['Constructions', '/cxn/report', 'cxnreport', '', '', []],
+            'cxnreport' => ['Constructicons', '/report/cxn', '', []],
 //            'corpusAnnotationReport' => ['Corpus Panes', '/corpus/report', 'corpusreport', '', 1, []],
         ]],
         'grapher' => ['Grapher', '/grapher', '', [
