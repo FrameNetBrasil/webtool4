@@ -144,6 +144,14 @@ $router->get('report/frame/data', [
 	'domain' => NULL,
 ]);
 
+$router->get('report/frame/content/{idFrame}/{lang?}', [
+	'uses' => 'App\Http\Controllers\Frame\ReportController@reportContent',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('report/frame/{idFrame?}/{lang?}', [
 	'uses' => 'App\Http\Controllers\Frame\ReportController@report',
 	'as' => NULL,

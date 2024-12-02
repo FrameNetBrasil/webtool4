@@ -29,7 +29,7 @@
                                 }
                             ]],
                             onClickRow: (index,row) => {
-                                htmx.ajax("GET", `/report/frame/${row.idFrame}`, "#reportArea");
+                                htmx.ajax("GET", `/report/frame/content/${row.idFrame}`, "#reportArea");
                             }
                         });
                     });
