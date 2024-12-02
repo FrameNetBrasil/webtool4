@@ -57,7 +57,7 @@ class ReportController extends Controller
             $data = ReportFrameService::report($idFrame, $lang);
             $data['search'] = $search;
             $data['idFrame'] = $idFrame;
-            return view("Frame.Report.report", $data);
+            return view("Frame.Report.main", $data);
         }
     }
 
