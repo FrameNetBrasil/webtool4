@@ -82,15 +82,15 @@
                     open="true"
                 >
                     @php($i = 0)
-                    @foreach ($evokesCE[$ceObj->idConstructionElement] as $frame)
+                    @foreach ($evokesCE[$ceObj->idConstructionElement] as $fe)
                         <button
-                            id="btnRelation_evokes_{{$frame->idFrame}}"
+                            id="btnRelation_evokes_{{$fe->idFrame}}"
                             class="ui button basic"
                         >
                             <a
-                                href="/report/frame/{{$frame->idFrame}}"
+                                href="/report/frame/{{$fe->idFrame}}"
                             >
-                                <x-element.frame name="{{$frame->name}}"></x-element.frame>
+                                <x-element.frame name="{{$fe->frameName}}.{{$fe->name}}"></x-element.frame>
                             </a>
                         </button>
                     @endforeach

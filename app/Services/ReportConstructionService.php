@@ -38,7 +38,7 @@ class ReportConstructionService
         $report['relations'] = self::getRelations($cxn);
         foreach ($ces as $ce) {
             $report['conceptsCE'][$ce->idConstructionElement] = self::getConcepts($ce->idEntity);
-            $report['evokesCE'][$ce->idConstructionElement] = self::getEvokes($cxn->idEntity);
+            $report['evokesCE'][$ce->idConstructionElement] = self::getEvokesCE($ce->idEntity);
             $report['constraintsCE'][$ce->idConstructionElement] = self::getConstraints($ce->idEntity);
         }
         debug($report['constraintsCE']);
@@ -115,6 +115,19 @@ class ReportConstructionService
             ->where("r.relationType","rel_evokes")
             ->where("f.idLanguage", AppService::getCurrentIdLanguage())
             ->select("r.relationType","f.idFrame","f.name")
+            ->orderBy("f.name")
+            ->all();
+        return $evokes;
+    }
+
+    public static function getEvokesCE(int $idEntity): array
+    {
+        $evokes = Criteria::table("view_relation as r")
+            ->join("view_frameelement as f", "r.idEntity2", "=", "f.idEntity")
+            ->where("r.idEntity1", $idEntity)
+            ->where("r.relationType","rel_evokes")
+            ->where("f.idLanguage", AppService::getCurrentIdLanguage())
+            ->select("r.relationType","f.idFrame","f.name","f.frameName")
             ->orderBy("f.name")
             ->all();
         return $evokes;
