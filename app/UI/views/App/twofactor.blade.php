@@ -7,22 +7,22 @@
                 >
                     <div class="six fields">
                         <div class="field">
-                            <input type="text" name="field0" placeholder="" class="w-2rem p-2">
+                            <input type="text" name="field0" placeholder="" class="w-2rem p-2" maxlength="1">
                         </div>
                         <div class="field">
-                            <input type="text" name="field1" placeholder="" class="w-2rem p-2">
+                            <input type="text" name="field1" placeholder="" class="w-2rem p-2" maxlength="1">
                         </div>
                         <div class="field">
-                            <input type="text" name="field2" placeholder="" class="w-2rem p-2">
+                            <input type="text" name="field2" placeholder="" class="w-2rem p-2" maxlength="1">
                         </div>
                         <div class="field">
-                            <input type="text" name="field3" placeholder="" class="w-2rem p-2">
+                            <input type="text" name="field3" placeholder="" class="w-2rem p-2" maxlength="1">
                         </div>
                         <div class="field">
-                            <input type="text" name="field4" placeholder="" class="w-2rem p-2">
+                            <input type="text" name="field4" placeholder="" class="w-2rem p-2" maxlength="1">
                         </div>
                         <div class="field">
-                            <input type="text" name="field5" placeholder="" class="w-2rem p-2">
+                            <input type="text" name="field5" placeholder="" class="w-2rem p-2" maxlength="1">
                         </div>
                     </div>
                     <x-submit
