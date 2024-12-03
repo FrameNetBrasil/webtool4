@@ -45,4 +45,26 @@
             </button>
         </div>
     </div>
+{{--    <div class="flex flex-column">--}}
+{{--        <div class="mr-1 font-bold">--}}
+{{--            &nbsp;--}}
+{{--        </div>--}}
+{{--        <div class="mr-1 font-bold">--}}
+{{--            <button--}}
+{{--                id="btnShowHideObjects"--}}
+{{--                class="ui toggle button secondary"--}}
+{{--                x-data @click="$store.doStore.showHideObjects()"--}}
+{{--            >--}}
+{{--                Show/Hide All--}}
+{{--            </button>--}}
+{{--            <button--}}
+{{--                id="btnClear"--}}
+{{--                class="ui button secondary"--}}
+{{--                x-data @click="$store.doStore.clear()"--}}
+{{--            >--}}
+{{--                <i class="redo icon"></i>--}}
+{{--                Clear--}}
+{{--            </button>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 </div>
