@@ -41,7 +41,6 @@ class ReportConstructionService
             $report['evokesCE'][$ce->idConstructionElement] = self::getEvokesCE($ce->idEntity);
             $report['constraintsCE'][$ce->idConstructionElement] = self::getConstraints($ce->idEntity);
         }
-        debug($report['constraintsCE']);
         return $report;
     }
 

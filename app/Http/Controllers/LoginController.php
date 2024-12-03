@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Data\ImperData;
 use App\Data\LoginData;
+use App\Data\TwoFactorData;
 use App\Exceptions\LoginException;
 use App\Exceptions\UserNewException;
 use App\Exceptions\UserPendingException;
@@ -79,19 +80,34 @@ class LoginController extends Controller
     {
         debug($data);
         $user = new AuthUserService();
-        $status = $user->md5Login($data);
+        $status = $user->md5Check($data);
 
         if ($status == 'new') {
             throw new UserNewException('User registered. Wait for Administrator approval.');
         } elseif ($status == 'pending') {
             throw new UserPendingException('User already registered, but waiting for Administrator approval.');
-        } elseif ($status == 'logged') {
-            return $this->redirect("/");
+        } elseif ($status == 'checked') {
+
+            return $this->redirect("/twofactor");
         } else {
             throw new LoginException('Login failed; contact administrator.');
         }
     }
 
+    #[Get(path: '/twofactor')]
+    public function twofactor()
+    {
+        return view("App.twofactor");
+    }
+
+    #[Post(path: '/twofactor')]
+    public function twofactorPost(TwoFactorData $data)
+    {
+        debug($data);
+        $user = new AuthUserService();
+        $user->md5TwoFactor($data);
+        return $this->redirect("/");
+    }
     #[Get(path: '/login-error')]
     public function loginError()
     {

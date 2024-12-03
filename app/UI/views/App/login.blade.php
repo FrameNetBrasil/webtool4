@@ -2,13 +2,8 @@
     $challenge = uniqid(rand());
     session(['challenge', $challenge]);
 @endphp
-<x-layout.main>
-    <x-slot:actions>
-            Webtool
-    </x-slot:actions>
-    <x-slot:title>
-    </x-slot:title>
-    <x-slot:main>
+<x-layout.page>
+    <section id="work" class="w-full h-full">
         <div class="wt-container-center h-full">
             <div id="formLoginDiv">
                 @fragment('form')
@@ -23,15 +18,19 @@
                             <div style="text-align: center">
                                 <img src="/images/fnbr_logo.png" />
                             </div>
-                            <x-text-field
-                                id="login"
-                                label="Login"
-                                value=""
-                            ></x-text-field>
-                            <x-password-field
-                                id="password"
-                                label="Password"
-                            ></x-password-field>
+                            <div class="field">
+                                <x-text-field
+                                    id="login"
+                                    label="Login"
+                                    value=""
+                                ></x-text-field>
+                            </div>
+                            <div class="field">
+                                <x-password-field
+                                    id="password"
+                                    label="Password"
+                                ></x-password-field>
+                            </div>
                         </x-slot:fields>
 
                         <x-slot:buttons>
@@ -51,5 +50,5 @@
                 @endfragment
             </div>
         </div>
-    </x-slot:main>
-</x-layout.main>
+    </section>
+</x-layout.page>
