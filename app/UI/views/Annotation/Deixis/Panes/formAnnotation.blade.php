@@ -1,5 +1,5 @@
 <div class="ui form">
-    <div class="bg-white pt-1 pr-1 pl-1">
+    <div class="bg-white pt-1 pr-1 pl-1 overflow-y-auto overflow-x-hidden">
         <div class="flex flex-row gap-1 justify-content-between pb-1">
             @if(is_null($object))
                 <div class="font-bold">Current Object: #none</div>
@@ -80,7 +80,7 @@
                     <x-combobox.lu
                         id="idLU"
                         label="CV Name"
-                        placeholder="(min: 2 chars)"
+                        placeholder="(min: 3 chars)"
                         class="w-23rem mb-2"
                         :value="$object?->idLU"
                         :name="$object?->lu ?? ''"
