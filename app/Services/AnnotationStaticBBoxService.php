@@ -9,6 +9,7 @@ use App\Data\Annotation\StaticBBox\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Image;
+use App\Repositories\Task;
 use App\Repositories\Timeline;
 use App\Repositories\User;
 use Illuminate\Support\Facades\DB;
@@ -89,19 +90,39 @@ class AnnotationStaticBBoxService
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
+        $usertask = AnnotationService::getCurrentUserTask($idDocument);
+        debug("=================================");
+        debug($usertask);
+        if (is_null($usertask)) {
+            return [
+                'objects' => [],
+                'frames' => []
+            ];
+        }
+        //$task = Task::byId($usertask->idTask);
         $result = Criteria::table("view_annotation_static as sta")
             ->leftJoin("view_lu", "sta.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
             ->where("sta.idLanguage", "left", $idLanguage)
             ->where("idDocument", $idDocument)
             ->where("view_frame.idLanguage", "left", $idLanguage)
-            ->select("idStaticObject", "sta.name", "idAnnotationLU", "sta.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "sta.idFrame", "frame", "fe", "color")
+            ->select("idStaticObject", "sta.name", "idAnnotationLU", "sta.idLU", "lu", "view_lu.name as luName", "sta.idUserTaskLU",
+                "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "sta.idFrame", "frame", "fe", "color", "sta.idUserTaskFE")
             ->orderBy("idStaticObject")
             ->all();
         $oMM = [];
         $bbox = [];
         foreach ($result as $row) {
-            $oMM[] = $row->idStaticObject;
+            $valid = true;
+            if ($row->idUserTaskFE) {
+                $valid = ($valid && ($row->idUserTaskFE == $usertask->idUserTask)) || ($usertask->idUserTask == 1);
+            }
+            if ($row->idUserTaskLU) {
+                $valid = ($valid && ($row->idUserTaskLU == $usertask->idUserTask)) || ($usertask->idUserTask == 1);
+            }
+            if ($valid) {
+                $oMM[] = $row->idStaticObject;
+            }
         }
         if (count($result) > 0) {
             $bboxObjects = Criteria::table("view_staticobject_boundingbox")
