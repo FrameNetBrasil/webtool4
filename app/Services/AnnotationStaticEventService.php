@@ -59,39 +59,39 @@ class AnnotationStaticEventService
         return $i ?? null;
     }
 
-    private static function getCurrentUserTask(int $idDocument): object|null
-    {
-        $idUser = AppService::getCurrentIdUser();
-        $user = User::byId($idUser);
-        // get usertask for this document
-        $usertask = Criteria::table("usertask_document")
-            ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-            ->where("usertask_document.idDocument", $idDocument)
-            ->where("ut.idUser", $idUser)
-            ->select("ut.idUserTask","ut.idTask")
-            ->first();
-        if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-            if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
-                $usertask = (object)[
-                    "idUserTask" => 1
-                ];
-            } else {
-                $usertask = null;
-            }
-        }
-        return $usertask;
-    }
+//    private static function getCurrentUserTask(int $idDocument): object|null
+//    {
+//        $idUser = AppService::getCurrentIdUser();
+//        $user = User::byId($idUser);
+//        // get usertask for this document
+//        $usertask = Criteria::table("usertask_document")
+//            ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
+//            ->where("usertask_document.idDocument", $idDocument)
+//            ->where("ut.idUser", $idUser)
+//            ->select("ut.idUserTask","ut.idTask")
+//            ->first();
+//        if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
+//            if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
+//                $usertask = (object)[
+//                    "idUserTask" => 1
+//                ];
+//            } else {
+//                $usertask = null;
+//            }
+//        }
+//        return $usertask;
+//    }
 
     public static function getObjectsForAnnotationImage(int $idDocument, int $idSentence): array
     {
-        $usertask = self::getCurrentUserTask($idDocument);
+        $usertask = AnnotationService::getCurrentUserTask($idDocument);
         if (is_null($usertask)) {
             return [
                 'objects' => [],
                 'frames' => []
             ];
         }
-//        $task = Task::byId($usertask->idTask);
+        $task = Task::byId($usertask->idTask);
 //        debug($task);
         //objects for document_sentence
         $criteria = Criteria::table("view_staticobject_textspan")
@@ -140,7 +140,7 @@ class AnnotationStaticEventService
             }
         }
         return [
-            'type' => 'annotation',
+            'type' => $task->type,
             'objects' => $objects,
             'frames' => $frames
         ];

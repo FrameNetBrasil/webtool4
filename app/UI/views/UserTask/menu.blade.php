@@ -4,7 +4,7 @@ $items = [
 ];
 @endphp
 <x-objectmenu
-    id="usertaskMenu"
+    id="usertaskMenu_{{$usertask->idUserTask}}"
     :items="$items"
     :path="'usertask/' . $usertask->idUserTask"
 ></x-objectmenu>
