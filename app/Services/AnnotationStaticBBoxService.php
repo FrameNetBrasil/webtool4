@@ -112,7 +112,8 @@ class AnnotationStaticBBoxService
             ->all();
         $oMM = [];
         $bbox = [];
-        foreach ($result as $row) {
+        $valids = [];
+        foreach ($result as $i => $row) {
             $valid = true;
             if ($row->idUserTaskFE) {
                 $valid = ($valid && ($row->idUserTaskFE == $usertask->idUserTask)) || ($usertask->idUserTask == 1);
@@ -121,9 +122,11 @@ class AnnotationStaticBBoxService
                 $valid = ($valid && ($row->idUserTaskLU == $usertask->idUserTask)) || ($usertask->idUserTask == 1);
             }
             if ($valid) {
-                $oMM[] = $row->idStaticObject;
+                $valids[$i] = $i;
+                $oMM[$row->idStaticObject] = $row->idStaticObject;
             }
         }
+        debug($oMM);
         if (count($result) > 0) {
             $bboxObjects = Criteria::table("view_staticobject_boundingbox")
                 ->whereIN("idStaticObject", $oMM)
@@ -133,11 +136,15 @@ class AnnotationStaticBBoxService
             }
         }
         $objects = [];
+        $j = 1;
         foreach ($result as $i => $row) {
-            $row->order = $i + 1;
-            $row->bbox = $bbox[$row->idStaticObject] ?? null;
-            $objects[] = $row;
+            if (isset($valids[$i])) {
+                $row->order = $j++;
+                $row->bbox = $bbox[$row->idStaticObject] ?? null;
+                $objects[] = $row;
+            }
         }
+        debug($objects);
         return $objects;
     }
 
