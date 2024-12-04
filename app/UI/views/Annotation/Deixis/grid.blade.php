@@ -7,7 +7,7 @@
         ->where("p.projectName","<>","Default Project")
         ->select("p.projectName")
         ->chunkResult("projectName","projectName");
-    $data = AnnotationService::browseCorpusDocumentBySearch($search, $listProjects);
+    $data = AnnotationService::browseCorpusDocumentBySearch($search, $listProjects,'DeixisAnnotation');
     $id = uniqid("corpusTree");
 @endphp
 <div

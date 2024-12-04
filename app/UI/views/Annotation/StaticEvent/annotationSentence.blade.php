@@ -15,7 +15,7 @@
                     @include('Annotation.StaticEvent.Panes.imagePane')
                 </div>
                 <div class="sentence">
-                    @if($type != 'No Text')
+                    @if($type != 'no sentence')
                         @include('Annotation.StaticEvent.Panes.sentencePane')
                     @endif
                 </div>
