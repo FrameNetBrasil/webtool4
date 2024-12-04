@@ -91,6 +91,7 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
+            Criteria::deleteById("project","idProject", $id);
             return $this->clientRedirect("/project");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());

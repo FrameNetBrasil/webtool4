@@ -29,7 +29,7 @@
                     <td
                         style="width:80px"
                     >
-                        #{{$sentence->idSentence}}
+                        #{{$sentence->idDocumentSentence}}
                     </td>
                     <td>
                         <a

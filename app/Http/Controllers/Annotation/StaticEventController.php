@@ -92,12 +92,6 @@ class StaticEventController extends Controller
         return view("Annotation.StaticEvent.annotationSentence", $data->toArray());
     }
 
-//    #[Get(path: '/annotation/staticEvent/sentence/{idSentenceMM}/object')]
-//    public function annotationSentenceObject(int $idSentenceMM)
-//    {
-//        return $this->getData($idSentenceMM);
-//    }
-
     #[Post(path: '/annotation/staticEvent/addFrame')]
     public function annotationSentenceFes(CreateData $input)
     {

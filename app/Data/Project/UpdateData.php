@@ -10,6 +10,7 @@ class UpdateData extends Data
         public ?int $idProject = null,
         public ?string $name = '',
         public ?string $description = '',
+        public ?int $idProjectGroup = null
     )
     {
     }

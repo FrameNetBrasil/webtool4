@@ -12,7 +12,7 @@ class Project
         return Criteria::byFilter("project", ["idProject", "=", $id])->first();
     }
 
-    public static function getAllowedDocsForUser(array $projects = []): array
+    public static function getAllowedDocsForUser(array $projects = [], string $projectGroup = ''): array
     {
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
@@ -27,6 +27,10 @@ class Project
             if (!empty($projects)) {
                 $criteria = $criteria
                     ->whereIn('projectName', $projects);
+            }
+            if ($projectGroup != '') {
+                $criteria = $criteria
+                    ->where('projectGroup', $projectGroup);
             }
             $criteria = $criteria
                 ->all();

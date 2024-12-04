@@ -18,6 +18,13 @@
                 value="{{$project->description}}"
             ></x-multiline-field>
         </div>
+        <div class="field">
+            <x-combobox.project-group
+                label="Project Group"
+                id="idProjectGroup"
+                :value="$project->idProjectGroup"
+            ></x-combobox.project-group>
+        </div>
     </x-slot:fields>
     <x-slot:buttons>
         <x-submit label="Save"></x-submit>
