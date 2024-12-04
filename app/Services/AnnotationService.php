@@ -43,6 +43,11 @@ class AnnotationService
                             ->where("ut.idUser", -2)
                             ->select("ut.idUserTask", "ut.idTask")
                             ->first();
+                        if (empty($usertask)) {
+                            $usertask = (object)[
+                                "idUserTask" => 1
+                            ];
+                        }
                     }
                 }
             }
