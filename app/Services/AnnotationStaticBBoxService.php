@@ -161,6 +161,7 @@ class AnnotationStaticBBoxService
                 'relationType' => 'rel_annotation',
                 'idUserTask' => $usertask->idUserTask
             ]);
+            debug($json);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         }
@@ -187,7 +188,7 @@ class AnnotationStaticBBoxService
             $sob = json_encode([
                 'name' => $data->name,
                 'scene' => 0,
-                'idFlickr30kEntitiesChain' => 0,
+                'idFlickr30kEntitiesChain' => -1,
                 'nobndbox' => 0,
                 'idUser' => $idUser
             ]);
