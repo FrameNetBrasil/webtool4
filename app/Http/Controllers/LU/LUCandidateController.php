@@ -128,8 +128,9 @@ class LUCandidateController extends Controller
                 'text' => "LU candidate {$luCandidate->name} has been deleted.",
             ]);
             Criteria::deleteById("lucandidate", "idLUCandidate", $id);
-            $this->trigger('reload-gridLUCandidate');
-            return $this->renderNotify("success", "LU candidate deleted.");
+//            $this->trigger('reload-gridLUCandidate');
+//            return $this->renderNotify("success", "LU candidate deleted.");
+            return $this->redirect("/luCandidate");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
