@@ -1984,8 +1984,16 @@ $router->post('usertask/documents/new', [
 	'domain' => NULL,
 ]);
 
+$router->delete('usertask/{idUserTask}', [
+	'uses' => 'App\Http\Controllers\Task\UserTaskController@deleteUserTask',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->delete('usertask/{idUserTask}/documents/{idUserTaskDocument}', [
-	'uses' => 'App\Http\Controllers\Task\UserTaskController@delete',
+	'uses' => 'App\Http\Controllers\Task\UserTaskController@deleteUserTaskDocument',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
