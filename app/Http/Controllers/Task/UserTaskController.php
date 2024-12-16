@@ -78,8 +78,25 @@ class UserTaskController extends Controller
         }
     }
 
+    #[Delete(path: '/usertask/{idUserTask}')]
+    public function deleteUserTask(string $idUserTask)
+    {
+        try {
+            Criteria::table("usertask_document")
+                ->where("idUserTask", $idUserTask)
+                ->delete();
+            Criteria::table("usertask")
+                ->where("idUserTask", $idUserTask)
+                ->delete();
+            $this->trigger("reload-gridUserTaskDocuments");
+            return $this->renderNotify("success", "Document removed from UserTask.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
     #[Delete(path: '/usertask/{idUserTask}/documents/{idUserTaskDocument}')]
-    public function delete(string $idUserTask, string $idUserTaskDocument)
+    public function deleteUserTaskDocument(string $idUserTask, string $idUserTaskDocument)
     {
         try {
             Criteria::table("usertask_document")
