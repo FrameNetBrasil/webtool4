@@ -11,7 +11,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}" />
             <x-search-field
                 id="lu"
-                value="{{$search->lu}}"
+                :value="$search->lu"
                 placeholder="Search LU"
                 class="w-full"
             ></x-search-field>
@@ -32,7 +32,7 @@
             class="h-full overflow-y-auto"
             @if(isset($idLU))
                 hx-trigger="load"
-            hx-get="/report/lu/content/{{$idLU}}"
+                hx-get="/report/lu/content/{{$idLU}}"
             @endif
         >
         </div>
