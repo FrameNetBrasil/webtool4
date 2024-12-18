@@ -1,9 +1,11 @@
 <x-layout.page>
-    <header>
+    <x-slot:head>
         {{$head}}
-    </header>
-    <section id="work" class="h-full w-full">
-        {{$main}}
-    </section>
+    </x-slot:head>
+    <x-slot:main>
+        <section id="work" class="h-full w-full">
+            {{$main}}
+        </section>
+    </x-slot:main>
 </x-layout.page>
 

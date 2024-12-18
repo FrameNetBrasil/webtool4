@@ -1,5 +1,5 @@
 @php use App\Database\Criteria;use App\Repositories\User;use App\Services\AppService; use App\Services\MessageService; @endphp
-<x-layout.main>
+<x-layout.page>
     <x-slot:head>
         <x-breadcrumb :sections="[['','Home']]"></x-breadcrumb>
     </x-slot:head>
@@ -76,5 +76,5 @@
         @endif
 
     </x-slot:main>
-</x-layout.main>
+</x-layout.page>
 
