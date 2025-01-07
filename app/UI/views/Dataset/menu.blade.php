@@ -1,12 +1,13 @@
 @php
 $items = [
     ['formEdit','Edit'],
-    ['projects','Projects'],
+//    ['projects','Projects'],
     ['corpus','Corpus'],
 ];
+$id = uniqid("datasetMenu");
 @endphp
 <x-objectmenu
-    id="datasetMenu"
+    :id="$id"
     :items="$items"
     :path="'dataset/' . $dataset->idDataset"
 ></x-objectmenu>

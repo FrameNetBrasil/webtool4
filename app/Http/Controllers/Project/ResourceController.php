@@ -28,11 +28,8 @@ class ResourceController extends Controller
     #[Post(path: '/project/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
-        $datasets = Dataset::listToGrid($search);
-        $projects = Dataset::listProjectForGrid($search?->project ?? '');
         $view = view("Project.grid",[
-            'projects' => $projects,
-            'datasets' => $datasets
+            'search' => $search
         ]);
         return (is_null($fragment) ? $view : $view->fragment('search'));
     }
@@ -67,7 +64,7 @@ class ResourceController extends Controller
             Criteria::table("project")
                 ->where("idProject",$data->idProject)
                 ->update($data->toArray());
-            $this->trigger("reload-gridDataset");
+            $this->trigger("reload-gridProject");
             return $this->renderNotify("success", "Project updated.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -80,7 +77,7 @@ class ResourceController extends Controller
         try {
             Criteria::table("project")
                 ->insert($user->toArray());
-            $this->trigger("reload-gridDataset");
+            $this->trigger("reload-gridProject");
             return $this->renderNotify("success", "Project created.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
