@@ -1,4 +1,4 @@
-<x-form id="formNewDatasetCorpus" title="Add to Dataset" :center="false"  hx-post="/dataset/{{$idDataset}}/corpus/new">
+<x-form id="formNewDatasetCorpus" title="Add Corpus to Dataset" :center="false"  hx-post="/dataset/{{$idDataset}}/corpus/new">
     <x-slot:fields>
         <x-hidden-field id="idDataset" value="{{$idDataset}}"></x-hidden-field>
         <x-combobox.corpus

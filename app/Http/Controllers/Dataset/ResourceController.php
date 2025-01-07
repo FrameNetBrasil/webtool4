@@ -66,7 +66,7 @@ class ResourceController extends Controller
     {
         try {
             Criteria::function('dataset_update(?)', [$data->toJson()]);
-            $this->trigger("reload-gridDataset");
+            $this->trigger("reload-gridProject");
             return $this->renderNotify("success", "Dataset updated.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -78,7 +78,7 @@ class ResourceController extends Controller
     {
         try {
             Criteria::function('dataset_create(?)', [$data->toJson()]);
-            $this->trigger("reload-gridDataset");
+            $this->trigger("reload-gridDatasets");
             return $this->renderNotify("success", "Dataset created.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -93,7 +93,7 @@ class ResourceController extends Controller
                 $id,
                 AppService::getCurrentIdUser()
             ]);
-            return $this->clientRedirect("/dataset");
+            return $this->clientRedirect("/project");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

@@ -328,6 +328,38 @@ $router->delete('project/{id}/users/{idUser}', [
 	'domain' => NULL,
 ]);
 
+$router->get('project/{id}/datasets', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasets',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('project/{id}/datasets/formNew', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasetsFormNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('project/{id}/datasets/grid', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasetsGrid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('project/{id}/datasets/new', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasetsNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('project', [
 	'uses' => 'App\Http\Controllers\Project\ResourceController@resource',
 	'as' => NULL,

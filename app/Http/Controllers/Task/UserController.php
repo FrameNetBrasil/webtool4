@@ -54,7 +54,7 @@ class UserController extends Controller
     public function projectsNew(UserTaskData $data)
     {
         Criteria::table("usertask")->insert($data->toArray());
-        $this->trigger('reload-gridTaskUsers');
+        $this->trigger('reload-gridTask');
         return $this->renderNotify("success", "UserTask added to task.");
     }
 
@@ -65,7 +65,7 @@ class UserController extends Controller
             Criteria::table("usertask")
                 ->where("idUserTask", $idUserTask)
                 ->delete();
-            $this->trigger('reload-gridTaskUsers');
+            $this->trigger('reload-gridTask');
             return $this->renderNotify("success", "User removed from task.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
