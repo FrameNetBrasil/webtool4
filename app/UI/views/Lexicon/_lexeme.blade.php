@@ -1,3 +1,7 @@
+<x-layout.page>
+    <div class="ui card h-full w-full">
+        <div class="flex-grow-0 content h-4rem bg-white">
+            @fragment('content')
                 <x-layout.object>
                     <x-slot:name>
                         <span>{{$lexeme->name}}</span>
@@ -71,3 +75,9 @@
                         </div>
                     </x-slot:main>
                 </x-layout.object>
+
+            @endfragment
+        </div>
+    </div>
+</x-layout.page>
+
