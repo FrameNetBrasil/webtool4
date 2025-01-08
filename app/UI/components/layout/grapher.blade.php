@@ -1,5 +1,9 @@
 <x-layout.index>
     @include('components.layout.head')
+    <header id="header">
+        <i id="headMenuIcon" class="sidebar icon menuIcon cursor-pointer"></i>
+        {{$head}}
+    </header>
     <div id="content">
         <div class="contentContainer ui pushable">
             @include('Grapher.report')
@@ -9,9 +13,6 @@
             </div>
             <div class="pusher closing pusher-full">
                 <main role="main" class="main">
-                    <header>
-                        {{$head}}
-                    </header>
                     <div id="graphPane"
                          class="flex flex-column w-full h-full p-0 wt-layout-grapher">
                         {{$main}}
@@ -27,7 +28,14 @@
         </div>
     </div>
     <footer>
-        @include("components.layout.footer")
+        <div class="flex justify-content-between w-full">
+            <div>
+                @include("components.layout.footer")
+            </div>
+            <div>
+                {!! config('webtool.version') !!}
+            </div>
+        </div>
     </footer>
     <script>
         $(".menuLeft")
