@@ -18,7 +18,7 @@
                     </span>
                     <div
                         hx-get="/lexicon/lexeme/{{$lexemeentry->idLexeme}}"
-                        hx-target="#lexiconEditContainer"
+                        hx-target="#editArea"
                         hx-swap="innerHTML"
                         class="header cursor-pointer name"
                     >
