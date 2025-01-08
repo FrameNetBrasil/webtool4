@@ -26,7 +26,6 @@
                 {!! config('webtool.version') !!}
             </div>
         </div>
-
     </footer>
     <script>
         $(".menuLeft")
