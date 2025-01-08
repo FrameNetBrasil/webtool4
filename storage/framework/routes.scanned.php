@@ -2328,6 +2328,14 @@ $router->get('report/lu/{idLU}/dynamic', [
 	'domain' => NULL,
 ]);
 
+$router->get('report/lu/{idLU}/dynamic/objects/{idDocument}', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@reportDynamicObjects',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('report/lu/dynamic/object/{idDynamicObject}', [
 	'uses' => 'App\Http\Controllers\LU\ReportController@reportDynamicObject',
 	'as' => NULL,

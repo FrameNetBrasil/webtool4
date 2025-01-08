@@ -1,5 +1,6 @@
 <script>
-    player = videojs("videoContainer");
+    //player = videojs("videoContainer");
+    player = window.player;
     player.src({type: 'video/mp4', src: 'https://dynamic.frame.net.br/{{ $video->sha1Name }}.mp4'});
     Alpine.store('doStore').setCurrentFrame({{$object->startFrame}});
     player.currentTime(Alpine.store('doStore').currentTime);
