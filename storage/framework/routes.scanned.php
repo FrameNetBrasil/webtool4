@@ -328,6 +328,38 @@ $router->delete('project/{id}/users/{idUser}', [
 	'domain' => NULL,
 ]);
 
+$router->get('project/{id}/datasets', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasets',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('project/{id}/datasets/formNew', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasetsFormNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('project/{id}/datasets/grid', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasetsGrid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('project/{id}/datasets/new', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasetsNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('project', [
 	'uses' => 'App\Http\Controllers\Project\ResourceController@resource',
 	'as' => NULL,
@@ -2240,6 +2272,22 @@ $router->get('lu/{id}/semanticTypes', [
 	'domain' => NULL,
 ]);
 
+$router->post('report/lu/grid', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@grid',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/lu/data', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@data',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('report/lu/content/{idLU?}', [
 	'uses' => 'App\Http\Controllers\LU\ReportController@reportContent',
 	'as' => NULL,
@@ -2248,16 +2296,48 @@ $router->get('report/lu/content/{idLU?}', [
 	'domain' => NULL,
 ]);
 
-$router->get('report/lu/{idLU?}', [
-	'uses' => 'App\Http\Controllers\LU\ReportController@report',
+$router->get('report/lu/{idLU}/textual', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@reportTextual',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('report/lu/grid', [
-	'uses' => 'App\Http\Controllers\LU\ReportController@grid',
+$router->get('report/lu/{idLU}/static', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@reportStatic',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/lu/static/object/{idDocument}/{idLU}', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@reportStaticObject',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/lu/{idLU}/dynamic', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@reportDynamic',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/lu/dynamic/object/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@reportDynamicObject',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/lu/{idLU?}', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@report',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
@@ -2700,6 +2780,30 @@ $router->get('relations/relationtype/{id}/entries', [
 	'uses' => 'App\Http\Controllers\Relations\EntryController@entriesRTY',
 	'as' => NULL,
 	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('report/multimodal/grid', [
+	'uses' => 'App\Http\Controllers\Multimodal\ReportController@grid',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/multimodal/data', [
+	'uses' => 'App\Http\Controllers\Multimodal\ReportController@data',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('report/multimodal/{idDocument?}/{view?}', [
+	'uses' => 'App\Http\Controllers\Multimodal\ReportController@report',
+	'as' => NULL,
+	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);

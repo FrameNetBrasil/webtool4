@@ -8,7 +8,12 @@ class Dataset
 {
     public static function byId(int $id): object
     {
-        return Criteria::byFilter("dataset", ["idDataset","=", $id])->first();
+        $dataset = Criteria::byFilter("dataset", ["idDataset","=", $id])->first();
+        $dataset->project = Criteria::table("project")
+            ->join("project_dataset","project_dataset.idProject","=","project.idProject")
+            ->where("project_dataset.idDataset","=",$id)
+            ->first();
+        return $dataset;
     }
 
     public static function listToGrid(SearchData $search): array

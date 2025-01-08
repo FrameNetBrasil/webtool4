@@ -15,10 +15,11 @@ class Task
     {
         $criteria = Criteria::table("user")
             ->join("usertask","user.idUser","=","usertask.idUser")
+            ->join("task","usertask.idTask","=","task.idTask")
             ->distinct()
             ->select('usertask.idTask', 'user.idUser','usertask.idUserTask','user.name','user.email')
 //            ->selectRaw("concat('#', user.idUser,'  ', user.name, ' [', user.email,']') as name")
-            ->orderBy('usertask.idTask')
+            ->orderBy('task.name')
             ->orderBy('user.name');
         $criteria->orWhere('user.name', 'startswith', $user);
         return $criteria->get()->groupBy('idTask')->toArray();
@@ -29,7 +30,7 @@ class Task
         return Criteria::table("task")
             ->select('idTask','name')
             ->where('name', 'startswith', $name)
-            ->orderBy('idTask')
+            ->orderBy('name')
             ->keyBy('idTask')
             ->all();
     }
