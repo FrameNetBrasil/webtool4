@@ -113,6 +113,7 @@ class AnnotationStaticBBoxService
         $oMM = [];
         $bbox = [];
         $valids = [];
+        debug($result);
         foreach ($result as $i => $row) {
             $valid = true;
             if ($row->idUserTaskFE) {
@@ -150,7 +151,7 @@ class AnnotationStaticBBoxService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
-        $usertask = self::getCurrentUserTask($data->idDocument);
+        $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
         $sob = Criteria::byId("staticobject", "idStaticObject", $data->idStaticObject);
         Criteria::deleteById("annotation", "idAnnotationObject", $sob->idAnnotationObject);
         if ($data->idFrameElement) {
