@@ -1,7 +1,7 @@
 <x-layout.annotation>
     <x-slot:head>
         <x-breadcrumb
-            :sections="[['/','Home'],['/annotation/dynamicMode','Deixis Annotation'],['',$document->name]]"></x-breadcrumb>
+            :sections="[['/','Home'],['/annotation/deixis','Deixis Annotation'],['',$document->name]]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <div
