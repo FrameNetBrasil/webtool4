@@ -15,8 +15,11 @@
 @endphp
 <header id="head" class="flex justify-content-between">
     <div class="flex align-items-center ">
+        <div style="width:40px;text-align:center">
+            <img src="/images/fnbr_logo_header_alpha_white.png" height="24"/>
+        </div>
+        <div class="border-right-1 border-white-alpha-60" style="height:20px"></div>
         <div class="headApp">
-            <i id="headMenuIcon" class="sidebar icon menuIcon cursor-pointer"></i>
             <a href="/">
                 <span>{!! config('webtool.headerTitle') !!}</span>
             </a>

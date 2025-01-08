@@ -13,13 +13,13 @@
             hx-target="#editArea"
             hx-swap="innerHTML"
         ></x-button>
-        <x-button
-            label="New Dataset"
-            color="secondary"
-            hx-get="/dataset/new"
-            hx-target="#editArea"
-            hx-swap="innerHTML"
-        ></x-button>
+{{--        <x-button--}}
+{{--            label="New Dataset"--}}
+{{--            color="secondary"--}}
+{{--            hx-get="/dataset/new"--}}
+{{--            hx-target="#editArea"--}}
+{{--            hx-swap="innerHTML"--}}
+{{--        ></x-button>--}}
     </x-slot:actions>
     <x-slot:search>
         <x-form-search>
@@ -29,7 +29,7 @@
                     placeholder="Search Project"
                     hx-post="/project/grid/search"
                     hx-trigger="input changed delay:500ms, search"
-                    hx-target="#gridDataset"
+                    hx-target="#projectTreeWrapper"
                     hx-swap="innerHTML"
                 ></x-search-field>
             </div>
@@ -39,7 +39,7 @@
                     placeholder="Search Dataset"
                     hx-post="/project/grid/search"
                     hx-trigger="input changed delay:500ms, search"
-                    hx-target="#gridDataset"
+                    hx-target="#projectTreeWrapper"
                     hx-swap="innerHTML"
                 ></x-search-field>
             </div>

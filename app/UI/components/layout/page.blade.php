@@ -1,5 +1,9 @@
 <x-layout.index>
     @include('components.layout.head')
+    <header id="header">
+        <i id="headMenuIcon" class="sidebar icon menuIcon cursor-pointer"></i>
+        {{$head}}
+    </header>
     <div id="content">
         <div class="contentContainer ui pushable">
             <div class="menuLeft ui left vertical menu sidebar">
@@ -7,7 +11,7 @@
             </div>
             <div class="pusher closing pusher-full">
                 <main role="main" class="main">
-                    {{$slot}}
+                    {{$main}}
                     <wt-go-top id="btnTop" label="Top" offset="64"></wt-go-top>
                 </main>
             </div>

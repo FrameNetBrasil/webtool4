@@ -1,6 +1,7 @@
 @php
 $items = [
     ['formEdit','Edit'],
+    ['datasets','Datasets'],
     ['users','Managers'],
 ];
 @endphp
