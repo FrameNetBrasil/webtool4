@@ -81,7 +81,7 @@
                         this.currentTime = (frame - 1) * 0.04;
                     }
                 })
-                let dom = null;
+                // let dom = null;
                 // });
                 $(function () {
 
