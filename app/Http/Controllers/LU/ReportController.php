@@ -97,31 +97,19 @@ class ReportController extends Controller
     #[Get(path: '/report/lu/static/object/{idDocument}/{idLU}')]
     public function reportStaticObject(int|string $idDocument,int|string $idLU)
     {
-//        $image = Criteria::table("view_annotation_static as a")
-//            ->join("view_document_image as di", "a.idDocument", "=", "di.idDocument")
-//            ->join("image as i", "di.idImage", "=", "i.idImage")
-//            ->select("i.idImage","i.name","i.width","i.height")
-//            ->where("a.idStaticObject", $idStaticObject)
-//            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
-//            ->first();
-//        $bbox = Criteria::table("view_staticobject_boundingbox as bb")
-//            ->select("bb.x","bb.y","bb.width","bb.height")
-//            ->where("bb.idStaticObject", $idStaticObject)
-//            ->first();
         $image = Criteria::table("image as i")
             ->join("view_document_image as di", "di.idImage", "=", "i.idImage")
             ->select("i.idImage","i.name","i.width","i.height")
             ->where("di.idDocument", $idDocument)
             ->first();
-        $bboxes = Criteria::table("view_annotation_static as a")
-            //->join("view_document_image as di", "a.idDocument", "=", "di.idDocument")
-            ->join("view_staticobject_boundingbox as bb","a.idStaticObject", "=", "bb.idStaticObject")
+        $bboxes = Criteria::table("view_annotation as a")
+            ->join("lu", "a.idEntity", "=", "lu.idEntity")
+            ->join("staticobject as so", "a.idAnnotationObject", "=", "so.idAnnotationObject")
+            ->join("view_staticobject_boundingbox as bb","so.idStaticObject", "=", "bb.idStaticObject")
             ->select("bb.x","bb.y","bb.width","bb.height")
             ->where("a.idDocument", $idDocument)
-            ->where("a.idLU", $idLU)
-            ->where("a.idLanguage","LEFT", AppService::getCurrentIdLanguage())
+            ->where("lu.idLU", $idLU)
             ->all();
-        debug($bboxes);
         return view("LU.Report.image", [
             'image' => $image,
             'bboxes' => $bboxes,
@@ -132,16 +120,6 @@ class ReportController extends Controller
     public function reportDynamic(int|string $idLU)
     {
         $lu = LU::byId($idLU);
-//        $objects = Criteria::table("view_annotation_dynamic as a")
-//            ->join("view_document as d", "a.idDocument", "=", "d.idDocument")
-//            ->distinct()
-//            ->select("d.name as documentName","d.idDocument","a.idDynamicObject")
-//            ->where("a.idLU", $idLU)
-//            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
-//            ->where("d.idLanguage", AppService::getCurrentIdLanguage())
-//            ->orderBy("d.name")
-//            ->orderBy("a.idDynamicObject")
-//            ->all();
         $documents = Criteria::table("view_annotation_dynamic as a")
             ->join("view_document as d", "a.idDocument", "=", "d.idDocument")
             ->distinct()
@@ -163,16 +141,14 @@ class ReportController extends Controller
     public function reportDynamicObjects(int|string $idLU, int|string $idDocument)
     {
         $lu = LU::byId($idLU);
-        $objects = Criteria::table("view_annotation_dynamic as a")
-            ->join("view_document as d", "a.idDocument", "=", "d.idDocument")
+        $objects = Criteria::table("view_annotation as a")
+            ->join("lu", "a.idEntity", "=", "lu.idEntity")
+            ->join("dynamicobject as do", "a.idAnnotationObject", "=", "do.idAnnotationObject")
             ->distinct()
-            ->select("a.idDynamicObject")
-            ->where("a.idLU", $idLU)
-            ->where("d.idDocument", $idDocument)
-            ->where("a.idLanguage", "LEFT", AppService::getCurrentIdLanguage())
-            ->where("d.idLanguage", AppService::getCurrentIdLanguage())
-            ->orderBy("d.name")
-            ->orderBy("a.idDynamicObject")
+            ->select("do.idDynamicObject")
+            ->where("lu.idLU", $idLU)
+            ->where("a.idDocument", $idDocument)
+            ->orderBy("do.idDynamicObject")
             ->all();
         $data = [
             'lu' => $lu,
