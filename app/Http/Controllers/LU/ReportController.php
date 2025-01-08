@@ -114,12 +114,12 @@ class ReportController extends Controller
             ->where("di.idDocument", $idDocument)
             ->first();
         $bboxes = Criteria::table("view_annotation_static as a")
-            ->join("view_document_image as di", "a.idDocument", "=", "di.idDocument")
+            //->join("view_document_image as di", "a.idDocument", "=", "di.idDocument")
             ->join("view_staticobject_boundingbox as bb","a.idStaticObject", "=", "bb.idStaticObject")
             ->select("bb.x","bb.y","bb.width","bb.height")
             ->where("a.idDocument", $idDocument)
             ->where("a.idLU", $idLU)
-            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
+            ->where("a.idLanguage","LEFT", AppService::getCurrentIdLanguage())
             ->all();
         debug($bboxes);
         return view("LU.Report.image", [
@@ -169,7 +169,7 @@ class ReportController extends Controller
             ->select("a.idDynamicObject")
             ->where("a.idLU", $idLU)
             ->where("d.idDocument", $idDocument)
-            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
+            ->where("a.idLanguage", "LEFT", AppService::getCurrentIdLanguage())
             ->where("d.idLanguage", AppService::getCurrentIdLanguage())
             ->orderBy("d.name")
             ->orderBy("a.idDynamicObject")
@@ -190,7 +190,7 @@ class ReportController extends Controller
             ->join("video as v", "dv.idVideo", "=", "v.idVideo")
             ->select("v.idVideo","v.sha1Name")
             ->where("a.idDynamicObject", $idDynamicObject)
-            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
+            ->where("a.idLanguage", "LEFT", AppService::getCurrentIdLanguage())
             ->first();
         $object = Criteria::byId("dynamicobject","idDynamicObject", $idDynamicObject);
         $bbox = Criteria::table("view_dynamicobject_boundingbox as bb")
