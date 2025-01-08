@@ -132,11 +132,43 @@ class ReportController extends Controller
     public function reportDynamic(int|string $idLU)
     {
         $lu = LU::byId($idLU);
+//        $objects = Criteria::table("view_annotation_dynamic as a")
+//            ->join("view_document as d", "a.idDocument", "=", "d.idDocument")
+//            ->distinct()
+//            ->select("d.name as documentName","d.idDocument","a.idDynamicObject")
+//            ->where("a.idLU", $idLU)
+//            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
+//            ->where("d.idLanguage", AppService::getCurrentIdLanguage())
+//            ->orderBy("d.name")
+//            ->orderBy("a.idDynamicObject")
+//            ->all();
+        $documents = Criteria::table("view_annotation_dynamic as a")
+            ->join("view_document as d", "a.idDocument", "=", "d.idDocument")
+            ->distinct()
+            ->select("d.name as documentName","d.idDocument")
+            ->where("a.idLU", $idLU)
+            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
+            ->where("d.idLanguage", AppService::getCurrentIdLanguage())
+            ->orderBy("d.name")
+            ->all();
+        $data = [
+            'lu' => $lu,
+            'language' => Criteria::byId("language","idLanguage", $lu->idLanguage),
+            'documents' => $documents
+        ];
+        return view("LU.Report.dynamic", $data);
+    }
+
+    #[Get(path: '/report/lu/{idLU}/dynamic/objects/{idDocument}')]
+    public function reportDynamicObjects(int|string $idLU, int|string $idDocument)
+    {
+        $lu = LU::byId($idLU);
         $objects = Criteria::table("view_annotation_dynamic as a")
             ->join("view_document as d", "a.idDocument", "=", "d.idDocument")
             ->distinct()
-            ->select("d.name as documentName","d.idDocument","a.idDynamicObject")
+            ->select("a.idDynamicObject")
             ->where("a.idLU", $idLU)
+            ->where("d.idDocument", $idDocument)
             ->where("a.idLanguage", AppService::getCurrentIdLanguage())
             ->where("d.idLanguage", AppService::getCurrentIdLanguage())
             ->orderBy("d.name")
@@ -147,7 +179,7 @@ class ReportController extends Controller
             'language' => Criteria::byId("language","idLanguage", $lu->idLanguage),
             'objects' => $objects
         ];
-        return view("LU.Report.dynamic", $data);
+        return view("LU.Report.objects", $data);
     }
 
     #[Get(path: '/report/lu/dynamic/object/{idDynamicObject}')]

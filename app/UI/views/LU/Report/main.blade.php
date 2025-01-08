@@ -38,6 +38,37 @@
         </div>
         <script>
             let reportLU = {};
+            window.player = {};
+            document.addEventListener('alpine:init', () => {
+                window.doStore = Alpine.store('doStore', {
+                    idVideoJs: 'videoContainer',
+                    idVideo: 'videoContainer_html5_api',
+                    fps: 25, // frames por segundo
+                    timeInterval: 1 / 25, // intervalo entre frames - 0.04s = 40ms
+                    originalDimensions: {
+                        width: 852,
+                        height: 480
+                    },
+                    timeCount: 0,
+                    currentTime: 0,
+                    currentFrame: 0,
+                    timeByFrame: 0,
+                    frameCount: 1,
+                    timeFormated: (timeSeconds) => {
+                        let minute = Math.trunc(timeSeconds / 60);
+                        let seconds = Math.trunc(timeSeconds - (minute * 60));
+                        return minute + ':' + seconds;
+                    },
+                    timeFromFrame: (frame) => {
+                        return (frame - 1) * 0.04;
+                    },
+                    setCurrentFrame(frame) {
+                        this.currentFrame = frame;
+                        this.currentTime = (frame - 1) * 0.04;
+                    }
+                })
+            });
+
         </script>
     </x-slot:pane>
 </x-layout.report>
