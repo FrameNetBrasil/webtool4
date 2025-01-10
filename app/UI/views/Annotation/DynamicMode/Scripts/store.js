@@ -94,7 +94,11 @@ document.addEventListener('alpine:init', () => {
                 this.selectObject(null);
             }
         },
-
+        replaceByIdDynamicObject(idDynamicObject, object){
+            let index = this.objects.findIndex(o => o.idDynamicObject === idDynamicObject);
+            const merged = Object.assign({}, this.objects[index], object);
+            this.objects[index] = merged;
+        },
         startTracking() {
             console.log('*** start tracking');
             this.newObjectState = 'tracking';

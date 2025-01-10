@@ -79,6 +79,12 @@
                             scale: {{$scale}}
                         }
                     };
+
+                    document.body.addEventListener("updateObjectAnnotationEvent", function(evt){
+                        console.log("event updateObjectAnnotationEvent");
+                        annotation.objects.updateObjectAnnotationEvent();
+                    })
+
                     @include("Annotation.StaticBBox.Scripts.api")
                     @include("Annotation.StaticBBox.Scripts.image")
                     @include("Annotation.StaticBBox.Scripts.objects")

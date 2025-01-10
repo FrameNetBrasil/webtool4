@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\StaticBBox\AnnotationCommentData;
 use App\Data\Annotation\StaticBBox\CloneData;
+use App\Data\Annotation\StaticBBox\CommentData;
 use App\Data\Annotation\StaticBBox\DocumentData;
 use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
 use App\Data\Annotation\StaticBBox\ObjectData;
@@ -49,7 +50,6 @@ class StaticBBoxController extends Controller
             ->where("idDocument", $idDocument)
             ->first();
         $image = Image::byId($documentImage->idImage);
-        $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $documentImage->idDocumentImage])->first();
         return DocumentData::from([
             'idDocument' => $idDocument,
             'idDocumentImage' => $documentImage->idDocumentImage,
@@ -91,6 +91,28 @@ class StaticBBoxController extends Controller
         ]);
     }
 
+    #[Get(path: '/annotation/staticBBox/formComment/{idStaticObject}/{order}')]
+    public function getFormComment(int $idStaticObject, int $order)
+    {
+        $object = AnnotationStaticBBoxService::getObjectComment($idStaticObject);
+        return view("Annotation.StaticBBox.Panes.formComment", [
+            'order' => $order,
+            'object' => $object
+        ]);
+    }
+
+    #[Post(path: '/annotation/staticBBox/updateObjectComment')]
+    public function updateObjectComment(CommentData $data)
+    {
+        try {
+            $idStaticObject = AnnotationStaticBBoxService::updateObjectComment($data);
+            $this->trigger('updateObjectAnnotationEvent');
+            return $this->renderNotify("success", "Comment registered.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
     #[Get(path: '/annotation/staticBBox/gridObjects/{idDocument}')]
     public function objectsForGrid(int $idDocument)
     {
@@ -116,7 +138,9 @@ class StaticBBoxController extends Controller
         debug($data);
         try {
             $idStaticObject = AnnotationStaticBBoxService::updateObjectAnnotation($data);
-            return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
+            $this->trigger('updateObjectAnnotationEvent');
+            //return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
+            return $this->renderNotify("success", "Object updated.");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());

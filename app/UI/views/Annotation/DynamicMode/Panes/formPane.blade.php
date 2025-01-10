@@ -15,7 +15,7 @@
                             Range
                             <div class="detail">{{$object->startFrame}}/{{$object->endFrame}}</div>
                         </div>
-                        <div class="ui label tag wt-tag-id">
+                        <div class="ui label wt-tag-id">
                             #{{$object->idDynamicObject}}
                         </div>
                     </div>

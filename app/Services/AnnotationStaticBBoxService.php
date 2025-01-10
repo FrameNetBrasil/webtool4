@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Data\Annotation\StaticBBox\CloneData;
+use App\Data\Annotation\StaticBBox\CommentData;
 use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
 use App\Data\Annotation\StaticBBox\ObjectData;
 use App\Data\Annotation\StaticBBox\UpdateBBoxData;
@@ -81,18 +82,27 @@ class AnnotationStaticBBoxService
         $do = Criteria::table("view_annotation_static")
             ->where("idLanguage", "left", $idLanguage)
             ->where("idStaticObject", $idStaticObject)
-            ->select("idStaticObject", "name", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color")
+            ->select("idStaticObject", "name", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color","idDocument")
             ->orderBy("idStaticObject")
             ->first();
         return $do;
+    }
+
+    public static function getObjectComment(int $idStaticObject): object|null
+    {
+        $so = Criteria::table("staticobject as so")
+            ->leftJoin("annotationcomment as ac", "so.idStaticObject", "=", "ac.idStaticObject")
+            ->leftJoin("user as u", "ac.idUser", "=", "u.idUser")
+            ->where("so.idStaticObject", $idStaticObject)
+            ->select("so.idStaticObject", "ac.comment", "ac.createdAt", "ac.updatedAt", "u.email")
+            ->first();
+        return $so;
     }
 
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $usertask = AnnotationService::getCurrentUserTask($idDocument);
-        debug("=================================");
-        debug($usertask);
         if (is_null($usertask)) {
             return [
                 'objects' => [],
@@ -241,6 +251,28 @@ class AnnotationStaticBBoxService
         return $idStaticObject;
     }
 
+    public static function updateObjectComment(CommentData $data): int
+    {
+        $idStaticObject = $data->idStaticObject;
+        $comment = Criteria::byId("annotationcomment", "idStaticObject", $idStaticObject);
+        if (is_null($comment)) {
+            Criteria::create("annotationcomment", [
+                "idStaticObject" => $idStaticObject,
+                "comment" => $data->comment,
+                "idUser" => $data->idUser,
+                "createdAt" => $data->createdAt,
+                "updatedAt" => $data->updatedAt,
+            ]);
+        } else {
+            Criteria::table("annotationcomment")
+                ->where("idStaticObject", $idStaticObject)
+                ->update([
+                    "comment" => $data->comment,
+                    "updatedAt" => $data->updatedAt,
+                ]);
+        }
+        return $idStaticObject;
+    }
     public static function cloneObject(CloneData $data): int
     {
         $idUser = AppService::getCurrentIdUser();
@@ -307,6 +339,10 @@ class AnnotationStaticBBoxService
         });
     }
 
+    public static function deleteObjectComment(int $idStaticObject): void
+    {
+        Criteria::deleteById("annotationcomment", "idStaticObject", $idStaticObject);
+    }
     public static function updateBBox(UpdateBBoxData $data): int
     {
         $bbox = Criteria::table("view_staticobject_boundingbox")
