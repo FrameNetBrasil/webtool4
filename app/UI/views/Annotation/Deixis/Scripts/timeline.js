@@ -3,12 +3,6 @@
 var keyframeWithCustomImage = {
     val: 500
 };
-// Custom Image
-const image = new Image();
-image.src = "https://material-icons.github.io/material-icons-png/png/white/public/baseline-2x.png"; // replace with your image path
-image.onload = () => {
-    annotation.timeline.timeline.redraw();
-};
 annotation.timeline = {
     model: null,
     timeline: null,
@@ -111,7 +105,7 @@ annotation.timeline = {
             element.keyframes = keyframes;
             rows.push(element);
         }
-        console.log(rows);
+        //console.log(rows);
         let timelineModel = {
             rows: rows
         };
@@ -442,6 +436,13 @@ annotation.timeline = {
     //         }
     //     }, annotation.timeline.playStep);
     // }
+};
+
+// Custom Image
+const image = new Image();
+image.src = "https://material-icons.github.io/material-icons-png/png/white/public/baseline-2x.png"; // replace with your image path
+image.onload = () => {
+    // annotation.timeline.timeline.redraw();
 };
 
 

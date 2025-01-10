@@ -384,6 +384,14 @@ $router->post('project/grid/{fragment?}', [
 	'domain' => NULL,
 ]);
 
+$router->get('project/data', [
+	'uses' => 'App\Http\Controllers\Project\ResourceController@data',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('project/new', [
 	'uses' => 'App\Http\Controllers\Project\ResourceController@new',
 	'as' => NULL,
@@ -1034,6 +1042,22 @@ $router->post('annotation/dynamicMode/formObject', [
 
 $router->get('annotation/dynamicMode/formObject/{idDynamicObject}/{order}', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getFormObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/dynamicMode/formComment/{idDynamicObject}/{order}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getFormComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/dynamicMode/updateObjectComment', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateObjectComment',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -2184,6 +2208,46 @@ $router->delete('image/{id}/document/{idDocument}', [
 	'domain' => NULL,
 ]);
 
+$router->get('image/{id}/dataset', [
+	'uses' => 'App\Http\Controllers\Image\DatasetController@dataset',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/{id}/dataset/formNew', [
+	'uses' => 'App\Http\Controllers\Image\DatasetController@datasetFormNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/{id}/dataset/grid', [
+	'uses' => 'App\Http\Controllers\Image\DatasetController@datasetGrid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('image/{id}/dataset/new', [
+	'uses' => 'App\Http\Controllers\Image\DatasetController@datasetNew',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('image/{id}/dataset/{idDataset}', [
+	'uses' => 'App\Http\Controllers\Image\DatasetController@delete',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('image', [
 	'uses' => 'App\Http\Controllers\Image\ResourceController@resource',
 	'as' => NULL,
@@ -2192,7 +2256,7 @@ $router->get('image', [
 	'domain' => NULL,
 ]);
 
-$router->get('image/grid', [
+$router->get('image/grid/{fragment?}', [
 	'uses' => 'App\Http\Controllers\Image\ResourceController@grid',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -2200,8 +2264,16 @@ $router->get('image/grid', [
 	'domain' => NULL,
 ]);
 
-$router->post('image/grid', [
+$router->post('image/grid/{fragment?}', [
 	'uses' => 'App\Http\Controllers\Image\ResourceController@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('image/data', [
+	'uses' => 'App\Http\Controllers\Image\ResourceController@data',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -2856,42 +2928,18 @@ $router->post('utils/importFullText', [
 	'domain' => NULL,
 ]);
 
-$router->get('sandbox/tree', [
-	'uses' => 'App\Http\Controllers\SandboxController@tree',
+$router->get('sandbox/page1', [
+	'uses' => 'App\Http\Controllers\SandboxController@page1',
 	'as' => NULL,
-	'middleware' => ['web'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('sandbox/tree/grid', [
-	'uses' => 'App\Http\Controllers\SandboxController@grid',
+$router->get('sandbox/page2', [
+	'uses' => 'App\Http\Controllers\SandboxController@page2',
 	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('sandbox/tree/domain/{idDomain}', [
-	'uses' => 'App\Http\Controllers\SandboxController@getFramesByDomain',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('sandbox/tree/type/{idType}', [
-	'uses' => 'App\Http\Controllers\SandboxController@getFramesByType',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('sandbox/tree/frame/{idFrame}', [
-	'uses' => 'App\Http\Controllers\SandboxController@getFELU',
-	'as' => NULL,
-	'middleware' => ['web'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);

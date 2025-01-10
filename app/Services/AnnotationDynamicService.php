@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Data\Annotation\DynamicMode\CloneData;
+use App\Data\Annotation\DynamicMode\CommentData;
 use App\Data\Annotation\DynamicMode\CreateBBoxData;
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
@@ -91,19 +92,32 @@ class AnnotationDynamicService
         return $do;
     }
 
+    public static function getObjectComment(int $idDynamicObject): object|null
+    {
+        $do = Criteria::table("dynamicobject as do")
+            ->leftJoin("annotationcomment as ac", "do.idDynamicObject", "=", "ac.idDynamicObject")
+            ->where("do.idDynamicObject", $idDynamicObject)
+            ->select("do.idDynamicObject", "do.startFrame", "do.endFrame","ac.comment","ac.createdAt","ac.updatedAt")
+            ->first();
+        return $do;
+    }
+
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $result = Criteria::table("view_annotation_dynamic")
-            ->leftJoin("view_lu", "view_annotation_dynamic.idLu", "=", "view_lu.idLU")
+        $result = Criteria::table("view_annotation_dynamic as ad")
+            ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
-            ->where("view_annotation_dynamic.idLanguage", "left", $idLanguage)
-            ->where("idDocument", $idDocument)
+            ->leftJoin("annotationcomment as ac", "ad.idDynamicObject", "=", "ac.idDynamicObject")
+            ->where("ad.idLanguage", "left", $idLanguage)
+            ->where("ad.idDocument", $idDocument)
             ->where("view_frame.idLanguage","left",$idLanguage)
-            ->select("idDynamicObject", "view_annotation_dynamic.name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "view_annotation_dynamic.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName","idAnnotationFE", "idFrameElement", "view_annotation_dynamic.idFrame", "frame", "fe", "color")
+            ->select("ad.idDynamicObject", "ad.name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin",
+                "idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName",
+                "idAnnotationFE", "idFrameElement", "ad.idFrame", "frame", "fe", "color","ac.comment")
             ->orderBy("startFrame")
             ->orderBy("endFrame")
-            ->orderBy("idDynamicObject")
+            ->orderBy("ad.idDynamicObject")
             ->all();
         $oMM = [];
         $bboxes = [];
@@ -252,22 +266,29 @@ class AnnotationDynamicService
                     'startTime' => $data->startTime,
                     'endTime' => $data->endTime,
                 ]);
-//            if (count($data->frames)) {
-//                self::deleteBBoxesByDynamicObject($idDynamicObject);
-//                foreach ($data->frames as $frame) {
-//                    $json = json_encode([
-//                        'frameNumber' => (int)$frame['frameNumber'],
-//                        'frameTime' => (float)$frame['frameTime'],
-//                        'x' => (int)$frame['x'],
-//                        'y' => (int)$frame['y'],
-//                        'width' => (int)$frame['width'],
-//                        'height' => (int)$frame['height'],
-//                        'blocked' => (int)$frame['blocked'],
-//                        'idDynamicObject' => (int)$idDynamicObject
-//                    ]);
-//                    $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
-//                }
-//            }
+        }
+        return $idDynamicObject;
+    }
+
+    public static function updateObjectComment(CommentData $data): int
+    {
+        $idDynamicObject = $data->idDynamicObject;
+        $comment = Criteria::byId("annotationcomment","idDynamicObject", $idDynamicObject);
+        if (is_null($comment)) {
+            Criteria::create("annotationcomment",[
+                "idDynamicObject" => $idDynamicObject,
+                "comment" => $data->comment,
+                "idUser" => $data->idUser,
+                "createdAt" => $data->createdAt,
+                "updatedAt" => $data->updatedAt,
+            ]);
+        } else {
+            Criteria::table("annotationcomment")
+            ->where("idDynamicObject", $idDynamicObject)
+            ->update([
+                "comment" => $data->comment,
+                "updatedAt" => $data->updatedAt,
+            ]);
         }
         return $idDynamicObject;
     }

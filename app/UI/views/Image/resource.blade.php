@@ -15,14 +15,28 @@
         ></x-button>
     </x-slot:actions>
     <x-slot:search>
-        <x-search-field
-            id="name"
-            placeholder="Search Image"
-            hx-post="/image/grid"
-            hx-trigger="input changed delay:500ms, search"
-            hx-target="#imageGrid"
-            hx-swap="outerHTML"
-        ></x-search-field>
+        <x-form-search>
+            <div class="field">
+                <x-search-field
+                    id="dataset"
+                    placeholder="Search Dataset"
+                    hx-post="/image/grid/search"
+                    hx-trigger="input changed delay:500ms, search"
+                    hx-target="#imageTreeWrapper"
+                    hx-swap="innerHTML"
+                ></x-search-field>
+            </div>
+            <div class="field">
+                <x-search-field
+                    id="image"
+                    placeholder="Search Image"
+                    hx-post="/image/grid/search"
+                    hx-trigger="input changed delay:500ms, search"
+                    hx-target="#imageTreeWrapper"
+                    hx-swap="innerHTML"
+                ></x-search-field>
+            </div>
+        </x-form-search>
     </x-slot:search>
     <x-slot:grid>
         <div

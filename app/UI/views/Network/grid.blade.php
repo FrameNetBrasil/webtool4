@@ -1,16 +1,23 @@
-<table id="networkFrameGrid">
+@php
+    $id = uniqid("networkGrid");
+@endphp
+<table id="{{$id}}">
 </table>
 <script>
     $(function() {
-        $("#networkFrameGrid").treegrid({
+        $("#{{$id}}").treegrid({
             fit: true,
             url: "/network/listForTree",
-            queryParams: {{ Js::from(['_token' => $search->_token,'idFramalDomain' => $search->idFramalDomain,'frame' => $search->frame]) }},
+            queryParams: {
+                frame: "{{$search->frame}}",
+                _token: "{{ csrf_token() }}",
+            },
+            method:'post',
             showHeader: false,
+            showFooter: false,
             rownumbers: false,
             idField: "id",
             treeField: "name",
-            showFooter: false,
             border: false,
             columns: [[
                 {
@@ -33,7 +40,7 @@
                 }
             ]],
             onClickRow: (row) => {
-                $("#networkFrameGrid").treegrid("toggle", row.id);
+                $("#{{$id}}").treegrid("toggle", row.id);
             }
         });
     });
@@ -47,4 +54,3 @@
         font-size: 13px;
     }
 </style>
-</div>
