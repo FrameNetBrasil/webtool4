@@ -105,6 +105,12 @@ class DynamicModeController extends Controller
         ]);
     }
 
+    #[Get(path: '/annotation/dynamicMode/object/{idDynamicObject}')]
+    public function getObject(int $idDynamicObject)
+    {
+        return AnnotationDynamicService::getObject($idDynamicObject ?? 0);
+    }
+
     #[Get(path: '/annotation/dynamicMode/formComment/{idDynamicObject}/{order}')]
     public function getFormComment(int $idDynamicObject, int $order)
     {
@@ -120,6 +126,7 @@ class DynamicModeController extends Controller
     {
         try {
             $idDynamicObject = AnnotationDynamicService::updateObjectComment($data);
+            $this->trigger('updateObjectAnnotationEvent');
             return $this->renderNotify("success", "Comment registered.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -177,9 +184,20 @@ class DynamicModeController extends Controller
     public function deleteObject(int $idDynamicObject)
     {
         try {
-            debug("========== deleting {$idDynamicObject}");
             AnnotationDynamicService::deleteObject($idDynamicObject);
             return $this->renderNotify("success", "Object removed.");
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/annotation/dynamicMode/{idDynamicObject}/comment')]
+    public function deleteObjectComment(int $idDynamicObject)
+    {
+        try {
+            AnnotationDynamicService::deleteObjectComment($idDynamicObject);
+            return $this->renderNotify("success", "Object comment removed.");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());

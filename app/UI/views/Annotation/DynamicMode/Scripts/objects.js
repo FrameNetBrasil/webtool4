@@ -443,42 +443,42 @@ annotation.objects = {
         }
 
     },
-    // updateObject: async (data) => {
+    // updateObjectAnnotation: async (data) => {
     //     let currentObject = Alpine.store("doStore").currentObject;
     //     let params = {
     //         idDocument: annotation.document.idDocument,
     //         idDynamicObject: currentObject.object.idDynamicObject,
     //         idFrameElement: parseInt(data.idFrameElement),
-    //         idLU: parseInt(data.idLU)
+    //         startFrame: parseInt(data.startFrame),
+    //         endFrame: parseInt(data.endFrame),
+    //         idLU: data.idLU ? parseInt(data.idLU) : null
     //     };
-    //     await annotation.api.updateObject(params);
-    //     await Alpine.store("doStore").updateObjectList();
+    //     await annotation.api.updateObjectAnnotation(params);
+    //     console.log('* updateObjectAnnotation');
+    //     //await Alpine.store("doStore").updateObjectList();
     //     Alpine.store("doStore").selectObject(currentObject.idObject);
     // },
-    updateObjectAnnotation: async (data) => {
-        let currentObject = Alpine.store("doStore").currentObject;
-        let params = {
-            idDocument: annotation.document.idDocument,
-            idDynamicObject: currentObject.object.idDynamicObject,
-            idFrameElement: parseInt(data.idFrameElement),
-            startFrame: parseInt(data.startFrame),
-            endFrame: parseInt(data.endFrame),
-            idLU: data.idLU ? parseInt(data.idLU) : null
-        };
-        await annotation.api.updateObjectAnnotation(params);
-        await Alpine.store("doStore").updateObjectList();
-        Alpine.store("doStore").selectObject(currentObject.idObject);
-    },
     updateObjectAnnotationEvent: async () => {
         let currentObject = Alpine.store("doStore").currentObject;
+        // console.log('* updateObjectAnnotationEvent' , currentObject);
+        // let idDynamicObject = currentObject.object.idDynamicObject;
         await Alpine.store("doStore").updateObjectList();
         Alpine.store("doStore").selectObject(currentObject.idObject);
+        // const object = await annotation.api.loadObject(idDynamicObject);
+        // console.log("object loaded", object);
+        // Alpine.store("doStore").replaceByIdDynamicObject(idDynamicObject, object);
     },
     deleteObject: async (idDynamicObject) => {
-        console.log("deletting", idDynamicObject);
         await manager.confirmDelete("Removing object #" + idDynamicObject + ".", "/annotation/dynamicMode/" + idDynamicObject, async () => {
             await Alpine.store("doStore").updateObjectList();
             Alpine.store("doStore").selectObject(null);
+        });
+    },
+    deleteObjectComment: async (idDynamicObject) => {
+        await manager.confirmDelete("Removing comment for object #" + idDynamicObject + ".", "/annotation/dynamicMode/" + idDynamicObject + '/comment', async () => {
+            await Alpine.store("doStore").updateObjectList();
+            let currentObject = Alpine.store("doStore").currentObject;
+            Alpine.store("doStore").selectObject(currentObject.idObject);
         });
     },
     async tracking(canGoOn) {

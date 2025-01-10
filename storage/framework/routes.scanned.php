@@ -936,6 +936,22 @@ $router->get('annotation/staticBBox/formObject/{idDynamicObject}/{order}', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/staticBBox/formComment/{idStaticObject}/{order}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@getFormComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/updateObjectComment', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@updateObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/staticBBox/gridObjects/{idDocument}', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@objectsForGrid',
 	'as' => NULL,
@@ -1048,6 +1064,14 @@ $router->get('annotation/dynamicMode/formObject/{idDynamicObject}/{order}', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/dynamicMode/object/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/dynamicMode/formComment/{idDynamicObject}/{order}', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getFormComment',
 	'as' => NULL,
@@ -1098,6 +1122,14 @@ $router->post('annotation/dynamicMode/cloneObject', [
 
 $router->delete('annotation/dynamicMode/{idDynamicObject}', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/dynamicMode/{idDynamicObject}/comment', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteObjectComment',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

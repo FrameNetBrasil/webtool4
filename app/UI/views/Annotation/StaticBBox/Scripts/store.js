@@ -45,6 +45,11 @@ document.addEventListener('alpine:init', () => {
             let object = annotation.objects.getByIdStaticObject(idStaticObject);
             this.selectObject(object.idObject);
         },
+        commentObject(idStaticObject) {
+            let object = annotation.objects.getByIdStaticObject(idStaticObject);
+            this.selectObject(object.idObject);
+            htmx.ajax("GET","/annotation/staticBBox/formComment/" + idStaticObject + "/" + object.idObject, "#formObject");
+        },
         createObject() {
             this.selectObject(null);
             this.newObjectState = 'creating';

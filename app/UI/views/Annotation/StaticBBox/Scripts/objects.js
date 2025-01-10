@@ -131,21 +131,6 @@ annotation.objects = {
     clearBBoxes: function() {
         $(".bbox").css("display", "none");
     },
-    // drawImageObject: function () {
-    //     // desenha a box do objeto atual
-    //     try {
-    //         let newObjectState = Alpine.store('doStore').newObjectState;
-    //         // apaga todas as boxes
-    //         $('.bbox').css("display", "none");
-    //         let currentObject = Alpine.store('doStore').currentObject;
-    //         if (currentObject) {
-    //             console.log('drawFrame not tracking', currentObject);
-    //             currentObject.drawBox();
-    //         }
-    //     } catch (e) {
-    //         manager.messager('error', e.message);
-    //     }
-    // },
     drawBoxes: function() {
         // show/hide todas as boxes
         let state = Alpine.store("doStore").showHideBoxesState;
@@ -170,24 +155,6 @@ annotation.objects = {
         });
 
     },
-    // drawFrameBoxes: function (frameNumber) {
-    //     // show/hide todas as boxes existentes no frame frameNumber
-    //     //let that = this;
-    //     frameNumber = parseInt(frameNumber);
-    //     if (frameNumber < 1) {
-    //         return;
-    //     }
-    //     let state = Alpine.store('doStore').showHideBoxesState;
-    //     if (state === 'hide') {
-    //         $('.bbox').css("display", "none");
-    //     } else {
-    //         let objects = annotation.objects.tracker.annotatedObjects.filter(o => o.inFrame(frameNumber));
-    //         console.log(objects);
-    //         objects.forEach(o => {
-    //             o.drawBoxInFrame(frameNumber, 'showing');
-    //         });
-    //     }
-    // },
     creatingObject() {
         annotation.drawBox.init();
         console.log("creating new object");
@@ -317,15 +284,20 @@ annotation.objects = {
         await Alpine.store("doStore").updateObjectList();
         Alpine.store("doStore").selectObject(currentObject.idObject);
     },
-    updateObjectAnnotation: async (data) => {
+    // updateObjectAnnotation: async (data) => {
+    //     let currentObject = Alpine.store("doStore").currentObject;
+    //     let params = {
+    //         idDocument: annotation.document.idDocument,
+    //         idStaticObject: currentObject.object.idStaticObject,
+    //         idFrameElement: parseInt(data.idFrameElement),
+    //         idLU: data.idLU ? parseInt(data.idLU) : null
+    //     };
+    //     await annotation.api.updateObjectAnnotation(params);
+    //     await Alpine.store("doStore").updateObjectList();
+    //     Alpine.store("doStore").selectObject(currentObject.idObject);
+    // },
+    updateObjectAnnotationEvent: async () => {
         let currentObject = Alpine.store("doStore").currentObject;
-        let params = {
-            idDocument: annotation.document.idDocument,
-            idStaticObject: currentObject.object.idStaticObject,
-            idFrameElement: parseInt(data.idFrameElement),
-            idLU: data.idLU ? parseInt(data.idLU) : null
-        };
-        await annotation.api.updateObjectAnnotation(params);
         await Alpine.store("doStore").updateObjectList();
         Alpine.store("doStore").selectObject(currentObject.idObject);
     },
@@ -336,6 +308,13 @@ annotation.objects = {
             "/annotation/staticBBox/" + idStaticObject,
             async () => await Alpine.store("doStore").updateObjectList()
         );
+    },
+    deleteObjectComment: async (idStaticObject) => {
+        await manager.confirmDelete("Removing comment for object #" + idStaticObject + ".", "/annotation/staticBBox/" + idStaticObject + '/comment', async () => {
+            await Alpine.store("doStore").updateObjectList();
+            let currentObject = Alpine.store("doStore").currentObject;
+            Alpine.store("doStore").selectObject(currentObject.idObject);
+        });
     },
     cloneCurrentObject: async () => {
         try {

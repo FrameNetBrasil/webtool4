@@ -5,11 +5,11 @@
         <x-slot:title>
             @if($order == 0)
                 <div class="flex">
-                    <div class="title">Current Object: #none</div>
+                    <div class="title">Comment for Object: #none</div>
                 </div>
             @else
                 <div class="flex gap-2">
-                    <div class="title">Current Object: #{{$order}}</div>
+                    <div class="title">Comment for Object: #{{$order}}</div>
                     <div class="flex h-2rem gap-2">
                         <div class="ui label">
                             Range
@@ -19,6 +19,9 @@
                             #{{$object->idDynamicObject}}
                         </div>
                     </div>
+                    @if($object->email)
+                        <div class="text-sm">Created by [{{$object->email}}] at [{{$object->createdAt}}]</div>
+                    @endif
                 </div>
             @endif
         </x-slot:title>
@@ -35,6 +38,12 @@
         </x-slot:fields>
         <x-slot:buttons>
             <x-submit label="Save"></x-submit>
+            <x-button
+                type="button"
+                label="Delete"
+                color="danger"
+                onclick="annotation.objects.deleteObjectComment({{$object?->idDynamicObject}})"
+            ></x-button>
         </x-slot:buttons>
     </x-form>
 </div>
