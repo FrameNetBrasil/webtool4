@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\DynamicMode\AnnotationCommentData;
 use App\Data\Annotation\DynamicMode\CloneData;
+use App\Data\Annotation\DynamicMode\CommentData;
 use App\Data\Annotation\DynamicMode\CreateBBoxData;
 use App\Data\Annotation\DynamicMode\DocumentData;
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
@@ -56,7 +57,7 @@ class DynamicModeController extends Controller
             ->where("idDocument", $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $documentVideo->idDocumentVideo])->first();
+        //$comment = Criteria::byFilter("annotationcomment", ["id1", "=", $documentVideo->idDocumentVideo])->first();
 
 //        $annotation =  AnnotationStaticEventService::getObjectsForAnnotationImage($document->idDocument, $sentence->idSentence);
         return DocumentData::from([
@@ -71,7 +72,7 @@ class DynamicModeController extends Controller
 //            'frames' => $annotation['frames'],
 //            'type' => $annotation['type'],
             'fragment' => 'fe',
-            'comment' => $comment->comment ?? ''
+//            'comment' => $comment->comment ?? ''
         ]);
     }
 
@@ -102,6 +103,27 @@ class DynamicModeController extends Controller
             'order' => $order,
             'object' => $object
         ]);
+    }
+
+    #[Get(path: '/annotation/dynamicMode/formComment/{idDynamicObject}/{order}')]
+    public function getFormComment(int $idDynamicObject, int $order)
+    {
+        $object = AnnotationDynamicService::getObjectComment($idDynamicObject);
+        return view("Annotation.DynamicMode.Panes.formComment", [
+            'order' => $order,
+            'object' => $object
+        ]);
+    }
+
+    #[Post(path: '/annotation/dynamicMode/updateObjectComment')]
+    public function updateObjectComment(CommentData $data)
+    {
+        try {
+            $idDynamicObject = AnnotationDynamicService::updateObjectComment($data);
+            return $this->renderNotify("success", "Comment registered.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
     }
 
     #[Get(path: '/annotation/dynamicMode/gridObjects/{idDocument}')]

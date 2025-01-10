@@ -11,6 +11,7 @@
                 </ul>
                 <script>
                     $(function() {
+                        let luIcon = `{!! view('components.icon.lu')->render() !!} `;
                         $("#{{$id}}").datagrid({
                             url:"/report/lu/data",
                             queryParams: {
@@ -24,8 +25,11 @@
                             border: false,
                             columns: [[
                                 {
-                                    field: "text",
+                                    field: "name",
                                     width: "100%",
+                                    formatter: function(value,row,index){
+                                        return luIcon + value + ' [' + row.frameName + ']';
+                                    }
                                 }
                             ]],
                             onClickRow: (index,row) => {

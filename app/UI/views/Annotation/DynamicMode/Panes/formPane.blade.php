@@ -1,4 +1,4 @@
-<div class="form">
+<div class="form" style="height:260px">
     <x-form
         hx-post="/annotation/dynamicMode/updateObjectAnnotation"
     >
@@ -52,7 +52,7 @@
                 <div class="field mr-1">
                     <x-combobox.lu
                         id="idLU"
-                        label="LU"
+                        label="CVName"
                         placeholder="LU (min: 2 chars)"
                         class="w-23rem mb-2"
                         :value="$object?->idLU"
@@ -79,12 +79,6 @@
         </x-slot:fields>
         <x-slot:buttons>
             <x-submit label="Save"></x-submit>
-{{--            --}}
-{{--            <x-button--}}
-{{--                type="button"--}}
-{{--                label="Save"--}}
-{{--                onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),startFrame: $('#startFrame').attr('value'),endFrame: $('#endFrame').attr('value')})"--}}
-{{--            ></x-button>--}}
             <x-button
                 type="button"
                 label="Clone"

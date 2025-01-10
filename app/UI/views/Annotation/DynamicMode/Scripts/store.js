@@ -66,16 +66,11 @@ document.addEventListener('alpine:init', () => {
             //console.log('after', object);
             this.selectObject(object.idObject);
         },
-        // selectObjectFrame(idObject, frameNumber) {
-        //     this.currentObject = annotation.objects.get(idObject);
-        //     // annotationGridObject.selectRowByObject(idObject);
-        //     //let time = annotation.video.timeFromFrame(frameNumber);
-        //     //annotation.video.player.currentTime(time);
-        //     annotation.video.gotoFrame(frameNumber);
-        //     //this.timeByFrame = time;
-        //     annotation.objects.drawFrameObject(frameNumber);
-        //     this.newObjectState = 'showing';
-        // },
+        commentObject(idDynamicObject) {
+            let object = annotation.objects.getByIdDynamicObject(idDynamicObject);
+            this.selectObject(object.idObject);
+            htmx.ajax("GET","/annotation/dynamicMode/formComment/" + idDynamicObject + "/" + object.idObject, "#formObject");
+        },
         createObject() {
             if (this.currentVideoState === 'paused') {
                 //console.log('create object');

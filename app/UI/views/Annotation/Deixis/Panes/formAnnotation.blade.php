@@ -111,6 +111,11 @@
                     color="danger"
                     @click.prevent="annotation.objects.deleteObject({{$object->idDynamicObject}})"
                 ></x-button>
+                <x-button
+                    label="Comments"
+                    color="secondary"
+                    @click.prevent="console.log({{$object->idDynamicObject}});$('.ui.flyout').flyout('toggle')"
+                ></x-button>
             </div>
             <div>
                 <button
@@ -143,7 +148,7 @@
                     x-data @click="$store.doStore.stopTracking()"
                 >
                     <i class="window stop icon"></i>
-                    <span x-data x-text="'Stop at frame #' + ($store.doStore.currentFrame || '')"></span>
+                    <span x-data x-text="'Stop at #' + ($store.doStore.currentFrame || '')"></span>
                 </button>
             </div>
         </div>

@@ -1,6 +1,6 @@
 <x-layout.object>
     <x-slot:name>
-        <span class="color_user">{{$dataset->project->name}}.{{$dataset->name}}</span>
+        <span class="color_user">{{$dataset->name}} [{{$dataset->project->name}}]</span>
     </x-slot:name>
     <x-slot:detail>
         <div class="ui label tag wt-tag-id">
