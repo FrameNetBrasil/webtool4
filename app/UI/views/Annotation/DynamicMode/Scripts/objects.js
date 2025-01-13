@@ -475,7 +475,9 @@ annotation.objects = {
         });
     },
     deleteObjectComment: async (idDynamicObject) => {
-        await manager.confirmDelete("Removing comment for object #" + idDynamicObject + ".", "/annotation/dynamicMode/" + idDynamicObject + '/comment', async () => {
+        await manager.confirmDelete("Removing comment for object #" + idDynamicObject + ".",
+            "/annotation/dynamicMode/comment/" + annotation.document.idDocument + "/" + idDynamicObject,
+            async () => {
             await Alpine.store("doStore").updateObjectList();
             let currentObject = Alpine.store("doStore").currentObject;
             Alpine.store("doStore").selectObject(currentObject.idObject);

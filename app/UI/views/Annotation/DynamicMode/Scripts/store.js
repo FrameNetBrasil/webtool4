@@ -49,6 +49,7 @@ document.addEventListener("alpine:init", () => {
                 console.log(" ** player current time - selectObject", annotation.video.player.currentTime());
                 let object = annotation.objects.get(idObject);
                 this.currentObject = object;
+                annotation.idDynamicObject = object.object.idDynamicObject;
                 //console.log(object);
                 //let time = annotation.video.timeFromFrame(object.object.startFrame);
                 //console.log(time, object.object.startFrame);
@@ -69,7 +70,16 @@ document.addEventListener("alpine:init", () => {
         commentObject(idDynamicObject) {
             let object = annotation.objects.getByIdDynamicObject(idDynamicObject);
             this.selectObject(object.idObject);
-            htmx.ajax("GET", "/annotation/dynamicMode/formComment/" + idDynamicObject + "/" + object.idObject, "#formObject");
+            //htmx.ajax("GET", "/annotation/dynamicMode/formComment/" + idDynamicObject + "/" + object.idObject, "#formObject");
+            let context= {
+                target: "#formObject",
+                values: {
+                    idDynamicObject,
+                    order: object.idObject,
+                    idDocument: annotation.document.idDocument
+                }
+            };
+            htmx.ajax("GET", "/annotation/dynamicMode/formComment", context );
         },
         createObject() {
             if (this.currentVideoState === "paused") {
@@ -257,23 +267,15 @@ document.addEventListener("alpine:init", () => {
             Alpine.store("doStore").setObjects(annotation.objectList);
             Alpine.store("doStore").newObjectState = "none";
             Alpine.store("doStore").currentVideoState = "paused";
-            $("#gridObjects").datagrid({ data: annotation.objectList });
             if (annotation.idDynamicObject) {
-                let index = $("#gridObjects").datagrid("getRowIndex", annotation.idDynamicObject);
-                $("#gridObjects").datagrid("scrollTo", index);
-                $("#gridObjects").datagrid("selectRow", index);
+                console.log(annotation.idDynamicObject);
+                setTimeout(function() {
+                    const elmnt = document.getElementById("do_" + annotation.idDynamicObject);
+                    elmnt.scrollIntoView();
+                    Alpine.store("doStore").selectObjectByIdDynamicObject(annotation.idDynamicObject);
+                },100);
+
             }
-            // if (annotation.idDynamicObject) {
-            //     console.log(annotation.idDynamicObject);
-            //     setTimeout(function() {
-            //         const elmnt = document.getElementById("do_" + annotation.idDynamicObject);
-            //         console.log(elmnt);
-            //         //elmnt.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-            //         elmnt.scrollIntoView();
-            //         Alpine.store("doStore").selectObjectByIdDynamicObject(annotation.idDynamicObject);
-            //     },100);
-            //
-            // }
         }
     });
 });

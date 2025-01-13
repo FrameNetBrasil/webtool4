@@ -12,6 +12,8 @@ class CommentData extends Data
         public ?int   $idDynamicObject = null,
         public ?int   $idStaticObject = null,
         public ?int   $idAnnotationSet = null,
+        public ?int   $order = null,
+        public ?int   $idDocument = null,
         public ?string $comment = '',
         public ?int $idUser = null,
         public ?string $createdAt = '',

@@ -39,7 +39,7 @@
                         onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
                     ></x-combobox.frame>
                 </div>
-                <div id="fes" class="field w-15rem mr-1">
+                <div id="fes" class="field w-17rem mr-1">
                     <x-combobox.fe-frame
                         id="idFrameElement"
                         name="idFrameElement"

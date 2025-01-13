@@ -193,19 +193,6 @@ class DynamicModeController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
-    public function annotation(int|string $idDocument, int $idDynamicObject = null)
-    {
-        debug($idDocument);
-        $data = $this->getData($idDocument);
-        if (!is_null($idDynamicObject)) {
-            $data->idDynamicObject = $idDynamicObject;
-        }
-        debug($data);
-        return view("Annotation.DynamicMode.annotation", $data->toArray());
-    }
-
-
     /*
      * Build sentence
      */
@@ -314,20 +301,31 @@ class DynamicModeController extends Controller
      * Comment
      */
 
-    #[Get(path: '/annotation/dynamicMode/formComment/{idDynamicObject}/{order}')]
-    public function getFormComment(int $idDynamicObject, int $order)
+//    #[Get(path: '/annotation/dynamicMode/formComment/{idDynamicObject}/{order}')]
+//    public function getFormComment(int $idDynamicObject, int $order)
+//    {
+//        $object = CommentService::getDynamicObjectComment($idDynamicObject);
+//        return view("Annotation.DynamicMode.Panes.formComment", [
+//            'order' => $order,
+//            'object' => $object
+//        ]);
+//    }
+
+    #[Get(path: '/annotation/dynamicMode/formComment')]
+    public function getFormComment(CommentData $data)
     {
-        $object = CommentService::getDynamicObjectComment($idDynamicObject);
+        $object = CommentService::getDynamicObjectComment($data->idDynamicObject);
         return view("Annotation.DynamicMode.Panes.formComment", [
-            'order' => $order,
+            'idDocument' => $data->idDocument,
+            'order' => $data->order,
             'object' => $object
         ]);
     }
-
     #[Post(path: '/annotation/dynamicMode/updateObjectComment')]
     public function updateObjectComment(CommentData $data)
     {
         try {
+            debug($data);
             CommentService::updateDynamicObjectComment($data);
             $this->trigger('updateObjectAnnotationEvent');
             return $this->renderNotify("success", "Comment registered.");
@@ -335,16 +333,33 @@ class DynamicModeController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
-    #[Delete(path: '/annotation/dynamicMode/{idDynamicObject}/comment')]
-    public function deleteObjectComment(int $idDynamicObject)
+    #[Delete(path: '/annotation/dynamicMode/comment/{idDocument}/{idDynamicObject}')]
+    public function deleteObjectComment(int $idDocument,int $idDynamicObject)
     {
         try {
-            CommentService::deleteDynamicObjectComment($idDynamicObject);
+            CommentService::deleteDynamicObjectComment($idDocument,$idDynamicObject);
             return $this->renderNotify("success", "Object comment removed.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
+    /*
+     * get Object
+     */
+
+    #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
+    public function annotation(int|string $idDocument, int $idDynamicObject = null)
+    {
+        debug($idDocument);
+        $data = $this->getData($idDocument);
+        if (!is_null($idDynamicObject)) {
+            $data->idDynamicObject = $idDynamicObject;
+        }
+        debug($data);
+        return view("Annotation.DynamicMode.annotation", $data->toArray());
+    }
+
 
 
 }
