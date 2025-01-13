@@ -17,29 +17,6 @@ use Illuminate\Support\Facades\DB;
 
 class AnnotationStaticBBoxService
 {
-    private static function getCurrentUserTask(int $idDocument): object|null
-    {
-        $idUser = AppService::getCurrentIdUser();
-        $user = User::byId($idUser);
-        // get usertask for this document
-        $usertask = Criteria::table("usertask_document")
-            ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-            ->where("usertask_document.idDocument", $idDocument)
-            ->where("ut.idUser", $idUser)
-            ->select("ut.idUserTask", "ut.idTask")
-            ->first();
-        if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-            if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
-                $usertask = (object)[
-                    "idUserTask" => 1
-                ];
-            } else {
-                $usertask = null;
-            }
-        }
-        return $usertask;
-    }
-
     private static function deleteBBoxesByStaticBBoxObject(int $idStaticObject)
     {
         $bboxes = Criteria::table("view_staticobject_boundingbox as sb")

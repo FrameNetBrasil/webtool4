@@ -26,6 +26,7 @@ class AnnotationFullTextService
             ->first();
         return !is_null($timespan);
     }
+
     public static function listSentences(int $idDocument): array
     {
         $hasTimespan = self::hasTimespan($idDocument);
@@ -191,7 +192,7 @@ class AnnotationFullTextService
         $lu = LU::byId($as->idLU);
         $pos = Criteria::byId("pos", "idPOS", $lu->idPOS);
         $layerPOS = ['pos_n' => 'lty_noun', 'pos_v' => 'lty_verb', 'pos_a' => 'lty_adj', 'pos_prep' => 'lty_prep',
-            'pos_adv' => 'lty_adv', 'pos_num' => 'lty_num', 'pos_pron' => 'lty_pron', 'pos_ccon' => 'lty_ccon', 'pos_scon' => 'lty_scon', 'pos_intj' => 'lty_intj'];
+            'pos_adv' => 'lty_adv', 'pos_num' => 'lty_num', 'pos_pron' => 'lty_pron', 'pos_ccon' => 'lty_ccon', 'pos_scon' => 'lty_scon' /*, 'pos_intj' => 'lty_intj'*/];
         $labels = [];
         $labels['lty_fe'] = Criteria::table("view_frameelement")
             ->where('idLanguage', $idLanguage)
@@ -213,11 +214,13 @@ class AnnotationFullTextService
             ->where("entry", "lty_other")
             ->keyBy("idEntityGenericLabel")
             ->all();
-        $labels[$layerPOS[$pos->entry]] = Criteria::table("view_layertype_gl")
-            ->where('idLanguage', $idLanguage)
-            ->where("entry", $layerPOS[$pos->entry])
-            ->keyBy("idEntityGenericLabel")
-            ->all();
+        if (isset($layerPOS[$pos->entry])) {
+            $labels[$layerPOS[$pos->entry]] = Criteria::table("view_layertype_gl")
+                ->where('idLanguage', $idLanguage)
+                ->where("entry", $layerPOS[$pos->entry])
+                ->keyBy("idEntityGenericLabel")
+                ->all();
+        }
         $labels['lty_sent'] = Criteria::table("view_layertype_gl")
             ->where('idLanguage', $idLanguage)
             ->where("entry", "lty_sent")
@@ -364,7 +367,7 @@ class AnnotationFullTextService
         foreach ($layerTypes as $layerType) {
             $idLayerType = $layerType->idLayerType;
             if (isset($spansByLayerType[$idLayerType])) {
-                $idLayer =$layerType->idLayer;
+                $idLayer = $layerType->idLayer;
                 for ($i = $firstWord; $i <= $lastWord; $i++) {
                     $spans[$i][$idLayer] = null;
                 }

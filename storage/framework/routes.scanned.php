@@ -1040,8 +1040,8 @@ $router->post('annotation/dynamicMode/grid', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/dynamicMode/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@annotation',
+$router->get('annotation/dynamicMode/object/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getObject',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -1056,40 +1056,16 @@ $router->post('annotation/dynamicMode/formObject', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/dynamicMode/formObject/{idDynamicObject}/{order}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getFormObject',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/dynamicMode/object/{idDynamicObject}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getObject',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/dynamicMode/formComment/{idDynamicObject}/{order}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getFormComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/dynamicMode/updateObjectComment', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateObjectComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('annotation/dynamicMode/gridObjects/{idDocument}', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@objectsForGrid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/dynamicMode/formObject/{idDynamicObject}/{order}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getFormObject',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -1128,14 +1104,6 @@ $router->delete('annotation/dynamicMode/{idDynamicObject}', [
 	'domain' => NULL,
 ]);
 
-$router->delete('annotation/dynamicMode/{idDynamicObject}/comment', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteObjectComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->post('annotation/dynamicMode/updateBBox', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateBBox',
 	'as' => NULL,
@@ -1168,8 +1136,8 @@ $router->get('annotation/dynamicMode/sentences/{idDocument}', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/dynamicMode/comment', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@annotationComment',
+$router->get('annotation/dynamicMode/{idDocument}/{idDynamicObject?}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@annotation',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -1226,6 +1194,30 @@ $router->get('annotation/dynamicMode/buildSentences/sentences/{idDocument}', [
 
 $router->post('annotation/dynamicMode/splitSentence', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@splitSentence',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/dynamicMode/formComment/{idDynamicObject}/{order}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getFormComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/dynamicMode/updateObjectComment', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/dynamicMode/{idDynamicObject}/comment', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteObjectComment',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

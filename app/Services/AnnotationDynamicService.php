@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Data\Annotation\DynamicMode\CloneData;
-use App\Data\Annotation\DynamicMode\CommentData;
 use App\Data\Annotation\DynamicMode\CreateBBoxData;
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
 use App\Data\Annotation\DynamicMode\ObjectData;
@@ -13,54 +12,19 @@ use App\Data\Annotation\DynamicMode\WordData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Base;
-use App\Repositories\Corpus;
-use App\Repositories\Document;
 use App\Repositories\DynamicSentenceMM;
 use App\Repositories\Label;
-use App\Repositories\LayerType;
 use App\Repositories\Sentence;
 use App\Repositories\Timeline;
 use App\Repositories\User;
 use App\Repositories\UserAnnotation;
 use App\Repositories\Video;
 use App\Repositories\ViewAnnotationSet;
-use App\Repositories\WordForm;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use Orkester\Manager;
 
 
 class AnnotationDynamicService
 {
-    private static function getCurrentUserTask(int $idDocument): object|null
-    {
-        $idUser = AppService::getCurrentIdUser();
-        $user = User::byId($idUser);
-        // get usertask for this document
-        $usertask = Criteria::table("usertask_document")
-            ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-            ->where("usertask_document.idDocument", $idDocument)
-            ->where("ut.idUser", $idUser)
-            ->select("ut.idUserTask", "ut.idTask")
-            ->first();
-        if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-            if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
-                $usertask = (object)[
-                    "idUserTask" => 1
-                ];
-//                $usertask = Criteria::table("usertask_document")
-//                    ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-//                    ->where("usertask_document.idDocument", $idDocument)
-//                    ->where("ut.idUser", -2)
-//                    ->select("ut.idUserTask", "ut.idTask")
-//                    ->first();
-            } else {
-                $usertask = null;
-            }
-        }
-        return $usertask;
-    }
-
     private static function deleteBBoxesByDynamicObject(int $idDynamicObject)
     {
         $bboxes = Criteria::table("view_dynamicobject_boundingbox as db")
@@ -88,17 +52,6 @@ class AnnotationDynamicService
             ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color", "idDocument")
             ->orderBy("startFrame")
             ->orderBy("endFrame")
-            ->first();
-        return $do;
-    }
-
-    public static function getObjectComment(int $idDynamicObject): object|null
-    {
-        $do = Criteria::table("dynamicobject as do")
-            ->leftJoin("annotationcomment as ac", "do.idDynamicObject", "=", "ac.idDynamicObject")
-            ->leftJoin("user as u", "ac.idUser", "=", "u.idUser")
-            ->where("do.idDynamicObject", $idDynamicObject)
-            ->select("do.idDynamicObject", "do.startFrame", "do.endFrame", "ac.comment", "ac.createdAt", "ac.updatedAt", "u.email")
             ->first();
         return $do;
     }
@@ -144,7 +97,7 @@ class AnnotationDynamicService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
-        $usertask = self::getCurrentUserTask($data->idDocument);
+        $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
         Criteria::deleteById("annotation", "idAnnotationObject", $do->idAnnotationObject);
         if ($data->idFrameElement) {
@@ -169,7 +122,6 @@ class AnnotationDynamicService
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         }
-        debug($data);
         if (($data->startFrame) && ($data->endFrame)) {
             $idUser = AppService::getCurrentIdUser();
             $bboxes = Criteria::table("view_dynamicobject_boundingbox")
@@ -275,29 +227,6 @@ class AnnotationDynamicService
         return $idDynamicObject;
     }
 
-    public static function updateObjectComment(CommentData $data): int
-    {
-        $idDynamicObject = $data->idDynamicObject;
-        $comment = Criteria::byId("annotationcomment", "idDynamicObject", $idDynamicObject);
-        if (is_null($comment)) {
-            Criteria::create("annotationcomment", [
-                "idDynamicObject" => $idDynamicObject,
-                "comment" => $data->comment,
-                "idUser" => $data->idUser,
-                "createdAt" => $data->createdAt,
-                "updatedAt" => $data->updatedAt,
-            ]);
-        } else {
-            Criteria::table("annotationcomment")
-                ->where("idDynamicObject", $idDynamicObject)
-                ->update([
-                    "comment" => $data->comment,
-                    "updatedAt" => $data->updatedAt,
-                ]);
-        }
-        return $idDynamicObject;
-    }
-
     public static function cloneObject(CloneData $data): int
     {
         $idUser = AppService::getCurrentIdUser();
@@ -368,11 +297,6 @@ class AnnotationDynamicService
             $idUser = AppService::getCurrentIdUser();
             Criteria::function("dynamicobject_delete(?,?)", [$idDynamicObject, $idUser]);
         });
-    }
-
-    public static function deleteObjectComment(int $idDynamicObject): void
-    {
-        Criteria::deleteById("annotationcomment", "idDynamicObject", $idDynamicObject);
     }
 
     public static function updateBBox(UpdateBBoxData $data): int
