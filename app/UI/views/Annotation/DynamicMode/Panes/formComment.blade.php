@@ -1,3 +1,4 @@
+@php(debug($object))
 <div class="form" style="height:260px">
     <x-form
         hx-post="/annotation/dynamicMode/updateObjectComment"
@@ -26,6 +27,7 @@
             @endif
         </x-slot:title>
         <x-slot:fields>
+            <x-hidden-field id="idDocument" value="{{$idDocument}}"></x-hidden-field>
             <x-hidden-field id="idDynamicObject" value="{{$object?->idDynamicObject}}"></x-hidden-field>
             <x-hidden-field id="createdAt" value="{{$object?->createdAt}}"></x-hidden-field>
             <div class="field mr-1">

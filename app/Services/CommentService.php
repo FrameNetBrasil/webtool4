@@ -20,22 +20,44 @@ class CommentService
         return $do;
     }
 
-    public static function deleteDynamicObjectComment(int $idDynamicObject): void
+    public static function deleteDynamicObjectComment(int $idDocument, int $idDynamicObject): void
     {
-        Criteria::deleteById("annotationcomment", "idDynamicObject", $idDynamicObject);
+        $comment = Criteria::byId("annotationcomment", "idDynamicObject", $idDynamicObject);
+        if (!is_null($comment)) {
+            $document = Document::byId($idDocument);
+            $idProject = Criteria::table("view_project_docs as pd")
+                ->where("pd.idDocument", $idDocument)
+                ->first()->idProject;
+            $users = Criteria::table("user as u")
+                ->join("project_manager as pm", "u.idUser", "=", "pm.idUser")
+                ->select("u.idUser", "u.email")
+                ->where("pm.idProject", $idProject)
+                ->get()->pluck("idUser")->all();
+            $users[] = $idUserCurrent = AppService::getCurrentIdUser();
+            $users[] = $comment->idUser;
+            Criteria::deleteById("annotationcomment", "idDynamicObject", $idDynamicObject);
+            $link = "<a href=\"/annotation/dynamicMode/{$idDocument}/{$idDynamicObject}\">[#{$idDynamicObject}]</a>.";
+            foreach($users as $idUser) {
+                if ($idUser != $idUserCurrent) {
+                    MessageService::sendMessage((object)[
+                        'idUserFrom' => $idUserCurrent,
+                        'idUserTo' => $idUser,
+                        'class' => 'error',
+                        'text' => "Comment deleted at document [{$document->name}] object {$link}.",
+                    ]);
+                }
+            }
+        }
     }
 
     public static function updateDynamicObjectComment(CommentData $data): int
     {
         $idDynamicObject = $data->idDynamicObject;
-        $idDocument = Criteria::table("view_annotation_dynamic as do")
-            ->where("do.idDynamicObject", $idDynamicObject)
-            ->first()->idDocument;
-        $document = Document::byId($idDocument);
+        $document = Document::byId($data->idDocument);
         $idProject = Criteria::table("view_project_docs as pd")
-            ->where("pd.idDocument", $idDocument)
+            ->where("pd.idDocument", $data->idDocument)
             ->first()->idProject;
-        $users = Criteria::table("users as u")
+        $users = Criteria::table("user as u")
             ->join("project_manager as pm", "u.idUser", "=", "pm.idUser")
             ->select("u.idUser", "u.email")
             ->where("pm.idProject", $idProject)
@@ -51,6 +73,7 @@ class CommentService
                 "updatedAt" => $data->updatedAt,
             ]);
         } else {
+            $users[] = $comment->idUser;
             Criteria::table("annotationcomment")
                 ->where("idDynamicObject", $idDynamicObject)
                 ->update([
@@ -58,13 +81,17 @@ class CommentService
                     "updatedAt" => $data->updatedAt,
                 ]);
         }
+        $idUserCurrent = AppService::getCurrentIdUser();
+        $link = "<a href=\"/annotation/dynamicMode/{$document->idDocument}/{$idDynamicObject}\">[#{$idDynamicObject}]</a>.";
         foreach($users as $idUser) {
-            MessageService::sendMessage((object)[
-                'idUserFrom' => AppService::getCurrentIdUser(),
-                'idUserTo' => $idUser,
-                'class' => 'error',
-                'text' => "Comment created/updated at document [{$document->name}] object [#{$idDynamicObject}].",
-            ]);
+            if ($idUser != $idUserCurrent) {
+                MessageService::sendMessage((object)[
+                    'idUserFrom' => $idUserCurrent,
+                    'idUserTo' => $idUser,
+                    'class' => 'warning',
+                    'text' => "Comment created/updated at document [{$document->name}] object {$link}.",
+                ]);
+            }
         }
         return $idDynamicObject;
     }
