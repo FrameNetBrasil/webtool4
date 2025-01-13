@@ -73,13 +73,24 @@
                         _token: "{{ csrf_token() }}",
                         document: {{ Js::from($document) }},
                         video: {{ Js::from($video) }},
-                        objectList: []
+                        objectList: [],
+                        idDynamicObject:{!! $idDynamicObject ?? 'null' !!}
                     };
 
                     document.body.addEventListener("updateObjectAnnotationEvent", function(evt){
                         console.log("event updateObjectAnnotationEvent");
                         annotation.objects.updateObjectAnnotationEvent();
                     })
+
+{{--                    @if(!is_null($idDynamicObject))--}}
+{{--                    $(function() {--}}
+{{--                        console.log("do_{{$idDynamicObject}}");--}}
+{{--                        const elmnt = document.getElementById("do_{{$idDynamicObject}}");--}}
+{{--                        console.log(elmnt);--}}
+{{--                        //elmnt.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });--}}
+{{--                    });--}}
+
+{{--                    @endif--}}
 
                     @include("Annotation.DynamicMode.Scripts.api")
                     @include("Annotation.DynamicMode.Scripts.video")

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\DynamicMode;
+namespace App\Data\Comment;
 
 use App\Services\AppService;
 use Carbon\Carbon;
@@ -10,6 +10,8 @@ class CommentData extends Data
 {
     public function __construct(
         public ?int   $idDynamicObject = null,
+        public ?int   $idStaticObject = null,
+        public ?int   $idAnnotationSet = null,
         public ?string $comment = '',
         public ?int $idUser = null,
         public ?string $createdAt = '',
