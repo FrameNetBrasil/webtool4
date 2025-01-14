@@ -112,9 +112,9 @@
                     @click.prevent="annotation.objects.deleteObject({{$object->idDynamicObject}})"
                 ></x-button>
                 <x-button
-                    label="Comments"
+                    label="Comment"
                     color="secondary"
-                    @click.prevent="console.log({{$object->idDynamicObject}});$('.ui.flyout').flyout('toggle')"
+                    @click.prevent="Alpine.store('doStore').commentObject({{$object->idDynamicObject}})"
                 ></x-button>
             </div>
             <div>

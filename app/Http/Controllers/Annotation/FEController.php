@@ -8,12 +8,14 @@ use App\Data\Annotation\FE\CreateASData;
 use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\FE\SearchData;
 use App\Data\Annotation\FE\SelectionData;
+use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
 use App\Repositories\WordForm;
 use App\Services\AnnotationFEService;
+use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -68,14 +70,7 @@ class FEController extends Controller
     #[Get(path: '/annotation/fe/as/{idAS}/{token}')]
     public function annotationSet(int $idAS, string $token)
     {
-        $data = AnnotationFEService::getASData($idAS);
-//        $idLU = $data['lu']->idLU;
-//        $data['alternativeLU'] = [];
-//        foreach(WordForm::getLUs($token) as $lu) {
-//            if ($lu->idLU != $idLU) {
-//                $data['alternativeLU'][] = $lu;
-//            }
-//        }
+        $data = AnnotationFEService::getASData($idAS, $token);
         return view("Annotation.FE.Panes.annotationSet", $data);
     }
 
@@ -148,6 +143,43 @@ class FEController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
+    /*
+     * Comment
+     */
+
+    #[Get(path: '/annotation/fe/formComment/{idAnnotationSet}')]
+    public function getFormComment(int $idAnnotationSet)
+    {
+        $object = CommentService::getAnnotationSetComment($idAnnotationSet);
+        return view("Annotation.FE.Panes.formComment", [
+            'object' => $object
+        ]);
+    }
+    #[Post(path: '/annotation/fe/updateObjectComment')]
+    public function updateObjectComment(CommentData $data)
+    {
+        try {
+            debug($data);
+            CommentService::updateAnnotationSetComment($data);
+            $this->trigger('reload-annotationSet');
+            return $this->renderNotify("success", "Comment registered.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+    #[Delete(path: '/annotation/fe/comment/{idAnnotationSet}')]
+    public function deleteObjectComment(int $idAnnotationSet)
+    {
+        try {
+            CommentService::deleteAnnotationSetComment($idAnnotationSet);
+            $this->trigger('reload-annotationSet');
+            return $this->renderNotify("success", "Object comment removed.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
 
 }
 

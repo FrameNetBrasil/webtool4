@@ -48,7 +48,15 @@ document.addEventListener('alpine:init', () => {
         commentObject(idStaticObject) {
             let object = annotation.objects.getByIdStaticObject(idStaticObject);
             this.selectObject(object.idObject);
-            htmx.ajax("GET","/annotation/staticBBox/formComment/" + idStaticObject + "/" + object.idObject, "#formObject");
+            let context= {
+                target: "#formObject",
+                values: {
+                    idStaticObject,
+                    order: object.idObject,
+                    idDocument: annotation.document.idDocument
+                }
+            };
+            htmx.ajax("GET", "/annotation/staticBBox/formComment", context );
         },
         createObject() {
             this.selectObject(null);
@@ -125,7 +133,13 @@ document.addEventListener('alpine:init', () => {
             window.annotation.objects.annotateObjects(annotation.objectList);
             Alpine.store('doStore').setObjects(annotation.objectList);
             Alpine.store('doStore').newObjectState = 'none';
-            // Alpine.store('doStore').currentVideoState = 'paused';
+            if (annotation.idStaticObject) {
+                setTimeout(function() {
+                    const elmnt = document.getElementById("so_" + annotation.idStaticObject);
+                    elmnt.scrollIntoView();
+                    Alpine.store("doStore").selectObjectByIdStaticObject(annotation.idStaticObject);
+                },100);
+            }
         }
     });
 });

@@ -71,8 +71,10 @@ document.addEventListener('alpine:init', () => {
                 this.currentObject = object;
                 this.currentStartFrame = object.startFrame;
                 this.currentEndFrame = object.endFrame;
-                annotation.video.gotoFrame(this.currentFrame);
+                // console.log('after', object,this.currentFrame);
+                annotation.video.gotoFrame(this.currentStartFrame);
                 this.newObjectState = 'showing';
+                annotation.timeline.setTime(object.startTime);
                 htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.idDynamicObject, "#formObject");
             }
             // annotationGridObject.selectRowByObject(idObject);
@@ -83,23 +85,19 @@ document.addEventListener('alpine:init', () => {
             //console.log('after', object);
             this.selectObject(object.idObject);
         },
-        // createObject() {
-        //     if (this.currentVideoState === 'paused') {
-        //         //console.log('create object');
-        //         this.selectObject(null);
-        //         this.newObjectState = 'creating';
-        //         annotation.objects.creatingObject();
-        //     }
-        // },
-        // async endObject() {
-        //     if (this.currentVideoState === 'paused') {
-        //         //console.log('end object');
-        //         this.currentObject.object.endFrame = this.currentFrame;
-        //         await annotation.objects.saveObject(this.currentObject);
-        //         this.selectObject(null);
-        //     }
-        // },
-
+        commentObject(idDynamicObject) {
+            let object = annotation.objects.getByIdDynamicObject(idDynamicObject);
+            this.selectObject(object.idObject);
+            let context= {
+                target: "#formObject",
+                values: {
+                    idDynamicObject,
+                    order: object.idObject,
+                    idDocument: annotation.document.idDocument
+                }
+            };
+            htmx.ajax("GET", "/annotation/deixis/formComment", context );
+        },
         createBBox() {
             if (this.currentVideoState === 'paused') {
                 //console.log('create object');
@@ -278,12 +276,16 @@ document.addEventListener('alpine:init', () => {
         const dataState = Alpine.store('doStore').dataState;
         if (dataState === 'loaded') {
             console.log('Data Loaded');
-            //console.log(annotation.objectList);
             window.annotation.objects.annotateObjects(annotation.layerList);
             window.annotation.timeline.updateModel();
             Alpine.store('doStore').setLayers(annotation.layerList);
             Alpine.store('doStore').newObjectState = 'none';
             Alpine.store('doStore').currentVideoState = 'paused';
+            if (annotation.idDynamicObject) {
+                setTimeout(function() {
+                    Alpine.store("doStore").selectObjectByIdDynamicObject(annotation.idDynamicObject);
+                },100);
+            }
         }
     });
 });

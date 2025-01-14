@@ -63,14 +63,12 @@
                 _token: "{{ csrf_token() }}",
                 document: {{ Js::from($document) }},
                 video: {{ Js::from($video) }},
-                layerList: []
+                layerList: [],
+                idDynamicObject:{!! $idDynamicObject ?? 'null' !!}
             };
 
             document.body.addEventListener("updateObjectAnnotationEvent", function(evt) {
                 annotation.objects.updateObjectAnnotationEvent();
-            });
-            $(function() {
-                $(".ui.flyout").flyout({ context: "#work" });
             });
 
             @include("Annotation.Deixis.Scripts.DeixisObject")

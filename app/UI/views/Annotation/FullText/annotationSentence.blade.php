@@ -5,7 +5,7 @@
     </x-slot:head>
     <x-slot:main>
         @include('Annotation.FullText.Panes.annotation')
-        <div id="fullTextAnnotationPane" class="fullTextAnnotationPane">
+        <div id="fullTextAnnotationPane" class="fullTextAnnotationPane flex flex-column h-full">
                 <div class="header">
                     <div class="tag">
                         <div class="ui label wt-tag-id">
@@ -31,10 +31,8 @@
                         @endif
                     </div>
                 </div>
-                <div class="annotations" >
+                <div class="annotations flex-grow-1" >
                     @include('Annotation.FullText.Panes.annotations')
-                    <div id="workArea" class="workArea" x-data="$store.ftStore">
-                    </div>
                 </div>
         </div>
     </x-slot:main>

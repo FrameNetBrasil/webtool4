@@ -48,7 +48,7 @@ annotation.timeline = {
                         keyframesStyle: {
                             shape: "rect"
                         },
-                        label: object.gl
+                        label: object.gl + (object.comment ? '*' : '')
                     };
                 } else if (object.idLU) {
                     groups[object.idDynamicObject] = {
@@ -61,7 +61,7 @@ annotation.timeline = {
                         keyframesStyle: {
                             shape: "rect"
                         },
-                        label: object.lu
+                        label: object.lu + (object.comment ? '*' : '')
                     };
                 } else {
                     // groups[object.idDynamicObject] = group[1];
@@ -78,7 +78,7 @@ annotation.timeline = {
                         keyframesStyle: {
                             shape: "rect"
                         },
-                        label: object.idDynamicObject
+                        label: object.idDynamicObject + (object.comment ? '*' : '')
                     };
                 }
 
@@ -158,23 +158,6 @@ annotation.timeline = {
             }
             console.log("dragfinished");
         });
-
-        // annotation.timeline.timeline.onContextMenu(function(obj) {
-        //     if (obj.args) {
-        //         obj.args.preventDefault();
-        //     }
-        //     console.log(obj, "addKeyframe");
-        //
-        //     obj.elements.forEach(p => {
-        //         if (p.type === "row" && p.row) {
-        //             if (!p.row?.keyframes) {
-        //                 p.row.keyframes = [];
-        //             }
-        //             p.row?.keyframes?.push({ val: obj.point?.val || 0 });
-        //         }
-        //     });
-        //     timeline.redraw();
-        // });
 
         annotation.timeline.timeline.onMouseDown(function(obj) {
             //console.log(obj.target, obj.val);

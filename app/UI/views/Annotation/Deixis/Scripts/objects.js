@@ -423,8 +423,6 @@ annotation.objects = {
         let params = {
             idDocument: annotation.document.idDocument,
             idDynamicObject: currentObject.idDynamicObject,
-            // startFrame: parseInt(data.startFrame),
-            // endFrame: parseInt(data.endFrame),
             idFrameElement: data.idFrameElement ? parseInt(data.idFrameElement) : null,
             idLU: data.idLU ? parseInt(data.idLU) : null,
             idGenericLabel: data.idGenericLabel ? parseInt(data.idGenericLabel) : null
@@ -434,17 +432,26 @@ annotation.objects = {
             Alpine.store("doStore").selectObjectByIdDynamicObject(dynamicObject.idDynamicObject);
         });
     },
-    // updateObjectAnnotationEvent: async () => {
-    //     let currentObject = Alpine.store("doStore").currentObject;
-    //     await Alpine.store("doStore").updateObjectList();
-    //     Alpine.store("doStore").selectObject(currentObject.idObject);
-    // },
+    updateObjectAnnotationEvent: async () => {
+        let currentObject = Alpine.store("doStore").currentObject;
+        await Alpine.store("doStore").loadLayerList();
+        Alpine.store("doStore").selectObject(currentObject.idObject);
+    },
     deleteObject: async (idDynamicObject) => {
         console.log("delete ", idDynamicObject);
         await manager.confirmDelete("Removing object #" + idDynamicObject + ".", "/annotation/deixis/" + idDynamicObject, async () => {
             await Alpine.store("doStore").loadLayerList();
             Alpine.store("doStore").selectObject(null);
         });
+    },
+    deleteObjectComment: async (idDynamicObject) => {
+        await manager.confirmDelete("Removing comment for object #" + idDynamicObject + ".",
+            "/annotation/deixis/comment/" + annotation.document.idDocument + "/" + idDynamicObject,
+            async () => {
+                await Alpine.store("doStore").updateObjectList();
+                let currentObject = Alpine.store("doStore").currentObject;
+                Alpine.store("doStore").selectObject(currentObject.idObject);
+            });
     },
     async tracking(canGoOn) {
         if (canGoOn) {

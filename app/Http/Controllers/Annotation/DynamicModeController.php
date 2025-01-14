@@ -301,16 +301,6 @@ class DynamicModeController extends Controller
      * Comment
      */
 
-//    #[Get(path: '/annotation/dynamicMode/formComment/{idDynamicObject}/{order}')]
-//    public function getFormComment(int $idDynamicObject, int $order)
-//    {
-//        $object = CommentService::getDynamicObjectComment($idDynamicObject);
-//        return view("Annotation.DynamicMode.Panes.formComment", [
-//            'order' => $order,
-//            'object' => $object
-//        ]);
-//    }
-
     #[Get(path: '/annotation/dynamicMode/formComment')]
     public function getFormComment(CommentData $data)
     {
@@ -351,12 +341,10 @@ class DynamicModeController extends Controller
     #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
     public function annotation(int|string $idDocument, int $idDynamicObject = null)
     {
-        debug($idDocument);
         $data = $this->getData($idDocument);
         if (!is_null($idDynamicObject)) {
             $data->idDynamicObject = $idDynamicObject;
         }
-        debug($data);
         return view("Annotation.DynamicMode.annotation", $data->toArray());
     }
 

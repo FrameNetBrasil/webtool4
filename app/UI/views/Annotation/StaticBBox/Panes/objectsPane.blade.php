@@ -5,30 +5,36 @@
             <th></th>
             <th></th>
             <th class="text-right">#object</th>
-            <th  class="text-right">#id</th>
+            <th class="text-right">#id</th>
             <th>FrameElement</th>
             <th>CVName</th>
         </tr>
         </thead>
-        <tbody
-        >
+        <tbody>
         <template x-data x-for="object,index in $store.doStore.objects">
             <tr
+                :id="'so_' + object.idStaticObject"
                 @click="Alpine.store('doStore').selectObject(index + 1)"
-                :class="'cursor-pointer w-full text-color ' + (object.comment ? 'ui yellow' : (object.fe ? 'ui green' : 'ui red'))"
+                class="cursor-pointer w-full text-color"
+                :class="{
+    'ui yellow': object.comment,
+    'ui green' : object.fe && !object.comment,
+    'ui red': !object.fe && !object.comment,
+    'ui blue' : Alpine.store('doStore').currentObject && ($store.doStore.objects[index].idStaticObject === Alpine.store('doStore').currentObject.object.idStaticObject)
+}"
             >
                 <td class="w-2rem">
                     <x-delete
                         title="delete Object"
                         @click.stop="annotation.objects.deleteObject(object.idStaticObject)"
                     ></x-delete>
-                </td >
+                </td>
                 <td class="w-2rem">
                     <x-comment
                         @click.stop="Alpine.store('doStore').commentObject(object.idStaticObject)"
                     ></x-comment>
-                </td >
-                <td class="text-right w-6rem">
+                </td>
+                <td class="text-right w-5rem">
                     <div class="objectId" x-text="'#' + (index + 1)"></div>
                 </td>
                 <td class="text-right w-6rem">
@@ -52,7 +58,6 @@
         </tbody>
     </table>
 </div>
-
 
 
 {{--<div class="ui tab active objects p-2" data-tab="objects">--}}
