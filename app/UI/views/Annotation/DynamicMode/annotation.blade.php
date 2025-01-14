@@ -82,16 +82,6 @@
                         annotation.objects.updateObjectAnnotationEvent();
                     })
 
-{{--                    @if(!is_null($idDynamicObject))--}}
-{{--                    $(function() {--}}
-{{--                        console.log("do_{{$idDynamicObject}}");--}}
-{{--                        const elmnt = document.getElementById("do_{{$idDynamicObject}}");--}}
-{{--                        console.log(elmnt);--}}
-{{--                        //elmnt.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });--}}
-{{--                    });--}}
-
-{{--                    @endif--}}
-
                     @include("Annotation.DynamicMode.Scripts.api")
                     @include("Annotation.DynamicMode.Scripts.video")
                     @include("Annotation.DynamicMode.Scripts.drawBox")

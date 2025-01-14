@@ -1,3 +1,4 @@
+@php($word =  '')
 <div
     class="container"
     hx-trigger="reload-sentence from:body"
@@ -8,6 +9,11 @@
     @foreach($tokens as $i => $token)
         @php($hasAS = isset($token['idAS']) ? ' hasAS ' : '')
         @php($hasLU = $token['hasLU'] ? ' hasLU ' : '')
+        @if(isset($token['idAS']))
+            @if($token['idAS'] == $idAnnotationSet)
+               @php($word =  $token['word'])
+            @endif
+        @endif
         <span
             class="word {{$hasLU}}"
             id="{{$i}}">
@@ -34,4 +40,16 @@
             @endif
         </span>
     @endforeach
+</div>
+<div id="workArea" class="workArea h-full" x-data="$store.ftStore">
+    @if(!is_null($idAnnotationSet))
+        {{$idAnnotationSet}}  {{$word}}
+        <div
+            hx-trigger="load"
+            hx-get="/annotation/fullText/as/{{$idAnnotationSet}}/{{$word}}"
+            hx-target="#workArea"
+            hx-swap="innerHTML"
+        >
+        </div>
+    @endif
 </div>

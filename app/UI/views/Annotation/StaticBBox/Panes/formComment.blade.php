@@ -17,6 +17,7 @@
             @endif
         </x-slot:title>
         <x-slot:fields>
+            <x-hidden-field id="idDocument" value="{{$idDocument}}"></x-hidden-field>
             <x-hidden-field id="idStaticObject" value="{{$object?->idStaticObject}}"></x-hidden-field>
             <x-hidden-field id="createdAt" value="{{$object?->createdAt}}"></x-hidden-field>
             <div class="field mr-1">

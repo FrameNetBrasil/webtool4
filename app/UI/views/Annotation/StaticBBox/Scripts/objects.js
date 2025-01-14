@@ -310,11 +310,13 @@ annotation.objects = {
         );
     },
     deleteObjectComment: async (idStaticObject) => {
-        await manager.confirmDelete("Removing comment for object #" + idStaticObject + ".", "/annotation/staticBBox/" + idStaticObject + '/comment', async () => {
-            await Alpine.store("doStore").updateObjectList();
-            let currentObject = Alpine.store("doStore").currentObject;
-            Alpine.store("doStore").selectObject(currentObject.idObject);
-        });
+        await manager.confirmDelete("Removing comment for object #" + idStaticObject + ".",
+            "/annotation/staticBBox/comment/" + annotation.document.idDocument + "/" + idStaticObject,
+            async () => {
+                await Alpine.store("doStore").updateObjectList();
+                let currentObject = Alpine.store("doStore").currentObject;
+                Alpine.store("doStore").selectObject(currentObject.idObject);
+            });
     },
     cloneCurrentObject: async () => {
         try {

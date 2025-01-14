@@ -103,6 +103,7 @@ class AnnotationFullTextService
             'sentence' => $sentence,
             'text' => $sentence->text,
             'tokens' => $words,
+            'idAnnotationSet' => null
         ];
 
     }
@@ -320,7 +321,8 @@ class AnnotationFullTextService
             'labels' => $labels,
             'entities' => $entities,
             'nis' => $nis,
-            'alternativeLU' => $alternativeLU
+            'alternativeLU' => $alternativeLU,
+            'word' => $token
         ];
 
     }

@@ -90,17 +90,17 @@ class AnnotationStaticBBoxService
         $result = Criteria::table("view_annotation_static as sta")
             ->leftJoin("view_lu", "sta.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
+            ->leftJoin("annotationcomment as ac", "sta.idStaticObject", "=", "ac.idStaticObject")
             ->where("sta.idLanguage", "left", $idLanguage)
             ->where("idDocument", $idDocument)
             ->where("view_frame.idLanguage", "left", $idLanguage)
-            ->select("idStaticObject", "sta.name", "idAnnotationLU", "sta.idLU", "lu", "view_lu.name as luName", "sta.idUserTaskLU",
-                "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "sta.idFrame", "frame", "fe", "color", "sta.idUserTaskFE")
+            ->select("sta.idStaticObject", "sta.name", "idAnnotationLU", "sta.idLU", "lu", "view_lu.name as luName", "sta.idUserTaskLU",
+                "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "sta.idFrame", "frame", "fe", "color", "sta.idUserTaskFE","ac.comment")
             ->orderBy("idStaticObject")
             ->all();
         $oMM = [];
         $bbox = [];
         $valids = [];
-        debug($result);
         foreach ($result as $i => $row) {
             $valid = true;
             if ($row->idUserTaskFE) {
@@ -114,7 +114,6 @@ class AnnotationStaticBBoxService
                 $oMM[$row->idStaticObject] = $row->idStaticObject;
             }
         }
-        debug($oMM);
         if (count($result) > 0) {
             $bboxObjects = Criteria::table("view_staticobject_boundingbox")
                 ->whereIN("idStaticObject", $oMM)
@@ -132,7 +131,6 @@ class AnnotationStaticBBoxService
                 $objects[] = $row;
             }
         }
-        debug($objects);
         return $objects;
     }
 

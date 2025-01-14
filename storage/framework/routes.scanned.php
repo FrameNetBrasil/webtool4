@@ -3216,6 +3216,30 @@ $router->delete('annotation/fe/annotationset/{idAnnotationSet}', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/fe/formComment/{idAnnotationSet}', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@getFormComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/fe/updateObjectComment', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@updateObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/fe/comment/{idAnnotationSet}', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@deleteObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/deixis', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@browse',
 	'as' => NULL,
@@ -3226,14 +3250,6 @@ $router->get('annotation/deixis', [
 
 $router->post('annotation/deixis/grid', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@grid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/deixis/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@annotation',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3258,14 +3274,6 @@ $router->post('annotation/deixis/formAnnotation', [
 
 $router->get('annotation/deixis/formAnnotation/{idDynamicObject}', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@getFormAnnotation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/deixis/gridObjects/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@gridObjects',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3304,14 +3312,6 @@ $router->post('annotation/deixis/updateObjectAnnotation', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/deixis/cloneObject', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@cloneObject',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->delete('annotation/deixis/{idDynamicObject}', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteObject',
 	'as' => NULL,
@@ -3320,16 +3320,40 @@ $router->delete('annotation/deixis/{idDynamicObject}', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/deixis/updateBBox', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateBBox',
+$router->get('annotation/deixis/fes/{idFrame}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@feCombobox',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/deixis/fes/{idFrame}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@feCombobox',
+$router->get('annotation/deixis/formComment', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@getFormComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/updateObjectComment', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/deixis/comment/{idDocument}/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/deixis/{idDocument}/{idDynamicObject?}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@annotation',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3616,14 +3640,6 @@ $router->post('annotation/staticBBox/grid', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/staticBBox/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@annotation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->post('annotation/staticBBox/formObject', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@formObject',
 	'as' => NULL,
@@ -3634,22 +3650,6 @@ $router->post('annotation/staticBBox/formObject', [
 
 $router->get('annotation/staticBBox/formObject/{idDynamicObject}/{order}', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@getFormObject',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/staticBBox/formComment/{idStaticObject}/{order}', [
-	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@getFormComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/staticBBox/updateObjectComment', [
-	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@updateObjectComment',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3720,8 +3720,32 @@ $router->get('annotation/staticBBox/sentences/{idDocument}', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/staticBBox/comment', [
-	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@annotationComment',
+$router->get('annotation/staticBBox/formComment', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@getFormComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/staticBBox/updateObjectComment', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@updateObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/staticBBox/comment/{idDocument}/{idStaticObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@deleteObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/staticBBox/{idDocument}/{idStaticObject?}', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@annotation',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3752,7 +3776,7 @@ $router->get('annotation/fullText/grid/{idDocument}/sentences', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fullText/sentence/{idDocumentSentence}', [
+$router->get('annotation/fullText/sentence/{idDocumentSentence}/{idAnnotationSet?}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@sentence',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -3818,6 +3842,30 @@ $router->post('annotation/fullText/create', [
 
 $router->delete('annotation/fullText/annotationset/{idAnnotationSet}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteAS',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/fullText/formComment/{idAnnotationSet}', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@getFormComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/fullText/updateObjectComment', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@updateObjectComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/fullText/comment/{idAnnotationSet}', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteObjectComment',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

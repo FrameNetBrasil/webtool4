@@ -1,4 +1,3 @@
-@php(debug($object))
 <div class="form" style="height:260px">
     <x-form
         hx-post="/annotation/dynamicMode/updateObjectComment"
