@@ -38,23 +38,24 @@
     }
 
     .annotations {
-            flex-grow: 1;
-            display: flex;
-            flex-flow: column;
-            gap: 0.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-flow: column;
+        gap: 0.5rem;
 
-            .hasLU {
-                cursor: pointer;
-            }
+        .hasLU {
+            cursor: pointer;
+        }
 
-            .hasAS {
-                cursor: pointer;
-                border: 0;
-                color: white !important;
-                background-color: @grey-10 !important;
-            }
+        .hasAS {
+            cursor: pointer;
+            border: 0;
+            color: white !important;
+            background-color: @grey-10 !important;
+        }
 
-            .workArea {
+        .workArea {
+            #formAnnotationSet {
                 .word {
                     display: inline-block;
                     position: relative;
@@ -84,8 +85,7 @@
                     font-family: "Noto Sans Mono", monospace;
                     font-optical-sizing: auto;
                     font-style: normal;
-                    font-variation-settings:
-                        "wdth" 75;
+                    font-variation-settings: "wdth" 75;
 
 
                     .colWord {
@@ -98,7 +98,7 @@
                         width: 0.75rem;
 
                         .word {
-                            width:100%;
+                            width: 100%;
                         }
                     }
                 }
@@ -176,6 +176,7 @@
                 }
 
             }
+        }
     }
-}
 
+}

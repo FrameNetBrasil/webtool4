@@ -1,10 +1,10 @@
 <div
     id="formAnnotationSet"
-    class="h-full  flex flex-column"
+    class="h-full"
     hx-trigger="reload-annotationSet from:body"
-    hx-target="this"
-    hx-swap="outerHTML"
-    hx-get="/annotation/fe/as/{{$idAnnotationSet}}/{{$word}}"
+    hx-target="#workArea"
+    hx-swap="innerHTML"
+    hx-get="/annotation/fe/as/{{$idAnnotationSet}}/{{$token}}"
 >
     <div class="ui card w-full">
         <div class="content">
@@ -119,18 +119,19 @@
 
                 <div class="rowFE">
                     @foreach($fes as $fe)
+                        @php(debug($token))
                         <div class="colFE">
                             <button
                                 class="ui right labeled icon button color_{{$fe->idColor}}"
                                 hx-post="/annotation/fe/annotate/"
                                 hx-target="#workArea"
-                                hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idFrameElement:{{$fe->idFrameElement}}, selection: annotationFE.selection}'
+                                hx-vals="js:{idAnnotationSet: {{$idAnnotationSet}}, token: '{{$token}}', idFrameElement:{{$fe->idFrameElement}}, selection: annotationFE.selection}"
                             >
                                 <i
                                     class="delete icon"
                                     hx-on:click="event.stopPropagation()"
                                     hx-delete="/annotation/fe/frameElement"
-                                    hx-vals='js:{idAnnotationSet: {{$idAnnotationSet}}, idFrameElement:{{$fe->idFrameElement}}}'
+                                    hx-vals="js:{idAnnotationSet: {{$idAnnotationSet}}, token: '{{$token}}', idFrameElement:{{$fe->idFrameElement}}}"
                                     hx-target="#workArea"
                                 >
                                 </i>

@@ -59,11 +59,11 @@ class ResourceController extends Controller
                     ->all();
             } else {
                 $data = Criteria::table("image")
-                    ->join("dataset_image as di", "image.idImage", "=", "di.idImage")
-                    ->join("dataset", "di.idDataset", "=", "dataset.idDataset")
+                    ->leftJoin("dataset_image as di", "image.idImage", "=", "di.idImage")
+                    ->leftJoin("dataset", "di.idDataset", "=", "dataset.idDataset")
                     ->select('image.idImage', 'image.name')
                     ->selectRaw("concat('i',image.idImage) as id")
-                    ->selectRaw("concat(' [',dataset.name,']') as dataset")
+                    ->selectRaw("IFNULL(concat(' [',dataset.name,']'),' []') as dataset")
                     ->selectRaw("'open' as state")
                     ->selectRaw("'image' as type")
                     ->where("image.name", "startswith", $search->image)
