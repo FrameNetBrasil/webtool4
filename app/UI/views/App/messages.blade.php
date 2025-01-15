@@ -9,6 +9,7 @@
     hx-target="this"
     hx-swap="outerHTML"
     hx-get="/messages"
+    class="p-2"
 >
         @foreach($messages as $message)
             <div class="ui {{$message->class}} message">

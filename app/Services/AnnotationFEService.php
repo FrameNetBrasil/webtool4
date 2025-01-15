@@ -284,7 +284,7 @@ class AnnotationFEService
 
     }
 
-    public static function getASData(int $idAS): array
+    public static function getASData(int $idAS, string $token = ''): array
     {
         $it = Criteria::table("view_instantiationtype")
             ->where('idLanguage', AppService::getCurrentIdLanguage())
@@ -375,7 +375,8 @@ class AnnotationFEService
             'target' => $target[0],
             'spans' => $spans,
             'fes' => $fes,
-            'nis' => $nis
+            'nis' => $nis,
+            'word' => $token
         ];
 
     }

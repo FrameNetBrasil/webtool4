@@ -1,5 +1,7 @@
 <div class="form">
-    <x-form>
+    <x-form
+        hx-post="/annotation/staticBBox/updateObjectAnnotation"
+    >
         <x-slot:title>
             @if($order == 0)
                 <div class="flex">
@@ -17,6 +19,8 @@
             @endif
         </x-slot:title>
         <x-slot:fields>
+            <x-hidden-field id="idDocument" value="{{$object?->idDocument}}"></x-hidden-field>
+            <x-hidden-field id="idStaticObject" value="{{$object?->idStaticObject}}"></x-hidden-field>
             <div class="formgroup-inline">
                 <div class="field mr-1">
                     <x-combobox.frame
@@ -56,11 +60,7 @@
             </div>
         </x-slot:fields>
         <x-slot:buttons>
-            <x-button
-                type="button"
-                label="Save"
-                onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
-            ></x-button>
+            <x-submit label="Save"></x-submit>
             <x-button
                 type="button"
                 label="Clone"

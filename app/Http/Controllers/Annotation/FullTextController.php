@@ -8,11 +8,13 @@ use App\Data\Annotation\FullText\DeleteLabelData;
 use App\Data\Annotation\FullText\SelectionData;
 use App\Data\Annotation\FullText\AnnotationData;
 use App\Data\Annotation\FullText\SearchData;
+use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
 use App\Services\AnnotationFullTextService;
+use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -59,10 +61,13 @@ class FullTextController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/fullText/sentence/{idDocumentSentence}')]
-    public function sentence(int $idDocumentSentence)
+    #[Get(path: '/annotation/fullText/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
+    public function sentence(int $idDocumentSentence,int $idAnnotationSet = null)
     {
         $data = AnnotationFullTextService::getAnnotationData($idDocumentSentence);
+        if (!is_null($idAnnotationSet)) {
+            $data['idAnnotationSet'] = $idAnnotationSet;
+        }
         return view("Annotation.FullText.annotationSentence", $data);
     }
 
@@ -83,7 +88,6 @@ class FullTextController extends Controller
     public function annotationSet(int $idAS, string $token)
     {
         $data = AnnotationFullTextService::getASData($idAS, $token);
-//        debug($data['lu']);
         return view("Annotation.FullText.Panes.annotationSet", $data);
     }
 
@@ -157,6 +161,42 @@ class FullTextController extends Controller
             $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $idAnnotationSet);
             AnnotationSet::delete($idAnnotationSet);
             return $this->clientRedirect("/annotation/fullText/sentence/{$annotationSet->idDocumentSentence}");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    /*
+     * Comment
+     */
+
+    #[Get(path: '/annotation/fullText/formComment/{idAnnotationSet}')]
+    public function getFormComment(int $idAnnotationSet)
+    {
+        $object = CommentService::getAnnotationSetComment($idAnnotationSet);
+        return view("Annotation.FullText.Panes.formComment", [
+            'object' => $object
+        ]);
+    }
+    #[Post(path: '/annotation/fullText/updateObjectComment')]
+    public function updateObjectComment(CommentData $data)
+    {
+        try {
+            debug($data);
+            CommentService::updateAnnotationSetComment($data);
+            $this->trigger('reload-annotationSet');
+            return $this->renderNotify("success", "Comment registered.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+    #[Delete(path: '/annotation/fullText/comment/{idAnnotationSet}')]
+    public function deleteObjectComment(int $idAnnotationSet)
+    {
+        try {
+            CommentService::deleteAnnotationSetComment($idAnnotationSet);
+            $this->trigger('reload-annotationSet');
+            return $this->renderNotify("success", "Object comment removed.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

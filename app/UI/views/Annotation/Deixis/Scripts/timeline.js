@@ -3,12 +3,6 @@
 var keyframeWithCustomImage = {
     val: 500
 };
-// Custom Image
-const image = new Image();
-image.src = "https://material-icons.github.io/material-icons-png/png/white/public/baseline-2x.png"; // replace with your image path
-image.onload = () => {
-    annotation.timeline.timeline.redraw();
-};
 annotation.timeline = {
     model: null,
     timeline: null,
@@ -54,7 +48,7 @@ annotation.timeline = {
                         keyframesStyle: {
                             shape: "rect"
                         },
-                        label: object.gl
+                        label: object.gl + (object.comment ? '*' : '')
                     };
                 } else if (object.idLU) {
                     groups[object.idDynamicObject] = {
@@ -67,7 +61,7 @@ annotation.timeline = {
                         keyframesStyle: {
                             shape: "rect"
                         },
-                        label: object.lu
+                        label: object.lu + (object.comment ? '*' : '')
                     };
                 } else {
                     // groups[object.idDynamicObject] = group[1];
@@ -84,7 +78,7 @@ annotation.timeline = {
                         keyframesStyle: {
                             shape: "rect"
                         },
-                        label: object.idDynamicObject
+                        label: object.idDynamicObject + (object.comment ? '*' : '')
                     };
                 }
 
@@ -111,7 +105,7 @@ annotation.timeline = {
             element.keyframes = keyframes;
             rows.push(element);
         }
-        console.log(rows);
+        //console.log(rows);
         let timelineModel = {
             rows: rows
         };
@@ -164,23 +158,6 @@ annotation.timeline = {
             }
             console.log("dragfinished");
         });
-
-        // annotation.timeline.timeline.onContextMenu(function(obj) {
-        //     if (obj.args) {
-        //         obj.args.preventDefault();
-        //     }
-        //     console.log(obj, "addKeyframe");
-        //
-        //     obj.elements.forEach(p => {
-        //         if (p.type === "row" && p.row) {
-        //             if (!p.row?.keyframes) {
-        //                 p.row.keyframes = [];
-        //             }
-        //             p.row?.keyframes?.push({ val: obj.point?.val || 0 });
-        //         }
-        //     });
-        //     timeline.redraw();
-        // });
 
         annotation.timeline.timeline.onMouseDown(function(obj) {
             //console.log(obj.target, obj.val);
@@ -442,6 +419,13 @@ annotation.timeline = {
     //         }
     //     }, annotation.timeline.playStep);
     // }
+};
+
+// Custom Image
+const image = new Image();
+image.src = "https://material-icons.github.io/material-icons-png/png/white/public/baseline-2x.png"; // replace with your image path
+image.onload = () => {
+    // annotation.timeline.timeline.redraw();
 };
 
 

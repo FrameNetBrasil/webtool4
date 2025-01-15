@@ -28,24 +28,25 @@ class ReportController extends Controller
     #[Get(path: '/report/lu/data')]
     public function data(SearchData $search)
     {
-        $rows = [];
+        $lus = [];
         if ($search->lu != '') {
             $lus = Criteria::byFilterLanguage("view_lu",
                 ['name', "startswith", $search->lu])
+                ->select("idLU","name","frameName")
                 ->orderBy('name')
                 ->all();
-            foreach ($lus as $lu) {
-                $text = view("components.element.lu")->with(["name" => $lu->name, 'frame' => $lu->frameName])->render();
-                $n = [];
-                $n['id'] = $lu->idLU;
-                $n['idLU'] = $lu->idLU;
-                $n['type'] = 'lu';
-                $n['text'] = $text;
-                $n['state'] = 'open';
-                $rows[] = $n;
-            }
+//            foreach ($lus as $lu) {
+//                $text = view("components.element.lu")->with(["name" => $lu->name, 'frame' => $lu->frameName])->render();
+//                $n = [];
+//                $n['id'] = $lu->idLU;
+//                $n['idLU'] = $lu->idLU;
+//                $n['type'] = 'lu';
+//                $n['text'] = $text;
+//                $n['state'] = 'open';
+//                $rows[] = $n;
+//            }
         }
-        return $rows;
+        return $lus;
     }
 
     #[Get(path: '/report/lu/content/{idLU?}')]

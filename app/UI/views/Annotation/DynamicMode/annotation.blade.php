@@ -18,9 +18,9 @@
                 <div class="controls">
                     @include("Annotation.DynamicMode.Panes.controlsPane")
                 </div>
-                <div class="comment">
-                    @include("Annotation.DynamicMode.Panes.commentPane")
-                </div>
+{{--                <div class="comment">--}}
+{{--                    @include("Annotation.DynamicMode.Panes.commentPane")--}}
+{{--                </div>--}}
             </div>
             <div class="center">
                 <div class="header flex w-full">
@@ -73,7 +73,8 @@
                         _token: "{{ csrf_token() }}",
                         document: {{ Js::from($document) }},
                         video: {{ Js::from($video) }},
-                        objectList: []
+                        objectList: [],
+                        idDynamicObject:{!! $idDynamicObject ?? 'null' !!}
                     };
 
                     document.body.addEventListener("updateObjectAnnotationEvent", function(evt){

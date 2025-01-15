@@ -26,22 +26,24 @@ class ReportController extends Controller
     #[Get(path: '/report/frame/data')]
     public function data(SearchData $search)
     {
-        $rows = [];
-        $frameIcon = view('components.icon.frame')->render();
+//        $rows = [];
+//        $frameIcon = view('components.icon.frame')->render();
         $frames = Criteria::byFilterLanguage("view_frame",
             ['name', "startswith", $search->frame])
+            ->select("idFrame","name")
             ->orderBy('name')
             ->all();
-        foreach ($frames as $frame) {
-            $n = [];
-            $n['id'] = $frame->idFrame;
-            $n['idFrame'] = $frame->idFrame;
-            $n['type'] = 'frame';
-            $n['text'] = $frameIcon . $frame->name;
-            $n['state'] = 'open';
-            $rows[] = $n;
-        }
-        return $rows;
+//        foreach ($frames as $frame) {
+//            $n = [];
+//            $n['id'] = $frame->idFrame;
+//            $n['idFrame'] = $frame->idFrame;
+//            $n['type'] = 'frame';
+//            $n['text'] = $frameIcon . $frame->name;
+//            $n['state'] = 'open';
+//            $rows[] = $n;
+//        }
+//        return $rows;
+        return $frames;
     }
 
     #[Get(path: '/report/frame/content/{idFrame}/{lang?}')]

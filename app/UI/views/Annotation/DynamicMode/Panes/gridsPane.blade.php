@@ -6,7 +6,7 @@
     <div class="gridBody">
         @include("Annotation.DynamicMode.Panes.objectsPane")
         <div
-            class="ui tab sentences p-2"
+            class="ui tab sentences"
             data-tab="sentences"
             hx-trigger="load"
             hx-get="/annotation/dynamicMode/sentences/{{$idDocument}}"

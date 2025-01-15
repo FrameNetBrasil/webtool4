@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="flex align-items-center justify-content-end pr-1 h-full">
-        <div id="menuLanguage" class="ui dropdown pointing top left pr-3 border-right-1 border-white-alpha-60">
+        <div id="menuLanguage" class="ui dropdown pointing top left pr-3">
             {!! $currentLanguage->description !!}<i class="dropdown icon"></i>
             <div class="menu">
                 @foreach($languages as $language)
@@ -38,9 +38,12 @@
             </div>
         </div>
         @if($isLogged)
-            <div id="menuUser" class="ui dropdown pl-3">
-                {{$user->email}}<i class="dropdown icon"></i>
+            <div id="menuUser" class="ui right dropdown item pl-3 pointing top left ">
+                <div class="ui teal circular label">{!! strtoupper($user->email[0]) !!}</div>
                 <div class="menu">
+                    <div class="item">
+                        {{$user->email}}
+                    </div>
                     <div class="item">
                         Level: {{$userLevel}}
                     </div>

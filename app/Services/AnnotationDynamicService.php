@@ -12,54 +12,19 @@ use App\Data\Annotation\DynamicMode\WordData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Base;
-use App\Repositories\Corpus;
-use App\Repositories\Document;
 use App\Repositories\DynamicSentenceMM;
 use App\Repositories\Label;
-use App\Repositories\LayerType;
 use App\Repositories\Sentence;
 use App\Repositories\Timeline;
 use App\Repositories\User;
 use App\Repositories\UserAnnotation;
 use App\Repositories\Video;
 use App\Repositories\ViewAnnotationSet;
-use App\Repositories\WordForm;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use Orkester\Manager;
 
 
 class AnnotationDynamicService
 {
-    private static function getCurrentUserTask(int $idDocument): object|null
-    {
-        $idUser = AppService::getCurrentIdUser();
-        $user = User::byId($idUser);
-        // get usertask for this document
-        $usertask = Criteria::table("usertask_document")
-            ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-            ->where("usertask_document.idDocument", $idDocument)
-            ->where("ut.idUser", $idUser)
-            ->select("ut.idUserTask", "ut.idTask")
-            ->first();
-        if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-            if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
-                $usertask = (object)[
-                    "idUserTask" => 1
-                ];
-//                $usertask = Criteria::table("usertask_document")
-//                    ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-//                    ->where("usertask_document.idDocument", $idDocument)
-//                    ->where("ut.idUser", -2)
-//                    ->select("ut.idUserTask", "ut.idTask")
-//                    ->first();
-            } else {
-                $usertask = null;
-            }
-        }
-        return $usertask;
-    }
-
     private static function deleteBBoxesByDynamicObject(int $idDynamicObject)
     {
         $bboxes = Criteria::table("view_dynamicobject_boundingbox as db")
@@ -84,7 +49,7 @@ class AnnotationDynamicService
         $do = Criteria::table("view_annotation_dynamic")
             ->where("idLanguage", "left", $idLanguage)
             ->where("idDynamicObject", $idDynamicObject)
-            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color","idDocument")
+            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color", "idDocument")
             ->orderBy("startFrame")
             ->orderBy("endFrame")
             ->first();
@@ -94,16 +59,19 @@ class AnnotationDynamicService
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $result = Criteria::table("view_annotation_dynamic")
-            ->leftJoin("view_lu", "view_annotation_dynamic.idLu", "=", "view_lu.idLU")
+        $result = Criteria::table("view_annotation_dynamic as ad")
+            ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
-            ->where("view_annotation_dynamic.idLanguage", "left", $idLanguage)
-            ->where("idDocument", $idDocument)
-            ->where("view_frame.idLanguage","left",$idLanguage)
-            ->select("idDynamicObject", "view_annotation_dynamic.name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idAnnotationLU", "view_annotation_dynamic.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName","idAnnotationFE", "idFrameElement", "view_annotation_dynamic.idFrame", "frame", "fe", "color")
+            ->leftJoin("annotationcomment as ac", "ad.idDynamicObject", "=", "ac.idDynamicObject")
+            ->where("ad.idLanguage", "left", $idLanguage)
+            ->where("ad.idDocument", $idDocument)
+            ->where("view_frame.idLanguage", "left", $idLanguage)
+            ->select("ad.idDynamicObject", "ad.name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin",
+                "idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName",
+                "idAnnotationFE", "idFrameElement", "ad.idFrame", "frame", "fe", "color", "ac.comment")
             ->orderBy("startFrame")
             ->orderBy("endFrame")
-            ->orderBy("idDynamicObject")
+            ->orderBy("ad.idDynamicObject")
             ->all();
         $oMM = [];
         $bboxes = [];
@@ -129,7 +97,7 @@ class AnnotationDynamicService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
-        $usertask = self::getCurrentUserTask($data->idDocument);
+        $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
         Criteria::deleteById("annotation", "idAnnotationObject", $do->idAnnotationObject);
         if ($data->idFrameElement) {
@@ -187,10 +155,13 @@ class AnnotationDynamicService
                         ]);
                         $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
                     }
-                    Criteria::table("dynamicobject")
-                        ->where("idDynamicObject", $data->idDynamicObject)
-                        ->update(["endFrame" => $data->endFrame]);
                 }
+                Criteria::table("dynamicobject")
+                    ->where("idDynamicObject", $data->idDynamicObject)
+                    ->update([
+                        "startFrame" => $data->startFrame,
+                        "endFrame" => $data->endFrame
+                    ]);
             } else {
                 throw new \Exception("First BBox must be created mannualy.");
             }
@@ -252,22 +223,6 @@ class AnnotationDynamicService
                     'startTime' => $data->startTime,
                     'endTime' => $data->endTime,
                 ]);
-//            if (count($data->frames)) {
-//                self::deleteBBoxesByDynamicObject($idDynamicObject);
-//                foreach ($data->frames as $frame) {
-//                    $json = json_encode([
-//                        'frameNumber' => (int)$frame['frameNumber'],
-//                        'frameTime' => (float)$frame['frameTime'],
-//                        'x' => (int)$frame['x'],
-//                        'y' => (int)$frame['y'],
-//                        'width' => (int)$frame['width'],
-//                        'height' => (int)$frame['height'],
-//                        'blocked' => (int)$frame['blocked'],
-//                        'idDynamicObject' => (int)$idDynamicObject
-//                    ]);
-//                    $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
-//                }
-//            }
         }
         return $idDynamicObject;
     }

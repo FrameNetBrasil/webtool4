@@ -6,6 +6,5 @@
             placeholder="{{$placeholder}}"
             {{$attributes->class(["w-full"])}}
             rows="{{$rows}}"
-        >{{$value}}
-        </textarea>
+        >{{$value}}</textarea>
 </div>

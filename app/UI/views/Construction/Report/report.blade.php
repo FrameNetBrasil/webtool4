@@ -2,7 +2,7 @@
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
-                <x-element.frame name="{{$construction->name}}"></x-element.frame>
+                <x-element.construction name="{{$construction->name}}"></x-element.construction>
             </h1>
         </div>
         <div

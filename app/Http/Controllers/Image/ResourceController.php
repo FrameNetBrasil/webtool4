@@ -23,14 +23,55 @@ class ResourceController extends Controller
         return view("Image.resource");
     }
 
-    #[Get(path: '/image/grid')]
-    #[Post(path: '/image/grid')]
+    #[Get(path: '/image/grid/{fragment?}')]
+    #[Post(path: '/image/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
-        debug($search);
-        return view("Image.grid",[
+        $view = view("Image.grid", [
             'search' => $search
         ]);
+        return (is_null($fragment) ? $view : $view->fragment('search'));
+    }
+
+    #[Get(path: '/image/data')]
+    public function data(SearchData $search)
+    {
+        if ($search->id != 0) {
+            $data = Criteria::table("image")
+                ->join("dataset_image as di", "image.idImage", "=", "di.idImage")
+                ->join("dataset", "di.idDataset", "=", "dataset.idDataset")
+                ->where("dataset.idDataset", $search->id)
+                ->select('image.idImage', 'image.name')
+                ->selectRaw("concat('i',image.idImage) as id")
+                ->selectRaw("'' as dataset")
+                ->selectRaw("'open' as state")
+                ->selectRaw("'image' as type")
+                ->limit(1000)
+                ->orderBy("image.name")->all();
+        } else {
+            if ($search->image == '') {
+                $data = Criteria::table("dataset")
+                    ->select("idDataset as id", "idDataset", "name")
+                    ->selectRaw("'closed' as state")
+                    ->selectRaw("'dataset' as type")
+                    ->where("name", "startswith", $search->dataset)
+                    ->orderBy("name")
+                    ->all();
+            } else {
+                $data = Criteria::table("image")
+                    ->join("dataset_image as di", "image.idImage", "=", "di.idImage")
+                    ->join("dataset", "di.idDataset", "=", "dataset.idDataset")
+                    ->select('image.idImage', 'image.name')
+                    ->selectRaw("concat('i',image.idImage) as id")
+                    ->selectRaw("concat(' [',dataset.name,']') as dataset")
+                    ->selectRaw("'open' as state")
+                    ->selectRaw("'image' as type")
+                    ->where("image.name", "startswith", $search->image)
+                    ->limit(1000)
+                    ->orderBy("image.name")->all();
+            }
+        }
+        return $data;
     }
 
     #[Get(path: '/image/{id}/edit')]
