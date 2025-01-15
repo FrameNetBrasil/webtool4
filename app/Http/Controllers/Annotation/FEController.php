@@ -71,6 +71,7 @@ class FEController extends Controller
     public function annotationSet(int $idAS, string $token)
     {
         $data = AnnotationFEService::getASData($idAS, $token);
+        debug($data);
         return view("Annotation.FE.Panes.annotationSet", $data);
     }
 
@@ -108,7 +109,7 @@ class FEController extends Controller
     {
         try {
             AnnotationFEService::deleteFE($data);
-            $data = AnnotationFEService::getASData($data->idAnnotationSet);
+            $data = AnnotationFEService::getASData($data->idAnnotationSet, $data->token);
             //$data['alternativeLU'] = [];
             return view("Annotation.FE.Panes.annotationSet", $data);
         } catch (\Exception $e) {
