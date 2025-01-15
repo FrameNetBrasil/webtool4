@@ -23,25 +23,31 @@
             @foreach($sentences as $idSentence => $sentence)
                 <tr
                     class="sentence"
-                    hx-target="#gridArea"
-                    hx-swap="innerHTML"
                 >
                     <td
                         style="width:80px"
                     >
-                        #{{$sentence->idDocumentSentence}}
+                        <a
+                            href="/annotation/staticEvent/sentence/{{$sentence->idDocumentSentence}}"
+                        >
+                            #{{$sentence->idDocumentSentence}}
+                        </a>
                     </td>
                     <td>
                         <a
                             href="/annotation/staticEvent/sentence/{{$sentence->idDocumentSentence}}"
                         >
-                                {!! $sentence->text !!}
+                            {!! $sentence->text !!}
                         </a>
                     </td>
                     <td
                         style="width:120px"
                     >
+                        <a
+                            href="/annotation/staticEvent/sentence/{{$sentence->idDocumentSentence}}"
+                        >
                             {!! $sentence->imageName !!}
+                        </a>
                     </td>
                 </tr>
             @endforeach

@@ -67,7 +67,6 @@ class StaticEventController extends Controller
             ["idSentence", "=", $sentence->idSentence]
         ])->first();
         $image = Criteria::byFilter("image", ["idImage", "=", $is->idImage])->first();
-        $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $idDocumentSentence])->first();
         $annotation = AnnotationStaticEventService::getObjectsForAnnotationImage($document->idDocument, $sentence->idSentence);
         return SentenceData::from([
             'idDocumentSentence' => $idDocumentSentence,
@@ -79,8 +78,7 @@ class StaticEventController extends Controller
             'image' => $image,
             'objects' => $annotation['objects'],
             'frames' => $annotation['frames'],
-            'type' => $annotation['type'],
-            'comment' => $comment->comment ?? ''
+            'type' => $annotation['type']
         ]);
     }
 
