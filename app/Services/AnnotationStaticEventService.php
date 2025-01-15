@@ -27,13 +27,17 @@ class AnnotationStaticEventService
 
     public static function listSentences(int $idDocument): array
     {
+        $userTask = AnnotationService::getCurrentUserTask($idDocument);
+        $task = Task::byId($userTask->idTask);
+        $text = ($task->type == 'sentence') ? "sentence.text" : "'' as text";
         $sentences = Criteria::table("sentence")
             ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
             ->join("document as d", "ds.idDocument", "=", "d.idDocument")
             ->join("view_image_sentence as is", "sentence.idSentence", "=", "is.idSentence")
             ->join("image as i", "is.idImage", "=", "i.idImage")
             ->where("d.idDocument", $idDocument)
-            ->select("sentence.idSentence", "sentence.text", "i.name as imageName", "ds.idDocumentSentence")
+            ->select("sentence.idSentence", "i.name as imageName", "ds.idDocumentSentence")
+            ->selectRaw($text)
             ->distinct()
             ->orderBy("ds.idDocumentSentence")
             ->limit(1500)
@@ -58,29 +62,6 @@ class AnnotationStaticEventService
             ->min('idDocumentSentence');
         return $i ?? null;
     }
-
-//    private static function getCurrentUserTask(int $idDocument): object|null
-//    {
-//        $idUser = AppService::getCurrentIdUser();
-//        $user = User::byId($idUser);
-//        // get usertask for this document
-//        $usertask = Criteria::table("usertask_document")
-//            ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-//            ->where("usertask_document.idDocument", $idDocument)
-//            ->where("ut.idUser", $idUser)
-//            ->select("ut.idUserTask","ut.idTask")
-//            ->first();
-//        if (empty($usertask)) { // usa a task -> dataset -> corpus -> document
-//            if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
-//                $usertask = (object)[
-//                    "idUserTask" => 1
-//                ];
-//            } else {
-//                $usertask = null;
-//            }
-//        }
-//        return $usertask;
-//    }
 
     public static function getObjectsForAnnotationImage(int $idDocument, int $idSentence): array
     {

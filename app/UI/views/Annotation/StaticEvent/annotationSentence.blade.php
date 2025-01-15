@@ -19,9 +19,9 @@
                         @include('Annotation.StaticEvent.Panes.sentencePane')
                     @endif
                 </div>
-                <div class="comment">
-                    @include('Annotation.StaticEvent.Panes.commentPane')
-                </div>
+{{--                <div class="comment">--}}
+{{--                    @include('Annotation.StaticEvent.Panes.commentPane')--}}
+{{--                </div>--}}
             </div>
             <div class="center">
                 <div class="header">
