@@ -6,7 +6,7 @@ return [
     'language' => 'pt',
     'defaultIdLanguage' => 1,
     'defaultPassword' => 'default',
-    'pageTitle' => 'Webtool 4.0',
+    'pageTitle' => env('APP_TITLE'),
     'mainTitle' => 'FrameNet Brasil Webtool 4.0',
     'headerTitle' => 'Webtool',
     'footer' => '&copy; 2014-2025 FrameNet Brasil Lab, UFJF.',
@@ -29,7 +29,7 @@ return [
             'reportc5' => ['C5', '/report/c5', '', []],
             'reporttqr' => ['TQR', '/report/qualia', '', []],
             'cxnreport' => ['Constructicons', '/report/cxn', '', []],
-            'multimodalreport' => ['Multimodal', '/report/multimodal', '', []],
+//            'multimodalreport' => ['Multimodal', '/report/multimodal', '', []],
 //            'corpusAnnotationReport' => ['Corpus Panes', '/corpus/report', 'corpusreport', '', 1, []],
         ]],
         'grapher' => ['Grapher', '/grapher', '', [

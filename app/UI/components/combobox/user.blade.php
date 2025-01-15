@@ -6,7 +6,7 @@
             <input class="prompt" type="search" placeholder="{{$placeholder}}">
             <i class="search icon"></i>
         </div>
-        <div class="results"></div>
+        <div class="results w-25rem"></div>
     </div>
 </div>
 <script>

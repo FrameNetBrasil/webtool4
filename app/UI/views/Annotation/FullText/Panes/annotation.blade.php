@@ -1,17 +1,6 @@
 <script type="text/javascript">
-    // let annotationFullText = {
-    //     selection: {
-    //         type: "",
-    //         id: "",
-    //         start: 0,
-    //         end: 0
-    //     }
-    // };
-
-
     @include("Annotation.FullText.Scripts.api")
     @include("Annotation.FullText.Scripts.store")
-
 
     $(function() {
         document.onselectionchange = () => {

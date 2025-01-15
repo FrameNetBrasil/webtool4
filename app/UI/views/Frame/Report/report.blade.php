@@ -1,5 +1,5 @@
 <div id="frameReport" class="flex flex-column h-full">
-    <div class="flex flex-row align-content-start">
+    <div class="flex flex-row align-content-start flex-wrap">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
                 <x-element.frame name="{{$frame->name}}"></x-element.frame>

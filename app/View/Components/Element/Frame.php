@@ -11,8 +11,6 @@ class Frame extends Component
     /**
      * Create a new component instance.
      */
-    public string $icon;
-
     public function __construct(
         public string $name = '',
     )

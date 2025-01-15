@@ -9,6 +9,7 @@ class DocumentData extends Data
     public function __construct(
         public ?int $idDocument = null,
         public ?int $idDocumentVideo = null,
+        public ?int $idDynamicObject = null,
         public ?int $idPrevious = null,
         public ?int $idNext = null,
         public ?object $document = null,

@@ -134,8 +134,9 @@ class ResourceController extends Controller
     public function listForSelect(QData $data)
     {
         $name = (strlen($data->q) > 1) ? $data->q : 'none';
-        return ['results' => Criteria::byFilter("user",["name","startswith",$name])
-            ->selectRaw("idUser,concat(name,' [',email,']') as name")
+        return ['results' => Criteria::byFilter("user",
+            [["name","startswith",$name],["status","=",1]])
+            ->selectRaw("idUser,concat('#',idUser, ' ', name,' [',email,']') as name")
             ->orderby("name")
             ->all()];
     }

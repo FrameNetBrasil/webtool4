@@ -11,6 +11,9 @@ annotation.api = {
             }
         });
     },
+    loadObject: async (idDynamicObject) => {
+        return await ky.get("/annotation/dynamicMode/object/" + idDynamicObject, {}).json();
+    },
     deleteObject: async (idDynamicObject) => {
         console.log('deletting api', idDynamicObject, annotation._token);
 
@@ -91,20 +94,20 @@ annotation.api = {
         });
         return result;
     },
-    updateObjectAnnotation: async (params) => {
-        params._token = annotation._token;
-        let result = null;
-        await $.ajax({
-            url: "/annotation/dynamicMode/updateObjectAnnotation",
-            method: "POST",
-            dataType: "json",
-            data: params,
-            success: (response) => {
-                result = response;
-            }
-        });
-        return result;
-    },
+    // updateObjectAnnotation: async (params) => {
+    //     params._token = annotation._token;
+    //     let result = null;
+    //     await $.ajax({
+    //         url: "/annotation/dynamicMode/updateObjectAnnotation",
+    //         method: "POST",
+    //         dataType: "json",
+    //         data: params,
+    //         success: (response) => {
+    //             result = response;
+    //         }
+    //     });
+    //     return result;
+    // },
     updateBBox: async (params) => {
         params._token = annotation._token;
         let result = null;

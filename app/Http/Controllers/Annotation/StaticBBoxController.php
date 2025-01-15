@@ -9,12 +9,14 @@ use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
 use App\Data\Annotation\StaticBBox\ObjectData;
 use App\Data\Annotation\StaticBBox\SearchData;
 use App\Data\Annotation\StaticBBox\UpdateBBoxData;
+use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Image;
 use App\Services\AnnotationStaticBBoxService;
+use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -49,7 +51,6 @@ class StaticBBoxController extends Controller
             ->where("idDocument", $idDocument)
             ->first();
         $image = Image::byId($documentImage->idImage);
-        $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $documentImage->idDocumentImage])->first();
         return DocumentData::from([
             'idDocument' => $idDocument,
             'idDocumentImage' => $documentImage->idDocumentImage,
@@ -57,18 +58,11 @@ class StaticBBoxController extends Controller
             'corpus' => $corpus,
             'image' => $image,
             'fragment' => 'fe',
-            'comment' => $comment->comment ?? '',
             'idPrevious' => AnnotationStaticBBoxService::getPrevious($document),
             'idNext' => AnnotationStaticBBoxService::getNext($document),
         ]);
     }
 
-    #[Get(path: '/annotation/staticBBox/{idDocument}')]
-    public function annotation(int $idDocument)
-    {
-        $data = $this->getData($idDocument);
-        return view("Annotation.StaticBBox.annotation", $data->toArray());
-    }
 
     #[Post(path: '/annotation/staticBBox/formObject')]
     public function formObject(ObjectData $data)
@@ -116,7 +110,9 @@ class StaticBBoxController extends Controller
         debug($data);
         try {
             $idStaticObject = AnnotationStaticBBoxService::updateObjectAnnotation($data);
-            return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
+            $this->trigger('updateObjectAnnotationEvent');
+            //return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
+            return $this->renderNotify("success", "Object updated.");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -178,32 +174,57 @@ class StaticBBoxController extends Controller
         ]);
     }
 
-    #[Post(path: '/annotation/staticBBox/comment')]
-    public function annotationComment(AnnotationCommentData $data)
+    /*
+     * Comment
+     */
+
+    #[Get(path: '/annotation/staticBBox/formComment')]
+    public function getFormComment(CommentData $data)
     {
-        debug($data);
+        $object = CommentService::getStaticObjectComment($data->idStaticObject);
+        return view("Annotation.StaticBBox.Panes.formComment", [
+            'idDocument' => $data->idDocument,
+            'order' => $data->order,
+            'object' => $object
+        ]);
+    }
+
+    #[Post(path: '/annotation/staticBBox/updateObjectComment')]
+    public function updateObjectComment(CommentData $data)
+    {
         try {
-            $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $data->idDocumentVideo])->first();
-            if (!is_null($comment)) {
-                Criteria::table("annotationcomment")
-                    ->where("idAnnotationComment", "=", $comment->idAnnotationComment)
-                    ->update([
-                        "type" => "StaticEvent",
-                        "id1" => $data->idDocumentVideo,
-                        "comment" => $data->comment
-                    ]);
-            } else {
-                Criteria::table("annotationcomment")
-                    ->insert([
-                        "type" => "StaticEvent",
-                        "id1" => $data->idDocumentVideo,
-                        "comment" => $data->comment
-                    ]);
-            }
-            return $this->renderNotify("success", "Comment added.");
+            debug($data);
+            CommentService::updateStaticObjectComment($data);
+            $this->trigger('updateObjectAnnotationEvent');
+            return $this->renderNotify("success", "Comment registered.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
+    }
+
+    #[Delete(path: '/annotation/staticBBox/comment/{idDocument}/{idStaticObject}')]
+    public function deleteObjectComment(int $idDocument, int $idStaticObject)
+    {
+        try {
+            CommentService::deleteStaticObjectComment($idDocument, $idStaticObject);
+            return $this->renderNotify("success", "Object comment removed.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    /*
+     * get Object
+     */
+    #[Get(path: '/annotation/staticBBox/{idDocument}/{idStaticObject?}')]
+    public function annotation(int $idDocument, int $idStaticObject = null)
+    {
+        $data = $this->getData($idDocument);
+        if (!is_null($idStaticObject)) {
+            $data->idStaticObject = $idStaticObject;
+        }
+
+        return view("Annotation.StaticBBox.annotation", $data->toArray());
     }
 
 }

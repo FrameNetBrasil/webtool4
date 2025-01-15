@@ -32,10 +32,9 @@ class DatasetController extends Controller
     #[Get(path: '/project/{id}/datasets/grid')]
     public function datasetsGrid(int $id)
     {
-        $datasets = Criteria::table("project_dataset")
-            ->join("dataset", "project_dataset.idDataset", "=", "dataset.idDataset")
-            ->select("dataset.*")
-            ->where("project_dataset.idProject", $id)
+        $datasets = Criteria::table("dataset")
+            ->select("*")
+            ->where("idProject", $id)
             ->all();
         return view("Project.datasetsGrid", [
             'idProject' => $id,

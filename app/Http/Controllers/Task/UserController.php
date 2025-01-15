@@ -43,6 +43,7 @@ class UserController extends Controller
             ->join("user", "usertask.idUser", "=", "user.idUser")
             ->select("usertask.*","user.name")
             ->where("usertask.idTask", $id)
+            ->orderBy("user.name")
             ->all();
         return view("Task.usersGrid", [
             'idTask' => $id,

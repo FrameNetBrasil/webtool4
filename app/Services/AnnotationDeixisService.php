@@ -112,13 +112,14 @@ class AnnotationDeixisService
         $objects = Criteria::table("view_annotation_deixis as ad")
             ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
+            ->leftJoin("annotationcomment as ac", "ad.idDynamicObject", "=", "ac.idDynamicObject")
             ->where("ad.idLanguageFE", "left", $idLanguage)
             ->where("ad.idLanguageLT", "=", $idLanguage)
             ->where("ad.idDocument", $idDocument)
             ->where("view_frame.idLanguage", "left", $idLanguage)
             ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin", "ad.idLayerType", "ad.nameLayerType",
                 "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.colorFE",
-                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.bgColorGL", "ad.fgColorGL","ad.layerGroup")
+                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.bgColorGL", "ad.fgColorGL","ad.layerGroup", "ac.comment")
             ->orderBy("ad.nameLayerType")
             ->orderBy("ad.startFrame")
             ->orderBy("ad.endFrame")

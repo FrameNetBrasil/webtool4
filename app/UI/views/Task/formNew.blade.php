@@ -1,21 +1,27 @@
-<x-form id="formNewTask" title="New Task" :center="false"  hx-post="/task/new">
+<x-form id="formNewTask" title="New Task" :center="false" hx-post="/task/new">
     <x-slot:fields>
-        <x-text-field
-            label="Name"
-            id="name"
-            value=""
-        ></x-text-field>
-        <x-multiline-field
-            label="Description"
-            id="description"
-            value=""
-        ></x-multiline-field>
-        <x-combobox.dataset
-            id="idDataset"
-            label="Source Dataset"
-            value="0"
-        >
-        </x-combobox.dataset>
+        <div class="field">
+            <x-text-field
+                label="Name"
+                id="name"
+                value=""
+            ></x-text-field>
+        </div>
+        <div class="field">
+            <x-multiline-field
+                label="Description"
+                id="description"
+                value=""
+            ></x-multiline-field>
+        </div>
+        <div class="field">
+            <x-combobox.dataset
+                id="idDataset"
+                label="Source Dataset"
+                value="0"
+            >
+            </x-combobox.dataset>
+        </div>
         <div class="three fields">
             <div class="field">
                 <x-text-field

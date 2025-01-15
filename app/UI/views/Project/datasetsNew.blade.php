@@ -11,21 +11,6 @@
                 value=""
             ></x-text-field>
         </div>
-        {{--        <div class="field">--}}
-        {{--            <x-multiline-field--}}
-        {{--                label="Description"--}}
-        {{--                id="description"--}}
-        {{--                value=""--}}
-        {{--            ></x-multiline-field>--}}
-        {{--        </div>--}}
-        {{--            <div class="field">--}}
-        {{--                <x-combobox.project--}}
-        {{--                    id="idProject"--}}
-        {{--                    label="Project"--}}
-        {{--                    value="0"--}}
-        {{--                >--}}
-        {{--                </x-combobox.project>--}}
-        {{--            </div>--}}
     </x-slot:fields>
     <x-slot:buttons>
         <x-submit label="Save"></x-submit>

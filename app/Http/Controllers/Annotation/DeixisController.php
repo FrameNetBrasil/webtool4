@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Annotation;
 use App\Data\Annotation\Deixis\CreateObjectData;
 use App\Data\Annotation\Deixis\DocumentData;
 use App\Data\Annotation\Deixis\ObjectAnnotationData;
+use App\Data\Annotation\Deixis\ObjectData;
 use App\Data\Annotation\Deixis\ObjectFrameData;
 use App\Data\Annotation\Deixis\SearchData;
+use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
@@ -14,6 +16,7 @@ use App\Repositories\Document;
 use App\Repositories\Video;
 use App\Services\AnnotationDeixisService;
 use App\Services\AppService;
+use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -42,46 +45,25 @@ class DeixisController extends Controller
 
     private function getData(int $idDocument): DocumentData
     {
-        $idLanguage = AppService::getCurrentIdLanguage();
-
         $document = Document::byId($idDocument);
         $corpus = Corpus::byId($document->idCorpus);
-
         $documentVideo = Criteria::table("view_document_video")
             ->where("idDocument", $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        $comment = Criteria::byFilter("annotationcomment", ["id1", "=", $documentVideo->idDocumentVideo])->first();
-
-//        $annotation =  AnnotationStaticEventService::getObjectsForAnnotationImage($document->idDocument, $sentence->idSentence);
         return DocumentData::from([
             'idDocument' => $idDocument,
             'idDocumentVideo' => $documentVideo->idDocumentVideo,
-//            'idPrevious' => AnnotationStaticEventService::getPrevious($document->idDocument,$idDocumentSentence),
-//            'idNext' => AnnotationStaticEventService::getNext($document->idDocument,$idDocumentSentence),
             'document' => $document,
             'corpus' => $corpus,
             'video' => $video,
-//            'objects' => $annotation['objects'],
-//            'frames' => $annotation['frames'],
-//            'type' => $annotation['type'],
-            'fragment' => 'fe',
-            'comment' => $comment->comment ?? ''
+            'fragment' => 'fe'
         ]);
-    }
-
-    #[Get(path: '/annotation/deixis/{idDocument}')]
-    public function annotation(int $idDocument)
-    {
-        $data = $this->getData($idDocument);
-        debug($data);
-        return view("Annotation.Deixis.annotation", $data->toArray());
     }
 
     #[Post(path: '/annotation/deixis/createNewObjectAtLayer')]
     public function createNewObjectAtLayer(CreateObjectData $data)
     {
-        debug($data);
         try {
             return AnnotationDeixisService::createNewObjectAtLayer($data);
         } catch (\Exception $e) {
@@ -92,7 +74,6 @@ class DeixisController extends Controller
     #[Post(path: '/annotation/deixis/formAnnotation')]
     public function formAnnotation(ObjectData $data)
     {
-        debug($data);
         $object = AnnotationDeixisService::getObject($data->idDynamicObject ?? 0);
         return view("Annotation.Deixis.Panes.formPane", [
             'order' => $data->order,
@@ -109,12 +90,6 @@ class DeixisController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/deixis/gridObjects/{idDocument}')]
-    public function gridObjects(int $idDocument)
-    {
-        return AnnotationDeixisService::getObjectsByDocument($idDocument);
-    }
-
     #[Get(path: '/annotation/deixis/loadLayerList/{idDocument}')]
     public function loadLayerList(int $idDocument)
     {
@@ -124,7 +99,6 @@ class DeixisController extends Controller
     #[Post(path: '/annotation/deixis/updateObject')]
     public function updateObject(ObjectData $data)
     {
-        debug($data);
         try {
             $idDynamicObject = AnnotationDeixisService::updateObject($data);
             return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
@@ -137,7 +111,6 @@ class DeixisController extends Controller
     #[Post(path: '/annotation/deixis/updateObjectFrame')]
     public function updateObjectFrame(ObjectFrameData $data)
     {
-        debug("========= updateObjectFrame", $data);
         try {
             return AnnotationDeixisService::updateObjectFrame($data);
         } catch (\Exception $e) {
@@ -149,22 +122,8 @@ class DeixisController extends Controller
     #[Post(path: '/annotation/deixis/updateObjectAnnotation')]
     public function updateObjectAnnotation(ObjectAnnotationData $data)
     {
-        debug($data);
         try {
             return AnnotationDeixisService::updateObjectAnnotation($data);
-        } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Post(path: '/annotation/deixis/cloneObject')]
-    public function cloneObject(CloneData $data)
-    {
-        debug($data);
-        try {
-            $idDynamicObject = AnnotationDynamicService::cloneObject($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -183,19 +142,6 @@ class DeixisController extends Controller
         }
     }
 
-    #[Post(path: '/annotation/deixis/updateBBox')]
-    public function updateBBox(UpdateBBoxData $data)
-    {
-        try {
-            debug($data);
-            $idBoundingBox = AnnotationDynamicService::updateBBox($data);
-            return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
-        } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
     #[Get(path: '/annotation/deixis/fes/{idFrame}')]
     public function feCombobox(int $idFrame)
     {
@@ -204,5 +150,54 @@ class DeixisController extends Controller
         ]);
     }
 
+    /*
+     * Comment
+     */
+
+    #[Get(path: '/annotation/deixis/formComment')]
+    public function getFormComment(CommentData $data)
+    {
+        $object = CommentService::getDynamicObjectComment($data->idDynamicObject);
+        return view("Annotation.DynamicMode.Panes.formComment", [
+            'idDocument' => $data->idDocument,
+            'order' => $data->order,
+            'object' => $object
+        ]);
+    }
+    #[Post(path: '/annotation/deixis/updateObjectComment')]
+    public function updateObjectComment(CommentData $data)
+    {
+        try {
+            debug($data);
+            CommentService::updateDynamicObjectComment($data);
+            $this->trigger('updateObjectAnnotationEvent');
+            return $this->renderNotify("success", "Comment registered.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+    #[Delete(path: '/annotation/deixis/comment/{idDocument}/{idDynamicObject}')]
+    public function deleteObjectComment(int $idDocument,int $idDynamicObject)
+    {
+        try {
+            CommentService::deleteDynamicObjectComment($idDocument,$idDynamicObject);
+            return $this->renderNotify("success", "Object comment removed.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    /*
+     * get Object
+     */
+    #[Get(path: '/annotation/deixis/{idDocument}/{idDynamicObject?}')]
+    public function annotation(int|string $idDocument, int $idDynamicObject = null)
+    {
+        $data = $this->getData($idDocument);
+        if (!is_null($idDynamicObject)) {
+            $data->idDynamicObject = $idDynamicObject;
+        }
+        return view("Annotation.Deixis.annotation", $data->toArray());
+    }
 
 }

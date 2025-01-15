@@ -1,3 +1,16 @@
+@php
+    $originalWidth = intval($image->width);
+    $originalHeight = intval($image->height);
+    debug($originalWidth,$originalHeight);
+    $canvasWidth = 540;
+    $canvasHeight = 400;
+    $scaleWidth = $canvasWidth / $originalWidth;
+    $scaleHeight = $canvasHeight / $originalHeight;
+    $scaleReduce = ($scaleHeight < $scaleWidth) ? $scaleHeight : $scaleWidth;
+    $imageWidth = intval($originalWidth * $scaleReduce);
+    $imageHeight = intval($originalHeight * $scaleReduce);
+@endphp
+
 <x-form
     title="Edit image"
     hx-post="/image"
@@ -28,3 +41,15 @@
         <x-submit label="Save"></x-submit>
     </x-slot:buttons>
 </x-form>
+<div
+    style="position:relative;width:{{$canvasWidth}}px;height:{{$canvasHeight}}px;"
+>
+    <image
+        id="imageStaticBBox"
+        width="{{$imageWidth}}"
+        height="{{$imageHeight}}"
+        id="imageContainer"
+        src="https://dynamic.frame.net.br/images/{{$image->name}}"
+    >
+    </image>
+</div>
