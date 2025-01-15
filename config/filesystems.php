@@ -56,6 +56,17 @@ return [
             'throw' => false,
         ],
 
+        'media' => [
+            'driver' => 'http',
+            'token' => env('APP_MEDIA_TOKEN'),
+            'url' => env('APP_MEDIA_URL'),
+            'public_url' => env('APP_MEDIA_PUBLIC_URL', env('APP_MEDIA_URL')),
+            'bucket' => env('APP_MEDIA_BUCKET'),
+            'include_bucket_prefix_in_url' => env('APP_MEDIA_INCLUDE_BUCKET_PREFIX_IN_URL', false),
+            'include_bucket_in_url' => env('APP_MEDIA_INCLUDE_BUCKET_IN_URL', false),
+            'throw' => false,
+        ],
+
     ],
 
     /*

@@ -11,6 +11,7 @@ return [
     'headerTitle' => 'Webtool',
     'footer' => '&copy; 2014-2025 FrameNet Brasil Lab, UFJF.',
     'version' => 'v.4.02',
+    'mediaURL' => env('APP_MEDIA_URL'),
     'login' => [
         'handler' => env('APP_AUTH'),
         'AUTH0_CLIENT_ID' => env('AUTH0_CLIENT_ID'),

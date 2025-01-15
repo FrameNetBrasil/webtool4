@@ -376,7 +376,7 @@ class AnnotationFEService
             'spans' => $spans,
             'fes' => $fes,
             'nis' => $nis,
-            'word' => $token
+            'token' => $token
         ];
 
     }
@@ -474,7 +474,7 @@ class AnnotationFEService
             }
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         });
-        return self::getASData($data->idAnnotationSet);
+        return self::getASData($data->idAnnotationSet, $data->token);
     }
 
     public static function deleteFE(DeleteFEData $data): void
