@@ -8,6 +8,7 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\FrameElement;
 use App\Repositories\LU;
+use App\Repositories\User;
 use App\Services\AppService;
 use App\Services\ReportLUService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -52,10 +53,14 @@ class ReportController extends Controller
     #[Get(path: '/report/lu/content/{idLU?}')]
     public function reportContent(int|string $idLU)
     {
+        $idUser = AppService::getCurrentIdUser();
+        $user = User::byId($idUser);
+        $isMaster = User::isManager($user) || User::isMemberOf($user, 'MASTER');
         $lu = LU::byId($idLU);
         $data = [
             'lu' => $lu,
             'language' => Criteria::byId("language","idLanguage", $lu->idLanguage),
+            'isMaster' => $isMaster,
         ];
         if (!is_null($lu->incorporatedFE)) {
             $data['incorporatedFE'] = FrameElement::byId($lu->incorporatedFE);

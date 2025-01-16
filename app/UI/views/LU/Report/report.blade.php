@@ -13,6 +13,9 @@
                 #{{$lu->idLU}}
             </div>
             <x-link-button color="secondary" href="/report/frame/{{$lu->idFrame}}" label="{{$lu->frameName}}"></x-link-button>
+            @if($isMaster)
+                <x-link-button color="ui red" href="/lu/{{$lu->idLU}}/edit" label="Edit"></x-link-button>
+            @endif
         </div>
     </div>
     <x-card title="Definition" class="luReport__card">
