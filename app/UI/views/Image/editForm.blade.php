@@ -49,7 +49,7 @@
         width="{{$imageWidth}}"
         height="{{$imageHeight}}"
         id="imageContainer"
-        src="https://dynamic.frame.net.br/images/{{$image->name}}"
+        src="{!! config('webtool.mediaURL') . "/" . $image->currentURL !!}"
     >
     </image>
 </div>
