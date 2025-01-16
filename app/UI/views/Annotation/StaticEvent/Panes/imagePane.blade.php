@@ -1,5 +1,5 @@
 @php
-    $imageURL = "http://flickr30k.frame.net.br/flickr30k-images/" . $image->name;
+    $imageURL = config('webtool.mediaURL') . "/" . $image->currentURL;
     $imageWidth = $image->width;
     $imageHeight = $image->height;
 

@@ -149,8 +149,7 @@
     <video-js
         id="videoContainer"
         class="video-js"
-{{--        src="http://dynamic.frame.net.br/afa00f72fb6fe767d051f2dff2633ee3e67eecdd.mp4"--}}
-        src="https://dynamic.frame.net.br/{{$video->sha1Name}}.mp4"
+        src="{!! config('webtool.mediaURL') . "/" . $video->currentURL !!}"
     >
     </video-js>
     <canvas id="canvas" width=0 height=0></canvas>
