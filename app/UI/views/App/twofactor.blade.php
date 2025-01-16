@@ -1,4 +1,8 @@
 <x-layout.page>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['','Twofactor']]"></x-breadcrumb>
+    </x-slot:head>
+    <x-slot:main>
     <section id="work" class="w-full h-full">
         <div class="wt-container-center h-full">
                 <form
@@ -31,4 +35,5 @@
                 </form>
             </div>
     </section>
+        </x-slot:main>
 </x-layout.page>
