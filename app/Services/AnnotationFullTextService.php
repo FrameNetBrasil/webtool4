@@ -528,7 +528,7 @@ class AnnotationFullTextService
     public static function deleteLabel(DeleteLabelData $data): void
     {
         DB::transaction(function () use ($data) {
-            debug($data);
+            //debug($data);
             // get Label spans for this idAnnotationSet based on idEntity
             $annotations = Criteria::table("textspan as ts")
                 ->join("annotation as a", "ts.idAnnotationObject", "=", "a.idAnnotationObject")
@@ -537,7 +537,7 @@ class AnnotationFullTextService
                 ->where("a.idEntity", $data->idEntity)
                 ->select("a.idAnnotation", "ts.idTextSpan", "l.idLayer")
                 ->all();
-            debug($annotations);
+            //debug($annotations);
             foreach ($annotations as $annotation) {
                 Criteria::deleteById("annotation", "idAnnotation", $annotation->idAnnotation);
                 Timeline::addTimeline("annotation", $annotation->idAnnotation, "D");
