@@ -147,9 +147,11 @@ class FullTextController extends Controller
             return $this->renderNotify("error", "Error creating AnnotationSet.");
         } else {
             $data = AnnotationFullTextService::getASData($idAnnotationSet);
-            return response()
-                ->view("Annotation.FullText.Panes.annotationSet", $data)
-                ->header('HX-Trigger', 'reload-sentence');
+            $this->trigger('reload-sentence');
+            return view("Annotation.FullText.Panes.annotationSet", $data);
+//            return response()
+//                ->view("Annotation.FullText.Panes.annotationSet", $data)
+//                ->header('HX-Trigger', ');
 
         }
     }
