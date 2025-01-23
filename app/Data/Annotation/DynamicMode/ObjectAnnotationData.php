@@ -14,6 +14,7 @@ class ObjectAnnotationData extends Data
         public string $_token = '',
         public ?int   $startFrame = null,
         public ?int   $endFrame = null,
+        public ?int   $isBlocked = 0,
     )
     {
         $this->_token = csrf_token();

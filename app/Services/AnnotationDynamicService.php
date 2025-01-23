@@ -53,6 +53,10 @@ class AnnotationDynamicService
             ->orderBy("startFrame")
             ->orderBy("endFrame")
             ->first();
+        $firstBBox = Criteria::table("view_dynamicobject_boundingbox as bb")
+            ->where("idDynamicObject", $idDynamicObject)
+            ->first();
+        $do->isBlocked = $firstBBox->blocked;
         return $do;
     }
 
@@ -130,6 +134,12 @@ class AnnotationDynamicService
                 ->all();
             $iFirst = array_key_first($bboxes);
             $firstBBox = $bboxes[$iFirst];
+            $isBlocked = $data->isBlocked;
+            // update first bbox because the status of blocked
+            Criteria::table("boundingbox")
+                ->where("idBoundingBox", $firstBBox->idBoundingBox)
+                ->update(["blocked" => $isBlocked]);
+            //
             if ($data->startFrame >= $firstBBox->frameNumber) {
                 $iLast = array_key_last($bboxes);
                 $lastBBox = $bboxes[$iLast];
@@ -150,7 +160,7 @@ class AnnotationDynamicService
                             'y' => (int)$lastBBox->y,
                             'width' => (int)$lastBBox->width,
                             'height' => (int)$lastBBox->height,
-                            'blocked' => (int)$lastBBox->blocked,
+                            'blocked' => (int)$isBlocked, //(int)$lastBBox->blocked,
                             'idDynamicObject' => $data->idDynamicObject
                         ]);
                         $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);

@@ -432,6 +432,19 @@ annotation.objects = {
             Alpine.store("doStore").selectObjectByIdDynamicObject(dynamicObject.idDynamicObject);
         });
     },
+    updateObjectRange: async () => {
+        let currentObject = Alpine.store("doStore").currentObject;
+        let params = {
+            idDocument: annotation.document.idDocument,
+            idDynamicObject: currentObject.idDynamicObject,
+            startFrame: Alpine.store("doStore").currentStartFrame,
+            endFrame: Alpine.store("doStore").currentEndFrame
+        };
+        annotation.api.updateObjectRange(params, async (dynamicObject) => {
+            await Alpine.store("doStore").loadLayerList();
+            Alpine.store("doStore").selectObjectByIdDynamicObject(dynamicObject.idDynamicObject);
+        });
+    },
     updateObjectAnnotationEvent: async () => {
         let currentObject = Alpine.store("doStore").currentObject;
         await Alpine.store("doStore").loadLayerList();

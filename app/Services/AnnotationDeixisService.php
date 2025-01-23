@@ -66,10 +66,10 @@ class AnnotationDeixisService
         $idUser = AppService::getCurrentIdUser();
         $do = json_encode([
             'name' => "",
-            'startFrame' => $data->currentFrame,
-            'endFrame' => $data->currentFrame + 4,
-            'startTime' => ($data->currentFrame - 1) * 0.040,
-            'endTime' => ($data->currentFrame + 3) * 0.040,
+            'startFrame' => $data->startFrame,
+            'endFrame' => $data->endFrame,
+            'startTime' => ($data->startFrame - 1) * 0.040,
+            'endTime' => ($data->endFrame) * 0.040,
             'status' => 0,
             'origin' => 5,
             'idUser' => $idUser
