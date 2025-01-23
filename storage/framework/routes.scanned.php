@@ -3296,6 +3296,14 @@ $router->post('annotation/deixis/updateObject', [
 	'domain' => NULL,
 ]);
 
+$router->post('annotation/deixis/updateObjectRange', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObjectRange',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('annotation/deixis/updateObjectFrame', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObjectFrame',
 	'as' => NULL,

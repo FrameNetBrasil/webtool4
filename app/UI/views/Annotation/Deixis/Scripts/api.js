@@ -113,6 +113,18 @@ annotation.api = {
             }
         });
     },
+    updateObjectRange: async (params, callback) => {
+        params._token = annotation._token;
+        await $.ajax({
+            url: "/annotation/deixis/updateObjectRange",
+            method: "POST",
+            dataType: "json",
+            data: params,
+            success: (response) => {
+                callback(response);
+            }
+        });
+    },
     updateBBox: async (params) => {
         params._token = annotation._token;
         let result = null;

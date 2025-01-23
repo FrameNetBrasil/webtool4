@@ -1,4 +1,4 @@
-<div class="w-20rem">
+<div {{$attributes}}>
     <div class="form-field field" style="overflow:initial">
         @if($label != '')
         <label for="{{$id}}">{{$label}}</label>

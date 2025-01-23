@@ -153,9 +153,31 @@
     <div id="boxesContainer">
     </div>
     <div x-data class="info flex flex-row justify-content-between">
-        <div style="width:200px; text-align:left">
+        <div style="width:100px;text-align:left;">
             <div class="ui label">
             <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeFormated($store.doStore.timeCount)"></span>]
+            </div>
+        </div>
+        <div>
+            <div class="flex">
+                <div
+                    title="Register startFrame"
+                >
+                    <button
+                        class="compact ui button text-base"
+                        @click.stop="$store.doStore.newStartFrame = $store.doStore.currentStartFrame = $store.doStore.currentFrame"
+                    ><x-icon.start></x-icon.start>
+                    </button>
+                </div>
+                <div
+                    title="Register endFrame"
+                >
+                    <button
+                        class="compact ui button text-base"
+                        @click.stop="$store.doStore.newEndFrame = $store.doStore.currentEndFrame = $store.doStore.currentFrame"
+                    ><x-icon.end></x-icon.end>
+                    </button>
+                </div>
             </div>
         </div>
         <div>
@@ -173,7 +195,7 @@
                 Status <div class="detail"><span x-text="$store.doStore.newObjectState"></span></div>
             </div>
         </div>
-        <div style="width:120px; text-align:right">
+        <div style="width:100px; text-align:right">
             <div class="ui label">
             <span x-text="$store.doStore.frameDuration"></span> [<span x-text="$store.doStore.timeFormated($store.doStore.timeDuration)"></span>]
             </div>

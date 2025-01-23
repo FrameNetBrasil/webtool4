@@ -26,6 +26,11 @@
                         @click.prevent="annotation.video.playByFrameRange({{$object->startFrame}},{{$object->endFrame}},0)"
                     ><i class="play icon"></i> Play Range
                     </button>
+                    <button
+                        class="ui button primary"
+                        @click.prevent="annotation.objects.updateObjectRange()"
+                    >Update Range
+                    </button>
                 </div>
                 <div class="flex h-2rem gap-2">
                     <div class="ui label">
