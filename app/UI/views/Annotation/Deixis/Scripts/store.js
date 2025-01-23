@@ -10,6 +10,8 @@ document.addEventListener('alpine:init', () => {
         currentFrame: 1,
         currentStartFrame: 0,
         currentEndFrame: 0,
+        newStartFrame: 0,
+        newEndFrame: 0,
         currentObject: null,
         currentObjectState: 'none',
         newObjectState: 'none',
@@ -74,7 +76,7 @@ document.addEventListener('alpine:init', () => {
                 // console.log('after', object,this.currentFrame);
                 annotation.video.gotoFrame(this.currentStartFrame);
                 this.newObjectState = 'showing';
-                annotation.timeline.setTime(object.startTime);
+                //annotation.timeline.setTime(object.startTime);
                 htmx.ajax("GET","/annotation/deixis/formAnnotation/" + object.idDynamicObject, "#formObject");
             }
             // annotationGridObject.selectRowByObject(idObject);

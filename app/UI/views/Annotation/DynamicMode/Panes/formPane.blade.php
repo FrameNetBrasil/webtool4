@@ -75,6 +75,13 @@
                         :value="$object?->endFrame ?? 0"
                     ></x-number-field>
                 </div>
+                <div class="field ml-3">
+                    <label></label>
+                    <div class="ui checkbox">
+                        <input type="checkbox" name="isBlocked" value="1" {!! $object->isBlocked ? 'checked' : '' !!}>
+                        <label>Is blocked?</label>
+                    </div>
+                </div>
             </div>
         </x-slot:fields>
         <x-slot:buttons>
