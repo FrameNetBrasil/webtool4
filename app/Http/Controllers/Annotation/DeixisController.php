@@ -108,6 +108,18 @@ class DeixisController extends Controller
         }
     }
 
+    #[Post(path: '/annotation/deixis/updateObjectRange')]
+    public function updateObjectRange(ObjectFrameData $data)
+    {
+        try {
+            debug($data);
+            return AnnotationDeixisService::updateObjectFrame($data);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
     #[Post(path: '/annotation/deixis/updateObjectFrame')]
     public function updateObjectFrame(ObjectFrameData $data)
     {
