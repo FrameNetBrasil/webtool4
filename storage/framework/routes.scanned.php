@@ -3152,7 +3152,7 @@ $router->get('annotation/fe/grid/{idDocument}/sentences', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fe/sentence/{idDocumentSentence}', [
+$router->get('annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@sentence',
 	'as' => NULL,
 	'middleware' => ['auth'],
