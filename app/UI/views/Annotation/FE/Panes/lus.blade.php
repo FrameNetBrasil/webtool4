@@ -55,8 +55,8 @@
         <tr
             hx-post="/annotation/fe/create"
             hx-vals='js:{"idDocumentSentence": {{$idDocumentSentence}},"idLU": {{$lu->idLU}}, "wordList": getWordData()}'
-            hx-target="#workArea"
-            hx-swap="innerHTML"
+{{--            hx-target="#workArea"--}}
+{{--            hx-swap="innerHTML"--}}
         >
             <td
                 class="cursor-pointer"

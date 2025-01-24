@@ -4,7 +4,7 @@
     hx-trigger="reload-annotationSet from:body"
     hx-target="#workArea"
     hx-swap="innerHTML"
-    hx-get="/annotation/fe/as/{{$idAnnotationSet}}/{{$token}}"
+    hx-get="/annotation/fe/as/{{$idAnnotationSet}}/{{$word}}"
 >
     <div class="ui card w-full">
         <div class="content">
@@ -71,22 +71,22 @@
                     <div>
                         <div class="rowWord">
 
-                            @foreach($words as $i => $word)
+                            @foreach($words as $i => $w)
                                 {{--                            @if($word['word'] != ' ')--}}
-                                <div class="{!! ($word['word'] != ' ') ? 'colWord' : 'colSpace' !!}">
+                                <div class="{!! ($w['word'] != ' ') ? 'colWord' : 'colSpace' !!}">
                                     @php($isTarget = ($i >= $target->startWord) && ($i <= $target->endWord))
                                     @php($topLine = 30)
                                     @php($labelsAtWord = ($spans[$i] ?? []))
                                     @php($height = 24 + ($isTarget ? 0 : (count($labelsAtWord) * 30)))
                                     <span
-                                        class="word {{$isTarget ? 'target' : ''}} {{$word['hasFE'] ? 'hasFE' : ''}}"
+                                        class="word {{$isTarget ? 'target' : ''}} {{$w['hasFE'] ? 'hasFE' : ''}}"
                                         id="word_{{$i}}"
                                         data-type="word"
                                         data-i="{{$i}}"
-                                        data-startchar="{{$word['startChar']}}"
-                                        data-endchar="{{$word['endChar']}}"
+                                        data-startchar="{{$w['startChar']}}"
+                                        data-endchar="{{$w['endChar']}}"
                                         style="height:{{$height}}px"
-                                    >{{$word['word']}}
+                                    >{{$w['word']}}
                                         @foreach($idLayers as $l => $idLayer)
                                             @php($label = $spans[$i][$idLayer])
                                             {{--                                        @foreach($labelsAtWord as $label)--}}
@@ -119,20 +119,22 @@
 
                 <div class="rowFE">
                     @foreach($fes as $fe)
-                        @php(debug($token))
                         <div class="colFE">
                             <button
                                 class="ui right labeled icon button color_{{$fe->idColor}}"
-                                hx-post="/annotation/fe/annotate/"
+                                hx-on:click="event.stopPropagation()"
+                                hx-post="/annotation/fe/annotate"
                                 hx-target="#workArea"
-                                hx-vals="js:{idAnnotationSet: {{$idAnnotationSet}}, token: '{{$token}}', idFrameElement:{{$fe->idFrameElement}}, selection: annotationFE.selection}"
+                                hx-swap="innerHTML"
+                                hx-vals="js:{idAnnotationSet: {{$idAnnotationSet}}, token: '{{$word}}', idFrameElement:{{$fe->idFrameElement}}, selection: annotationFE.selection}"
                             >
                                 <i
                                     class="delete icon"
                                     hx-on:click="event.stopPropagation()"
                                     hx-delete="/annotation/fe/frameElement"
-                                    hx-vals="js:{idAnnotationSet: {{$idAnnotationSet}}, token: '{{$token}}', idFrameElement:{{$fe->idFrameElement}}}"
+                                    hx-vals="js:{idAnnotationSet: {{$idAnnotationSet}}, token: '{{$word}}', idFrameElement:{{$fe->idFrameElement}}}"
                                     hx-target="#workArea"
+                                    hx-swap="innerHTML"
                                 >
                                 </i>
                                 <x-element.fe

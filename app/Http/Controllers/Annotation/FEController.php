@@ -53,10 +53,13 @@ class FEController extends Controller
         ]);
     }
 
-    #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}')]
-    public function sentence(int $idDocumentSentence)
+    #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
+    public function sentence(int $idDocumentSentence,int $idAnnotationSet = null)
     {
         $data = AnnotationFEService::getAnnotationData($idDocumentSentence);
+        if (!is_null($idAnnotationSet)) {
+            $data['idAnnotationSet'] = $idAnnotationSet;
+        }
         return view("Annotation.FE.annotationSentence", $data);
     }
 
@@ -95,7 +98,12 @@ class FEController extends Controller
             if ($input->range->type != '') {
                 $data = AnnotationFEService::annotateFE($input);
                 //$data['alternativeLU'] = [];
+                debug("#######################################################");
+
+//                $this->trigger('reload-annotationSet');
+//                $this->trigger('reload-annotationSet');
                 return view("Annotation.FE.Panes.annotationSet", $data);
+//                return $input->idAnnotationSet;
             } else {
                 return $this->renderNotify("error", "No selection.");
             }
@@ -110,6 +118,7 @@ class FEController extends Controller
         try {
             AnnotationFEService::deleteFE($data);
             $data = AnnotationFEService::getASData($data->idAnnotationSet, $data->token);
+            debug("--------------------------------------------------------");
             //$data['alternativeLU'] = [];
             return view("Annotation.FE.Panes.annotationSet", $data);
         } catch (\Exception $e) {
@@ -124,11 +133,10 @@ class FEController extends Controller
         if (is_null($idAnnotationSet)) {
             return $this->renderNotify("error", "Error creating AnnotationSet.");
         } else {
-            $data = AnnotationFEService::getASData($idAnnotationSet);
-            //$data['alternativeLU'] = [];
-            return response()
-                ->view("Annotation.FE.Panes.annotationSet", $data)
-                ->header('HX-Trigger', 'reload-sentence');
+            //$data = AnnotationFEService::getASData($idAnnotationSet);
+//            $this->trigger('reload-sentence');
+//            return view("Annotation.FE.Panes.annotationSet", $data);
+            return $this->clientRedirect("/annotation/fe/sentence/{$input->idDocumentSentence}/{$idAnnotationSet}");
 
         }
     }
