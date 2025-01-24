@@ -104,8 +104,8 @@ class FullTextController extends Controller
     public function annotate(AnnotationData $input)
     {
         try {
-            debug($input);
-            debug(request("selection"));
+            //debug($input);
+            //debug(request("selection"));
             $input->range = SelectionData::from(request("selection"));
             if ($input->range->end < $input->range->start) {
                 throw new \Exception("Wrong selection.");
@@ -117,7 +117,7 @@ class FullTextController extends Controller
                 throw new \Exception("No selection.");
             }
         } catch (\Exception $e) {
-            $trigger = $this->notify("error", $e->getMessage());
+            //$trigger = $this->notify("error", $e->getMessage());
             return response('', 500)
                 ->header('HX-Trigger', $trigger);
         }

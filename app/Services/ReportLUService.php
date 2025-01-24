@@ -24,7 +24,7 @@ class ReportLUService
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $cmd = <<<HERE
-select a.idAnnotationSet, IFNULL(afe.startChar,1000) startChar, afe.endChar, afe.layerTypeEntry layerEntry, it.name itName, afe.idEntity feIdEntity,
+select a.idAnnotationSet, IFNULL(afe.startChar,1000) startChar, afe.endChar, afe.layerTypeEntry layerEntry, it.name itName, it.entry itEntry, afe.idEntity feIdEntity,
 afe.name feName, afe.idFrameElement feId, afe.coreType feTypeEntry, afe.idColor, gf.name gfName, pt.name ptName
 from view_annotationset a
 left join view_annotation_text_fe afe on (a.idAnnotationSet = afe.idAnnotationSet)
@@ -72,7 +72,7 @@ HERE;
             $feEntries[$feIdEntity] = $fe;
             $gf = $row->gfName ?: '?';
             $pt = $row->ptName ?: '?';
-            $it = $row->itName ?: '?';
+            $it = $row->itEntry ?: '?';
             $startChar = $row->startChar ?: '0';
             if ($it == 'int_normal') {
                 $idRealization = 'id' . md5($feIdEntity . $gf . $pt);
@@ -92,6 +92,7 @@ HERE;
             $fe = $row->feName;
             $gf = $row->gfName ?: '?';
             $pt = $row->ptName ?: '?';
+            $it = $row->itEntry ?: '?';
             if ($row->idAnnotationSet != $idAS) {
                 if ($idAS >= 0) {
                     $vpfe[$idVPFE]['feEntries'] = $feEntries;

@@ -241,7 +241,7 @@ HERE;
         } catch (\Exception $e) {
             DB::rollback();
             debug($e->getMessage());
-            throw new \Exception("Operation denied. Check if AS has spans.");
+            throw new \Exception("Operation denied. Check if AS has spans or comments.");
         }
     }
 
