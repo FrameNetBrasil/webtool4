@@ -1,6 +1,6 @@
 <div class="form" style="height:260px">
     <x-form
-        hx-post="/annotation/fullText/updateObjectComment"
+        hx-post="/annotation/fe/updateObjectComment"
     >
         <x-slot:title>
             <div class="flex gap-2">
@@ -27,7 +27,7 @@
                 type="button"
                 label="Delete"
                 color="danger"
-                onclick="manager.confirmDelete(`Removing Comment for #{{$object->idAnnotationSet}}'.`, '/annotation/fullText/comment/{{$object->idAnnotationSet}}', null, '')"
+                onclick="manager.confirmDelete(`Removing Comment for #{{$object->idAnnotationSet}}'.`, '/annotation/fe/comment/{{$object->idAnnotationSet}}', null, '')"
             ></x-button>
         </x-slot:buttons>
     </x-form>

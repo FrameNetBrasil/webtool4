@@ -216,6 +216,7 @@ class AnnotationFEService
             'sentence' => $sentence,
             'text' => $sentence->text,
             'tokens' => $words,
+            'idAnnotationSet' => null
         ];
 
     }
@@ -376,7 +377,7 @@ class AnnotationFEService
             'spans' => $spans,
             'fes' => $fes,
             'nis' => $nis,
-            'token' => $token
+            'word' => $token
         ];
 
     }

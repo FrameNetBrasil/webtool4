@@ -43,7 +43,6 @@
 </div>
 <div id="workArea" class="workArea h-full" x-data="$store.ftStore">
     @if(!is_null($idAnnotationSet))
-        {{$idAnnotationSet}}  {{$word}}
         <div
             hx-trigger="load"
             hx-get="/annotation/fullText/as/{{$idAnnotationSet}}/{{$word}}"

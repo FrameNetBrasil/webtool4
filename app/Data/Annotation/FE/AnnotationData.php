@@ -9,7 +9,7 @@ class AnnotationData extends Data
         public int          $idAnnotationSet,
         public int          $idFrameElement,
         public ?SelectionData $range = null,
-        public ?string        $token = '',
+        public string        $token = '',
         public ?string        $_token = '',
     )
     {
