@@ -380,7 +380,7 @@ class AnnotationDynamicService
     public static function updateSentence(SentenceData $data): void
     {
         if ($data->idSentence > 0) {
-            $sentence = Criteria::byId("sentence", "idSentence", $data->idSentence);
+            $sentence = Criteria::byId("view_sentence", "idSentence", $data->idSentence);
             // atualiza timespan associadp
             $or = Criteria::table("view_object_relation as or")
                 ->where("idAnnotationObject1", $sentence->idAnnotationObject)
@@ -413,7 +413,7 @@ class AnnotationDynamicService
                 'idLanguage' => $data->idLanguage
             ]);
             $idSentence = Criteria::function("sentence_create(?)", [$json]);
-            $sentence = Criteria::byId("sentence", "idSentence", $idSentence);
+            $sentence = Criteria::byId("view_sentence", "idSentence", $idSentence);
             Criteria::table("sentence")
                 ->where("idSentence", $idSentence)
                 ->update(['idOriginMM' => $data->idOriginMM]);
@@ -431,7 +431,7 @@ class AnnotationDynamicService
             $idObject = Criteria::function("objectrelation_create(?)", [$json]);
 
 
-//            $sentence = Criteria::byId("sentence", "idSentence", $data->idSentence);
+//            $sentence = Criteria::byId("view_sentence", "idSentence", $data->idSentence);
 //            // atualiza timespan associadp
 //            $or = Criteria::table("view_object_relation as or")
 //                ->where("idAnnotationObject1", $sentence->idAnnotationObject)
@@ -478,7 +478,7 @@ class AnnotationDynamicService
             'idLanguage' => $data->idLanguage
         ]);
         $idSentence = Criteria::function("sentence_create(?)", [$json]);
-        $sentence = Criteria::byId("sentence", "idSentence", $idSentence);
+        $sentence = Criteria::byId("view_sentence", "idSentence", $idSentence);
         Criteria::table("sentence")
             ->where("idSentence", $idSentence)
             ->update(['idOriginMM' => 4]);

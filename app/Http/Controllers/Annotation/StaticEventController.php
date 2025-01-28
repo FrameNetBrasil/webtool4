@@ -62,7 +62,7 @@ class StaticEventController extends Controller
             ["idLanguage","=", $idLanguage],
         ])->first();
         $corpus = Corpus::byId($document->idCorpus);
-        $sentence = Criteria::byFilter("sentence", ["idSentence", "=", $ds->idSentence])->first();
+        $sentence = Criteria::byFilter("view_sentence", ["idSentence", "=", $ds->idSentence])->first();
         $is = Criteria::byFilter("view_image_sentence", [
             ["idSentence", "=", $sentence->idSentence]
         ])->first();

@@ -163,7 +163,7 @@ class AnnotationFEService
 
     public static function getAnnotationData(int $idDocumentSentence): array
     {
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
@@ -264,7 +264,7 @@ class AnnotationFEService
 
     public static function getLUs(int $idDocumentSentence, int $idWord): array
     {
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
@@ -293,7 +293,7 @@ class AnnotationFEService
         $as = Criteria::table("view_annotationset")
             ->where('idAnnotationSet', $idAS)
             ->first();
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $as->idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")

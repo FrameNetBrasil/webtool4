@@ -9,7 +9,6 @@ use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
-use App\Repositories\FrameElement;
 use App\Repositories\LU;
 use App\Repositories\Timeline;
 use App\Repositories\WordForm;
@@ -29,6 +28,8 @@ class AnnotationFullTextService
 
     public static function listSentences(int $idDocument): array
     {
+        $u = DB::select("select SESSION_USER()");
+        debug($u);
         $hasTimespan = self::hasTimespan($idDocument);
         if ($hasTimespan) {
             $sentences = Criteria::table("sentence")
@@ -80,7 +81,7 @@ class AnnotationFullTextService
 
     public static function getAnnotationData(int $idDocumentSentence): array
     {
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
@@ -151,7 +152,7 @@ class AnnotationFullTextService
 
     public static function getLUs(int $idDocumentSentence, int $idWord): array
     {
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
@@ -181,7 +182,7 @@ class AnnotationFullTextService
         $as = Criteria::table("view_annotationset")
             ->where('idAnnotationSet', $idAS)
             ->first();
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $as->idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
@@ -336,7 +337,7 @@ class AnnotationFullTextService
         $as = Criteria::table("view_annotationset")
             ->where('idAnnotationSet', $idAS)
             ->first();
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $as->idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
