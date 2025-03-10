@@ -56,7 +56,7 @@ class AnnotationDynamicService
         $firstBBox = Criteria::table("view_dynamicobject_boundingbox as bb")
             ->where("idDynamicObject", $idDynamicObject)
             ->first();
-        $do->isBlocked = $firstBBox->blocked;
+        $do->isBlocked = $firstBBox->blocked ?? 0;
         return $do;
     }
 
