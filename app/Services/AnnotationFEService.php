@@ -225,7 +225,7 @@ class AnnotationFEService
     {
         $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
         // get words/chars
-        $wordsChars = AnnotationSet::getWordsChars($sentence->text);
+        $wordsChars = AnnotationSet::getWordsChars(htmlspecialchars_decode($sentence->text));
         $words = $wordsChars->words;
         $wordsByChar = [];
         foreach ($words as $word) {
