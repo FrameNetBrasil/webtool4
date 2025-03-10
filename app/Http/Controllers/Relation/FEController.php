@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Relation;
 
+use App\Data\Relation\FEData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\FrameElement;

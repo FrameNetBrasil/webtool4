@@ -9,7 +9,7 @@
                 $search->sentence = '%';
             }
             $sentences = Criteria::table("view_document_sentence as ds")
-                ->join("sentence as s","ds.idSentence","=","s.idSentence")
+                ->join("view_sentence as s","ds.idSentence","=","s.idSentence")
                 ->join("view_document as d","ds.idDocument","=","d.idDocument")
                 ->where("d.idLanguage",$idLanguage)
                 ->where("s.text","contains",$search->sentence)

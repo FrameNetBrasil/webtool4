@@ -10,14 +10,14 @@
             label="New RelationGroup"
             color="secondary"
             hx-get="/relations/relationgroup/new"
-            hx-target="#editarea"
+            hx-target="#editArea"
             hx-swap="innerHTML"
         ></x-button>
         <x-button
             label="New RelationType"
             color="secondary"
             hx-get="/relations/relationtype/new"
-            hx-target="#editarea"
+            hx-target="#editArea"
             hx-swap="innerHTML"
         ></x-button>
     </x-slot:actions>

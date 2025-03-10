@@ -163,7 +163,7 @@ class AnnotationFEService
 
     public static function getAnnotationData(int $idDocumentSentence): array
     {
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
@@ -226,13 +226,13 @@ class AnnotationFEService
         $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
         // get words/chars
         $wordsChars = AnnotationSet::getWordsChars($sentence->text);
-//        debug($wordsChars);
         $words = $wordsChars->words;
         $wordsByChar = [];
         foreach ($words as $word) {
             $wordsByChar[$word['startChar']] = $word;
         }
 //        debug($wordsChars->chars);
+//        debug($wordsByChar);
         $wordTarget = [];
         foreach ($targets as $target) {
             $wordTarget[$target->startChar] = [
@@ -264,7 +264,7 @@ class AnnotationFEService
 
     public static function getLUs(int $idDocumentSentence, int $idWord): array
     {
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
@@ -293,7 +293,7 @@ class AnnotationFEService
         $as = Criteria::table("view_annotationset")
             ->where('idAnnotationSet', $idAS)
             ->first();
-        $sentence = Criteria::table("sentence as s")
+        $sentence = Criteria::table("view_sentence as s")
             ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $as->idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
@@ -327,6 +327,7 @@ class AnnotationFEService
         $firstWord = array_key_first($wordsChars->words);
         $lastWord = array_key_last($wordsChars->words);
         $spansByLayer = collect($feSpans)->groupBy('idLayer')->all();
+        debug($fes);
         foreach ($spansByLayer as $idLayer => $existingSpans) {
             $idLayers[] = $idLayer;
             for ($i = $firstWord; $i <= $lastWord; $i++) {
