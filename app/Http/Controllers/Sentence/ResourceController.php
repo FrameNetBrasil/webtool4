@@ -45,7 +45,7 @@ class ResourceController extends Controller
     #[Get(path: '/sentence/{idSentence}')]
     public function sentence(int $idSentence)
     {
-        $sentence = Criteria::byId("sentence","idSentence",$idSentence);
+        $sentence = Criteria::byId("view_sentence","idSentence",$idSentence);
         return view("Sentence.edit", [
             'sentence' => $sentence,
         ]);
@@ -54,7 +54,7 @@ class ResourceController extends Controller
     #[Get(path: '/sentence/{id}/editForm')]
     public function editForm(string $id)
     {
-        $sentence = Criteria::byId("sentence","idSentence",$id);
+        $sentence = Criteria::byId("view_sentence","idSentence",$id);
         $as = Criteria::table("annotationset")
             ->where("idSentence", $id)
             ->all();

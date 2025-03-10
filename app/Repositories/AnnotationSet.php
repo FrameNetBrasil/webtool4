@@ -158,7 +158,7 @@ HERE;
     {
         $criteria = Criteria::table("view_annotationset as a")
             ->join("view_document_sentence as ds", "a.idDocumentSentence", "=", "ds.idDocumentSentence")
-            ->join("sentence as s", "ds.idSentence", "=", "s.idSentence")
+            ->join("view_sentence as s", "ds.idSentence", "=", "s.idSentence")
             ->select('a.idAnnotationSet', 'ds.idDocumentSentence', 's.idSentence', 's.text');
         if (is_array($idAnnotationSet)) {
             $criteria->where('idAnnotationSet', 'IN', $idAnnotationSet);

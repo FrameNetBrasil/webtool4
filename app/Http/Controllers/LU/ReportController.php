@@ -36,16 +36,6 @@ class ReportController extends Controller
                 ->select("idLU","name","frameName")
                 ->orderBy('name')
                 ->all();
-//            foreach ($lus as $lu) {
-//                $text = view("components.element.lu")->with(["name" => $lu->name, 'frame' => $lu->frameName])->render();
-//                $n = [];
-//                $n['id'] = $lu->idLU;
-//                $n['idLU'] = $lu->idLU;
-//                $n['type'] = 'lu';
-//                $n['text'] = $text;
-//                $n['state'] = 'open';
-//                $rows[] = $n;
-//            }
         }
         return $lus;
     }
@@ -105,7 +95,7 @@ class ReportController extends Controller
     {
         $image = Criteria::table("image as i")
             ->join("view_document_image as di", "di.idImage", "=", "i.idImage")
-            ->select("i.idImage","i.name","i.width","i.height")
+            ->select("i.idImage","i.name","i.width","i.height","i.currentURL")
             ->where("di.idDocument", $idDocument)
             ->first();
         $bboxes = Criteria::table("view_annotation as a")
@@ -170,7 +160,7 @@ class ReportController extends Controller
         $video = Criteria::table("view_annotation_dynamic as a")
             ->join("view_document_video as dv", "a.idDocument", "=", "dv.idDocument")
             ->join("video as v", "dv.idVideo", "=", "v.idVideo")
-            ->select("v.idVideo","v.sha1Name")
+            ->select("v.idVideo","v.sha1Name","v.currentURL")
             ->where("a.idDynamicObject", $idDynamicObject)
             ->where("a.idLanguage", "LEFT", AppService::getCurrentIdLanguage())
             ->first();

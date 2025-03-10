@@ -207,7 +207,7 @@ class DynamicModeController extends Controller
     #[Get(path: '/annotation/dynamicMode/formSentence/{idDocument}/{idSentence}')]
     public function formSentence(int $idDocument, int $idSentence)
     {
-        $sentence = Criteria::byId("sentence", "idSentence", $idSentence);
+        $sentence = Criteria::byId("view_sentence", "idSentence", $idSentence);
         if (is_null($sentence)) {
             $sentence = (object)[
                 "idSentence" => 0,

@@ -18,7 +18,7 @@ class DocumentController extends Controller
     #[Get(path: '/sentence/{id}/document')]
     public function document(int $id)
     {
-        $sentence = Criteria::byId("sentence","idSentence",$id);
+        $sentence = Criteria::byId("view_sentence","idSentence",$id);
         return view("Sentence.document", [
             'sentence' => $sentence
         ]);
@@ -50,7 +50,7 @@ class DocumentController extends Controller
     public function documentNew(DocumentData $data)
     {
 
-        $sentence = Criteria::byId("sentence","idSentence",$data->idSentence);
+        $sentence = Criteria::byId("view_sentence","idSentence",$data->idSentence);
         $document = Document::byId($data->idDocument);
         $json = json_encode([
             'idAnnotationObject1' => $document->idAnnotationObject,
@@ -66,7 +66,7 @@ class DocumentController extends Controller
     public function delete(int $id, int $idDocument)
     {
         try {
-            $sentence = Criteria::byId("sentence","idSentence",$id);
+            $sentence = Criteria::byId("view_sentence","idSentence",$id);
             $document = Document::byId($idDocument);
             Criteria::table("annotationobjectrelation")
                 ->where("idAnnotationObject1", $document->idAnnotationObject)

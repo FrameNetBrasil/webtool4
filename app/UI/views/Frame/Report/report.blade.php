@@ -193,6 +193,9 @@
             </x-card-plain>
         @endforeach
     </x-card>
+    <x-card title="Visual Units" class="frameReport__card frameReport__card--main" open="true">
+        @include("Frame.Report.vu")
+    </x-card>
 </div>
 <script>
     $("#btnDownload").click(function(e) {
