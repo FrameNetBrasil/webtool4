@@ -113,7 +113,7 @@ class AnnotationFullTextService
     {
         $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
         // get words/chars
-        $wordsChars = AnnotationSet::getWordsChars($sentence->text);
+        $wordsChars = AnnotationSet::getWordsChars(htmlspecialchars_decode($sentence->text));
 //        debug($wordsChars);
         $words = $wordsChars->words;
         $wordsByChar = [];
