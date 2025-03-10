@@ -73,17 +73,14 @@ class ResourceController extends Controller
     public function newRelationGroup(CreateRelationGroupData $data)
     {
         try {
+            $entry = "rgp_" . strtolower($data->nameEn);
             $exists = Criteria::table("relationgroup")
-                ->whereRaw("name = '{$data->name}' collate 'utf8mb4_bin'")
+                ->whereRaw("entry = '{$entry}' collate 'utf8mb4_bin'")
                 ->first();
             if (!is_null($exists)) {
                 throw new \Exception("RelationGroup already exists.");
             }
-            $newRelationGroup = [
-                'name' => $data->name,
-                'type' => $data->type,
-            ];
-            $idRelationGroup = Criteria::create("relationgroup", $newRelationGroup);
+            $idRelationGroup = Criteria::function('relationgroup_create(?)', [$data->toJson()]);
             $relationGroup = RelationGroup::byId($idRelationGroup);
             $this->trigger('reload-gridRelations');
             return $this->render("Relations.editRelationGroup", [
@@ -155,21 +152,14 @@ class ResourceController extends Controller
     public function newRelationType(CreateRelationTypeData $data)
     {
         try {
-            $exists = Criteria::table("view_relationtype")
-                ->whereRaw("name = '{$data->nameEn}' collate 'utf8mb4_bin'")
-                ->where("idLanguage",2)
+            $entry = "rel_" . strtolower($data->nameCanonical);
+            $exists = Criteria::table("relationtype")
+                ->whereRaw("entry = '{$data->nameCanonical}' collate 'utf8mb4_bin'")
                 ->first();
             if (!is_null($exists)) {
                 throw new \Exception("RelationType already exists.");
             }
-            $json = json_encode((object)[
-                'nameEn' => $data->nameEn,
-                'allowsApositional' => $data->allowsApositional,
-                'isAnnotation' => $data->isAnnotation,
-                'layerOrder' => $data->layerOrder,
-                'idRelationGroup' => $data->idRelationGroup
-            ]);
-            $idRelationType = Criteria::function("relationtype_create(?)", [$json]);
+            $idRelationType = Criteria::function("relationtype_create(?)", [$data->toJson()]);
             $relationType = RelationType::byId($idRelationType);
             $this->trigger('reload-gridRelations');
             return $this->render("Relations.editRelationType", [

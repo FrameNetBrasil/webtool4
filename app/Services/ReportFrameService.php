@@ -33,6 +33,7 @@ class ReportFrameService
         $report['relations'] = self::getRelations($frame);
         $report['classification'] = Frame::getClassificationLabels($idFrame);
         $report['lus'] = self::getLUs($frame, $idLanguage);
+        $report['vus'] = self::getVUs($frame, $idLanguage);
         return $report;
     }
 
@@ -130,9 +131,16 @@ class ReportFrameService
             ->join("pos","lu.idPOS","=","pos.idPOS")
             ->where("idFrame", $frame->idFrame)
             ->where("idLanguage", $idLanguage)
+            ->orderBy("name")
             ->treeResult("POS")->all();
         ksort($lus);
         return $lus;
+    }
+
+    public static function getVUs($frame, $idLanguage)
+    {
+        $vus = AnnotationStaticEventService::getDocumentsForVU($frame->idFrame, $idLanguage);
+        return $vus;
     }
 
     public static function getClassification($frame)

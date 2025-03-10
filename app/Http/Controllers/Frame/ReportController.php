@@ -96,4 +96,32 @@ class ReportController extends Controller
             ->all()];
     }
 
+    #[Get(path: '/report/frame/static/object/{idDocument}/{idImage}/{idFrame}')]
+    public function getStaticObject(int $idDocument, int $idImage, int $idFrame)
+    {
+        $image = Criteria::table("image as i")
+            ->select("i.idImage","i.name","i.width","i.height","i.currentURL")
+            ->where("i.idImage", $idImage)
+            ->first();
+        $fesList = Criteria::table("view_annotation_static as a")
+            ->select("a.idStaticObject","a.fe","a.color")
+            ->where("a.idDocument", $idDocument)
+            ->where("a.idImage", $idImage)
+            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
+            ->where("a.idFrame", $idFrame)
+            ->all();
+        $fes = collect($fesList)->groupBy("idStaticObject")->toArray();
+        $idStaticObject = array_keys($fes);
+        $bboxes = Criteria::table("view_staticobject_boundingbox as bb")
+            ->distinct()
+            ->select("bb.idStaticObject", "bb.x","bb.y","bb.width","bb.height")
+            ->whereIn("bb.idStaticObject", $idStaticObject)
+            ->all();
+        return view("Frame.Report.image", [
+            'image' => $image,
+            'fes' => $fes,
+            'bboxes' => $bboxes,
+        ]);
+    }
+
 }
