@@ -226,13 +226,13 @@ class AnnotationFEService
         $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
         // get words/chars
         $wordsChars = AnnotationSet::getWordsChars($sentence->text);
-//        debug($wordsChars);
         $words = $wordsChars->words;
         $wordsByChar = [];
         foreach ($words as $word) {
             $wordsByChar[$word['startChar']] = $word;
         }
 //        debug($wordsChars->chars);
+//        debug($wordsByChar);
         $wordTarget = [];
         foreach ($targets as $target) {
             $wordTarget[$target->startChar] = [
@@ -327,6 +327,7 @@ class AnnotationFEService
         $firstWord = array_key_first($wordsChars->words);
         $lastWord = array_key_last($wordsChars->words);
         $spansByLayer = collect($feSpans)->groupBy('idLayer')->all();
+        debug($fes);
         foreach ($spansByLayer as $idLayer => $existingSpans) {
             $idLayers[] = $idLayer;
             for ($i = $firstWord; $i <= $lastWord; $i++) {

@@ -199,5 +199,119 @@ class AnnotationStaticEventService
         });
     }
 
+    /*
+     * Visual Units: documentos anotados para um dado frame de evento
+     */
+
+    public static function getDocumentsForVU(int $idFrame, int $idLanguage): array
+    {
+
+//        select distinct i.idImage, d.idDocument, d.corpusName, d.name
+//from staticobject as sob
+//join view_object_relation or1 on (sob.idAnnotationObject = or1.idAnnotationObject2)
+//join view_object_relation or2 on (or1.idAnnotationObject1 = or2.idAnnotationObject2)
+//join image i on (or1.idAnnotationObject1 = i.idAnnotationObject)
+//join view_document d on (or2.idAnnotationObject1 = d.idAnnotationObject)
+//join annotation a on (sob.idAnnotationObject = a.idAnnotationObject)
+//join frameelement fe on (a.idEntity = fe.idEntity)
+//where (or1.relationType = 'rel_image_staobj')
+//and (or2.relationType = 'rel_document_image')
+//and (fe.idFrame = 664)
+//and d.idcorpus between 140 and 147
+//    and d.idLanguage = 1
+//order by 3,4,1;
+//
+        $annotations = Criteria::table("staticobject as sob")
+            ->join("view_object_relation as or1", "sob.idAnnotationObject", "=", "or1.idAnnotationObject2")
+            ->join("view_object_relation as or2", "or1.idAnnotationObject1", "=", "or2.idAnnotationObject2")
+            ->join("image as i", "or1.idAnnotationObject1", "=", "i.idAnnotationObject")
+            ->join("view_document as d", "or2.idAnnotationObject1", "=", "d.idAnnotationObject")
+            ->join("annotation as a", "sob.idAnnotationObject", "=", "a.idAnnotationObject")
+            ->join("frameelement as fe", "a.idEntity", "=", "fe.idEntity")
+            ->where("or1.relationType",'rel_image_staobj')
+            ->where("or2.relationType",'rel_document_image')
+            ->where("fe.idFrame", "=", $idFrame)
+            ->where("d.idLanguage", "=", $idLanguage)
+            ->whereBetween("d.idCorpus", [140,147])
+            ->orderBy("d.corpusName")
+            ->orderBy("d.name")
+            ->orderBy("i.idImage")
+            ->distinct()
+            ->select([
+                "d.corpusName",
+                "d.name as documentName",
+                "d.idDocument",
+                "i.idImage"
+            ])
+            ->all();
+        return $annotations;
+    }
+
+    public static function getObjectsForVU(int $idDocument, int $idSentence): array
+    {
+        $usertask = AnnotationService::getCurrentUserTask($idDocument);
+        if (is_null($usertask)) {
+            return [
+                'objects' => [],
+                'frames' => []
+            ];
+        }
+        $task = Task::byId($usertask->idTask);
+//        debug($task);
+        //objects for document_sentence
+        $criteria = Criteria::table("view_staticobject_textspan")
+            ->where("idDocument", $idDocument)
+            ->where("idSentence", $idSentence);
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $objects = $criteria->get()->keyBy('idStaticObject')->all();
+        $idObject = 1;
+        foreach ($objects as $i => $object) {
+            $bboxes = Criteria::table("view_staticobject_boundingbox")
+                ->where("idStaticObject", $i)
+                ->select("x", "y", "width", "height")
+                ->all();
+//            debug($bboxes);
+            $object->idObject = $idObject++;
+            $object->bboxes = $bboxes;
+        }
+        $frames = [];
+        foreach ($objects as $object) {
+//            debug($object);
+            $annotations = Criteria::table("view_annotation as a")
+                ->join("view_frameelement as fe", "a.idEntity", "=", "fe.idEntity")
+                ->where("a.idAnnotationObject", "=", $object->idAnnotationObject)
+                ->where("a.idUserTask", "=", $usertask->idUserTask)
+                ->where("fe.idLanguage", "=", $idLanguage)
+                ->select([
+                    "a.idAnnotation",
+                    "fe.idFrame",
+                    "fe.frameName as frameName",
+                    "fe.idFrameElement"
+                ])
+                ->orderBy("fe.idFrame")
+                ->all();
+            foreach ($annotations as $annotation) {
+                if (!isset($frames[$annotation->idFrame])) {
+                    $frames[$annotation->idFrame] = [
+                        'idFrame' => $annotation->idFrame,
+                        'name' => $annotation->frameName,
+                        'objects' => []
+                    ];
+                }
+                if (is_null($annotation->idFrameElement)) {
+                    $annotation->idFrameElement = -1;
+                }
+                $frames[$annotation->idFrame]['objects'][$object->idStaticObject] = $annotation;
+            }
+        }
+        return [
+            'type' => $task->type,
+            'objects' => $objects,
+            'frames' => $frames
+        ];
+    }
+
+
+
 
 }

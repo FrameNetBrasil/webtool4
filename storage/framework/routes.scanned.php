@@ -176,6 +176,14 @@ $router->get('frame/listScenario/forSelect', [
 	'domain' => NULL,
 ]);
 
+$router->get('report/frame/static/object/{idDocument}/{idImage}/{idFrame}', [
+	'uses' => 'App\Http\Controllers\Frame\ReportController@getStaticObject',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('frame/{id}/classification', [
 	'uses' => 'App\Http\Controllers\Frame\ClassificationController@classification',
 	'as' => NULL,
