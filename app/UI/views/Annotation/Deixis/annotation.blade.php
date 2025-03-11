@@ -40,7 +40,7 @@
                     <div class="flex flex-column flex-grow-0 pt-2">
                         @include("Annotation.Deixis.Panes.newObject")
                     </div>
-                    @include("Annotation.Deixis.Panes.timelinePane")
+                    @include("Annotation.Deixis.Panes.gridsPane")
 
                 </div>
             </div>
@@ -69,6 +69,14 @@
 
             document.body.addEventListener("updateObjectAnnotationEvent", function(evt) {
                 annotation.objects.updateObjectAnnotationEvent();
+            });
+
+            document.body.addEventListener("htmx:afterSwap", function(elt) {
+                if (elt.target.id === "formObject"){
+                    if (document.getElementById("btnCreateObject")) {
+                        Alpine.store("doStore").uiEditingObject();
+                    }
+                }
             });
 
             @include("Annotation.Deixis.Scripts.DeixisObject")

@@ -157,7 +157,7 @@ annotation.objects = {
                     // - ou precisa ser criada
                     let bbox = currentObject.getBoundingBoxAt(frameNumber);
                     if (bbox) {
-                        currentObject.drawBoxInFrame(frameNumber, "showing");
+                        currentObject.drawBoxInFrame(frameNumber, "editing");
                     } else {
                         let tracker = annotation.objects.tracker;
                         await tracker.setBBoxForObject(currentObject, frameNumber);
@@ -173,12 +173,12 @@ annotation.objects = {
                             bbox.idBoundingBox = idBoundingBox;
                         });
                         // console.log("returning from tracker");
-                        currentObject.drawBoxInFrame(frameNumber, "showing");
+                        currentObject.drawBoxInFrame(frameNumber, "editing");
                     }
 
                 } else {
                     // console.log("drawFrame not tracking", currentObject);
-                    currentObject.drawBoxInFrame(frameNumber, "showing");
+                    currentObject.drawBoxInFrame(frameNumber, "editing");
                 }
                 // console.log("%%%%%%  end drawFrameObject in ", frameNumber);
             }
@@ -201,12 +201,11 @@ annotation.objects = {
             let objects = annotation.objects.tracker.annotatedObjects.filter(o => o.inFrame(frameNumber));
             // console.log(objects);
             objects.forEach(o => {
-                o.drawBoxInFrame(frameNumber, "showing");
+                o.drawBoxInFrame(frameNumber, "editing");
             });
         }
     },
     creatingBBox() {
-        //annotation.video.player.currentTime(Alpine.store('doStore').timeByFrame);
         annotation.drawBox.init();
         // console.log("creating new object");
         document.querySelector("#canvas").style.cursor = "crosshair";
@@ -238,24 +237,6 @@ annotation.objects = {
         let data = await annotation.objects.createNewBBox(tempObject);
         console.log("end CreatedBBox");
     },
-    // getNewObject: (currentFrame) => {
-    //     return {
-    //         idObject: 0,
-    //         order: 0,
-    //         idFrame: -1,
-    //         frame: "",
-    //         idFE: -1,
-    //         fe: "",
-    //         startFrame: currentFrame,
-    //         //endFrame: annotation.video.framesRange.last
-    //         endFrame: currentFrame,
-    //         visible: true,
-    //         hidden: false,
-    //         locked: false,
-    //         color: vatic.getColor(1),
-    //         bboxes: []
-    //     };
-    // },
     createNewBBox: async (tempObject) => {
         try {
             let currentFrame = Alpine.store("doStore").currentFrame;
@@ -263,44 +244,23 @@ annotation.objects = {
                 currentFrame = 1;
             }
             console.log("createNewBBox", tempObject, currentFrame);
-            //let annotatedObject = new DeixisObject(annotation.objects.getNewObject(currentFrame));
             let annotatedObject = Alpine.store("doStore").currentObject;
             annotatedObject.dom = tempObject.dom;
             let bbox = new BoundingBox(currentFrame, tempObject.bbox.x, tempObject.bbox.y, tempObject.bbox.width, tempObject.bbox.height, true, null);
-            // let frameObject = new Frame(currentFrame, tempObject.bbox, true, null);
-            // annotatedObject.addToFrame(frameObject);
             console.log(annotatedObject);
             annotatedObject.addBBox(bbox);
             annotation.objects.interactify(
                 annotatedObject,
                 async (x, y, width, height, idBoundingBox) => {
-                    // let currentFrame = Alpine.store("doStore").currentFrame;
-                    // let bbox = new BoundingBox(currentFrame,x,y,width,height,null);
-                    // let bbox = new BoundingBox(x, y, width, height);
-                    // let currentFrame = Alpine.store("doStore").currentFrame;
-                    // let frameObject = new Frame(currentFrame, bbox, true, idBoundingBox);
-                    // annotatedObject.addToFrame(frameObject);
                     let currentFrame = Alpine.store("doStore").currentFrame;
-                    //let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
-                    //let frameObject = new Frame(currentFrame, bbox, true, idDynamicBBoxMM);
-                    // let frameObject = annotatedObject.getFrameAt(currentFrame);
-                    // frameObject.bbox = bbox;
-                    // frameObject.isGroundTruth = true;
-                    //annotatedObject.addToFrame(frameObject);
-                    //console.log(frameObject.idBoundingBox, bbox);
-                    //annotation.objects.saveRawObject(annotatedObject);
                     let bbox = new annotatedObject.getBoundingBoxAt(currentFrame);
                     annotation.api.updateBBox({
                         idBoundingBox: bbox.idBoundingBox,
                         bbox: bbox
                     });
-                    //
-                    // annotatedObject.addBBox(bbox);
-                    // annotation.objects.saveRawObject(annotatedObject);
                 }
             );
             //console.log("##### creating newBBox");
-
             //let data = await annotation.objects.createBBox(annotatedObject);
             let paramsBBox = {
                 idDynamicObject: annotatedObject.idDynamicObject,
@@ -315,10 +275,10 @@ annotation.objects = {
             });
             //await Alpine.store("doStore").loadLayerList();
             console.log("##### New bbox created.");
-            Alpine.store("doStore").newObjectState = "showing";
-            //Alpine.store("doStore").selectObjectByIdDynamicObject(data.idDynamicObject);
+            Alpine.store("doStore").newObjectState = "tracking";
             annotation.objects.tracker.getFrameImage(currentFrame);
-            annotatedObject.drawBoxInFrame(currentFrame, "showing");
+            annotatedObject.drawBoxInFrame(currentFrame, "editing");
+            Alpine.store("doStore").uiEnableTracking();
             manager.notify("success", "New bbox created.");
             // return data;
         } catch (e) {
@@ -329,83 +289,6 @@ annotation.objects = {
             // return null;
         }
     },
-    // getObjectFrameData: (currentObject, startFrame, endFrame) => {
-    //     console.log("getObjectFrameData", currentObject, startFrame, endFrame);
-    //     let data = [];
-    //     //let lastFrame = currentObject.endFrame;
-    //     let lastFrame = startFrame;
-    //     for (var frame of currentObject.frames) {
-    //         if ((frame.frameNumber >= startFrame) && (frame.frameNumber <= endFrame)) {
-    //             if (frame.bbox !== null) {
-    //                 data.push({
-    //                     frameNumber: frame.frameNumber,
-    //                     frameTime: annotation.video.timeFromFrame(frame.frameNumber),
-    //                     x: frame.bbox.x,
-    //                     y: frame.bbox.y,
-    //                     width: frame.bbox.width,
-    //                     height: frame.bbox.height,
-    //                     blocked: frame.blocked ? 1 : 0
-    //                 });
-    //                 lastFrame = frame.frameNumber;
-    //             }
-    //         }
-    //     }
-    //     return {
-    //         frames: data,
-    //         lastFrame: lastFrame
-    //     };
-    // },
-
-//     createObject: async (object) => {
-//         let params = {
-//             idDocument: annotation.document.idDocument,
-//             idDynamicObject: null,
-//             startFrame: object.startFrame,
-//             endFrame: object.endFrame,
-//             idFrame: null,
-//             idFrameElement: null,
-//             idLU: null,
-//             startTime: annotation.video.timeFromFrame(object.startFrame),
-//             endTime: annotation.video.timeFromFrame(object.endFrame),
-//             origin: 5
-//         };
-//         console.log("createObject", object, params);
-//         if (params.startFrame > params.endFrame) {
-//             throw new Error("endFrame must be greater or equal to startFrame.");
-//         }
-//         let data = await annotation.api.updateObject(params);
-//         console.log("object created", data);
-//
-// //        await Alpine.store("doStore").updateObjectList();
-//         return data;
-//     },
-//     saveObject: async (currentObject) => {
-//         try {
-//             console.log("saving object #", currentObject.idObject);
-//             let params = {
-//                 idDocument: annotation.document.idDocument,
-//                 idDynamicObject: currentObject.object.idDynamicObject,
-//                 startFrame: currentObject.object.startFrame,
-//                 endFrame: currentObject.object.endFrame,
-//                 idFrame: currentObject.object.idFrame,
-//                 idFrameElement: currentObject.object.idFrameElement,
-//                 idLU: currentObject.object.idLU,
-//                 startTime: annotation.video.timeFromFrame(currentObject.object.startFrame),
-//                 endTime: annotation.video.timeFromFrame(currentObject.object.endFrame),
-//                 origin: 2,
-//                 frames: []
-//             };
-//             let data = await annotation.api.updateObject(params);
-//             console.log("object saved", data);
-//             // annotation.objects.saveObject(currentObject, params);
-//         } catch (e) {
-//             Alpine.store("doStore").newObjectState = "none";
-//             Alpine.store("doStore").currentVideoState = "paused";
-//             console.log(e.message);
-//             return null;
-//         }
-//
-//     },
     updateObjectFrame: async () => {
         let currentObject = Alpine.store("doStore").currentObject;
         let params = {
@@ -440,9 +323,9 @@ annotation.objects = {
             startFrame: Alpine.store("doStore").currentStartFrame,
             endFrame: Alpine.store("doStore").currentEndFrame
         };
-        annotation.api.updateObjectRange(params, async (dynamicObject) => {
+        annotation.api.updateObjectRange(params, async (idDynamicObject) => {
             await Alpine.store("doStore").loadLayerList();
-            Alpine.store("doStore").selectObjectByIdDynamicObject(dynamicObject.idDynamicObject);
+            Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
         });
     },
     updateObjectAnnotationEvent: async () => {
@@ -497,14 +380,34 @@ annotation.objects = {
         Alpine.store("doStore").selectObjectByIdDynamicObject(object.idDynamicObject);
     },
     createNewObjectAtLayer: async (params) => {
-        params.idDocument = annotation.document.idDocument;
-        annotation.api.createNewObjectAtLayer(params, async (object) => {
-            console.log("after create new", object);
+        if (params.idLayerType > 0) {
+            params.idDocument = annotation.document.idDocument;
+            annotation.api.createNewObjectAtLayer(params, async (object) => {
+                console.log("after create new", object);
+                await Alpine.store("doStore").loadLayerList();
+                manager.notify("success", "New Object : #" + object.idDynamicObject);
+                Alpine.store("doStore").selectObjectByIdDynamicObject(object.idDynamicObject);
+            });
+        } else {
+            manager.notify("error", "No layer defined.");
+        }
+    },
+    closeEdition: async () => {
+        await htmx.ajax("GET", "/annotation/deixis/formAnnotation/0", "#formObject");
+        Alpine.store("doStore").selectObject(null);
+        this.newObjectState = "none";
+        annotation.video.enablePlayPause();
+        annotation.video.enableSkipFrame();
+    },
+    deleteBBox: async (idDynamicObject) => {
+        let params = {
+            idDynamicObject: idDynamicObject
+        };
+        annotation.api.deleteBBox(params, async (idDynamicObject) => {
             await Alpine.store("doStore").loadLayerList();
-            manager.notify("success", "New Object : #" + object.idDynamicObject);
-            Alpine.store("doStore").selectObjectByIdDynamicObject(object.idDynamicObject);
+            Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
         });
-    }
+    },
 
 
 };

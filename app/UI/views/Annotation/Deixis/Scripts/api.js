@@ -153,6 +153,18 @@ annotation.api = {
             }
         });
     },
+    deleteBBox: async (params, callback) => {
+        params._token = annotation._token;
+        await $.ajax({
+            url: "/annotation/deixis/deleteBBox",
+            method: "POST",
+            dataType: "json",
+            data: params,
+            success: (response) => {
+                callback(response);
+            }
+        });
+    },
     cloneObject: async (params) => {
         params._token = annotation._token;
         let result = null;
