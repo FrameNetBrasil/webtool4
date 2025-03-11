@@ -3376,6 +3376,14 @@ $router->get('annotation/deixis/{idDocument}/{idDynamicObject?}', [
 	'domain' => NULL,
 ]);
 
+$router->post('annotation/deixis/deleteBBox', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@createBBox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/staticEvent', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticEventController@browse',
 	'as' => NULL,

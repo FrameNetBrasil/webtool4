@@ -1,4 +1,4 @@
-<div class="form" style="height:260px">
+<div class="form" style="height:240px">
     <x-form
         hx-post="/annotation/dynamicMode/updateObjectComment"
     >
@@ -33,6 +33,7 @@
                 <x-multiline-field
                     label="Comment"
                     id="comment"
+                    rows="4"
                     :value="$object->comment ?? ''"
                 ></x-multiline-field>
             </div>
