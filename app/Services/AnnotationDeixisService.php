@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Data\Annotation\Deixis\CreateObjectData;
+use App\Data\Annotation\Deixis\DeleteBBoxData;
 use App\Data\Annotation\Deixis\ObjectAnnotationData;
 use App\Data\Annotation\Deixis\ObjectFrameData;
 use App\Database\Criteria;
@@ -392,6 +393,20 @@ class AnnotationDeixisService
         $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
         return $idBoundingBox;
     }
+
+    public static function deleteBBoxesFromObject(DeleteBBoxData $data): int
+    {
+        $idUser = AppService::getCurrentIdUser();
+        $bboxes = Criteria::table("view_dynamicobject_boundingbox")
+            ->where("idDynamicObject", $data->idDynamicObject)
+            ->chunkResult("idBoundingBox","idBoundingBox");
+        debug($bboxes);
+        foreach ($bboxes as $idBoundingBox) {
+            Criteria::function("boundingbox_dynamic_delete(?,?)", [$idBoundingBox, $idUser]);
+        }
+        return $data->idDynamicObject;
+    }
+
 
     public static function listSentencesByDocument($idDocument): array
     {

@@ -13,8 +13,10 @@ class DeixisObject {
         this.hidden = false;
         this.locked = false;
         this.dom = null;
-        //this.frames = [];
-        //this.bboxes = [];
+    }
+
+    hasBBox() {
+       return (this.bboxes.length > 0);
     }
 
     inFrame(frameNumber) {
@@ -56,7 +58,7 @@ class DeixisObject {
                         this.dom.style.borderStyle = "dotted";
                         this.dom.style.borderWidth = "2px";
                     }
-                    if (state === "showing") {
+                    if (state === "editing") {
                         this.dom.style.borderColor = this.color.bg;
                         this.dom.querySelector(".objectId").style.backgroundColor = this.color.bg;
                         this.dom.querySelector(".objectId").style.color = this.color.fg;
