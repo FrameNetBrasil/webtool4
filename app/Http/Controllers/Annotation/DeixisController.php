@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\Deixis\CreateObjectData;
+use App\Data\Annotation\Deixis\DeleteBBoxData;
 use App\Data\Annotation\Deixis\DocumentData;
 use App\Data\Annotation\Deixis\ObjectAnnotationData;
 use App\Data\Annotation\Deixis\ObjectData;
@@ -170,7 +171,7 @@ class DeixisController extends Controller
     public function getFormComment(CommentData $data)
     {
         $object = CommentService::getDynamicObjectComment($data->idDynamicObject);
-        return view("Annotation.DynamicMode.Panes.formComment", [
+        return view("Annotation.Deixis.Panes.formComment", [
             'idDocument' => $data->idDocument,
             'order' => $data->order,
             'object' => $object
@@ -212,4 +213,15 @@ class DeixisController extends Controller
         return view("Annotation.Deixis.annotation", $data->toArray());
     }
 
+    #[Post(path: '/annotation/deixis/deleteBBox')]
+    public function createBBox(DeleteBBoxData $data)
+    {
+        try {
+            debug($data);
+            return AnnotationDeixisService::deleteBBoxesFromObject($data);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
 }

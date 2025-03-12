@@ -94,6 +94,9 @@
                 // console.log("timeupdate timecount ", Alpine.store('doStore').timeCount);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 annotation.timeline.setTime(Math.trunc(currentTime * 1000));
+                if (Alpine.store('doStore').newObjectState === 'editing') {
+                    Alpine.store('doStore').uiEditingObject();
+                }
                 if (annotation.video.playingRange) {
                     if (currentFrame > annotation.video.playingRange.endFrame) {
                         annotation.video.player.pause();

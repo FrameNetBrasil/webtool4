@@ -60,7 +60,7 @@ annotation.drawBox = {
             annotation.drawBox.ctx.clearRect(0, 0, annotation.drawBox.canvas.width, annotation.drawBox.canvas.height);
 
             Alpine.store('doStore').newObjectState = 'created';
-            Alpine.store('doStore').currentVideoState = 'created';
+            Alpine.store('doStore').currentVideoState = 'paused';
         }
     },
     handleMouseOut(e) {
