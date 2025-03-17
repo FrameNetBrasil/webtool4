@@ -2,7 +2,7 @@
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
-                <x-element.concept name="{{$concept->name}}"></x-element.concept>
+                <x-element.concept name="{{$concept->name}} ({{$concept->type}})"></x-element.concept>
             </h1>
         </div>
         <div class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
