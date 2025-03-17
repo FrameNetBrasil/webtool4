@@ -34,7 +34,7 @@
                             ]],
                             onClickRow: (row) => {
                                 if (row.type === "concept") {
-                                    htmx.ajax("GET", `/report/c5/${row.idConcept}`, "#reportArea");
+                                    htmx.ajax("GET", `/report/c5/content/${row.idConcept}`, "#reportArea");
                                 }
                             }
                         });
