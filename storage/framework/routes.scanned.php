@@ -256,8 +256,8 @@ $router->get('frame/{id}/relations/grid', [
 	'domain' => NULL,
 ]);
 
-$router->get('report/c5', [
-	'uses' => 'App\Http\Controllers\C5\ReportController@main',
+$router->post('report/c5/grid', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@grid',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
@@ -272,16 +272,16 @@ $router->get('report/c5/data', [
 	'domain' => NULL,
 ]);
 
-$router->get('report/c5/{idConcept}/{lang?}', [
-	'uses' => 'App\Http\Controllers\C5\ReportController@report',
+$router->get('report/c5/content/{idConcept}/{lang?}', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@reportContent',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('report/c5/search', [
-	'uses' => 'App\Http\Controllers\C5\ReportController@search',
+$router->get('report/c5/{idConcept?}/{lang?}', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@main',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
