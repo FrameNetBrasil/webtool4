@@ -12,10 +12,12 @@ class Concept
     {
         return Criteria::byFilterLanguage("view_concept", ['idConcept', '=', $id])->first();
     }
+
     public static function byIdEntity(int $idEntity): object
     {
         return Criteria::byFilterLanguage("view_concept", ['idEntity', '=', $idEntity])->first();
     }
+
     public static function listRelations(int $idEntity)
     {
         return Criteria::table("view_relation")
@@ -35,7 +37,7 @@ class Concept
                 ["view_concept.idLanguage", "=", AppService::getCurrentIdLanguage()]
             ])->select("view_concept.idConcept", "view_concept.idEntity", "view_concept.name")
             ->orderBy("view_concept.name")->all();
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $row->n = Criteria::table("view_relation")
                 ->where("view_relation.idEntity2", "=", $row->idEntity)
                 ->where("view_relation.relationType", "=", "rel_subtypeof")
@@ -43,6 +45,7 @@ class Concept
         }
         return $rows;
     }
+
     public static function listChildren(int $idEntity)
     {
         $rows = Criteria::table("view_relation")
@@ -53,7 +56,7 @@ class Concept
                 ["view_concept.idLanguage", "=", AppService::getCurrentIdLanguage()]
             ])->select("view_concept.idConcept", "view_concept.idEntity", "view_concept.name")
             ->orderBy("view_concept.name")->all();
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $row->n = Criteria::table("view_relation")
                 ->where("view_relation.idEntity2", "=", $row->idEntity)
                 ->where("view_relation.relationType", "=", "rel_subtypeof")
@@ -62,23 +65,59 @@ class Concept
         return $rows;
     }
 
-    public static function listRoots() : array
+    public static function listTypeChildren(int $idTypeInstance): array
     {
         $criteriaER = Criteria::table("view_relation")
             ->select('idEntity1')
             ->where("relationType", "=", 'rel_subtypeof');
         $rows = Criteria::table("view_concept")
-            ->where("view_concept.idEntity", "NOT IN", $criteriaER)
-            ->filter([
-                ['view_concept.idLanguage', '=', AppService::getCurrentIdLanguage()],
-            ])->select("view_concept.idConcept", "view_concept.idEntity", "view_concept.name")
+            ->where("idEntity", "NOT IN", $criteriaER)
+            ->where("idLanguage", AppService::getCurrentIdLanguage())
+            ->where("idTypeInstance", $idTypeInstance)
+            ->where("status","<>","deleted")
+            ->whereNotNull("keyword")
+            ->select("view_concept.idConcept", "view_concept.idEntity", "view_concept.name")
             ->orderBy("view_concept.name")->all();
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $row->n = Criteria::table("view_relation")
                 ->where("view_relation.idEntity2", "=", $row->idEntity)
                 ->where("view_relation.relationType", "=", "rel_subtypeof")
                 ->count();
         }
+        return $rows;
+    }
+
+    public static function listRoots(): array
+    {
+        $typeRoots = [
+            "typ_c5_semantic",
+            "typ_c5_construction",
+            "typ_c5_strategy",
+            "typ_c5_infostructure",
+            "typ_c5_frame",
+            "typ_c5_gloss"
+        ];
+        $rows = Criteria::table("view_typeinstance")
+            ->where("idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->whereIn("entry", $typeRoots)
+            ->all();
+//
+//
+//        $criteriaER = Criteria::table("view_relation")
+//            ->select('idEntity1')
+//            ->where("relationType", "=", 'rel_subtypeof');
+//        $rows = Criteria::table("view_concept")
+//            ->where("view_concept.idEntity", "NOT IN", $criteriaER)
+//            ->filter([
+//                ['view_concept.idLanguage', '=', AppService::getCurrentIdLanguage()],
+//            ])->select("view_concept.idConcept", "view_concept.idEntity", "view_concept.name")
+//            ->orderBy("view_concept.name")->all();
+//        foreach ($rows as $row) {
+//            $row->n = Criteria::table("view_relation")
+//                ->where("view_relation.idEntity2", "=", $row->idEntity)
+//                ->where("view_relation.relationType", "=", "rel_subtypeof")
+//                ->count();
+//        }
         return $rows;
     }
 
