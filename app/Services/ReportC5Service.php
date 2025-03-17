@@ -38,7 +38,7 @@ class ReportC5Service
         $relations = [];
         $result = RelationService::listRelationsConcept($concept->idConcept);
         foreach ($result as $row) {
-            $relationName = $row->relationType . '|' . $row->name;
+            $relationName = $row->relationType . '|' . $row->name . '|' . $row->color;
             $relations[$relationName][$row->idConceptRelated] = [
                 'idEntityRelation' => $row->idEntityRelation,
                 'idConcept' => $row->idConceptRelated,
