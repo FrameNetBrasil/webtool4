@@ -3776,6 +3776,86 @@ $router->get('annotation/staticBBox/{idDocument}/{idStaticObject?}', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/as', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@browse',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/as/grid', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@grid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/as/grid/{idDocument}/sentences', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@documentSentences',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/as/sentence/{idDocumentSentence}', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@sentence',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/as/as/{idAS}', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@annotationSet',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/as/lus/{idDocumentSentence}/{idWord}', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@getLUs',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/as/annotate', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@annotate',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/as/frameElement', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@deleteFE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/as/create', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@createAS',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/as/annotationset/{idAnnotationSet}', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@deleteAS',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/fullText/{idDocument?}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@browse',
 	'as' => NULL,
