@@ -253,7 +253,7 @@ annotation.objects = {
                 annotatedObject,
                 async (x, y, width, height, idBoundingBox) => {
                     let currentFrame = Alpine.store("doStore").currentFrame;
-                    let bbox = new annotatedObject.getBoundingBoxAt(currentFrame);
+                    let bbox = annotatedObject.getBoundingBoxAt(currentFrame);
                     annotation.api.updateBBox({
                         idBoundingBox: bbox.idBoundingBox,
                         bbox: bbox
