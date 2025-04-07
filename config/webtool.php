@@ -74,6 +74,7 @@ return [
         'manager' => ['Manager', '/manager', 'MANAGER', [
             'projectDataset' => ['Project/Dataset', '/project', 'MANAGER', []],
             'taskUser' => ['Task/User', '/task', 'MANAGER', []],
+            'reframing' => ['Reframing', '/reframing', 'MANAGER', []],
         ]],
         'admin' => ['Admin', '/admin', 'ADMIN', [
             'groupUser' => ['Group/User', '/user', 'ADMIN', []],
