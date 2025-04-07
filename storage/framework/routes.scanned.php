@@ -688,6 +688,62 @@ $router->get('lu/{id}/semanticTypes', [
 	'domain' => NULL,
 ]);
 
+$router->get('reframing', [
+	'uses' => 'App\Http\Controllers\LU\ReframingController@reframing',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('reframing/grid', [
+	'uses' => 'App\Http\Controllers\LU\ReframingController@grid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('reframing/data', [
+	'uses' => 'App\Http\Controllers\LU\ReframingController@data',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('reframing/lu/{idLU}', [
+	'uses' => 'App\Http\Controllers\LU\ReframingController@reframingLU',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('reframing/edit/{idLU}/{idNewFrame}', [
+	'uses' => 'App\Http\Controllers\LU\ReframingController@reframingEdit',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('reframing/fes/{idLU}/{idNewFrame}', [
+	'uses' => 'App\Http\Controllers\LU\ReframingController@reframingFEs',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->put('reframing', [
+	'uses' => 'App\Http\Controllers\LU\ReframingController@update',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('lu/{id}/constraints', [
 	'uses' => 'App\Http\Controllers\LU\ConstraintController@constraints',
 	'as' => NULL,
