@@ -3,7 +3,7 @@
 @endif
 <div id="{{$id}}_search" class="ui very short search">
     <div class="ui left icon small input">
-        <input type="hidden" id="{{$id}}" name="{{$name ?? id}}" value="{{$value}}">
+        <input type="hidden" id="{{$id}}" name="{{$idName ?? $id}}" value="{{$value}}">
         <input class="prompt" type="search" placeholder="{{$placeholder}}" value="{{$name}}">
         <i class="search icon"></i>
     </div>
