@@ -70,6 +70,7 @@ document.addEventListener("alpine:init", () => {
             if (idObject === null) {
                 this.currentObject = null;
                 this.newObjectState = "none";
+                $(".bbox").css("display", "none");
                 htmx.ajax("GET", "/annotation/deixis/formAnnotation/0", "#formObject");
             } else {
                 //console.log(" ** player current time - selectObject", annotation.video.player.currentTime());

@@ -104,17 +104,10 @@ annotation.objects = {
                     annotatedObject,
                     (x, y, width, height) => {
                         let currentFrame = Alpine.store("doStore").currentFrame;
-                        //let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
-                        //let frameObject = new Frame(currentFrame, bbox, true, idDynamicBBoxMM);
-                        // let frameObject = annotatedObject.getFrameAt(currentFrame);
-                        // frameObject.bbox = bbox;
-                        // frameObject.isGroundTruth = true;
-                        //annotatedObject.addToFrame(frameObject);
-                        //console.log(frameObject.idBoundingBox, bbox);
-                        //annotation.objects.saveRawObject(annotatedObject);
                         let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
-                        annotatedObject.addBBox(bbox);
-                        console.log("annotated object bbox", bbox);
+//                        annotatedObject.addBBox(bbox);
+                        annotatedObject.updateBBox(bbox);
+                        //console.log("annotated object bbox", bbox);
                         annotation.api.updateBBox({
                             idBoundingBox: bbox.idBoundingBox,
                             bbox: bbox
@@ -310,29 +303,13 @@ annotation.objects = {
             annotation.objects.interactify(
                 annotatedObject,
                 async (x, y, width, height, idBoundingBox) => {
-                    // let currentFrame = Alpine.store("doStore").currentFrame;
-                    // let bbox = new BoundingBox(currentFrame,x,y,width,height,null);
-                    // let bbox = new BoundingBox(x, y, width, height);
-                    // let currentFrame = Alpine.store("doStore").currentFrame;
-                    // let frameObject = new Frame(currentFrame, bbox, true, idBoundingBox);
-                    // annotatedObject.addToFrame(frameObject);
                     let currentFrame = Alpine.store("doStore").currentFrame;
-                    //let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
-                    //let frameObject = new Frame(currentFrame, bbox, true, idDynamicBBoxMM);
-                    // let frameObject = annotatedObject.getFrameAt(currentFrame);
-                    // frameObject.bbox = bbox;
-                    // frameObject.isGroundTruth = true;
-                    //annotatedObject.addToFrame(frameObject);
-                    //console.log(frameObject.idBoundingBox, bbox);
-                    //annotation.objects.saveRawObject(annotatedObject);
-                    let bbox = new annotatedObject.getBoundingBoxAt(currentFrame);
+                    let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
+                    annotatedObject.updateBBox(bbox);
                     annotation.api.updateBBox({
                         idBoundingBox: bbox.idBoundingBox,
                         bbox: bbox
                     });
-                    //
-                    // annotatedObject.addBBox(bbox);
-                    // annotation.objects.saveRawObject(annotatedObject);
                 }
             );
             console.log("##### creating newObject");
