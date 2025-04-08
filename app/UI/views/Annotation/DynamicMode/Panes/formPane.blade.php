@@ -78,7 +78,7 @@
                 <div class="field ml-3">
                     <label></label>
                     <div class="ui checkbox">
-                        <input type="checkbox" name="isBlocked" value="1" {!! $object->isBlocked ? 'checked' : '' !!}>
+                        <input type="checkbox" name="isBlocked" value="1" {!! $object?->isBlocked ? 'checked' : '' !!}>
                         <label>Is blocked?</label>
                     </div>
                 </div>

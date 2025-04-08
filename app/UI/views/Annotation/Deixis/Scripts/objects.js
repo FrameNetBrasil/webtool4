@@ -107,8 +107,8 @@ annotation.objects = {
                         (x, y, width, height) => {
                             let currentFrame = Alpine.store("doStore").currentFrame;
                             let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
-                            annotatedObject.addBBox(bbox);
-                            console.log("annotated object bbox", bbox);
+                            annotatedObject.updateBBox(bbox);
+                            //console.log("update annotated object bbox", bbox);
                             annotation.api.updateBBox({
                                 idBoundingBox: bbox.idBoundingBox,
                                 bbox: bbox
@@ -252,8 +252,12 @@ annotation.objects = {
             annotation.objects.interactify(
                 annotatedObject,
                 async (x, y, width, height, idBoundingBox) => {
+
                     let currentFrame = Alpine.store("doStore").currentFrame;
-                    let bbox = annotatedObject.getBoundingBoxAt(currentFrame);
+                    let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
+                    annotatedObject.updateBBox(bbox);
+                    //console.log("update annotated object bbox", bbox);
+                    //let bbox = annotatedObject.getBoundingBoxAt(currentFrame);
                     annotation.api.updateBBox({
                         idBoundingBox: bbox.idBoundingBox,
                         bbox: bbox

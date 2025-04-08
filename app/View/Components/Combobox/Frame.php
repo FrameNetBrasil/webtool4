@@ -19,6 +19,7 @@ class Frame extends Component
         public ?int $value = null,
         public string $placeholder = '',
         public string $name = '',
+        public string $idName = '',
         public ?string $onChange = '',
         public ?string $onSelect = '',
         public ?bool $hasDescription = true,
@@ -36,6 +37,9 @@ class Frame extends Component
             $this->placeholder = $frame->name;
         } else {
             $this->placeholder = "Search Frame";
+        }
+        if ($this->idName == '') {
+            $this->idName = $this->id;
         }
         $this->description = $this->hasDescription ? 'description' : '';
         return view('components.combobox.frame');

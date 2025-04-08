@@ -18,6 +18,13 @@
                 value="{{$task->description}}"
             ></x-multiline-field>
         </div>
+        <div class="field">
+            <x-combobox.project
+                label="Project"
+                id="idProject"
+                value="{{$task->idProject ?? 0}}"
+            ></x-combobox.project>
+        </div>
         <div class="three fields">
             <div class="field">
                 <x-text-field

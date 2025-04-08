@@ -84,6 +84,7 @@ class DeixisObject {
 
 
     addBBox(bbox) {
+        // console.log("addBBox",bbox);
         for (let i = 0; i < this.bboxes.length; i++) {
             if (this.bboxes[i].frameNumber === bbox.frameNumber) {
                 bbox.idBoundingBox = this.bboxes[i].idBoundingBox;
@@ -102,12 +103,26 @@ class DeixisObject {
         this.injectInvisibleFrameAtOrigin();
     }
 
+    updateBBox(bbox) {
+        // console.log("updateBBox",bbox);
+        for (let i = 0; i < this.bboxes.length; i++) {
+            if (this.bboxes[i].frameNumber === bbox.frameNumber) {
+                bbox.idBoundingBox = this.bboxes[i].idBoundingBox;
+                this.bboxes[i] = bbox;
+                // console.log(i, annotatedFrame);
+                this.removeFromFrameToBeRecomputedFrom(i + 1);
+                return;
+            }
+        }
+    }
+
     removeFromFrameToBeRecomputedFrom(bboxIndex) {
+        // console.log('=========== removeFromFrameToBeRecomputedFrom', bboxIndex, this.bboxes[bboxIndex]);
         let count = 0;
         for (let i = bboxIndex; i < this.bboxes.length; i++) {
-            if (this.bboxes[i].isGroundTruth) {
-                break;
-            }
+            // if (this.bboxes[i].isGroundTruth) {
+            //     break;
+            // }
             count++;
         }
         if (count > 0) {
