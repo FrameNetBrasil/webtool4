@@ -120,6 +120,14 @@ class ReframingController extends Controller
     {
         debug($data);
         try {
+            $lu = Criteria::byId("lu","idLU", $data->idLU);
+            $exists = Criteria::table("lu")
+                ->where("idLemma",$lu->idLemma)
+                ->where("idFrame",$data->idNewFrame)
+                ->first();
+            if (!is_null($exists)) {
+                throw new \Exception("LU already exists in the target Frame.");
+            }
             LU::reframing($data);
             return $this->renderNotify("success", "Reframing done.");
         } catch (\Exception $e) {
