@@ -18,13 +18,11 @@
                 :hasNull="true"
             ></x-combobox.fe-frame>
         </div>
-        <div class="field">
-            <div
-                class="field h-full"
-                hx-trigger="load"
-                hx-get="/reframing/fes/{{$lu->idLU}}/{{$idNewFrame}}"
-            >
-            </div>
+        <div
+            class="field h-full"
+            hx-trigger="load"
+            hx-get="/reframing/fes/{{$lu->idLU}}/{{$idNewFrame}}"
+        >
         </div>
     </x-slot:fields>
     <x-slot:buttons>
