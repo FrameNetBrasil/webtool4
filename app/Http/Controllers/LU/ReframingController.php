@@ -8,6 +8,7 @@ use App\Data\LUCandidate\SearchData;
 use App\Data\LUCandidate\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Repositories\Frame;
 use App\Repositories\Lemma;
 use App\Repositories\LU;
 use App\Repositories\LUCandidate;
@@ -58,7 +59,7 @@ class ReframingController extends Controller
         if ($search->lu != '') {
             $lus = Criteria::byFilterLanguage("view_lu",
                 ['name', "startswith", $search->lu])
-                ->select("idLU","name","frameName")
+                ->select("idLU", "name", "frameName")
                 ->orderBy('name')
                 ->all();
         }
@@ -74,7 +75,7 @@ class ReframingController extends Controller
         $lu = LU::byId($idLU);
         $data = [
             'lu' => $lu,
-            'language' => Criteria::byId("language","idLanguage", $lu->idLanguage),
+            'language' => Criteria::byId("language", "idLanguage", $lu->idLanguage),
             'isMaster' => $isMaster,
         ];
         return view("LU.Reframing.reframing", $data);
@@ -84,10 +85,19 @@ class ReframingController extends Controller
     public function reframingEdit(string $idLU, string $idNewFrame)
     {
         $lu = LU::byId($idLU);
+        $alreadyExists = false;
+        $exists = Criteria::table("lu")
+            ->where("idLemma", $lu->idLemma)
+            ->where("idFrame", $idNewFrame)
+            ->first();
+        if (!is_null($exists)) {
+            $alreadyExists = true;
+        }
         $data = [
             'lu' => $lu,
             'idNewFrame' => $idNewFrame,
-            'language' => Criteria::byId("language","idLanguage", $lu->idLanguage),
+            'alreadyExists' => $alreadyExists,
+            'language' => Criteria::byId("language", "idLanguage", $lu->idLanguage),
         ];
         return view("LU.Reframing.edit", $data);
     }
@@ -95,6 +105,7 @@ class ReframingController extends Controller
     #[Get(path: '/reframing/fes/{idLU}/{idNewFrame}')]
     public function reframingFEs(string $idLU, string $idNewFrame)
     {
+        $newFrame = Frame::byId($idNewFrame);
         $lu = LU::byId($idLU);
         $as = Criteria::table("view_annotationset as a")
             ->where("a.idLU", $idLU)
@@ -111,15 +122,16 @@ class ReframingController extends Controller
             ->where("fe.idLanguage", AppService::getCurrentIdLanguage())
             ->whereIN("fe.idFrameElement", $idFE)
             ->distinct()
-            ->select("fe.idFrameElement", "fe.name","fe.coreType","fe.idColor","fe.idEntity")
+            ->select("fe.idFrameElement", "fe.name", "fe.coreType", "fe.idColor", "fe.idEntity")
             ->orderBy("fe.name")
             ->all();
         $data = [
             'lu' => $lu,
             'idNewFrame' => $idNewFrame,
+            'newFrame' => $newFrame,
             'fes' => $fes,
             'countAS' => count($as),
-            'language' => Criteria::byId("language","idLanguage", $lu->idLanguage),
+            'language' => Criteria::byId("language", "idLanguage", $lu->idLanguage),
         ];
 //        debug($data);
         return view("LU.Reframing.fes", $data);
@@ -129,14 +141,6 @@ class ReframingController extends Controller
     public function update(ReframingData $data)
     {
         try {
-            $lu = Criteria::byId("lu","idLU", $data->idLU);
-            $exists = Criteria::table("lu")
-                ->where("idLemma",$lu->idLemma)
-                ->where("idFrame",$data->idNewFrame)
-                ->first();
-            if (!is_null($exists)) {
-                throw new \Exception("LU already exists in the target Frame.");
-            }
             LU::reframing($data);
             return $this->renderNotify("success", "Reframing done.");
         } catch (\Exception $e) {
