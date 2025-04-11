@@ -69,13 +69,23 @@ class LU
     public static function reframing(ReframingData $data): void
     {
         DB::transaction(function () use ($data) {
-            Criteria::table("lu")
-                ->where("idLU", "=", $data->idLU)
-                ->update([
-                    'senseDescription' => $data->senseDescription,
-                    'incorporatedFE' => $data->incorporatedFE,
-                    'idFrame' => $data->idNewFrame
-                ]);
+//            debug($data);
+            $lu = LU::byId($data->idLU);
+            $exists = Criteria::table("lu")
+                ->select("idLU","idEntity")
+                ->where("idLemma",$lu->idLemma)
+                ->where("idFrame",$data->idNewFrame)
+                ->first();
+            $alreadyExists = (!is_null($exists));
+            if (!$alreadyExists) {
+                Criteria::table("lu")
+                    ->where("idLU", "=", $data->idLU)
+                    ->update([
+                        'senseDescription' => $data->senseDescription,
+                        'incorporatedFE' => $data->incorporatedFE,
+                        'idFrame' => $data->idNewFrame
+                    ]);
+            }
             if (!is_null($data->idEntityFE)) {
                 foreach ($data->idEntityFE as $i => $idEntityFE) {
                     // recover the annotations for this LU/FE
@@ -100,6 +110,37 @@ class LU
                         }
                     }
                 }
+            }
+            if ($alreadyExists) {
+                // change the annotations from given LU to the existing LU and delete given LU
+                $annotationSets = Criteria::table("annotationset as a")
+                    ->select("a.idAnnotationSet")
+                    ->where("a.idLU", $data->idLU)
+                    ->all();
+                foreach ($annotationSets as $annotationSet) {
+                    debug($annotationSet->idAnnotationSet);
+                    Criteria::table("annotationset")
+                        ->where("idAnnotationSet", $annotationSet->idAnnotationSet)
+                        ->update([
+                            "idLU" => $exists->idLU,
+                            "idEntityRelated" => $exists->idEntity
+                        ]);
+                }
+                $annotations = Criteria::table("annotation as a")
+                    ->select("a.idAnnotation")
+                    ->where("a.idEntity", $lu->idEntity)
+                    ->all();
+                foreach ($annotations as $annotation) {
+                    Criteria::table("annotation")
+                        ->where("idAnnotation", $annotation->idAnnotation)
+                        ->update([
+                            "idEntity" => $exists->idEntity
+                        ]);
+                }
+                Criteria::function('lu_delete(?, ?)', [
+                    $data->idLU,
+                    AppService::getCurrentIdUser()
+                ]);
             }
         });
     }
