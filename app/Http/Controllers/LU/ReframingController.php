@@ -100,12 +100,16 @@ class ReframingController extends Controller
             ->where("a.idLU", $idLU)
             ->select("a.idAnnotationSet")
             ->all();
+        $idAS = collect($as)->pluck("idAnnotationSet")->toArray();
+        $afe = Criteria::table("view_annotation_text_fe as afe")
+            ->whereIN("afe.idAnnotationSet", $idAS)
+            ->distinct()
+            ->select("afe.idFrameElement")
+            ->all();
+        $idFE = collect($afe)->pluck("idFrameElement")->toArray();
         $fes = Criteria::table("view_frameelement as fe")
-            ->join("view_annotation_text_fe as afe", "fe.idFrameElement", "=", "afe.idFrameElement")
-            ->join("view_annotationset as a", "afe.idAnnotationSet", "=", "a.idAnnotationSet")
-            ->where("a.idLU", $idLU)
-            ->where("afe.idLanguage", AppService::getCurrentIdLanguage())
             ->where("fe.idLanguage", AppService::getCurrentIdLanguage())
+            ->whereIN("fe.idFrameElement", $idFE)
             ->distinct()
             ->select("fe.idFrameElement", "fe.name","fe.coreType","fe.idColor","fe.idEntity")
             ->orderBy("fe.name")
@@ -117,7 +121,7 @@ class ReframingController extends Controller
             'countAS' => count($as),
             'language' => Criteria::byId("language","idLanguage", $lu->idLanguage),
         ];
-        debug($data);
+//        debug($data);
         return view("LU.Reframing.fes", $data);
     }
 
