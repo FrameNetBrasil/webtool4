@@ -1,3 +1,9 @@
+@if($alreadyExists)
+<div class="ui visible warning message mt-2">
+    LU already exists in the target frame. Reframing will not update sense description or incorporatedFE.
+</div>
+@endif
+
 <x-form>
     <x-slot:fields>
         <x-hidden-field id="idLU" :value="$lu->idLU"></x-hidden-field>

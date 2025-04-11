@@ -1,4 +1,4 @@
-<label>FE annotations mapping</label>
+<label>FE annotations mapping from [{{$lu->frameName}}.{{$lu->name}}] to [{{$newFrame->name}}.{{$lu->name}}]</label>
 @if($countAS > 0)
     <div class="ui visible warning message">
         {{$countAS}} AnnotationSets for this LU.

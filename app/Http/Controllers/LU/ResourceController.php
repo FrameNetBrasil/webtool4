@@ -64,6 +64,13 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
+            $lu = LU::byId($id);
+            $a = Criteria::table("annotation")
+                ->where("idEntity", $lu->idEntity)
+                ->all();
+            if (count($a) > 0) {
+                throw new \Exception("LU has annotations.");
+            }
             Criteria::function('lu_delete(?, ?)', [
                 $id,
                 AppService::getCurrentIdUser()
