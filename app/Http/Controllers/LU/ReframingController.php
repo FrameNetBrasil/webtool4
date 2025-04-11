@@ -96,6 +96,10 @@ class ReframingController extends Controller
     public function reframingFEs(string $idLU, string $idNewFrame)
     {
         $lu = LU::byId($idLU);
+        $as = Criteria::table("view_annotationset as a")
+            ->where("a.idLU", $idLU)
+            ->select("a.idAnnotationSet")
+            ->all();
         $fes = Criteria::table("view_frameelement as fe")
             ->join("view_annotation_text_fe as afe", "fe.idFrameElement", "=", "afe.idFrameElement")
             ->join("view_annotationset as a", "afe.idAnnotationSet", "=", "a.idAnnotationSet")
@@ -110,15 +114,16 @@ class ReframingController extends Controller
             'lu' => $lu,
             'idNewFrame' => $idNewFrame,
             'fes' => $fes,
+            'countAS' => count($as),
             'language' => Criteria::byId("language","idLanguage", $lu->idLanguage),
         ];
+        debug($data);
         return view("LU.Reframing.fes", $data);
     }
 
     #[Put(path: '/reframing')]
     public function update(ReframingData $data)
     {
-        debug($data);
         try {
             $lu = Criteria::byId("lu","idLU", $data->idLU);
             $exists = Criteria::table("lu")
