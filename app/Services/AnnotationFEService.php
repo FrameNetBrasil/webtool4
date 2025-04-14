@@ -350,6 +350,7 @@ class AnnotationFEService
                                 $hasLabel = true;
                             }
                         } else {
+                            debug($span);
                             $name = $fes[$span->idEntity]->name;
                             $nis[$span->idInstantiationType][$span->idEntity] = [
                                 'idEntityFE' => $span->idEntity,
