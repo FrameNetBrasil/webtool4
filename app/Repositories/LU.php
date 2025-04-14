@@ -99,7 +99,7 @@ class LU
                         ->whereIN("afe.idAnnotationSet", $idAS)
                         ->where("afe.idEntity", $idEntityFE)
                         ->distinct()
-                        ->select("afe.idAnnotation")
+                        ->select("afe.idAnnotation","afe.idTextSpan")
                         ->all();
 //                    $annotations = Criteria::table("view_frameelement as fe")
 //                        ->join("view_annotation_text_fe as afe", "fe.idFrameElement", "=", "afe.idFrameElement")
