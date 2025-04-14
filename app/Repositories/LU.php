@@ -97,6 +97,7 @@ class LU
                     $idAS = collect($as)->pluck("idAnnotationSet")->toArray();
                     $annotations = Criteria::table("view_annotation_text_fe as afe")
                         ->whereIN("afe.idAnnotationSet", $idAS)
+                        ->where("afe.idEntity", $idEntityFE)
                         ->distinct()
                         ->select("afe.idAnnotation")
                         ->all();
@@ -111,6 +112,7 @@ class LU
                     foreach ($annotations as $annotation) {
                         if ($data->changeToFE[$i] == -1) {
                             Criteria::deleteById("annotation", "idAnnotation", $annotation->idAnnotation);
+                            Criteria::deleteById("textspan", "idTextSpan", $annotation->idTextSpan);
                         } else {
                             $fe = Criteria::byId("frameelement", "idFrameElement", $data->changeToFE[$i]);
                             Criteria::table("annotation")
