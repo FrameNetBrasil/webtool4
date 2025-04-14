@@ -69,7 +69,7 @@ class LU
     public static function reframing(ReframingData $data): void
     {
         DB::transaction(function () use ($data) {
-//            debug($data);
+            debug($data);
             $lu = LU::byId($data->idLU);
             $exists = Criteria::table("lu")
                 ->select("idLU","idEntity")
@@ -89,16 +89,27 @@ class LU
             if (!is_null($data->idEntityFE)) {
                 foreach ($data->idEntityFE as $i => $idEntityFE) {
                     // recover the annotations for this LU/FE
-                    $annotations = Criteria::table("view_frameelement as fe")
-                        ->join("view_annotation_text_fe as afe", "fe.idFrameElement", "=", "afe.idFrameElement")
-                        ->join("view_annotationset as a", "afe.idAnnotationSet", "=", "a.idAnnotationSet")
+
+                    $as = Criteria::table("view_annotationset as a")
                         ->where("a.idLU", $data->idLU)
-                        ->where("afe.idLanguage", AppService::getCurrentIdLanguage())
-                        ->where("fe.idLanguage", AppService::getCurrentIdLanguage())
+                        ->select("a.idAnnotationSet")
+                        ->all();
+                    $idAS = collect($as)->pluck("idAnnotationSet")->toArray();
+                    $annotations = Criteria::table("view_annotation_text_fe as afe")
+                        ->whereIN("afe.idAnnotationSet", $idAS)
+                        ->distinct()
                         ->select("afe.idAnnotation")
                         ->all();
+//                    $annotations = Criteria::table("view_frameelement as fe")
+//                        ->join("view_annotation_text_fe as afe", "fe.idFrameElement", "=", "afe.idFrameElement")
+//                        ->join("view_annotationset as a", "afe.idAnnotationSet", "=", "a.idAnnotationSet")
+//                        ->where("a.idLU", $data->idLU)
+//                        ->where("afe.idLanguage", AppService::getCurrentIdLanguage())
+//                        ->where("fe.idLanguage", AppService::getCurrentIdLanguage())
+//                        ->select("afe.idAnnotation")
+//                        ->all();
                     foreach ($annotations as $annotation) {
-                        if (is_null($idEntityFE)) {
+                        if ($data->changeToFE[$i] == -1) {
                             Criteria::deleteById("annotation", "idAnnotation", $annotation->idAnnotation);
                         } else {
                             $fe = Criteria::byId("frameelement", "idFrameElement", $data->changeToFE[$i]);
