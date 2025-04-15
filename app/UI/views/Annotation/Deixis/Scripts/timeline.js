@@ -51,6 +51,7 @@ annotation.timeline = {
                         label: object.gl + (object.comment ? '*' : '')
                     };
                 } else if (object.idLU) {
+                    console.log(object);
                     groups[object.idDynamicObject] = {
                         style: {
                             fillColor: "white",
@@ -61,7 +62,7 @@ annotation.timeline = {
                         keyframesStyle: {
                             shape: "rect"
                         },
-                        label: object.lu + (object.comment ? '*' : '')
+                        label: object.lu + (object.fe ? '/' + object.frame + '.' + object.fe : '') + (object.comment ? '*' : '')
                     };
                 } else {
                     // groups[object.idDynamicObject] = group[1];

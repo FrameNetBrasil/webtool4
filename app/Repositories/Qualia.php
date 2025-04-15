@@ -12,6 +12,11 @@ class Qualia
         return Criteria::byFilterLanguage("view_qualia", ['idQualia', '=', $id])->first();
     }
 
+    public static function byIdRaw(int $id): object
+    {
+        return Criteria::byFilter("qualia", ['idQualia', '=', $id])->first();
+    }
+
     public static function byIdEntity(int $idEntity): object
     {
         return Criteria::byFilterLanguage("view_qualia", ['idEntity', '=', $idEntity])->first();
@@ -110,4 +115,22 @@ class Qualia
         }
         return $rows;
     }
+
+    public static function listByLU(int $idEntityLU)
+    {
+        return Criteria::table("view_relation")
+            ->join("view_lu as lu1", "view_relation.idEntity1", "=", "lu1.idEntity")
+            ->join("view_lu as lu2", "view_relation.idEntity2", "=", "lu2.idEntity")
+            ->join("qualia as qlr", "view_relation.idEntity3", "=", "qlr.idEntity")
+            ->filter([
+                ["view_relation.idEntity1", "=", $idEntityLU],
+                ["view_relation.relationGroup", "=", "rgp_qualia"],
+                ["lu1.idLanguage", "=", AppService::getCurrentIdLanguage()],
+                ["lu2.idLanguage", "=", AppService::getCurrentIdLanguage()]
+            ])->select("view_relation.idEntityRelation","lu1.name as lu1Name", "lu2.name as lu2Name", "qlr.info as qlrInfo")
+            ->orderBy("qlr.info")
+            ->orderBy("lu2.name")
+            ->all();
+    }
+
 }

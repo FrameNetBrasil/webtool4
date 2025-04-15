@@ -632,6 +632,46 @@ $router->get('messages', [
 	'domain' => NULL,
 ]);
 
+$router->get('lu/{id}/qualia', [
+	'uses' => 'App\Http\Controllers\LU\QualiaController@qualia',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lu/{id}/qualia/formNew/{fragment?}', [
+	'uses' => 'App\Http\Controllers\LU\QualiaController@qualiaFormNew',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lu/{id}/qualia/grid', [
+	'uses' => 'App\Http\Controllers\LU\QualiaController@qualiaGrid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lu/qualia/{id}', [
+	'uses' => 'App\Http\Controllers\LU\QualiaController@qualiaLU',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('lu/qualia/{idEntityRelation}', [
+	'uses' => 'App\Http\Controllers\LU\QualiaController@deleteQualiaRelation',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('lu', [
 	'uses' => 'App\Http\Controllers\LU\ResourceController@newLU',
 	'as' => NULL,
