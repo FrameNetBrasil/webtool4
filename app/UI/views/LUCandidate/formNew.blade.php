@@ -6,7 +6,7 @@
             <x-combobox.lemma
                 id="idLemma"
                 label="Lemma [min: 3 chars]"
-                value=""
+                :value="0"
             ></x-combobox.lemma>
         </div>
         <div class="field">
