@@ -60,6 +60,7 @@ return [
             'framestructure' => ['Frame', '/frame', 'MASTER', []],
 //            'corpusstructure' => ['Corpus', '/corpus', 'MASTER', []],
             'lexiconstructure' => ['Lexicon', '/lexicon', 'MASTER', []],
+            'lexicon3structure' => ['Lexicon-3', '/lexicon3', 'MASTER', []],
             //'sentence' => ['Sentence', '/sentence', 'MASTER', []],
             'lucandidate' => ['LU candidate', '/luCandidate', 'MASTER', []],
 //            'tqr2structure' => ['TQR2', '/tqr2', 'MASTER', []],
