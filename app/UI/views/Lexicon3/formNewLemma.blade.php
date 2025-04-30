@@ -3,20 +3,21 @@
     hx-post="/lexicon3/lemma/new"
 >
     <x-slot:fields>
+        <x-hidden-field id="idLexiconGroup" :value="2"></x-hidden-field>
         <div class="two fields">
             <div class="field">
                 <x-text-field
                     label="Lemma"
-                    id="name"
+                    id="form"
                     value=""
                 ></x-text-field>
             </div>
             <div class="field">
-                <x-combobox.udpos
+                <x-combobox.ud-pos
                     id="idUDPOS"
                     label="POS"
                     value=""
-                ></x-combobox.udpos>
+                ></x-combobox.ud-pos>
             </div>
         </div>
     </x-slot:fields>

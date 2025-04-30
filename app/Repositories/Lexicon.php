@@ -12,4 +12,11 @@ class Lexicon
         return Criteria::byFilterLanguage("lexicon", ['idLexicon', '=', $id])->first();
     }
 
+    public static function lemmaById(int $id): object
+    {
+        return Criteria::byFilter("view_lexicon_lemma", [
+            "idLexicon", "=", $id
+        ])->first();
+    }
+
 }

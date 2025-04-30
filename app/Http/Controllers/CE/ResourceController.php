@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\FE;
+namespace App\Http\Controllers\CE;
 
 use App\Data\CreateFEData;
-use App\Data\FE\CreateData;
-use App\Data\FE\UpdateData;
+use App\Data\CE\CreateData;
+use App\Data\CE\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Repositories\ConstructionElement;
 use App\Repositories\EntityRelation;
 use App\Repositories\Entry;
 use App\Repositories\Frame;
@@ -25,7 +26,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware(name: 'auth')]
 class ResourceController extends Controller
 {
-    #[Post(path: '/fe')]
+    #[Post(path: '/ce')]
     public function newFE(CreateData $data)
     {
         debug($data);
@@ -44,15 +45,15 @@ class ResourceController extends Controller
         }
     }
 
-    #[Get(path: '/fe/{id}/edit')]
+    #[Get(path: '/ce/{id}/edit')]
     public function edit(string $id)
     {
-        return view("FE.edit", [
-            'frameElement' => FrameElement::byId($id)
+        return view("CE.edit", [
+            'constructionElement' => ConstructionElement::byId($id)
         ]);
     }
 
-    #[Get(path: '/fe/{id}/main')]
+    #[Get(path: '/ce/{id}/main')]
     public function main(string $id)
     {
         $this->data->_layout = 'main';
@@ -60,7 +61,7 @@ class ResourceController extends Controller
     }
 
 
-    #[Delete(path: '/fe/{id}')]
+    #[Delete(path: '/ce/{id}')]
     public function delete(string $id)
     {
         try {
@@ -75,7 +76,7 @@ class ResourceController extends Controller
         }
     }
 
-    #[Get(path: '/fe/{id}/formEdit')]
+    #[Get(path: '/ce/{id}/formEdit')]
     public function formEdit(string $id)
     {
         return view("FE.formEdit", [
@@ -83,7 +84,7 @@ class ResourceController extends Controller
         ]);
     }
 
-    #[Put(path: '/fe/{id}')]
+    #[Put(path: '/ce/{id}')]
     public function update(string $id, UpdateData $data)
     {
         FrameElement::update($data);

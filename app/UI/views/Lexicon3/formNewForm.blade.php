@@ -1,24 +1,22 @@
 <x-form
-    title="New Lexeme"
-    hx-post="/lexicon/lexeme/new"
-    hx-target="#editArea"
-    hx-swap="innerHTML"
+    title="New Form"
+    hx-post="/lexicon3/form/new"
 >
     <x-slot:fields>
         <div class="two fields">
             <div class="field">
                 <x-text-field
-                    label="Lexeme"
-                    id="name"
+                    label="Form"
+                    id="form"
                     value=""
                 ></x-text-field>
             </div>
             <div class="field">
-                <x-combobox.pos
-                    id="idPOS"
-                    label="POS"
-                    value=""
-                ></x-combobox.pos>
+                <x-combobox.lexicon-group
+                    id="idLexiconGroup"
+                    label="Group"
+                    :value="0"
+                ></x-combobox.lexicon-group>
             </div>
         </div>
     </x-slot:fields>

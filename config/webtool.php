@@ -64,7 +64,7 @@ return [
             //'sentence' => ['Sentence', '/sentence', 'MASTER', []],
             'lucandidate' => ['LU candidate', '/luCandidate', 'MASTER', []],
 //            'tqr2structure' => ['TQR2', '/tqr2', 'MASTER', []],
-//            'cxnstructure' => ['Construction', '/cxn', 'MASTER', []],
+            'cxnstructure' => ['Constructicon', '/cxn', 'MASTER', []],
 //            'lemmastructure' => ['Lemma', '/lemma', 'MASTER', []],
 //            'lexemestructure' => ['Lexeme', '/lexeme', 'MASTER', []],
 //            'qualia' => ['Qualia', '/qualia', 'menu-qualia', 'MASTER', 1, []],

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\FE;
+namespace App\Http\Controllers\CE;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Entry;
@@ -12,7 +12,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 #[Middleware("master")]
 class EntryController extends Controller
 {
-    #[Get(path: '/fe/{id}/entries')]
+    #[Get(path: '/ce/{id}/entries')]
     public function entries(string $id)
     {
         $frame = FrameElement::byId($id);

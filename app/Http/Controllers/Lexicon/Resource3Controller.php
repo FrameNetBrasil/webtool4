@@ -3,17 +3,22 @@
 namespace App\Http\Controllers\Lexicon;
 
 use App\Data\ComboBox\QData;
+use App\Data\Lexicon\CreateExpressionData;
 use App\Data\Lexicon\CreateLemmaData;
 use App\Data\Lexicon\CreateLexemeData;
 use App\Data\Lexicon\CreateLexemeEntryData;
+use App\Data\Lexicon\CreateLexiconData;
 use App\Data\Lexicon\CreateWordformData;
 use App\Data\Lexicon\SearchData;
 use App\Data\Lexicon\UpdateLexemeData;
+use App\Data\Lexicon\UpdateLexiconData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Lemma;
 use App\Repositories\Lexeme;
+use App\Repositories\Lexicon;
 use App\Services\AppService;
+use App\View\Components\Combobox\LexiconGroup;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -37,6 +42,7 @@ class Resource3Controller extends Controller
     #[Post(path: '/lexicon3/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
+        debug('===========================');
         $view = view("Lexicon3.grid", [
             'search' => $search
         ]);
@@ -51,8 +57,8 @@ class Resource3Controller extends Controller
     public function listForSelect(QData $data)
     {
         $name = (strlen($data->q) > 2) ? $data->q : 'none';
-        return ['results' => Criteria::byFilterLanguage("view_lemma",["name","startswith", trim($name)])
-            ->select('idLemma','fullName as name')
+        return ['results' => Criteria::byFilterLanguage("view_lexicon_lemma",["name","startswith", trim($name)])
+            ->select('idLemma','fullNameUD as name')
             ->orderby("name")->all()];
     }
 
@@ -62,47 +68,12 @@ class Resource3Controller extends Controller
         return view("Lexicon3.formNewLemma");
     }
 
-    #[Get(path: '/lexicon3/lemma/{idLemma}/lexemeentries')]
-    public function lexemeentries(int $idLemma)
-    {
-        $lemma = Lemma::byId($idLemma);
-        $lexemeentries = Criteria::table("lexemeentry as le")
-            ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
-            ->join("pos", "lexeme.idPOS", "=", "pos.idPOS")
-            ->where("le.idLemma", $idLemma)
-            ->select("le.*", "lexeme.name as lexeme", "pos.pos")
-            ->orderBy("le.lexemeorder")
-            ->all();
-        return view("Lexicon3.lexemeentries", [
-            'lemma' => $lemma,
-            'lexemeentries' => $lexemeentries
-        ]);
-    }
-
-    #[Get(path: '/lexicon3/lemma/{idLemma}/{fragment?}')]
-    public function lemma(int $idLemma, string $fragment = null)
-    {
-        $lemma = Lemma::byId($idLemma);
-        $lexemeentries = Criteria::table("lexemeentry as le")
-            ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
-            ->join("pos", "lexeme.idPOS", "=", "pos.idPOS")
-            ->where("le.idLemma", $idLemma)
-            ->select("le.*", "lexeme.name as lexeme", "pos.pos")
-            ->orderBy("le.lexemeorder")
-            ->all();
-        $view = view("Lexicon3.lemma", [
-            'lemma' => $lemma,
-            'lexemeentries' => $lexemeentries
-        ]);
-        return (is_null($fragment) ? $view : $view->fragment($fragment));
-    }
-
     #[Post(path: '/lexicon3/lemma/new')]
-    public function newLemma(CreateLemmaData $data)
+    public function newLemma(CreateLexiconData $data)
     {
         try {
             $exists = Criteria::table("view_lexicon_lemma")
-                ->whereRaw("name = '{$data->name}' collate 'utf8mb4_bin'")
+                ->whereRaw("name = '{$data->form}' collate 'utf8mb4_bin'")
                 ->where("idUDPOS", $data->idUDPOS)
                 ->where("idLanguage", $data->idLanguage)
                 ->first();
@@ -110,23 +81,17 @@ class Resource3Controller extends Controller
                 throw new \Exception("Lemma already exists.");
             }
             $newLemma = json_encode([
-                'form' => $data->name,
-                'idLexiconGroup' => 2,
+                'form' => $data->form,
+                'idLexiconGroup' => $data->idLexiconGroup,
                 'idLanguage' => $data->idLanguage,
                 'idPOS' => $data->idPOS,
                 'idUDPOS' => $data->idUDPOS,
             ]);
             $idLemma = Criteria::function("lexicon_create(?)", [$newLemma]);
-            $lemma = Lemma::byId($idLemma);
-//            $lexemeentries = Criteria::table("lexemeentry as le")
-//                ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
-//                ->where("le.idLemma", $idLemma)
-//                ->select("le.*", "lexeme.name as lexeme")
-//                ->orderBy("le.lexemeorder")
-//                ->all();
+            $lemma = Lexicon::lemmaById($idLemma);
             $view = view('Lexicon3.lemma', [
                 'lemma' => $lemma,
-                'lexemeentries' => $lexemeentries
+                'expressions' => []
             ]);
             return $view->fragment("content");
         } catch (\Exception $e) {
@@ -134,14 +99,49 @@ class Resource3Controller extends Controller
         }
     }
 
-    #[Put(path: '/lexicon3/lemma/{idLemma}')]
-    public function updateLemma(UpdateLayerGroupData $data)
+
+    #[Get(path: '/lexicon3/lemma/{idLemma}/expressions')]
+    public function expressions(int $idLemma)
     {
+        $lemma = Lexicon::LemmabyId($idLemma);
+        $expressions = Criteria::table("view_lexicon_expression as e")
+            ->where("e.idLemma", $idLemma)
+            ->orderBy("e.position")
+            ->all();
+        return view("Lexicon3.expressions", [
+            'lemma' => $lemma,
+            'expressions' => $expressions
+        ]);
+    }
+
+    #[Get(path: '/lexicon3/lemma/{idLemma}/{fragment?}')]
+    public function lemma(int $idLemma, string $fragment = null)
+    {
+        $lemma = Lexicon::LemmabyId($idLemma);
+        $expressions = Criteria::table("view_lexicon_expression as e")
+            ->where("e.idLemma", $idLemma)
+            ->orderBy("e.position")
+            ->all();
+        $view = view("Lexicon3.lemma", [
+            'lemma' => $lemma,
+            'expressions' => $expressions
+        ]);
+        return (is_null($fragment) ? $view : $view->fragment($fragment));
+    }
+
+
+
+    #[Put(path: '/lexicon3/lemma')]
+    public function updateLemma(UpdateLexiconData $data)
+    {
+        debug($data);
         try {
-            Criteria::table("lemma")
-                ->where("idLemma", $data->idLemma)
+            Criteria::table("lexicon")
+                ->where("idLexicon", $data->idLexicon)
+                ->where("idLexiconGroup", $data->idLexiconGroup)
                 ->update([
-                    'name' => $data->name,
+                    'form' => $data->form,
+                    'idUDPOS' => $data->idUDPOS,
                     'idPOS' => $data->idPOS,
                 ]);
             return $this->renderNotify("success", "Lemma updated.");
@@ -150,172 +150,85 @@ class Resource3Controller extends Controller
         }
     }
 
-    #[Delete(path: '/lexicon3/lemma/{idLemma}')]
-    public function deleteLemma(string $idLemma)
+    #[Delete(path: '/lexicon3/lemma/{idLexicon}')]
+    public function deleteLemma(string $idLexicon)
     {
         try {
-            Criteria::function("lemma_delete(?,?)", [$idLemma, AppService::getCurrentIdUser()]);
+            Criteria::function("lexicon_delete(?,?)", [$idLexicon, AppService::getCurrentIdUser()]);
             $this->trigger('reload-gridLexicon3');
             return $this->renderNotify("success", "Lemma removed.");
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify("error", "Deletion failed. Check if there is some LU  using this lemma.");
         }
     }
 
 
     /*------
-      Lexeme
+      Expression
       ------ */
 
-    #[Get(path: '/lexicon3/lexeme/new')]
-    public function formNewLexeme()
-    {
-        return view("Lexicon3.formNewLexeme");
-    }
-
-    #[Get(path: '/lexicon3/lexeme/{idLexeme}/wordforms')]
-    public function wordforms(int $idLexeme)
-    {
-        $lexeme = Lexeme::byId($idLexeme);
-        $wordforms = Criteria::table("wordform")
-            ->where("idLexeme", $idLexeme)
-            ->orderBy("form")
-            ->all();
-        return view("Lexicon3.wordforms", [
-            'lexeme' => $lexeme,
-            'wordforms' => $wordforms
-        ]);
-    }
-
-    #[Get(path: '/lexicon3/lexeme/{idLexeme}/{fragment?}')]
-    public function lexeme(int $idLexeme, string $fragment = null)
-    {
-        $lexeme = Lexeme::byId($idLexeme);
-        $wordforms = Criteria::table("wordform")
-            ->where("idLexeme", $idLexeme)
-            ->orderBy("form")
-            ->all();
-        $view = view("Lexicon3.lexeme", [
-            'lexeme' => $lexeme,
-            'wordforms' => $wordforms
-        ]);
-        return (is_null($fragment) ? $view : $view->fragment('content'));
-    }
-
-
-    #[Post(path: '/lexicon3/lexeme/new')]
-    public function newLexeme(CreateLexemeData $data)
+    #[Post(path: '/lexicon3/expression/new')]
+    public function newExpression(CreateExpressionData $data)
     {
         try {
-            $exists = Criteria::table("lexeme")
-                ->whereRaw("name = '{$data->name}' collate 'utf8mb4_bin'")
-                ->where("idPOS", $data->idPOS)
-                ->where("idLanguage", $data->idLanguage)
-                ->first();
-            if (!is_null($exists)) {
-                throw new \Exception("Lexeme already exists.");
-            }
-            $newLexeme = json_encode([
-                'name' => $data->name,
-                'idPOS' => $data->idPOS,
-                'idLanguage' => $data->idLanguage,
-            ]);
-            $idLexeme = Criteria::function("lexeme_create(?)", [$newLexeme]);
-            $lexeme = Lexeme::byId($idLexeme);
-            $wordforms = Criteria::table("wordform")
-                ->where("idLexeme", $idLexeme)
-                ->orderBy("form")
-                ->all();
-            $view = view('Lexicon3.lexeme', [
-                    'lexeme' => $lexeme,
-                    'wordforms' => $wordforms
+            if ($data->idLexicon) {
+                Criteria::create("lexicon_expression", [
+                    "idLexicon" => $data->idLemma,
+                    "idExpression" => $data->idLexicon,
+                    "position" => $data->position,
+                    "head" => $data->head,
+                    "breakBefore" => $data->breakBefore,
                 ]);
-            return $view->fragment("content");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Put(path: '/lexicon3/lexeme/{idLexeme}')]
-    public function updateLexeme(UpdateLexemeData $data)
-    {
-        try {
-            Criteria::table("lexeme")
-                ->where("idLexeme", $data->idLexeme)
-                ->update([
-                    'name' => $data->name,
-                    'idPOS' => $data->idPOS,
-                ]);
-            return $this->renderNotify("success", "Lexeme updated.");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Delete(path: '/lexicon3/lexeme/{idLexeme}')]
-    public function deleteLexeme(string $idLexeme)
-    {
-        try {
-            Criteria::function("lexeme_delete(?,?)", [$idLexeme, AppService::getCurrentIdUser()]);
-            $this->trigger('reload-gridLexicon3');
-            return $this->renderNotify("success", "Lexeme removed.");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    /*-----------
-      LexemeEntry
-      ----------- */
-
-    #[Post(path: '/lexicon3/lexemeentry/new')]
-    public function newLexemeEntry(CreateLexemeEntryData $data)
-    {
-        try {
-            if ($data->idLexeme) {
-                Criteria::table("lexemeentry")->insert([
-                    'idLemma' => $data->idLemma,
-                    'idLexeme' => $data->idLexeme,
-                    'lexemeOrder' => $data->lexemeOrder,
-                    'headWord' => $data->headWord,
-                    'breakBefore' => $data->breakBefore
-                ]);
-                $this->trigger('reload-gridLexemeEntry');
-                return $this->renderNotify("success", "Lexeme added.");
+                $this->trigger('reload-gridExpressions');
+                return $this->renderNotify("success", "Expression added.");
             } else {
-                throw new \Exception("Lexeme not found.");
+                throw new \Exception("Expression not found.");
             }
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
 
-    #[Delete(path: '/lexicon3/lexemeentries/{idLexemeEntry}')]
-    public function deleteLexemeEntry(string $idLexemeEntry)
+    #[Delete(path: '/lexicon3/expression/{idLexiconExpression}')]
+    public function deleteLexiconExpression(string $idLexiconExpression)
     {
         try {
-            Criteria::deleteById("lexemeentry", "idLexemeEntry", $idLexemeEntry);
-            $this->trigger('reload-gridLexemeEntry');
-            return $this->renderNotify("success", "Lexeme removed.");
+            Criteria::deleteById("lexicon_expression", "idLexiconExpression", $idLexiconExpression);
+            $this->trigger('reload-gridExpressions');
+            return $this->renderNotify("success", "Expression removed.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
 
     /*--------
-      Wordform
+      Form
       -------- */
-    #[Post(path: '/lexicon3/wordform/new')]
-    public function newWordform(CreateWordformData $data)
+    #[Get(path: '/lexicon3/form/new')]
+    public function formNewForm()
+    {
+        return view("Lexicon3.formNewForm");
+    }
+    #[Post(path: '/lexicon3/form/new')]
+    public function newForm(CreateLexiconData $data)
     {
         try {
-            Criteria::table("wordform")->insert([
-                'idLexeme' => $data->idLexemeWordform,
+            $exists = Criteria::table("lexicon")
+                ->whereRaw("form = '{$data->form}' collate 'utf8mb4_bin'")
+                ->where("idLexiconGroup", $data->idLexiconGroup)
+                ->where("idLanguage", $data->idLanguage)
+                ->first();
+            if (!is_null($exists)) {
+                throw new \Exception("Form already exists.");
+            }
+            $newForm = json_encode([
                 'form' => $data->form,
-                'md5' => md5($data->form),
+                'idLexiconGroup' => $data->idLexiconGroup,
+                'idLanguage' => $data->idLanguage,
             ]);
-            $this->trigger('reload-gridWordforms');
-            return $this->renderNotify("success", "Wordform created.");
+            $idLexicon = Criteria::function("lexicon_create(?)", [$newForm]);
+            $lexicon = Lexicon::byId($idLexicon);
+            return $this->renderNotify("success", "Form created.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
@@ -332,4 +245,36 @@ class Resource3Controller extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
+    #[Get(path: '/lexicon3/form/{idLexicon}/{fragment?}')]
+    public function lexicon(int $idLexicon, string $fragment = null)
+    {
+        $lexicon = Lexicon::byId($idLexicon);
+        $lexicon->group = Criteria::byId("lexicon_group", "idLexiconGroup", $lexicon->idLexiconGroup);
+        $view = view("Lexicon3.lexicon", [
+            'lexicon' => $lexicon,
+        ]);
+        return (is_null($fragment) ? $view : $view->fragment($fragment));
+    }
+
+    #[Put(path: '/lexicon3/lexicon')]
+    public function updateLexicon(UpdateLexiconData $data)
+    {
+        try {
+            if ($data->idLexiconGroup == 2) {
+                throw new \Exception("Lemmas must use specific action.");
+            }
+            Criteria::table("lexicon")
+                ->where("idLexicon", $data->idLexicon)
+                ->update([
+                    'form' => $data->form,
+                    'idLexiconGroup' => $data->idLexiconGroup,
+                ]);
+            $this->trigger('reload-gridLexicon3');
+            return $this->renderNotify("success", "Form updated.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
 }

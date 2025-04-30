@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\FE;
+namespace App\Http\Controllers\CE;
 
 use App\Data\CreateFEData;
-use App\Data\FE\UpdateData;
+use App\Data\CE\UpdateData;
 use App\Http\Controllers\Controller;
 use App\Repositories\Constraint;
 use App\Repositories\EntityRelation;
@@ -24,7 +24,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware(name: 'auth')]
 class ConstraintController extends Controller
 {
-    #[Get(path: '/fe/{id}/constraints')]
+    #[Get(path: '/ce/{id}/constraints')]
     public function constraints(string $id)
     {
         return view("Constraint.feChild", [
@@ -32,7 +32,7 @@ class ConstraintController extends Controller
         ]);
     }
 
-    #[Get(path: '/fe/{id}/constraints/formNew')]
+    #[Get(path: '/ce/{id}/constraints/formNew')]
     public function constraintsFormNew(int $id)
     {
         $view = view("Constraint.feFormNew", [
@@ -42,7 +42,7 @@ class ConstraintController extends Controller
         return $view;
     }
 
-    #[Get(path: '/fe/{id}/constraints/grid')]
+    #[Get(path: '/ce/{id}/constraints/grid')]
     public function constraintsGrid(int $id)
     {
         $fe = FrameElement::byId($id);
