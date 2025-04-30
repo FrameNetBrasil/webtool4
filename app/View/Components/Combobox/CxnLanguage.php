@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class UDPos extends Component
+class CxnLanguage extends Component
 {
     public array $options;
     /**
@@ -20,10 +20,12 @@ class UDPos extends Component
         public string $placeholder = ''
     )
     {
-        //$pos = new \App\Repositories\POS();
-        $this->options = Criteria::table("udpos")
-            ->orderBy("POS")
-            ->all();
+        $this->options = Criteria::table("construction")
+            ->join("language", "language.idLanguage", "=", "construction.idLanguage")
+            ->select("language.idLanguage", "language.description as language")
+            ->distinct()
+            ->orderBy("language.description")
+            ->chunkResult("idLanguage","language");
     }
 
     /**
@@ -31,6 +33,6 @@ class UDPos extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.combobox.udpos');
+        return view('components.combobox.cxn-language');
     }
 }

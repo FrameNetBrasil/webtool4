@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\FE;
+namespace App\Http\Controllers\CE;
 
 use App\Data\CreateFEData;
-use App\Data\FE\UpdateData;
+use App\Data\CE\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\EntityRelation;
@@ -25,7 +25,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware(name: 'auth')]
 class RelationController extends Controller
 {
-    #[Get(path: '/fe/relations/{idEntityRelation}/frame/{idFrameBase}')]
+    #[Get(path: '/ce/relations/{idEntityRelation}/frame/{idFrameBase}')]
     public function relations(string $idEntityRelation, string $idFrameBase)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
@@ -51,7 +51,7 @@ class RelationController extends Controller
         ]);
     }
 
-    #[Get(path: '/fe/relations/{idEntityRelation}/formNew')]
+    #[Get(path: '/ce/relations/{idEntityRelation}/formNew')]
     public function relationsFEFormNew(int $idEntityRelation)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
@@ -76,7 +76,7 @@ class RelationController extends Controller
         ]);
     }
 
-    #[Get(path: '/fe/relations/{idEntityRelation}/grid')]
+    #[Get(path: '/ce/relations/{idEntityRelation}/grid')]
     public function gridRelationsFE(int $idEntityRelation)
     {
         $idLanguage = AppService::getCurrentIdLanguage();

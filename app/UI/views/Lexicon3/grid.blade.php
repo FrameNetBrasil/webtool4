@@ -3,42 +3,43 @@
     $limit = 300;
     $idLanguage = \App\Services\AppService::getCurrentIdLanguage();
     $data = [];
-    if ($search->item == '') {
+    if ($search->wordform == '') {
         if ($search->lemma == '') {
             $search->lemma = '--none';
         }
         $lemmas = Criteria::table("view_lexicon_lemma as lm")
             ->leftJoin("lexicon_expression as le","le.idLexicon","=","lm.idLexicon")
             ->leftJoin("lexicon as lx","le.idExpression","=","lx.idLexicon")
-            ->leftJoin("lexicon_form as lf","lx.idLexiconForm","=","lf.idLexiconForm")
             ->where("lm.idLanguage", $idLanguage)
             ->whereRaw("lm.name LIKE '{$search->lemma}%' collate 'utf8mb4_bin'")
-            ->select("lm.idLexicon", "lm.name as lemma","le.idExpression","lf.form")
+            ->select("lm.idLexicon", "lm.fullNameUD as lemma","le.idExpression","lx.form")
             ->distinct()
             ->limit($limit)
-            ->orderBy("lemma")->get()->groupBy(["idLexicon","lemma"])->toArray();
+            ->orderBy("lemma")->orderBy("form")->get()->groupBy(["idLexicon","lemma"])->toArray();
         $data = [];
         foreach($lemmas as $idLemma => $lemma) {
-            debug($lemma);
             $name = array_key_first($lemma);
             $children = [];
             if ($lemma[$name][0]->idExpression) {
                 $children = array_map(fn($item) => [
-                    'id'=> $item->idExpression,
+                    'id'=> 'f'. $item->idExpression,
+                    'idLexicon' => $item->idExpression,
                     'text' => $item->form,
                     'state' => 'closed',
-                    'type' => 'item',
+                    'type' => 'form',
                     'children' => []
                 ], $lemma[$name] ?? []);
             }
             $data[] = [
-                'id' => $idLemma,
+                'id' => 'l'. $idLemma,
+                'idLexicon' => $idLemma,
                 'text' => $name,
                 'state' => 'closed',
                 'type' => 'lemma',
                 'children' => $children
             ];
         }
+//        debug($data);
     } else {
         $items = Criteria::byFilter("view_lexicon_items", [
             ["form", "startswith", $search->item],
@@ -49,7 +50,8 @@
             ->orderBy("form")->all();
         foreach($items as $item) {
             $data[] = [
-                'id' => $item->idLexicon,
+                'id' => 'f'.$item->idLexicon,
+                'idLexicon' => $item->idLexicon,
                 'text' => $item->form,
                 'state' => 'closed',
                 'type' => 'item',
@@ -68,7 +70,7 @@
 @endphp
 <div
     class="h-full"
-    hx-trigger="reload-gridLexicon from:body"
+    hx-trigger="reload-gridLexicon3 from:body"
     hx-target="this"
     hx-swap="outerHTML"
     hx-post="/lexicon3/grid"
@@ -97,10 +99,10 @@
                             ]],
                             onClickRow: (row) => {
                                 if (row.type === "lemma") {
-                                    htmx.ajax("GET", `/lexicon3/lemma/${row.id}/content`, "#editArea");
+                                    htmx.ajax("GET", `/lexicon3/lemma/${row.idLexicon}/content`, "#editArea");
                                 }
-                                if (row.type === "lexeme") {
-                                    htmx.ajax("GET", `/lexicon3/item/${row.id}/content`, "#editArea");
+                                if (row.type === "form") {
+                                    htmx.ajax("GET", `/lexicon3/form/${row.idLexicon}/content`, "#editArea");
                                 }
                             }
                         });

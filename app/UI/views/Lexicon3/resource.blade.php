@@ -14,9 +14,9 @@
             hx-swap="innerHTML"
         ></x-button>
         <x-button
-            label="New Item"
+            label="New Form"
             color="secondary"
-            hx-get="/lexicon3/item/new"
+            hx-get="/lexicon3/form/new"
             hx-target="#editArea"
             hx-swap="innerHTML"
         ></x-button>
@@ -37,9 +37,9 @@
             </div>
             <div class="field">
                 <x-search-field
-                    id="lexeme"
-                    value="{{$search->item}}"
-                    placeholder="Search Item"
+                    id="wordform"
+                    value="{{$search->wordform}}"
+                    placeholder="Search Form"
                     hx-post="/lexicon3/grid/search"
                     hx-trigger="input changed delay:500ms, search"
                     hx-target="#lexiconTreeWrapper"

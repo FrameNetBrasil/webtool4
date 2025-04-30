@@ -10,7 +10,6 @@ class SearchData extends Data
         public ?string $lemma = '',
         public ?string $lexeme = '',
         public ?string $wordform = '',
-        public ?string $item = '',
         public ?string $id = '',
         public ?int $idLemma = 0,
         public ?int $idLexeme = 0,
@@ -21,11 +20,12 @@ class SearchData extends Data
         if ($this->id != '') {
             if ($this->id[0] == 'l') {
                 $this->idLemma = substr($this->id, 1);
+                $this->idLexicon = substr($this->id, 1);
             }
             if ($this->id[0] == 'x') {
                 $this->idLexeme = substr($this->id, 1);
             }
-            if ($this->id[0] == 'i') {
+            if ($this->id[0] == 'f') {
                 $this->idLexicon = substr($this->id, 1);
             }
         }
