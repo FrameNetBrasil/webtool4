@@ -28,7 +28,6 @@
     <x-slot:pane>
         <div
             id="reportArea"
-            class="h-full overflow-y-auto"
         >
             @includeWhen(!is_null($idFrame),"Frame.Report.report")
         </div>

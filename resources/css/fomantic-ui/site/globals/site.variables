@@ -2,19 +2,20 @@
      User Global Variables
 *******************************/
 
-//@textColor:#545B64;
+// using claude variables
+
 @textColor:#333;
-@selectedTextColor: @blue;
-@successColor: #008b38;
-@primaryColor: @blue-10;
-@secondaryColor: @teal;
-@lightPrimaryColor: @blue-11;
-@lightSecondaryColor: @lightTeal;
-@inputPlaceholderColor: @grey;
-@fontSize: 14px;
-@relativeSmall: @fontSize;
-@relativeBorderRadius: 2px;
-@absoluteBorderRadius: 2px;
+@selectedTextColor: var(--text-default);
+@successColor: var(--color-success-600);
+@primaryColor: #1a365d; // var(--color-primary-600);
+@secondaryColor: #2c7a7b;//var(--color-secondary-500);
+@lightPrimaryColor: #7493bc;// var(--color-primary-300);
+@lightSecondaryColor: #6ec8c8;//var(--color-secondary-300);
+@inputPlaceholderColor: var(--text-light);
+@fontSize: var(--text-sm);
+@relativeSmall: 14px;
+@relativeBorderRadius: var(--radius-sm);
+@absoluteBorderRadius: var(--radius-sm);
 
 /* -------------------
       Site Colors

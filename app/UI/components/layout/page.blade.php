@@ -11,8 +11,10 @@
             </div>
             <div class="pusher closing pusher-full">
                 <div class="wt-container">
-                    <main role="main" class="wt-main h-full">
-                        {{$main}}
+                    <main role="main" class="wt-main relative h-full overflow-auto">
+                        <div class="absolute top-0 left-0 bottom-0 right-0">
+                            {{$main}}
+                        </div>
                     </main>
                 </div>
             </div>
@@ -29,16 +31,16 @@
         </footer>
     </div>
     <script>
-            $(".menuLeft")
-                .sidebar({
-                    context: $(".wt-content"),
-                    dimPage: false,
-                    transition: "overlay",
-                    mobileTransition: "overlay",
-                    closable: false
-                })
-                .sidebar("attach events", ".menuIcon")
-                .sidebar("hide")
-            ;
+        $(".menuLeft")
+            .sidebar({
+                context: $(".wt-content"),
+                dimPage: false,
+                transition: "overlay",
+                mobileTransition: "overlay",
+                closable: false
+            })
+            .sidebar("attach events", ".menuIcon")
+            .sidebar("hide")
+        ;
     </script>
 </x-layout.index>

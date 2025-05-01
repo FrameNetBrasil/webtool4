@@ -13,7 +13,7 @@ class Datagrid extends Component
      */
     public function __construct(
         public string $id,
-        public string $title,
+        public string $title = '',
         public string $type  = 'child',
         public string $height = '100%',
         public string $header = '',

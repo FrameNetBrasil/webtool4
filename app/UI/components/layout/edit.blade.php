@@ -3,7 +3,7 @@
         {{$head}}
     </x-slot:head>
     <x-slot:main>
-        <section id="work" class="h-full w-full">
+        <section class="h-full w-full p-2">
             {{$main}}
         </section>
     </x-slot:main>

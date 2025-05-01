@@ -1,24 +1,29 @@
-<div id="frameReport" class="flex flex-column h-full">
+<div id="frameReport">
     <div class="flex flex-row align-content-start flex-wrap">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
                 <x-element.frame name="{{$frame->name}}"></x-element.frame>
             </h1>
+            <div>
+                @foreach ($classification as $name => $classes)
+                    @if(($name == 'rel_framal_domain') || ($name == 'rel_framal_type'))
+                        @foreach ($classes as $value)
+                        <div class="ui small label">
+                            {{$value}}
+                        </div>
+                        @endforeach
+                    @endif
+                @endforeach
+            </div>
         </div>
         <div
             class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
-            @foreach ($classification as $name => $values)
-                @foreach ($values as $value)
-                    <div
-                        class="sm:pb-1"
-                    >
-                        <div class="ui label wt-tag-{{$name}}">
-                            {{$value}}
-                        </div>
-                    </div>
-                @endforeach
-            @endforeach
-            {{--            <i id="btnDownload" class="icon material text-2xl cursor-pointer" title="Save as PDF">picture_as_pdf</i>--}}
+            <div class="ui label wt-tag-id">
+                {{$classification['id'][0]}}
+            </div>
+            <div class="ui label wt-tag-en">
+                {{$classification['en'][0]}}
+            </div>
             <button
                 id="btnDownload"
                 class="ui button mini basic secondary"
@@ -26,10 +31,10 @@
             </button>
         </div>
     </div>
-    <x-card title="Definition" class="frameReport__card frameReport__card--main">
+    <x-card title="Definition">
         {!! str_replace('ex>','code>',nl2br($frame->description)) !!}
     </x-card>
-    <x-card title="Frame Elements" class="frameReport__card frameReport__card--main">
+    <x-card title="Frame Elements">
         <table class="ui celled striped table">
             <thead>
             <tr>
@@ -84,7 +89,7 @@
             </table>
         @endif
         @if ($fecoreset)
-            <x-card title="FE Core set(s)" class="frameReport__card frameReport__card--internal">
+            <x-card title="FE Core set(s)">
                 <table id="feCoreSet" class="frameReport__table">
                     <tbody>
                     <tr>
@@ -149,15 +154,13 @@
             </table>
         @endif
     </x-card>
-    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main" open="true">
+    <x-card title="Frame-Frame Relations">
         @php($i = 0)
         @foreach ($relations as $nameEntry => $relations1)
             @php([$entry, $name] = explode('|', $nameEntry))
             @php($relId = str_replace(' ', '_', $name))
             <x-card-plain
-                title="<span class='color_{{$entry}}'>{{$name}}</span>"
-                @class(["frameReport__card" => (++$i < count($report['relations']))])
-                class="frameReport__card--internal">
+                title="<span class='color_{{$entry}}'>{{$name}}</span>">
                 <div class="flex flex-wrap gap-1">
                     @foreach ($relations1 as $idFrame => $relation)
                         <button
@@ -175,11 +178,10 @@
             </x-card-plain>
         @endforeach
     </x-card>
-    <x-card title="Lexical Units" class="frameReport__card frameReport__card--main" open="true">
+    <x-card title="Lexical Units">
         @foreach ($lus as $POS => $posLU)
             <x-card-plain
                 title="POS: {{$POS}}"
-                class="frameReport__card--internal"
             >
                 <div class="flex flex-wrap gap-1">
                     @foreach ($posLU as $lu)
@@ -193,7 +195,7 @@
             </x-card-plain>
         @endforeach
     </x-card>
-    <x-card title="Visual Units" class="frameReport__card frameReport__card--main" open="true">
+    <x-card title="Visual Units">
         @include("Frame.Report.vu")
     </x-card>
 </div>

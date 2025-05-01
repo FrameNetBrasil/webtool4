@@ -1,4 +1,4 @@
-<div id="luReport" class="flex flex-column h-full">
+<div id="luReport" class="h-full flex flex-column">
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
@@ -12,7 +12,15 @@
             <div class="ui label wt-tag-id">
                 #{{$lu->idLU}}
             </div>
-            <x-link-button color="secondary" href="/report/frame/{{$lu->idFrame}}" label="{{$lu->frameName}}"></x-link-button>
+            <button
+                class="ui button basic"
+            >
+                <a
+                    href="/report/frame/{{$lu->idFrame}}"
+                >
+                    <x-element.frame name="{{$lu->frameName}}"></x-element.frame>
+                </a>
+            </button>
             @if($isMaster)
                 <x-link-button color="ui red" href="/lu/{{$lu->idLU}}/edit" label="Edit"></x-link-button>
             @endif
@@ -27,8 +35,6 @@
                           idColor="{{$incorporatedFE->idColor}}"></x-element.fe>
         @endif
     </x-card>
-    <div class="flex-grow-1 h-full flex flex-column">
-        @include("LU.Report.menu")
-    </div>
+    @include("LU.Report.menu")
 </div>
 

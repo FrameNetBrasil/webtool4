@@ -4,7 +4,7 @@
     <div class="relative h-full overflow-auto">
         <div class="absolute top-0 left-0 bottom-0 right-0">
 
-            <div class="grid w-full ">
+            <div class="grid w-full">
                 <div class="col-4">
                     <x-datagrid
                         id="gridFE"
@@ -18,7 +18,6 @@
                             </thead>
                         </x-slot:thead>
                         @foreach($realizations as $feIdEntity => $gfptas)
-                            @php(debug($gfptas))
                             @if($feIdEntity)
                                 <tr
                                     style="display:table;table-layout: fixed;"
