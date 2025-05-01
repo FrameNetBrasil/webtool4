@@ -14,7 +14,7 @@
     $hrefLogin = (env('AUTH0_CLIENT_ID') == 'auth0') ? '/auth0Login' : '/';
 
 @endphp
-<div class="full height">
+<div class="wt-menu">
         @foreach($actions as $id => $action)
             @php
                 $menuData = MenuData::from([
@@ -26,8 +26,8 @@
                 ]);
             @endphp
             @if (MAuth::checkAccess($menuData->group))
-                <div class="item">
-                    <div class="header">{!! $menuData->label !!}</div>
+                <div class="section">
+                    <div class="title">{!! $menuData->label !!}</div>
                     <div class="menu">
                         @foreach($menuData->items as $idItem => $item)
                             @php

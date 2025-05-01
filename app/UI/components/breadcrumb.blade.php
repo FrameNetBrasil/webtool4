@@ -1,10 +1,10 @@
-<div class="ui breadcrumb">
+<div class="wt-breadcrumb">
     @foreach($sections as $section)
         @if ($loop->last)
-            <div class="active section">{{$section[1]}}</div>
+            <div class="active">{{$section[1]}}</div>
         @else
             <a href="{{$section[0]}}" class="section">{{$section[1]}}</a>
-            <i class="right chevron icon divider"></i>
+            <span class="separator">/</span>
         @endif
     @endforeach
 </div>

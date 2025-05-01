@@ -1,43 +1,44 @@
 <x-layout.index>
-    @include('components.layout.head')
-    <header id="header">
-        <i id="headMenuIcon" class="sidebar icon menuIcon cursor-pointer"></i>
-        {{$head}}
-    </header>
-    <div id="content">
-        <div class="contentContainer ui pushable">
+    <div class="wt-layout">
+        @include('components.layout.head')
+        <header id="header" class="wt-subheader">
+            <div class="mr-2"><i class="sidebar icon menuIcon cursor-pointer"></i></div>
+            {{$head}}
+        </header>
+        <div class="wt-content ui pushable">
             <div class="menuLeft ui left vertical menu sidebar">
                 @include("components.layout.menu")
             </div>
             <div class="pusher closing pusher-full">
-                <main role="main" class="main">
-                    {{$main}}
-                    <wt-go-top id="btnTop" label="Top" offset="64"></wt-go-top>
-                </main>
+                <div class="wt-container">
+                    <main role="main" class="wt-main h-full">
+                        {{$main}}
+                    </main>
+                </div>
             </div>
         </div>
+        <footer class="wt-footer">
+            <div class="flex justify-content-between w-full">
+                <div>
+                    @include("components.layout.footer")
+                </div>
+                <div>
+                    {!! config('webtool.version') !!}
+                </div>
+            </div>
+        </footer>
     </div>
-    <footer>
-        <div class="flex justify-content-between w-full">
-            <div>
-                @include("components.layout.footer")
-            </div>
-            <div>
-                {!! config('webtool.version') !!}
-            </div>
-        </div>
-    </footer>
     <script>
-        $(".menuLeft")
-            .sidebar({
-                context: $(".contentContainer"),
-                dimPage: false,
-                transition: "overlay",
-                mobileTransition: "overlay",
-                closable: false,
-            })
-            .sidebar("attach events", ".menuIcon")
-            .sidebar("hide")
-        ;
+            $(".menuLeft")
+                .sidebar({
+                    context: $(".wt-content"),
+                    dimPage: false,
+                    transition: "overlay",
+                    mobileTransition: "overlay",
+                    closable: false
+                })
+                .sidebar("attach events", ".menuIcon")
+                .sidebar("hide")
+            ;
     </script>
 </x-layout.index>
