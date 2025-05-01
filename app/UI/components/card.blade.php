@@ -4,11 +4,11 @@
      @endif
 >
     @if($title != '')
-        <div class=" card-header">
+        <div class="header">
             <div class="flex justify-content-between">
-                <h3 class="ui header mb-0">
+                <div class="title">
                     {!! $title !!}
-                </h3>
+                </div>
                 @if(!is_null($open))
                 <div class="cursor-pointer text-right"
                          x-on:click="open = ! open"
@@ -20,7 +20,7 @@
             </div>
         </div>
     @endif
-    <div class="card-body">
+    <div class="body">
         <div
             @if(!is_null($open))
             x-show="open" x-transition

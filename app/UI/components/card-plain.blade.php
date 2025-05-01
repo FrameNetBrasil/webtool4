@@ -1,6 +1,10 @@
 <div {{ $attributes->merge(['class' => 'wt-card-plain']) }}>
-    <div class="card-header">{!! $title !!}</div>
-    <div class="card-body">
+    <div class="header">
+        <div class="title">
+            {!! $title !!}
+        </div>
+    </div>
+    <div class="body">
         {{$slot}}
     </div>
 </div>

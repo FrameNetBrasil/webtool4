@@ -12,7 +12,7 @@
   padding: 0;
 }
 .tree-node {
-  height: 1.25rem;
+  height: 1.25rem !important;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -90,7 +90,7 @@
   background: url('/images/easyui/tree_icons.png') no-repeat -240px -18px;
 }
 .tree-title {
-  font-size: @wt-font-size;
+  font-size: var(--text-base);
   display: inline-block;
   text-decoration: none;
   vertical-align: top;
@@ -100,7 +100,7 @@
   line-height: 18px;
 }
 .tree-node-proxy {
-  font-size: @wt-font-size;
+  font-size: var(--text-base);
   line-height: 20px;
   padding: 0 2px 0 20px;
   border-width: 1px;
@@ -133,7 +133,7 @@
 }
 .tree-editor {
   border: 1px solid #95B8E7;
-  font-size: @wt-font-size;
+  font-size: var(--text-base);
   line-height: 16px;
   padding: 0 4px;
   margin: 0;

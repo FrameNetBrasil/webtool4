@@ -156,11 +156,18 @@
     Brand Colors
 -------------------- */
 
+/*
 @primaryColor: @blue;
 @secondaryColor: @black;
 
 @lightPrimaryColor: @lightBlue;
 @lightSecondaryColor: @lightBlack;
+*/
+
+@primaryColor: var(--color-primary-600);
+@secondaryColor: var(--color-secondary-500);
+@lightPrimaryColor: var(--color-primary-300);
+@lightSecondaryColor: var(--color-secondary-300);
 
 /* Whenever a color needs to get calculated (screen()/multiply()) out of a base color */
 @blendingBaseColor: #ccc;

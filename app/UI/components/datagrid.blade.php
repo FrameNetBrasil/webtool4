@@ -1,7 +1,7 @@
-<div {{$attributes->class(["wt-datagrid","wt-container-center-content" => $center])}} >
+<div {{$attributes->class(["wt-datagrid"])}} >
     @if($title != '')
-    <div class="datagrid-header">
-        <div class="datagrid-title">{{$title}}{!! $extraTitle !!}</div>
+    <div class="header">
+        <div class="title">{{$title}}{!! $extraTitle !!}</div>
     </div>
     @endif
     <div class="table">
