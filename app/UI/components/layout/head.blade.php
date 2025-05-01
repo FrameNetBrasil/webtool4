@@ -13,22 +13,16 @@
     $hrefLogin = (env('APP_AUTH') == 'auth0') ? '/auth0Login' : '/';
 
 @endphp
-<header id="head" class="flex justify-content-between">
-    <div class="flex align-items-center ">
-        <div style="width:40px;text-align:center">
-            <img src="/images/fnbr_logo_header_alpha_white.png" height="24"/>
-        </div>
-        <div class="border-right-1 border-white-alpha-60" style="height:20px"></div>
-        <div class="headApp">
+<header id="head" class="wt-header">
+    <div class="wt-header-left">
+        <div class="wt-logo">
+            <img src="/images/fnbr_logo_header_alpha_white.png"/>
             <a href="/">
                 <span>{!! config('webtool.headerTitle') !!}</span>
             </a>
         </div>
-        <div id="headLargeSearch">
-            <x-layout.search></x-layout.search>
-        </div>
     </div>
-    <div class="flex align-items-center justify-content-end pr-1 h-full">
+    <div class="wt-header-right">
         <div id="menuLanguage" class="ui dropdown pointing top left pr-3">
             {!! $currentLanguage->description !!}<i class="dropdown icon"></i>
             <div class="menu">
@@ -69,9 +63,9 @@
         @endif
     </div>
 </header>
-<div id="headSmallSearch" class="p-1">
-    <x-layout.search></x-layout.search>
-</div>
+{{--<div id="headSmallSearch" class="p-1">--}}
+{{--    <x-layout.search></x-layout.search>--}}
+{{--</div>--}}
 <script>
     $(function() {
         $("#menuLanguage").dropdown();
