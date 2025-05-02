@@ -5,9 +5,9 @@
         debug($sentences);
     }
 @endphp
-<div class="wt-datagrid flex flex-column" style="height:100%">
-    <div class="datagrid-header">
-        <div class="datagrid-title flex justify-content-between">
+<div class="wt-datagrid h-full mt-2">
+    <div class="header">
+        <div class="title flex justify-content-between">
             <div>
                 Sentences
             </div>

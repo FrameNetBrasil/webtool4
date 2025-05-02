@@ -4,7 +4,7 @@
         $sentences = AnnotationFEService::getSentence($search->idSentence);
     }
 @endphp
-<div class="wt-datagrid h-full mt-2">
+<div class="wt-datagrid-card h-full mt-2">
     <div class="header">
         <div class="title flex justify-content-between">
             <div>
@@ -22,7 +22,7 @@
             @endif
         </div>
     </div>
-    <div class="table" style="position:relative;height:100%">
+    <div class="table">
         <table id="sentenceTable">
             <tbody
             >
@@ -66,4 +66,3 @@
         </table>
     </div>
 </div>
-

@@ -3,9 +3,9 @@
         <x-breadcrumb :sections="[['/','Home'],['','FE Annotation']]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:main>
-        <div class="wt-page h-full w-full">
+        <div class="wt-page">
             <div class="header">
-                <h1>FE Annotation</h1>
+                <span class="title">FE Annotation</span>
             </div>
             <div class="body">
                 <div class="flex-grow-0 content bg-gray-100 pt-3 pl-3">

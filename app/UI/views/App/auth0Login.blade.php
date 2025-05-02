@@ -4,7 +4,7 @@
     </x-slot:head>
     <x-slot:main>
         <section id="work" class="w-full h-full">
-            <div class="wt-container-center h-full">
+            <div class="wt-center h-full">
                 <div class="auth0-login">
                     <img src="/images/fnbr_logo_alpha.png" width="240" />
                     <a class="btnLogin">Sign In</a>
