@@ -21,20 +21,20 @@
                                 placeholder="Search Corpus"
                             ></x-search-field>
                         </div>
-                        <div class="field">
-                            <x-search-field
-                                id="document"
-                                value="{{$search->document}}"
-                                placeholder="Search Document"
-                            ></x-search-field>
-                        </div>
-                        <div class="field">
-                            <x-search-field
-                                id="idSentence"
-                                value="{{$search->idSentence}}"
-                                placeholder="Search by ID"
-                            ></x-search-field>
-                        </div>
+{{--                        <div class="field">--}}
+{{--                            <x-search-field--}}
+{{--                                id="document"--}}
+{{--                                value="{{$search->document}}"--}}
+{{--                                placeholder="Search Document"--}}
+{{--                            ></x-search-field>--}}
+{{--                        </div>--}}
+{{--                        <div class="field">--}}
+{{--                            <x-search-field--}}
+{{--                                id="idSentence"--}}
+{{--                                value="{{$search->idSentence}}"--}}
+{{--                                placeholder="Search by ID"--}}
+{{--                            ></x-search-field>--}}
+{{--                        </div>--}}
                     </x-form-search>
                 </div>
                 <div class="flex-grow-1 content h-full">
