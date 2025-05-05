@@ -5,7 +5,7 @@
     <div class="ui left icon small input">
         <input type="hidden" id="{{$id}}" name="{{$idName ?? $id}}" value="{{$value}}">
         <input class="prompt" type="search" placeholder="{{$placeholder}}" value="{{$name}}">
-        <i class="search icon"></i>
+        <i class="search icon" onclick="$('#{{$id}}').val(0);console.log('s');"></i>
     </div>
     <div class="results"></div>
 </div>

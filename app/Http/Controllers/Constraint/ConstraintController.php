@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Constraint;
 
 use App\Data\FE\ConstraintData as FEConstraintData;
 use App\Data\LU\ConstraintData as LUConstraintData;
+use App\Data\CE\ConstraintData as CEConstraintData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Repositories\Concept;
+use App\Repositories\Construction;
+use App\Repositories\ConstructionElement;
 use App\Repositories\Frame;
 use App\Repositories\FrameElement;
+use App\Repositories\Lexicon;
 use App\Repositories\LU;
 use App\Repositories\Qualia;
 use App\Services\RelationService;
@@ -18,6 +23,9 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'auth')]
 class ConstraintController extends Controller
 {
+    /*------
+        FE
+     -------*/
     #[Post(path: '/constraint/fe/{id}')]
     public function constraintFE(FEConstraintData $data)
     {
@@ -69,6 +77,9 @@ class ConstraintController extends Controller
         }
     }
 
+    /*------
+       LU
+    -------*/
     #[Post(path: '/constraint/lu/{id}')]
     public function constraintLU(LUConstraintData $data)
     {
@@ -98,6 +109,137 @@ class ConstraintController extends Controller
         try {
             Criteria::table("entityrelation")->where("idEntityRelation", $idConstraintInstance)->delete();
             $this->trigger('reload-gridConstraintLU');
+            return $this->renderNotify("success", "Constraint deleted.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    /*------
+       CE
+    -------*/
+
+    #[Post(path: '/constraint/ce/{id}')]
+    public function constraintCE(CEConstraintData $data)
+    {
+        debug($data);
+        try {
+            $ce = ConstructionElement::byId($data->idConstructionElement);
+            if ($data->idConstructionConstraint > 0) {
+                $constraintEntry = 'rel_constraint_cxn';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Construction::byId($data->idConstructionConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idFrameConstraint > 0) {
+                $constraintEntry = 'rel_constraint_frame';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Frame::byId($data->idFrameConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idFrameFamilyConstraint > 0) {
+                $constraintEntry = 'rel_constraint_framefamily';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Frame::byId($data->idFrameFamilyConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idLUConstraint > 0) {
+                $constraintEntry = 'rel_constraint_lu';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = LU::byId($data->idLUConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idLemmaConstraint > 0) {
+                $constraintEntry = 'rel_constraint_lemma';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Lexicon::lemmaById($data->idLemmaConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idWordFormConstraint > 0) {
+                $constraintEntry = 'rel_constraint_wordform';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Lexicon::byId($data->idWordFormConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idMorphemeConstraint > 0) {
+                $constraintEntry = 'rel_constraint_morpheme';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Lexicon::byId($data->idMorphemeConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idUDRelationConstraint > 0) {
+                $constraintEntry = 'rel_constraint_udrelation';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Criteria::byId("udrelation","idUDRelation",$data->idUDRelationConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idUDFeatureConstraint > 0) {
+                $constraintEntry = 'rel_constraint_udfeature';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Criteria::byId("udfeature","idUDFeature",$data->idUDFeatureConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idUDPOSConstraint > 0) {
+                $constraintEntry = 'rel_constraint_udpos';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Criteria::byId("udpos","idUDPOS",$data->idUDPOSConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idBeforeCEConstraint > 0) {
+                $constraintEntry = 'rel_constraint_before';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = ConstructionElement::byId($data->idBeforeCEConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idAfterCEConstraint > 0) {
+                $constraintEntry = 'rel_constraint_after';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = ConstructionElement::byId($data->idAfterCEConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idMeetsCEConstraint > 0) {
+                $constraintEntry = 'rel_constraint_meets';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = ConstructionElement::byId($data->idMeetsCEConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idConceptConstraint > 0) {
+                $constraintEntry = 'rel_constraint_evokes';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Concept::byId($data->idConceptConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idIndexGenderCEConstraint > 0) {
+                $constraintEntry = 'rel_constraint_ugender';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = ConstructionElement::byId($data->idIndexGenderCEConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idIndexPersonCEConstraint > 0) {
+                $constraintEntry = 'rel_constraint_uperson';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = ConstructionElement::byId($data->idIndexPersonCEConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            if ($data->idIndexNumberCEConstraint > 0) {
+                $constraintEntry = 'rel_constraint_unumber';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = ConstructionElement::byId($data->idIndexNumberCEConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
+            }
+            $this->trigger('reload-gridConstraintCE');
+            return $this->renderNotify("success", "Constraint created.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/constraint/ce/{idConstraintInstance}')]
+    public function deleteConstraintCE(int $idConstraintInstance)
+    {
+        try {
+            Criteria::table("entityrelation")->where("idEntityRelation", $idConstraintInstance)->delete();
+            $this->trigger('reload-gridConstraintCE');
             return $this->renderNotify("success", "Constraint deleted.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
