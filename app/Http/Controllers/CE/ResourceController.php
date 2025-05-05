@@ -2,21 +2,12 @@
 
 namespace App\Http\Controllers\CE;
 
-use App\Data\CreateFEData;
 use App\Data\CE\CreateData;
 use App\Data\CE\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\ConstructionElement;
-use App\Repositories\EntityRelation;
-use App\Repositories\Entry;
-use App\Repositories\Frame;
-use App\Repositories\FrameElement;
-use App\Repositories\ViewConstraint;
-use App\Repositories\ViewFrameElement;
 use App\Services\AppService;
-use App\Services\EntryService;
-use App\Services\RelationService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -27,19 +18,18 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 class ResourceController extends Controller
 {
     #[Post(path: '/ce')]
-    public function newFE(CreateData $data)
+    public function newCE(CreateData $data)
     {
         debug($data);
         try {
-            Criteria::function('fe_create(?, ?, ?, ?, ?)', [
-                $data->idFrame,
-                $data->nameEn,
-                $data->coreType,
+            Criteria::function('ce_create(?, ?, ?, ?, ?)', [
+                $data->idConstruction,
+                $data->name,
                 $data->idColor,
                 $data->idUser
             ]);
-            $this->trigger('reload-gridFE');
-            return $this->renderNotify("success", "FrameElement created.");
+            $this->trigger('reload-gridCE');
+            return $this->renderNotify("success", "ConstructionElement created.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
@@ -65,12 +55,12 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
-            Criteria::function('fe_delete(?, ?)', [
+            Criteria::function('ce_delete(?, ?)', [
                 $id,
                 AppService::getCurrentUser()->idUser
             ]);
-            $this->trigger('reload-gridFE');
-            return $this->renderNotify("success", "FrameElement deleted.");
+            $this->trigger('reload-gridCE');
+            return $this->renderNotify("success", "ConstructionElement deleted.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
@@ -79,17 +69,17 @@ class ResourceController extends Controller
     #[Get(path: '/ce/{id}/formEdit')]
     public function formEdit(string $id)
     {
-        return view("FE.formEdit", [
-            'frameElement' => FrameElement::byId($id)
+        return view("CE.formEdit", [
+            'constructionElement' => ConstructionElement::byId($id)
         ]);
     }
 
     #[Put(path: '/ce/{id}')]
     public function update(string $id, UpdateData $data)
     {
-        FrameElement::update($data);
-        $this->trigger('reload-objectFE');
-        return $this->renderNotify("success", "FrameElement updated.");
+        ConstructionElement::update($data);
+        $this->trigger('reload-objectCE');
+        return $this->renderNotify("success", "ConstructionElement updated.");
     }
 
 }

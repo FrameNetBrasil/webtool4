@@ -288,6 +288,14 @@ $router->get('report/c5/{idConcept?}/{lang?}', [
 	'domain' => NULL,
 ]);
 
+$router->get('concept/list/forSelect', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@listForSelect',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('constraint/fe/{id}', [
 	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@constraintFE',
 	'as' => NULL,
@@ -1352,6 +1360,38 @@ $router->put('lexicon3/lexicon', [
 	'domain' => NULL,
 ]);
 
+$router->get('lexicon3/feature/listForSelect', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@listFeatureForSelect',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lexicon3/feature/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@newFeature',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/feature/{idLexicon}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@features',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('lexicon3/feature/{idLexicon}/{idUDFeature}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@deleteFeature',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('corpus', [
 	'uses' => 'App\Http\Controllers\Corpus\ResourceController@resource',
 	'as' => NULL,
@@ -2193,7 +2233,7 @@ $router->get('sandbox/page2', [
 ]);
 
 $router->post('ce', [
-	'uses' => 'App\Http\Controllers\CE\ResourceController@newFE',
+	'uses' => 'App\Http\Controllers\CE\ResourceController@newCE',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

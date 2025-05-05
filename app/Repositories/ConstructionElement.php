@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Data\CE\UpdateData;
 use App\Database\Criteria;
 use App\Services\AppService;
 
@@ -16,10 +17,9 @@ class ConstructionElement
 
     public static function update(UpdateData $object)
     {
-        Criteria::table("frameelement")
-            ->where("idFrameElement", "=", $object->idFrameElement)
+        Criteria::table("constructionelement")
+            ->where("idConstructionElement", "=", $object->idConstructionElement)
             ->update([
-                'coreType' => $object->coreType,
                 'idColor' => $object->idColor
             ]);
     }

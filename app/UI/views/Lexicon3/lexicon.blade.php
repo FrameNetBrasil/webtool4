@@ -48,6 +48,28 @@
                     <x-submit label="Update" hx-put="/lexicon3/lexicon"></x-submit>
                 </x-slot:buttons>
             </x-form>
+            <x-form
+                title="Add Feature"
+            >
+                <x-slot:fields>
+                    <x-hidden-field id="idLexiconBase" :value="$lexicon->idLexicon"></x-hidden-field>
+                    <div class="fields">
+                        <div class="field">
+                            <x-combobox.ud-feature
+                                id="idUDFeature"
+                                label="UD Feature"
+                                :value="0"
+                            ></x-combobox.ud-feature>
+                        </div>
+                    </div>
+                </x-slot:fields>
+                <x-slot:buttons>
+                    <x-submit label="Add" hx-post="/lexicon3/feature/new"></x-submit>
+                </x-slot:buttons>
+            </x-form>
+            <h3 class="ui header">Features</h3>
+            @include("Lexicon3.features")
+
         </div>
     </x-slot:main>
 </x-layout.object>
