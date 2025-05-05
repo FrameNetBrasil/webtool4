@@ -57,9 +57,10 @@ class Resource3Controller extends Controller
     #[Get(path: '/lexicon3/lemma/listForSelect')]
     public function listForSelect(QData $data)
     {
-        $name = (strlen($data->q) > 2) ? $data->q : 'none';
+        $name = (strlen($data->q) > 0) ? $data->q : 'none';
         return ['results' => Criteria::byFilterLanguage("view_lexicon_lemma",["name","startswith", trim($name)])
-            ->select('idLemma','fullNameUD as name')
+            ->select('idLexicon','fullNameUD as name')
+            ->limit(50)
             ->orderby("name")->all()];
     }
 
@@ -168,6 +169,15 @@ class Resource3Controller extends Controller
       Expression
       ------ */
 
+    #[Get(path: '/lexicon3/expression/listForSelect')]
+    public function listExpressionForSelect(QData $data)
+    {
+        $name = (strlen($data->q) > 0) ? $data->q : 'none';
+        return ['results' => Criteria::byFilterLanguage("lexicon",["form","startswith", trim($name)])
+            ->select('idLexicon','form as name')
+            ->limit(50)
+            ->orderby("name")->all()];
+    }
     #[Post(path: '/lexicon3/expression/new')]
     public function newExpression(CreateExpressionData $data)
     {
@@ -205,6 +215,21 @@ class Resource3Controller extends Controller
     /*--------
       Form
       -------- */
+    #[Get(path: '/lexicon3/morpheme/listForSelect')]
+    public function listMorphemeForSelect(QData $data)
+    {
+        $name = (strlen($data->q) > 0) ? $data->q : 'none';
+        return Criteria::table("lexicon as l")
+        ->join("lexicon_group as g","g.idLexiconGroup","=","l.idLexiconGroup")
+            ->where("l.form","startswith", trim($name))
+            ->whereNotIn("l.idLexiconGroup",[1,2,7])
+            ->where("l.idLanguage",AppService::getCurrentIdLanguage())
+            ->select('l.idLexicon')
+            ->selectRaw("concat(l.form,' [', g.name,']') as name")
+            ->limit(50)
+            ->orderby("name")->all();
+    }
+
     #[Get(path: '/lexicon3/form/new')]
     public function formNewForm()
     {

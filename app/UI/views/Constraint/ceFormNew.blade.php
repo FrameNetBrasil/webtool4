@@ -50,21 +50,31 @@
             <div class="col-2">
                 <h3 class="ui violet dividing header">Lemma</h3>
                 <div class="field">
-                    <x-combobox.lu
+                    <x-combobox.lexicon-lemma
                         id="idLemmaConstraint"
                         label="Lemma"
                         class="w-25rem"
-                    ></x-combobox.lu>
+                    ></x-combobox.lexicon-lemma>
                 </div>
             </div>
             <div class="col-2">
                 <h3 class="ui violet dividing header">Wordform</h3>
                 <div class="field">
-                    <x-combobox.lu
+                    <x-combobox.lexicon-expression
                         id="idWordFormConstraint"
                         label="Wordform"
                         class="w-25rem"
-                    ></x-combobox.lu>
+                    ></x-combobox.lexicon-expression>
+                </div>
+            </div>
+            <div class="col-2">
+                <h3 class="ui violet dividing header">Morpheme</h3>
+                <div class="field">
+                    <x-combobox.lexicon-morpheme
+                        id="idMorphemeConstraint"
+                        label="Morpheme"
+                        class="w-25rem"
+                    ></x-combobox.lexicon-morpheme>
                 </div>
             </div>
             <div class="col-2">

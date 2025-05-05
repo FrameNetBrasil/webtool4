@@ -328,6 +328,22 @@ $router->delete('constraint/lu/{idConstraintInstance}', [
 	'domain' => NULL,
 ]);
 
+$router->post('constraint/ce/{id}', [
+	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@constraintCE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('constraint/ce/{idConstraintInstance}', [
+	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@deleteConstraintCE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->put('entry', [
 	'uses' => 'App\Http\Controllers\Entry\EntryController@entry',
 	'as' => NULL,
@@ -1304,6 +1320,14 @@ $router->delete('lexicon3/lemma/{idLexicon}', [
 	'domain' => NULL,
 ]);
 
+$router->get('lexicon3/expression/listForSelect', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@listExpressionForSelect',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('lexicon3/expression/new', [
 	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@newExpression',
 	'as' => NULL,
@@ -1314,6 +1338,14 @@ $router->post('lexicon3/expression/new', [
 
 $router->delete('lexicon3/expression/{idLexiconExpression}', [
 	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@deleteLexiconExpression',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/morpheme/listForSelect', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@listMorphemeForSelect',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
