@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Lexicon;
 
 use App\Data\ComboBox\QData;
 use App\Data\Lexicon\CreateExpressionData;
+use App\Data\Lexicon\CreateFeatureData;
 use App\Data\Lexicon\CreateLemmaData;
 use App\Data\Lexicon\CreateLexemeData;
 use App\Data\Lexicon\CreateLexemeEntryData;
@@ -251,8 +252,14 @@ class Resource3Controller extends Controller
     {
         $lexicon = Lexicon::byId($idLexicon);
         $lexicon->group = Criteria::byId("lexicon_group", "idLexiconGroup", $lexicon->idLexiconGroup);
+        $features = Criteria::table("udfeature as f")
+            ->join("lexicon_feature as lf", "f.idUDFeature", "lf.idUDFeature")
+            ->select("f.idUDFeature","f.name","lf.idLexicon")
+            ->where("lf.idLexicon", $idLexicon)
+            ->all();
         $view = view("Lexicon3.lexicon", [
             'lexicon' => $lexicon,
+            'features' => $features,
         ]);
         return (is_null($fragment) ? $view : $view->fragment($fragment));
     }
@@ -272,6 +279,70 @@ class Resource3Controller extends Controller
                 ]);
             $this->trigger('reload-gridLexicon3');
             return $this->renderNotify("success", "Form updated.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    /*--------
+      Features
+     -------- */
+
+    #[Get(path: '/lexicon3/feature/listForSelect')]
+    public function listFeatureForSelect(QData $data)
+    {
+        $name = (strlen($data->q) > 0) ? $data->q : 'none';
+        return ['results' => Criteria::table("udfeature")
+            ->select('idUDFeature','name')
+            ->whereRaw("lower(name) LIKE lower('{$name}%')")
+            ->orderby("name")->all()];
+    }
+
+    #[Post(path: '/lexicon3/feature/new')]
+    public function newFeature(CreateFeatureData $data)
+    {
+        try {
+            Criteria::table("lexicon_feature")
+                ->where("idLexicon", $data->idLexiconBase)
+                ->where("idUDFeature", $data->idUDFeature)
+                ->delete();
+            Criteria::create("lexicon_feature",[
+                "idLexicon" => $data->idLexiconBase,
+                "idUDFeature" => $data->idUDFeature,
+            ]);
+            $this->trigger('reload-gridFeatures');
+            return $this->renderNotify("success", "Feature added.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Get(path: '/lexicon3/feature/{idLexicon}')]
+    public function features(int $idLexicon)
+    {
+        $lexicon = Lexicon::byId($idLexicon);
+        $lexicon->group = Criteria::byId("lexicon_group", "idLexiconGroup", $lexicon->idLexiconGroup);
+        $features = Criteria::table("udfeature as f")
+            ->join("lexicon_feature as lf", "f.idUDFeature", "lf.idUDFeature")
+            ->select("f.idUDFeature","f.name","lf.idLexicon")
+            ->where("lf.idLexicon", $idLexicon)
+            ->all();
+        return view("Lexicon3.features", [
+            'lexicon' => $lexicon,
+            'features' => $features,
+        ]);
+    }
+
+    #[Delete(path: '/lexicon3/feature/{idLexicon}/{idUDFeature}')]
+    public function deleteFeature(int $idLexicon, int $idUDFeature)
+    {
+        try {
+            Criteria::table("lexicon_feature")
+                ->where("idLexicon", $idLexicon)
+                ->where("idUDFeature", $idUDFeature)
+                ->delete();
+            $this->trigger('reload-gridFeatures');
+            return $this->renderNotify("success", "Feature removed.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

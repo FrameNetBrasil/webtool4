@@ -7,7 +7,7 @@
     ];
 @endphp
 <x-objectmenu
-    id="feMenu"
+    id="ceMenu"
     :items="$items"
-    :path="'/fe/' . $frameElement->idFrameElement"
+    :path="'/ce/' . $constructionElement->idConstructionElement"
 ></x-objectmenu>

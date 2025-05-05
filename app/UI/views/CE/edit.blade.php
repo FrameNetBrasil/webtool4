@@ -14,20 +14,17 @@
                 <div class="ui label wt-tag-id">
                     #{{$constructionElement->idConstructionElement}}
                 </div>
-                <div class="ui label wt-tag-en">
-                    {{$constructionElement->nameEn}} [en]
-                </div>
                 <div>
-                    <x-combobox.fe-frame
-                        id="idFrameElement"
-                        :idFrame="$constructionElement->cxn->idFrame"
-                        :defaultText="'Change FE'"
-                    ></x-combobox.fe-frame>
+                    <x-combobox.ce-cxn
+                        id="idConstructionlement"
+                        :idConstruction="$constructionElement->cxn->idConstruction"
+                        :defaultText="'Change CE'"
+                    ></x-combobox.ce-cxn>
                     <script>
                         $(function() {
-                            $('#idFrameElement_dropdown').dropdown({
+                            $('#idConstructionElement_dropdown').dropdown({
                                 onChange: (value) => {
-                                    window.location.href= `/fe/${value}/edit`;
+                                    window.location.href= `/ce/${value}/edit`;
                                 }
                             });
                         });
@@ -38,7 +35,7 @@
                 #{{$constructionElement->description}}
             </x-slot:description>
             <x-slot:main>
-                @include("FE.menu")
+                @include("CE.menu")
             </x-slot:main>
         </x-layout.object>
     </x-slot:main>

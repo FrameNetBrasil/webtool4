@@ -9,7 +9,7 @@ class CreateData extends Data
 {
     public function __construct(
         public ?int $idConstruction,
-        public ?string $nameEn,
+        public ?string $name,
         public ?int $idColor,
         public ?int $idUser,
         public ?string $entry,
@@ -17,7 +17,7 @@ class CreateData extends Data
     )
     {
         $this->idUser = AppService::getCurrentIdUser();
-        $this->entry = strtolower('ce_' . $this->nameEn);
+        $this->entry = strtolower('ce_' . $this->name);
         $this->_token = csrf_token();
     }
 }
