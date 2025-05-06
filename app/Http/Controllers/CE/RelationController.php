@@ -2,48 +2,34 @@
 
 namespace App\Http\Controllers\CE;
 
-use App\Data\CreateFEData;
-use App\Data\CE\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\EntityRelation;
-use App\Repositories\Entry;
-use App\Repositories\Frame;
-use App\Repositories\FrameElement;
-use App\Repositories\Relation;
-use App\Repositories\ViewConstraint;
-use App\Repositories\ViewFrameElement;
 use App\Services\AppService;
-use App\Services\EntryService;
 use App\Services\RelationService;
-use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
-use Collective\Annotations\Routing\Attributes\Attributes\Post;
-use Collective\Annotations\Routing\Attributes\Attributes\Put;
 
 #[Middleware(name: 'auth')]
 class RelationController extends Controller
 {
-    #[Get(path: '/ce/relations/{idEntityRelation}/frame/{idFrameBase}')]
-    public function relations(string $idEntityRelation, string $idFrameBase)
+    #[Get(path: '/ce/relations/{idEntityRelation}/cxn/{idCxnBase}')]
+    public function relations(string $idEntityRelation, string $idCxnBase)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $relation = Criteria::byId("view_relation","idEntityRelation", $idEntityRelation);
-        //$config = config('webtool.relations');
-        $frame = Criteria::table("view_frame")
+        $cxn = Criteria::table("view_construction")
             ->where("idEntity", $relation->idEntity1)
             ->where("idLanguage", $idLanguage)
             ->first();
-        $relatedFrame = Criteria::table("view_frame")
+        $relatedCxn = Criteria::table("view_construction")
             ->where("idEntity", $relation->idEntity2)
             ->where("idLanguage", $idLanguage)
             ->first();
-        return view("Relation.feChild",[
+        return view("Relation.ceChild",[
             'idEntityRelation' => $idEntityRelation,
-            'idFrameBase' => $idFrameBase,
-            'frame' => $frame,
-            'relatedFrame' => $relatedFrame,
+            'idCxnBase' => $idCxnBase,
+            'cxn' => $cxn,
+            'relatedCxn' => $relatedCxn,
             'relation' => (object)[
                 'name' => $relation->nameDirect,
                 'relationType' => $relation->relationType
@@ -52,23 +38,22 @@ class RelationController extends Controller
     }
 
     #[Get(path: '/ce/relations/{idEntityRelation}/formNew')]
-    public function relationsFEFormNew(int $idEntityRelation)
+    public function relationsCEFormNew(int $idEntityRelation)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $relation = Criteria::byId("view_relation","idEntityRelation", $idEntityRelation);
-        //$config = config('webtool.relations');
-        $frame = Criteria::table("view_frame")
+        $cxn = Criteria::table("view_construction")
             ->where("idEntity", $relation->idEntity1)
             ->where("idLanguage", $idLanguage)
             ->first();
-        $relatedFrame = Criteria::table("view_frame")
+        $relatedCxn = Criteria::table("view_construction")
             ->where("idEntity", $relation->idEntity2)
             ->where("idLanguage", $idLanguage)
             ->first();
-        return view("Relation.feFormNew",[
+        return view("Relation.ceFormNew",[
             'idEntityRelation' => $idEntityRelation,
-            'frame' => $frame,
-            'relatedFrame' => $relatedFrame,
+            'cxn' => $cxn,
+            'relatedCxn' => $relatedCxn,
             'relation' => (object)[
                 'name' => $relation->nameDirect,
                 'entry' => $relation->relationType
@@ -77,28 +62,27 @@ class RelationController extends Controller
     }
 
     #[Get(path: '/ce/relations/{idEntityRelation}/grid')]
-    public function gridRelationsFE(int $idEntityRelation)
+    public function gridRelationsCE(int $idEntityRelation)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $relation = Criteria::byId("view_relation","idEntityRelation", $idEntityRelation);
-        //$config = config('webtool.relations');
-        $frame = Criteria::table("view_frame")
+        $cxn = Criteria::table("view_construction")
             ->where("idEntity", $relation->idEntity1)
             ->where("idLanguage", $idLanguage)
             ->first();
-        $relatedFrame = Criteria::table("view_frame")
+        $relatedCxn = Criteria::table("view_construction")
             ->where("idEntity", $relation->idEntity2)
             ->where("idLanguage", $idLanguage)
             ->first();
-        return view("Relation.feGrid",[
+        return view("Relation.ceGrid",[
             'idEntityRelation' => $idEntityRelation,
-            'frame' => $frame,
-            'relatedFrame' => $relatedFrame,
+            'cxn' => $cxn,
+            'relatedCxn' => $relatedCxn,
             'relation' => (object)[
                 'name' => $relation->nameDirect,
                 'relationType' => $relation->relationType
             ],
-            'relations' => RelationService::listRelationsFE($idEntityRelation)
+            'relations' => RelationService::listRelationsCE($idEntityRelation)
         ]);
     }
 }

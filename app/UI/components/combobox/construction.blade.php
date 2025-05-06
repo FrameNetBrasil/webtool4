@@ -5,7 +5,7 @@
     <div class="ui left icon small input">
         <input type="hidden" id="{{$id}}" name="{{$idName ?? $id}}" value="{{$value}}">
         <input class="prompt" type="search" placeholder="{{$placeholder}}" value="{{$name}}">
-        <i class="search icon" onclick="$('#{{$id}}').val(0);console.log('s');"></i>
+        <i class="search icon"></i>
     </div>
     <div class="results"></div>
 </div>
@@ -20,12 +20,21 @@
                     title: "fullName",
                     description: "{{$description}}"
                 },
+                displayField: "",
                 maxResults: 20,
                 minCharacters: 3,
                 onSelect: (result) => {
                     $('#{{$id}}').val(result.idConstruction);
                     {!! $onSelect !!}
-                ;}
+                    ;
+                },
+                onResultsClose: function() {
+                    setTimeout(function() {
+                        if ($('#{{$id}}_search').search("get value") == "") {
+                            $('#{{$id}}').val(0);
+                        }
+                    }, 500);
+                }
             })
         ;
     });

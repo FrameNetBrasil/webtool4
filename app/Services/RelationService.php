@@ -251,40 +251,26 @@ class RelationService extends Controller
         return $result;
     }
 
-    public static function listRelationsCE(int $idCE)
+    public static function listRelationsCE(int $idEntityRelationBase)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $result = [];
         $relations = Criteria::table("view_constructionelement_relation")
-            ->where("ce1IdConstructionElement", $idCE)
+            ->where("idRelation", $idEntityRelationBase)
             ->where("idLanguage", $idLanguage)
-            ->orderBy("relationType")
-            ->orderBy("ce2Name")
             ->all();
+        $result = [];
         foreach ($relations as $relation) {
             $result[] = (object)[
                 'idEntityRelation' => $relation->idEntityRelation,
-                'relationType' => $relation->relationType,
-                'name' => $relation->nameDirect,
+                'entry' => $relation->relationType,
+                'relationName' => $relation->nameDirect,
                 'color' => $relation->color,
-                'idCERelated' => $relation->ce2IdConstructionElement,
-                'related' => $relation->ce2Name,
-                'direction' => 'direct'
-            ];
-        }
-        $inverse = Criteria::table("view_constructionelement_relation")
-            ->where("ce2IdConstructionElement", $idCE)
-            ->where("idLanguage", $idLanguage)
-            ->all();
-        foreach ($inverse as $relation) {
-            $result[] = (object)[
-                'idEntityRelation' => $relation->idEntityRelation,
-                'relationType' => $relation->relationType,
-                'name' => $relation->nameInverse,
-                'color' => $relation->color,
-                'idCERelated' => $relation->ce1IdConstruction,
-                'related' => $relation->ce1Name,
-                'direction' => 'inverse'
+                'ceName' => $relation->ce1Name,
+                'ceIdColor' => $relation->ce1IdColor,
+                'ceIdEntity' => $relation->ce1IdEntity,
+                'relatedCEName' => $relation->ce2Name,
+                'relatedCEIdColor' => $relation->ce2IdColor,
+                'relatedCEIdEntity' => $relation->ce2IdEntity,
             ];
         }
         return $result;

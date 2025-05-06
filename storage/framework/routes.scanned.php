@@ -2352,7 +2352,7 @@ $router->get('ce/{id}/entries', [
 	'domain' => NULL,
 ]);
 
-$router->get('ce/relations/{idEntityRelation}/frame/{idFrameBase}', [
+$router->get('ce/relations/{idEntityRelation}/cxn/{idCxnBase}', [
 	'uses' => 'App\Http\Controllers\CE\RelationController@relations',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -2361,7 +2361,7 @@ $router->get('ce/relations/{idEntityRelation}/frame/{idFrameBase}', [
 ]);
 
 $router->get('ce/relations/{idEntityRelation}/formNew', [
-	'uses' => 'App\Http\Controllers\CE\RelationController@relationsFEFormNew',
+	'uses' => 'App\Http\Controllers\CE\RelationController@relationsCEFormNew',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -2369,7 +2369,7 @@ $router->get('ce/relations/{idEntityRelation}/formNew', [
 ]);
 
 $router->get('ce/relations/{idEntityRelation}/grid', [
-	'uses' => 'App\Http\Controllers\CE\RelationController@gridRelationsFE',
+	'uses' => 'App\Http\Controllers\CE\RelationController@gridRelationsCE',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -2984,6 +2984,30 @@ $router->get('cxn/{id}', [
 	'domain' => NULL,
 ]);
 
+$router->get('cxn/{id}/constraints', [
+	'uses' => 'App\Http\Controllers\Construction\ConstraintController@constraints',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('cxn/{id}/constraints/formNew', [
+	'uses' => 'App\Http\Controllers\Construction\ConstraintController@constraintsFormNew',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('cxn/{id}/constraints/grid', [
+	'uses' => 'App\Http\Controllers\Construction\ConstraintController@constraintsGrid',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('cxn', [
 	'uses' => 'App\Http\Controllers\Construction\BrowseController@browse',
 	'as' => NULL,
@@ -3064,24 +3088,24 @@ $router->get('cxn/{id}/ces/grid', [
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/relations', [
-	'uses' => 'App\Http\Controllers\Frame\RelationController@relations',
+$router->get('cxn/{id}/relations', [
+	'uses' => 'App\Http\Controllers\Construction\RelationController@relations',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/relations/formNew', [
-	'uses' => 'App\Http\Controllers\Frame\RelationController@formNewRelation',
+$router->get('cxn/{id}/relations/formNew', [
+	'uses' => 'App\Http\Controllers\Construction\RelationController@formNewRelation',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/relations/grid', [
-	'uses' => 'App\Http\Controllers\Frame\RelationController@gridRelation',
+$router->get('cxn/{id}/relations/grid', [
+	'uses' => 'App\Http\Controllers\Construction\RelationController@gridRelation',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
