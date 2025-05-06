@@ -1,34 +1,34 @@
 <div
     class="ui card h-full w-full mb-2"
-    hx-trigger="reload-gridLU from:body"
+    hx-trigger="reload-gridConstraintCxn from:body"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/frame/{{$idFrame}}/lus/grid"
+    hx-get="/cxn/{{$idConstruction}}/constraints/grid"
 >
     <div class="flex-grow-1 content bg-white">
         <div
-            id="gridLU"
+            id="cxnConstraintGrid"
             class="grid"
         >
-            @foreach($lus as $lu)
+            @foreach($constraints as $constraint)
                 <div class="col-3">
                     <div class="ui card w-full">
                         <div class="content">
                     <span class="right floated">
                         <x-delete
-                            title="delete LU"
-                            onclick="manager.confirmDelete(`Removing LU '{{$lu->name}}'.`, '/lu/{{$lu->idLU}}')"
+                            title="delete Cxn Constraint"
+                            onclick="manager.confirmDelete(`Removing Constraint '{{$constraint->constraintName}}'.`, '/constraint/cxn/{{$constraint->idConstraintInstance}}')"
                         ></x-delete>
                     </span>
                             <div
                                 class="header"
                             >
-                                <a href="/lu/{{$lu->idLU}}/edit">
-                                    <x-element.lu :name="$lu->name"></x-element.lu>
-                                </a>
+                                <x-element.constraint
+                                    name="{{$constraint->constraintName}}"
+                                ></x-element.constraint>
                             </div>
                             <div class="description">
-                                {{$lu->senseDescription}}
+                                {{$constraint->idConstrainedByName}}
                             </div>
                         </div>
                     </div>

@@ -344,6 +344,22 @@ $router->delete('constraint/ce/{idConstraintInstance}', [
 	'domain' => NULL,
 ]);
 
+$router->post('constraint/cxn/{id}', [
+	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@constraintCxn',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('constraint/cxn/{idConstraintInstance}', [
+	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@deleteConstraintCxn',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->put('entry', [
 	'uses' => 'App\Http\Controllers\Entry\EntryController@entry',
 	'as' => NULL,

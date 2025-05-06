@@ -4,6 +4,7 @@ namespace App\Http\Controllers\CE;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Constraint;
+use App\Repositories\Construction;
 use App\Repositories\ConstructionElement;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -15,16 +16,20 @@ class ConstraintController extends Controller
     public function constraints(string $id)
     {
         return view("Constraint.ceChild", [
-            'idConstructionElement' => $id
+            'idConstructionElement' => $id,
         ]);
     }
 
     #[Get(path: '/ce/{id}/constraints/formNew')]
     public function constraintsFormNew(int $id)
     {
+        $ce = ConstructionElement::byId($id);
+        $evokedFrame = Construction::getEvokedFrame($ce->idConstruction);
+        debug($evokedFrame->idFrame);
         $view = view("Constraint.ceFormNew", [
             'idConstructionElement' => $id,
-            'constructionElement' => ConstructionElement::byId($id)
+            'constructionElement' => ConstructionElement::byId($id),
+            'idEvokedFrame' => $evokedFrame?->idFrame ?? 0
         ]);
         return $view;
     }
