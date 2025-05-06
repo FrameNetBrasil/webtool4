@@ -1,8 +1,6 @@
 @php
     $id = uniqid("luStaticTree");
     $idFrame = $frame->idFrame;
-            debug($vus);
-
 @endphp
 <div class="grid w-full h-full" style="min-height:500px">
     <div class="col-4">

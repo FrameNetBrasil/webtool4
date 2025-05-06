@@ -18,7 +18,7 @@
                             </thead>
                         </x-slot:thead>
                         @foreach($realizations as $feIdEntity => $gfptas)
-                            @php(debug($gfptas))
+{{--                            @php(debug($gfptas))--}}
                             @if($feIdEntity)
                                 <tr
                                     style="display:table;table-layout: fixed;"

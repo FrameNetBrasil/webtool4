@@ -20,7 +20,6 @@ class LexiconLemma extends Component
         public ?int $value = 0,
     )
     {
-        debug('value',$this->value);
         if (($this->value != '') && ($this->value != 0)) {
             $lemma = Lexicon::lemmabyId($this->value);
             $this->placeholder = $lemma->name;

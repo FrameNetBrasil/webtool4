@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Constraint;
 use App\Data\FE\ConstraintData as FEConstraintData;
 use App\Data\LU\ConstraintData as LUConstraintData;
 use App\Data\CE\ConstraintData as CEConstraintData;
+use App\Data\Construction\ConstraintData as CxnConstraintData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Concept;
@@ -240,6 +241,45 @@ class ConstraintController extends Controller
         try {
             Criteria::table("entityrelation")->where("idEntityRelation", $idConstraintInstance)->delete();
             $this->trigger('reload-gridConstraintCE');
+            return $this->renderNotify("success", "Constraint deleted.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    /*------
+      Cxn
+    -------*/
+
+    #[Post(path: '/constraint/cxn/{id}')]
+    public function constraintCxn(CxnConstraintData $data)
+    {
+        try {
+            $cxn = Construction::byId($data->idConstruction);
+            if ($data->idFrameConstraint > 0) {
+                $relationEntry = 'rel_evokes';
+                $frame = Frame::byId($data->idFrameConstraint);
+                RelationService::create($relationEntry, $cxn->idEntity, $frame->idEntity);
+            }
+            if ($data->idConceptConstraint > 0) {
+                $constraintEntry = 'rel_constraint_evokes';
+                $idConstraint = Criteria::create("entity",["type" => "CON"]);
+                $constrainedBy = Concept::byId($data->idConceptConstraint);
+                RelationService::create($constraintEntry, $idConstraint, $cxn->idEntity, $constrainedBy->idEntity);
+            }
+            $this->trigger('reload-gridConstraintCxn');
+            return $this->renderNotify("success", "Constraint created.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/constraint/cxn/{idConstraintInstance}')]
+    public function deleteConstraintCxn(int $idConstraintInstance)
+    {
+        try {
+            Criteria::table("entityrelation")->where("idEntityRelation", $idConstraintInstance)->delete();
+            $this->trigger('reload-gridConstraintCxn');
             return $this->renderNotify("success", "Constraint deleted.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());

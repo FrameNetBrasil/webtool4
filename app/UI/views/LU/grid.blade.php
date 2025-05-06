@@ -24,7 +24,7 @@
                                 class="header"
                             >
                                 <a href="/lu/{{$lu->idLU}}/edit">
-                                    <x-element.lu name="{{$lu->name}}"></x-element.lu>
+                                    <x-element.lu :name="$lu->name"></x-element.lu>
                                 </a>
                             </div>
                             <div class="description">

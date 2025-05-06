@@ -6,11 +6,9 @@ use App\Data\ComboBox\QData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\LU;
-use App\Repositories\ViewLU;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
-use Orkester\Manager;
 
 #[Middleware(name: 'auth')]
 class BrowseController extends Controller

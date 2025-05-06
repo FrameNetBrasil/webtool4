@@ -3,11 +3,11 @@
 >
     <x-slot:fields>
         <div class="field">
-            <x-combobox.lemma
-                id="idLemma"
+            <x-combobox.lexicon-lemma
+                id="idLexicon"
                 label="Lemma [min: 3 chars]"
-                :value="0"
-            ></x-combobox.lemma>
+                value="0"
+            ></x-combobox.lexicon-lemma>
         </div>
         <div class="field">
             <x-multiline-field
