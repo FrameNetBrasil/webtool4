@@ -106,4 +106,12 @@ class AppController extends Controller
     {
         return view('App.messages');
     }
+
+    #[Get(path: '/error')]
+    public function error()
+    {
+        debug(session("errors")->all());
+        $msg = session("errors")->all()[0];
+        return $this->renderNotify("error", $msg);
+    }
 }

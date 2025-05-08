@@ -288,6 +288,14 @@ $router->get('report/c5/{idConcept?}/{lang?}', [
 	'domain' => NULL,
 ]);
 
+$router->get('concept/list/forSelect', [
+	'uses' => 'App\Http\Controllers\C5\ReportController@listForSelect',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('constraint/fe/{id}', [
 	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@constraintFE',
 	'as' => NULL,
@@ -314,6 +322,38 @@ $router->post('constraint/lu/{id}', [
 
 $router->delete('constraint/lu/{idConstraintInstance}', [
 	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@deleteConstraintLU',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('constraint/ce/{id}', [
+	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@constraintCE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('constraint/ce/{idConstraintInstance}', [
+	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@deleteConstraintCE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('constraint/cxn/{id}', [
+	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@constraintCxn',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('constraint/cxn/{idConstraintInstance}', [
+	'uses' => 'App\Http\Controllers\Constraint\ConstraintController@deleteConstraintCxn',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -626,6 +666,14 @@ $router->post('app/search', [
 
 $router->get('messages', [
 	'uses' => 'App\Http\Controllers\AppController@messages',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('error', [
+	'uses' => 'App\Http\Controllers\AppController@error',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
@@ -1202,6 +1250,190 @@ $router->post('lexicon/wordform/new', [
 
 $router->delete('lexicon/wordform/{idWordForm}', [
 	'uses' => 'App\Http\Controllers\Lexicon\ResourceController@deleteWordform',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@browse',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lexicon3/grid/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@grid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/lemma/listForSelect', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@listForSelect',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/lemma/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@formNewLemma',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lexicon3/lemma/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@newLemma',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/lemma/{idLemma}/expressions', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@expressions',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/lemma/{idLemma}/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@lemma',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->put('lexicon3/lemma', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@updateLemma',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('lexicon3/lemma/{idLexicon}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@deleteLemma',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/expression/listForSelect', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@listExpressionForSelect',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lexicon3/expression/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@newExpression',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('lexicon3/expression/{idLexiconExpression}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@deleteLexiconExpression',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/morpheme/listForSelect', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@listMorphemeForSelect',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/form/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@formNewForm',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lexicon3/form/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@newForm',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('lexicon3/wordform/{idWordForm}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@deleteWordform',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/form/{idLexicon}/{fragment?}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@lexicon',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->put('lexicon3/lexicon', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@updateLexicon',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/feature/listForSelect', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@listFeatureForSelect',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lexicon3/feature/new', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@newFeature',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('lexicon3/feature/{idLexicon}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@features',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('lexicon3/feature/{idLexicon}/{idUDFeature}', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@deleteFeature',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -2048,112 +2280,112 @@ $router->get('sandbox/page2', [
 	'domain' => NULL,
 ]);
 
-$router->post('fe', [
-	'uses' => 'App\Http\Controllers\FE\ResourceController@newFE',
+$router->post('ce', [
+	'uses' => 'App\Http\Controllers\CE\ResourceController@newCE',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/{id}/edit', [
-	'uses' => 'App\Http\Controllers\FE\ResourceController@edit',
+$router->get('ce/{id}/edit', [
+	'uses' => 'App\Http\Controllers\CE\ResourceController@edit',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/{id}/main', [
-	'uses' => 'App\Http\Controllers\FE\ResourceController@main',
+$router->get('ce/{id}/main', [
+	'uses' => 'App\Http\Controllers\CE\ResourceController@main',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->delete('fe/{id}', [
-	'uses' => 'App\Http\Controllers\FE\ResourceController@delete',
+$router->delete('ce/{id}', [
+	'uses' => 'App\Http\Controllers\CE\ResourceController@delete',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/{id}/formEdit', [
-	'uses' => 'App\Http\Controllers\FE\ResourceController@formEdit',
+$router->get('ce/{id}/formEdit', [
+	'uses' => 'App\Http\Controllers\CE\ResourceController@formEdit',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->put('fe/{id}', [
-	'uses' => 'App\Http\Controllers\FE\ResourceController@update',
+$router->put('ce/{id}', [
+	'uses' => 'App\Http\Controllers\CE\ResourceController@update',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/{id}/semanticTypes', [
-	'uses' => 'App\Http\Controllers\FE\SemanticTypeController@semanticTypes',
+$router->get('ce/{id}/semanticTypes', [
+	'uses' => 'App\Http\Controllers\CE\SemanticTypeController@semanticTypes',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/{id}/constraints', [
-	'uses' => 'App\Http\Controllers\FE\ConstraintController@constraints',
+$router->get('ce/{id}/constraints', [
+	'uses' => 'App\Http\Controllers\CE\ConstraintController@constraints',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/{id}/constraints/formNew', [
-	'uses' => 'App\Http\Controllers\FE\ConstraintController@constraintsFormNew',
+$router->get('ce/{id}/constraints/formNew', [
+	'uses' => 'App\Http\Controllers\CE\ConstraintController@constraintsFormNew',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/{id}/constraints/grid', [
-	'uses' => 'App\Http\Controllers\FE\ConstraintController@constraintsGrid',
+$router->get('ce/{id}/constraints/grid', [
+	'uses' => 'App\Http\Controllers\CE\ConstraintController@constraintsGrid',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/{id}/entries', [
-	'uses' => 'App\Http\Controllers\FE\EntryController@entries',
+$router->get('ce/{id}/entries', [
+	'uses' => 'App\Http\Controllers\CE\EntryController@entries',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/relations/{idEntityRelation}/frame/{idFrameBase}', [
-	'uses' => 'App\Http\Controllers\FE\RelationController@relations',
+$router->get('ce/relations/{idEntityRelation}/cxn/{idCxnBase}', [
+	'uses' => 'App\Http\Controllers\CE\RelationController@relations',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/relations/{idEntityRelation}/formNew', [
-	'uses' => 'App\Http\Controllers\FE\RelationController@relationsFEFormNew',
+$router->get('ce/relations/{idEntityRelation}/formNew', [
+	'uses' => 'App\Http\Controllers\CE\RelationController@relationsCEFormNew',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('fe/relations/{idEntityRelation}/grid', [
-	'uses' => 'App\Http\Controllers\FE\RelationController@gridRelationsFE',
+$router->get('ce/relations/{idEntityRelation}/grid', [
+	'uses' => 'App\Http\Controllers\CE\RelationController@gridRelationsCE',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -2736,114 +2968,58 @@ $router->get('layers/layertype/{id}/entries', [
 	'domain' => NULL,
 ]);
 
-$router->get('frame/new', [
-	'uses' => 'App\Http\Controllers\Frame\ResourceController@new',
+$router->get('cxn/new', [
+	'uses' => 'App\Http\Controllers\Construction\ResourceController@new',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('frame', [
-	'uses' => 'App\Http\Controllers\Frame\ResourceController@store',
+$router->post('cxn', [
+	'uses' => 'App\Http\Controllers\Construction\ResourceController@store',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->delete('frame/{idFrame}', [
-	'uses' => 'App\Http\Controllers\Frame\ResourceController@delete',
+$router->delete('cxn/{idcxn}', [
+	'uses' => 'App\Http\Controllers\Construction\ResourceController@delete',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}', [
-	'uses' => 'App\Http\Controllers\Frame\ResourceController@get',
+$router->get('cxn/{id}', [
+	'uses' => 'App\Http\Controllers\Construction\ResourceController@get',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/fes', [
-	'uses' => 'App\Http\Controllers\Frame\FEController@fes',
+$router->get('cxn/{id}/constraints', [
+	'uses' => 'App\Http\Controllers\Construction\ConstraintController@constraints',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/fes/formNew', [
-	'uses' => 'App\Http\Controllers\Frame\FEController@formNewFE',
+$router->get('cxn/{id}/constraints/formNew', [
+	'uses' => 'App\Http\Controllers\Construction\ConstraintController@constraintsFormNew',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/fes/grid', [
-	'uses' => 'App\Http\Controllers\Frame\FEController@gridFE',
+$router->get('cxn/{id}/constraints/grid', [
+	'uses' => 'App\Http\Controllers\Construction\ConstraintController@constraintsGrid',
 	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/semanticTypes', [
-	'uses' => 'App\Http\Controllers\Frame\SemanticTypeController@semanticTypes',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/feRelations', [
-	'uses' => 'App\Http\Controllers\Frame\FEInternalRelationController@feRelations',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/feRelations/formNew/{error?}', [
-	'uses' => 'App\Http\Controllers\Frame\FEInternalRelationController@formNewFERelations',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/feRelations/grid', [
-	'uses' => 'App\Http\Controllers\Frame\FEInternalRelationController@gridFERelations',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/lus', [
-	'uses' => 'App\Http\Controllers\Frame\LUController@lus',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/lus/formNew', [
-	'uses' => 'App\Http\Controllers\Frame\LUController@formNewLU',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/lus/grid', [
-	'uses' => 'App\Http\Controllers\Frame\LUController@gridLU',
-	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -2896,72 +3072,56 @@ $router->get('construction/list/forSelect', [
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/classification', [
-	'uses' => 'App\Http\Controllers\Frame\ClassificationController@classification',
+$router->get('cxn/{id}/entries', [
+	'uses' => 'App\Http\Controllers\Construction\EntryController@entries',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/classification/formFramalType', [
-	'uses' => 'App\Http\Controllers\Frame\ClassificationController@formFramalType',
+$router->get('cxn/{id}/ces', [
+	'uses' => 'App\Http\Controllers\Construction\CEController@ces',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/classification/formFramalDomain', [
-	'uses' => 'App\Http\Controllers\Frame\ClassificationController@formFramalDomain',
+$router->get('cxn/{id}/ces/formNew', [
+	'uses' => 'App\Http\Controllers\Construction\CEController@formNewCE',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('frame/classification/domain', [
-	'uses' => 'App\Http\Controllers\Frame\ClassificationController@framalDomain',
+$router->get('cxn/{id}/ces/grid', [
+	'uses' => 'App\Http\Controllers\Construction\CEController@gridCE',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('frame/classification/type', [
-	'uses' => 'App\Http\Controllers\Frame\ClassificationController@framalType',
+$router->get('cxn/{id}/relations', [
+	'uses' => 'App\Http\Controllers\Construction\RelationController@relations',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/entries', [
-	'uses' => 'App\Http\Controllers\Frame\EntryController@entries',
+$router->get('cxn/{id}/relations/formNew', [
+	'uses' => 'App\Http\Controllers\Construction\RelationController@formNewRelation',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('frame/{id}/relations', [
-	'uses' => 'App\Http\Controllers\Frame\RelationController@relations',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/relations/formNew', [
-	'uses' => 'App\Http\Controllers\Frame\RelationController@formNewRelation',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('frame/{id}/relations/grid', [
-	'uses' => 'App\Http\Controllers\Frame\RelationController@gridRelation',
+$router->get('cxn/{id}/relations/grid', [
+	'uses' => 'App\Http\Controllers\Construction\RelationController@gridRelation',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],

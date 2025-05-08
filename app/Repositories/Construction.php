@@ -79,5 +79,17 @@ class Construction
         return $rows;
     }
 
+    public static function getEvokedFrame(int $idConstruction): object
+    {
+        $cxn = Construction::byId($idConstruction);
+        $relation = Criteria::table("view_relation")
+            ->filter([
+                ["view_relation.idEntity1", "=", $cxn->idEntity],
+                ["view_relation.relationType", "=", "rel_evokes"],
+            ])->first();
+        $frame = $relation ? Frame::byIdEntity($relation->idEntity2) : null;
+        return $frame;
+    }
+
 }
 

@@ -6,18 +6,13 @@ use App\Data\LU\CreateData;
 use App\Data\LU\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\Lemma;
 use App\Repositories\LU;
-use App\Repositories\ViewConstraint;
-use App\Repositories\ViewLU;
 use App\Services\AppService;
-use App\Services\EntryService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 use Collective\Annotations\Routing\Attributes\Attributes\Put;
-use Orkester\Manager;
 
 #[Middleware(name: 'auth')]
 class ResourceController extends Controller
@@ -28,7 +23,8 @@ class ResourceController extends Controller
     {
         try {
             $exists = Criteria::table("lu")
-                ->where("idLemma",$data->idLemma)
+//                ->where("idLemma",$data->idLemma)
+                ->where("idLexicon",$data->idLexicon)
                 ->where("idFrame",$data->idFrame)
                 ->first();
             if (!is_null($exists)) {

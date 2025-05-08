@@ -25,7 +25,14 @@
                 onSelect: (result) => {
                     $('#{{$id}}').val(result.idFrame);
                     {!! $onSelect !!}
-                ;}
+                ;},
+                onResultsClose: function() {
+                    setTimeout(function() {
+                        if ($('#{{$id}}_search').search("get value") == "") {
+                            $('#{{$id}}').val(0);
+                        }
+                    }, 500);
+                }
             })
         ;
     });
