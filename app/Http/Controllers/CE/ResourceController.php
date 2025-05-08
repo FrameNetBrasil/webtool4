@@ -1,21 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\FE;
+namespace App\Http\Controllers\CE;
 
-use App\Data\CreateFEData;
-use App\Data\FE\CreateData;
-use App\Data\FE\UpdateData;
+use App\Data\CE\CreateData;
+use App\Data\CE\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\EntityRelation;
-use App\Repositories\Entry;
-use App\Repositories\Frame;
-use App\Repositories\FrameElement;
-use App\Repositories\ViewConstraint;
-use App\Repositories\ViewFrameElement;
+use App\Repositories\ConstructionElement;
 use App\Services\AppService;
-use App\Services\EntryService;
-use App\Services\RelationService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -25,34 +17,33 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware(name: 'auth')]
 class ResourceController extends Controller
 {
-    #[Post(path: '/fe')]
-    public function newFE(CreateData $data)
+    #[Post(path: '/ce')]
+    public function newCE(CreateData $data)
     {
         debug($data);
         try {
-            Criteria::function('fe_create(?, ?, ?, ?, ?)', [
-                $data->idFrame,
-                $data->nameEn,
-                $data->coreType,
+            Criteria::function('ce_create(?, ?, ?, ?, ?)', [
+                $data->idConstruction,
+                $data->name,
                 $data->idColor,
                 $data->idUser
             ]);
-            $this->trigger('reload-gridFE');
-            return $this->renderNotify("success", "FrameElement created.");
+            $this->trigger('reload-gridCE');
+            return $this->renderNotify("success", "ConstructionElement created.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
 
-    #[Get(path: '/fe/{id}/edit')]
+    #[Get(path: '/ce/{id}/edit')]
     public function edit(string $id)
     {
-        return view("FE.edit", [
-            'frameElement' => FrameElement::byId($id)
+        return view("CE.edit", [
+            'constructionElement' => ConstructionElement::byId($id)
         ]);
     }
 
-    #[Get(path: '/fe/{id}/main')]
+    #[Get(path: '/ce/{id}/main')]
     public function main(string $id)
     {
         $this->data->_layout = 'main';
@@ -60,35 +51,35 @@ class ResourceController extends Controller
     }
 
 
-    #[Delete(path: '/fe/{id}')]
+    #[Delete(path: '/ce/{id}')]
     public function delete(string $id)
     {
         try {
-            Criteria::function('fe_delete(?, ?)', [
+            Criteria::function('ce_delete(?, ?)', [
                 $id,
                 AppService::getCurrentUser()->idUser
             ]);
-            $this->trigger('reload-gridFE');
-            return $this->renderNotify("success", "FrameElement deleted.");
+            $this->trigger('reload-gridCE');
+            return $this->renderNotify("success", "ConstructionElement deleted.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
 
-    #[Get(path: '/fe/{id}/formEdit')]
+    #[Get(path: '/ce/{id}/formEdit')]
     public function formEdit(string $id)
     {
-        return view("FE.formEdit", [
-            'frameElement' => FrameElement::byId($id)
+        return view("CE.formEdit", [
+            'constructionElement' => ConstructionElement::byId($id)
         ]);
     }
 
-    #[Put(path: '/fe/{id}')]
+    #[Put(path: '/ce/{id}')]
     public function update(string $id, UpdateData $data)
     {
-        FrameElement::update($data);
-        $this->trigger('reload-objectFE');
-        return $this->renderNotify("success", "FrameElement updated.");
+        ConstructionElement::update($data);
+        $this->trigger('reload-objectCE');
+        return $this->renderNotify("success", "ConstructionElement updated.");
     }
 
 }

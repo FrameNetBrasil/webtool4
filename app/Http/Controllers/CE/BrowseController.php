@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\FE;
+namespace App\Http\Controllers\CE;
 
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
