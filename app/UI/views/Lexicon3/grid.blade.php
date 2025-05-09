@@ -41,10 +41,10 @@
         }
 //        debug($data);
     } else {
-        $items = Criteria::byFilter("view_lexicon_items", [
-            ["form", "startswith", $search->item],
+        $items = Criteria::byFilter("view_lexicon_form", [
+            ["form", "startswith", $search->wordform],
             ['idLanguage', "=", $idLanguage]
-        ])->select('idLexicon', 'form')
+        ])->select('idLexicon', 'form', 'shortName')
             ->distinct()
             ->limit($limit)
             ->orderBy("form")->all();
@@ -52,9 +52,9 @@
             $data[] = [
                 'id' => 'f'.$item->idLexicon,
                 'idLexicon' => $item->idLexicon,
-                'text' => $item->form,
+                'text' => $item->shortName,
                 'state' => 'closed',
-                'type' => 'item',
+                'type' => 'form',
             ];
         }
     }
