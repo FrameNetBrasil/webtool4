@@ -30,7 +30,7 @@ class ResourceController extends Controller
     #[Post(path: '/video/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
-        $view = view("Video.grid",[
+        $view = view("Video.grid", [
             'search' => $search
         ]);
         return (is_null($fragment) ? $view : $view->fragment('search'));
@@ -39,7 +39,7 @@ class ResourceController extends Controller
     #[Get(path: '/video/{id}/edit')]
     public function edit(string $id)
     {
-        return view("Video.edit",[
+        return view("Video.edit", [
             'video' => Video::byId($id)
         ]);
     }
@@ -47,7 +47,7 @@ class ResourceController extends Controller
     #[Get(path: '/video/{id}/formEdit')]
     public function formEdit(string $id)
     {
-        return view("Video.formEdit",[
+        return view("Video.formEdit", [
             'video' => Video::byId($id)
         ]);
     }
@@ -57,7 +57,7 @@ class ResourceController extends Controller
     {
         try {
             Criteria::table("video")
-                ->where("idVideo",$data->idVideo)
+                ->where("idVideo", $data->idVideo)
                 ->update([
                     "title" => $data->title,
                     "originalFile" => $data->originalFile,
@@ -72,7 +72,7 @@ class ResourceController extends Controller
     #[Get(path: '/video/{id}/formUpload')]
     public function formUpload(string $id)
     {
-        return view("Video.formUpload",[
+        return view("Video.formUpload", [
             'video' => Video::byId($id)
         ]);
     }
@@ -82,10 +82,11 @@ class ResourceController extends Controller
     {
         try {
             Criteria::table("video")
-                ->where("idVideo",$data->idVideo)
+                ->where("idVideo", $data->idVideo)
                 ->update([
-                    "originalFile" => $data->originalFile,
-                    'sha1Name' => $data->sha1Name
+                    "currentURL" => $data->currentURL,
+//                    "originalFile" => $data->originalFile,
+//                    'sha1Name' => $data->sha1Name
                 ]);
             return $this->renderNotify("success", "Video uploaded.");
         } catch (\Exception $e) {
@@ -115,10 +116,10 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
-//            Criteria::function('video_delete(?, ?)', [
-//                $id,
-//                AppService::getCurrentIdUser()
-//            ]);
+            Criteria::function('video_delete(?, ?)', [
+                $id,
+                AppService::getCurrentIdUser()
+            ]);
             return $this->clientRedirect("/video");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -129,7 +130,7 @@ class ResourceController extends Controller
     public function listForSelect(QData $data)
     {
         $name = (strlen($data->q) > 2) ? $data->q : 'none';
-        return ['results' => Criteria::byFilter("video",["title","startswith",$name])->orderby("title")->all()];
+        return ['results' => Criteria::byFilter("video", ["title", "startswith", $name])->orderby("title")->all()];
     }
 
 
