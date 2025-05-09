@@ -79,7 +79,7 @@ class Construction
         return $rows;
     }
 
-    public static function getEvokedFrame(int $idConstruction): object
+    public static function getEvokedFrame(int $idConstruction): object|null
     {
         $cxn = Construction::byId($idConstruction);
         $relation = Criteria::table("view_relation")
