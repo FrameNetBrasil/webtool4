@@ -25,7 +25,6 @@ class ConstraintController extends Controller
     {
         $ce = ConstructionElement::byId($id);
         $evokedFrame = Construction::getEvokedFrame($ce->idConstruction);
-        debug($evokedFrame->idFrame);
         $view = view("Constraint.ceFormNew", [
             'idConstructionElement' => $id,
             'constructionElement' => ConstructionElement::byId($id),
