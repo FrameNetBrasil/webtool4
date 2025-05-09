@@ -43,7 +43,6 @@ class Resource3Controller extends Controller
     #[Post(path: '/lexicon3/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
-        debug('===========================');
         $view = view("Lexicon3.grid", [
             'search' => $search
         ]);
