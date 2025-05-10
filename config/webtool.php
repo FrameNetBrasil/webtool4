@@ -7,7 +7,7 @@ return [
     'defaultIdLanguage' => 1,
     'defaultPassword' => 'default',
     'pageTitle' => env('APP_TITLE'),
-    'mainTitle' => 'FrameNet Brasil Webtool 4.0',
+    'mainTitle' => 'FrameNet Brasil Webtool 4.1',
     'headerTitle' => 'Webtool',
     'footer' => '&copy; 2014-2025 FrameNet Brasil Lab, UFJF.',
     'version' => 'v.4.1',
@@ -59,7 +59,7 @@ return [
         'structure' => ['Structure', '/structure', 'MASTER', [
             'framestructure' => ['Frame', '/frame', 'MASTER', []],
 //            'corpusstructure' => ['Corpus', '/corpus', 'MASTER', []],
-            'lexiconstructure' => ['Lexicon', '/lexicon', 'MASTER', []],
+//            'lexiconstructure' => ['Lexicon', '/lexicon', 'MASTER', []],
             'lexicon3structure' => ['Lexicon-3', '/lexicon3', 'MASTER', []],
             //'sentence' => ['Sentence', '/sentence', 'MASTER', []],
             'lucandidate' => ['LU candidate', '/luCandidate', 'MASTER', []],

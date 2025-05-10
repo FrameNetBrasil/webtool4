@@ -40,7 +40,7 @@ class CreateData extends Data
                 ]
             ]
         ]);
-        $this->currentURL = trim(str_replace($url . '/', '',(string)$response->getBody()));
+        $this->currentURL = trim(str_replace(str_replace('https','http',$url) . '/', '',(string)$response->getBody()));
     }
 
 }

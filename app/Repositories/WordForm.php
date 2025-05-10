@@ -104,12 +104,21 @@ class WordForm
             return false;
         }
         $idLanguage = AppService::getCurrentIdLanguage();
-        $wf1 = md5(mb_strtolower($wordform));
-        debug(strtolower($wordform),md5(strtolower(utf8_encode($wordform))),mb_strtolower($wordform),$wf1);
+//        $wf1 = md5(mb_strtolower($wordform));
+//        debug(strtolower($wordform),md5(strtolower(utf8_encode($wordform))),mb_strtolower($wordform),$wf1);
+//        $r = DB::select("
+//                    select l.form,count(l.idLU) as n
+//                    from view_lexicon l
+//                    where (l.md5 = '{$wf1}')
+//                    and (idLanguageLM = {$idLanguage})
+//                    group by l.form
+//                    having count(l.idLU) > 0
+//                ");
+        $wf1 = mb_strtolower($wordform);
         $r = DB::select("
                     select l.form,count(l.idLU) as n
                     from view_lexicon l
-                    where (l.md5 = '{$wf1}')
+                    where (l.form = '{$wf1}' collate 'utf8mb4_bin' )
                     and (idLanguageLM = {$idLanguage})
                     group by l.form
                     having count(l.idLU) > 0
@@ -148,14 +157,23 @@ class WordForm
         }
         $idLanguage = AppService::getCurrentIdLanguage();
         $wf1 = mb_strtolower(str_replace("'", "\'", $wordform));
-        debug($wf1,md5($wf1));
+        debug($wf1, md5($wf1));
+//        $criteria = Criteria::table("view_lexicon as l")
+//            ->select("idLU", "lu", "senseDescription", "frame.name as frameName")
+//            ->join("view_frame as frame", "l.idFrame", "=", "frame.idFrame")
+//            ->where("l.md5", md5($wf1))
+//            ->where("l.idLanguageLM", "=", $idLanguageBase ?? $idLanguage)
+//            ->where("l.lexemeOrder", "=", 1)
+//            ->where("frame.idLanguage", "=", $idLanguage)
+//            ->orderBy("frame.name")
+//            ->orderBy("l.lu");
         $criteria = Criteria::table("view_lexicon as l")
-            ->select("idLU","lu","senseDescription","frame.name as frameName")
-            ->join("view_frame as frame", "l.idFrame","=","frame.idFrame")
-            ->where("l.md5",md5($wf1))
-            ->where("l.idLanguageLM","=",$idLanguageBase ?? $idLanguage)
-            ->where("l.lexemeOrder","=",1)
-            ->where("frame.idLanguage","=",$idLanguage)
+            ->select("idLU", "lu", "senseDescription", "frame.name as frameName")
+            ->join("view_frame as frame", "l.idFrame", "=", "frame.idFrame")
+            ->whereRaw("l.form = '{$wf1}'  collate 'utf8mb4_bin'")
+            ->where("l.idLanguageLM", "=", $idLanguageBase ?? $idLanguage)
+            ->where("l.position", "=", 1)
+            ->where("frame.idLanguage", "=", $idLanguage)
             ->orderBy("frame.name")
             ->orderBy("l.lu");
         return $criteria->all();

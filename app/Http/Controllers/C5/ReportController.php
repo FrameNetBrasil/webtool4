@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\C5;
 
 use App\Data\C5\SearchData;
+use App\Data\ComboBox\QData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Concept;
 use App\Services\ReportC5Service;
@@ -88,64 +90,12 @@ class ReportController extends Controller
         }
     }
 
-
-//    #[Get(path: '/report/c5/{idConcept}/{lang?}')]
-//    public function report(int|string $idConcept = '', string $lang = '')
-//    {
-//        $search = session('searchConcept') ?? SearchData::from();
-//        $data = ReportC5Service::report($idConcept, $lang);
-//        $data['search'] = $search;
-//        $data['idConcept'] = $idConcept;
-//        $data['data'] = $data;
-//        return view("C5.Report.report", $data);
-//    }
-
-
-
-
-//    private function listForTree(SearchData $search)
-//    {
-//        $c5Icon = view('components.icon.concept')->render();
-//        $tree = [];
-//        if ($search->concept != '') {
-//            $st = Criteria::table("view_concept")
-//                ->select("idConcept", "idEntity", "name")
-//                ->where("name", "startswith", $search->concept)
-//                ->where('idLanguage', '=', AppService::getCurrentIdLanguage())
-//                ->orderBy("name")->all();
-//            foreach ($st as $row) {
-//                $node = [];
-//                $node['id'] = $row->idEntity;
-//                $node['idConcept'] = $row->idConcept;
-//                $node['type'] = 'concept';
-//                $node['text'] = $c5Icon . $row->name;
-//                $node['state'] = 'closed';
-//                $node['children'] = $this->getChildren($row->idEntity);
-//                $tree[] = $node;
-//            }
-//        } else {
-//
-//        }
-//        return $tree;
-//    }
-//
-//    private function getChildren(int $idEntity): array
-//    {
-//        $c5Icon = view('components.icon.concept')->render();
-//        $children = [];
-//        $st = Concept::listChildren($idEntity);
-//        foreach ($st as $row) {
-//            $n = [];
-//            $n['id'] = $row->idEntity;
-//            $n['idConcept'] = $row->idConcept;
-//            $n['type'] = 'concept';
-//            $n['text'] = $c5Icon . $row->name;
-//            $n['state'] = 'closed';
-//            $n['children'] = $this->getChildren($row->idEntity);;
-//            $children[] = $n;
-//        }
-//        return $children;
-//    }
+    #[Get(path: '/concept/list/forSelect')]
+    public function listForSelect(QData $data)
+    {
+        $name = (strlen($data->q) > 2) ? $data->q : 'none';
+        return ['results' => Criteria::byFilterLanguage("view_concept", ["name", "startswith", $name])->orderby("name")->all()];
+    }
 
 
 }

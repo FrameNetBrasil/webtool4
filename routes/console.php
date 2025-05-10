@@ -16,32 +16,12 @@ Artisan::command('schema', function () {
  * Multimodal
  */
 
-Artisan::command('webtool40_multimodal_video_process {videoPath}', function ($videoPath) {
-    $service = new \App\Offline\Multimodal\videoPreprocess($videoPath);
-    $service->process();
-})->purpose('');
-
-Artisan::command('webtool40_multimodal_audio_process {videoPath}', function ($videoPath) {
-    $service = new \App\Offline\Multimodal\audioPreprocess($videoPath);
-    $service->process();
-})->purpose('');
-
-//Artisan::command('webtool40_multimodal_video_process_doc {idDocument}', function ($idDocument) {
-//    $service = new \App\Offline\Multimodal\videoPreprocess_Kenneth($idDocument);
-//    $service->process();
-//})->purpose('');
-//
-//Artisan::command('webtool40_multimodal_audio_process_doc {idDocument}', function ($idDocument) {
-//    $service = new \App\Offline\Multimodal\audioPreprocess_The_crush($idDocument);
-//    $service->process();
-//})->purpose('');
-
 Artisan::command('webtool40_multimodal_video_process_doc {idDocument}', function ($idDocument) {
-    $service = new \App\Offline\Multimodal\videoPreprocess_Lais($idDocument);
+    $service = new \App\Offline\Multimodal\videoPreprocess_Livia($idDocument);
     $service->process();
 })->purpose('');
 
 Artisan::command('webtool40_multimodal_audio_process_doc {idDocument}', function ($idDocument) {
-    $service = new \App\Offline\Multimodal\audioPreprocess_document($idDocument);
+    $service = new \App\Offline\Multimodal\audioPreprocess_Livia($idDocument);
     $service->process();
 })->purpose('');
