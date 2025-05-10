@@ -13,6 +13,7 @@ class UpdateData extends Data
         public ?string $senseDescription = '',
         public ?string $discussion = '',
         public ?int $idLemma = null,
+        public ?int $idLexicon = null,
         public ?int $idFrame = null,
         public ?int $idDocumentSentence = null,
         public ?int $idDocument = null,

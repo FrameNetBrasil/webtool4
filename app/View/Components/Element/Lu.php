@@ -16,7 +16,6 @@ class Lu extends Component
         public ?string $frame = null,
     )
     {
-        debug($name);
     }
 
     /**

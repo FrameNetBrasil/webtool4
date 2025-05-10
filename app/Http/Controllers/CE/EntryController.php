@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\CE;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\ConstructionElement;
 use App\Repositories\Entry;
-use App\Repositories\FrameElement;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -15,9 +15,9 @@ class EntryController extends Controller
     #[Get(path: '/ce/{id}/entries')]
     public function entries(string $id)
     {
-        $frame = FrameElement::byId($id);
+        $ce = ConstructionElement::byId($id);
         return view("Entry.edit", [
-            'entries' => Entry::listByIdEntity($frame->idEntity),
+            'entries' => Entry::listByIdEntity($ce->idEntity),
             'languages' => AppService::availableLanguages()
         ]);
     }
