@@ -25,6 +25,12 @@ class CreateData extends Data
         $this->idUser = AppService::getCurrentIdUser();
         $this->originalFile = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
+        if ($this->name == '') {
+            $this->name = $this->originalFile;
+        }
+        if (is_null($this->idLanguage)) {
+            $this->idLanguage = AppService::getCurrentIdLanguage();
+        }
 
         $client = new Client([
             'timeout' => 300.0,
