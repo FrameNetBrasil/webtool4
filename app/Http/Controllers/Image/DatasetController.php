@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Image;
 
-use App\Data\Image\DocumentData;
+use App\Data\Image\DatasetData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\Document;
 use App\Repositories\Image;
-use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
