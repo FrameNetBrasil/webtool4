@@ -1528,6 +1528,86 @@ $router->get('corpus/{id}/entries', [
 	'domain' => NULL,
 ]);
 
+$router->get('dashboard', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@main',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('dashboard/frame2', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@frame2',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('dashboard/frame2PPM', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@frame2PPM',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('dashboard/frame2NLG', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@frame2NLG',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('dashboard/frame2Gesture', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@frame2Gesture',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('dashboard/audition', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@audition',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('dashboard/multi30k', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@multi30k',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('changeLanguage/{language}', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@changeLanguage',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('dashboard/mcgovern', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@mcgovern',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('dashboard/gt', [
+	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@gt',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('sentence', [
 	'uses' => 'App\Http\Controllers\Sentence\ResourceController@browse',
 	'as' => NULL,
