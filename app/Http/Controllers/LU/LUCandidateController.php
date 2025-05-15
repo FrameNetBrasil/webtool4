@@ -7,7 +7,6 @@ use App\Data\LUCandidate\SearchData;
 use App\Data\LUCandidate\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\Lemma;
 use App\Repositories\Lexicon;
 use App\Repositories\LUCandidate;
 use App\Repositories\User;
@@ -74,7 +73,7 @@ class LUCandidateController extends Controller
                 throw new \Exception("Lemma is required");
             } else {
                 $lemma = Lexicon::lemmabyId($data->idLexicon);
-                $data->name = strtolower($lemma->name . '.' . $lemma->udPOS);
+                $data->name = strtolower($lemma->shortName);
                 Criteria::table("lucandidate")
                     ->insert($data->toArray());
                 $this->trigger('reload-gridLUCandidate');

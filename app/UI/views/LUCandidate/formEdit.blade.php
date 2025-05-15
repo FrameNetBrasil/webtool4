@@ -1,5 +1,6 @@
 @php
     $id = uniqid("formEditLUCandidate");
+    debug($luCandidate);
 @endphp
 <x-form
     id="{{$id}}"
@@ -8,14 +9,14 @@
         <x-hidden-field id="idLUCandidate" :value="$luCandidate->idLUCandidate"></x-hidden-field>
         @if($isManager)
         <div class="field">
-            <x-combobox.lemma
-                id="idLemma"
+            <x-combobox.lexicon-lemma
+                id="idLexicon"
                 label="Lemma [min: 3 chars]"
-                :value="$luCandidate->idLemma"
-            ></x-combobox.lemma>
+                :value="$luCandidate->idLexicon"
+            ></x-combobox.lexicon-lemma>
         </div>
         @else
-           <x-hidden-field id="idLemma" :value="$luCandidate->idLemma"></x-hidden-field>
+           <x-hidden-field id="idLexicon" :value="$luCandidate->idLexicon"></x-hidden-field>
         @endif
         <div class="field">
             <x-multiline-field
