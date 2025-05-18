@@ -25,7 +25,14 @@ class ReportController extends Controller
     #[Get(path: '/report/c5/data')]
     public function data(SearchData $search)
     {
-        $c5Icon = view('components.icon.concept')->render();
+        $icons = [
+            'inf' => view('components.icon.concept_inf')->render(),
+            'sem' => view('components.icon.concept_sem')->render(),
+            'str' => view('components.icon.concept_str')->render(),
+            'cxn' => view('components.icon.concept_cxn')->render(),
+            'def' => view('components.icon.concept_def')->render(),
+            'frame' => view('components.icon.frame')->render(),
+        ];
         $tree = [];
         if ($search->concept != '') {
             $concepts = Concept::listTree($search->concept);
@@ -33,11 +40,13 @@ class ReportController extends Controller
             if ($search->id == '') {
                 $types = Concept::listRoots();
                 foreach ($types as $type) {
+                    debug($type);
+                    $icon = $icons[$type->type];
                     $n = [];
                     $n['id'] = 't' . $type->idTypeInstance;
                     $n['idTypeInstance'] = $type->idTypeInstance;
                     $n['type'] = 'type';
-                    $n['text'] = $c5Icon . $type->name;
+                    $n['text'] = $icon . $type->name;
                     $n['state'] = 'closed';
                     $n['children'] = [];
                     $tree[] = $n;
@@ -52,11 +61,12 @@ class ReportController extends Controller
             }
         }
         foreach ($concepts as $concept) {
+            $icon = $icons[$concept->type];
             $n = [];
             $n['id'] = 'c' . $concept->idEntity;
             $n['idConcept'] = $concept->idConcept;
             $n['type'] = 'concept';
-            $n['text'] = $c5Icon . $concept->name;
+            $n['text'] = $icon . $concept->name;
             $n['state'] = ($concept->n > 0) ? 'closed' : 'open';
             $n['children'] = [];
             $tree[] = $n;
