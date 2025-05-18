@@ -29,6 +29,7 @@ class ReportC5Service
                 ->first();
         }
         $report['concept'] = $concept;
+        $report['constituents'] = self::getConstituents($concept);
         $report['relations'] = self::getRelations($concept);
         return $report;
     }
@@ -38,13 +39,34 @@ class ReportC5Service
         $relations = [];
         $result = RelationService::listRelationsConcept($concept->idConcept);
         foreach ($result as $row) {
-            $relationName = $row->relationType . '|' . $row->name . '|' . $row->color;
-            $relations[$relationName][$row->idConceptRelated] = [
-                'idEntityRelation' => $row->idEntityRelation,
-                'idConcept' => $row->idConceptRelated,
-                'name' => $row->related,
-                'color' => $row->color
-            ];
+            if ($row->relationType != 'rel_constituentof') {
+                $relationName = $row->relationType . '|' . $row->name . '|' . $row->color;
+                $relations[$relationName][$row->idConceptRelated] = [
+                    'idEntityRelation' => $row->idEntityRelation,
+                    'idConcept' => $row->idConceptRelated,
+                    'name' => $row->related,
+                    'color' => $row->color
+                ];
+            }
+        }
+        ksort($relations);
+        return $relations;
+    }
+
+    public static function getConstituents($concept): array
+    {
+        $relations = [];
+        $result = RelationService::listRelationsConcept($concept->idConcept);
+        foreach ($result as $row) {
+            if ($row->relationType == 'rel_constituentof') {
+                $relationName = $row->relationType . '|' . $row->name . '|' . $row->color;
+                $relations[$relationName][$row->idConceptRelated] = [
+                    'idEntityRelation' => $row->idEntityRelation,
+                    'idConcept' => $row->idConceptRelated,
+                    'name' => $row->related,
+                    'color' => $row->color
+                ];
+            }
         }
         ksort($relations);
         return $relations;
