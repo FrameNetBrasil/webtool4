@@ -27,7 +27,7 @@ return [
             'reportlu' => ['LU', '/report/lu', '', []],
             'networkstructure' => ['Network', '/network', 'MASTER', []],
             'reportst' => ['SemanticType', '/report/semanticType', '', []],
-            'reportc5' => ['C5', '/report/c5', '', []],
+            'reportc5' => ['MoCCA', '/report/c5', '', []],
             'reporttqr' => ['TQR', '/report/qualia', '', []],
             'cxnreport' => ['Constructions', '/report/cxn', '', []],
             'dashboard' => ['Dashboard', '/dashboard', '', []],
