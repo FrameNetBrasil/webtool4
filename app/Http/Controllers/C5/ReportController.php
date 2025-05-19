@@ -22,6 +22,7 @@ class ReportController extends Controller
             'search' => $search,
         ]);
     }
+
     #[Get(path: '/report/c5/data')]
     public function data(SearchData $search)
     {
@@ -34,10 +35,10 @@ class ReportController extends Controller
             'frame' => view('components.icon.frame')->render(),
         ];
         $tree = [];
-        if ($search->concept != '') {
-            $concepts = Concept::listTree($search->concept);
-        } else {
-            if ($search->id == '') {
+        if ($search->id == '') {
+            if (($search->concept != '')) {
+                $concepts = Concept::listTree($search->concept);
+            } else {
                 $types = Concept::listRoots();
                 foreach ($types as $type) {
                     debug($type);
@@ -52,12 +53,12 @@ class ReportController extends Controller
                     $tree[] = $n;
                 }
                 return $tree;
+            }
+        } else {
+            if ($search->idTypeInstance != 0) {
+                $concepts = Concept::listTypeChildren($search->idTypeInstance);
             } else {
-                if ($search->idTypeInstance != 0) {
-                    $concepts = Concept::listTypeChildren($search->idTypeInstance);
-                } else {
-                    $concepts = Concept::listChildren($search->idConcept);
-                }
+                $concepts = Concept::listChildren($search->idConcept);
             }
         }
         foreach ($concepts as $concept) {
@@ -75,7 +76,7 @@ class ReportController extends Controller
     }
 
     #[Get(path: '/report/c5/content/{idConcept}/{lang?}')]
-    public function reportContent(int|string $idConcept = '',string $lang = '')
+    public function reportContent(int|string $idConcept = '', string $lang = '')
     {
         $search = session('searchConcept') ?? SearchData::from();
         $data = ReportC5Service::report($idConcept, $lang);
@@ -83,6 +84,7 @@ class ReportController extends Controller
         $data['idConcept'] = $idConcept;
         return view("C5.Report.report", $data);
     }
+
     #[Get(path: '/report/c5/{idConcept?}/{lang?}')]
     public function main(int|string $idConcept = '', string $lang = '')
     {
@@ -93,6 +95,8 @@ class ReportController extends Controller
                 'idConcept' => null
             ]);
         } else {
+            $concept = Concept::byId($idConcept);
+            $search->concept = $concept->name;
             $data = ReportC5Service::report($idConcept, $lang);
             $data['search'] = $search;
             $data['idConcept'] = $idConcept;
