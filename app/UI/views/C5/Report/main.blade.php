@@ -1,20 +1,23 @@
 <x-layout.report>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','C5 Report']]"></x-breadcrumb>
+        <x-breadcrumb :sections="[['/','Home'],['','MoCCA']]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:search>
         <x-form-search
             id="conceptSearch"
-            hx-post="/report/c5/search"
+            hx-post="/report/c5/grid"
             hx-target="#gridArea"
         >
-            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-            <x-search-field
-                id="concept"
-                value="{{$search->concept}}"
-                placeholder="Search Concept"
-                class="w-full"
-            ></x-search-field>
+            <div class="fields">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                <x-search-field
+                    id="concept"
+                    value="{{$search->concept}}"
+                    placeholder="Search Concept"
+                    class="w-full"
+                ></x-search-field>
+                <x-button-reload></x-button-reload>
+            </div>
         </x-form-search>
     </x-slot:search>
     <x-slot:grid>

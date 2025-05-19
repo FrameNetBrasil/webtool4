@@ -492,6 +492,7 @@ class RelationService extends Controller
                 'color' => $relation->color,
                 'idConceptRelated' => $relation->c2IdConcept,
                 'related' => $relation->c2Name,
+                'type' => $relation->c2Type,
                 'direction' => 'direct'
             ];
         }
@@ -507,6 +508,7 @@ class RelationService extends Controller
                 'color' => $relation->color,
                 'idConceptRelated' => $relation->c1IdConcept,
                 'related' => $relation->c1Name,
+                'type' => $relation->c1Type,
                 'direction' => 'inverse'
             ];
         }

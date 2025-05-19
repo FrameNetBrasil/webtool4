@@ -6,13 +6,13 @@
     hx-get="/report/c5/grid"
 >
     <div class="relative h-full overflow-auto">
-        <div id="c5TreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
+        <div class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
             @fragment('search')
-                <ul id="c5Tree">
+                <ul class="c5Tree">
                 </ul>
                 <script>
                     $(function() {
-                        $("#c5Tree").treegrid({
+                        $(".c5Tree").treegrid({
                             {{--data: {{Js::from($data)}},--}}
                             url:"/report/c5/data",
                             queryParams: {
