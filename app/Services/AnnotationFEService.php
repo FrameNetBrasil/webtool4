@@ -390,6 +390,7 @@ class AnnotationFEService
     public static function annotateFE(AnnotationData $data): array
     {
         DB::transaction(function () use ($data) {
+            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $data->idAnnotationSet);
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
                 ->where("ut.idUser", -2)
@@ -443,6 +444,7 @@ class AnnotationFEService
                     'multi' => 0,
                     'idLayer' => $idLayer,
                     'idInstantiationType' => $it->idInstantiationType,
+                    'idSentence' => $annotationSet->idSentence,
                 ]);
                 $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
                 $ts = Criteria::table("textspan")
@@ -462,6 +464,7 @@ class AnnotationFEService
                     'multi' => 0,
                     'idLayer' => $idLayer,
                     'idInstantiationType' => (int)$data->range->id,
+                    'idSentence' => $annotationSet->idSentence,
                 ]);
                 $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
                 $ts = Criteria::table("textspan")
