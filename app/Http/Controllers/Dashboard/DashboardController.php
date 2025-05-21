@@ -98,7 +98,7 @@ class DashboardController extends Controller
     {
         App::setLocale(AppService::getCurrentLanguageCode());
         //if (session("dashboard_must_calculate")) {
-        //    UpdateService::multi30kAll();
+            UpdateService::multi30kAll();
         //}
         $multi30k = DashboardService::multi30k();
         $multi30kEntity = DashboardService::multi30kEntity();
