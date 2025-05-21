@@ -25,6 +25,12 @@ class CreateData extends Data
         $this->idUser = AppService::getCurrentIdUser();
         $this->originalFile = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
+        if ($this->name == '') {
+            $this->name = $this->originalFile;
+        }
+        if (is_null($this->idLanguage)) {
+            $this->idLanguage = AppService::getCurrentIdLanguage();
+        }
 
         $client = new Client([
             'timeout' => 300.0,
@@ -39,7 +45,8 @@ class CreateData extends Data
                 ]
             ]
         ]);
-        $this->currentURL = trim(str_replace($url . '/', '',(string)$response->getBody()));
+//        $this->currentURL = trim(str_replace($url . '/', '',(string)$response->getBody()));
+        $this->currentURL = trim(str_replace(str_replace('https','http',$url) . '/', '',(string)$response->getBody()));
 
         $dimensions = $file->dimensions();
         $this->width = $dimensions[0] ?? 0;

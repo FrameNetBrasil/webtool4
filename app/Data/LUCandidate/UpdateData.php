@@ -3,6 +3,7 @@
 namespace App\Data\LUCandidate;
 
 use App\Repositories\Lemma;
+use App\Repositories\Lexicon;
 use Spatie\LaravelData\Data;
 
 class UpdateData extends Data
@@ -31,8 +32,8 @@ class UpdateData extends Data
         if (is_null($this->discussion)) {
             $this->discussion = '';
         }
-        $lemma = Lemma::byId($this->idLemma);
-        $this->name = $lemma->name;
+        $lemma = Lexicon::lemmabyId($this->idLexicon);
+        $this->name = $lemma->shortName;
     }
 
 
