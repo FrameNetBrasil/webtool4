@@ -1584,14 +1584,6 @@ $router->get('dashboard/multi30k', [
 	'domain' => NULL,
 ]);
 
-$router->get('changeLanguage/{language}', [
-	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@changeLanguage',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('dashboard/mcgovern', [
 	'uses' => 'App\Http\Controllers\Dashboard\DashboardController@mcgovern',
 	'as' => NULL,
