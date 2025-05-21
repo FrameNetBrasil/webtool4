@@ -24,13 +24,14 @@ class DashboardController extends Controller
         App::setLocale($lang);
         session(['currentController' => "Reinventa"]);
         session(["dashboard_must_calculate" => DashboardService::mustCalculate()]);
-        //session(["dashboard_must_calculate" => true]);
+//        session(["dashboard_must_calculate" => false]);
         return view('Dashboard.main', []);
     }
 
     #[Get(path: '/dashboard/frame2')]
     public function frame2()
     {
+        App::setLocale(AppService::getCurrentLanguageCode());
         if (session("dashboard_must_calculate")) {
             UpdateService::frame2();
         }
@@ -43,6 +44,7 @@ class DashboardController extends Controller
     #[Get(path: '/dashboard/frame2PPM')]
     public function frame2PPM()
     {
+        App::setLocale(AppService::getCurrentLanguageCode());
         if (session("dashboard_must_calculate")) {
             UpdateService::frame2PPM();
         }
@@ -55,6 +57,7 @@ class DashboardController extends Controller
     #[Get(path: '/dashboard/frame2NLG')]
     public function frame2NLG()
     {
+        App::setLocale(AppService::getCurrentLanguageCode());
         if (session("dashboard_must_calculate")) {
             UpdateService::frame2NLG();
         }
@@ -67,6 +70,7 @@ class DashboardController extends Controller
     #[Get(path: '/dashboard/frame2Gesture')]
     public function frame2Gesture()
     {
+        App::setLocale(AppService::getCurrentLanguageCode());
         if (session("dashboard_must_calculate")) {
             UpdateService::frame2Gesture();
         }
@@ -79,6 +83,7 @@ class DashboardController extends Controller
     #[Get(path: '/dashboard/audition')]
     public function audition()
     {
+        App::setLocale(AppService::getCurrentLanguageCode());
         if (session("dashboard_must_calculate")) {
             UpdateService::audition();
         }
@@ -91,9 +96,10 @@ class DashboardController extends Controller
     #[Get(path: '/dashboard/multi30k')]
     public function multi30k()
     {
-        if (session("dashboard_must_calculate")) {
-            //UpdateService::multi30kAll();
-        }
+        App::setLocale(AppService::getCurrentLanguageCode());
+        //if (session("dashboard_must_calculate")) {
+        //    UpdateService::multi30kAll();
+        //}
         $multi30k = DashboardService::multi30k();
         $multi30kEntity = DashboardService::multi30kEntity();
         $multi30kEvent = DashboardService::multi30kEvent();
@@ -107,14 +113,14 @@ class DashboardController extends Controller
     }
 
 
-    #[Get(path: '/changeLanguage/{language}')]
-    public function changeLanguage(Request $request, string $language)
-    {
-        $currentURL = $request->header("Hx-Current-Url");
-        $data = Criteria::byFilter("language", ['language', '=', $language])->first();
-        AppService::setCurrentLanguage($data->idLanguage);
-        return $this->redirect($currentURL);
-    }
+//    #[Get(path: '/changeLanguage/{language}')]
+//    public function changeLanguage(Request $request, string $language)
+//    {
+//        $currentURL = $request->header("Hx-Current-Url");
+//        $data = Criteria::byFilter("language", ['language', '=', $language])->first();
+//        AppService::setCurrentLanguage($data->idLanguage);
+//        return $this->redirect($currentURL);
+//    }
 
     #[Get(path: '/dashboard/mcgovern')]
     public function mcgovern()

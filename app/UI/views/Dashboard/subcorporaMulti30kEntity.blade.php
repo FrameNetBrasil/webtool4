@@ -1,7 +1,7 @@
 <div class="dashboard-subtitle">{{__('dashboard.imageAnnotation')}}</div>
 <div class="flex gap-2">
     <div class="dashboard-card  dashboard-card1">
-        <div class="header">{{__('dashboard.annotatedImages')}}</div>
+        <div class="header">{{__('dashboard.annotatedObjects')}}</div>
         <div class="body">
             {{$multi30kEntity['images']}}
         </div>
