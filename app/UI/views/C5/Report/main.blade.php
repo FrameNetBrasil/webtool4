@@ -8,14 +8,16 @@
             hx-post="/report/c5/grid"
             hx-target="#gridArea"
         >
-            <div class="fields">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+            <div class="field mr-0">
                 <x-search-field
                     id="concept"
                     value="{{$search->concept}}"
                     placeholder="Search Concept"
                     class="w-full"
                 ></x-search-field>
+            </div>
+            <div class="field">
                 <x-button-reload></x-button-reload>
             </div>
         </x-form-search>
