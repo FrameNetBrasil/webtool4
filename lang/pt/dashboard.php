@@ -14,6 +14,7 @@ return [
     'eno' => "ENO: Inglês Original",
     'annotatedSentences' => 'Sentenças anotadas',
     'annotatedImages' => 'Imagens anotadas',
+    'annotatedObjects' => 'Objetos anotados',
     'annotatedBBox' => 'Bounding Boxes anotadas',
     'frames' => 'Frames distintos',
     'fes' => 'Elementos de Frame distintos',
