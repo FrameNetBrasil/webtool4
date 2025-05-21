@@ -643,22 +643,22 @@ class UpdateService
             'crp_corpus-prime-sem-sentença',
             'crp_corpus-prime-com-sentença',
         ];
-        Criteria::$database = 'webtool37';
-        $count = Criteria::table("staticannotationmm as sa")
-            ->join("frameelement as fe", "sa.idFrameElement", "=", "fe.idFrameElement")
-            ->join("staticobjectsentencemm as sos", "sa.idStaticObjectSentenceMM", "=", "sos.idStaticObjectSentenceMM")
-            ->join("staticsentencemm as ss", "sos.idStaticSentenceMM", "=", "ss.idStaticSentenceMM")
-            ->join("document_sentence as ds", "ss.idDocument", "=", "ds.idDocument")
-            ->join("document as d", "ds.idDocument", "=", "d.idDocument")
+
+        $count = Criteria::table("view_staticobject_textspan as ts")
+            ->join("view_staticobject_boundingbox as bb", "ts.idStaticObject", "=", "bb.idStaticObject")
+            ->join("staticobject as sta", "ts.idStaticObject", "=", "sta.idStaticObject")
+            ->join("annotation as a", "sta.idAnnotationObject", "=", "a.idAnnotationObject")
+            ->join("frameelement as fe", "a.idEntity", "=", "fe.idEntity")
+            ->join("document as d", "ts.idDocument", "=", "d.idDocument")
             ->join("corpus as c", "d.idCorpus", "=", "c.idCorpus")
             ->where('c.entry', 'IN', $corpora)
-            ->whereNotNull('sa.idFrameElement')
-            ->selectRaw("count(distinct ss.idStaticSentenceMM) as n1")
-            ->selectRaw("count(distinct sos.idStaticObjectSentenceMM) as n2")
+            ->selectRaw("count(distinct ts.idStaticObject) as n1")
+            ->selectRaw("count(distinct bb.idBoundingBox) as n2")
             ->selectRaw("count(distinct fe.idFrame) as n3")
             ->selectRaw("count(distinct fe.idFrameElement) as n4")
             ->all();
-        $result['images'] = $count[0]->n1;
+
+        $result['objects'] = $count[0]->n1;
         $result['bbox'] = $count[0]->n2;
         $result['framesImage'] = $count[0]->n3;
         $result['fesImage'] = $count[0]->n4;
@@ -667,7 +667,6 @@ class UpdateService
         // sentences
         Criteria::$database = 'webtool';
         $count = Criteria::table("view_document_sentence as ds")
-            ->join("lome_result as lr", "ds.idDocumentSentence", "=", "lr.idDocumentSentence")
             ->selectRaw("ds.idDocument,count(distinct ds.idSentence) as n")
             ->groupBy("ds.idDocument")
             ->chunkResult("idDocument","n");
@@ -709,22 +708,20 @@ where ds.idDocument = 663";
             'crp_oficina_sem_sentenca_3',
             'crp_oficina_sem_sentenca_4',
         ];
-        Criteria::$database = 'webtool37';
-        $count = Criteria::table("staticannotationmm as sa")
-            ->join("frameelement as fe", "sa.idFrameElement", "=", "fe.idFrameElement")
-            ->join("staticobjectsentencemm as sos", "sa.idStaticObjectSentenceMM", "=", "sos.idStaticObjectSentenceMM")
-            ->join("staticsentencemm as ss", "sos.idStaticSentenceMM", "=", "ss.idStaticSentenceMM")
-            ->join("document_sentence as ds", "ss.idDocument", "=", "ds.idDocument")
-            ->join("document as d", "ds.idDocument", "=", "d.idDocument")
+        $count = Criteria::table("view_staticobject_textspan as ts")
+            ->join("view_staticobject_boundingbox as bb", "ts.idStaticObject", "=", "bb.idStaticObject")
+            ->join("staticobject as sta", "ts.idStaticObject", "=", "sta.idStaticObject")
+            ->join("annotation as a", "sta.idAnnotationObject", "=", "a.idAnnotationObject")
+            ->join("frameelement as fe", "a.idEntity", "=", "fe.idEntity")
+            ->join("document as d", "ts.idDocument", "=", "d.idDocument")
             ->join("corpus as c", "d.idCorpus", "=", "c.idCorpus")
             ->where('c.entry', 'IN', $corpora)
-            ->whereNotNull('sa.idFrameElement')
-            ->selectRaw("count(distinct ss.idStaticSentenceMM) as n1")
-            ->selectRaw("count(distinct sos.idStaticObjectSentenceMM) as n2")
+            ->selectRaw("count(distinct ts.idStaticObject) as n1")
+            ->selectRaw("count(distinct bb.idBoundingBox) as n2")
             ->selectRaw("count(distinct fe.idFrame) as n3")
             ->selectRaw("count(distinct fe.idFrameElement) as n4")
             ->all();
-        $result['images'] = $count[0]->n1;
+        $result['objects'] = $count[0]->n1;
         $result['bbox'] = $count[0]->n2;
         $result['framesImage'] = $count[0]->n3;
         $result['fesImage'] = $count[0]->n4;
@@ -740,22 +737,20 @@ where ds.idDocument = 663";
             'crp_corpus-prime-sem-sentença',
             'crp_corpus-prime-com-sentença',
         ];
-        Criteria::$database = 'webtool37';
-        $count = Criteria::table("staticannotationmm as sa")
-            ->join("frameelement as fe", "sa.idFrameElement", "=", "fe.idFrameElement")
-            ->join("staticobjectsentencemm as sos", "sa.idStaticObjectSentenceMM", "=", "sos.idStaticObjectSentenceMM")
-            ->join("staticsentencemm as ss", "sos.idStaticSentenceMM", "=", "ss.idStaticSentenceMM")
-            ->join("document_sentence as ds", "ss.idDocument", "=", "ds.idDocument")
-            ->join("document as d", "ds.idDocument", "=", "d.idDocument")
+        $count = Criteria::table("view_staticobject_textspan as ts")
+            ->join("view_staticobject_boundingbox as bb", "ts.idStaticObject", "=", "bb.idStaticObject")
+            ->join("staticobject as sta", "ts.idStaticObject", "=", "sta.idStaticObject")
+            ->join("annotation as a", "sta.idAnnotationObject", "=", "a.idAnnotationObject")
+            ->join("frameelement as fe", "a.idEntity", "=", "fe.idEntity")
+            ->join("document as d", "ts.idDocument", "=", "d.idDocument")
             ->join("corpus as c", "d.idCorpus", "=", "c.idCorpus")
             ->where('c.entry', 'IN', $corpora)
-            ->whereNotNull('sa.idFrameElement')
-            ->selectRaw("count(distinct ss.idStaticSentenceMM) as n1")
-            ->selectRaw("count(distinct sos.idStaticObjectSentenceMM) as n2")
+            ->selectRaw("count(distinct ts.idStaticObject) as n1")
+            ->selectRaw("count(distinct bb.idBoundingBox) as n2")
             ->selectRaw("count(distinct fe.idFrame) as n3")
             ->selectRaw("count(distinct fe.idFrameElement) as n4")
             ->all();
-        $result['images'] = $count[0]->n1;
+        $result['objects'] = $count[0]->n1;
         $result['bbox'] = $count[0]->n2;
         $result['framesImage'] = $count[0]->n3;
         $result['fesImage'] = $count[0]->n4;
@@ -773,21 +768,21 @@ where ds.idDocument = 663";
         debug($multi30k, $multi30kEntity, $multi30kEvent);
         Criteria::$database = 'webtool';
         Criteria::create("dashboard_multi30k", [
-            "multi30k_image_image" => $multi30k['images'],
-            "multi30k_image_bbox" => $multi30k['bbox'],
-            "multi30k_image_frame" => $multi30k['framesImage'],
-            "multi30k_image_ef" => $multi30k['fesImage'],
             "multi30k_ptt_sentence" => $multi30k['pttSentences'],
             "multi30k_ptt_lome" => $multi30k['pttFrames'],
             "multi30k_pto_sentence" => $multi30k['ptoSentences'],
             "multi30k_pto_lome" => $multi30k['ptoFrames'],
             "multi30k_eno_sentence" => $multi30k['enoSentences'],
             "multi30k_eno_lome" => $multi30k['enoFrames'],
-            "multi30kevent_image_image" => $multi30kEvent['images'],
+            "multi30k_image_image" => $multi30k['objects'],
+            "multi30k_image_bbox" => $multi30k['bbox'],
+            "multi30k_image_frame" => $multi30k['framesImage'],
+            "multi30k_image_ef" => $multi30k['fesImage'],
+            "multi30kevent_image_image" => $multi30kEvent['objects'],
             "multi30kevent_image_bbox" => $multi30kEvent['bbox'],
             "multi30kevent_image_frame" => $multi30kEvent['framesImage'],
             "multi30kevent_image_ef" => $multi30kEvent['fesImage'],
-            "multi30kentity_image_image" => $multi30kEntity['images'],
+            "multi30kentity_image_image" => $multi30kEntity['objects'],
             "multi30kentity_image_bbox" => $multi30kEntity['bbox'],
             "multi30kentity_image_frame" => $multi30kEntity['framesImage'],
             "multi30kentity_image_ef" => $multi30kEntity['fesImage']
