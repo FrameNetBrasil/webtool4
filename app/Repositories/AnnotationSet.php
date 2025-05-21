@@ -174,6 +174,7 @@ HERE;
     {
         DB::beginTransaction();
         try {
+            $documentSentence = Criteria::byId("view_document_sentence","idDocumentSentence",$idDocumentSentence);
             $lu = LU::byId($idLU);
             $ti = Criteria::byId("typeinstance", "entry", 'ast_unann');
             $annotationSet = [
@@ -203,6 +204,7 @@ HERE;
                         'multi' => 0,
                         'idInstantiationType' => $ti->idTypeInstance,
                         'idLayer' => $idLayer,
+                        'idSentence' => $documentSentence->idSentence,
                     ]);
                     $idTextSpan = Criteria::function("textspan_char_create(?)", [$textspan]);
                     $ts = Criteria::table("textspan")

@@ -425,7 +425,7 @@ class AnnotationFullTextService
     public static function annotateEntity(AnnotationData $data): void
     {
         DB::transaction(function () use ($data) {
-
+            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $data->idAnnotationSet);
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
                 ->where("ut.idUser", -2)
@@ -490,6 +490,7 @@ class AnnotationFullTextService
                     'multi' => 0,
                     'idLayer' => $idLayer,
                     'idInstantiationType' => $it->idInstantiationType,
+                    'idSentence' => $annotationSet->idSentence,
                 ]);
                 $idTextSpan = Criteria::function("textspan_char_create(?)", [$json]);
                 $ts = Criteria::table("textspan")
@@ -509,6 +510,7 @@ class AnnotationFullTextService
                     'multi' => 0,
                     'idLayer' => $idLayer,
                     'idInstantiationType' => (int)$data->range->id,
+                    'idSentence' => $annotationSet->idSentence,
                 ]);
                 $idTextSpan = Criteria::function("textspan_char_create(?)", [$json]);
                 $ts = Criteria::table("textspan")

@@ -22,7 +22,7 @@ class LexiconLemma extends Component
     {
         if (($this->value != '') && ($this->value != 0)) {
             $lemma = Lexicon::lemmabyId($this->value);
-            $this->placeholder = $lemma->name;
+            $this->placeholder = $lemma->shortName;
         } else {
             $this->placeholder = "Search Lemma";
         }

@@ -117,9 +117,7 @@ class FullTextController extends Controller
                 throw new \Exception("No selection.");
             }
         } catch (\Exception $e) {
-            //$trigger = $this->notify("error", $e->getMessage());
-            return response('', 500)
-                ->header('HX-Trigger', $trigger);
+            return $this->renderNotify("error", $e->getMessage());
         }
     }
 
@@ -132,10 +130,7 @@ class FullTextController extends Controller
             //return view("Annotation.FullText.Panes.annotationSet", $data);
             return $data->idAnnotationSet;
         } catch (\Exception $e) {
-//            return $this->renderNotify("error", $e->getMessage());
-            $trigger = $this->notify("error", $e->getMessage());
-            return response('', 500)
-                ->header('HX-Trigger', $trigger);
+            return $this->renderNotify("error", $e->getMessage());
         }
     }
 
