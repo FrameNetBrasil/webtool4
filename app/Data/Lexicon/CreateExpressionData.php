@@ -33,13 +33,14 @@ class CreateExpressionData extends Data
         if (is_null($this->head)) {
             $this->head = 0;
         }
+        debug($this);
         if ($this->idLexiconGroup == 1) {
             $lexicon = Criteria::table("lexicon")
                 ->whereRaw("form = '{$this->form}' collate 'utf8mb4_bin'")
                 ->where("idLexiconGroup", 1)
                 ->where("idLanguage", "=", AppService::getCurrentIdLanguage())
                 ->first();
-        } else if ($this->idLexiconGroup == 1) {
+        } else if ($this->idLexiconGroup == 2) {
             $lexicon = Criteria::table("lexicon")
                 ->whereRaw("form = '{$this->form}' collate 'utf8mb4_bin'")
                 ->where("idLexiconGroup", 2)
