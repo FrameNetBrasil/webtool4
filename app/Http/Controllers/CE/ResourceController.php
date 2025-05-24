@@ -22,12 +22,23 @@ class ResourceController extends Controller
     {
         debug($data);
         try {
-            Criteria::function('ce_create(?, ?, ?, ?, ?)', [
-                $data->idConstruction,
-                $data->name,
-                $data->idColor,
-                $data->idUser
-            ]);
+//            par_idConstruction INT,
+//	par_name VARCHAR(255),
+//    par_idColor INT,
+//    par_optional INT,
+//    par_head INT,
+//    par_multiple INT,
+//    par_idUser INT
+            $idcxn = Criteria::function('ce_create(?)', [$data->toJson()]);
+//            Criteria::function('ce_create(?, ?, ?, ?, ?, ?, ?)', [
+//                $data->idConstruction,
+//                $data->name,
+//                $data->idColor,
+//                $data->optional,
+//                $data->head,
+//                $data->multiple,
+//                $data->idUser
+//            ]);
             $this->trigger('reload-gridCE');
             return $this->renderNotify("success", "ConstructionElement created.");
         } catch (\Exception $e) {
