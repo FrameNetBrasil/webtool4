@@ -18,7 +18,7 @@ class ResourceController extends Controller
     #[Get(path: '/cxn/new')]
     public function new()
     {
-        return view("cxn.new");
+        return view("Construction.new");
     }
 
     #[Post(path: '/cxn')]
@@ -36,6 +36,7 @@ class ResourceController extends Controller
     public function delete(string $idcxn)
     {
         try {
+            debug($idcxn);
             Criteria::function('cxn_delete(?, ?)', [
                 $idcxn,
                 AppService::getCurrentIdUser()
