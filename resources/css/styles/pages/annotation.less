@@ -1,0 +1,491 @@
+/*******************************
+    Annotation Interface Styling
+*******************************/
+
+.annotation-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    /* Annotation toolbar */
+    .annotation-toolbar {
+        display: flex;
+        align-items: center;
+        background: #1F2937;
+        color: #FFFFFF;
+        padding: 0.75rem 1.5rem;
+        border-bottom: 1px solid #374151;
+        flex-shrink: 0;
+
+        .toolbar-section {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            &:not(:last-child) {
+                margin-right: 1.5rem;
+                padding-right: 1.5rem;
+                border-right: 1px solid #4B5563;
+            }
+
+            .section-label {
+                color: #9CA3AF;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-right: 0.5rem;
+            }
+        }
+
+        .tool-group {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+
+            .tool-button {
+                padding: 0.5rem;
+                background: transparent;
+                border: 1px solid transparent;
+                border-radius: 4px;
+                color: #9CA3AF;
+                cursor: pointer;
+                transition: all 0.15s ease;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: #F9FAFB;
+                }
+
+                &.active {
+                    background: #5E6AD2;
+                    border-color: #5E6AD2;
+                    color: #FFFFFF;
+                }
+
+                &.disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+
+                    &:hover {
+                        background: transparent;
+                        color: #9CA3AF;
+                    }
+                }
+            }
+        }
+
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .zoom-level {
+                min-width: 4rem;
+                text-align: center;
+                font-size: 0.875rem;
+                color: #D1D5DB;
+            }
+        }
+
+        .playback-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+
+            .play-button {
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50%;
+                background: #5E6AD2;
+                border: none;
+                color: #FFFFFF;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:hover {
+                    background: #4C51BF;
+                }
+            }
+
+            .time-display {
+                font-family: monospace;
+                font-size: 0.875rem;
+                color: #D1D5DB;
+                min-width: 8rem;
+                text-align: center;
+            }
+        }
+
+        .annotation-info {
+            margin-left: auto;
+
+            .info-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-left: 1rem;
+
+                .info-label {
+                    color: #9CA3AF;
+                    font-size: 0.875rem;
+                }
+
+                .info-value {
+                    color: #F9FAFB;
+                    font-weight: 500;
+                    font-size: 0.875rem;
+                }
+            }
+        }
+    }
+
+    /* Main annotation area */
+    .annotation-workspace {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+
+        /* Canvas area */
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: #000000;
+            overflow: hidden;
+
+            .media-canvas {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                cursor: crosshair;
+
+                &.panning {
+                    cursor: grab;
+                }
+
+                &.pan-active {
+                    cursor: grabbing;
+                }
+            }
+
+            /* Overlay for annotations */
+            .annotation-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+
+                .bounding-box {
+                    position: absolute;
+                    border: 2px solid #3B82F6;
+                    background: rgba(59, 130, 246, 0.1);
+                    pointer-events: all;
+                    cursor: move;
+
+                    &.selected {
+                        border-color: #EF4444;
+                        background: rgba(239, 68, 68, 0.1);
+                    }
+
+                    &.hover {
+                        border-color: #10B981;
+                        background: rgba(16, 185, 129, 0.1);
+                    }
+
+                    .resize-handle {
+                        position: absolute;
+                        width: 8px;
+                        height: 8px;
+                        background: #FFFFFF;
+                        border: 1px solid #3B82F6;
+
+                        &.nw { top: -4px; left: -4px; cursor: nw-resize; }
+                        &.ne { top: -4px; right: -4px; cursor: ne-resize; }
+                        &.sw { bottom: -4px; left: -4px; cursor: sw-resize; }
+                        &.se { bottom: -4px; right: -4px; cursor: se-resize; }
+                        &.n { top: -4px; left: 50%; margin-left: -4px; cursor: n-resize; }
+                        &.s { bottom: -4px; left: 50%; margin-left: -4px; cursor: s-resize; }
+                        &.w { top: 50%; left: -4px; margin-top: -4px; cursor: w-resize; }
+                        &.e { top: 50%; right: -4px; margin-top: -4px; cursor: e-resize; }
+                    }
+
+                    .box-label {
+                        position: absolute;
+                        top: -1.5rem;
+                        left: 0;
+                        background: rgba(0, 0, 0, 0.8);
+                        color: #FFFFFF;
+                        padding: 0.25rem 0.5rem;
+                        border-radius: 3px;
+                        font-size: 0.75rem;
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            /* Canvas controls */
+            .canvas-controls {
+                position: absolute;
+                bottom: 1rem;
+                right: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                .control-group {
+                    background: rgba(255, 255, 255, 0.9);
+                    border: 1px solid #E5E7EB;
+                    border-radius: 6px;
+                    padding: 0.5rem;
+                    backdrop-filter: blur(4px);
+
+                    .control-button {
+                        display: block;
+                        width: 2.5rem;
+                        height: 2.5rem;
+                        border: none;
+                        background: transparent;
+                        color: #4B5563;
+                        cursor: pointer;
+                        border-radius: 4px;
+
+                        &:hover {
+                            background: #F3F4F6;
+                            color: #1F2937;
+                        }
+
+                        &:not(:last-child) {
+                            margin-bottom: 0.25rem;
+                        }
+                    }
+                }
+            }
+        }
+
+        /* Properties panel */
+        .properties-panel {
+            width: 320px;
+            background: #F9FAFB;
+            border-left: 1px solid #E5E7EB;
+            display: flex;
+            flex-direction: column;
+
+            .panel-header {
+                padding: 1rem 1.5rem;
+                border-bottom: 1px solid #E5E7EB;
+                background: #FFFFFF;
+
+                .panel-title {
+                    font-weight: 600;
+                    color: #1F2937;
+                    margin: 0;
+                }
+            }
+
+            .panel-content {
+                flex: 1;
+                overflow-y: auto;
+
+                .property-section {
+                    padding: 1.5rem;
+                    border-bottom: 1px solid #E5E7EB;
+
+                    .section-title {
+                        font-size: 0.875rem;
+                        font-weight: 600;
+                        color: #374151;
+                        margin-bottom: 1rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.05em;
+                    }
+
+                    .property-field {
+                        margin-bottom: 1rem;
+
+                        label {
+                            display: block;
+                            font-size: 0.875rem;
+                            font-weight: 500;
+                            color: #374151;
+                            margin-bottom: 0.5rem;
+                        }
+
+                        .ui.input,
+                        .ui.dropdown {
+                            width: 100%;
+                        }
+                    }
+
+                    .color-picker {
+                        display: flex;
+                        gap: 0.5rem;
+                        flex-wrap: wrap;
+
+                        .color-option {
+                            width: 2rem;
+                            height: 2rem;
+                            border-radius: 4px;
+                            border: 2px solid transparent;
+                            cursor: pointer;
+
+                            &.selected {
+                                border-color: #1F2937;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Timeline for video annotation */
+    .annotation-timeline {
+        height: 120px;
+        background: #F9FAFB;
+        border-top: 1px solid #E5E7EB;
+        display: flex;
+        flex-direction: column;
+
+        .timeline-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #E5E7EB;
+            background: #FFFFFF;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .timeline-title {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: #374151;
+            }
+
+            .timeline-controls {
+                display: flex;
+                gap: 0.5rem;
+
+                .timeline-zoom {
+                    display: flex;
+                    gap: 0.25rem;
+
+                    button {
+                        padding: 0.25rem 0.5rem;
+                        background: #FFFFFF;
+                        border: 1px solid #E5E7EB;
+                        border-radius: 4px;
+                        font-size: 0.75rem;
+                        cursor: pointer;
+
+                        &:hover {
+                            background: #F9FAFB;
+                        }
+                    }
+                }
+            }
+        }
+
+        .timeline-track {
+            flex: 1;
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+
+            .track-ruler {
+                height: 20px;
+                background: #FFFFFF;
+                border-bottom: 1px solid #E5E7EB;
+                position: relative;
+
+                .time-marker {
+                    position: absolute;
+                    top: 0;
+                    height: 100%;
+                    border-left: 1px solid #9CA3AF;
+
+                    .time-label {
+                        position: absolute;
+                        top: 2px;
+                        left: 4px;
+                        font-size: 0.75rem;
+                        color: #6B7280;
+                    }
+                }
+            }
+
+            .track-content {
+                flex: 1;
+                position: relative;
+
+                .annotation-segment {
+                    position: absolute;
+                    height: 30px;
+                    background: #5E6AD2;
+                    border-radius: 4px;
+                    color: #FFFFFF;
+                    font-size: 0.75rem;
+                    padding: 0.25rem 0.5rem;
+                    cursor: pointer;
+
+                    &.selected {
+                        background: #EF4444;
+                    }
+
+                    &:hover {
+                        opacity: 0.8;
+                    }
+
+                    .segment-label {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+
+                .playhead {
+                    position: absolute;
+                    top: 0;
+                    width: 2px;
+                    height: 100%;
+                    background: #EF4444;
+                    z-index: 10;
+                    pointer-events: none;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        top: -6px;
+                        left: -6px;
+                        width: 14px;
+                        height: 14px;
+                        background: #EF4444;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Annotation modes */
+.annotation-page {
+    &.mode-select .media-canvas {
+        cursor: default;
+    }
+
+    &.mode-draw .media-canvas {
+        cursor: crosshair;
+    }
+
+    &.mode-pan .media-canvas {
+        cursor: grab;
+    }
+
+    &.mode-zoom .media-canvas {
+        cursor: zoom-in;
+    }
+}

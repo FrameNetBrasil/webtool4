@@ -1,0 +1,24 @@
+/*******************************
+    CRUD-Optimized Modals
+*******************************/
+
+/* Modern modal styling */
+@background: #FFFFFF;
+@borderRadius: 12px;              // More rounded for modern feel
+@boxShadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+/* Header styling */
+@headerBackground: #FFFFFF;
+@headerColor: #1F2937;
+@headerPadding: 1.5rem 1.5rem 1rem;
+@headerFontSize: 1.25rem;
+@headerFontWeight: 600;
+
+/* Content spacing */
+@contentPadding: 0rem 1.5rem 1.5rem;
+
+/* Actions area */
+@actionBackground: #F9FAFB;
+@actionPadding: 1rem 1.5rem;
+@actionBorderTop: 1px solid #E5E7EB;

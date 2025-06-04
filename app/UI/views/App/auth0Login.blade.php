@@ -1,30 +1,28 @@
-<x-layout.page>
-    <x-slot:head>
+<x-layout::page>
+    <x-slot:breadcrumb>
         <x-breadcrumb :sections="[['','Home']]"></x-breadcrumb>
-    </x-slot:head>
+    </x-slot:breadcrumb>
     <x-slot:main>
-        <section id="work" class="w-full h-full">
-            <div class="wt-center h-full">
-                <div class="auth0-login">
+        <div class="content-container wide h-full center-container-with-sidebar">
+            <div>
+                <div class="pb-4">
                     <img src="/images/fnbr_logo_alpha.png" width="240" />
-                    <a class="btnLogin">Sign In</a>
+                </div>
+                <div>
+                    <a class="ui button login">Sign In</a>
                 </div>
             </div>
-        </section>
+        </div>
         <script>
             $(document).ready(function() {
-                $(".btnLogin").click(function(e) {
+                $(".ui.button.login").click(function(e) {
                     e.preventDefault();
                     window.location = "/auth0Login";
-                });
-                $(".btnLogout").click(function(e) {
-                    e.preventDefault();
-                    window.location = "/auth0Logout";
                 });
             });
         </script>
     </x-slot:main>
-</x-layout.page>
+</x-layout::page>
 
 
 
