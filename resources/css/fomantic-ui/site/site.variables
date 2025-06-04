@@ -1,0 +1,69 @@
+@imagePath: "/scripts/fomantic-ui/assets/images";
+@fontPath: "/scripts/fomantic-ui/assets/fonts";
+
+/*******************************
+    CRUD-Optimized Global Theme
+*******************************/
+
+/* Modern Color Palette - Inspired by Linear/Notion */
+@primaryColor: #5E6AD2;           // Modern purple-blue
+@secondaryColor: #6B7280;         // Neutral gray
+@green: #10B981;                  // Success green
+@red: #EF4444;                    // Error red
+@orange: #F59E0B;                 // Warning orange
+@blue: @primaryColor;
+@grey: #F3F4F6;                   // Light background gray
+
+/* Typography - Clean and readable */
+@importFonts: false;
+@fontName: 'Inter';               // Modern, readable font
+@fontSize: 14px;                  // Slightly smaller for density
+@lineHeight: 1.5;                 // Better readability
+@headerFont: 'Inter', @fallbackFonts;
+@pageFont: 'Inter', @fallbackFonts;
+
+/* Layout - Tighter spacing for density */
+@borderRadius: 6px;               // Modern, subtle radius
+@pageBackground: #FAFBFC;         // Soft, warm white
+@textColor: #1F2937;              // Darker, more readable
+@linkColor: @primaryColor;
+
+/* Compact sizing for data density */
+@miniSize: 0.7rem;
+@tinySize: 0.8rem;
+@smallSize: 0.9rem;
+@mediumSize: 1rem;
+@largeSize: 1.1rem;
+
+/*******************************
+    Annotation-Specific Variables
+*******************************/
+
+/* Annotation toolbar */
+@annotationToolbarBackground: #1F2937;
+@annotationToolbarHeight: 3rem;
+@annotationToolColor: #F3F4F6;
+@annotationToolActiveColor: @primaryColor;
+
+/* Bounding box colors */
+@boundingBoxDefault: #3B82F6;     // Blue
+@boundingBoxSelected: #EF4444;    // Red
+@boundingBoxHover: #10B981;       // Green
+@boundingBoxStroke: 2px;
+@boundingBoxOpacity: 0.3;
+
+/* Canvas controls */
+@canvasControlSize: 2.5rem;
+@canvasControlBackground: rgba(255, 255, 255, 0.9);
+@canvasControlBorder: 1px solid #E5E7EB;
+@canvasControlRadius: 6px;
+@canvasControlShadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+/* Sidebar for object relationships */
+@sidebarWidth: 280px;
+@sidebarBackground: #F9FAFB;
+@sidebarBorder: 1px solid #E5E7EB;
+@relationshipLineColor: #9CA3AF;
+@relationshipActiveColor: @primaryColor;
+
+

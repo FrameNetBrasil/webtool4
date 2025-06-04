@@ -16,6 +16,9 @@ return [
     'paths' => [
         app_path('UI'),
         app_path('UI/views'),
+        app_path('UI/layouts'),
+        app_path('UI/components'),
+        app_path('UI/forms'),
 //        resource_path('views'),
     ],
 
