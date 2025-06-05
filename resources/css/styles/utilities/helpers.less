@@ -253,11 +253,18 @@
     }
 }
 
+.ui.button {
+    // Login button - red with specific width
+    &.danger {
+        background-color: #e74c3c !important;
+    }
+}
+
 // Alternative: flex centering container
 .center-container-with-sidebar {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin-left:calc(280px / -2);
+    margin-left:calc(var(--sidebar-width) / -2);
+    margin-top:calc(var(--header-height) / -2);
 }

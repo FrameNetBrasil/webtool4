@@ -903,7 +903,7 @@
     /* Enhanced Nav Section with Collapsible Support */
     .nav-section {
         /* Keep existing styles and add collapsible functionality */
-        //padding: 1rem;
+        padding: 1rem;
         //border-bottom: 1px solid #E5E7EB;
 
         &:last-child {
@@ -1012,36 +1012,6 @@
                 }
             }
         }
-    }
-
-    .nav-section[data-section="user"] {
-        //margin-top: auto; /* Push to bottom */
-        //border-top: 1px solid #E5E7EB;
-    }
-
-    /* Prevent all flickering during sidebar initialization */
-    .nav-section.collapsible {
-        .section-items {
-            transition: none; /* Initially no transition */
-            overflow: hidden;
-            height: 0; /* Start collapsed by default */
-        }
-
-        /* Only enable transitions after JavaScript initialization */
-        &.initialized .section-items {
-            transition: height 0.3s ease;
-        }
-
-        /* Ensure collapsed state is properly maintained */
-        &.collapsed .section-items {
-            height: 0 !important;
-            overflow: hidden;
-        }
-    }
-
-    /* Hide sections completely until JavaScript loads */
-    .app-sidebar:not(.js-initialized) .nav-section.collapsible .section-items {
-        display: none;
     }
 
     /* Enhanced Nav Items with Search Support */
