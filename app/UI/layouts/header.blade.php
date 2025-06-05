@@ -63,7 +63,12 @@
                     <div class="item" hx-get="/user/profile" hx-trigger="click">My profile</div>
                     <div class="divider"></div>
                     <div class="item">
-                        <x-button label="Logout" hx-get="/logout"></x-button>
+                        <button
+                            class="ui button"
+                            hx-get="/logout"
+                        >
+                            Logout
+                        </button>
                     </div>
                 </div>
             </div>

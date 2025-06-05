@@ -18,6 +18,7 @@ class Button extends Component
         public string $icon = ''
     )
     {
+        debug("===============================");
         $this->color = $color;//ucfirst($color);
         if ($this->color === 'danger') {
             $this->color = 'negative';
@@ -29,6 +30,6 @@ class Button extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.button');
+        return view('forms.button');
     }
 }

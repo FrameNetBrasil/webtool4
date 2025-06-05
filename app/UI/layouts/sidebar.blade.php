@@ -15,6 +15,38 @@
 
 @endphp
 <nav class="app-sidebar">
+    @if($isLogged)
+        <div class="nav-section collapsible" data-section="user">
+            <div class="section-header">
+                <div class="section-title-content">
+                    <img src="avatar.jpg" alt="User" class="user-avatar" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px;">
+                    <span>John Doe</span>
+                    <span class="nav-badge danger">3</span>
+                </div>
+                <i class="dropdown icon collapse-icon"></i>
+            </div>
+            <div class="section-items">
+                <a href="#" class="nav-item">
+                    <i class="user icon nav-icon"></i>
+                    <span class="nav-text">Profile Settings</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="cog icon nav-icon"></i>
+                    <span class="nav-text">Preferences</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="bell icon nav-icon"></i>
+                    <span class="nav-text">Notifications</span>
+                    <span class="nav-badge danger">3</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-item">
+                    <i class="sign out icon nav-icon"></i>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </div>
+        </div>
+    @endif
     @foreach($actions as $id => $action)
         @php
             $menuData = MenuData::from([
@@ -53,20 +85,3 @@
         @endif
     @endforeach
 </nav>
-<script>
-    $(function() {
-
-        // Initialize with custom options
-        const sidebar = new CollapsibleSidebar({
-            autoSave: true,           // Save state automatically
-            searchDelay: 200,         // Search debounce delay
-            storageKey: "my-sidebar", // Custom localStorage key
-
-            // Custom selectors if your HTML is different
-            sidebarSelector: ".app-sidebar",
-            sectionSelector: ".nav-section",
-            headerSelector: ".section-header"
-        });
-    });
-
-</script>

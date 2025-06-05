@@ -1,8 +1,8 @@
 @php use App\Database\Criteria;use App\Repositories\User;use App\Services\AppService; use App\Services\MessageService; @endphp
-<x-layout.page>
-    <x-slot:head>
+<x-layout::page>
+    <x-slot:breadcrumb>
         <x-breadcrumb :sections="[['','Home']]"></x-breadcrumb>
-    </x-slot:head>
+    </x-slot:breadcrumb>
     <x-slot:main>
         @php
             $idUser = AppService::getCurrentIdUser();
@@ -110,5 +110,5 @@
 
         @endif
     </x-slot:main>
-</x-layout.page>
+</x-layout::page>
 

@@ -903,7 +903,7 @@
     /* Enhanced Nav Section with Collapsible Support */
     .nav-section {
         /* Keep existing styles and add collapsible functionality */
-        padding: 1rem;
+        //padding: 1rem;
         //border-bottom: 1px solid #E5E7EB;
 
         &:last-child {
@@ -1012,6 +1012,36 @@
                 }
             }
         }
+    }
+
+    .nav-section[data-section="user"] {
+        //margin-top: auto; /* Push to bottom */
+        //border-top: 1px solid #E5E7EB;
+    }
+
+    /* Prevent all flickering during sidebar initialization */
+    .nav-section.collapsible {
+        .section-items {
+            transition: none; /* Initially no transition */
+            overflow: hidden;
+            height: 0; /* Start collapsed by default */
+        }
+
+        /* Only enable transitions after JavaScript initialization */
+        &.initialized .section-items {
+            transition: height 0.3s ease;
+        }
+
+        /* Ensure collapsed state is properly maintained */
+        &.collapsed .section-items {
+            height: 0 !important;
+            overflow: hidden;
+        }
+    }
+
+    /* Hide sections completely until JavaScript loads */
+    .app-sidebar:not(.js-initialized) .nav-section.collapsible .section-items {
+        display: none;
     }
 
     /* Enhanced Nav Items with Search Support */
@@ -1608,6 +1638,115 @@
 
     @media (min-width: 768px) {
         display: none;
+    }
+}
+
+// User context section styling
+.sidebar-section.user-context {
+    margin-top: auto; // Push to bottom
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    .sidebar-section-header {
+        padding: 12px 16px;
+        background: rgba(0, 0, 0, 0.1);
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+
+            .ui.image {
+                margin-right: 12px;
+                width: 32px !important;
+                height: 32px !important;
+            }
+
+            .user-details {
+                flex: 1;
+                min-width: 0; // Allow text truncation
+
+                .username {
+                    font-weight: 600;
+                    color: white;
+                    font-size: 14px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .user-role {
+                    font-size: 12px;
+                    color: rgba(255, 255, 255, 0.7);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+
+        .toggle-icon {
+            color: rgba(255, 255, 255, 0.7);
+            transition: transform 0.3s ease;
+        }
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+    }
+
+    // Collapsed state
+    &.collapsed {
+        .toggle-icon {
+            transform: rotate(-90deg);
+        }
+    }
+
+    // User menu items
+    .sidebar-section-content {
+        .ui.menu {
+            background: rgba(0, 0, 0, 0.05);
+
+            .item {
+                color: rgba(255, 255, 255, 0.9);
+                padding: 10px 16px;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: white;
+                }
+
+                i.icon {
+                    margin-right: 8px;
+                    opacity: 0.8;
+                }
+
+                .ui.label {
+                    float: right;
+                    margin-left: auto;
+                }
+            }
+
+            .divider {
+                border-color: rgba(255, 255, 255, 0.1);
+                margin: 4px 0;
+            }
+        }
+    }
+}
+
+// Sidebar layout adjustment to accommodate user section
+.collapsible-sidebar {
+    display: flex;
+    flex-direction: column;
+
+    .sidebar-section:not(.user-context) {
+        flex: 0 0 auto;
+    }
+
+    .sidebar-section.user-context {
+        flex: 0 0 auto;
+        margin-top: auto;
     }
 }
 
