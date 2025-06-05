@@ -1,6 +1,7 @@
 import './bootstrap';
 import './webcomponents';
-import CollapsibleSidebar from './collapsible_sidebar';
+//import CollapsibleSidebar from './collapsible_sidebar';
+import AccordionSidebar from './AccordionSidebar.js'
 
 import Chart from 'chart.js/auto';
 
@@ -17,5 +18,6 @@ window.Chart = Chart;
 window.svgPanZoom = svgPanZoom;
 window.ky = ky;
 window.Split = Split;
-window.CollapsibleSidebar = CollapsibleSidebar;
+//window.CollapsibleSidebar = CollapsibleSidebar;
+window.AccordionSidebar = AccordionSidebar;
 
