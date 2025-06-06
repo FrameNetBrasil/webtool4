@@ -44,40 +44,40 @@
                 @endforeach
             </div>
         </div>
-        @if($isLogged)
-            <div id="menuUser" class="ui right dropdown item pl-3 pointing top left ">
-                <div class="user-menu">
-                    <div class="user-avatar">{!! strtoupper($user->email[0]) !!}</div>
-                </div>
-                <div class="menu">
-                    <div class="item">
-                        {{$user->email}}
-                    </div>
-                    <div class="item">
-                        Level: {{$userLevel}}
-                    </div>
-                    <div class="item">
-                        ID: #{{$user->idUser}}
-                    </div>
-                    <div class="divider"></div>
-                    <div class="item" hx-get="/user/profile" hx-trigger="click">My profile</div>
-                    <div class="divider"></div>
-                    <div class="item">
-                        <button
-                            class="ui button"
-                            hx-get="/logout"
-                        >
-                            Logout
-                        </button>
-                    </div>
-                </div>
-            </div>
-        @endif
+{{--        @if($isLogged)--}}
+{{--            <div id="menuUser" class="ui right dropdown item pl-3 pointing top left ">--}}
+{{--                <div class="user-menu">--}}
+{{--                    <div class="user-avatar">{!! strtoupper($user->email[0]) !!}</div>--}}
+{{--                </div>--}}
+{{--                <div class="menu">--}}
+{{--                    <div class="item">--}}
+{{--                        {{$user->email}}--}}
+{{--                    </div>--}}
+{{--                    <div class="item">--}}
+{{--                        Level: {{$userLevel}}--}}
+{{--                    </div>--}}
+{{--                    <div class="item">--}}
+{{--                        ID: #{{$user->idUser}}--}}
+{{--                    </div>--}}
+{{--                    <div class="divider"></div>--}}
+{{--                    <div class="item" hx-get="/user/profile" hx-trigger="click">My profile</div>--}}
+{{--                    <div class="divider"></div>--}}
+{{--                    <div class="item">--}}
+{{--                        <button--}}
+{{--                            class="ui button"--}}
+{{--                            hx-get="/logout"--}}
+{{--                        >--}}
+{{--                            Logout--}}
+{{--                        </button>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        @endif--}}
     </div>
 </header>
 <script>
     $(function() {
         $("#menuLanguage").dropdown();
-        $("#menuUser").dropdown();
+        // $("#menuUser").dropdown();
     });
 </script>

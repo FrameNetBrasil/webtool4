@@ -1,3 +1,4 @@
+
 /*******************************
     Dashboard Pages Styling
 *******************************/
@@ -15,12 +16,12 @@
             .dashboard-title {
                 font-size: 2rem;
                 font-weight: 700;
-                color: #1F2937;
+                color: var(--color-text-primary);
                 margin: 0 0 0.5rem 0;
             }
 
             .dashboard-subtitle {
-                color: #6B7280;
+                color: var(--color-text-secondary);
                 font-size: 1rem;
             }
 
@@ -37,13 +38,13 @@
             .nav-tabs {
                 display: flex;
                 gap: 0;
-                border-bottom: 1px solid #E5E7EB;
+                border-bottom: 1px solid var(--color-border-primary);
 
                 .nav-tab {
                     padding: 0.75rem 1.5rem;
                     background: none;
                     border: none;
-                    color: #6B7280;
+                    color: var(--color-text-secondary);
                     font-size: 0.875rem;
                     font-weight: 500;
                     cursor: pointer;
@@ -51,13 +52,13 @@
                     transition: all 0.15s ease;
 
                     &:hover {
-                        color: #374151;
-                        background: #F9FAFB;
+                        color: var(--color-text-primary);
+                        background: var(--color-sidebar-bg);
                     }
 
                     &.active {
-                        color: #5E6AD2;
-                        border-bottom-color: #5E6AD2;
+                        color: var(--color-primary);
+                        border-bottom-color: var(--color-primary);
                     }
                 }
             }
@@ -72,15 +73,15 @@
         margin-bottom: 2rem;
 
         .stat-card {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            background: var(--color-bg-primary);
+            border: 1px solid var(--color-border-primary);
             border-radius: 8px;
             padding: 1.5rem;
             transition: all 0.15s ease;
 
             &:hover {
-                border-color: #C7D2FE;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                border-color: var(--color-primary-border);
+                box-shadow: 0 4px 6px -1px var(--color-shadow-medium);
             }
 
             .stat-header {
@@ -90,7 +91,7 @@
                 margin-bottom: 1rem;
 
                 .stat-title {
-                    color: #6B7280;
+                    color: var(--color-text-secondary);
                     font-size: 0.875rem;
                     font-weight: 500;
                     text-transform: uppercase;
@@ -100,19 +101,19 @@
                 .stat-icon {
                     width: 2rem;
                     height: 2rem;
-                    background: #F3F4F6;
+                    background: var(--color-bg-tertiary);
                     border-radius: 6px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #6B7280;
+                    color: var(--color-text-secondary);
                 }
             }
 
             .stat-value {
                 font-size: 2rem;
                 font-weight: 700;
-                color: #1F2937;
+                color: var(--color-text-primary);
                 margin-bottom: 0.5rem;
             }
 
@@ -123,15 +124,15 @@
                 font-size: 0.875rem;
 
                 &.positive {
-                    color: #059669;
+                    color: var(--color-success-dark);
                 }
 
                 &.negative {
-                    color: #DC2626;
+                    color: var(--color-error-dark);
                 }
 
                 &.neutral {
-                    color: #6B7280;
+                    color: var(--color-text-secondary);
                 }
 
                 .change-icon {
@@ -142,22 +143,22 @@
 
             /* Colored stat cards */
             &.primary {
-                background: linear-gradient(135deg, #5E6AD2 0%, #4C51BF 100%);
-                color: #FFFFFF;
+                background: var(--gradient-primary);
+                color: var(--color-text-white);
                 border: none;
 
                 .stat-title,
                 .stat-change {
-                    color: rgba(255, 255, 255, 0.8);
+                    color: var(--color-overlay-20);
                 }
 
                 .stat-value {
-                    color: #FFFFFF;
+                    color: var(--color-text-white);
                 }
 
                 .stat-icon {
-                    background: rgba(255, 255, 255, 0.2);
-                    color: #FFFFFF;
+                    background: var(--color-overlay-20);
+                    color: var(--color-text-white);
                 }
             }
         }
@@ -165,8 +166,8 @@
 
     /* Chart containers */
     .chart-container {
-        background: #FFFFFF;
-        border: 1px solid #E5E7EB;
+        background: var(--color-bg-primary);
+        border: 1px solid var(--color-border-primary);
         border-radius: 8px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
@@ -180,7 +181,7 @@
             .chart-title {
                 font-size: 1.125rem;
                 font-weight: 600;
-                color: #1F2937;
+                color: var(--color-text-primary);
             }
 
             .chart-controls {
@@ -189,29 +190,29 @@
 
                 .time-selector {
                     display: flex;
-                    border: 1px solid #E5E7EB;
+                    border: 1px solid var(--color-border-primary);
                     border-radius: 6px;
                     overflow: hidden;
 
                     .time-option {
                         padding: 0.5rem 0.75rem;
-                        background: #FFFFFF;
+                        background: var(--color-bg-primary);
                         border: none;
-                        color: #6B7280;
+                        color: var(--color-text-secondary);
                         font-size: 0.875rem;
                         cursor: pointer;
 
                         &:hover {
-                            background: #F9FAFB;
+                            background: var(--color-sidebar-bg);
                         }
 
                         &.active {
-                            background: #5E6AD2;
-                            color: #FFFFFF;
+                            background: var(--color-primary);
+                            color: var(--color-text-white);
                         }
 
                         &:not(:last-child) {
-                            border-right: 1px solid #E5E7EB;
+                            border-right: 1px solid var(--color-border-primary);
                         }
                     }
                 }
@@ -228,9 +229,9 @@
                 align-items: center;
                 justify-content: center;
                 height: 100%;
-                color: #9CA3AF;
+                color: var(--color-text-tertiary);
                 font-size: 0.875rem;
-                border: 2px dashed #E5E7EB;
+                border: 2px dashed var(--color-border-primary);
                 border-radius: 6px;
             }
         }
@@ -238,8 +239,8 @@
 
     /* Activity feed */
     .activity-feed {
-        background: #FFFFFF;
-        border: 1px solid #E5E7EB;
+        background: var(--color-bg-primary);
+        border: 1px solid var(--color-border-primary);
         border-radius: 8px;
 
         .feed-header {
@@ -248,7 +249,7 @@
             .feed-title {
                 font-size: 1.125rem;
                 font-weight: 600;
-                color: #1F2937;
+                color: var(--color-text-primary);
                 margin-bottom: 1rem;
             }
         }
@@ -261,7 +262,7 @@
                 display: flex;
                 gap: 1rem;
                 padding: 1rem 1.5rem;
-                border-bottom: 1px solid #F3F4F6;
+                border-bottom: 1px solid var(--color-border-light);
 
                 &:last-child {
                     border-bottom: none;
@@ -271,25 +272,25 @@
                     width: 2.5rem;
                     height: 2.5rem;
                     border-radius: 50%;
-                    background: #F3F4F6;
+                    background: var(--color-bg-tertiary);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     flex-shrink: 0;
 
                     &.action-create {
-                        background: #D1FAE5;
-                        color: #059669;
+                        background: var(--color-status-success-bg);
+                        color: var(--color-success-dark);
                     }
 
                     &.action-update {
-                        background: #DBEAFE;
-                        color: #2563EB;
+                        background: var(--color-status-info-bg);
+                        color: var(--color-info-dark);
                     }
 
                     &.action-delete {
-                        background: #FEE2E2;
-                        color: #DC2626;
+                        background: var(--color-status-error-bg);
+                        color: var(--color-error-dark);
                     }
                 }
 
@@ -297,13 +298,13 @@
                     flex: 1;
 
                     .item-description {
-                        color: #1F2937;
+                        color: var(--color-text-primary);
                         font-size: 0.875rem;
                         margin-bottom: 0.25rem;
                     }
 
                     .item-meta {
-                        color: #6B7280;
+                        color: var(--color-text-secondary);
                         font-size: 0.75rem;
 
                         .item-time {
@@ -317,13 +318,13 @@
 
     /* Recent items */
     .recent-items {
-        background: #FFFFFF;
-        border: 1px solid #E5E7EB;
+        background: var(--color-bg-primary);
+        border: 1px solid var(--color-border-primary);
         border-radius: 8px;
 
         .items-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #F3F4F6;
+            border-bottom: 1px solid var(--color-border-light);
 
             display: flex;
             align-items: center;
@@ -332,11 +333,11 @@
             .items-title {
                 font-size: 1.125rem;
                 font-weight: 600;
-                color: #1F2937;
+                color: var(--color-text-primary);
             }
 
             .view-all-link {
-                color: #5E6AD2;
+                color: var(--color-primary);
                 font-size: 0.875rem;
                 text-decoration: none;
 
@@ -352,7 +353,7 @@
                 align-items: center;
                 gap: 1rem;
                 padding: 1rem 1.5rem;
-                border-bottom: 1px solid #F3F4F6;
+                border-bottom: 1px solid var(--color-border-light);
                 transition: background 0.15s ease;
 
                 &:last-child {
@@ -360,18 +361,18 @@
                 }
 
                 &:hover {
-                    background: #F9FAFB;
+                    background: var(--color-sidebar-bg);
                 }
 
                 .item-icon {
                     width: 2rem;
                     height: 2rem;
                     border-radius: 4px;
-                    background: #F3F4F6;
+                    background: var(--color-bg-tertiary);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #6B7280;
+                    color: var(--color-text-secondary);
                     flex-shrink: 0;
                 }
 
@@ -380,18 +381,18 @@
 
                     .item-title {
                         font-weight: 500;
-                        color: #1F2937;
+                        color: var(--color-text-primary);
                         margin-bottom: 0.25rem;
                     }
 
                     .item-subtitle {
-                        color: #6B7280;
+                        color: var(--color-text-secondary);
                         font-size: 0.875rem;
                     }
                 }
 
                 .item-time {
-                    color: #9CA3AF;
+                    color: var(--color-text-tertiary);
                     font-size: 0.75rem;
                     flex-shrink: 0;
                 }

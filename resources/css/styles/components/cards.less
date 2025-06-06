@@ -1,0 +1,449 @@
+// Base card enhancements
+.ui.card {
+    // Interactive states
+    &.selectable {
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        &.selected {
+            border-color: @primaryColor;
+            box-shadow: 0 0 0 2px @primaryColor;
+        }
+    }
+
+    &.hoverable:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+    }
+
+    // Loading state
+    &.loading {
+        pointer-events: none;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 10;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid @primaryColor;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: card-loading 1s linear infinite;
+            z-index: 11;
+        }
+    }
+}
+
+@keyframes card-loading {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.option-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        font-size: 20px;
+        color: white;
+        flex-shrink: 0;
+        border: 1px solid;
+
+        // Color themes
+        //&.reports { background: linear-gradient(135deg, #5E6AD2, #4C51BF); }
+        //&.data { background: linear-gradient(135deg, #10B981, #059669); }
+        //&.annotations { background: linear-gradient(135deg, #F59E0B, #D97706); }
+        //&.search { background: linear-gradient(135deg, #3B82F6, #2563EB); }
+        //&.settings { background: linear-gradient(135deg, #6B7280, #4B5563); }
+    }
+
+    .option-card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        color: @mutedTextColor;
+
+        .option-card-count {
+            background: @lightGrey;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .option-card-updated {
+            color: @lightTextColor;
+        }
+    }
+
+    .option-card-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+}
+
+.data-card {
+    .data-card-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .data-card-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: @primaryColor;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .data-card-title {
+            flex: 1;
+
+            .header {
+                margin-bottom: 0.25rem;
+            }
+
+            .meta {
+                color: @mutedTextColor;
+                font-size: 0.85rem;
+            }
+        }
+
+        .data-card-status {
+            flex-shrink: 0;
+        }
+    }
+
+    .data-card-stats {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+
+        .statistic {
+            text-align: center;
+
+            .value {
+                font-size: 1.2rem;
+                font-weight: 600;
+                color: @primaryColor;
+            }
+
+            .label {
+                font-size: 0.75rem;
+                color: @mutedTextColor;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+        }
+    }
+
+    .data-card-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+}
+
+.summary-card {
+    .summary-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+
+        .summary-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .summary-card-trend {
+            font-size: 0.875rem;
+            font-weight: 600;
+
+            &.positive {
+                color: @positiveColor;
+            }
+
+            &.negative {
+                color: @negativeColor;
+            }
+
+            &.neutral {
+                color: @mutedTextColor;
+            }
+        }
+    }
+
+    .summary-card-value {
+        margin-bottom: 0.5rem;
+
+        .statistic {
+            .value {
+                font-size: 2rem;
+                font-weight: 700;
+                line-height: 1;
+            }
+
+            .label {
+                font-size: 0.875rem;
+                color: @mutedTextColor;
+            }
+        }
+    }
+
+    .summary-card-description {
+        font-size: 0.8rem;
+        color: @lightTextColor;
+    }
+
+    // Themed variants
+    &.primary {
+        .summary-card-icon {
+            background: rgba(94, 106, 210, 0.1);
+            color: @primaryColor;
+        }
+    }
+
+    &.positive {
+        .summary-card-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: @positiveColor;
+        }
+    }
+
+    &.warning {
+        .summary-card-icon {
+            background: rgba(245, 158, 11, 0.1);
+            color: @warningColor;
+        }
+    }
+
+    &.negative {
+        .summary-card-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: @negativeColor;
+        }
+    }
+}
+
+.action-card {
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: @primaryColor;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin: 0 auto 1rem;
+    }
+
+    .action-card-shortcut {
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        color: @mutedTextColor;
+
+        kbd {
+            background: @lightGrey;
+            border: 1px solid @borderColor;
+            border-radius: 3px;
+            padding: 0.125rem 0.25rem;
+            font-family: monospace;
+            font-size: 0.7rem;
+        }
+    }
+}
+
+
+.content-card {
+    .content-card-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .image:hover .content-card-overlay {
+        opacity: 1;
+    }
+
+    .content-card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+}
+
+.form-card {
+    .ui.form {
+        .field {
+            margin-bottom: 1rem;
+        }
+    }
+
+    .extra.content {
+        .ui.buttons {
+            width: 100%;
+        }
+    }
+}
+
+
+.status-card {
+    .status-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+
+        .status-card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .status-card-level {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .status-card-time {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: @mutedTextColor;
+        }
+    }
+
+    .status-card-details {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid @borderColor;
+
+        .detail-item {
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    // Status level themes
+    &.info {
+        border-left: 4px solid @infoColor;
+
+        .status-card-icon {
+            background: rgba(59, 130, 246, 0.1);
+            color: @infoColor;
+        }
+
+        .status-card-level {
+            color: @infoColor;
+        }
+    }
+
+    &.warning {
+        border-left: 4px solid @warningColor;
+
+        .status-card-icon {
+            background: rgba(245, 158, 11, 0.1);
+            color: @warningColor;
+        }
+
+        .status-card-level {
+            color: @warningColor;
+        }
+    }
+
+    &.negative {
+        border-left: 4px solid @negativeColor;
+
+        .status-card-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: @negativeColor;
+        }
+
+        .status-card-level {
+            color: @negativeColor;
+        }
+    }
+
+    &.positive {
+        border-left: 4px solid @positiveColor;
+
+        .status-card-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: @positiveColor;
+        }
+
+        .status-card-level {
+            color: @positiveColor;
+        }
+    }
+}
+

@@ -1,5 +1,6 @@
 /*******************************
     CSS Grid Layout System
+    Updated with CSS Variables
 *******************************/
 
 :root {
@@ -26,8 +27,8 @@
 /* Layout Areas */
 .app-header {
     grid-area: header;
-    background: #FFFFFF;
-    border-bottom: 1px solid #E5E7EB;
+    background: var(--color-bg-primary);
+    border-bottom: 1px solid var(--color-border-primary);
     display: flex;
     align-items: center;
     padding: 0 1.5rem;
@@ -36,23 +37,55 @@
 
 .app-sidebar {
     grid-area: sidebar;
-    background: #F9FAFB;
-    border-right: 1px solid #E5E7EB;
+    background: var(--color-sidebar-bg);
+    border-right: 1px solid var(--color-sidebar-border);
     overflow-y: auto;
     z-index: 50;
 }
 
 .app-main {
     grid-area: main;
-    background: #FFFFFF;
+    background: var(--color-bg-primary);
     overflow-y: auto;
     position: relative;
 }
 
+/* Page-level structure */
+.app-main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.page-header {
+    flex-shrink: 0;
+    padding: 2rem;
+    border-bottom: 1px solid #E5E7EB;
+    background: #FFFFFF;
+}
+
+.page-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0; /* Container handles padding */
+}
+
+/* Content-level structure */
+.content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+
+    &.wide { max-width: 95%; }
+    &.narrow { max-width: 800px; }
+    &.reading { max-width: 65ch; }
+    &.fluid { max-width: 100%; padding: 1.5rem; }
+}
 .app-tools {
     grid-area: tools;
-    background: #F9FAFB;
-    border-left: 1px solid #E5E7EB;
+    background: var(--color-sidebar-bg);
+    border-left: 1px solid var(--color-border-primary);
     overflow-y: auto;
 }
 
@@ -160,11 +193,31 @@
 }
 
 /* Card grids for data display */
+// Card Grid System - Fomantic-UI Integration
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 
+    // CRITICAL: Override Fomantic's margin system for grid layouts
+    .ui.card {
+        margin: 0 !important; // Reset all margins
+
+        // Override specific Fomantic rules
+        &:first-child {
+            margin-top: 0 !important;
+        }
+
+        &:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        // Ensure cards work properly in grid
+        width: 100%;
+        height: fit-content;
+    }
+
+    // Grid variants
     &.dense {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 0.75rem;
@@ -180,9 +233,39 @@
         gap: 1rem;
     }
 
-    &.single-row {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        grid-template-rows: 1fr;
+    // Mobile responsiveness
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+
+        &.dense,
+        &.wide-cards,
+        &.small-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+// Alternative grid systems for different use cases
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .ui.card {
+        margin: 0 !important; // Same fix
+    }
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+
+    .ui.card {
+        margin: 0 !important; // Same fix
     }
 }
 
@@ -191,9 +274,9 @@
     position: relative;
     overflow: auto;
     max-height: calc(100vh - 200px);
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--color-border-primary);
     border-radius: 8px;
-    background: #FFFFFF;
+    background: var(--color-bg-primary);
 
     &.full-height {
         max-height: calc(100vh - 120px);
@@ -216,14 +299,14 @@
         thead th {
             position: sticky;
             top: 0;
-            background: #F9FAFB;
+            background: var(--color-sidebar-bg);
             z-index: 10;
-            border-bottom: 2px solid #E5E7EB;
-            box-shadow: 0 1px 0 #E5E7EB;
+            border-bottom: 2px solid var(--color-border-primary);
+            box-shadow: 0 1px 0 var(--color-border-primary);
         }
 
         &.striped tbody tr:nth-child(2n) {
-            background: #F9FAFB;
+            background: var(--color-sidebar-bg);
         }
     }
 }
@@ -456,14 +539,14 @@
         position: relative;
 
         &:not(:last-child) {
-            border-right: 1px solid #E5E7EB;
+            border-right: 1px solid var(--color-border-primary);
         }
     }
 
     &.vertical .split-panel {
         &:not(:last-child) {
             border-right: none;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid var(--color-border-primary);
         }
     }
 }
@@ -502,8 +585,8 @@
     }
 
     .sidebar-content {
-        background: #F9FAFB;
-        border: 1px solid #E5E7EB;
+        background: var(--color-sidebar-bg);
+        border: 1px solid var(--color-border-primary);
         border-radius: 8px;
         padding: 1.5rem;
         height: fit-content;

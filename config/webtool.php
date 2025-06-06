@@ -22,7 +22,7 @@ return [
         'AUTH0_BASE_URL' => env('AUTH0_BASE_URL'),
     ],
     'actions' => [
-        'report' => ['Report', '/report', '', [
+        'report' => ['Report', '/reports', '', [
             'reportframe' => ['Frame', '/report/frame', '', []],
             'reportlu' => ['LU', '/report/lu', '', []],
             'networkstructure' => ['Network', '/network', 'MASTER', []],
@@ -30,10 +30,10 @@ return [
             'reportc5' => ['MoCCA', '/report/c5', '', []],
             'reporttqr' => ['TQR', '/report/qualia', '', []],
             'cxnreport' => ['Constructions', '/report/cxn', '', []],
-            'dashboard' => ['Dashboard', '/dashboard', '', []],
 //            'multimodalreport' => ['Multimodal', '/report/multimodal', '', []],
 //            'corpusAnnotationReport' => ['Corpus Panes', '/corpus/report', 'corpusreport', '', 1, []],
         ]],
+        'dashboard' => ['Dashboard', '/dashboard', '', []],
         'grapher' => ['Grapher', '/grapher', '', [
             'framegrapher' => ['Frames', '/grapher/frame', '', []],
             'domaingrapher' => ['Domain', '/grapher/domain', '', []],
