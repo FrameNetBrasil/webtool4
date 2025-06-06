@@ -1,6 +1,6 @@
 <x-layout::page>
     <x-slot:breadcrumb>
-        <x-breadcrumb :sections="[['','Home']]"></x-breadcrumb>
+        <x-breadcrumb :sections="[]"></x-breadcrumb>
     </x-slot:breadcrumb>
     <x-slot:main>
         <div class="content-container wide h-full center-container-with-sidebar">
