@@ -16,6 +16,17 @@
 @endphp
 
 <div class="app-sidebar">
+    <div class="ui secondary vertical menu">
+        <a class="item">
+            Reports
+        </a>
+        <a class="item">
+            Grapher
+        </a>
+        <a class="item">
+            Settings
+        </a>
+    </div>
     <!-- Optional Search -->
 {{--    <div class="sidebar-search">--}}
 {{--        <div class="ui input">--}}
@@ -23,44 +34,45 @@
 {{--        </div>--}}
 {{--    </div>--}}
 
-    <!-- Main Navigation Accordion -->
-    <div class="ui fluid accordion" id="sidebar-navigation">
 
-    @foreach($actions as $id => $action)
-            @php
-                $menuData = MenuData::from([
-                    'id' => $id . '_small',
-                    'label' => $action[0],
-                    'href' => $action[1],
-                    'group' => $action[2],
-                    'items' => $action[3]
-                ]);
-            @endphp
-            @if (MAuth::checkAccess($menuData->group))
-                <div class="title">
-                    <i class="dropdown icon"></i>
-                    {!! $menuData->label !!}
+    <!-- Main Navigation Accordion -->
+{{--    <div class="ui fluid accordion" id="sidebar-navigation">--}}
+
+{{--    @foreach($actions as $id => $action)--}}
+{{--            @php--}}
+{{--                $menuData = MenuData::from([--}}
+{{--                    'id' => $id . '_small',--}}
+{{--                    'label' => $action[0],--}}
+{{--                    'href' => $action[1],--}}
+{{--                    'group' => $action[2],--}}
+{{--                    'items' => $action[3]--}}
+{{--                ]);--}}
+{{--            @endphp--}}
+{{--            @if (MAuth::checkAccess($menuData->group))--}}
+{{--                <div class="title">--}}
+{{--                    <i class="dropdown icon"></i>--}}
+{{--                    {!! $menuData->label !!}--}}
 {{--                    <i class="chevron down icon collapse-icon"></i>--}}
-                </div>
-                <div class="content">
-                    @foreach($menuData->items as $idItem => $item)
-                        @php
-                            $itemData = MenuData::from([
-                                'id' => $idItem . '_small',
-                                'label' => $item[0],
-                                'href' => $item[1],
-                                'group' => $item[2],
-                                'items' => $item[3]
-                            ]);
-                        @endphp
+{{--                </div>--}}
+{{--                <div class="content">--}}
+{{--                    @foreach($menuData->items as $idItem => $item)--}}
+{{--                        @php--}}
+{{--                            $itemData = MenuData::from([--}}
+{{--                                'id' => $idItem . '_small',--}}
+{{--                                'label' => $item[0],--}}
+{{--                                'href' => $item[1],--}}
+{{--                                'group' => $item[2],--}}
+{{--                                'items' => $item[3]--}}
+{{--                            ]);--}}
+{{--                        @endphp--}}
 {{--                        <a href="{{$itemData->href}}" class="nav-item">--}}
-                        <a href="#" class="nav-item">
-                            {{$itemData->label}}
-                        </a>
-                    @endforeach
-                </div>
-            @endif
-        @endforeach
+{{--                        <a href="#" class="nav-item">--}}
+{{--                            {{$itemData->label}}--}}
+{{--                        </a>--}}
+{{--                    @endforeach--}}
+{{--                </div>--}}
+{{--            @endif--}}
+{{--        @endforeach--}}
 
 
 {{--        <!-- Projects Section -->--}}
@@ -208,7 +220,7 @@
 {{--                Contact Us--}}
 {{--            </a>--}}
 {{--        </div>--}}
-    </div>
+{{--    </div>--}}
 </div>
 
 
@@ -286,11 +298,11 @@
 {{--</nav>--}}
 <script>
     $(document).ready(function() {
-        $('#sidebar-navigation')
-            .accordion({
-                exclusive: false
-            })
-        ;
+        // $('#sidebar-navigation')
+        //     .accordion({
+        //         exclusive: false
+        //     })
+        // ;
 
         // console.log('Initializing Accordion Sidebar...');
         //
