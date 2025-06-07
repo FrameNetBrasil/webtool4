@@ -3,13 +3,15 @@
         <x-breadcrumb :sections="[]"></x-breadcrumb>
     </x-slot:breadcrumb>
     <x-slot:main>
-        <div class="content-container wide h-full center-container-with-sidebar">
-            <div>
-                <div class="pb-4">
-                    <img src="/images/fnbr_logo_alpha.png" width="240" />
-                </div>
+        <div class="page-content">
+            <div class="content-container wide h-full center-container-with-sidebar">
                 <div>
-                    <a class="ui button login">Sign In</a>
+                    <div class="pb-4">
+                        <img src="/images/fnbr_logo_alpha.png" width="240" />
+                    </div>
+                    <div>
+                        <a class="ui button login">Sign In</a>
+                    </div>
                 </div>
             </div>
         </div>

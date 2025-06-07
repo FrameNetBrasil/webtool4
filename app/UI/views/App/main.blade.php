@@ -36,7 +36,7 @@
             </x-ui::page-header>
         @endif
         <div class="page-content">
-            <div class="content-container wide">
+            <div class="content-container">
                 @include("App.messages")
                 @if(!$isManager)
                     <div class="wt-card w-full">
