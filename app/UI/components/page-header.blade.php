@@ -4,9 +4,9 @@
             <h1 class="ui header">
                 {{$title}}
             </h1>
-            <p>
+            <span class="text-lg">
                 {{$subtitle}}
-            </p>
+            </span>
         </div>
     </div>
 </div>
