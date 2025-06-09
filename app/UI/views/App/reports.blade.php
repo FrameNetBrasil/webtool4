@@ -23,13 +23,15 @@
             <div class="content-container">
                 <div class="card-grid dense">
                     @foreach($reports as $category => $report)
-                        <div
+                        <a
                             class="ui card option-card"
                             data-category="{{$category}}"
-                            hx-get="{{$report[1]}}"
-                            hx-target="body"
-                            hx-swap="outerHTML"
-                            hx-indicator="this"
+                            href="{{$report[1]}}"
+                            hx-boost="true"
+{{--                            hx-get="{{$report[1]}}"--}}
+{{--                            hx-target="body"--}}
+{{--                            hx-swap="outerHTML"--}}
+{{--                            hx-indicator="this"--}}
                         >
                             <div class="content">
                                 <div class="header">
@@ -40,7 +42,7 @@
                                     {{$report[2]}}
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     @endforeach
                 </div>
             </div>

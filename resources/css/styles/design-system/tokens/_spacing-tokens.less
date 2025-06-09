@@ -1,0 +1,77 @@
+// Design System Spacing Variables
+:root {
+    // Base spacing scale (8px increments)
+    --spacing-0: 0;                 // 0px   - No spacing
+    --spacing-1: 0.25rem;           // 4px   - Micro (borders, fine details)
+    --spacing-2: 0.5rem;            // 8px   - Tiny (tight spacing)
+    --spacing-3: 0.75rem;           // 12px  - Small (compact layouts)
+    --spacing-4: 1rem;              // 16px  - Base (standard spacing)
+    --spacing-5: 1.25rem;           // 20px  - Medium-large
+    --spacing-6: 1.5rem;            // 24px  - Large (section spacing)
+    --spacing-8: 2rem;              // 32px  - XL (major sections)
+    --spacing-10: 2.5rem;           // 40px  - XXL (page sections)
+    --spacing-12: 3rem;             // 48px  - Huge (major layout)
+    --spacing-16: 4rem;             // 64px  - Massive (hero sections)
+    --spacing-20: 5rem;             // 80px  - Ultra (rare usage)
+    --spacing-24: 6rem;             // 96px  - Maximum (special cases)
+
+    // Semantic spacing aliases
+    --spacing-xs: var(--spacing-1); // Extra small
+    --spacing-sm: var(--spacing-2); // Small
+    --spacing-md: var(--spacing-4); // Medium (default)
+    --spacing-lg: var(--spacing-6); // Large
+    --spacing-xl: var(--spacing-8); // Extra large
+    --spacing-xxl: var(--spacing-12); // Extra extra large
+}
+
+// Layout Spacing (Between major sections)
+:root {
+    --layout-gap: var(--spacing-6);      // 24px - Grid gaps
+    --layout-margin: var(--spacing-8);   // 32px - Section margins
+    --layout-padding: var(--spacing-8);  // 32px - Container padding
+}
+
+// Component Spacing (Within components)
+:root {
+    --component-gap: var(--spacing-4);       // 16px - Component internal gaps
+    --component-margin: var(--spacing-4);    // 16px - Component margins
+    --component-padding: var(--spacing-4);   // 16px - Component padding
+}
+
+// Content Spacing (Text and media)
+:root {
+    --content-gap: var(--spacing-3);      // 12px - Content gaps
+    --content-margin: var(--spacing-3);   // 12px - Content margins
+    --text-margin: var(--spacing-2);      // 8px  - Text element margins
+}
+
+// Interactive Spacing (Buttons, inputs, clickable areas)
+:root {
+    --interactive-padding-x: var(--spacing-4); // 16px - Horizontal padding
+    --interactive-padding-y: var(--spacing-2); // 8px  - Vertical padding
+    --interactive-gap: var(--spacing-2);       // 8px  - Between interactive elements
+}
+
+// ===== SPACING VARIABLES =====
+@spacing-0: ~'var(--spacing-0)';
+@spacing-1: ~'var(--spacing-1)';
+@spacing-2: ~'var(--spacing-2)';
+@spacing-3: ~'var(--spacing-3)';
+@spacing-4: ~'var(--spacing-4)';
+@spacing-5: ~'var(--spacing-5)';
+@spacing-6: ~'var(--spacing-6)';
+@spacing-8: ~'var(--spacing-8)';
+@spacing-10: ~'var(--spacing-10)';
+@spacing-12: ~'var(--spacing-12)';
+@spacing-16: ~'var(--spacing-16)';
+@spacing-20: ~'var(--spacing-20)';
+@spacing-24: ~'var(--spacing-24)';
+
+// Semantic spacing
+@spacing-xs: @spacing-1;
+@spacing-sm: @spacing-2;
+@spacing-md: @spacing-4;
+@spacing-lg: @spacing-6;
+@spacing-xl: @spacing-8;
+@spacing-2xl: @spacing-12;
+
