@@ -64,6 +64,7 @@
     cursor: pointer;
 
     &:hover {
+        text-decoration: none;
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
@@ -80,13 +81,6 @@
         color: white;
         flex-shrink: 0;
         border: 1px solid;
-
-        // Color themes
-        //&.reports { background: linear-gradient(135deg, #5E6AD2, #4C51BF); }
-        //&.data { background: linear-gradient(135deg, #10B981, #059669); }
-        //&.annotations { background: linear-gradient(135deg, #F59E0B, #D97706); }
-        //&.search { background: linear-gradient(135deg, #3B82F6, #2563EB); }
-        //&.settings { background: linear-gradient(135deg, #6B7280, #4B5563); }
     }
 
     .option-card-meta {
@@ -109,38 +103,12 @@
         }
     }
 
-    .htmx-request {
-        opacity: 0.7;
-        pointer-events: none;
-        position: relative;
-
-        &::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid var(--color-primary);
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: card-loading 1s linear infinite;
-            z-index: 10;
-        }
-    }
-
     .option-card-actions {
         display: flex;
         gap: 0.5rem;
         justify-content: flex-end;
     }
 }
-
-@keyframes card-loading {
-    to { transform: rotate(360deg); }
-}
-
 
 .data-card {
     .data-card-header {

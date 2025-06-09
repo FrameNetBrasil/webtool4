@@ -1,0 +1,785 @@
+/*******************************
+    Fomantic UI Site Variables
+    Updated with Design System Integration
+*******************************/
+
+@imagePath: "/scripts/fomantic-ui/assets/images";
+@fontPath: "/scripts/fomantic-ui/assets/fonts";
+
+/*-------------------
+      Base Sizes
+--------------------*/
+
+@emSize: 14px;
+@fontSize: 14px;
+
+/*-------------------
+       Fonts
+--------------------*/
+
+@importGoogleFonts: false;
+@fontName: 'Inter';
+@fallbackFonts: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+@pageFont: @fontName, @fallbackFonts;
+@headerFont: @fontName, @fallbackFonts;
+@fontSmoothing: antialiased;
+@lineHeight: 1.5;
+
+/*-------------------
+    Border Radius
+--------------------*/
+@borderRadius: 6px;               // Modern, subtle radius
+@relativeBorderRadius: 0.375rem;
+@absoluteBorderRadius: 0.375rem;
+@defaultBorderRadius: @absoluteBorderRadius;
+
+/*-------------------
+     Brand Colors
+--------------------*/
+
+@primaryColor: #5E6AD2;
+@secondaryColor: #4B5563;
+
+/*-------------------
+      Site Colors
+--------------------*/
+
+/* Your custom color palette */
+@customPrimary: #5E6AD2;
+@customPrimaryHover: #4C51BF;
+@customPrimaryDark: #3730A3;
+
+/* Base colors - matching your design system */
+@red: #EF4444;
+@orange: #F59E0B;
+@yellow: #F59E0B;
+@olive: #84CC16;
+@green: #10B981;
+@teal: #14B8A6;
+@blue: #3B82F6;
+@violet: #6366F1;
+@purple: #8B5CF6;
+@pink: #EC4899;
+@brown: #92400E;
+@grey: #6B7280;
+@black: #111827;
+
+/* Light colors */
+@lightRed: #FEE2E2;
+@lightOrange: #FEF3C7;
+@lightYellow: #FEF3C7;
+@lightOlive: #D9F99D;
+@lightGreen: #D1FAE5;
+@lightTeal: #CCFBF1;
+@lightBlue: #DBEAFE;
+@lightViolet: #E0E7FF;
+@lightPurple: #EDE9FE;
+@lightPink: #FCE7F3;
+@lightBrown: #FEF3C7;
+@lightGrey: #F3F4F6;
+@lightBlack: #374151;
+
+/* Neutrals - matching your gray scale */
+@fullBlack: #000000;
+@offWhite: #F9FAFB;
+@darkWhite: #F3F4F6;
+@midWhite: #E5E7EB;
+@white: #FFFFFF;
+
+/*-------------------
+    Alpha Colors
+--------------------*/
+
+@subtleTransparentBlack: rgba(0, 0, 0, 0.02);
+@transparentBlack: rgba(0, 0, 0, 0.05);
+@strongTransparentBlack: rgba(0, 0, 0, 0.10);
+@veryStrongTransparentBlack: rgba(0, 0, 0, 0.15);
+
+@subtleTransparentWhite: rgba(255, 255, 255, 0.02);
+@transparentWhite: rgba(255, 255, 255, 0.08);
+@strongTransparentWhite: rgba(255, 255, 255, 0.15);
+
+/*-------------------
+    Emotive Colors
+--------------------*/
+
+/* Positive - Success */
+@positiveColor: #10B981;
+@positiveBackgroundColor: #D1FAE5;
+@positiveBorderColor: #10B981;
+@positiveHeaderColor: #065F46;
+@positiveTextColor: #065F46;
+
+/* Negative - Error */
+@negativeColor: #EF4444;
+@negativeBackgroundColor: #FEE2E2;
+@negativeBorderColor: #EF4444;
+@negativeHeaderColor: #991B1B;
+@negativeTextColor: #991B1B;
+
+/* Info */
+@infoColor: #3B82F6;
+@infoBackgroundColor: #DBEAFE;
+@infoBorderColor: #3B82F6;
+@infoHeaderColor: #1E40AF;
+@infoTextColor: #1E40AF;
+
+/* Warning */
+@warningColor: #F59E0B;
+@warningBorderColor: #F59E0B;
+@warningBackgroundColor: #FEF3C7;
+@warningHeaderColor: #92400E;
+@warningTextColor: #92400E;
+
+/*-------------------
+        Page
+--------------------*/
+
+@pageBackground: #FAFBFC;         // Soft, warm white
+@pageOverflowX: hidden;
+@lineHeight: 1.5;
+@textColor: #1F2937;
+
+/*-------------------
+      Paragraph
+--------------------*/
+
+@paragraphMargin: 0 0 1em;
+@paragraphLineHeight: 1.5;
+
+/*-------------------
+       Links
+--------------------*/
+
+@linkColor: #5E6AD2;
+@linkUnderline: none;
+@linkHoverColor: #4C51BF;
+@linkHoverUnderline: underline;
+
+/*-------------------
+    Scroll Bars
+--------------------*/
+
+@useCustomScrollbars: true;
+@customScrollbarWidth: 8px;
+@customScrollbarHeight: 8px;
+@trackBackground: #F3F4F6;
+@trackBorderRadius: 4px;
+@thumbBorderRadius: 4px;
+@thumbBackground: #D1D5DB;
+@thumbTransition: background 0.2s ease;
+@thumbInactiveBackground: #E5E7EB;
+@thumbHoverBackground: #9CA3AF;
+
+/*-------------------
+  Highlighted Text
+--------------------*/
+
+@highlightBackground: #FEF3C7;
+@highlightColor: #92400E;
+
+/*-------------------
+     Neutral Text
+--------------------*/
+
+@darkTextColor: #111827;
+@mutedTextColor: #6B7280;
+@lightTextColor: #9CA3AF;
+@unselectedTextColor: #9CA3AF;
+@hoveredTextColor: #374151;
+@pressedTextColor: #1F2937;
+@selectedTextColor: #111827;
+
+@invertedTextColor: #FFFFFF;
+@invertedMutedTextColor: #F3F4F6;
+@invertedLightTextColor: #E5E7EB;
+@invertedUnselectedTextColor: #D1D5DB;
+@invertedHoveredTextColor: #FFFFFF;
+@invertedPressedTextColor: #FFFFFF;
+@invertedSelectedTextColor: #FFFFFF;
+
+/*-------------------
+      Borders
+--------------------*/
+
+@borderColor: #E5E7EB;
+@strongBorderColor: #D1D5DB;
+@internalBorderColor: #F3F4F6;
+@selectedBorderColor: #9CA3AF;
+@strongSelectedBorderColor: #6B7280;
+@disabledBorderColor: #E5E7EB;
+
+@solidInternalBorderColor: #F9FAFB;
+@solidBorderColor: #D1D5DB;
+@solidSelectedBorderColor: #9CA3AF;
+
+@whiteBorderColor: rgba(255, 255, 255, 0.1);
+@selectedWhiteBorderColor: rgba(255, 255, 255, 0.8);
+
+/*-------------------
+     Backgrounds
+--------------------*/
+
+/* Colored Backgrounds - matching your status colors */
+@primaryBackground: #EEF2FF;
+@secondaryBackground: #F3F4F6;
+@redBackground: #FEE2E2;
+@orangeBackground: #FEF3C7;
+@yellowBackground: #FEF3C7;
+@oliveBackground: #D1FAE5;
+@greenBackground: #D1FAE5;
+@tealBackground: #CCFBF1;
+@blueBackground: #DBEAFE;
+@violetBackground: #E0E7FF;
+@purpleBackground: #EDE9FE;
+@pinkBackground: #FCE7F3;
+@brownBackground: #FEF3C7;
+@greyBackground: #F3F4F6;
+@blackBackground: #1F2937;
+
+/*-------------------
+  Colored Headers
+--------------------*/
+
+@primaryHeaderColor: #3730A3;
+@secondaryHeaderColor: #374151;
+@redHeaderColor: #991B1B;
+@orangeHeaderColor: #92400E;
+@yellowHeaderColor: #92400E;
+@oliveHeaderColor: #065F46;
+@greenHeaderColor: #065F46;
+@tealHeaderColor: #0F766E;
+@blueHeaderColor: #1E40AF;
+@violetHeaderColor: #4338CA;
+@purpleHeaderColor: #6B21A8;
+@pinkHeaderColor: #BE185D;
+@brownHeaderColor: #92400E;
+@greyHeaderColor: #374151;
+@blackHeaderColor: #000000;
+
+/*-------------------
+    Colored Text
+--------------------*/
+
+@primaryTextColor: #5E6AD2;
+@secondaryTextColor: #6B7280;
+@redTextColor: #EF4444;
+@orangeTextColor: #F59E0B;
+@yellowTextColor: #F59E0B;
+@oliveTextColor: #84CC16;
+@greenTextColor: #10B981;
+@tealTextColor: #14B8A6;
+@blueTextColor: #3B82F6;
+@violetTextColor: #6366F1;
+@purpleTextColor: #8B5CF6;
+@pinkTextColor: #EC4899;
+@brownTextColor: #92400E;
+@greyTextColor: #6B7280;
+@blackTextColor: #111827;
+
+/*-------------------
+       Loader
+--------------------*/
+
+@loaderSize: 2.5rem;
+@loaderSpeed: 0.6s;
+@loaderLineWidth: 0.2em;
+@loaderFillColor: #F3F4F6;
+@loaderLineColor: #5E6AD2;
+
+@invertedLoaderFillColor: rgba(255, 255, 255, 0.15);
+@invertedLoaderLineColor: #FFFFFF;
+
+/*-------------------
+     Transitions
+--------------------*/
+
+@defaultDuration: 0.2s;
+@defaultEasing: ease;
+
+/*-------------------
+     Breakpoints
+--------------------*/
+
+@mobileBreakpoint: 320px;
+@tabletBreakpoint: 768px;
+@computerBreakpoint: 992px;
+@largeMonitorBreakpoint: 1200px;
+@widescreenMonitorBreakpoint: 1920px;
+
+/*-------------------
+      Form Input
+--------------------*/
+
+@inputBackground: #FFFFFF;
+@inputVerticalPadding: 0.75rem;
+@inputHorizontalPadding: 1rem;
+@inputPadding: @inputVerticalPadding @inputHorizontalPadding;
+
+/* Input Text Color */
+@inputColor: #1F2937;
+@inputPlaceholderColor: #9CA3AF;
+@inputPlaceholderFocusColor: #6B7280;
+
+/* Line Height */
+@inputLineHeight: 1.5;
+
+/*-------------------
+    Focused Input
+--------------------*/
+
+@focusedFormBorderColor: #5E6AD2;
+@focusedFormMutedBorderColor: #C7D2FE;
+
+/*-------------------
+      Box Shadow
+--------------------*/
+
+@subtleShadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+@floatingShadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+@floatingShadowHover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+/*-------------------
+   Colored Borders
+--------------------*/
+
+@primaryBorderColor: #5E6AD2;
+@secondaryBorderColor: #6B7280;
+@redBorderColor: #EF4444;
+@orangeBorderColor: #F59E0B;
+@yellowBorderColor: #F59E0B;
+@oliveBorderColor: #84CC16;
+@greenBorderColor: #10B981;
+@tealBorderColor: #14B8A6;
+@blueBorderColor: #3B82F6;
+@violetBorderColor: #6366F1;
+@purpleBorderColor: #8B5CF6;
+@pinkBorderColor: #EC4899;
+@brownBorderColor: #92400E;
+@greyBorderColor: #6B7280;
+@blackBorderColor: #111827;
+
+/*-------------------
+      Gradients
+--------------------*/
+
+@primaryGradient: linear-gradient(135deg, #5E6AD2, #4C51BF);
+@successGradient: linear-gradient(90deg, #10B981, #059669);
+@warningGradient: linear-gradient(90deg, #F59E0B, #D97706);
+@errorGradient: linear-gradient(90deg, #EF4444, #DC2626);
+
+/*-------------------
+    Custom Additions
+--------------------*/
+
+/* Status Colors - matching your system */
+@statusSuccessBg: #D1FAE5;
+@statusSuccessText: #065F46;
+@statusSuccessDot: #10B981;
+
+@statusWarningBg: #FEF3C7;
+@statusWarningText: #92400E;
+@statusWarningDot: #F59E0B;
+
+@statusErrorBg: #FEE2E2;
+@statusErrorText: #991B1B;
+@statusErrorDot: #EF4444;
+
+@statusInfoBg: #DBEAFE;
+@statusInfoText: #1E40AF;
+@statusInfoDot: #3B82F6;
+
+@statusNeutralBg: #F3F4F6;
+@statusNeutralText: #4B5563;
+@statusNeutralDot: #6B7280;
+
+/* Additional custom variables */
+@focusRingColor: rgba(94, 106, 210, 0.1);
+@selectionBg: rgba(59, 130, 246, 0.1);
+@selectionBorder: #3B82F6;
+
+/* Sidebar colors */
+@sidebarBg: #F9FAFB;
+@sidebarBorder: #E5E7EB;
+@sidebarItemHover: #F3F4F6;
+@sidebarItemActive: #EEF2FF;
+
+/* Badge colors */
+@badgePrimaryBg: #C7D2FE;
+@badgePrimaryText: #5E6AD2;
+@badgeSuccessBg: #D1FAE5;
+@badgeSuccessText: #059669;
+@badgeWarningBg: #FEF3C7;
+@badgeWarningText: #D97706;
+@badgeDangerBg: #FEE2E2;
+@badgeDangerText: #DC2626;
+@badgeNeutralBg: #E5E7EB;
+@badgeNeutralText: #4B5563;
+
+/*-------------------
+        Sizes
+--------------------*/
+
+@miniSize: (11 / 14);
+@tinySize: (12 / 14);
+@smallSize: (13 / 14);
+@mediumSize: (14 / 14);
+@largeSize: (16 / 14);
+@bigSize: (18 / 14);
+@hugeSize: (20 / 14);
+@massiveSize: (24 / 14);
+
+/*-------------------
+     Font Sizes
+--------------------*/
+
+@miniSizeFont: 0.75rem;
+@tinySizeFont: 0.8rem;
+@smallSizeFont: 0.9rem;
+@mediumSizeFont: 1rem;
+@largeSizeFont: 1.1rem;
+@bigSizeFont: 1.2rem;
+@hugeSizeFont: 1.3rem;
+
+/*-------------------
+     Header Sizes
+--------------------*/
+
+@h1: 2rem;
+@h2: 1.714rem;
+@h3: 1.28rem;
+@h4: 1.071rem;
+@h5: 1rem;
+@h6: 0.857rem;
+
+@headerFontWeight: 600;
+@headerLineHeight: 1.25;
+
+/*-------------------
+    Dark Theme
+--------------------*/
+
+@darkBg: #1F2937;
+@darkBorder: #374151;
+@darkText: #F9FAFB;
+@darkTextMuted: #D1D5DB;
+@darkHover: #374151;
+@darkActive: #4C51BF;
+
+/*-------------------
+   Form State Colors
+--------------------*/
+
+/* Error States */
+@formErrorColor: #991B1B;
+@formErrorBorder: #EF4444;
+@formErrorBackground: #FEE2E2;
+
+/* Success States */
+@formSuccessColor: #065F46;
+@formSuccessBorder: #10B981;
+@formSuccessBackground: #D1FAE5;
+
+/* Warning States */
+@formWarningColor: #92400E;
+@formWarningBorder: #F59E0B;
+@formWarningBackground: #FEF3C7;
+
+/* Info States */
+@formInfoColor: #1E40AF;
+@formInfoBorder: #3B82F6;
+@formInfoBackground: #DBEAFE;
+
+/*-------------------
+     Z-Indexes
+--------------------*/
+
+@zIndexDropdown: 1000;
+@zIndexModal: 1001;
+@zIndexPopup: 1002;
+
+/*-------------------
+  Disable Defaults
+--------------------*/
+
+@disabledOpacity: 0.5;
+@disabledTextColor: #9CA3AF;
+
+/*-------------------
+     Hover States
+--------------------*/
+
+/* Calculate hover states automatically */
+@primaryColorHover: #4C51BF;
+@primaryColorFocus: #3730A3;
+@primaryColorDown: #3730A3;
+@primaryColorActive: #3730A3;
+
+/* Success/Green Hover States */
+@greenHover: #059669;
+@greenFocus: #047857;
+@greenDown: #065F46;
+@greenActive: #065F46;
+
+/* Error/Red Hover States */
+@redHover: #DC2626;
+@redFocus: #B91C1C;
+@redDown: #991B1B;
+@redActive: #991B1B;
+
+/* Warning/Yellow Hover States */
+@yellowHover: #D97706;
+@yellowFocus: #B45309;
+@yellowDown: #92400E;
+@yellowActive: #92400E;
+
+/* Info/Blue Hover States */
+@blueHover: #2563EB;
+@blueFocus: #1D4ED8;
+@blueDown: #1E40AF;
+@blueActive: #1E40AF;
+
+/*******************************
+    Annotation-Specific Variables
+*******************************/
+
+/* Annotation toolbar */
+@annotationToolbarBackground: #1F2937;
+@annotationToolbarHeight: 3rem;
+@annotationToolColor: #F3F4F6;
+@annotationToolActiveColor: @primaryColor;
+
+/* Bounding box colors */
+@boundingBoxDefault: #3B82F6;     // Blue
+@boundingBoxSelected: #EF4444;    // Red
+@boundingBoxHover: #10B981;       // Green
+@boundingBoxStroke: 2px;
+@boundingBoxOpacity: 0.3;
+
+/* Canvas controls */
+@canvasControlSize: 2.5rem;
+@canvasControlBackground: rgba(255, 255, 255, 0.9);
+@canvasControlBorder: 1px solid #E5E7EB;
+@canvasControlRadius: 6px;
+@canvasControlShadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+/* Sidebar for object relationships */
+@sidebarWidth: 280px;
+@sidebarBackground: #F9FAFB;
+@sidebarBorder: 1px solid #E5E7EB;
+@relationshipLineColor: #9CA3AF;
+@relationshipActiveColor: @primaryColor;
+
+/*******************************
+    Responsive Layout
+*******************************/
+
+/* Breakpoint Variables */
+@mobile: ~"(max-width: 767px)";
+@tablet: ~"(min-width: 768px) and (max-width: 1023px)";
+@desktop: ~"(min-width: 1024px)";
+@large: ~"(min-width: 1200px)";
+@xlarge: ~"(min-width: 1400px)";
+@xxlarge: ~"(min-width: 1600px)";
+
+/* Additional breakpoints for fine control */
+@small-mobile: ~"(max-width: 480px)";
+@large-mobile: ~"(min-width: 481px) and (max-width: 767px)";
+@small-tablet: ~"(min-width: 768px) and (max-width: 991px)";
+@large-tablet: ~"(min-width: 992px) and (max-width: 1023px)";
+
+/*******************************
+    CRUD-Optimized Buttons
+*******************************/
+
+/* Smaller, more subtle buttons */
+@verticalPadding: 0.6em;          // Reduced padding
+@horizontalPadding: 1.2em;        // Reduced padding
+@fontWeight: 500;                 // Medium weight, not bold
+@textTransform: none;             // No uppercase
+@borderRadius: 6px;               // Consistent with global
+
+/* Subtle styling */
+@background: #F9FAFB;
+@color: #374151;
+@border: 1px solid #E5E7EB;
+
+/* Refined hover states */
+@hoverBackgroundColor: #F3F4F6;
+@hoverColor: #1F2937;
+@hoverBoxShadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+/* Primary button - accent color */
+@primaryBackgroundColor: @primaryColor;
+@primaryColor: #FFFFFF;
+@primaryHoverBackgroundColor: darken(@primaryColor, 8%);
+
+/* Icon buttons for CRUD operations */
+@iconOnlyPadding: 0.5em;
+@iconOnlySize: 2.2em;
+
+/*******************************
+    CRUD-Optimized Cards
+*******************************/
+
+/* Subtle card design */
+@background: #FFFFFF;
+@border: 1px solid #E5E7EB;
+@borderRadius: 8px;               // Slightly larger radius
+@boxShadow: 0 1px 3px rgba(0, 0, 0, 0.05); // Very subtle
+@padding: 1.25em;                 // Generous but not excessive
+
+/* Card headers */
+@headerFontSize: 1.1em;           // Not too large
+@headerFontWeight: 600;           // Semibold
+@headerColor: #1F2937;
+@headerMargin: 0em 0em 0.75em;
+
+/* Card content */
+@contentColor: #4B5563;           // Slightly muted
+@metaColor: #6B7280;              // More muted for metadata
+
+/*******************************
+    CRUD-Optimized Forms
+*******************************/
+
+/* Tighter form spacing */
+@fieldMargin: 0em 0em 0.8em;      // Reduced from 1em
+@labelMargin: 0em 0em 0.4em 0em;  // Tighter label spacing
+@labelColor: #374151;
+@labelFontWeight: 500;            // Medium weight
+@labelFontSize: 0.875em;          // Slightly smaller
+
+/* Inline forms for CRUD operations */
+@inlineFieldMargin: 0em 1em 0em 0em;
+@inlineInputWidth: auto;
+
+/*******************************
+    CRUD-Optimized Inputs
+*******************************/
+
+/* Refined input styling */
+@background: #FFFFFF;
+@border: 1px solid #D1D5DB;
+@borderRadius: 6px;
+@verticalPadding: 0.6em;          // Compact but usable
+@horizontalPadding: 0.75em;
+
+/* Modern focus states */
+@focusBorderColor: @primaryColor;
+@focusBoxShadow: 0 0 0 3px rgba(94, 106, 210, 0.1);
+@focusBackground: #FFFFFF;
+
+/* Error states */
+@errorBackground: #FEF2F2;
+@errorBorder: #F87171;
+@errorColor: #DC2626;
+
+/* Placeholder styling */
+@placeholderColor: #9CA3AF;
+@placeholderFocusColor: #6B7280;
+
+/*******************************
+    CRUD-Optimized Menus
+*******************************/
+
+/* Clean menu design */
+@background: #FFFFFF;
+@border: 1px solid #E5E7EB;
+@borderRadius: 6px;
+@boxShadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+/* Compact menu items */
+@itemPadding: 0.6em 1em;          // Tighter padding
+@itemTextColor: #4B5563;
+@itemFontWeight: 500;
+
+/* Subtle hover states */
+@hoverItemBackground: #F3F4F6;
+@hoverItemTextColor: #1F2937;
+@activeItemBackground: #EEF2FF;
+@activeItemTextColor: @primaryColor;
+
+/* Breadcrumb-style navigation */
+@breadcrumbSpacing: 0.5em;
+@breadcrumbArrowColor: #9CA3AF;
+
+/*******************************
+    CRUD-Optimized Modals
+*******************************/
+
+/* Modern modal styling */
+@background: #FFFFFF;
+@borderRadius: 12px;              // More rounded for modern feel
+@boxShadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+/* Header styling */
+@headerBackground: #FFFFFF;
+@headerColor: #1F2937;
+@headerPadding: 1.5rem 1.5rem 1rem;
+@headerFontSize: 1.25rem;
+@headerFontWeight: 600;
+
+/* Content spacing */
+@contentPadding: 0rem 1.5rem 1.5rem;
+
+/* Actions area */
+@actionBackground: #F9FAFB;
+@actionPadding: 1rem 1.5rem;
+@actionBorderTop: 1px solid #E5E7EB;
+
+/*******************************
+    CRUD-Optimized Messages
+*******************************/
+
+/* Subtle message styling */
+@background: #F8FAFC;
+@border: 1px solid #E2E8F0;
+@borderRadius: 6px;
+@padding: 1em 1.25em;
+@boxShadow: none;                 // Remove heavy shadow
+
+/* State colors - modern palette */
+@positiveBackgroundColor: #F0FDF4;
+@positiveTextColor: #166534;
+@positiveBorderColor: #BBF7D0;
+
+@negativeBackgroundColor: #FEF2F2;
+@negativeTextColor: #DC2626;
+@negativeBorderColor: #FECACA;
+
+@infoBackgroundColor: #EFF6FF;
+@infoTextColor: #1E40AF;
+@infoBorderColor: #BFDBFE;
+
+@warningBackgroundColor: #FFFBEB;
+@warningTextColor: #D97706;
+@warningBorderColor: #FDE68A;
+
+/*******************************
+    CRUD-Optimized Tables
+*******************************/
+
+/* Compact table design */
+@cellVerticalPadding: 0.5em;      // Tighter rows
+@cellHorizontalPadding: 0.75em;   // Adequate column spacing
+@headerVerticalPadding: 0.6em;
+@headerHorizontalPadding: 0.75em;
+
+/* Subtle borders and backgrounds */
+@border: 1px solid #E5E7EB;
+@headerBackground: #F9FAFB;
+@headerColor: #374151;
+@headerFontWeight: 600;           // Semibold, not bold
+@headerFontSize: 0.875em;         // Slightly smaller
+
+/* Striped rows for readability */
+@stripedBackground: #F9FAFB;
+@selectableBackground: #EEF2FF;   // Light purple for selection
+@selectableTextColor: #1F2937;
+
+/* Hover states */
+@hoverBackground: #F3F4F6;
+@activeBackground: #EEF2FF;
+@activeColor: #1F2937;
