@@ -138,6 +138,7 @@
                     <div class="field">
                         <x-combobox.lexicon-morpheme
                             id="idMorphemeConstraint"
+                            :idLanguage="$constructionElement->cxn->cxIdLanguage"
                             label="Morpheme"
                             class="w-25rem"
                         ></x-combobox.lexicon-morpheme>
