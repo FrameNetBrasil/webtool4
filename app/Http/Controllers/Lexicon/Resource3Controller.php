@@ -218,11 +218,12 @@ class Resource3Controller extends Controller
     public function listMorphemeForSelect(QData $data)
     {
         $name = (strlen($data->q) > 0) ? $data->q : 'none';
+        $idLanguage = ($data->idLanguage > 0) ? $data->idLanguage : AppService::getCurrentIdLanguage();
         return Criteria::table("lexicon as l")
         ->join("lexicon_group as g","g.idLexiconGroup","=","l.idLexiconGroup")
             ->where("l.form","startswith", trim($name))
             ->whereNotIn("l.idLexiconGroup",[1,2,7])
-            ->where("l.idLanguage",AppService::getCurrentIdLanguage())
+            ->where("l.idLanguage", $idLanguage)
             ->select('l.idLexicon')
             ->selectRaw("concat(l.form,' [', g.name,']') as name")
             ->limit(50)
