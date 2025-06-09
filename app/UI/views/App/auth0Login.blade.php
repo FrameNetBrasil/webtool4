@@ -4,7 +4,7 @@
     </x-slot:breadcrumb>
     <x-slot:main>
         <div class="page-content">
-            <div class="content-container wide h-full center-container-with-sidebar">
+            <div class=" center-container-with-sidebar content-container wide h-full">
                 <div>
                     <div class="pb-4">
                         <img src="/images/fnbr_logo_alpha.png" width="240" />
