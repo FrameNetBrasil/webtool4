@@ -52,7 +52,7 @@
                 <div class="field mr-1">
                     <x-combobox.lu
                         id="idLU"
-                        label="CVName"
+                        label="Framed entity"
                         placeholder="LU (min: 2 chars)"
                         class="w-23rem mb-2"
                         :value="$object?->idLU"
