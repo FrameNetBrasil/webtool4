@@ -4,18 +4,18 @@
     background: none;
     border: none;
     padding: @relativeTiny; // 8px
-    color: @textSecondary;
+    color: @secondaryColor;
     cursor: pointer;
     border-radius: @borderRadiusMD; // 6px
     transition: all @transitionFast;
 
     &:hover {
-        color: @textPrimary;
-        background: @surfaceTertiary;
+        color: @primaryColor;
+        background: @primaryBackground;
     }
 
     .icon {
-        font-size: @fontSizeXL; // 20px
+        font-size: @huge; // 20px
     }
 
     @media (min-width: @mobileBreakpoint) {

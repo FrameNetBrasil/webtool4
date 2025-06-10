@@ -49,6 +49,7 @@ class ReportController extends Controller
     public function report(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
     {
         $search = session('searchFrame') ?? SearchData::from();
+        debug($search);
         if ($idFrame == '') {
             return view("Frame.Report.main", [
                 'search' => $search,

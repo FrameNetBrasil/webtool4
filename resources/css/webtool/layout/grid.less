@@ -22,8 +22,8 @@
 /* Layout Areas */
 .app-header {
     grid-area: header;
-    background: @surfacePrimary;                                         // (was var(--color-bg-primary))
-    border-bottom: 1px solid @borderSubtle;                             // (was var(--color-border-primary))
+    background: @primaryBackground;                                         // (was var(--color-bg-primary))
+    border-bottom: 1px solid @borderColor;                             // (was var(--color-border-primary))
     display: flex;
     align-items: center;
     padding: 0 @relativeLarge;                                           // 24px (was var(--spacing-6))
@@ -32,15 +32,15 @@
 
 .app-sidebar {
     grid-area: sidebar;
-    background: @sidebarBackground;                                      // (was var(--color-sidebar-bg))
-    border-right: 1px solid @sidebarBorder;                             // (was var(--color-sidebar-border))
+    background: @primaryBackground;                                      // (was var(--color-sidebar-bg))
+    border-right: 1px solid @borderColor;                             // (was var(--color-sidebar-border))
     overflow-y: auto;
     z-index: @zIndexFixed;                                               // (was var(--z-fixed))
 }
 
 .app-main {
     grid-area: main;
-    background: @surfacePrimary;                                         // (was var(--color-bg-primary))
+    background: @primaryBackground;                                         // (was var(--color-bg-primary))
     overflow-y: auto;
     position: relative;
 }
@@ -56,8 +56,8 @@
 .page-header {
     flex-shrink: 0;
     padding: @relativeBig;                                               // 32px (was var(--spacing-8))
-    border-bottom: 1px solid @borderSubtle;                             // (was var(--color-border-primary))
-    background: @surfacePrimary;                                         // (was var(--color-bg-primary))
+    border-bottom: 1px solid @borderColor;                             // (was var(--color-border-primary))
+    background: @primaryBackground;                                         // (was var(--color-bg-primary))
 }
 
 .page-content {
@@ -96,8 +96,8 @@
 
 .app-tools {
     grid-area: tools;
-    background: @sidebarBackground;                                      // (was var(--color-sidebar-bg))
-    border-left: 1px solid @borderSubtle;                               // (was var(--color-border-primary))
+    background: @primaryBackground;                                      // (was var(--color-sidebar-bg))
+    border-left: 1px solid @borderColor;                               // (was var(--color-border-primary))
     overflow-y: auto;
 }
 
@@ -264,9 +264,9 @@
     position: relative;
     overflow: auto;
     max-height: calc(100vh - 200px);
-    border: 1px solid @borderSubtle;                                     // (was var(--color-border-primary))
+    border: 1px solid @borderColor;                                     // (was var(--color-border-primary))
     border-radius: @borderRadiusLG;                                      // 8px (was var(--radius-lg))
-    background: @surfacePrimary;                                         // (was var(--color-bg-primary))
+    background: @primaryBackground;                                         // (was var(--color-bg-primary))
 
     &.full-height {
         max-height: calc(100vh - 120px);
@@ -289,14 +289,14 @@
         thead th {
             position: sticky;
             top: 0;
-            background: @sidebarBackground;                              // (was var(--color-sidebar-bg))
+            background: @primaryBackground;                              // (was var(--color-sidebar-bg))
             z-index: @zIndexDropdown;                                    // (was var(--z-dropdown))
-            border-bottom: 2px solid @borderSubtle;                     // (was var(--color-border-primary))
+            border-bottom: 2px solid @borderColor;                     // (was var(--color-border-primary))
             box-shadow: @shadowSM;                                      // (was var(--shadow-sm))
         }
 
         &.striped tbody tr:nth-child(2n) {
-            background: @sidebarBackground;                              // (was var(--color-sidebar-bg))
+            background: @primaryBackground;                              // (was var(--color-sidebar-bg))
         }
     }
 }
@@ -520,14 +520,14 @@
         position: relative;
 
         &:not(:last-child) {
-            border-right: 1px solid @borderSubtle;                      // (was var(--color-border-primary))
+            border-right: 1px solid @borderColor;                      // (was var(--color-border-primary))
         }
     }
 
     &.vertical .split-panel {
         &:not(:last-child) {
             border-right: none;
-            border-bottom: 1px solid @borderSubtle;                     // (was var(--color-border-primary))
+            border-bottom: 1px solid @borderColor;                     // (was var(--color-border-primary))
         }
     }
 }
@@ -566,8 +566,8 @@
     }
 
     .sidebar-content {
-        background: @sidebarBackground;                                  // (was var(--color-sidebar-bg))
-        border: 1px solid @borderSubtle;                                // (was var(--color-border-primary))
+        background: @primaryBackground;                                  // (was var(--color-sidebar-bg))
+        border: 1px solid @borderColor;                                // (was var(--color-border-primary))
         border-radius: @borderRadiusLG;                                 // 8px (was var(--radius-lg))
         padding: @relativeLarge;                                         // 24px (was var(--spacing-6))
         height: fit-content;
@@ -613,62 +613,62 @@
 }
 
 /* Annotation workspace layout */
-.annotation-workspace {
-    display: grid;
-    height: 100vh;
-    grid-template-areas:
-        "toolbar toolbar toolbar"
-        "sidebar canvas properties"
-        "timeline timeline timeline";
-    grid-template-columns: @sidebarWidth 1fr @toolsPanelWidth;          // (was var(--sidebar-width) var(--tools-panel-width))
-    grid-template-rows: @toolbarHeight 1fr @timelineHeight;             // (was var(--toolbar-height) var(--timeline-height))
-    gap: 0;
-
-    .annotation-toolbar {
-        grid-area: toolbar;
-        background: @surfacePrimary;                                     // (was var(--color-bg-primary))
-        border-bottom: 1px solid @borderSubtle;                         // (was var(--color-border-primary))
-        padding: 0 @relativeMedium;                                      // 16px (was var(--spacing-4))
-    }
-
-    .annotation-sidebar {
-        grid-area: sidebar;
-        background: @sidebarBackground;                                  // (was var(--color-sidebar-bg))
-        border-right: 1px solid @sidebarBorder;                         // (was var(--color-sidebar-border))
-    }
-
-    .annotation-canvas {
-        grid-area: canvas;
-        background: @black;                                              // (was var(--color-canvas-bg))
-    }
-
-    .annotation-properties {
-        grid-area: properties;
-        background: @sidebarBackground;                                  // (was var(--color-sidebar-bg))
-        border-left: 1px solid @borderSubtle;                           // (was var(--color-border-primary))
-    }
-
-    .annotation-timeline {
-        grid-area: timeline;
-        background: @surfaceSecondary;                                   // (was var(--color-bg-secondary))
-        border-top: 1px solid @borderSubtle;                            // (was var(--color-border-primary))
-    }
-
-    &.no-timeline {
-        grid-template-areas:
-            "toolbar toolbar toolbar"
-            "sidebar canvas properties";
-        grid-template-rows: @toolbarHeight 1fr;                         // (was var(--toolbar-height))
-    }
-
-    &.fullscreen-canvas {
-        grid-template-areas:
-            "toolbar"
-            "canvas";
-        grid-template-columns: 1fr;
-        grid-template-rows: @toolbarHeight 1fr;                         // (was var(--toolbar-height))
-    }
-}
+//.annotation-workspace {
+//    display: grid;
+//    height: 100vh;
+//    grid-template-areas:
+//        "toolbar toolbar toolbar"
+//        "sidebar canvas properties"
+//        "timeline timeline timeline";
+//    grid-template-columns: @sidebarWidth 1fr @toolsPanelWidth;          // (was var(--sidebar-width) var(--tools-panel-width))
+//    grid-template-rows: @toolbarHeight 1fr @timelineHeight;             // (was var(--toolbar-height) var(--timeline-height))
+//    gap: 0;
+//
+//    .annotation-toolbar {
+//        grid-area: toolbar;
+//        background: @surfacePrimary;                                     // (was var(--color-bg-primary))
+//        border-bottom: 1px solid @borderSubtle;                         // (was var(--color-border-primary))
+//        padding: 0 @relativeMedium;                                      // 16px (was var(--spacing-4))
+//    }
+//
+//    .annotation-sidebar {
+//        grid-area: sidebar;
+//        background: @sidebarBackground;                                  // (was var(--color-sidebar-bg))
+//        border-right: 1px solid @sidebarBorder;                         // (was var(--color-sidebar-border))
+//    }
+//
+//    .annotation-canvas {
+//        grid-area: canvas;
+//        background: @black;                                              // (was var(--color-canvas-bg))
+//    }
+//
+//    .annotation-properties {
+//        grid-area: properties;
+//        background: @sidebarBackground;                                  // (was var(--color-sidebar-bg))
+//        border-left: 1px solid @borderSubtle;                           // (was var(--color-border-primary))
+//    }
+//
+//    .annotation-timeline {
+//        grid-area: timeline;
+//        background: @surfaceSecondary;                                   // (was var(--color-bg-secondary))
+//        border-top: 1px solid @borderSubtle;                            // (was var(--color-border-primary))
+//    }
+//
+//    &.no-timeline {
+//        grid-template-areas:
+//            "toolbar toolbar toolbar"
+//            "sidebar canvas properties";
+//        grid-template-rows: @toolbarHeight 1fr;                         // (was var(--toolbar-height))
+//    }
+//
+//    &.fullscreen-canvas {
+//        grid-template-areas:
+//            "toolbar"
+//            "canvas";
+//        grid-template-columns: 1fr;
+//        grid-template-rows: @toolbarHeight 1fr;                         // (was var(--toolbar-height))
+//    }
+//}
 
 /* Nested grids for complex layouts */
 .nested-grid {

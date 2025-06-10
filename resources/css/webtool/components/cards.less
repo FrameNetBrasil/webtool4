@@ -84,7 +84,7 @@
         align-items: center;
         justify-content: center;
         margin-bottom: @relativeMedium;
-        font-size: @fontSizeXL;
+        font-size: @huge;
         color: @invertedTextColor;
         flex-shrink: 0;
         border: 1px solid;
@@ -95,18 +95,18 @@
         justify-content: space-between;
         align-items: center;
         margin-top: @relativeMedium;
-        font-size: @fontSizeXS;
-        color: @textTertiary;
+        font-size: @tiny;
+        color: @secondaryColor;
 
         .option-card-count {
-            background: @surfaceTertiary;
+            background: @secondaryBackground;
             padding: @relativeMini @relativeTiny;
             border-radius: @borderRadiusLG;
             font-weight: @fontWeightMedium;
         }
 
         .option-card-updated {
-            color: @textSecondary;
+            color: @secondaryColor;
         }
     }
 
@@ -145,8 +145,8 @@
             }
 
             .meta {
-                color: @textTertiary;
-                font-size: @fontSizeSM;
+                color: @secondaryColor;
+                font-size: @small;
             }
         }
 
@@ -164,16 +164,16 @@
             text-align: center;
 
             .value {
-                font-size: @fontSizeXL;
+                font-size: @huge;
                 font-weight: @fontWeightSemibold;
                 color: @primaryColor;
             }
 
             .label {
-                font-size: @fontSizeXS;
-                color: @textTertiary;
+                font-size: @small;
+                color: @secondaryColor;
                 text-transform: uppercase;
-                letter-spacing: @letterSpacingWide;
+                letter-spacing: @letterSpacingNormal;
             }
         }
     }
@@ -197,15 +197,15 @@
             width: @relative40px;
             height: @relative40px;
             border-radius: @borderRadiusMD;
-            background: @overlayDark10;
+            background: @primaryBackground;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: @fontSizeLG;
+            font-size: @large;
         }
 
         .summary-card-trend {
-            font-size: @fontSizeSM;
+            font-size: @small;
             font-weight: @fontWeightSemibold;
 
             &.positive {
@@ -217,7 +217,7 @@
             }
 
             &.neutral {
-                color: @textTertiary;
+                color: @secondaryColor;
             }
         }
     }
@@ -227,48 +227,48 @@
 
         .statistic {
             .value {
-                font-size: @fontSize4XL; // 36px
+                font-size: @massive; // 36px
                 font-weight: @fontWeightBold;
-                line-height: @lineHeightNone;
+                line-height: @lineHeight;
             }
 
             .label {
-                font-size: @fontSizeSM;
-                color: @textTertiary;
+                font-size: @small;
+                color: @secondaryColor;
             }
         }
     }
 
     .summary-card-description {
-        font-size: @fontSizeXS;
-        color: @textSecondary;
+        font-size: @mini;
+        color: @secondaryColor;
     }
 
     // Themed variants
     &.primary {
         .summary-card-icon {
-            background: @overlayPrimary10;
+            background: @primaryBackground;
             color: @primaryColor;
         }
     }
 
     &.positive {
         .summary-card-icon {
-            background: @statusSuccessBackground;
+            background: @successBackgroundColor;
             color: @positiveColor;
         }
     }
 
     &.warning {
         .summary-card-icon {
-            background: @statusWarningBackground;
+            background: @warningBackgroundColor;
             color: @warningColor;
         }
     }
 
     &.negative {
         .summary-card-icon {
-            background: @statusErrorBackground;
+            background: @errorBackgroundColor;
             color: @negativeColor;
         }
     }
@@ -294,17 +294,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: @fontSize2XL;
+        font-size: @huge;
         margin: 0 auto @relativeMedium;
     }
 
     .action-card-shortcut {
         margin-top: @relativeTiny;
-        font-size: @fontSizeXS;
-        color: @textTertiary;
+        font-size: @mini;
+        color: @secondaryColor;
 
         kbd {
-            background: @surfaceTertiary;
+            background: @secondaryBackground;
             border: 1px solid @borderColor;
             border-radius: @borderRadiusSM;
             padding: @relativeMini @relativeMini;
@@ -366,20 +366,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: @fontSizeBase;
+            font-size: @small;
         }
 
         .status-card-level {
             font-weight: @fontWeightSemibold;
             text-transform: uppercase;
-            font-size: @fontSizeXS;
-            letter-spacing: @letterSpacingWide;
+            font-size: @mini;
+            letter-spacing: @letterSpacingNormal;
         }
 
         .status-card-time {
             margin-left: auto;
-            font-size: @fontSizeXS;
-            color: @textTertiary;
+            font-size: @mini;
+            color: @secondaryColor;
         }
     }
 
@@ -390,7 +390,7 @@
 
         .detail-item {
             margin-bottom: @relativeTiny;
-            font-size: @fontSizeSM;
+            font-size: @small;
 
             &:last-child {
                 margin-bottom: 0;
@@ -403,7 +403,7 @@
         border-left: 4px solid @infoColor;
 
         .status-card-icon {
-            background: @statusInfoBackground;
+            background: @infoBackgroundColor;
             color: @infoColor;
         }
 
@@ -416,7 +416,7 @@
         border-left: 4px solid @warningColor;
 
         .status-card-icon {
-            background: @statusWarningBackground;
+            background: @warningBackgroundColor;
             color: @warningColor;
         }
 
@@ -429,7 +429,7 @@
         border-left: 4px solid @negativeColor;
 
         .status-card-icon {
-            background: @statusErrorBackground;
+            background: @errorBackgroundColor;
             color: @negativeColor;
         }
 
@@ -442,7 +442,7 @@
         border-left: 4px solid @positiveColor;
 
         .status-card-icon {
-            background: @statusSuccessBackground;
+            background: @successBackgroundColor;
             color: @positiveColor;
         }
 
@@ -502,7 +502,7 @@
         .action-card-icon {
             width: @relative48px; // 48px on mobile
             height: @relative48px; // 48px on mobile
-            font-size: @fontSizeXL;
+            font-size: @huge;
         }
     }
 
