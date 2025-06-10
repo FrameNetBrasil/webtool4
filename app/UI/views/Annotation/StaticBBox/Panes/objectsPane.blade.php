@@ -7,7 +7,7 @@
             <th class="text-right">#object</th>
             <th class="text-right">#id</th>
             <th>FrameElement</th>
-            <th>CVName</th>
+            <th>Framed entity</th>
         </tr>
         </thead>
         <tbody>
