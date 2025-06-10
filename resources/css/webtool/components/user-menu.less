@@ -6,21 +6,21 @@
 /* User Menu */
 .user-menu {
     .user-avatar {
-        width: @relativeBig; // 32px
-        height: @relativeBig; // 32px
+        width: @relativeHuge;
+        height: @relativeHuge;
         border-radius: @borderRadiusFull;
         background: @borderColor;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: @textSecondary;
+        color: @secondaryColor;
         font-weight: @fontWeightMedium;
-        font-size: @fontSizeSM; // 14px
+        font-size: @small; // 14px
         cursor: pointer;
         transition: all @transitionFast;
 
         &:hover {
-            background: @borderStrong;
+            background: @primaryBackground;
         }
 
         img {
@@ -39,6 +39,6 @@
     .user-level {
         padding: @relativeTiny 0; // 8px
         cursor: pointer;
-        font-size: @fontSizeXS; // 12px
+        font-size: @mini; // 12px
     }
 }

@@ -36,7 +36,7 @@ Icons are order A-Z in their group, Solid, Outline, Thin (Pro only) and Brand
 
 /* Solid Icons */
 @importIcons: true;
-@fontName: "icons";
+@iconsFontName: "icons";
 @outlineFontName: "outline-icons";
 @thinFontName: "thin-icons";
 @brandFontName: "brand-icons";
@@ -45,7 +45,7 @@ Icons are order A-Z in their group, Solid, Outline, Thin (Pro only) and Brand
 @fonts: {
     @solid: {
         font-family: @fontName;
-        src: url("@{fontPath}/@{fontName}.woff2") format("woff2");
+        src: url("@{fontPath}/@{iconsFontName}.woff2") format("woff2");
         font-style: normal;
         font-weight: @normal;
         font-display: block;
