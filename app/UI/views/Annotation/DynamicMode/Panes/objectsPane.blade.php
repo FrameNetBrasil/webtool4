@@ -1,5 +1,5 @@
 <div class="ui tab active objects" data-tab="objects">
-    <table id="gridObjects" class="ui compact striped table">
+    <table id="gridObjects" class="ui compact striped table w-full">
         <thead>
         <tr>
             <th></th>
