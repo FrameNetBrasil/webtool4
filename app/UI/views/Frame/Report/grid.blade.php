@@ -2,7 +2,7 @@
 <div class="results-container view-cards">
     <div class="results-header">
         <div class="results-info">
-            <div class="results-count" id="resultsCount">0 results</div>
+            <div class="results-count" id="resultsCount">{!! count($frames) !!} results</div>
             <div class="search-query-display" id="queryDisplay"></div>
         </div>
         <div class="results-actions">
