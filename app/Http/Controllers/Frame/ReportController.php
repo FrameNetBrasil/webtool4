@@ -18,8 +18,15 @@ class ReportController extends Controller
     #[Post(path: '/report/frame/grid')]
     public function grid(SearchData $search)
     {
+        debug($search);
+        $frames = Criteria::byFilterLanguage("view_frame",
+            ['name', "startswith", $search->frame])
+            ->select("idFrame","name","description")
+            ->orderBy('name')
+            ->all();
         return view("Frame.Report.grid", [
             'search' => $search,
+            'frames' => $frames,
         ]);
     }
 
@@ -49,11 +56,11 @@ class ReportController extends Controller
     public function report(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
     {
         $search = session('searchFrame') ?? SearchData::from();
-        debug($search);
         if ($idFrame == '') {
             return view("Frame.Report.main", [
                 'search' => $search,
-                'idFrame' => null
+                'idFrame' => null,
+                "frames" => []
             ]);
         } else {
             $data = ReportFrameService::report($idFrame, $lang);
