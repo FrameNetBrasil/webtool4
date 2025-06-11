@@ -45,6 +45,7 @@ class CosineService
                     Criteria::create("cosine_link", [
                         "idCosineNodeSource" => $idNodeSource,
                         "idCosineNodeTarget" => $idNodeTarget,
+                        "type" => "fr",
                         "value" => self::$weigths[$relation->relationType],
                     ]);
                     self::createFrameLinks($relation->f1IdFrame);
@@ -59,7 +60,7 @@ class CosineService
         // clear current network
         $frameNodes = Criteria::table("cosine_node")
             ->where("type", "FRM")
-            ->get()->pluck("idFrame")->toArray();
+            ->get()->pluck("idCosineNode")->toArray();
 //        debug($frameNodes);
         Criteria::table("cosine_link")
             ->whereIN("idCosineNodeSource", $frameNodes)
@@ -68,7 +69,7 @@ class CosineService
             ->whereIN("idCosineNodeTarget", $frameNodes)
             ->delete();
         Criteria::table("cosine_node")
-            ->whereIN("idCosineNode", $frameNodes)
+            ->where("type", "FRM")
             ->delete();
         $frames = Criteria::table("frame")
             ->select("idFrame")
@@ -94,7 +95,7 @@ class CosineService
             ->where("idDocument", $idDocument)
             ->all();
         foreach ($sentences as $sentence) {
-            $sentenceNode = Criteria::byId("cosine_node", "idDocumentSentence", $sentence->idDocumentSentence);
+            $sentenceNode = Criteria::byId("cosine_node", "idDocument", $sentence->idDocument);
             Criteria::table("cosine_link")
                 ->where("idCosineNodeSource", $sentenceNode->idCosineNode)
                 ->delete();
@@ -110,7 +111,7 @@ class CosineService
             ->where("ds.idDocument", $idDocument)
             ->where("t.idLanguage", AppService::getCurrentIdLanguage())
             ->where("t.name", "Target")
-            ->select("ds.idSentence", "lu.idFrame", "ds.idDocumentSentence")
+            ->select("ds.idSentence", "lu.idFrame", "ds.idDocumentSentence", "ds.idDocument")
             ->distinct()
             ->all();
         $idDocumentSentence = $idCosineNodeSentence = 0;
@@ -119,7 +120,8 @@ class CosineService
                 $idCosineNodeSentence = Criteria::create("cosine_node", [
                     "name" => "sen_" . $sentence->idSentence,
                     "type" => "SEN",
-                    "idDocumentSentence" => $sentence->idDocumentSentence,
+                    "idDocument" => $sentence->idDocument,
+                    "idSentence" => $sentence->idSentence,
                 ]);
                 $idDocumentSentence = $sentence->idDocumentSentence;
             }
@@ -128,7 +130,136 @@ class CosineService
                 "idCosineNodeSource" => $idCosineNodeSentence,
                 "idCosineNodeTarget" => $idCosineNodeFrame,
                 "value" => 1.0,
+                "type" => "lu"
             ]);
+        }
+    }
+
+    public static function deleteNodeByDocument(int $idDocument): void
+    {
+        // clear current network for the idDocument
+        $nodes = Criteria::table("cosine_node")
+            ->where("idDocument", $idDocument)
+            ->all();
+        foreach ($nodes as $node) {
+            Criteria::table("cosine_link")
+                ->where("idCosineNodeSource", $node->idCosineNode)
+                ->delete();
+            Criteria::table("cosine_node")
+                ->where("idCosineNode", $node->idCosineNode)
+                ->delete();
+        }
+        Criteria::table("cosine_node")
+            ->where("idDocument", $idDocument)
+            ->delete();
+    }
+
+    public static function deleteObjectNodeByDocument(int $idDocument): void
+    {
+        // clear current network for the idDocument
+        $nodes = Criteria::table("cosine_node")
+            ->where("idDocument", $idDocument)
+            ->whereNotNull("idDynamicObject")
+            ->all();
+        foreach ($nodes as $node) {
+            Criteria::table("cosine_link")
+                ->where("idCosineNodeSource", $node->idCosineNode)
+                ->delete();
+            Criteria::table("cosine_node")
+                ->where("idCosineNode", $node->idCosineNode)
+                ->delete();
+        }
+        Criteria::table("cosine_node")
+            ->where("idDocument", $idDocument)
+            ->whereNotNull("idDynamicObject")
+            ->delete();
+    }
+
+    public static function createLinkSentenceAnnotationTimeToFrame(int $idDocument): void
+    {
+        // clear current network for the idDocument
+        self::deleteNodeByDocument($idDocument);
+        //
+        $sentences = Criteria::table("document_sentence as ds")
+            ->join("view_sentence_timespan as st", "ds.idSentence", "st.idSentence")
+            ->join("view_annotationset as a", "ds.idSentence", "a.idSentence")
+            ->join("view_annotation_text_gl as t", "a.idAnnotationSet", "t.idAnnotationSet")
+            ->join("lu", "lu.idLU", "a.idLU")
+            ->where("ds.idDocument", $idDocument)
+            ->where("t.idLanguage", AppService::getCurrentIdLanguage())
+            ->where("t.name", "Target")
+            ->select("ds.idSentence", "lu.idFrame", "ds.idDocumentSentence", "ds.idDocument", "st.idTimeSpan")
+            ->distinct()
+            ->orderBy("ds.idSentence")
+            ->all();
+        $idSentence = $idCosineNodeSentence = 0;
+        foreach ($sentences as $sentence) {
+            if ($sentence->idSentence != $idSentence) {
+                $idCosineNodeSentence = Criteria::create("cosine_node", [
+                    "name" => "sen_" . $sentence->idSentence,
+                    "type" => "SEN",
+                    "idDocument" => $sentence->idDocument,
+                    "idSentence" => $sentence->idSentence,
+                    "idTimespan" => $sentence->idTimeSpan,
+                ]);
+                $idSentence = $sentence->idSentence;
+            }
+            $idCosineNodeFrame = Criteria::byId("cosine_node", "idFrame", $sentence->idFrame)->idCosineNode;
+            Criteria::create("cosine_link", [
+                "idCosineNodeSource" => $idCosineNodeSentence,
+                "idCosineNodeTarget" => $idCosineNodeFrame,
+                "value" => 1.0,
+                "type" => "lu"
+            ]);
+        }
+    }
+
+    public static function createLinkObjectAnnotationTimeToFrame(int $idDocument): void
+    {
+        // clear current network for the idDocument
+        self::deleteObjectNodeByDocument($idDocument);
+        //
+        $timespans = Criteria::table("cosine_node as n")
+            ->join("timespan as ts", "n.idTimespan", "ts.idTimespan")
+            ->where("n.idDocument", $idDocument)
+            ->select("n.idDocument", "n.idTimespan", "ts.startTime", "ts.endTime")
+            ->all();
+        foreach ($timespans as $timespan) {
+            $objects = Criteria::table("view_annotation_dynamic as a")
+                ->join("lu", "a.idLU", "lu.idLU")
+                ->select("a.idDynamicObject", "lu.idFrame as idFrameLU", "a.idFrame as idFrameFE", "a.startTime", "a.endTime")
+                ->where("a.idDocument", $idDocument)
+                ->where("a.startTime", ">=", $timespan->startTime)
+                ->where("a.endTime", "<=", $timespan->endTime)
+                ->where("a.idLanguage", AppService::getCurrentIdLanguage())
+                ->all();
+            foreach ($objects as $object) {
+                if (($object->startTime >= $timespan->startTime) && ($object->endTime <= $timespan->endTime)) {
+//                    print_r($object->idDynamicObject . '    '.$object->startTime . "-" . $object->endTime . '   === ' . $timespan->startTime . '-' .$timespan->endTime . "\n");
+                    $idCosineNodeObject = Criteria::create("cosine_node", [
+                        "name" => "dob_" . $object->idDynamicObject,
+                        "type" => "DOB",
+                        "idDocument" => $idDocument,
+                        "idDynamicObject" => $object->idDynamicObject,
+                        "idTimespan" => $timespan->idTimespan,
+                    ]);
+                    $idCosineNodeFrame = Criteria::byId("cosine_node", "idFrame", $object->idFrameLU)->idCosineNode;
+                    Criteria::create("cosine_link", [
+                        "idCosineNodeSource" => $idCosineNodeObject,
+                        "idCosineNodeTarget" => $idCosineNodeFrame,
+                        "value" => 1.0,
+                        "type" => "lu"
+                    ]);
+                    $idCosineNodeFrame = Criteria::byId("cosine_node", "idFrame", $object->idFrameFE)->idCosineNode;
+                    Criteria::create("cosine_link", [
+                        "idCosineNodeSource" => $idCosineNodeObject,
+                        "idCosineNodeTarget" => $idCosineNodeFrame,
+                        "value" => 1.0,
+                        "type" => "fe"
+                    ]);
+
+                }
+            }
         }
     }
 
@@ -147,15 +278,17 @@ class CosineService
         return $links;
     }
 
-    private static function createVectorForDocumentSentence(int $idDocumentSentence): array
+    private static function createVectorFromNode(int $idCosineNode, string $type = ''): array
     {
         $vector = [];
         self::$processed = [];
         // links to start frames
-        $sentenceNode = Criteria::byId("cosine_node", "idDocumentSentence", $idDocumentSentence);
         $linkToFrames = Criteria::table("cosine_link")
-            ->where("idCosineNodeSource", $sentenceNode->idCosineNode)
-            ->all();
+            ->where("idCosineNodeSource", $idCosineNode);
+        if ($type != '') {
+            $linkToFrames = $linkToFrames->where("type", $type);
+        }
+        $linkToFrames = $linkToFrames->all();
         foreach ($linkToFrames as $linkToFrame) {
             $vector[$linkToFrame->idCosineNodeTarget] = $linkToFrame->value;
             $links = [];
@@ -167,82 +300,80 @@ class CosineService
         return $vector;
     }
 
-    public static function compareSentences(int $idDocumentSentence1, int $idDocumentSentence2): object
+    private static function createVectorForSentence(int $idSentence): array
     {
-        $vector1 = self::createVectorForDocumentSentence($idDocumentSentence1);
-        $vector2 = self::createVectorForDocumentSentence($idDocumentSentence2);
-//        return [];
-//        $vector1 = [];
-//        $node1 = DB::connection("daisy")
-//            ->table("cosine2_node")
-//            ->where("name", $name1)
-//            ->first();
-//        if (!is_null($node1)) {
-//            $links1 = DB::connection("daisy")
-//                ->table("cosine2_link")
-//                ->join("cosine2_node as target", "cosine2_link.idNodeTarget", "=", "target.idNode")
-//                ->where("idNodeSource", $node1->idNode)
-//                ->select("target.idNode", "target.idEntity")
-//                ->get()->all();
-//            foreach ($links1 as $link) {
-//                $vector1[$link->idEntity] = 1.0;
-//                $associateds = DB::connection("daisy")
-//                    ->table("cosine2_associative")
-//                    ->join("cosine2_node as associated", "cosine2_associative.idNodeB", "=", "associated.idNode")
-//                    ->where("idNodeA", $link->idNode)
-//                    ->select("associated.idEntity", "cosine2_associative.value")
-//                    ->get()->all();
-//                foreach ($associateds as $associated) {
-//                    $a = $associated->value;
-//                    $idEntity = $associated->idEntity;
-//                    if (isset($vector1[$idEntity])) {
-//                        if ($vector1[$idEntity] < $a) {
-//                            $vector1[$idEntity] = $a;
-//                        }
-//                    } else {
-//                        $vector1[$idEntity] = $a;
-//                    }
-//                }
-//            }
-//        }
-//        /*
-//         * Name2
-//         */
-//        $vector2 = [];
-//        $node2 = DB::connection("daisy")
-//            ->table("cosine2_node")
-//            ->where("name", $name2)
-//            ->first();
-//        if (!is_null($node2)) {
-//            $links2 = DB::connection("daisy")
-//                ->table("cosine2_link")
-//                ->join("cosine2_node as target", "cosine2_link.idNodeTarget", "=", "target.idNode")
-//                ->where("idNodeSource", $node2->idNode)
-//                ->select("target.idNode", "target.idEntity")
-//                ->get()->all();
-//            foreach ($links2 as $link) {
-//                $vector2[$link->idEntity] = 1.0;
-//                $associateds = DB::connection("daisy")
-//                    ->table("cosine2_associative")
-//                    ->join("cosine2_node as associated", "cosine2_associative.idNodeB", "=", "associated.idNode")
-//                    ->where("idNodeA", $link->idNode)
-//                    ->select("associated.idEntity", "cosine2_associative.value")
-//                    ->get()->all();
-//                foreach ($associateds as $associated) {
-//                    $a = $associated->value;
-//                    $idEntity = $associated->idEntity;
-//                    if (isset($vector2[$idEntity])) {
-//                        if ($vector2[$idEntity] < $a) {
-//                            $vector2[$idEntity] = $a;
-//                        }
-//                    } else {
-//                        $vector2[$idEntity] = $a;
-//                    }
-//                }
-//            }
-//        }
+        $sentenceNode = Criteria::byId("cosine_node", "idSentence", $idSentence);
+        return self::createVectorFromNode($sentenceNode->idCosineNode);
+    }
+
+    public static function compareTimespan(int $idDocument, int $idOriginMM, string $type = ''): array
+    {
+        $results = [];
+        $timespans = Criteria::table("cosine_node as n")
+            ->join("timespan as ts", "n.idTimespan", "ts.idTimespan")
+            ->join("sentence as s", "n.idSentence", "s.idSentence")
+            ->where("n.idDocument", $idDocument)
+            ->where("n.type", "SEN")
+            ->where("s.idOriginMM", $idOriginMM)
+            ->select("n.idCosineNode", "n.idTimespan", "n.idSentence","ts.startTime", "ts.endTime")
+            ->all();
+        foreach ($timespans as $timespan) {
+            $vector1 = self::createVectorFromNode($timespan->idCosineNode, $type);
+            $objects = Criteria::table("cosine_node as n")
+                ->where("n.idDocument", $idDocument)
+                ->where("n.type", "DOB")
+                ->where("n.idTimespan", $timespan->idTimespan)
+                ->select("n.idCosineNode")
+                ->get()->pluck("idCosineNode")->toArray();
+            $vector2 = [];
+            foreach ($objects as $object) {
+                $vector = self::createVectorFromNode($object, $type);
+                foreach ($vector as $idFrame => $value) {
+                    if (isset($vector2[$idFrame])) {
+                        if ($value > $vector2[$idFrame]) {
+                            $vector2[$idFrame] = $value;
+                        }
+                    } else {
+                        $vector2[$idFrame] = $value;
+                    }
+                }
+            }
+            $cosine = self::compareVectors($vector1, $vector2);
+            $results[] = [
+                "idSentence" => $timespan->idSentence,
+                "startTime" => $timespan->startTime,
+                "endTime" => $timespan->endTime,
+                "objects" => implode(",", $objects),
+                "cosine" => $cosine->cosine
+            ];
+        }
+        $count = 0;
+        $total = 0.0;
+        foreach ($results as $result) {
+            ++$count;
+            $total += ($result['cosine'] >= 0) ? (float) $result['cosine'] : 0.0;
+        }
+        $results[] = [
+            "idSentence" => "Total",
+            "startTime" => $count,
+            "endTime" => "",
+            "objects" => "Média",
+            "cosine" => ($total/$count)
+        ];
+//        debug($results);
+        return $results;
+    }
 
 
+    public static function compareSentences(int $idSentence1, int $idSentence2): object
+    {
+        $vector1 = self::createVectorForSentence($idSentence1);
+        $vector2 = self::createVectorForSentence($idSentence2);
+        return self::compareVectors($vector1, $vector2);
+    }
+
+    public static function compareVectors(array $vector1, array $vector2): object
+    {
         // fill zeroes
         foreach ($vector2 as $idEntity => $a) {
             if (!isset($vector1[$idEntity])) {
@@ -304,9 +435,18 @@ class CosineService
                 'array2' => [],
                 'cosine' => 0];
         }
-        debug($result);
+//        debug($result);
         return $result;
 
+    }
+
+    public static function writeToCSV(string $fileName, array $results) {
+        $handle = fopen($fileName, "w");
+        fputcsv($handle, array_keys($results[0]));
+        foreach($results as $row) {
+            fputcsv($handle, $row);
+        }
+        fclose($handle);
     }
 
 
