@@ -14,7 +14,7 @@
                     <div class="search-section">
                         <div class="search-input-group">
                             <x-ui::form-search
-                                hx-get="/report/frame"
+                                hx-post="/report/frame/grid"
                                 hx-target="#gridArea"
                                 id="frame"
                                 placeholder="Search Frame"
