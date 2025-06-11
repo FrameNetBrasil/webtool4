@@ -19,6 +19,7 @@ class Fe extends Component
         public string $idColor = '',
     )
     {
+        debug("======================================");
         //$this->icon = config("webtool.fe.icon.grid")[$this->type];
         $this->icon = config("webtool.fe.icon")[$this->type];
     }
