@@ -1,4 +1,4 @@
-<div class="grids flex flex-column flex-grow-1">
+<div class="grids flex flex-column flex-grow-1" style="width:1024px;">
     <div class="ui pointing secondary menu tabs">
         <a class="item" data-tab="objects">Objects</a>
         <a class="item" data-tab="sentences">Sentences</a>
