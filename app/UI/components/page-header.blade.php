@@ -5,7 +5,7 @@
                 {{$title}}
             </h1>
             <span class="text-lg">
-                {{$subtitle}}
+                {!! $subtitle !!}
             </span>
         </div>
     </div>

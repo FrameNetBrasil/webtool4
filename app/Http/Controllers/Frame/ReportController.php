@@ -30,27 +30,27 @@ class ReportController extends Controller
         ]);
     }
 
-    #[Get(path: '/report/frame/data')]
-    public function data(SearchData $search)
-    {
-        $frames = Criteria::byFilterLanguage("view_frame",
-            ['name', "startswith", $search->frame])
-            ->select("idFrame","name")
-            ->orderBy('name')
-            ->all();
-        return $frames;
-    }
+//    #[Get(path: '/report/frame/data')]
+//    public function data(SearchData $search)
+//    {
+//        $frames = Criteria::byFilterLanguage("view_frame",
+//            ['name', "startswith", $search->frame])
+//            ->select("idFrame","name")
+//            ->orderBy('name')
+//            ->all();
+//        return $frames;
+//    }
 
-    #[Get(path: '/report/frame/content/{idFrame}/{lang?}')]
-    public function reportContent(int|string $idFrame = '',string $lang = '')
-    {
-        debug($idFrame, $lang);
-        $search = session('searchFrame') ?? SearchData::from();
-        $data = ReportFrameService::report($idFrame, $lang);
-        $data['search'] = $search;
-        $data['idFrame'] = $idFrame;
-        return view("Frame.Report.report", $data);
-    }
+//    #[Get(path: '/report/frame/content/{idFrame}/{lang?}')]
+//    public function reportContent(int|string $idFrame = '',string $lang = '')
+//    {
+//        debug($idFrame, $lang);
+//        $search = session('searchFrame') ?? SearchData::from();
+//        $data = ReportFrameService::report($idFrame, $lang);
+//        $data['search'] = $search;
+//        $data['idFrame'] = $idFrame;
+//        return view("Frame.Report.report", $data);
+//    }
 
     #[Get(path: '/report/frame/{idFrame?}/{lang?}')]
     public function report(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
@@ -66,7 +66,7 @@ class ReportController extends Controller
             $data = ReportFrameService::report($idFrame, $lang);
             $data['search'] = $search;
             $data['idFrame'] = $idFrame;
-            return view("Frame.Report.main", $data);
+            return view("Frame.Report.report", $data);
         }
     }
 
