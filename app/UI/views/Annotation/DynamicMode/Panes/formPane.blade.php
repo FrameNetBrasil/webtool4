@@ -43,7 +43,7 @@
                     <x-combobox.fe-frame
                         id="idFrameElement"
                         name="idFrameElement"
-                        label="FE (Participant/Props)"
+                        label="FE (Participant/Prop)"
                         :value="$object?->idFrameElement ?? 0"
                         :idFrame="$object?->idFrame ?? 0"
                         :hasNull="false"
