@@ -229,12 +229,14 @@ class CosineService
                 ->join("lu", "a.idLU", "lu.idLU")
                 ->select("a.idDynamicObject", "lu.idFrame as idFrameLU", "a.idFrame as idFrameFE", "a.startTime", "a.endTime")
                 ->where("a.idDocument", $idDocument)
-                ->where("a.startTime", ">=", $timespan->startTime)
-                ->where("a.endTime", "<=", $timespan->endTime)
+//                ->where("a.startTime", ">=", $timespan->startTime)
+//                ->where("a.endTime", "<=", $timespan->endTime)
                 ->where("a.idLanguage", AppService::getCurrentIdLanguage())
                 ->all();
             foreach ($objects as $object) {
-                if (($object->startTime >= $timespan->startTime) && ($object->endTime <= $timespan->endTime)) {
+                if ((($object->startTime <= $timespan->startTime) && ($object->endTime >= $timespan->startTime))
+                    || (($object->startTime > $timespan->startTime) && ($object->startTime <= $timespan->endTime)))
+                {
 //                    print_r($object->idDynamicObject . '    '.$object->startTime . "-" . $object->endTime . '   === ' . $timespan->startTime . '-' .$timespan->endTime . "\n");
                     $idCosineNodeObject = Criteria::create("cosine_node", [
                         "name" => "dob_" . $object->idDynamicObject,
@@ -323,11 +325,13 @@ class CosineService
                 ->where("n.idDocument", $idDocument)
                 ->where("n.type", "DOB")
                 ->where("n.idTimespan", $timespan->idTimespan)
-                ->select("n.idCosineNode")
-                ->get()->pluck("idCosineNode")->toArray();
+                ->select("n.idCosineNode","n.idDynamicObject")
+                ->all();
             $vector2 = [];
+            $idObjects = [];
             foreach ($objects as $object) {
-                $vector = self::createVectorFromNode($object, $type);
+                $idObjects[$object->idDynamicObject] = $object->idDynamicObject;
+                $vector = self::createVectorFromNode($object->idCosineNode, $type);
                 foreach ($vector as $idFrame => $value) {
                     if (isset($vector2[$idFrame])) {
                         if ($value > $vector2[$idFrame]) {
@@ -339,11 +343,16 @@ class CosineService
                 }
             }
             $cosine = self::compareVectors($vector1, $vector2);
+            $documentSentence = Criteria::table("document_sentence")
+                ->where("idDocument", $idDocument)
+                ->where("idSentence", $timespan->idSentence)
+                ->first();
             $results[] = [
+                "idDocumentSentence" => $documentSentence->idDocumentSentence,
                 "idSentence" => $timespan->idSentence,
                 "startTime" => $timespan->startTime,
                 "endTime" => $timespan->endTime,
-                "objects" => implode(",", $objects),
+                "objects" => implode(",", $idObjects),
                 "cosine" => $cosine->cosine
             ];
         }
@@ -354,8 +363,9 @@ class CosineService
             $total += ($result['cosine'] >= 0) ? (float) $result['cosine'] : 0.0;
         }
         $results[] = [
-            "idSentence" => "Total",
-            "startTime" => $count,
+            "idDocumentSentence" => "Total",
+            "idSentence" => $count,
+            "startTime" => "",
             "endTime" => "",
             "objects" => "Média",
             "cosine" => ($total/$count)
