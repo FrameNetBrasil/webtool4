@@ -1,0 +1,128 @@
+/* Summary Card Component */
+.summary-card {
+    .summary-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: @relativeMedium;
+
+        .summary-card-icon {
+            width: @relative40px;
+            height: @relative40px;
+            border-radius: @borderRadiusMD;
+            background: @primaryBackground;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: @large;
+        }
+
+        .summary-card-trend {
+            font-size: @small;
+            font-weight: @fontWeightSemibold;
+
+            &.positive {
+                color: @positiveColor;
+            }
+
+            &.negative {
+                color: @negativeColor;
+            }
+
+            &.neutral {
+                color: @secondaryColor;
+            }
+        }
+    }
+
+    .summary-card-value {
+        margin-bottom: @relativeTiny;
+
+        .statistic {
+            .value {
+                font-size: @massive; // 36px
+                font-weight: @fontWeightBold;
+                line-height: @lineHeight;
+            }
+
+            .label {
+                font-size: @small;
+                color: @secondaryColor;
+            }
+        }
+    }
+
+    .summary-card-description {
+        font-size: @mini;
+        color: @secondaryColor;
+    }
+
+    // Themed variants
+    &.primary {
+        .summary-card-icon {
+            background: @primaryBackground;
+            color: @primaryColor;
+        }
+    }
+
+    &.positive {
+        .summary-card-icon {
+            background: @successBackgroundColor;
+            color: @positiveColor;
+        }
+    }
+
+    &.warning {
+        .summary-card-icon {
+            background: @warningBackgroundColor;
+            color: @warningColor;
+        }
+    }
+
+    &.negative {
+        .summary-card-icon {
+            background: @errorBackgroundColor;
+            color: @negativeColor;
+        }
+    }
+}
+
+/* Action Card Component */
+.action-card {
+    text-align: center;
+    cursor: pointer;
+    transition: all @transitionNormal;
+
+    &:hover {
+        transform: translateY(-@relative2px);
+        box-shadow: @shadowLG;
+    }
+
+    .action-card-icon {
+        width: @relative64px;
+        height: @relative64px;
+        border-radius: @borderRadiusFull;
+        background: @primaryColor;
+        color: @invertedTextColor;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: @huge;
+        margin: 0 auto @relativeMedium;
+    }
+
+    .action-card-shortcut {
+        margin-top: @relativeTiny;
+        font-size: @mini;
+        color: @secondaryColor;
+
+        kbd {
+            background: @secondaryBackground;
+            border: 1px solid @borderColor;
+            border-radius: @borderRadiusSM;
+            padding: @relativeMini @relativeMini;
+            font-family: @codeFont;
+            font-size: 0.7rem;
+        }
+    }
+}

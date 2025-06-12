@@ -1,5 +1,5 @@
 <x-layout::index>
-    <div class="app-layout no-tools">
+    <div class="app-layout">
         @include('layouts.header')
 
         @include("layouts.sidebar")
