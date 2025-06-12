@@ -27,23 +27,24 @@ class ReportController extends Controller
     #[Get(path: '/report/cxn/data')]
     public function data(SearchData $search)
     {
+        debug($search);
         $languageIcon = view('components.icon.language')->render();
         $cxnIcon = view('components.icon.construction')->render();
         $showLanguage = false;
         $tree = [];
-        if (($search->cxn == '') && ($search->idLanguage == 0)) {
-            $languages = Construction::listRoots();
-            foreach ($languages as $language) {
-                $n = [];
-                $n['id'] = 'l' . $language->idLanguage;
-                $n['idLanguage'] = $language->idLanguage;
-                $n['type'] = 'language';
-                $n['text'] = $languageIcon . $language->description;
-                $n['state'] = ($language->n > 0) ? 'closed' : 'open';
-                $n['children'] = [];
-                $tree[] = $n;
-            }
-        } else {
+//        if (($search->cxn == '') && ($search->idLanguage == 0)) {
+//            $languages = Construction::listRoots();
+//            foreach ($languages as $language) {
+//                $n = [];
+//                $n['id'] = 'l' . $language->idLanguage;
+//                $n['idLanguage'] = $language->idLanguage;
+//                $n['type'] = 'language';
+//                $n['text'] = $languageIcon . $language->description;
+//                $n['state'] = ($language->n > 0) ? 'closed' : 'open';
+//                $n['children'] = [];
+//                $tree[] = $n;
+//            }
+//        } else {
             $cxns = Construction::listTree($search->cxn, $search->idLanguage);
             $showLanguage = ($search->idLanguage == 0);
             foreach ($cxns as $cxn) {
@@ -56,7 +57,7 @@ class ReportController extends Controller
                 $n['children'] = [];
                 $tree[] = $n;
             }
-        }
+//        }
         return $tree;
     }
 

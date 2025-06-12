@@ -37,19 +37,19 @@ class CosineHandleCommand extends Command
 //        CosineService::createLinkSentenceAnnotationTimeToFrame(631);
 //        CosineService::createLinkSentenceAnnotationTimeToFrame(626);
 //
-//        CosineService::createLinkObjectAnnotationTimeToFrame(614);
+        CosineService::createLinkObjectAnnotationTimeToFrame(614);
 //        CosineService::createLinkObjectAnnotationTimeToFrame(638);
 //        CosineService::createLinkObjectAnnotationTimeToFrame(617);
 //        CosineService::createLinkObjectAnnotationTimeToFrame(619);
 //        CosineService::createLinkObjectAnnotationTimeToFrame(631);
 //        CosineService::createLinkObjectAnnotationTimeToFrame(626);
         $document = Criteria::byId("document","idDocument",614);
-        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_original_full.csv", CosineService::compareTimespan(614, 4, ''));
-        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_original_lu.csv", CosineService::compareTimespan(614, 4, 'lu'));
-        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_original_fe.csv", CosineService::compareTimespan(614, 4, 'fe'));
-        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_description_full.csv", CosineService::compareTimespan(614, 7, ''));
-        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_description_lu.csv", CosineService::compareTimespan(614, 7, 'lu'));
-        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_description_fe.csv", CosineService::compareTimespan(614, 7, 'fe'));
+        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_original_full_2.csv", CosineService::compareTimespan(614, 4, ''));
+        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_original_lu_2.csv", CosineService::compareTimespan(614, 4, 'lu'));
+        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_original_fe_2.csv", CosineService::compareTimespan(614, 4, 'fe'));
+        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_description_full_2.csv", CosineService::compareTimespan(614, 7, ''));
+        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_description_lu_2.csv", CosineService::compareTimespan(614, 7, 'lu'));
+        CosineService::writeToCSV(__DIR__ . "/{$document->entry}_audio_description_fe_2.csv", CosineService::compareTimespan(614, 7, 'fe'));
 
 //        CosineService::createLinkSentenceAnnotationToFrame(1478);
 //        CosineService::createLinkSentenceAnnotationToFrame(1479);
