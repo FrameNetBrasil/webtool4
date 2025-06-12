@@ -10,42 +10,39 @@
     ];
 @endphp
 
-<x-layout::page>
-    <x-slot:breadcrumb>
-        <x-ui::breadcrumb :sections="[]"></x-ui::breadcrumb>
-    </x-slot:breadcrumb>
-    <x-slot:main>
-        <x-ui::page-header
-            title="Reports"
-            subtitle="Access webtool reports.">
-        </x-ui::page-header>
-        <div class="page-content">
-            <div class="content-container">
-                <div class="card-grid dense">
-                    @foreach($reports as $category => $report)
-                        <a
-                            class="ui card option-card"
-                            data-category="{{$category}}"
-                            href="{{$report[1]}}"
-                            hx-boost="true"
-{{--                            hx-get="{{$report[1]}}"--}}
-{{--                            hx-target="body"--}}
-{{--                            hx-swap="outerHTML"--}}
-{{--                            hx-indicator="this"--}}
-                        >
-                            <div class="content">
-                                <div class="header">
-                                    <x-dynamic-component :component="$report[3]"/>
-                                    {{$report[0]}}
+<x-layout::index>
+    <div class="app-layout no-tools">
+        @include('layouts.header')
+        @include("layouts.sidebar")
+        <main class="app-main">
+            <x-ui::page-header
+                title="Reports"
+                subtitle="Access webtool reports.">
+            </x-ui::page-header>
+            <div class="page-content">
+                <div class="content-container">
+                    <div class="card-grid dense">
+                        @foreach($reports as $category => $report)
+                            <a
+                                class="ui card option-card"
+                                data-category="{{$category}}"
+                                href="{{$report[1]}}"
+                                hx-boost="true"
+                            >
+                                <div class="content">
+                                    <div class="header">
+                                        <x-dynamic-component :component="$report[3]" />
+                                        {{$report[0]}}
+                                    </div>
+                                    <div class="description">
+                                        {{$report[2]}}
+                                    </div>
                                 </div>
-                                <div class="description">
-                                    {{$report[2]}}
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
-    </x-slot:main>
-</x-layout::page>
+        </main>
+    </div>
+</x-layout::index>
