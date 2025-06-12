@@ -22,9 +22,9 @@ class SearchData extends Data
         if (($this->id != '') && ($this->id[0] == 'l')) {
             $this->idLanguage = substr($this->id, 1);
         }
-        if ($this->idLanguage == 0) {
-            $this->idLanguage = AppService::getCurrentIdLanguage();
-        }
+//        if ($this->idLanguage == 0) {
+//            $this->idLanguage = AppService::getCurrentIdLanguage();
+//        }
         $this->_token = csrf_token();
     }
 

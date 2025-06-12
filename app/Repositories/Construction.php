@@ -71,11 +71,11 @@ class Construction
             ->select("l.idLanguage", "l.description")
             ->orderBy("l.description")
             ->all();
-        foreach ($rows as $row) {
-            $row->n = Criteria::table("view_construction")
-                ->where("view_construction.cxIdLanguage", "=", $row->idLanguage)
-                ->count();
-        }
+//        foreach ($rows as $row) {
+//            $row->n = Criteria::table("view_construction")
+//                ->where("view_construction.cxIdLanguage", "=", $row->idLanguage)
+//                ->count();
+//        }
         return $rows;
     }
 

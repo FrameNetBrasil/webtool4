@@ -8,6 +8,9 @@
         <div
             class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
             <div class="ui label wt-tag-id">
+                {{$language->description}}
+            </div>
+            <div class="ui label wt-tag-id">
                 #{{$construction->idConstruction}}
             </div>
             <button
@@ -159,6 +162,7 @@
         >
             @php($i = 0)
             @foreach ($concepts as $concept)
+                @php(debug($concept))
                 <button
                     id="btnRelation_concept_{{$concept->idConcept}}"
                     class="ui button basic"
@@ -166,7 +170,7 @@
                     <a
                         href="/report/c5/{{$concept->idConcept}}"
                     >
-                        <x-element.concept name="{{$concept->name}}"></x-element.concept>
+                        <x-element.concept name="{{$concept->name}}" type="{{$concept->type}}"></x-element.concept>
                     </a>
                 </button>
             @endforeach
