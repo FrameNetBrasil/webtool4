@@ -12,7 +12,7 @@
 
 <x-layout::page>
     <x-slot:breadcrumb>
-        <x-breadcrumb :sections="[]"></x-breadcrumb>
+        <x-ui::breadcrumb :sections="[]"></x-ui::breadcrumb>
     </x-slot:breadcrumb>
     <x-slot:main>
         <x-ui::page-header

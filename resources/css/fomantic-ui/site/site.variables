@@ -10,8 +10,8 @@
     Font System
 -------------------*/
 
-@fontName: 'Inter';
-@fontFamily: 'Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+@fontName: 'Noto Sans';
+@fontFamily: 'Noto Sans', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
 @fallbackFonts: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 
 @codeFont: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
