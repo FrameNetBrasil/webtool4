@@ -26,6 +26,7 @@ class ReportFrameService
                 ->where("idLanguage", $idLanguage)
                 ->first();
         }
+        $report['idFrame'] = $idFrame;
         $report['frame'] = $frame;
         $report['fe'] = self::getFEData($frame, $idLanguage);
         $report['fecoreset'] = self::getFECoreSet($frame);

@@ -18,11 +18,11 @@
 <div class="app-sidebar">
     <div class="ui secondary vertical menu">
         @if($isLogged)
-            <details class="ui accordion">
-                <summary class="item d-flex flex-row user-menu item">
+            <div class="ui accordion">
+                <div class="title d-flex flex-row user-menu item">
                     <div class="user-avatar">{!! strtoupper($user->email[0]) !!}</div>
                     <div class="user-email">{{$user->email}}<div class="user-level">{{$userLevel}}  #{{$user->idUser}}</div></div>
-                </summary>
+                </div>
                 <div class="content">
                     <a class="item" href="/profile">
                         Profile
@@ -31,7 +31,7 @@
                         Logout
                     </a>
                 </div>
-            </details>
+            </div>
         @endif
         @foreach($actions as $id => $action)
             @php
@@ -51,3 +51,9 @@
         @endforeach
     </div>
 </div>
+<script>
+    $(function() {
+        $(".ui.accordion")
+            .accordion();
+    });
+</script>

@@ -15,10 +15,12 @@
         @include('layouts.header')
         @include("layouts.sidebar")
         <main class="app-main">
-            <x-ui::page-header
-                title="Reports"
-                subtitle="Access webtool reports.">
-            </x-ui::page-header>
+            <div class="page-header">
+                <div class="page-header-content">
+                        <div class="page-title">Reports</div>
+                        <div class="page-subtitle">Access webtool reports.</div>
+                </div>
+            </div>
             <div class="page-content">
                 <div class="content-container">
                     <div class="card-grid dense">
