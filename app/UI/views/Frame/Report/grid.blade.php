@@ -1,5 +1,10 @@
-<!-- Results Container -->
-<div class="results-container view-cards">
+<!-- Results Container with AlpineJS -->
+<div class="results-container"
+     x-data="searchGrid()"
+     x-init="init()"
+     :class="`results-container view-${currentView}`"
+     @keydown.window="handleKeyboard($event)">
+
     <div class="results-header">
         <div class="results-info">
             <div class="results-count" id="resultsCount">{!! count($frames) !!} results</div>
@@ -7,11 +12,15 @@
         </div>
         <div class="results-actions">
             <div class="view-toggle">
-                <button class="view-btn active" data-view="cards">
+                <button class="view-btn"
+                        :class="{ 'active': currentView === 'cards' }"
+                        @click="setView('cards')">
                     <i class="th large icon"></i>
                     Cards
                 </button>
-                <button class="view-btn" data-view="table">
+                <button class="view-btn"
+                        :class="{ 'active': currentView === 'table' }"
+                        @click="setView('table')">
                     <i class="table icon"></i>
                     Table
                 </button>
@@ -31,26 +40,31 @@
     @endif
 
     <!-- Loading State -->
-    <div class="loading-state" id="loadingState" style="display: none;">
+    <div class="loading-state"
+         id="loadingState"
+         x-show="isLoading"
+         x-transition>
         <div class="loading-spinner"></div>
         <h3 class="loading-title">Searching...</h3>
-        <p class="loading-description">
-
-        </p>
+        <p class="loading-description"></p>
     </div>
+
     @if(count($frames) > 0)
         <!-- Card View -->
-        <div class="card-view">
+        <div class="card-view" x-show="currentView === 'cards'" x-transition>
             <div class="search-results-grid">
                 @foreach($frames as $frame)
-                    <div class="result-card" data-id="{{$frame->idFrame}}">
+                    <div class="result-card"
+                         data-id="{{$frame->idFrame}}"
+                         @click="navigateToFrame({{$frame->idFrame}})"
+                         tabindex="0"
+                         @keydown.enter="navigateToFrame({{$frame->idFrame}})"
+                         role="button">
                         <div class="card-header">
-                            {{--                            <div class="result-type sentence">Sentence</div>--}}
                             <div class="result-info">
                                 <div class="result-title">
                                     <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
                                 </div>
-                                {{--                                <div class="result-path">Medical Research → Neuroscience → Brain Studies → Doc12</div>--}}
                             </div>
                         </div>
                         <div class="result-content">
@@ -62,7 +76,7 @@
         </div>
 
         <!-- Table View -->
-        <div class="table-view">
+        <div class="table-view" x-show="currentView === 'table'" x-transition>
             <div class="results-table-container">
                 <table class="ui table results-table">
                     <thead>
@@ -73,7 +87,11 @@
                     </thead>
                     <tbody>
                     @foreach($frames as $frame)
-                        <tr data-id="{{$frame->idFrame}}">
+                        <tr data-id="{{$frame->idFrame}}"
+                            @click="navigateToFrame({{$frame->idFrame}})"
+                            tabindex="0"
+                            @keydown.enter="navigateToFrame({{$frame->idFrame}})"
+                            role="button">
                             <td>
                                 <div class="table-title">
                                     <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
@@ -92,84 +110,76 @@
         </div>
     @endif
 </div>
+
 <script>
-    // View toggle functionality
-    document.querySelectorAll(".view-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            // Update active button
-            document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            // Update container class
-            const container = document.querySelector(".results-container");
-            const view = btn.dataset.view;
-            console.log(view);
-            container.className = `results-container view-${view}`;
-        });
-    });
-    function updateViewForScreen() {
-        const isMobile = window.innerWidth <= 768;
-        const viewToggle = document.querySelector(".view-toggle");
+    function searchGrid() {
+        return {
+            currentView: 'cards',
+            isLoading: false,
 
-        if (isMobile) {
-            // On mobile, prefer table view
-            const compactBtn = document.querySelector(".view-btn[data-view=\"table\"]");
-            if (compactBtn && !compactBtn.classList.contains("active")) {
-                compactBtn.click();
+            init() {
+                this.loadSearchState();
+                this.updateViewForScreen();
+
+                // Listen for window resize
+                window.addEventListener('resize', () => {
+                    this.updateViewForScreen();
+                });
+            },
+
+            setView(view) {
+                this.currentView = view;
+                this.saveSearchState();
+            },
+
+            updateViewForScreen() {
+                const isMobile = window.innerWidth <= 768;
+                if (isMobile && this.currentView === 'cards') {
+                    this.currentView = 'table';
+                    this.saveSearchState();
+                }
+            },
+
+            handleKeyboard(event) {
+                if (event.ctrlKey || event.metaKey) {
+                    switch (event.key) {
+                        case '1':
+                            event.preventDefault();
+                            this.setView('cards');
+                            break;
+                        case '2':
+                            event.preventDefault();
+                            this.setView('table');
+                            break;
+                    }
+                }
+            },
+
+            navigateToFrame(frameId) {
+                window.location.href = `/report/frame/${frameId}`;
+            },
+
+            saveSearchState() {
+                const state = {
+                    view: this.currentView,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('search-state', JSON.stringify(state));
+            },
+
+            loadSearchState() {
+                const saved = localStorage.getItem('search-state');
+                if (saved) {
+                    try {
+                        const state = JSON.parse(saved);
+                        if (state.view) {
+                            this.currentView = state.view;
+                        }
+                    } catch (e) {
+                        console.warn('Could not load search state:', e);
+                    }
+                }
             }
         }
     }
-    // Check on load and resize
-    window.addEventListener("load", updateViewForScreen);
-    window.addEventListener("resize", updateViewForScreen);
-    // Keyboard shortcuts
-    document.addEventListener("keydown", (e) => {
-        if (e.ctrlKey || e.metaKey) {
-            switch (e.key) {
-                case "1":
-                    e.preventDefault();
-                    document.querySelector(".view-btn[data-view=\"cards\"]").click();
-                    break;
-                case "2":
-                    e.preventDefault();
-                    document.querySelector(".view-btn[data-view=\"table\"]").click();
-                    break;
-            }
-        }
-    });
-    document.addEventListener("click", (e) => {
-        const item = e.target.closest(".result-card, .results-table tbody tr, .compact-item");
-        if (item) {
-            e.preventDefault();
-            console.log(item);
-            window.location = `/report/frame/${item.dataset.id}`;
-        }
-    });
-
-    // Auto-save search state
-    function saveSearchState() {
-        const state = {
-            view: document.querySelector(".view-btn.active").dataset.view,
-            // selectedItems: Array.from(selectedItems),
-            timestamp: Date.now()
-        };
-        localStorage.setItem("search-state", JSON.stringify(state));
-    }
-
-    function loadSearchState() {
-        const saved = localStorage.getItem("search-state");
-        if (saved) {
-            const state = JSON.parse(saved);
-            // Restore view
-            const viewBtn = document.querySelector(`.view-btn[data-view="${state.view}"]`);
-            if (viewBtn) {
-                viewBtn.click();
-            }
-        }
-    }
-
-    // Save state on changes
-    document.addEventListener("click", saveSearchState);
-
-    // Load state on page load
-    loadSearchState();
 </script>

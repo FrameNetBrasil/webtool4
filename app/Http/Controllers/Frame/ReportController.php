@@ -15,59 +15,34 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'web')]
 class ReportController extends Controller
 {
+    #[Get(path: '/report/frame')]
+    public function main()
+    {
+        return view("Frame.Report.main", [
+            "frames" => []
+        ]);
+    }
+
     #[Post(path: '/report/frame/grid')]
     public function grid(SearchData $search)
     {
         debug($search);
         $frames = Criteria::byFilterLanguage("view_frame",
             ['name', "startswith", $search->frame])
-            ->select("idFrame","name","description")
+            ->select("idFrame", "name", "description")
             ->orderBy('name')
             ->all();
-        return view("Frame.Report.grid", [
+        return view("Frame.Report.main", [
             'search' => $search,
             'frames' => $frames,
-        ]);
+        ])->fragment("search");
     }
 
-//    #[Get(path: '/report/frame/data')]
-//    public function data(SearchData $search)
-//    {
-//        $frames = Criteria::byFilterLanguage("view_frame",
-//            ['name', "startswith", $search->frame])
-//            ->select("idFrame","name")
-//            ->orderBy('name')
-//            ->all();
-//        return $frames;
-//    }
-
-//    #[Get(path: '/report/frame/content/{idFrame}/{lang?}')]
-//    public function reportContent(int|string $idFrame = '',string $lang = '')
-//    {
-//        debug($idFrame, $lang);
-//        $search = session('searchFrame') ?? SearchData::from();
-//        $data = ReportFrameService::report($idFrame, $lang);
-//        $data['search'] = $search;
-//        $data['idFrame'] = $idFrame;
-//        return view("Frame.Report.report", $data);
-//    }
-
-    #[Get(path: '/report/frame/{idFrame?}/{lang?}')]
-    public function report(int|string $idFrame = '', string $lang = '', ?string $fragment = null)
+    #[Get(path: '/report/frame/{idFrame}/{lang?}')]
+    public function report(int|string $idFrame = '', string $lang = '')
     {
-        $search = session('searchFrame') ?? SearchData::from();
-        if ($idFrame == '') {
-            return view("Frame.Report.main", [
-                'search' => $search,
-                'idFrame' => null,
-                "frames" => []
-            ]);
-        } else {
-            $data = ReportFrameService::report($idFrame, $lang);
-            $data['search'] = $search;
-            $data['idFrame'] = $idFrame;
-            return view("Frame.Report.report", $data);
-        }
+        $data = ReportFrameService::report($idFrame, $lang);
+        return view("Frame.Report.report", $data);
     }
 
     #[Get(path: '/frame/list/forSelect')]
@@ -96,11 +71,11 @@ class ReportController extends Controller
     public function getStaticObject(int $idDocument, int $idImage, int $idFrame)
     {
         $image = Criteria::table("image as i")
-            ->select("i.idImage","i.name","i.width","i.height","i.currentURL")
+            ->select("i.idImage", "i.name", "i.width", "i.height", "i.currentURL")
             ->where("i.idImage", $idImage)
             ->first();
         $fesList = Criteria::table("view_annotation_static as a")
-            ->select("a.idStaticObject","a.fe","a.color")
+            ->select("a.idStaticObject", "a.fe", "a.color")
             ->where("a.idDocument", $idDocument)
             ->where("a.idImage", $idImage)
             ->where("a.idLanguage", AppService::getCurrentIdLanguage())
@@ -110,7 +85,7 @@ class ReportController extends Controller
         $idStaticObject = array_keys($fes);
         $bboxes = Criteria::table("view_staticobject_boundingbox as bb")
             ->distinct()
-            ->select("bb.idStaticObject", "bb.x","bb.y","bb.width","bb.height")
+            ->select("bb.idStaticObject", "bb.x", "bb.y", "bb.width", "bb.height")
             ->whereIn("bb.idStaticObject", $idStaticObject)
             ->all();
         return view("Frame.Report.image", [

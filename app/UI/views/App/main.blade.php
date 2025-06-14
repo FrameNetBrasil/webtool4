@@ -24,17 +24,17 @@
         @include('layouts.header')
         @include("layouts.sidebar")
         <main class="app-main">
-            @if($isManager)
-                <x-ui::page-header
-                    title="Projects"
-                    subtitle="List of projects you are managing.">
-                </x-ui::page-header>
-            @else
-                <x-ui::page-header
-                    title="Activities"
-                    subtitle="List of projects/tasks you are associated to.">
-                </x-ui::page-header>
-            @endif
+            <div class="page-header">
+                <div class="page-header-content">
+                    @if($isManager)
+                        <div class="page-title">Projects</div>
+                        <div class="page-subtitle">List of projects you are managing.</div>
+                    @else
+                        <div class="page-title">Activities</div>
+                        <div class="page-subtitle">List of projects/tasks you are associated to.</div>
+                    @endif
+                </div>
+            </div>
             <div class="page-content">
                 <div class="content-container">
                     @include("App.messages")
@@ -96,16 +96,19 @@
                         @endphp
                         <div class="card-grid dense">
                             @foreach($projectsForManager as $project)
-                                <div class="ui card data-card" data-entity-id="{{$project->idProject}}">
+                                <div class="ui card summary-card primary" data-entity-id="{{$project->idProject}}">
                                     <div class="content">
-                                        <div class="data-card-header">
-                                            <div class="data-card-title">
-                                                <div class="header">{{$project->projectName}}</div>
+                                        <div class="summary-card-header">
+                                            <div class="summary-card-icon">
+                                                <x-ui::icon.project></x-ui::icon.project>
+                                            </div>
+                                            <div class="summary-card-trend">
+                                                {{$project->projectName}}
+                                                <div class="summary-card-description">
+                                                    {{$project->projectDescription}}&nbsp;
+                                                </div>
                                             </div>
                                         </div>
-                                        {{--                                    <div class="description">--}}
-                                        {{--                                        {{$project->projectDescription}}--}}
-                                        {{--                                    </div>--}}
                                     </div>
                                 </div>
                             @endforeach
