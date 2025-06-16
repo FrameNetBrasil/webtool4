@@ -254,6 +254,7 @@ class ConstraintController extends Controller
     #[Post(path: '/constraint/cxn/{id}')]
     public function constraintCxn(CxnConstraintData $data)
     {
+        debug($data);
         try {
             $cxn = Construction::byId($data->idConstruction);
             if ($data->idFrameConstraint > 0) {
