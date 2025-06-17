@@ -50,12 +50,22 @@ class StaticBBoxObject {
     }
 
     loadBBox(bbox) {
-        this.bbox = new BoundingBox(
-            bbox.x,
-            bbox.y,
-            parseInt(bbox.width * this.scale),
-            parseInt(bbox.height * this.scale),
-        );
+        if ((this.idDocument >= 2248) && (this.idDocument <= 15779))
+        {
+            this.bbox = new BoundingBox(
+                parseInt(bbox.x * this.scale),
+                parseInt(bbox.y * this.scale),
+                parseInt(bbox.width * this.scale),
+                parseInt(bbox.height * this.scale),
+            );
+        } else {
+            this.bbox = new BoundingBox(
+                bbox.x,
+                bbox.y,
+                parseInt(bbox.width * this.scale),
+                parseInt(bbox.height * this.scale),
+            );
+        }
     }
 
     drawBox() {
