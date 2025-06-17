@@ -94,7 +94,7 @@ class AnnotationStaticBBoxService
             ->where("sta.idLanguage", "left", $idLanguage)
             ->where("idDocument", $idDocument)
             ->where("view_frame.idLanguage", "left", $idLanguage)
-            ->select("sta.idStaticObject", "sta.name", "idAnnotationLU", "sta.idLU", "lu", "view_lu.name as luName", "sta.idUserTaskLU",
+            ->select("idDocument","sta.idStaticObject", "sta.name", "idAnnotationLU", "sta.idLU", "lu", "view_lu.name as luName", "sta.idUserTaskLU",
                 "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "sta.idFrame", "frame", "fe", "color", "sta.idUserTaskFE","ac.comment")
             ->orderBy("idStaticObject")
             ->all();
