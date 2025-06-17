@@ -80,6 +80,7 @@
                         image: {{ Js::from($image) }},
                         objectList: [],
                         idStaticObject:{!! $idStaticObject ?? 'null' !!},
+                        idDocument:{!! $document->idDocument ?? 'null' !!},
                         dimensions: {
                             canvasWidth: {{$canvasWidth}},
                             canvasHeight: {{$canvasHeight}},
