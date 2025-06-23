@@ -209,7 +209,7 @@ class CosineService
                 "idCosineNodeSource" => $idCosineNodeSentence,
                 "idCosineNodeTarget" => $idCosineNodeFrame,
                 "value" => 1.0,
-                "type" => "lu"
+                "type" => "sn"
             ]);
         }
     }
@@ -219,6 +219,7 @@ class CosineService
         // clear current network for the idDocument
         self::deleteObjectNodeByDocument($idDocument);
         //
+        debug("==== createLinkObjectAnnotationTimeToFrame document {$idDocument}");
         $timespans = Criteria::table("cosine_node as n")
             ->join("timespan as ts", "n.idTimespan", "ts.idTimespan")
             ->where("n.idDocument", $idDocument)
@@ -320,7 +321,7 @@ class CosineService
             ->select("n.idCosineNode", "n.idTimespan", "n.idSentence","ts.startTime", "ts.endTime")
             ->all();
         foreach ($timespans as $timespan) {
-            $vector1 = self::createVectorFromNode($timespan->idCosineNode, $type);
+            $vector1 = self::createVectorFromNode($timespan->idCosineNode, 'sn');
             $objects = Criteria::table("cosine_node as n")
                 ->where("n.idDocument", $idDocument)
                 ->where("n.type", "DOB")
@@ -342,6 +343,11 @@ class CosineService
                     }
                 }
             }
+//            if ($type =='fe') {
+//                debug($vector1);
+//                debug($vector2);
+//                die;
+//            }
             $cosine = self::compareVectors($vector1, $vector2);
             $documentSentence = Criteria::table("document_sentence")
                 ->where("idDocument", $idDocument)
