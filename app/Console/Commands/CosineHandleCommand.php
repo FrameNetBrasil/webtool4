@@ -38,9 +38,10 @@ class CosineHandleCommand extends Command
 //        CosineService::createLinkSentenceAnnotationTimeToFrame(631);
 //        CosineService::createLinkSentenceAnnotationTimeToFrame(626);
 //
-        //$array = [614,638,617,619,631,626,502,507,508,509,510,511,512,513,515,516];
+        $array = [614,638,617,619,631,626,502,507,508,509,510,511,512,513,515,516];
         //$array = [619,631,626,502,507,508,509,510,511,512,513,515,516];
-        $array = [502,507,508,509,510,511,512,513,515,516];
+        //$array = [502,507,508,509,510,511,512,513,515,516];
+        //$array = [614];
         foreach($array as $idDocument){
             CosineService::createLinkSentenceAnnotationTimeToFrame($idDocument);
             CosineService::createLinkObjectAnnotationTimeToFrame($idDocument);

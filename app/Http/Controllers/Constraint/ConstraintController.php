@@ -204,6 +204,11 @@ class ConstraintController extends Controller
                 $constrainedBy = ConstructionElement::byId($data->idMeetsCEConstraint);
                 RelationService::create($constraintEntry, $idConstraint, $ce->idEntity, $constrainedBy->idEntity);
             }
+            if ($data->idFEConstraint > 0) {
+                $relationEntry = 'rel_evokes';
+                $fe = FrameElement::byId($data->idFEConstraint);
+                RelationService::create($relationEntry, $ce->idEntity, $fe->idEntity);
+            }
             if ($data->idConceptConstraint > 0) {
                 $constraintEntry = 'rel_constraint_evokes';
                 $idConstraint = Criteria::create("entity",["type" => "CON"]);
