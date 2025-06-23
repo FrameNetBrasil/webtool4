@@ -111,6 +111,7 @@ annotation.objects = {
             let annotatedObject = new StaticBBoxObject(object);
             annotatedObject.dom = annotation.objects.newBboxElement();
             annotatedObject.scale = annotation.dimensions.scale;
+            annotatedObject.idDocument = annotation.idDocument;
             if (object.bbox) {
                 annotatedObject.loadBBox(object.bbox);
             }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Database\Criteria;
 use App\Repositories\Construction;
+use App\Repositories\Language;
 
 class ReportConstructionService
 {
@@ -36,6 +37,7 @@ class ReportConstructionService
         $report['concepts'] = self::getConcepts($cxn->idEntity);
         $report['evokes'] = self::getEvokes($cxn->idEntity);
         $report['relations'] = self::getRelations($cxn);
+        $report['language'] = Language::byId($cxn->cxIdLanguage);
         foreach ($ces as $ce) {
             $report['conceptsCE'][$ce->idConstructionElement] = self::getConcepts($ce->idEntity);
             $report['evokesCE'][$ce->idConstructionElement] = self::getEvokesCE($ce->idEntity);
@@ -100,7 +102,7 @@ class ReportConstructionService
             ->where("r.idEntity1", $idEntity)
             ->where("r.relationType","rel_hasconcept")
             ->where("c.idLanguage", AppService::getCurrentIdLanguage())
-            ->select("r.relationType","c.idConcept","c.name")
+            ->select("r.relationType","c.idConcept","c.name","c.type")
             ->orderBy("c.name")
             ->all();
         return $concepts;

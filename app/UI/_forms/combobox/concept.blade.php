@@ -23,7 +23,7 @@
                 maxResults: 20,
                 minCharacters: 3,
                 onSelect: (result) => {
-                    $('#{{$id}}').val(result.idFrame);
+                    $('#{{$id}}').val(result.idConcept);
                     {!! $onSelect !!}
                 ;}
             })

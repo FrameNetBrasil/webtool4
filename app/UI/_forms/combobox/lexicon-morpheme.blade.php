@@ -14,7 +14,7 @@
         $('#{{$id}}_search')
             .search({
                 apiSettings: {
-                    url: "/lexicon3/morpheme/listForSelect?q={query}"
+                    url: "/lexicon3/morpheme/listForSelect?q={query}&idLanguage={{$idLanguage}}"
                 },
                 fields: {
                     title: "name"

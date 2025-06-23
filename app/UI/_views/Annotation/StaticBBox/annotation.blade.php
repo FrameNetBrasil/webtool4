@@ -8,7 +8,15 @@
     $scale = ($scaleHeight < $scaleWidth) ? $scaleHeight : $scaleWidth;
     $imageWidth = intval($originalWidth * $scale);
     $imageHeight = intval($originalHeight * $scale);
-    debug($scale, $originalWidth,$originalHeight,$scaleWidth ,$scaleHeight,$imageWidth,$imageHeight );
+    debug("original width: ". $originalWidth);
+    debug("original height: ". $originalHeight);
+    debug("canvas width: ". $canvasWidth);
+    debug("canvas height: ". $canvasHeight);
+    debug("scale width: ". $scaleWidth);
+    debug("scale height: ". $scaleHeight);
+    debug("scale: ". $scale);
+    debug("image width: ". $imageWidth);
+    debug("image height: ". $imageHeight);
 @endphp
 <x-layout.annotation>
     <x-slot:head>
@@ -72,6 +80,7 @@
                         image: {{ Js::from($image) }},
                         objectList: [],
                         idStaticObject:{!! $idStaticObject ?? 'null' !!},
+                        idDocument:{!! $document->idDocument ?? 'null' !!},
                         dimensions: {
                             canvasWidth: {{$canvasWidth}},
                             canvasHeight: {{$canvasHeight}},

@@ -1,5 +1,5 @@
 <div class="ui tab active objects" data-tab="objects">
-    <table id="gridObjects" class="ui compact striped table">
+    <table id="gridObjects" class="ui compact striped table w-full">
         <thead>
         <tr>
             <th></th>
@@ -9,7 +9,7 @@
             <th  class="text-right">End</th>
             <th  class="text-right">#id</th>
             <th>FrameElement</th>
-            <th>CVName</th>
+            <th>Framed entity</th>
         </tr>
         </thead>
         <tbody>
