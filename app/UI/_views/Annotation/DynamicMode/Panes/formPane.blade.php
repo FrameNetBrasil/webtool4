@@ -1,4 +1,4 @@
-<div class="form" style="height:260px">
+<div class="form" style="height:320px">
     <x-form
         hx-post="/annotation/dynamicMode/updateObjectAnnotation"
     >
@@ -29,7 +29,7 @@
                 <div class="field mr-1">
                     <x-combobox.frame
                         id="idFrame"
-                        label="Frame"
+                        label="Frame (Event/State)"
                         placeholder="Frame (min: 3 chars)"
                         style="width:250px"
                         class="mb-2"
@@ -43,16 +43,18 @@
                     <x-combobox.fe-frame
                         id="idFrameElement"
                         name="idFrameElement"
-                        label="FE"
+                        label="FE (Participant/Prop)"
                         :value="$object?->idFrameElement ?? 0"
                         :idFrame="$object?->idFrame ?? 0"
                         :hasNull="false"
                     ></x-combobox.fe-frame>
                 </div>
+            </div>
+            <div class="formgroup-inline">
                 <div class="field mr-1">
                     <x-combobox.lu
                         id="idLU"
-                        label="CVName"
+                        label="Framed Entity"
                         placeholder="LU (min: 2 chars)"
                         class="w-23rem mb-2"
                         :value="$object?->idLU"

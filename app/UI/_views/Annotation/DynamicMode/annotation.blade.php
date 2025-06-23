@@ -6,7 +6,7 @@
     <x-slot:main>
         <div
             id="dynamicAnnotationPane"
-            class="dynamicAnnotationPane"
+            class="dynamicAnnotationPane w-full"
             @keydown.arrow-left="console.log('1')"
             @keydown.arrow-right="console.log('2')"
             @keydown.enter="console.log('3')"
@@ -22,7 +22,7 @@
 {{--                    @include("Annotation.DynamicMode.Panes.commentPane")--}}
 {{--                </div>--}}
             </div>
-            <div class="center">
+            <div class="center w-full" style="width:1024px;" >
                 <div class="header flex w-full">
                     <div class="font-bold">
                         <x-icon.video></x-icon.video>{{$video->title}}

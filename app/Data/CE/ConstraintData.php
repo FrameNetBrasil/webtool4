@@ -21,6 +21,7 @@ class ConstraintData extends Data
         public ?string $idBeforeCEConstraint,
         public ?string $idAfterCEConstraint,
         public ?string $idMeetsCEConstraint,
+        public ?string $idFEConstraint,
         public ?string $idConceptConstraint,
         public ?string $idIndexGenderCEConstraint,
         public ?string $idIndexPersonCEConstraint,
