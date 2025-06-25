@@ -1,47 +1,38 @@
 @php use App\Database\Criteria;use App\Repositories\User;use App\Services\AppService; use App\Services\MessageService; @endphp
-@php
-    $idUser = AppService::getCurrentIdUser();
-    $user = User::byId($idUser);
-    $isManager = User::isManager($user);
-    $messages = MessageService::getMessagesToUser($idUser);
-    $rows = Criteria::table("view_usertask_docs as utd")
-        ->join("view_project_docs as pd","pd.idCorpus","=","utd.idCorpus")
-        ->join("project_manager as pm","pd.idProject","=","pm.idProject")
-        ->join("user as u","u.idUser","=","pm.idUser")
-        ->select("utd.taskName","utd.documentName","utd.corpusName")
-        ->selectRaw("GROUP_CONCAT(DISTINCT u.email SEPARATOR ',') as email")
-        ->groupByRaw("utd.taskName,utd.documentName,utd.corpusName")
-        ->where("utd.idUser",$idUser)
-        ->where("pd.idProject","<>", 1)
-        ->where("pd.idLanguage",AppService::getCurrentIdLanguage())
-        ->where("utd.idLanguage",AppService::getCurrentIdLanguage())
-        ->all();
-    $projects = collect($rows)->groupBy('projectName')->toArray();
-@endphp
-
-<x-layout::index>
-    <div class="app-layout no-tools">
-        @include('layouts.header')
-        @include("layouts.sidebar")
-        <main class="app-main">
-            <div class="page-header">
-                <div class="page-header-content">
-                    @if($isManager)
-                        <div class="page-title">Projects</div>
-                        <div class="page-subtitle">List of projects you are managing.</div>
-                    @else
-                        <div class="page-title">Activities</div>
-                        <div class="page-subtitle">List of projects/tasks you are associated to.</div>
-                    @endif
-                </div>
-            </div>
-            <div class="page-content">
-                <div class="content-container">
-                    @include("App.messages")
-                    @if(!$isManager)
-                        <div class="wt-card w-full">
-                            <h2 class="ui header">Projects</h2>
-                            <div class="body">
+<x-layout.page>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['','Home']]"></x-breadcrumb>
+    </x-slot:head>
+    <x-slot:main>
+        @php
+            $idUser = AppService::getCurrentIdUser();
+            $user = User::byId($idUser);
+            $isManager = User::isManager($user);
+            $messages = MessageService::getMessagesToUser($idUser);
+            $rows = Criteria::table("view_usertask_docs as utd")
+                ->join("view_project_docs as pd","pd.idCorpus","=","utd.idCorpus")
+                ->join("project_manager as pm","pd.idProject","=","pm.idProject")
+                ->join("user as u","u.idUser","=","pm.idUser")
+                ->select("utd.taskName","utd.documentName","utd.corpusName")
+                ->selectRaw("GROUP_CONCAT(DISTINCT u.email SEPARATOR ',') as email")
+                ->groupByRaw("utd.taskName,utd.documentName,utd.corpusName")
+                ->where("utd.idUser",$idUser)
+                ->where("pd.idProject","<>", 1)
+                ->where("pd.idLanguage",AppService::getCurrentIdLanguage())
+                ->where("utd.idLanguage",AppService::getCurrentIdLanguage())
+                ->all();
+            $projects = collect($rows)->groupBy('projectName')->toArray();
+        @endphp
+        @include("App.messages")
+        @if(!$isManager)
+            <div class="relative h-full overflow-auto">
+                <div class="absolute top-0 left-0 bottom-0 right-0">
+                    <div class="ui container">
+                        <div class="ui card w-full">
+                            <div class="flex-grow-0 content h-4rem bg-gray-100">
+                                <h2 class="ui header">My projects</h2>
+                            </div>
+                            <div class="flex-grow-1 content bg-white">
                                 <table class="ui striped small compact table">
                                     <tbody>
                                     @foreach($projects as $project => $data)
@@ -55,9 +46,11 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="wt-card">
-                            <h2 class="ui header">My tasks</h2>
-                            <div class="body">
+                        <div class="ui card w-full">
+                            <div class="flex-grow-0 content h-4rem bg-gray-100">
+                                <h2 class="ui header">My tasks</h2>
+                            </div>
+                            <div class="flex-grow-1 content bg-white">
                                 <table class="ui striped small compact table">
                                     <thead>
                                     <tr>
@@ -84,39 +77,93 @@
                                 </table>
                             </div>
                         </div>
-                    @else
-                        @php
-                            $projectsForManager =  Criteria::table("project_manager as pm")
-                                ->join("project as p","p.idProject","=","pm.idProject")
-                                ->join("user as u","u.idUser","=","pm.idUser")
-                                ->select("p.name as projectName","p.idProject","p.description as projectDescription")
-                                ->where("u.idUser",$idUser)
-                                ->where("p.idProject","<>", 1)
-                                ->all();
-                        @endphp
-                        <div class="card-grid dense">
-                            @foreach($projectsForManager as $project)
-                                <div class="ui card summary-card primary" data-entity-id="{{$project->idProject}}">
-                                    <div class="content">
-                                        <div class="summary-card-header">
-                                            <div class="summary-card-icon">
-                                                <x-ui::icon.project></x-ui::icon.project>
-                                            </div>
-                                            <div class="summary-card-trend">
-                                                {{$project->projectName}}
-                                                <div class="summary-card-description">
-                                                    {{$project->projectDescription}}&nbsp;
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
+                    </div>
                 </div>
             </div>
-        </main>
-    </div>
-</x-layout::index>
+        @else
+            @php
+                $projectsForManager =  Criteria::table("project_manager as pm")
+                    ->join("project as p","p.idProject","=","pm.idProject")
+                    ->join("user as u","u.idUser","=","pm.idUser")
+                    ->select("p.name as projectName","p.idProject")
+                    ->where("u.idUser",$idUser)
+                    ->where("p.idProject","<>", 1)
+                    ->all();
+            @endphp
+            <div class="relative h-full overflow-auto">
+                <div class="absolute top-0 left-0 bottom-0 right-0">
+                    <div class="ui container">
+                        <div class="ui card w-full">
+                            <div class="flex-grow-0 content h-4rem bg-gray-100">
+                                <h2 class="ui header">Managed projects</h2>
+                            </div>
+                            <div class="flex-grow-1 content bg-white">
+                                <table class="ui striped small compact table">
+                                    <thead>
+                                    <tr>
+                                        <th>Project</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($projectsForManager as $project)
+                                        <tr>
+                                            <td>
+                                                {{$project->projectName}}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+{{--                        <div class="ui card w-full">--}}
+{{--                            <div class="flex-grow-0 content h-4rem bg-gray-100">--}}
+{{--                                <h2 class="ui header">Tasks attributed</h2>--}}
+{{--                            </div>--}}
+{{--                            <div class="flex-grow-1 content bg-white">--}}
+{{--                                <table class="ui striped small compact table">--}}
+{{--                                    <thead>--}}
+{{--                                    <tr>--}}
+{{--                                        <th>Document</th>--}}
+{{--                                        <th>Annotator</th>--}}
+{{--                                    </tr>--}}
+{{--                                    </thead>--}}
+{{--                                    <tbody>--}}
+{{--                                    @foreach($projectsForManager as $project)--}}
+{{--                                        <tr>--}}
+{{--                                            <td colspan="2">--}}
+{{--                                                {{$project->projectName}}--}}
+{{--                                            </td>--}}
+{{--                                        </tr>--}}
+{{--                                        @php--}}
+{{--                                            $tasksAttributed = Criteria::table("view_usertask_docs as utd")--}}
+{{--                                                ->join("view_project_docs as pd","pd.idCorpus","=","utd.idCorpus")--}}
+{{--                                                ->join("user as u","u.idUser","=","utd.idUser")--}}
+{{--                                                ->select("utd.taskName","utd.documentName","u.email")--}}
+{{--                                                ->where("pd.idProject","=", $project->idProject)--}}
+{{--                                                ->where("pd.idLanguage",AppService::getCurrentIdLanguage())--}}
+{{--                                                ->all();--}}
+{{--                                        @endphp--}}
+{{--                                        @foreach($tasksAttributed as $task)--}}
+{{--                                            <tr>--}}
+{{--                                                <td>--}}
+{{--                                                    {{$task->documentName}}--}}
+{{--                                                </td>--}}
+{{--                                                <td>--}}
+{{--                                                    {{$task->email}}--}}
+{{--                                                </td>--}}
+{{--                                            </tr>--}}
+{{--                                        @endforeach--}}
+{{--                                    @endforeach--}}
+{{--                                    </tbody>--}}
+{{--                                </table>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+                    </div>
+                </div>
+            </div>
+        @endif
+    </x-slot:main>
+</x-layout.page>
 

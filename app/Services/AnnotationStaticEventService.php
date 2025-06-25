@@ -31,7 +31,7 @@ class AnnotationStaticEventService
         $task = Task::byId($userTask->idTask);
         $text = ($task->type == 'sentence') ? "sentence.text" : "'' as text";
         $sentences = Criteria::table("sentence")
-            ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
             ->join("document as d", "ds.idDocument", "=", "d.idDocument")
             ->join("view_image_sentence as is", "sentence.idSentence", "=", "is.idSentence")
             ->join("image as i", "is.idImage", "=", "i.idImage")
@@ -47,7 +47,7 @@ class AnnotationStaticEventService
 
     public static function getPrevious(int $idDocument, int $idDocumentSentence)
     {
-        $i = Criteria::table("view_document_sentence")
+        $i = Criteria::table("document_sentence")
             ->where("idDocument", "=", $idDocument)
             ->where("idDocumentSentence", "<", $idDocumentSentence)
             ->max('idDocumentSentence');
@@ -56,7 +56,7 @@ class AnnotationStaticEventService
 
     public static function getNext(int $idDocument, int $idDocumentSentence)
     {
-        $i = Criteria::table("view_document_sentence")
+        $i = Criteria::table("document_sentence")
             ->where("idDocument", "=", $idDocument)
             ->where("idDocumentSentence", ">", $idDocumentSentence)
             ->min('idDocumentSentence');
@@ -131,7 +131,7 @@ class AnnotationStaticEventService
     {
         DB::transaction(function () use ($idDocumentSentence, $idFrame) {
             $idLanguage = AppService::getCurrentIdLanguage();
-            $ds = Criteria::table("view_document_sentence")
+            $ds = Criteria::table("document_sentence")
                 ->where("idDocumentSentence", $idDocumentSentence)
                 ->select("idDocument","idSentence")
                 ->first();
@@ -161,7 +161,7 @@ class AnnotationStaticEventService
     {
         DB::transaction(function () use ($idDocumentSentence, $idFrame, $staticObjectFEs) {
             $idLanguage = AppService::getCurrentIdLanguage();
-            $relation = Criteria::table("view_document_sentence")
+            $relation = Criteria::table("document_sentence")
                 ->where("idDocumentSentence", $idDocumentSentence)
                 ->select("idDocument")
                 ->first();

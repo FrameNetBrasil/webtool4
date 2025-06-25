@@ -10,7 +10,7 @@
                             class="ni"
                             data-type="ni"
                             :data-name="itType.name"
-                            :data-id="itType.idTypeInstance"
+                            :data-id="itType.idType"
                             x-text="itType.name"
                             >
                         </div>

@@ -107,7 +107,7 @@ class AnnotationSet
             LEFT JOIN view_annotation_text_gl gl ON (ts.idTextSpan = gl.idTextSpan)
             LEFT JOIN view_annotation_text_fe fe ON (ts.idTextSpan = fe.idTextSpan)
             LEFT JOIN view_annotation_text_ce ce ON (ts.idTextSpan = ce.idTextSpan)
-            LEFT JOIN view_instantiationtype it ON (ts.idInstantiationType = it.idTypeInstance)
+            LEFT JOIN view_instantiationtype it ON (ts.idInstantiationType = it.idType)
         WHERE (l.idLanguage = {$idLanguage})
             AND (a.idAnnotationSet = {$idAnnotationSet})
 
@@ -131,7 +131,7 @@ HERE;
         $cmd = <<<HERE
  SELECT ds.idSentence, fece.startChar, fece.endChar, fece.idInstantiationType, fece.idColor, fece.name feName, fece.layerTypeEntry, it.name instantiationType
  from view_annotationset a
- join view_document_sentence ds on (a.idDocumentSentence = ds.idDocumentSentence)
+ join document_sentence ds on (a.idDocumentSentence = ds.idDocumentSentence)
 left join (
      select idAnnotationSet, name, idColor, layerTypeEntry, startChar, endChar,idInstantiationType
      from view_annotation_text_fe afe
@@ -157,7 +157,7 @@ HERE;
     public static function listSentencesByAS(int|array $idAnnotationSet)
     {
         $criteria = Criteria::table("view_annotationset as a")
-            ->join("view_document_sentence as ds", "a.idDocumentSentence", "=", "ds.idDocumentSentence")
+            ->join("document_sentence as ds", "a.idDocumentSentence", "=", "ds.idDocumentSentence")
             ->join("view_sentence as s", "ds.idSentence", "=", "s.idSentence")
             ->select('a.idAnnotationSet', 'ds.idDocumentSentence', 's.idSentence', 's.text');
         if (is_array($idAnnotationSet)) {
@@ -174,17 +174,16 @@ HERE;
     {
         DB::beginTransaction();
         try {
-            $documentSentence = Criteria::byId("view_document_sentence","idDocumentSentence",$idDocumentSentence);
+            $documentSentence = Criteria::byId("document_sentence","idDocumentSentence",$idDocumentSentence);
             $lu = LU::byId($idLU);
-            $ti = Criteria::byId("typeinstance", "entry", 'ast_unann');
+            $ti = Criteria::byId("type", "entry", 'ast_unann');
             $annotationSet = [
-                'idAnnotationObjectRelation' => $idDocumentSentence,
-                'idEntityRelated' => $lu->idEntity,
+                'idSentence' => $documentSentence->idSentence,
                 'idLU' => $lu->idLU,
-                'idAnnotationStatus' => $ti->idTypeInstance
+                'idAnnotationStatus' => $ti->idType
             ];
             $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
-            $ti = Criteria::byId("typeinstance", "entry", 'int_normal');
+            $ti = Criteria::byId("type", "entry", 'int_normal');
             $layerTypes = LayerType::listToLU($lu);
             foreach ($layerTypes as $lt) {
                 $layer = [
@@ -202,7 +201,7 @@ HERE;
                         'startChar' => $startChar,
                         'endChar' => $endChar,
                         'multi' => 0,
-                        'idInstantiationType' => $ti->idTypeInstance,
+                        'idInstantiationType' => $ti->idType,
                         'idLayer' => $idLayer,
                         'idSentence' => $documentSentence->idSentence,
                     ]);
@@ -216,9 +215,8 @@ HERE;
                         ->where("t.name", 'Default Task')
                         ->first();
                     $data = json_encode([
-                        'idAnnotationObject' => $ts->idAnnotationObject,
+                        'idTextSpan' => $ts->idTextSpan,
                         'idEntity' => $target->idEntity,
-                        'relationType' => 'rel_annotation',
                         'idUserTask' => $userTask->idUserTask
                     ]);
                     Criteria::function("annotation_create(?)", [$data]);
@@ -272,7 +270,7 @@ HERE;
 //
 //    public static function createLayersForLU(int $idAnnotationSet, object $lu, int $startChar, int $endChar)
 //    {
-//        $ti = typeinstance::getByEntry('int_normal');
+//        $ti = type::getByEntry('int_normal');
 //        $layerTypes = LayerType::listToLU($lu);
 //        foreach ($layerTypes as $lt) {
 //            $idLayer = Layer::save((object)[
@@ -286,7 +284,7 @@ HERE;
 //                    'startChar' => $startChar,
 //                    'endChar' => $endChar,
 //                    'multi' => 0,
-//                    'idInstantiationType' => $ti->idTypeInstance,
+//                    'idInstantiationType' => $ti->idType,
 //                    'idLayer' => $idLayer,
 //                    'idLabelType' => $target->idEntity
 //                ]);
@@ -446,7 +444,7 @@ HERE;
 //            INNER JOIN view_layer l on (a.idAnnotationSet = l.idAnnotationSet)
 //            INNER JOIN view_lu lu on (a.idLU = lu.idLU)
 //            INNER JOIN view_frameelement fe on (lu.idFrame = fe.idFrame)
-//            INNER JOIN typeinstance ti on (fe.typeEntry=ti.entry)
+//            INNER JOIN type ti on (fe.typeEntry=ti.entry)
 //            INNER JOIN view_entrylanguage e on (fe.entry = e.entry)
 //        WHERE (e.idLanguage = {$idLanguage} )
 //            AND (l.entry = 'lty_fe' )
@@ -499,7 +497,7 @@ HERE;
 //        FROM label lb
 //            INNER JOIN view_layer l ON (lb.idLayer = l.idLayer)
 //            INNER JOIN view_annotationset a ON (l.idAnnotationSet = a.idAnnotationSet)
-//            INNER JOIN view_instantiationtype it ON (lb.idInstantiationType = it.idtypeinstance)
+//            INNER JOIN view_instantiationtype it ON (lb.idInstantiationType = it.idType)
 //            INNER JOIN view_entrylanguage eit on (it.entry = eit.entry)
 //            INNER JOIN view_frameelement fe
 //                ON (lb.idLabelType = fe.idEntity)
@@ -663,7 +661,7 @@ HERE;
 //            public function setIdAnnotationStatus($value)
 //            {
 //                if (substr($value, 0, 3) == 'ast') {
-//                    $ti = new typeinstance();
+//                    $ti = new type();
 //                    $filter = (object)['entry' => $value];
 //                    $idStatus = $ti->listAnnotationStatus($filter)->asQuery()->getResult()[0]['idAnnotationStatus'];
 //                } else {
@@ -676,7 +674,7 @@ HERE;
 //            {
 //                $idAnnotationStatus = ($this->getIdAnnotationStatus() ?: '0');
 //                $criteria = $this->getCriteria()->
-//                select('idAnnotationStatus, annotationStatus.entry, annotationStatus.entries.name as annotationStatus, annotationStatus.idtypeinstance,' .
+//                select('idAnnotationStatus, annotationStatus.entry, annotationStatus.entries.name as annotationStatus, annotationStatus.idType,' .
 //                    'annotationStatus.color.rgbBg');
 //                if ($idAnnotationStatus) {
 //                    $criteria->where("idAnnotationStatus = {$idAnnotationStatus}");

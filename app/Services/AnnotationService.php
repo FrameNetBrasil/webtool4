@@ -9,52 +9,6 @@ use App\Repositories\User;
 
 class AnnotationService
 {
-    public static function getCurrentUserTask(int $idDocument): object|null
-    {
-        $document = Document::byId($idDocument);
-        $idUser = AppService::getCurrentIdUser();
-        $user = User::byId($idUser);
-        // get usertask for this document
-        $usertask = Criteria::table("usertask_document")
-            ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-            ->where("usertask_document.idDocument", $idDocument)
-            ->where("ut.idUser", $idUser)
-            ->select("ut.idUserTask", "ut.idTask")
-            ->first();
-        if (empty($usertask)) { // try to get for Corpus
-            $usertask = Criteria::table("usertask_document")
-                ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-                ->where("usertask_document.idCorpus", $document->idCorpus)
-                ->where("ut.idUser", $idUser)
-                ->select("ut.idUserTask", "ut.idTask")
-                ->first();
-            if (empty($usertask)) { // check privileges
-                if (User::isManager($user) || User::isMemberOf($user, 'MASTER')) {
-                    $usertask = Criteria::table("usertask_document")
-                        ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-                        ->where("usertask_document.idDocument", $idDocument)
-                        ->where("ut.idUser", -2)
-                        ->select("ut.idUserTask", "ut.idTask")
-                        ->first();
-                    if (empty($usertask)) { // try to get for Corpus
-                        $usertask = Criteria::table("usertask_document")
-                            ->join("usertask as ut", "ut.idUserTask", "=", "usertask_document.idUserTask")
-                            ->where("usertask_document.idCorpus", $document->idCorpus)
-                            ->where("ut.idUser", -2)
-                            ->select("ut.idUserTask", "ut.idTask")
-                            ->first();
-                        if (empty($usertask)) {
-                            $usertask = (object)[
-                                "idUserTask" => 1
-                            ];
-                        }
-                    }
-                }
-            }
-        }
-        return $usertask;
-    }
-
     public static function browseCorpusDocumentBySearch(object $search, array $projects = [], string $projectGroup = '')
     {
         $corpusIcon = view('components.icon.corpus')->render();

@@ -11,15 +11,10 @@ use App\Data\Annotation\DynamicMode\UpdateBBoxData;
 use App\Data\Annotation\DynamicMode\WordData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
-use App\Repositories\Base;
-use App\Repositories\DynamicSentenceMM;
-use App\Repositories\Label;
-use App\Repositories\Sentence;
+use App\Repositories\Task;
 use App\Repositories\Timeline;
 use App\Repositories\User;
-use App\Repositories\UserAnnotation;
 use App\Repositories\Video;
-use App\Repositories\ViewAnnotationSet;
 use Illuminate\Support\Facades\DB;
 
 
@@ -28,18 +23,14 @@ class AnnotationDynamicService
     private static function deleteBBoxesByDynamicObject(int $idDynamicObject)
     {
         $bboxes = Criteria::table("view_dynamicobject_boundingbox as db")
-            ->join("boundingbox as bb", "db.idBoundingBox", "=", "bb.idBoundingBox")
             ->where("db.idDynamicObject", $idDynamicObject)
-            ->select("bb.idAnnotationObject")
-            ->chunkResult("idAnnotationObject", "idAnnotationObject");
-        Criteria::table("annotationobjectrelation")
-            ->whereIn("idAnnotationObject2", $bboxes)
+            ->select("db.idBoundingBox")
+            ->chunkResult("idBoundingBox", "idBoundingBox");
+        Criteria::table("dynamicobject_boundingbox")
+            ->whereIn("idBoundingBox", $bboxes)
             ->delete();
         Criteria::table("boundingbox")
-            ->whereIn("idAnnotationObject", $bboxes)
-            ->delete();
-        Criteria::table("annotationobject")
-            ->whereIn("idAnnotationObject", $bboxes)
+            ->whereIn("idBoundingBox", $bboxes)
             ->delete();
     }
 
@@ -103,15 +94,14 @@ class AnnotationDynamicService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
-        $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
+        $usertask = Task::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
-        Criteria::deleteById("annotation", "idAnnotationObject", $do->idAnnotationObject);
+        Criteria::deleteById("annotation", "idDynamicObject", $do->idDynamicObject);
         if ($data->idFrameElement) {
             $fe = Criteria::byId("frameelement", "idFrameElement", $data->idFrameElement);
             $json = json_encode([
                 'idEntity' => $fe->idEntity,
-                'idAnnotationObject' => $do->idAnnotationObject,
-                'relationType' => 'rel_annotation',
+                'idDynamicObject' => $do->idDynamicObject,
                 'idUserTask' => $usertask->idUserTask
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
@@ -121,8 +111,7 @@ class AnnotationDynamicService
             $lu = Criteria::byId("lu", "idLU", $data->idLU);
             $json = json_encode([
                 'idEntity' => $lu->idEntity,
-                'idAnnotationObject' => $do->idAnnotationObject,
-                'relationType' => 'rel_annotation',
+                'idDynamicObject' => $do->idDynamicObject,
                 'idUserTask' => $usertask->idUserTask
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
@@ -202,13 +191,11 @@ class AnnotationDynamicService
                 ->where("idDocument", $data->idDocument)
                 ->first();
             $video = Video::byId($documentVideo->idVideo);
-            // create annotationobjectrelation for rel_video_dynobj
-            $relation = json_encode([
-                'idAnnotationObject1' => $video->idAnnotationObject,
-                'idAnnotationObject2' => $dynamicObject->idAnnotationObject,
-                'relationType' => 'rel_video_dynobj'
+            // create relation video_dynamicobject
+            Criteria::create("video_dynamicobject", [
+                "idVideo" => $video->idVideo,
+                "idDynamicObject" => $idDynamicObject,
             ]);
-            $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
             if (count($data->frames)) {
                 foreach ($data->frames as $frame) {
                     $json = json_encode([
@@ -260,13 +247,11 @@ class AnnotationDynamicService
             ->where("idDocument", $data->idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        // create annotationobjectrelation for rel_video_dynobj
-        $relation = json_encode([
-            'idAnnotationObject1' => $video->idAnnotationObject,
-            'idAnnotationObject2' => $dynamicObjectClone->idAnnotationObject,
-            'relationType' => 'rel_video_dynobj'
+        // create relation video_dynamicobject
+        Criteria::create("video_dynamicobject", [
+            "idVideo" => $video->idVideo,
+            "idDynamicObject" => $idDynamicObjectClone,
         ]);
-        $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
         // cloning bboxes
         $bboxes = Criteria::table("view_dynamicobject_boundingbox")
             ->where("idDynamicObject", $idDynamicObject)
@@ -289,23 +274,25 @@ class AnnotationDynamicService
 
     public static function deleteObject(int $idDynamicObject): void
     {
-        // se pode remover o objeto se for Manager ou se for o criador do objeto
+        // se pode remover o objeto se for Manager da task ou se for o criador do objeto
+        $dynamicObjectAnnotation = Criteria::byId("view_annotation_dynamic", "idDynamicObject", $idDynamicObject);
+        $taskManager = Task::getTaskManager($dynamicObjectAnnotation->idDocument);
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
         if (!User::isManager($user)) {
-            $tl = Criteria::table("timeline")
-                ->where("tablename", "dynamicobject")
-                ->where("id", $idDynamicObject)
-                ->select("idUser")
-                ->first();
-            if ($tl->idUser != $idUser) {
-                throw new \Exception("Object can not be removed.");
+            if ($taskManager->idUser != $idUser) {
+                $tl = Criteria::table("timeline")
+                    ->where("tablename", "dynamicobject")
+                    ->where("id", $idDynamicObject)
+                    ->select("idUser")
+                    ->first();
+                if ($tl->idUser != $idUser) {
+                    throw new \Exception("Object can not be removed.");
+                }
             }
         }
         DB::transaction(function () use ($idDynamicObject) {
-            // remove boundingbox
             self::deleteBBoxesByDynamicObject($idDynamicObject);
-            // remove dynamicobject
             $idUser = AppService::getCurrentIdUser();
             Criteria::function("dynamicobject_delete(?,?)", [$idDynamicObject, $idUser]);
         });
@@ -344,7 +331,7 @@ class AnnotationDynamicService
     public static function listSentencesByDocument($idDocument): array
     {
         $sentences = Criteria::table("sentence")
-            ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
             ->join("view_sentence_timespan as st", "sentence.idSentence", "=", "st.idSentence")
             ->join("document as d", "ds.idDocument", "=", "d.idDocument")
             ->leftJoin("originmm as o", "sentence.idOriginMM", "=", "o.idOriginMM")
@@ -384,23 +371,24 @@ class AnnotationDynamicService
         if ($data->idSentence > 0) {
             $sentence = Criteria::byId("view_sentence", "idSentence", $data->idSentence);
             // atualiza timespan associadp
-            $or = Criteria::table("view_object_relation as or")
-                ->where("idAnnotationObject1", $sentence->idAnnotationObject)
-                ->where("relationType", "rel_sentence_time")
+            $timeSpan = Criteria::table("sentence_timespan")
+                ->where("idSentence", $sentence->idSentence)
                 ->first();
-            Criteria::table("timespan")
-                ->where("idAnnotationObject", $or->idAnnotationObject2)
-                ->update([
-                    'startTime' => $data->startTime,
-                    'endTime' => $data->endTime
-                ]);
-            // atualiza sentence
-            Criteria::table("sentence")
-                ->where("idSentence", $data->idSentence)
-                ->update([
-                    'text' => trim($data->text),
-                    'idOriginMM' => $data->idOriginMM
-                ]);
+            if ($timeSpan) {
+                Criteria::table("timespan")
+                    ->where("idTimeSpan", $timeSpan->idTimeSpan)
+                    ->update([
+                        'startTime' => $data->startTime,
+                        'endTime' => $data->endTime
+                    ]);
+                // atualiza sentence
+                Criteria::table("sentence")
+                    ->where("idSentence", $data->idSentence)
+                    ->update([
+                        'text' => trim($data->text),
+                        'idOriginMM' => $data->idOriginMM
+                    ]);
+            }
         }
     }
 
@@ -425,33 +413,11 @@ class AnnotationDynamicService
             ]);
             $idTimeSpan = Criteria::function("timespan_create(?)", [$json]);
             $timespan = Criteria::byId("timespan", "idTimeSpan", $idTimeSpan);
-            $json = json_encode([
-                'idAnnotationObject1' => $sentence->idAnnotationObject,
-                'idAnnotationObject2' => $timespan->idAnnotationObject,
-                'relationType' => 'rel_sentence_time'
+            // create relation sentence_timespan
+            Criteria::create("sentence_timespan", [
+                "idSentence" => $idSentence,
+                "idTimeSpan" => $idTimeSpan,
             ]);
-            $idObject = Criteria::function("objectrelation_create(?)", [$json]);
-
-
-//            $sentence = Criteria::byId("view_sentence", "idSentence", $data->idSentence);
-//            // atualiza timespan associadp
-//            $or = Criteria::table("view_object_relation as or")
-//                ->where("idAnnotationObject1", $sentence->idAnnotationObject)
-//                ->where("relationType", "rel_sentence_time")
-//                ->first();
-//            Criteria::table("timespan")
-//                ->where("idAnnotationObject", $or->idAnnotationObject2)
-//                ->update([
-//                    'startTime' => $data->startTime,
-//                    'endTime' => $data->endTime
-//                ]);
-//            // atualiza sentence
-//            Criteria::table("sentence")
-//                ->where("idSentence", $data->idSentence)
-//                ->update([
-//                    'text' => trim($data->text),
-//                    'idOriginMM' => $data->idOriginMM
-//                ]);
         }
     }
 
@@ -490,13 +456,12 @@ class AnnotationDynamicService
         ]);
         $idTimeSpan = Criteria::function("timespan_create(?)", [$json]);
         $timespan = Criteria::byId("timespan", "idTimeSpan", $idTimeSpan);
-        $json = json_encode([
-            'idAnnotationObject1' => $sentence->idAnnotationObject,
-            'idAnnotationObject2' => $timespan->idAnnotationObject,
-            'relationType' => 'rel_sentence_time'
+        // create relation sentence_timespan
+        Criteria::create("sentence_timespan", [
+            "idSentence" => $idSentence,
+            "idTimeSpan" => $idTimeSpan,
         ]);
-        $idObject = Criteria::function("objectrelation_create(?)", [$json]);
-        $documentSentence = Criteria::table("view_document_sentence as ds")
+        $documentSentence = Criteria::table("document_sentence as ds")
             ->where("ds.idSentence", $idSentence)
             ->where("ds.idDocument", $data->idDocument)
             ->first();
