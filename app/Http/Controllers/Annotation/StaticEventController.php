@@ -56,7 +56,7 @@ class StaticEventController extends Controller
     private function getData(int $idDocumentSentence): SentenceData
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $ds = Criteria::byFilter("view_document_sentence", ["idDocumentSentence", "=", $idDocumentSentence])->first();
+        $ds = Criteria::byFilter("document_sentence", ["idDocumentSentence", "=", $idDocumentSentence])->first();
         $document = Criteria::byFilter("view_document", [
             ["idDocument", "=", $ds->idDocument],
             ["idLanguage","=", $idLanguage],

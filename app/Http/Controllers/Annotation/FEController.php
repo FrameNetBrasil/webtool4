@@ -98,7 +98,7 @@ class FEController extends Controller
             if ($input->range->type != '') {
                 $data = AnnotationFEService::annotateFE($input);
                 //$data['alternativeLU'] = [];
-                debug("#######################################################");
+//                debug("#######################################################");
 
 //                $this->trigger('reload-annotationSet');
 //                $this->trigger('reload-annotationSet');
