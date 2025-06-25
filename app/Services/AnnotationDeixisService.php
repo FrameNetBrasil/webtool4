@@ -411,7 +411,7 @@ class AnnotationDeixisService
     public static function listSentencesByDocument($idDocument): array
     {
         $sentences = Criteria::table("sentence")
-            ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
             ->join("view_sentence_timespan as st", "sentence.idSentence", "=", "st.idSentence")
             ->join("document as d", "ds.idDocument", "=", "d.idDocument")
             ->leftJoin("originmm as o", "sentence.idOriginMM", "=", "o.idOriginMM")
@@ -563,7 +563,7 @@ class AnnotationDeixisService
             'relationType' => 'rel_sentence_time'
         ]);
         $idObject = Criteria::function("objectrelation_create(?)", [$json]);
-        $documentSentence = Criteria::table("view_document_sentence as ds")
+        $documentSentence = Criteria::table("document_sentence as ds")
             ->where("ds.idSentence", $idSentence)
             ->where("ds.idDocument", $data->idDocument)
             ->first();

@@ -22,7 +22,7 @@ class AnnotationASService
 {
     private static function hasTimespan(int $idDocument): bool
     {
-        $timespan = Criteria::table("view_document_sentence as ds")
+        $timespan = Criteria::table("document_sentence as ds")
             ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
             ->where("ds.idDocument", $idDocument)
             ->first();
@@ -32,7 +32,7 @@ class AnnotationASService
     private static function getRowNumber(int $idDocument, int $idDocumentSentence): int
     {
         $sentences = Criteria::table("sentence")
-            ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
             ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
             ->where("ds.idDocument", $idDocument)
             ->selectRaw("ROW_NUMBER() OVER (order by `ts`.`startTime` asc, `ds`.`idDocumentSentence` asc) AS `rowNumber`, ds.idDocumentSentence")
@@ -46,7 +46,7 @@ class AnnotationASService
         $hasTimespan = self::hasTimespan($idDocument);
         if ($hasTimespan) {
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
@@ -57,7 +57,7 @@ class AnnotationASService
                 ->get()->keyBy("idDocumentSentence")->all();
         } else {
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
                 ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence")
@@ -76,14 +76,14 @@ class AnnotationASService
 
     public static function getSentence(int $idDocumentSentence): array
     {
-        $document = Criteria::table("view_document_sentence as ds")
+        $document = Criteria::table("document_sentence as ds")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->first();
         $idDocument = $document->idDocument;
         $hasTimespan = self::hasTimespan($idDocument);
         if ($hasTimespan) {
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
@@ -95,7 +95,7 @@ class AnnotationASService
                 ->get()->keyBy("idDocumentSentence")->all();
         } else {
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
                 ->where("ds.idDocumentSentence", $idDocumentSentence)
@@ -121,7 +121,7 @@ class AnnotationASService
             $rowNumber = self::getRowNumber($idDocument, $idDocumentSentence);
             debug($rowNumber);
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
                 ->where("ds.idDocument", $idDocument)
                 ->selectRaw("ROW_NUMBER() OVER (order by `ts`.`startTime` asc, `ds`.`idDocumentSentence` asc) AS `rowNumber`, ds.idDocumentSentence")
@@ -130,7 +130,7 @@ class AnnotationASService
             debug($sentences);
             return isset($sentences[$rowNumber - 1]) ? $sentences[$rowNumber - 1]->idDocumentSentence : null;
         } else {
-            $i = Criteria::table("view_document_sentence")
+            $i = Criteria::table("document_sentence")
                 ->where("idDocument", "=", $idDocument)
                 ->where("idDocumentSentence", "<", $idDocumentSentence)
                 ->max('idDocumentSentence');
@@ -145,7 +145,7 @@ class AnnotationASService
             $rowNumber = self::getRowNumber($idDocument, $idDocumentSentence);
             debug($rowNumber);
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
                 ->where("ds.idDocument", $idDocument)
                 ->selectRaw("ROW_NUMBER() OVER (order by `ts`.`startTime` asc, `ds`.`idDocumentSentence` asc) AS `rowNumber`, ds.idDocumentSentence")
@@ -153,7 +153,7 @@ class AnnotationASService
                 ->all();
             return isset($sentences[$rowNumber + 1]) ? $sentences[$rowNumber + 1]->idDocumentSentence : null;
         } else {
-            $i = Criteria::table("view_document_sentence")
+            $i = Criteria::table("document_sentence")
                 ->where("idDocument", "=", $idDocument)
                 ->where("idDocumentSentence", ">", $idDocumentSentence)
                 ->min('idDocumentSentence');
@@ -164,7 +164,7 @@ class AnnotationASService
     public static function getAnnotationData(int $idDocumentSentence): array
     {
         $sentence = Criteria::table("view_sentence as s")
-            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
             ->first();
@@ -184,7 +184,7 @@ class AnnotationASService
         if ($hasTimespan) {
             $rowNumber = self::getRowNumber($sentence->idDocument, $idDocumentSentence);
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
                 ->where("ds.idDocument", $sentence->idDocument)
                 ->selectRaw("ROW_NUMBER() OVER (order by `ts`.`startTime` asc, `ds`.`idDocumentSentence` asc) AS `rowNumber`, ds.idDocumentSentence")
@@ -193,12 +193,12 @@ class AnnotationASService
             $idPrevious = isset($sentences[$rowNumber - 1]) ? $sentences[$rowNumber - 1]->idDocumentSentence : null;
             $idNext = isset($sentences[$rowNumber + 1]) ? $sentences[$rowNumber + 1]->idDocumentSentence : null;
         } else {
-            $i = Criteria::table("view_document_sentence")
+            $i = Criteria::table("document_sentence")
                 ->where("idDocument", "=", $sentence->idDocument)
                 ->where("idDocumentSentence", "<", $idDocumentSentence)
                 ->max('idDocumentSentence');
             $idPrevious = $i ?? null;
-            $i = Criteria::table("view_document_sentence")
+            $i = Criteria::table("document_sentence")
                 ->where("idDocument", "=", $sentence->idDocument)
                 ->where("idDocumentSentence", ">", $idDocumentSentence)
                 ->min('idDocumentSentence');
@@ -267,7 +267,7 @@ class AnnotationASService
     public static function getLUs(int $idDocumentSentence, int $idWord): array
     {
         $sentence = Criteria::table("view_sentence as s")
-            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
             ->first();
@@ -296,7 +296,7 @@ class AnnotationASService
             ->where('idAnnotationSet', $idAS)
             ->first();
         $sentence = Criteria::table("view_sentence as s")
-            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $as->idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
             ->first();

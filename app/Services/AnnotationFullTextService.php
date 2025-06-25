@@ -19,7 +19,7 @@ class AnnotationFullTextService
 {
     private static function hasTimespan(int $idDocument): bool
     {
-        $timespan = Criteria::table("view_document_sentence as ds")
+        $timespan = Criteria::table("document_sentence as ds")
             ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
             ->where("ds.idDocument", $idDocument)
             ->first();
@@ -33,7 +33,7 @@ class AnnotationFullTextService
         $hasTimespan = self::hasTimespan($idDocument);
         if ($hasTimespan) {
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
@@ -44,7 +44,7 @@ class AnnotationFullTextService
                 ->get()->keyBy("idDocumentSentence")->all();
         } else {
             $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
                 ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence")
@@ -63,7 +63,7 @@ class AnnotationFullTextService
 
     public static function getPrevious(int $idDocument, int $idDocumentSentence)
     {
-        $i = Criteria::table("view_document_sentence")
+        $i = Criteria::table("document_sentence")
             ->where("idDocument", "=", $idDocument)
             ->where("idDocumentSentence", "<", $idDocumentSentence)
             ->max('idDocumentSentence');
@@ -72,7 +72,7 @@ class AnnotationFullTextService
 
     public static function getNext(int $idDocument, int $idDocumentSentence)
     {
-        $i = Criteria::table("view_document_sentence")
+        $i = Criteria::table("document_sentence")
             ->where("idDocument", "=", $idDocument)
             ->where("idDocumentSentence", ">", $idDocumentSentence)
             ->min('idDocumentSentence');
@@ -82,7 +82,7 @@ class AnnotationFullTextService
     public static function getAnnotationData(int $idDocumentSentence): array
     {
         $sentence = Criteria::table("view_sentence as s")
-            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
             ->first();
@@ -153,7 +153,7 @@ class AnnotationFullTextService
     public static function getLUs(int $idDocumentSentence, int $idWord): array
     {
         $sentence = Criteria::table("view_sentence as s")
-            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
             ->first();
@@ -183,7 +183,7 @@ class AnnotationFullTextService
             ->where('idAnnotationSet', $idAS)
             ->first();
         $sentence = Criteria::table("view_sentence as s")
-            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $as->idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
             ->first();
@@ -338,7 +338,7 @@ class AnnotationFullTextService
             ->where('idAnnotationSet', $idAS)
             ->first();
         $sentence = Criteria::table("view_sentence as s")
-            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
             ->where("ds.idDocumentSentence", $as->idDocumentSentence)
             ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
             ->first();
@@ -497,7 +497,7 @@ class AnnotationFullTextService
                     ->where("idTextSpan", $idTextSpan)
                     ->first();
                 $json = json_encode([
-                    'idAnnotationObject' => $ts->idAnnotationObject,
+                    'idTextSpan' => $ts->idTextSpan,
                     'idEntity' => $data->idEntity,
                     'relationType' => 'rel_annotation',
                     'idUserTask' => $userTask->idUserTask
@@ -517,7 +517,7 @@ class AnnotationFullTextService
                     ->where("idTextSpan", $idTextSpan)
                     ->first();
                 $json = json_encode([
-                    'idAnnotationObject' => $ts->idAnnotationObject,
+                    'idTextSpan' => $ts->idTextSpan,
                     'idEntity' => $data->idEntity,
                     'relationType' => 'rel_annotation',
                     'idUserTask' => $userTask->idUserTask
@@ -534,7 +534,7 @@ class AnnotationFullTextService
             //debug($data);
             // get Label spans for this idAnnotationSet based on idEntity
             $annotations = Criteria::table("textspan as ts")
-                ->join("annotation as a", "ts.idAnnotationObject", "=", "a.idAnnotationObject")
+                ->join("annotation as a", "ts.idTextSpan", "=", "a.idTextSpan")
                 ->join("layer as l", "ts.idLayer", "=", "l.idLayer")
                 ->where("l.idAnnotationSet", $data->idAnnotationSet)
                 ->where("a.idEntity", $data->idEntity)

@@ -71,7 +71,7 @@ class Concept
         return $rows;
     }
 
-    public static function listTypeChildren(int $idTypeInstance): array
+    public static function listTypeChildren(int $idType): array
     {
         $criteriaER = Criteria::table("view_relation")
             ->select('idEntity1')
@@ -84,7 +84,7 @@ class Concept
             ->where("idEntity", "NOT IN", $criteriaER)
             ->where("idEntity", "NOT IN", $criteriaConstituent)
             ->where("idLanguage", AppService::getCurrentIdLanguage())
-            ->where("idTypeInstance", $idTypeInstance)
+            ->where("idType", $idType)
             ->where("status","<>","deleted")
             ->whereNotNull("keyword")
             ->whereNotNull("view_concept.type")
@@ -101,14 +101,14 @@ class Concept
 
     public static function listRoots(): array
     {
-//        select distinct ti.idTypeInstance, ti.name, c.type
+//        select distinct ti.idType, ti.name, c.type
 //from view_concept c
-//join view_typeinstance ti on (c.idTypeInstance = ti.idTypeInstance)
+//join view_type ti on (c.idType = ti.idType)
 //where c.type is not null;
-        $rows = Criteria::table("view_typeinstance as ti")
-            ->join("view_concept as c", "ti.idTypeInstance", "=", "c.idTypeInstance")
+        $rows = Criteria::table("view_type as ti")
+            ->join("view_concept as c", "ti.idType", "=", "c.idType")
             ->where("ti.idLanguage", "=", AppService::getCurrentIdLanguage())
-            ->select("ti.idTypeInstance", "ti.name","c.type")
+            ->select("ti.idType", "ti.name","c.type")
             ->distinct()
             ->whereNotNull("c.type")
             ->orderBy("ti.name")

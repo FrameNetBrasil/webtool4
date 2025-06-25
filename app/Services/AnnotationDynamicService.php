@@ -105,13 +105,12 @@ class AnnotationDynamicService
     {
         $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
-        Criteria::deleteById("annotation", "idAnnotationObject", $do->idAnnotationObject);
+        Criteria::deleteById("annotation", "idDynamicObject", $do->idDynamicObject);
         if ($data->idFrameElement) {
             $fe = Criteria::byId("frameelement", "idFrameElement", $data->idFrameElement);
             $json = json_encode([
                 'idEntity' => $fe->idEntity,
-                'idAnnotationObject' => $do->idAnnotationObject,
-                'relationType' => 'rel_annotation',
+                'idDynamicObject' => $do->idDynamicObject,
                 'idUserTask' => $usertask->idUserTask
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
@@ -121,8 +120,7 @@ class AnnotationDynamicService
             $lu = Criteria::byId("lu", "idLU", $data->idLU);
             $json = json_encode([
                 'idEntity' => $lu->idEntity,
-                'idAnnotationObject' => $do->idAnnotationObject,
-                'relationType' => 'rel_annotation',
+                'idDynamicObject' => $do->idDynamicObject,
                 'idUserTask' => $usertask->idUserTask
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
@@ -202,13 +200,11 @@ class AnnotationDynamicService
                 ->where("idDocument", $data->idDocument)
                 ->first();
             $video = Video::byId($documentVideo->idVideo);
-            // create annotationobjectrelation for rel_video_dynobj
-            $relation = json_encode([
-                'idAnnotationObject1' => $video->idAnnotationObject,
-                'idAnnotationObject2' => $dynamicObject->idAnnotationObject,
-                'relationType' => 'rel_video_dynobj'
+            // create relation video_dynamicobject
+            Criteria::create("video_dynamicobject",[
+                "idVideo" => $video->idVideo,
+                "idDynamicObject" => $idDynamicObject,
             ]);
-            $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
             if (count($data->frames)) {
                 foreach ($data->frames as $frame) {
                     $json = json_encode([
@@ -344,7 +340,7 @@ class AnnotationDynamicService
     public static function listSentencesByDocument($idDocument): array
     {
         $sentences = Criteria::table("sentence")
-            ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
             ->join("view_sentence_timespan as st", "sentence.idSentence", "=", "st.idSentence")
             ->join("document as d", "ds.idDocument", "=", "d.idDocument")
             ->leftJoin("originmm as o", "sentence.idOriginMM", "=", "o.idOriginMM")
@@ -496,7 +492,7 @@ class AnnotationDynamicService
             'relationType' => 'rel_sentence_time'
         ]);
         $idObject = Criteria::function("objectrelation_create(?)", [$json]);
-        $documentSentence = Criteria::table("view_document_sentence as ds")
+        $documentSentence = Criteria::table("document_sentence as ds")
             ->where("ds.idSentence", $idSentence)
             ->where("ds.idDocument", $data->idDocument)
             ->first();
