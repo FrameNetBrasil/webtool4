@@ -128,11 +128,13 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onDragStarted(function(obj) {
+            obj.preventDefault();
+            return;
             //console.log(obj, "dragstarted");
         });
 
         annotation.timeline.timeline.onDrag(function(obj) {
-            //console.log(obj, "drag");
+            console.log(obj, "drag");
         });
 
         annotation.timeline.timeline.onKeyframeChanged(function(obj) {
@@ -161,27 +163,34 @@ annotation.timeline = {
         });
 
         annotation.timeline.timeline.onMouseDown(function(obj) {
-            //console.log(obj.target, obj.val);
-            var type = obj.target ? obj.target.type : "";
-            if (obj.pos) {
-                //console.log("mousedown:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
-                if (type === "") {
-                    //console.log(obj.elements[1].keyframes[0].idDynamicObject);
-                    if (obj.elements[1]) {
-                        Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
-                        let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
-                        Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
-                    } else {
-                        Alpine.store("doStore").selectObject(null);
-                    }
-                }
-                if (type === "keyframe") {
-                    Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
-                    //console.log(obj.elements[1].keyframes[0].idDynamicObject);
-                    let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
-                    Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
-                }
+            console.log(obj,obj.pos, obj.elements);
+            if (obj.elements[1]) {
+                Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
+                let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
+                Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
+            } else {
+                Alpine.store("doStore").selectObject(null);
             }
+            // var type = obj.target ? obj.target.type : "";
+            // if (obj.pos) {
+            //     //console.log("mousedown:" + obj.val + ".  target:" + type + ". " + Math.floor(obj.pos.x) + "x" + Math.floor(obj.pos.y), 2);
+            //     if (type === "") {
+            //         //console.log(obj.elements[1].keyframes[0].idDynamicObject);
+            //         if (obj.elements[1]) {
+            //             Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
+            //             let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
+            //             Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
+            //         } else {
+            //             Alpine.store("doStore").selectObject(null);
+            //         }
+            //     }
+            //     if (type === "keyframe") {
+            //         Alpine.store("doStore").currentFrame = annotation.video.frameFromTime(obj.val / 1000);
+            //         //console.log(obj.elements[1].keyframes[0].idDynamicObject);
+            //         let idDynamicObject = obj.elements[1].keyframes[0].idDynamicObject;
+            //         Alpine.store("doStore").selectObjectByIdDynamicObject(idDynamicObject);
+            //     }
+            // }
         });
 
         // annotation.timeline.timeline.onDoubleClick(function(obj) {
@@ -234,6 +243,7 @@ annotation.timeline = {
 
             return annotation.video.frameFromTime(Math.trunc(val /1000));
         };
+        annotation.timeline.selectMode();
     },
     setTime: function(timeMilliSeconds) {
         let timeline = annotation.timeline.timeline;
