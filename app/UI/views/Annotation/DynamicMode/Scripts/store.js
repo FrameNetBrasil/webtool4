@@ -62,9 +62,9 @@ document.addEventListener("alpine:init", () => {
             // annotationGridObject.selectRowByObject(idObject);
         },
         selectObjectByIdDynamicObject(idDynamicObject) {
-            //console.log('getting', idDynamicObject);
+            console.log('getting', idDynamicObject);
             let object = annotation.objects.getByIdDynamicObject(idDynamicObject);
-            //console.log('after', object);
+            console.log('after', object);
             this.selectObject(object.idObject);
         },
         commentObject(idDynamicObject) {
