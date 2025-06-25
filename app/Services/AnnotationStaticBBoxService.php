@@ -332,7 +332,7 @@ class AnnotationStaticBBoxService
     public static function listSentencesByDocument($idDocument): array
     {
         $sentences = Criteria::table("sentence")
-            ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
             ->join("document as d", "ds.idDocument", "=", "d.idDocument")
             ->leftJoin("originmm as o", "sentence.idOriginMM", "=", "o.idOriginMM")
             ->where("d.idDocument", $idDocument)

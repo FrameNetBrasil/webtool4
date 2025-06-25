@@ -158,10 +158,10 @@ class Frame
 //    {
 //        $criteria = FrameElement::getCriteria()
 //            ->select(['idFrameElement', 'entry', 'entries.name', 'entries.description', 'coreType', 'color.rgbFg', 'color.rgbBg',
-//                'typeInstance.idTypeInstance as idCoreType', 'color.idColor', 'idEntity'])
+//                'typeInstance.idType as idCoreType', 'color.idColor', 'idEntity'])
 //            ->where("idLanguage", "=", AppService::getCurrentIdLanguage())
 //            ->where("idFrame", "=", $idFrame)
-//            ->orderBy('typeInstance.idTypeInstance')
+//            ->orderBy('typeInstance.idType')
 //            ->orderBy('entries.name');
 //        return $criteria;
 //    }

@@ -37,18 +37,18 @@
                             @foreach($it as $i => $type)
                                 @if(($type->entry != 'int_normal') && ($type->entry != 'int_apos'))
                                     <div class="colNI">
-                                        @php($height = 24 + (isset($nis[$type->idTypeInstance]) ? (count($nis[$type->idTypeInstance]) * 30) : 0))
+                                        @php($height = 24 + (isset($nis[$type->idType]) ? (count($nis[$type->idType]) * 30) : 0))
                                         <span
                                             class="ni"
                                             id="ni_{{$i}}"
                                             data-type="ni"
                                             data-name="{{$type->name}}"
-                                            data-id="{{$type->idTypeInstance}}"
+                                            data-id="{{$type->idType}}"
                                             style="height:{{$height}}px"
                                         >{{$type->name}}
                                             @foreach($nis as $idInstantiationType => $niFEs)
                                                 @php($topLine = 30)
-                                                @if($type->idTypeInstance == $idInstantiationType)
+                                                @if($type->idType == $idInstantiationType)
                                                     @foreach($niFEs as $niFE)
                                                         @php($idEntityFE = $niFE['idEntityFE'])
                                                         {{--                                                                            <span class="line" style="background:#{{$fes[$idEntityFE]->rgbBg}}; top:{{$topLine}}px">--}}

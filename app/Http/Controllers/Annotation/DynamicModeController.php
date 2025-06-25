@@ -56,7 +56,6 @@ class DynamicModeController extends Controller
         $video = Video::byId($documentVideo->idVideo);
         return DocumentData::from([
             'idDocument' => $idDocument,
-            'idDocumentVideo' => $documentVideo->idDocumentVideo,
             'document' => $document,
             'corpus' => $corpus,
             'video' => $video,
