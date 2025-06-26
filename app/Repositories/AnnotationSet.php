@@ -180,7 +180,8 @@ HERE;
             $annotationSet = [
                 'idSentence' => $documentSentence->idSentence,
                 'idLU' => $lu->idLU,
-                'idAnnotationStatus' => $ti->idType
+                'idAnnotationStatus' => $ti->idType,
+                'idFrame' => $lu->idFrame
             ];
             $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
             $ti = Criteria::byId("type", "entry", 'int_normal');
@@ -229,6 +230,61 @@ HERE;
             throw new \Exception($e->getMessage());
         }
 
+    }
+
+    public static function createForLOME(int $idDocumentSentence, int $idFrame,  int $startChar, int $endChar, int $idLanguage,?int $idLexicon = null ): ?int
+    {
+        DB::beginTransaction();
+        try {
+            $documentSentence = Criteria::byId("document_sentence","idDocumentSentence",$idDocumentSentence);
+            $ti = Criteria::byId("type", "entry", 'ast_unann');
+            $annotationSet = [
+                'idSentence' => $documentSentence->idSentence,
+                'idLexicon' => $idLexicon,
+                'idAnnotationStatus' => $ti->idType,
+                'idFrame' => $idFrame
+            ];
+            $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
+            $ti = Criteria::byId("type", "entry", 'int_normal');
+            // target
+            $layerTypeTarget = Criteria::table("layertype")
+                ->select('idLayerType','entry')
+                ->where('entry', '=', 'lty_target')
+                ->first();
+            $layer = [
+                'rank' => 1,
+                'idLayerType' => $layerTypeTarget->idLayerType,
+                'idAnnotationSet' => $idAnnotationSet
+            ];
+            $idLayer = Criteria::create("layer", $layer);
+            $target = Criteria::table("genericlabel")
+                ->where("name", "Target")
+                ->where("idLanguage", $idLanguage)
+                ->first();
+            $textspan = json_encode([
+                'startChar' => $startChar,
+                'endChar' => $endChar,
+                'multi' => 0,
+                'idInstantiationType' => $ti->idType,
+                'idLayer' => $idLayer,
+                'idSentence' => $documentSentence->idSentence,
+            ]);
+            $idTextSpan = Criteria::function("textspan_char_create(?)", [$textspan]);
+            $ts = Criteria::table("textspan")
+                ->where("idTextSpan", $idTextSpan)
+                ->first();
+            $data = json_encode([
+                'idTextSpan' => $ts->idTextSpan,
+                'idEntity' => $target->idEntity,
+                'idUserTask' => 1
+            ]);
+            Criteria::function("annotation_create(?)", [$data]);
+            DB::commit();
+            return $idAnnotationSet;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e->getMessage());
+        }
     }
 
     public static function delete(int $idAnnotationSet): int
