@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Data\Annotation\StaticBBox\CloneData;
-use App\Data\Annotation\StaticBBox\CommentData;
 use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
 use App\Data\Annotation\StaticBBox\ObjectData;
 use App\Data\Annotation\StaticBBox\UpdateBBoxData;
+use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Image;
@@ -22,16 +22,13 @@ class AnnotationStaticBBoxService
         $bboxes = Criteria::table("view_staticobject_boundingbox as sb")
             ->join("boundingbox as bb", "sb.idBoundingBox", "=", "bb.idBoundingBox")
             ->where("sb.idStaticObject", $idStaticObject)
-            ->select("bb.idAnnotationObject")
-            ->chunkResult("idAnnotationObject", "idAnnotationObject");
-        Criteria::table("annotationobjectrelation")
-            ->whereIn("idAnnotationObject2", $bboxes)
+            ->select("bb.idBoundingBox")
+            ->chunkResult("idBoundingBox", "idBoundingBox");
+        Criteria::table("staticobject_boundingbox")
+            ->whereIn("idBoundingBox", $bboxes)
             ->delete();
         Criteria::table("boundingbox")
-            ->whereIn("idAnnotationObject", $bboxes)
-            ->delete();
-        Criteria::table("annotationobject")
-            ->whereIn("idAnnotationObject", $bboxes)
+            ->whereIn("idBoundingBox", $bboxes)
             ->delete();
     }
 
@@ -79,7 +76,7 @@ class AnnotationStaticBBoxService
     public static function getObjectsByDocument(int $idDocument): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $usertask = AnnotationService::getCurrentUserTask($idDocument);
+        $usertask = Task::getCurrentUserTask($idDocument);
         if (is_null($usertask)) {
             return [
                 'objects' => [],
@@ -88,7 +85,7 @@ class AnnotationStaticBBoxService
         }
         //$task = Task::byId($usertask->idTask);
         $result = Criteria::table("view_annotation_static as sta")
-            ->leftJoin("view_lu", "sta.idLu", "=", "view_lu.idLU")
+            ->leftJoin("view_lu", "sta.idLU", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
             ->leftJoin("annotationcomment as ac", "sta.idStaticObject", "=", "ac.idStaticObject")
             ->where("sta.idLanguage", "left", $idLanguage)
@@ -136,18 +133,16 @@ class AnnotationStaticBBoxService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
-        $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
+        $usertask = Task::getCurrentUserTask($data->idDocument);
         $sob = Criteria::byId("staticobject", "idStaticObject", $data->idStaticObject);
-        Criteria::deleteById("annotation", "idAnnotationObject", $sob->idAnnotationObject);
+        Criteria::deleteById("annotation", "idStaticObject", $sob->idStaticObject);
         if ($data->idFrameElement) {
             $fe = Criteria::byId("frameelement", "idFrameElement", $data->idFrameElement);
             $json = json_encode([
                 'idEntity' => $fe->idEntity,
-                'idAnnotationObject' => $sob->idAnnotationObject,
-                'relationType' => 'rel_annotation',
+                'idStaticObject' => $sob->idStaticObject,
                 'idUserTask' => $usertask->idUserTask
             ]);
-            debug($json);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         }
@@ -155,8 +150,7 @@ class AnnotationStaticBBoxService
             $lu = Criteria::byId("lu", "idLU", $data->idLU);
             $json = json_encode([
                 'idEntity' => $lu->idEntity,
-                'idAnnotationObject' => $sob->idAnnotationObject,
-                'relationType' => 'rel_annotation',
+                'idStaticObject' => $sob->idStaticObject,
                 'idUserTask' => $usertask->idUserTask
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
@@ -184,13 +178,11 @@ class AnnotationStaticBBoxService
                 ->where("idDocument", $data->idDocument)
                 ->first();
             $image = Image::byId($documentImage->idImage);
-            // create annotationobjectrelation for rel_image_staobj
-            $relation = json_encode([
-                'idAnnotationObject1' => $image->idAnnotationObject,
-                'idAnnotationObject2' => $staticObject->idAnnotationObject,
-                'relationType' => 'rel_image_staobj'
+            // create relation image_staticobject
+            Criteria::create("image_staticobject", [
+                "idImage" => $image->idImage,
+                "idStaticObject" => $idStaticObject,
             ]);
-            $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
             if (count($data->bbox)) {
                 $bbox = $data->bbox;
                 $json = json_encode([
@@ -265,13 +257,11 @@ class AnnotationStaticBBoxService
             ->where("idDocument", $data->idDocument)
             ->first();
         $image = Image::byId($documentImage->idImage);
-        // create annotationobjectrelation for rel_image_staobj
-        $relation = json_encode([
-            'idAnnotationObject1' => $image->idAnnotationObject,
-            'idAnnotationObject2' => $staticObjectClone->idAnnotationObject,
-            'relationType' => 'rel_image_staobj'
+        // create relation image_staticobject
+        Criteria::create("image_staticobject", [
+            "idImage" => $image->idImage,
+            "idStaticObject" => $idStaticObjectClone,
         ]);
-        $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
         // cloning bboxes
         $bbox = Criteria::table("view_staticobject_boundingbox")
             ->where("idStaticObject", $idStaticObject)
@@ -292,17 +282,21 @@ class AnnotationStaticBBoxService
 
     public static function deleteObject(int $idStaticObject): void
     {
-        // se pode remover o objeto se for Manager ou se for o criador do objeto
+        // se pode remover o objeto se for Manager da task ou se for o criador do objeto
+        $staticObjectAnnotation = Criteria::byId("view_annotation_static", "idStaticObject", $idStaticObject);
+        $taskManager = Task::getTaskManager($staticObjectAnnotation->idDocument);
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
         if (!User::isManager($user)) {
-            $tl = Criteria::table("timeline")
-                ->where("tablename", "staticobject")
-                ->where("id", $idStaticObject)
-                ->select("idUser")
-                ->first();
-            if ($tl->idUser != $idUser) {
-                throw new \Exception("Object can not be removed.");
+            if ($taskManager->idUser != $idUser) {
+                $tl = Criteria::table("timeline")
+                    ->where("tablename", "dynamicobject")
+                    ->where("id", $idStaticObject)
+                    ->select("idUser")
+                    ->first();
+                if ($tl->idUser != $idUser) {
+                    throw new \Exception("Object can not be removed.");
+                }
             }
         }
         DB::transaction(function () use ($idStaticObject) {
