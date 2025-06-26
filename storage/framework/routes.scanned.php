@@ -3984,6 +3984,14 @@ $router->get('annotation/staticBBox', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/staticBBox/grid/data', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@gridData',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('annotation/staticBBox/grid', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@grid',
 	'as' => NULL,
