@@ -391,7 +391,7 @@ class AnnotationFEService
     public static function annotateFE(AnnotationData $data): array
     {
         DB::transaction(function () use ($data) {
-            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $data->idAnnotationSet);
+            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $data->idAnnotationSet);
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
                 ->where("ut.idUser", -2)
@@ -549,6 +549,75 @@ class AnnotationFEService
         }
         $decorated = $decorated . mb_substr($text, $i);
         return $decorated;
+    }
+
+    public static function annotateFELOME(AnnotationData $data, int $idLanguage): void
+    {
+        DB::transaction(function () use ($data, $idLanguage) {
+            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $data->idAnnotationSet);
+            $fe = Criteria::byFilterLanguage("view_frameelement", ['idFrameElement', '=', $data->idFrameElement])->first();
+            if ($fe) {
+                $spans = Criteria::table("view_annotation_text_fe")
+                    ->where('idAnnotationSet', $data->idAnnotationSet)
+                    ->where("layerTypeEntry", "lty_fe")
+                    ->where("idLanguage", $idLanguage)
+                    ->select('idAnnotationSet', 'idLayerType', 'idLayer', 'startChar', 'endChar', 'idEntity', 'idTextSpan', 'layerTypeEntry', 'idInstantiationType')
+                    ->all();
+                $layers = Criteria::table("view_layer")
+                    ->where('idAnnotationSet', $data->idAnnotationSet)
+                    ->where("entry", "lty_fe")
+                    ->where("idLanguage", $idLanguage)
+                    ->all();
+                // verify if exists a layer with no overlap, else create one
+                $idLayer = 0;
+                foreach ($layers as $layer) {
+                    $overlap = false;
+                    foreach ($spans as $span) {
+                        if ($span->idLayer == $layer->idLayer) {
+                            if (!(($data->range->end < $span->startChar) || ($data->range->start > $span->endChar))) {
+                                $overlap |= true;
+                            }
+                        }
+                    }
+                    if (!$overlap) {
+                        $idLayer = $layer->idLayer;
+                        break;
+                    }
+                }
+                if ($idLayer == 0) {
+                    $layerType = Criteria::byId("layertype", "entry", "lty_fe");
+                    $idLayer = Criteria::create("layer", [
+                        'rank' => 0,
+                        'idLayerType' => $layerType->idLayerType,
+                        'idAnnotationSet' => $data->idAnnotationSet
+
+                    ]);
+                }
+                //
+                $it = Criteria::table("view_instantiationtype")
+                    ->where('entry', 'int_normal')
+                    ->first();
+                $data = json_encode([
+                    'startChar' => (int)$data->range->start,
+                    'endChar' => (int)$data->range->end,
+                    'multi' => 0,
+                    'idLayer' => $idLayer,
+                    'idInstantiationType' => $it->idInstantiationType,
+                    'idSentence' => $annotationSet->idSentence,
+                ]);
+                $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
+                $ts = Criteria::table("textspan")
+                    ->where("idTextSpan", $idTextSpan)
+                    ->first();
+                $data = json_encode([
+                    'idTextSpan' => $ts->idTextSpan,
+                    'idEntity' => $fe->idEntity,
+                    'idUserTask' => 1
+                ]);
+                $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
+            }
+        });
+
     }
 
 }

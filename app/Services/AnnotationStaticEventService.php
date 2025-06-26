@@ -81,9 +81,9 @@ class AnnotationStaticEventService
         $idLanguage = AppService::getCurrentIdLanguage();
         $objects = $criteria->get()->keyBy('idStaticObject')->all();
         $idObject = 1;
-        foreach ($objects as $i => $object) {
+        foreach ($objects as $idStaticObject => $object) {
             $bboxes = Criteria::table("view_staticobject_boundingbox")
-                ->where("idStaticObject", $i)
+                ->where("idStaticObject", $idStaticObject)
                 ->select("x", "y", "width", "height")
                 ->all();
 //            debug($bboxes);
@@ -95,7 +95,7 @@ class AnnotationStaticEventService
 //            debug($object);
             $annotations = Criteria::table("view_annotation as a")
                 ->join("view_frameelement as fe", "a.idEntity", "=", "fe.idEntity")
-                ->where("a.idAnnotationObject", "=", $object->idAnnotationObject)
+                ->where("a.idStaticObject", "=", $object->idStaticObject)
                 ->where("a.idUserTask", "=", $usertask->idUserTask)
                 ->where("fe.idLanguage", "=", $idLanguage)
                 ->select([
@@ -222,14 +222,12 @@ class AnnotationStaticEventService
 //order by 3,4,1;
 //
         $annotations = Criteria::table("staticobject as sob")
-            ->join("view_object_relation as or1", "sob.idAnnotationObject", "=", "or1.idAnnotationObject2")
-            ->join("view_object_relation as or2", "or1.idAnnotationObject1", "=", "or2.idAnnotationObject2")
-            ->join("image as i", "or1.idAnnotationObject1", "=", "i.idAnnotationObject")
-            ->join("view_document as d", "or2.idAnnotationObject1", "=", "d.idAnnotationObject")
-            ->join("annotation as a", "sob.idAnnotationObject", "=", "a.idAnnotationObject")
+            ->join("image_staticobject as iso", "sob.idStaticObject", "=", "iso.idStaticObject")
+            ->join("image as i", "iso.idImage", "=", "i.idImage")
+            ->join("document_image as di", "i.idImage", "=", "di.idImage")
+            ->join("view_document as d", "di.idDocument", "=", "d.idDocument")
+            ->join("annotation as a", "sob.idStaticObject", "=", "a.idStaticObject")
             ->join("frameelement as fe", "a.idEntity", "=", "fe.idEntity")
-            ->where("or1.relationType",'rel_image_staobj')
-            ->where("or2.relationType",'rel_document_image')
             ->where("fe.idFrame", "=", $idFrame)
             ->where("d.idLanguage", "=", $idLanguage)
             ->whereBetween("d.idCorpus", [140,147])
