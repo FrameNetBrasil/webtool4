@@ -1,14 +1,4 @@
 @php
-    use App\Database\Criteria; use App\Services\AnnotationService;
-    // get projects for documents that has images
-    $listProjects = Criteria::table("view_document_image as i")
-        ->join("view_project_docs as p","i.idDocument","=","p.idDocument")
-        ->where("p.idLanguage",\App\Services\AppService::getCurrentIdLanguage())
-        ->where("p.projectName","<>","Default Project")
-        ->select("p.projectName")
-        ->chunkResult("projectName","projectName");
-    // get the documents allowed to this user
-    $data = AnnotationService::browseCorpusDocumentBySearch($search, $listProjects);
     $id = uniqid("corpusTree");
 @endphp
 <div
@@ -22,7 +12,13 @@
                 <script>
                     $(function() {
                         $("#{{$id}}").treegrid({
-                            data: {{Js::from($data)}},
+{{--                            //data: {{Js::from($data)}},--}}
+                            url:"/annotation/staticBBox/grid/data",
+                            queryParams: {
+                                corpus: "{{$search->corpus}}",
+                                document: "{{$search->document}}"
+                            },
+                            method:"get",
                             fit: true,
                             showHeader: false,
                             rownumbers: false,
@@ -37,9 +33,9 @@
                                 }
                             ]],
                             onClickRow: (row) => {
-                                if (row.type === "corpus") {
-                                    $("#corpusTree").treegrid("toggle", row.id);
-                                }
+                                // if (row.type === "corpus") {
+                                //     $("#corpusTree").treegrid("toggle", row.id);
+                                // }
                                 if (row.type === "document") {
                                     window.location = `/annotation/staticBBox/${row.id}`;
                                 }
