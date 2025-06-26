@@ -32,7 +32,7 @@ class Project
                 $criteria = $criteria
                     ->where('projectGroup', $projectGroup);
             }
-            $criteria = $criteria
+            $docs = $criteria
                 ->all();
         } else {
             $criteria = Criteria::table("view_alloweddocs as ad")
@@ -48,10 +48,10 @@ class Project
                 $criteria = $criteria
                     ->whereIn('projectName', $projects);
             }
-            $criteria = $criteria
+            $docs = $criteria
                 ->all();
         }
-        return $criteria;
+        return $docs;
     }
 
 

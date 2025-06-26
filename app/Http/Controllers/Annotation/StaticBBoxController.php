@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Annotation\StaticBBox\AnnotationCommentData;
 use App\Data\Annotation\StaticBBox\CloneData;
 use App\Data\Annotation\StaticBBox\DocumentData;
 use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Image;
+use App\Services\AnnotationService;
 use App\Services\AnnotationStaticBBoxService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -35,6 +35,28 @@ class StaticBBoxController extends Controller
         ]);
     }
 
+    #[Get(path: '/annotation/staticBBox/grid/data')]
+    public function gridData(SearchData $search)
+    {
+        debug($search);
+
+        // get projects for documents that has images
+        $listProjects = Criteria::table("view_document_image as i")
+            ->join("view_project_docs as p","i.idDocument","=","p.idDocument")
+            ->where("p.idLanguage",\App\Services\AppService::getCurrentIdLanguage())
+            ->where("p.projectName","<>","Default Project")
+            ->select("p.projectName")
+            ->chunkResult("projectName","projectName");
+        debug($listProjects);
+        // get the documents allowed to this user
+        if (($search->document != '') || ($search->idCorpus != '')) {
+            $data = AnnotationService::browseDocumentBySearch($search, $listProjects);
+        } else {
+            $data = AnnotationService::browseCorpusBySearch($search, $listProjects);
+        }
+        return $data;
+    }
+
     #[Post(path: '/annotation/staticBBox/grid')]
     public function grid(SearchData $search)
     {
@@ -53,7 +75,6 @@ class StaticBBoxController extends Controller
         $image = Image::byId($documentImage->idImage);
         return DocumentData::from([
             'idDocument' => $idDocument,
-            'idDocumentImage' => $documentImage->idDocumentImage,
             'document' => $document,
             'corpus' => $corpus,
             'image' => $image,
