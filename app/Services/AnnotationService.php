@@ -9,7 +9,7 @@ use App\Repositories\User;
 
 class AnnotationService
 {
-    public static function browseCorpusDocumentBySearch(object $search, array $projects = [], string $projectGroup = '')
+    public static function browseCorpusDocumentBySearch(object $search, array $projects = [])
     {
         $corpusIcon = view('components.icon.corpus')->render();
         $documentIcon = view('components.icon.document')->render();
