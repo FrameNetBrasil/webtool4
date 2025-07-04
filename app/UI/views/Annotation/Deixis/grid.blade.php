@@ -1,13 +1,11 @@
 @php
     use App\Database\Criteria;use App\Services\AnnotationService;
     // get projects for documents that has videos
-    $listProjects = Criteria::table("view_document_video as v")
-        ->join("view_project_docs as p","v.idDocument","=","p.idDocument")
-        ->where("p.idLanguage",\App\Services\AppService::getCurrentIdLanguage())
-        ->where("p.projectName","<>","Default Project")
-        ->select("p.projectName")
+    $listProjects = Criteria::table("view_project_tasks as pt")
+        ->where("pt.taskGroupName","=","DeixisAnnotation")
+        ->select("pt.projectName")
         ->chunkResult("projectName","projectName");
-    $data = AnnotationService::browseCorpusDocumentBySearch($search, $listProjects,'DeixisAnnotation');
+    $data = AnnotationService::browseCorpusDocumentBySearch($search, $listProjects);
     $id = uniqid("corpusTree");
 @endphp
 <div
