@@ -73,7 +73,7 @@
                             <a
                                 href="/report/c5/{{$concept->idConcept}}"
                             >
-                                <x-element.concept name="{{$concept->name}}"></x-element.concept>
+                                <x-element.concept name="{{$concept->name}}" type="{{$concept->type}}"></x-element.concept>
                             </a>
                         </button>
                     @endforeach
