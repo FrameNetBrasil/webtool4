@@ -741,29 +741,36 @@ class XsdCompliantGenerators
                     }
                 }
             }
-            $i = 0;
+
             foreach ($scfegfptas as $sc => $fegfptas) {
+//                $i = 0;
+                print_r($fegfptas);
                 foreach ($fegfptas as $feIdEntity => $gfptas) {
+                    
                     $elPattern = $dom->createElement('pattern');
                     $elPattern->setAttribute('total', 0);
                     $elRealization->appendChild($elPattern);
-//                    if ($feIdEntity) {
-//                        foreach ($gfptas as $gf => $ptas) {
-//                            foreach ($ptas as $pt => $as) {
-//                                $elValenceUnit = $dom->createElement('valenceUnit');
-//                                $elValenceUnit->setAttribute('GF', $gf);
-//                                $elValenceUnit->setAttribute('PT', $pt);
-//                                $elValenceUnit->setAttribute('FE', $fes[$feIdEntity]['name']);
-//                                $elPattern->appendChild($elValenceUnit);
-////                                        foreach ($as as $a) {
-////                                            $elAS = $dom->createElement('annoSet');
-////                                            $elAS->setAttribute('ID', $a);
-////                                            $elPattern->appendChild($elAS);
-////                                        }
-//
-//                            }
+                    if ($feIdEntity) {
+//                        if ($i == 0) {
+
+                            foreach ($gfptas as $gf => $ptas) {
+                                foreach ($ptas as $pt => $as) {
+                                    $elValenceUnit = $dom->createElement('valenceUnit');
+                                    $elValenceUnit->setAttribute('GF', $gf);
+                                    $elValenceUnit->setAttribute('PT', $pt);
+                                    $elValenceUnit->setAttribute('FE', $fes[$feIdEntity]['name']);
+                                    $elPattern->appendChild($elValenceUnit);
+//                                        foreach ($as as $a) {
+//                                            $elAS = $dom->createElement('annoSet');
+//                                            $elAS->setAttribute('ID', $a);
+//                                            $elPattern->appendChild($elAS);
+//                                        }
+
+                                }
+                            }
+//                            ++$i;
 //                        }
-//                    }
+                    }
                 }
             }
         }
