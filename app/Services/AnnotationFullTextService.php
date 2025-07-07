@@ -32,22 +32,22 @@ class AnnotationFullTextService
         debug($u);
         $hasTimespan = self::hasTimespan($idDocument);
         if ($hasTimespan) {
-            $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            $sentences = Criteria::table("view_sentence as s")
+                ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
                 ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
-                ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence", "ts.startTime", "ts.endTime")
+                ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ts.startTime", "ts.endTime")
                 ->orderBy("ts.startTime")
                 ->orderBy("ds.idDocumentSentence")
                 ->limit(1000)
                 ->get()->keyBy("idDocumentSentence")->all();
         } else {
-            $sentences = Criteria::table("sentence")
-                ->join("view_document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
+            $sentences = Criteria::table("view_sentence as s")
+                ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
-                ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence")
+                ->select("s.idSentence", "s.text", "ds.idDocumentSentence")
                 ->orderBy("ds.idDocumentSentence")
                 ->limit(1000)
                 ->get()->keyBy("idDocumentSentence")->all();
