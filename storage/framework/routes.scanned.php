@@ -4720,6 +4720,22 @@ $router->post('relation/feinternal', [
 	'domain' => NULL,
 ]);
 
+$router->delete('relation/ce/{idEntityRelation}', [
+	'uses' => 'App\Http\Controllers\Relation\CEController@deleteFERelation',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('relation/ce', [
+	'uses' => 'App\Http\Controllers\Relation\CEController@newCERelation',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->delete('relation/frame/{idEntityRelation}', [
 	'uses' => 'App\Http\Controllers\Relation\FrameController@deleteFrameRelation',
 	'as' => NULL,
