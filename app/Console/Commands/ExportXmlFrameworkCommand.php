@@ -359,17 +359,25 @@ class ExportXmlFrameworkCommand extends Command
      */
     private function getLexicalUnits(?string $idLU = null): array
     {
-        $queryBuilder = new ExportQueryBuilder();
+        $query = Criteria::table($this->config['database_views']['lexical_units'] ?? 'view_lu')
+            ->join("view_frame as f","lu.idFrame","=","f.idFrame")
+            ->join("language as l","lu.idLanguage","=","l.idLanguage")
+            ->where("f.idLanguage", $this->idLanguage)
+            ->where("lu.active", 1)
+            ->select("lu.idLU","lu.name","f.name as frameName","lu.idFrame","l.language")
+            ->orderBy("lu.name");
+
+        //$queryBuilder = new ExportQueryBuilder();
         $luFilters = $this->config['filters']['lexical_units'] ?? [];
 
-        $query = $queryBuilder
-            ->addFilter("idLanguage", "=", $this->idLanguage)
-            ->addOrderBy("name")
-            ->buildQuery($this->config['database_views']['lexical_units'] ?? 'view_lu');
+//        $query = $queryBuilder
+//            ->addFilter("idLanguageFrame", "=", $this->idLanguage)
+//            ->addOrderBy("name")
+//            ->buildQuery($this->config['database_views']['lexical_units'] ?? 'view_lu');
 
         // Apply active filter if configured
         if ($this->config['filters']['active_only'] ?? true) {
-            $query->where("active", 1);
+            $query->where("lu.active", 1);
         }
 
         // Apply frequency filter if configured
