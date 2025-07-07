@@ -48,7 +48,9 @@
         "spatie/laravel-data": "*",
         "textalk/websocket": "^1.5",
         "thiagoalessio/tesseract_ocr": "^2.13",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "ext-dom": "*",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
