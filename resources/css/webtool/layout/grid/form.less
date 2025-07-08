@@ -1,7 +1,7 @@
 /* Form layouts */
 .form-grid {
     display: grid;
-    gap: @relativeLarge;                                                 // 24px (was var(--spacing-6))
+    gap: @relativeLarge;
 
     &.single-column {
         grid-template-columns: 1fr;
@@ -9,32 +9,32 @@
 
     &.two-column {
         grid-template-columns: 1fr 1fr;
-        gap: @relativeMedium @relativeBig;                               // 16px 32px (was var(--spacing-4) var(--spacing-8))
+        gap: @relativeMedium @relativeBig;
     }
 
     &.three-column {
         grid-template-columns: 1fr 1fr 1fr;
-        gap: @relativeMedium @relativeLarge;                             // 16px 24px (was var(--spacing-4) var(--spacing-6))
+        gap: @relativeMedium @relativeLarge;
     }
 
     &.four-column {
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        gap: @relativeMedium;                                            // 16px (was var(--spacing-4))
+        gap: @relativeMedium;
     }
 
     &.sidebar-form {
         grid-template-columns: 200px 1fr;
-        gap: @relativeBig;                                               // 32px (was var(--spacing-8))
+        gap: @relativeBig;
         align-items: start;
     }
 
     &.wide-sidebar {
         grid-template-columns: 300px 1fr;
-        gap: @relative40px;                                              // 40px (was var(--spacing-10))
+        gap: @relative40px;
     }
 
     &.auto-fit {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: @relativeLarge;                                             // 24px (was var(--spacing-6))
+        gap: @relativeLarge;
     }
 }

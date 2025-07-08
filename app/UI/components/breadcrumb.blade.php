@@ -1,4 +1,4 @@
-<div class="ui small breadcrumb">
+<div class="ui breadcrumb page-breadcrumb">
     @foreach($sections as $section)
         @if ($loop->last)
             <div class="active section">{{$section[1]}}</div>

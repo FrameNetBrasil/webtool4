@@ -27,9 +27,9 @@
     Base Sizing System
 -------------------*/
 
-// Core sizing (this controls everything) - WebTool uses 16px base
+// Core sizing (this controls everything) - WebTool uses 14px base
 // Primary base (your app standard)
-@appBaseFontSize: 16px;
+@appBaseFontSize: 14px;
 @emSize: @appBaseFontSize;
 @fontSize: @appBaseFontSize;
 
@@ -41,14 +41,14 @@
 @bodyFontSize: @fontSizeBase;
 
 // Harmonic scale raw values (for Fomantic override)
-@harmonicMiniRaw: 0.5;       // 8px
-@harmonicTinyRaw: 0.625;     // 10px
-@harmonicSmallRaw: 0.75;     // 12px
-@harmonicMediumRaw: 1.0;     // 16px (base)
-@harmonicLargeRaw: 1.25;     // 20px
-@harmonicBigRaw: 1.5;        // 24px
-@harmonicHugeRaw: 1.875;     // 30px
-@harmonicMassiveRaw: 2.25;   // 36px
+@harmonicMiniRaw: 0.5;       // 7px
+@harmonicTinyRaw: 0.625;     // 8.75px
+@harmonicSmallRaw: 0.75;     // 10.5px
+@harmonicMediumRaw: 1.0;     // 14px (base)
+@harmonicLargeRaw: 1.25;     // 17.5px
+@harmonicBigRaw: 1.5;        // 21px
+@harmonicHugeRaw: 1.875;     // 26.25px
+@harmonicMassiveRaw: 2.25;   // 31.5px
 
 // Override Fomantic's core size variables
 @miniRaw: @harmonicMiniRaw;
@@ -71,19 +71,19 @@
 @relative36px: @relativeMassive;
 
 // Keep your existing absolute spacing for layouts (these are fine)
-@relative1px: 1px;
-@relative2px: 2px;
-@relative4px: 4px;
-@relative6px: 6px;
-@relative16px: 16px;
-@relative20px: 20px;
-@relative24px: 24px;
-@relative32px: 32px;
-@relative40px: 40px;
-@relative48px: 48px;
-@relative64px: 64px;
-@relative80px: 80px;
-@relative96px: 96px;
+//@relative1px: 1px;
+//@relative2px: 2px;
+//@relative4px: 4px;
+//@relative6px: 6px;
+//@relative16px: 16px;
+//@relative20px: 20px;
+//@relative24px: 24px;
+//@relative32px: 32px;
+//@relative40px: 40px;
+//@relative48px: 48px;
+//@relative64px: 64px;
+//@relative80px: 80px;
+//@relative96px: 96px;
 
 //// Semantic size names (now harmonic)
 //@relativeMini: unit(@miniRaw, em);      // 0.571em ≈ 8px
@@ -108,20 +108,20 @@
     Harmonic Typography Scale
 -------------------*/
 
-// Font sizes using harmonic scale (based on 16px base)
-@fontSizeXXS: @relativeMini;    // 0.5rem = 8px Micro text, icons
-@fontSizeXS: @relativeTiny;     // 0.625rem = 10px Small labels, captions
-@fontSizeSM: @relativeSmall;    // 0.75rem = 12px Secondary text, metadata
-@fontSizeBase: @relativeMedium; // 1rem = 16px (your new standard) Body text (your new standard)
-@fontSizeLG: @relativeLarge;    // 1.25rem = 20px Emphasized text, small headings
-@fontSizeXL: @relativeBig;      // 1.5rem = 24px Subheadings
-@fontSize2XL: @relativeHuge;    // 1.875rem = 30px Section headings
-@fontSize3XL: @relativeMassive; // 2.25rem = 36px Page titles, hero text
+// Font sizes using harmonic scale (based on 14px base)
+@fontSizeXXS: @relativeMini;    // 0.5rem = 7px Micro text, icons
+@fontSizeXS: @relativeTiny;     // 0.625rem = 8.75px Small labels, captions
+@fontSizeSM: @relativeSmall;    // 0.75rem = 10.5px Secondary text, metadata
+@fontSizeBase: @relativeMedium; // 1rem = 14px Body text
+@fontSizeLG: @relativeLarge;    // 1.25rem = 17.5px Emphasized text, small headings
+@fontSizeXL: @relativeBig;      // 1.5rem = 22px Subheadings
+@fontSize2XL: @relativeHuge;    // 1.875rem = 26.25px Section headings
+@fontSize3XL: @relativeMassive; // 2.25rem = 31.5px Page titles, hero text
 
 // Extended harmonic progression
-@fontSize4XL: 2.8125rem;        // 45px (36px × 1.25)
-@fontSize5XL: 3.515625rem;      // 56px (45px × 1.25)
-@fontSize6XL: 4.39453125rem;    // 70px (56px × 1.25)
+@fontSize4XL: 2.8125rem;        // 39.375px (31.5px × 1.25)
+@fontSize5XL: 3.515625rem;      // 49.21875px (39.375px × 1.25)
+@fontSize6XL: 4.39453125rem;    // 61.5234375px (49.21875px × 1.25)
 
 // Font weights
 @thin: 300;
@@ -135,7 +135,7 @@
 @textBodyLarge: @fontSizeLG;
 @textSubheading: @fontSizeXL;
 @textHeading: @fontSize2XL;
-@textTitle: @fontSize2XL;
+@textTitle: @fontSize3XL;
 @textDisplay: @fontSize3XL;
 @textHero: @fontSize4XL;
 
@@ -471,7 +471,7 @@
 // Sidebar dimensions
 @sidebarWidth: 280px;
 @sidebarWidthNarrow: 250px;
-@sidebarWidthWide: 280px;//400px;
+@sidebarWidthWide: 400px;
 
 // Header and toolbar
 @headerHeight: @relative64px;
@@ -524,7 +524,7 @@
 
 // Input styling (14px base)
 @inputBackground: @surfacePrimary;
-@inputBorder: @borderDefault;
+@inputBorder: 1px solid @borderDefault;
 @inputColor: @textPrimary;
 @inputFontSize: @fontSizeBase;         // 14px - matches your app's base size
 @inputPlaceholderColor: @neutral400;
