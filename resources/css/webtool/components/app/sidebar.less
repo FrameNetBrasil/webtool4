@@ -1,0 +1,18 @@
+/* Sidebar */
+.app-sidebar {
+    padding: @relativeTiny 0 0 @relativeTiny; // 8px (was @relative2px)
+
+    .ui.vertical.menu {
+        width: 100%;
+    }
+
+    .ui.accordion {
+        margin-bottom: @relativeTiny; // 8px (was @relative2px)
+        border-bottom: 1px solid @borderColor; // (was @borderColor)
+
+        .content {
+            padding-top: 0;
+            padding-left: @relativeBig; // 32px (was @mini)
+        }
+    }
+}

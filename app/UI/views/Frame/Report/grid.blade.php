@@ -1,45 +1,185 @@
-@php
-    $id = uniqid("frameGrid");
-@endphp
-<div
-    class="h-full"
->
-    <div class="relative h-full overflow-auto">
-        <div id="frameTreeWrapper" class="ui table absolute top-0 left-0 bottom-0 right-0">
-            @fragment('search')
-                <ul id="{{$id}}">
-                </ul>
-                <script>
-                    $(function() {
-                        let frameIcon = `{!! view('components.icon.frame')->render() !!} `;
-                        $("#{{$id}}").datagrid({
-                            url:"/report/frame/data",
-                            queryParams: {
-                                frame: '{{$search->frame}}'
-                            },
-                            method:'get',
-                            fit: true,
-                            showHeader: false,
-                            showFooter: false,
-                            rownumbers: false,
-                            border: false,
-                            columns: [[
-                                {
-                                    field: "name",
-                                    width: "100%",
-                                    formatter: function(value,row,index){
-                                        return frameIcon + value;
-                                    }
-                                }
-                            ]],
-                            onClickRow: (index,row) => {
-                                htmx.ajax("GET", `/report/frame/content/${row.idFrame}`, "#reportArea");
-                                document.getElementById("reportArea").scrollIntoView();
-                            }
-                        });
-                    });
-                </script>
-            @endfragment
+<!-- Results Container with AlpineJS -->
+<div class="results-container"
+     x-data="searchGrid()"
+     x-init="init()"
+     :class="`results-container view-${currentView}`"
+     @keydown.window="handleKeyboard($event)">
+
+    <div class="results-header">
+        <div class="results-info">
+            <div class="results-count" id="resultsCount">{!! count($frames) !!} results</div>
+            <div class="search-query-display" id="queryDisplay"></div>
+        </div>
+        <div class="results-actions">
+            <div class="view-toggle">
+                <button class="view-btn"
+                        :class="{ 'active': currentView === 'cards' }"
+                        @click="setView('cards')">
+                    <i class="th large icon"></i>
+                    Cards
+                </button>
+                <button class="view-btn"
+                        :class="{ 'active': currentView === 'table' }"
+                        @click="setView('table')">
+                    <i class="table icon"></i>
+                    Table
+                </button>
+            </div>
         </div>
     </div>
+
+    <!-- Empty State -->
+    @if(count($frames) == 0)
+        <div class="empty-state" id="emptyState">
+            <i class="search icon empty-icon"></i>
+            <h3 class="empty-title">Ready to search</h3>
+            <p class="empty-description">
+                Enter your search term above to find frames.
+            </p>
+        </div>
+    @endif
+
+    <!-- Loading State -->
+    <div class="loading-state"
+         id="loadingState"
+         x-show="isLoading"
+         x-transition>
+        <div class="loading-spinner"></div>
+        <h3 class="loading-title">Searching...</h3>
+        <p class="loading-description"></p>
+    </div>
+
+    @if(count($frames) > 0)
+        <!-- Card View -->
+        <div class="card-view" x-show="currentView === 'cards'" x-transition>
+            <div class="search-results-grid">
+                @foreach($frames as $frame)
+                    <div class="result-card"
+                         data-id="{{$frame->idFrame}}"
+                         @click="navigateToFrame({{$frame->idFrame}})"
+                         tabindex="0"
+                         @keydown.enter="navigateToFrame({{$frame->idFrame}})"
+                         role="button">
+                        <div class="card-header">
+                            <div class="result-info">
+                                <div class="result-title">
+                                    <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-content">
+                            {{$frame->description}}
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-view" x-show="currentView === 'table'" x-transition>
+            <div class="results-table-container">
+                <table class="ui table results-table">
+                    <thead>
+                    <tr>
+                        <th class="four wide">Name</th>
+                        <th class="twelve wide">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($frames as $frame)
+                        <tr data-id="{{$frame->idFrame}}"
+                            @click="navigateToFrame({{$frame->idFrame}})"
+                            tabindex="0"
+                            @keydown.enter="navigateToFrame({{$frame->idFrame}})"
+                            role="button">
+                            <td>
+                                <div class="table-title">
+                                    <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-content">
+                                    {{$frame->description}}
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
 </div>
+
+<script>
+    function searchGrid() {
+        return {
+            currentView: 'cards',
+            isLoading: false,
+
+            init() {
+                this.loadSearchState();
+                this.updateViewForScreen();
+
+                // Listen for window resize
+                window.addEventListener('resize', () => {
+                    this.updateViewForScreen();
+                });
+            },
+
+            setView(view) {
+                this.currentView = view;
+                this.saveSearchState();
+            },
+
+            updateViewForScreen() {
+                const isMobile = window.innerWidth <= 768;
+                if (isMobile && this.currentView === 'cards') {
+                    this.currentView = 'table';
+                    this.saveSearchState();
+                }
+            },
+
+            handleKeyboard(event) {
+                if (event.ctrlKey || event.metaKey) {
+                    switch (event.key) {
+                        case '1':
+                            event.preventDefault();
+                            this.setView('cards');
+                            break;
+                        case '2':
+                            event.preventDefault();
+                            this.setView('table');
+                            break;
+                    }
+                }
+            },
+
+            navigateToFrame(frameId) {
+                window.location.href = `/report/frame/${frameId}`;
+            },
+
+            saveSearchState() {
+                const state = {
+                    view: this.currentView,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('search-state', JSON.stringify(state));
+            },
+
+            loadSearchState() {
+                const saved = localStorage.getItem('search-state');
+                if (saved) {
+                    try {
+                        const state = JSON.parse(saved);
+                        if (state.view) {
+                            this.currentView = state.view;
+                        }
+                    } catch (e) {
+                        console.warn('Could not load search state:', e);
+                    }
+                }
+            }
+        }
+    }
+</script>

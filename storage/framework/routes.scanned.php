@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $router->get('frame/new', [
 	'uses' => 'App\Http\Controllers\Frame\ResourceController@new',

@@ -26,6 +26,7 @@ class ReportFrameService
                 ->where("idLanguage", $idLanguage)
                 ->first();
         }
+        $report['idFrame'] = $idFrame;
         $report['frame'] = $frame;
         $report['fe'] = self::getFEData($frame, $idLanguage);
         $report['fecoreset'] = self::getFECoreSet($frame);
@@ -167,7 +168,7 @@ class ReportFrameService
                 $l = strtolower($m);
                 foreach ($styles as $fe => $s) {
                     if(utf8_encode($l) ==  $fe) {
-                        return "<span class='{$s}'>{$m}</span>";
+                        return "<span class='fe {$s}'>{$m}</span>";
                     }
                 }
                 return $m;
@@ -183,11 +184,11 @@ class ReportFrameService
                 foreach ($styles as $fe => $s) {
                     if (str_contains(utf8_encode($l), '|target')) {
                         $m = substr($m, 0, strpos($m, '|'));
-                        return "<span class='color_target'>{$m}</span>";
+                        return "<span class='fe color_target'>{$m}</span>";
                     } else {
                         if (str_contains(utf8_encode($l), '|' . $fe)) {
                             $m = substr($m, 0, strpos($m, '|'));
-                            return "<span class='{$s}'>{$m}</span>";
+                            return "<span class='fe {$s}'>{$m}</span>";
                         }
                     }
                 }
