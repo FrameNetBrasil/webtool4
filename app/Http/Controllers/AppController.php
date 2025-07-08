@@ -114,4 +114,11 @@ class AppController extends Controller
         $msg = session("errors")->all()[0];
         return $this->renderNotify("error", $msg);
     }
+
+    #[Get(path: '/reports')]
+    public function reports()
+    {
+        return view('App.reports');
+    }
+
 }

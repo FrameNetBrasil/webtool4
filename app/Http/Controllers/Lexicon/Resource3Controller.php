@@ -19,7 +19,7 @@ use App\Repositories\Lemma;
 use App\Repositories\Lexeme;
 use App\Repositories\Lexicon;
 use App\Services\AppService;
-use App\View\Components\Combobox\LexiconGroup;
+use App\View\_Components\Combobox\LexiconGroup;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
