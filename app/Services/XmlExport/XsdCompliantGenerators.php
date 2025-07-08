@@ -746,7 +746,7 @@ class XsdCompliantGenerators
 //                $i = 0;
                 print_r($fegfptas);
                 foreach ($fegfptas as $feIdEntity => $gfptas) {
-                    
+
                     $elPattern = $dom->createElement('pattern');
                     $elPattern->setAttribute('total', 0);
                     $elRealization->appendChild($elPattern);
