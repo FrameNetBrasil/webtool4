@@ -22,6 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
     <script type="text/javascript" src="/scripts/app/notify.js"></script>
+    <script type="text/javascript" src="/scripts/app/search.js"></script>
     <script type="text/javascript" src="/scripts/pdf/jspdf.debug.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2canvas.min.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2pdf.min.js"></script>

@@ -6,7 +6,7 @@
         'cxnreport' => ['Constructions', '/report/cxn', 'List of all constructions and its structure.', 'ui::icon.construction' ],
         'reporttqr' => ['TQR', '/report/qualia', 'Structure of Ternary Qualia Relarion (TQR).', 'ui::icon.qualia'],
         'reportst' => ['SemanticType', '/report/semanticType', 'List of Semantic Types and its hierarchy.','ui::icon.semantictype'],
-        'reportc5' => ['MoCCA', '/report/c5', 'List of all components of MoCCA Project.','ui::icon.concept'],
+        'reportc5' => ['MoCCA', '/report/c5', 'List of all Comparative Concepts (CC) of MoCCA Project.','ui::icon.concept'],
     ];
 @endphp
 
@@ -15,12 +15,7 @@
         @include('layouts.header')
         @include("layouts.sidebar")
         <main class="app-main">
-            <div class="page-header">
-                <div class="page-header-content">
-                        <div class="page-title">Reports</div>
-                        <div class="page-subtitle">Access webtool reports.</div>
-                </div>
-            </div>
+            <x-ui::breadcrumb :sections="[['/','Home'],['','Reports']]"></x-ui::breadcrumb>
             <div class="page-content">
                 <div class="content-container">
                     <div class="card-grid dense">

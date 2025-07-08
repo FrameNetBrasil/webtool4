@@ -25,23 +25,28 @@
     // Grid variants
     &.dense {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: @relativeSmall;                                             // 12px (was var(--spacing-3))
+        gap: @relativeSmall;
     }
 
     &.wide-cards {
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-        gap: @relativeLarge;                                             // 24px (was var(--spacing-6))
+        gap: @relativeLarge;
     }
 
     &.small-cards {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: @relativeMedium;                                            // 16px (was var(--spacing-4))
+        gap: @relativeMedium;
+    }
+
+    &.single-row {
+        grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+        grid-template-rows: 1fr;
     }
 
     // Mobile responsiveness
     @media (max-width: @mobileBreakpoint) {
         grid-template-columns: 1fr;
-        gap: @relativeMedium;                                            // 16px (was var(--spacing-4))
+        gap: @relativeMedium;
 
         &.dense,
         &.wide-cards,

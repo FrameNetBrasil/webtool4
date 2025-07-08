@@ -9,7 +9,7 @@ return [
     'pageTitle' => env('APP_TITLE'),
     'mainTitle' => 'FrameNet Brasil Webtool 4.1',
     'headerTitle' => 'Webtool',
-    'footer' => '&copy; 2014-2025 FrameNet Brasil Lab, UFJF.',
+    'footer' => '&copy; 2014-2025 FNBr/UFJF',
     'version' => 'v.4.2',
     'mediaURL' => env('APP_MEDIA_URL'),
     'login' => [

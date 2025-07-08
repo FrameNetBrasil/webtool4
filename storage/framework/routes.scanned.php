@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 $router->get('frame/new', [
 	'uses' => 'App\Http\Controllers\Frame\ResourceController@new',
@@ -128,6 +128,14 @@ $router->post('frame/grid', [
 	'domain' => NULL,
 ]);
 
+$router->get('report/frame', [
+	'uses' => 'App\Http\Controllers\Frame\ReportController@main',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('report/frame/grid', [
 	'uses' => 'App\Http\Controllers\Frame\ReportController@grid',
 	'as' => NULL,
@@ -136,23 +144,7 @@ $router->post('report/frame/grid', [
 	'domain' => NULL,
 ]);
 
-$router->get('report/frame/data', [
-	'uses' => 'App\Http\Controllers\Frame\ReportController@data',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('report/frame/content/{idFrame}/{lang?}', [
-	'uses' => 'App\Http\Controllers\Frame\ReportController@reportContent',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('report/frame/{idFrame?}/{lang?}', [
+$router->get('report/frame/{idFrame}/{lang?}', [
 	'uses' => 'App\Http\Controllers\Frame\ReportController@report',
 	'as' => NULL,
 	'middleware' => ['web'],
@@ -674,6 +666,14 @@ $router->get('messages', [
 
 $router->get('error', [
 	'uses' => 'App\Http\Controllers\AppController@error',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('reports', [
+	'uses' => 'App\Http\Controllers\AppController@reports',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
@@ -1434,6 +1434,166 @@ $router->get('lexicon3/feature/{idLexicon}', [
 
 $router->delete('lexicon3/feature/{idLexicon}/{idUDFeature}', [
 	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@deleteFeature',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/appNoTools', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@appNoTools',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/appNoSidebar', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@appNoSidebar',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/appMinimal', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@appMinimal',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/appFullscreen', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@appFullscreen',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/appSplit', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@appSplit',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/appSidebar', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@appSidebar',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/container', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@container',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/containerWide', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@containerWide',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/containerNarrow', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@containerNarrow',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/containerReading', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@containerReading',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/containerFluid', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@containerFluid',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/containerCompact', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@containerCompact',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/gridCrudSidebar', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@gridCrudSidebar',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/gridCrudSingleColumn', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@gridCrudSingleColumn',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/gridCrudSplitView', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@gridCrudSplitView',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/gridCrudMasterDetail', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@gridCrudMasterDetail',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/gridCrudThreePanel', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@gridCrudThreePanel',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/gridCard', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@gridCard',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/gridForm', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@gridForm',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('design/cardType', [
+	'uses' => 'App\Http\Controllers\UI\DesignController@cardType',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
