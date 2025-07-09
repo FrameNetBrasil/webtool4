@@ -1,11 +1,12 @@
 import './bootstrap';
 import './webcomponents';
+import './components/wt-tree';
 
 import Chart from 'chart.js/auto';
 
 import svgPanZoom from "svg-pan-zoom";
 import ky from 'ky';
-import Split from 'split.js'
+import Split from 'split.js';
 
 // import '../css/fomantic-ui/semantic.less';
 //import 'primeflex/primeflex.css';

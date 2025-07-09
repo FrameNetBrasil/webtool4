@@ -15,6 +15,7 @@ use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
 use App\Repositories\WordForm;
 use App\Services\AnnotationFEService;
+use App\Services\AnnotationService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -28,8 +29,10 @@ class FEController extends Controller
     public function browse()
     {
         $search = session('searchFEAnnotation') ?? SearchData::from();
+        $corpus = AnnotationService::browseCorpusBySearch($search);
+        debug($corpus);
         return view("Annotation.FE.browse", [
-            'search' => $search
+            'corpus' => $corpus
         ]);
     }
 
