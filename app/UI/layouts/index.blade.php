@@ -16,13 +16,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+{{--    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">--}}
 
     <script type="text/javascript" src="https://unpkg.com/htmx.org@2.0.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
     <script type="text/javascript" src="/scripts/app/notify.js"></script>
     <script type="text/javascript" src="/scripts/app/search.js"></script>
+    <script type="text/javascript" src="/scripts/app/treeComponent.js"></script>
     <script type="text/javascript" src="/scripts/pdf/jspdf.debug.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2canvas.min.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2pdf.min.js"></script>

@@ -30,8 +30,8 @@ class WtTree extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         // Update height directly on the container
         if (name === 'height' && this._container) {
-            const height = newValue || '400';
-            this._container.style.height = `${height}px`;
+            const height = newValue || '400px';
+            this._container.style.height = `${height}`;
         }
 
         // Update title
@@ -90,7 +90,6 @@ class WtTree extends HTMLElement {
 
     // Render the tree structure
     _renderTree() {
-        console.log(this._initialData);
         if (this._initialData.length === 0) {
             this._body.innerHTML = '<div class="no-data">No data available</div>';
             return;
@@ -102,11 +101,14 @@ class WtTree extends HTMLElement {
         this._initialData.forEach(item => {
             const row = this._createTreeRow(item);
             table.appendChild(row);
+            const rowChild = this._createTreeRowChild(item);
+            table.appendChild(rowChild);
         });
 
         this._body.innerHTML = '';
         this._body.appendChild(table);
     }
+
 
     // Create a tree row
     _createTreeRow(item, level = 0) {
@@ -116,17 +118,22 @@ class WtTree extends HTMLElement {
         const toggleCell = document.createElement('td');
         toggleCell.className = 'toggle';
         toggleCell.style.paddingLeft = `${level * 20}px`;
-        toggleCell.innerHTML = '<span class="toggle-icon">▶</span>';
-        toggleCell.addEventListener('click', () => this._toggleNode(item.id, toggleCell));
+        toggleCell.innerHTML = '<span class="toggle-icon collapsed"></span>';
+        toggleCell.addEventListener('click', () => this._toggleNode(item, toggleCell));
 
         // Content cell
         const contentCell = document.createElement('td');
         contentCell.className = 'content-cell';
         contentCell.id = item.id;
         contentCell.innerHTML = `
-                    ${item.text}
-                    <div id="tree_${item.id}" class="tree-content hidden"></div>
+                    <span class="tree-item-text">${item.text}</span>
+<!--                    <div id="tree_${item.id}" class="tree-content hidden"></div>-->
                 `;
+
+        // Add click event to the text content
+        const textSpan = contentCell.querySelector('.tree-item-text');
+        textSpan.style.cursor = 'pointer';
+        textSpan.addEventListener('click', () => this._handleItemClick(item.id));
 
         row.appendChild(toggleCell);
         row.appendChild(contentCell);
@@ -134,8 +141,51 @@ class WtTree extends HTMLElement {
         return row;
     }
 
+    // Create a tree row
+    _createTreeRowChild(item, level = 0) {
+        const row = document.createElement('tr');
+        row.className = 'hidden';
+        row.id = 'row_' + item.type + '_' + item.id;
+
+        // Toggle cell
+        const toggleCell = document.createElement('td');
+
+        // Content cell
+        const contentCell = document.createElement('td');
+        contentCell.innerHTML = `
+                    <div id="tree_${item.id}" class="tree-content hidden"></div>
+                `;
+        row.appendChild(toggleCell);
+        row.appendChild(contentCell);
+        return row;
+    }
+
+    // Handle item click and dispatch custom event
+    _handleItemClick(itemId) {
+        // Dispatch custom event
+        this.dispatchEvent(new CustomEvent('onClickData', {
+            detail: { id: itemId },
+            bubbles: true
+        }));
+
+        // Also call the onClickData function if it exists as an attribute
+        const onClickDataAttr = this.getAttribute('onClickData');
+        if (onClickDataAttr) {
+            try {
+                // Create a function from the attribute value
+                const func = new Function('id', onClickDataAttr);
+                func(itemId);
+            } catch (e) {
+                console.error('Error executing onClickData function:', e);
+            }
+        }
+    }
+
     // Toggle node expansion
-    _toggleNode(itemId, toggleElement) {
+    _toggleNode(item, toggleElement) {
+        const itemId = item.id;
+        const rowId = 'row_' + item.type + '_' + item.id;
+        const row = document.getElementById(rowId);
         const treeDiv = document.getElementById(`tree_${itemId}`);
         const icon = toggleElement.querySelector('.toggle-icon');
 
@@ -143,28 +193,35 @@ class WtTree extends HTMLElement {
             // Opening - check if content needs to be loaded
             if (!this._loadedNodes.has(itemId)) {
                 treeDiv.innerHTML = '<div class="loading">Loading...</div>';
-                this._loadNodeContent(itemId);
+                this._loadNodeContent(item);
                 this._loadedNodes.add(itemId);
             }
 
+            row.classList.remove('hidden');
             treeDiv.classList.remove('hidden');
+            icon.classList.remove('collapsed');
             icon.classList.add('expanded');
-            icon.textContent = '▼';
+            //icon.textContent = '▼';
         } else {
             // Closing
+            row.classList.add('hidden');
             treeDiv.classList.add('hidden');
+            icon.classList.add('collapsed');
             icon.classList.remove('expanded');
-            icon.textContent = '▶';
+            //icon.textContent = '▶';
         }
     }
 
     // Load node content using HTMX
-    _loadNodeContent(itemId) {
+    _loadNodeContent(item) {
+        console.log(item);
+        const itemId = item.id;
+        const type = item.type;
         const url = this.getAttribute('url') || '/api/tree';
         const targetDiv = document.getElementById(`tree_${itemId}`);
 
         if (window.htmx) {
-            htmx.ajax('GET', `${url}/${itemId}`, {
+            htmx.ajax('GET', `${url}/${type}/${itemId}`, {
                 target: `#tree_${itemId}`,
                 swap: 'innerHTML'
             });

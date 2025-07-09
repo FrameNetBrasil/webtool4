@@ -1,3 +1,4 @@
+@php(debug(count($corpus)))
 <x-layout::index>
     <div class="app-layout no-tools">
         @include('layouts.header')
@@ -92,12 +93,14 @@
                                     @if(count($corpus) > 0)
                                         <div class="tree-view" x-transition>
                                             <div class="search-results-tree">
-                                                <wt-tree
-                                                    url="/api/tree"
-                                                    height="100%"
-                                                    initial-data='{!! json_encode($corpus) !!}'
-                                                >
-                                                </wt-tree>
+                                                <x-ui::tree title="" url="/annotation/fe/tree" :data="$corpus"></x-ui::tree>
+
+{{--                                                <wt-tree--}}
+{{--                                                    url="/annotation/fe"--}}
+{{--                                                    height="100%"--}}
+{{--                                                    initial-data='{!! json_encode($corpus) !!}'--}}
+{{--                                                >--}}
+{{--                                                </wt-tree>--}}
                                             </div>
                                         </div>
                                         <!-- Card View -->
