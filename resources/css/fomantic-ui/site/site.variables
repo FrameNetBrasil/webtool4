@@ -10,8 +10,8 @@
     Font System
 -------------------*/
 
-@fontName: 'Noto Sans';
-@fontFamily: 'Noto Sans','Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+@fontName: 'Inter';
+@fontFamily: 'Inter','Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
 @fallbackFonts: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 
 @codeFont: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
@@ -20,8 +20,8 @@
 @textFont: @fontName, @fallbackFonts;
 
 // Disable Google Fonts
-@importGoogleFonts: false;
-@importFonts: false;
+@importGoogleFonts: true;
+@importFonts: true;
 
 /*-------------------
     Base Sizing System
@@ -623,7 +623,8 @@
 @treeBorder: @borderSubtle;
 @treeHeaderBackground: @surfaceSecondary;
 @treeHeaderColor: @textSecondary;
-@treeHoverBackground: @surfaceSecondary;
+@treeHoverBackground: @surfaceTertiary;
+
 
 ///*-------------------
 //    Annotation System (WebTool Specific)

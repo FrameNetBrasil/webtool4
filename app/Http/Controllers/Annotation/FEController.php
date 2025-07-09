@@ -26,54 +26,54 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 class FEController extends Controller
 {
     #[Get(path: '/annotation/fe')]
-    public function browse()
+    public function browse(SearchData $search)
     {
-        $search = session('searchFEAnnotation') ?? SearchData::from();
         $corpus = AnnotationService::browseCorpusBySearch($search);
         return view("Annotation.FE.browse", [
             'corpus' => $corpus,
         ]);
     }
 
-    #[Get(path: '/annotation/fe/tree/{type?}/{id?}')]
-    public function tree(string $type = null, int $id = null)
+    #[Post(path: '/annotation/fe/tree')]
+    public function tree(SearchData $search)
     {
-        debug($type);
-        debug($id);
-        $search = session('searchFEAnnotation') ?? SearchData::from();
-        if (is_null($type)) {
-            $data = AnnotationService::browseCorpusBySearch($search);
-//        debug($corpus);
-        } else if ($type == 'corpus') {
-            $search->idCorpus = $id;
-            $data = AnnotationService::browseDocumentBySearch($search);
-        } else if ($type == 'document') {
-            $data = AnnotationService::browseSentences(AnnotationFEService::listSentences($id));
+        if (!is_null($search->idDocumentSentence)) {
+            $data = AnnotationService::browseSentences(AnnotationFEService::getSentence($search->idDocumentSentence));
+        } else {
+            if (!is_null($search->idDocument)) {
+                $data = AnnotationService::browseSentences(AnnotationFEService::listSentences($search->idDocument));
+            } else {
+                if (!is_null($search->idCorpus) || ($search->document != '')) {
+                    $data = AnnotationService::browseDocumentBySearch($search);
+                } else {
+                    $data = AnnotationService::browseCorpusBySearch($search);
+                }
+            }
         }
         return view("Annotation.FE.tree", [
             'data' => $data
         ]);
     }
 
-    #[Post(path: '/annotation/fe/grid')]
-    public function grid(SearchData $search)
-    {
-        return view("Annotation.FE.grids", [
-            'search' => $search,
-            'sentences' => [],
-        ]);
-    }
+//    #[Post(path: '/annotation/fe/grid')]
+//    public function grid(SearchData $search)
+//    {
+//        return view("Annotation.FE.grids", [
+//            'search' => $search,
+//            'sentences' => [],
+//        ]);
+//    }
 
-    #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
-    public function documentSentences(int $idDocument)
-    {
-        $document = Document::byId($idDocument);
-        $sentences = AnnotationFEService::listSentences($idDocument);
-        return view("Annotation.FE.sentences", [
-            'document' => $document,
-            'sentences' => $sentences
-        ]);
-    }
+//    #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
+//    public function documentSentences(int $idDocument)
+//    {
+//        $document = Document::byId($idDocument);
+//        $sentences = AnnotationFEService::listSentences($idDocument);
+//        return view("Annotation.FE.sentences", [
+//            'document' => $document,
+//            'sentences' => $sentences
+//        ]);
+//    }
 
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
     public function sentence(int $idDocumentSentence, int $idAnnotationSet = null)
