@@ -85,23 +85,25 @@ class AnnotationService
         $allowed = Project::getAllowedDocsForUser($projects, $projectGroup);
         if ($search->document != '') {
             $data = [];
-            $allowedCorpus = array_keys(collect($allowed)->groupBy('idCorpus')->toArray());
-            $allowedDocuments = array_keys(
-                collect($allowed)
-                    ->groupBy('idDocument')
-                    ->toArray()
-            );
-            $documents = Criteria::byFilterLanguage("view_document", ["name", "contains", $search->document])
-                ->select('idDocument', 'name', 'corpusName',"idCorpus")
-                ->orderBy("corpusName")->orderBy("name")->all();
-            foreach($documents as $document) {
-                if ((isset($allowedDocuments[$document->idDocument]))) {
-                    $data[] = [
-                        'id' => $document->idDocument,
-                        'text' => $documentIcon . $document->corpusName . ' / ' . $document->name,
-                        'state' => 'closed',
-                        'type' => 'document'
-                    ];
+            if (strlen($search->document) > 2) {
+                $allowedCorpus = array_keys(collect($allowed)->groupBy('idCorpus')->toArray());
+                $allowedDocuments = array_keys(
+                    collect($allowed)
+                        ->groupBy('idDocument')
+                        ->toArray()
+                );
+                $documents = Criteria::byFilterLanguage("view_document", ["name", "contains", $search->document])
+                    ->select('idDocument', 'name', 'corpusName', "idCorpus")
+                    ->orderBy("corpusName")->orderBy("name")->all();
+                foreach ($documents as $document) {
+                    if ((isset($allowedDocuments[$document->idDocument]))) {
+                        $data[] = [
+                            'id' => $document->idDocument,
+                            'text' => $documentIcon . $document->corpusName . ' / ' . $document->name,
+                            'state' => 'closed',
+                            'type' => 'document'
+                        ];
+                    }
                 }
             }
         } else if ($search->idCorpus != '') {
@@ -127,7 +129,7 @@ class AnnotationService
         foreach ($sentences as $sentence) {
             $data[] = [
                 'id' => $sentence->idDocumentSentence,
-                'text' => '#' . $sentence->idDocumentSentence . '  ' . htmlentities($sentence->text),
+                'text' => '[#' . $sentence->idDocumentSentence . ']  ' . $sentence->text,
                 'state' => 'closed',
                 'type' => 'sentence',
                 'leaf' => true

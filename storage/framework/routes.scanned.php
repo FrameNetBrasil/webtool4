@@ -3632,24 +3632,8 @@ $router->get('annotation/fe', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fe/tree/{type?}/{id?}', [
+$router->post('annotation/fe/tree', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@tree',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/fe/grid', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@grid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/fe/grid/{idDocument}/sentences', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@documentSentences',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

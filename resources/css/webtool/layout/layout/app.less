@@ -85,8 +85,9 @@
 /* Full-screen layout for annotation */
 .app-layout.fullscreen {
     grid-template-areas:
+        "header"
         "toolbar"
         "canvas";
     grid-template-columns: 1fr;
-    grid-template-rows: @toolbarHeight 1fr;                             // (was var(--toolbar-height))
+    grid-template-rows: 3em @toolbarHeight 1fr;                             // (was var(--toolbar-height))
 }

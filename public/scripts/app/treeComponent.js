@@ -22,11 +22,11 @@ function treeComponent() {
             // Read configuration from data attributes
             this.readDataAttributes();
 
-            console.log("Tree component initialized with:", {
-                title: this.title,
-                baseUrl: this.baseUrl,
-                itemsCount: this.items.length
-            });
+            // console.log("Tree component initialized with:", {
+            //     title: this.title,
+            //     baseUrl: this.baseUrl,
+            //     itemsCount: this.items.length
+            // });
 
             // Set up HTMX event listeners
             this.setupHTMXEvents();
@@ -83,9 +83,9 @@ function treeComponent() {
         },
 
         // Select item
-        selectItem(itemId) {
+        selectItem(itemId, type) {
             this.selectedItem = itemId;
-            console.log(`Item selected: ${itemId}`);
+            // console.log(`Item selected: ${itemId}  ${type}`);
 
             // Call custom callback if provided
             if (this.onItemClick && typeof this.onItemClick === "function") {
@@ -94,7 +94,11 @@ function treeComponent() {
 
             // Dispatch custom event
             this.$el.dispatchEvent(new CustomEvent("tree-item-selected", {
-                detail: { id: itemId },
+                detail: {
+                    tree: this,
+                    id: itemId,
+                    type: type
+                },
                 bubbles: true
             }));
         },
@@ -106,7 +110,7 @@ function treeComponent() {
 
             // Re-initialize AlpineJS for dynamically loaded content if needed
             // This would be needed if the loaded content contains Alpine directives
-            console.log(`Content loaded for: ${itemId}`);
+            // console.log(`Content loaded for: ${itemId}`);
         },
 
         // Get item ID from HTMX target
@@ -121,7 +125,7 @@ function treeComponent() {
             this.loadingNodes = {};
             this.loadedNodes = {};
             this.selectedItem = null;
-            console.log("Tree reloaded");
+            // console.log("Tree reloaded");
         },
 
         expandAll() {
@@ -163,6 +167,10 @@ function treeComponent() {
         // Update configuration from attributes (useful for dynamic updates)
         updateFromAttributes() {
             this.readDataAttributes();
+        },
+
+        toggleNodeState(itemId) {
+            this.toggleNode(itemId);
         },
 
         // Set configuration programmatically

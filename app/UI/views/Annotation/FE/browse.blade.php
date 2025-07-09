@@ -1,4 +1,3 @@
-@php(debug(count($corpus)))
 <x-layout::index>
     <div class="app-layout no-tools">
         @include('layouts.header')
@@ -17,8 +16,8 @@
                         >
                             <div class="search-input-group">
                                 <form class="ui form"
-                                      hx-post="/report/frame/grid"
-                                      hx-target="#gridArea"
+                                      hx-post="/annotation/fe/tree"
+                                      hx-target=".search-results-tree"
                                       hx-swap="innerHTML"
                                       hx-trigger="submit, input delay:500ms from:input[name='frame']">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
@@ -30,7 +29,7 @@
                                                     type="search"
                                                     name="corpus"
                                                     placeholder="Search Corpus"
-                                                    x-model="searchQuery"
+{{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -42,7 +41,7 @@
                                                     type="search"
                                                     name="document"
                                                     placeholder="Search Document"
-                                                    x-model="searchQuery"
+{{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -54,11 +53,14 @@
                                                     type="search"
                                                     name="idDocumentSentence"
                                                     placeholder="Search #idSentence"
-                                                    x-model="searchQuery"
+{{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
                                         </div>
+                                        <button type="submit" class="ui medium primary button">
+                                            Search
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -70,62 +72,33 @@
                                      class="results-container view-cards"
                                 >
 
-                                    <div class="results-header">
-                                        <div class="results-info">
-                                            <div class="results-count" id="resultsCount">{!! count($corpus) !!}
-                                                results
-                                            </div>
-                                            <div class="search-query-display" id="queryDisplay"></div>
-                                        </div>
-                                    </div>
+{{--                                    <div class="results-header">--}}
+{{--                                        <div class="results-info">--}}
+{{--                                            <div class="results-count" id="resultsCount">{!! count($corpus) !!}--}}
+{{--                                                results--}}
+{{--                                            </div>--}}
+{{--                                            <div class="search-query-display" id="queryDisplay"></div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
 
-                                    <!-- Empty State -->
-                                    @if(count($corpus) == 0)
-                                        <div class="empty-state" id="emptyState">
-                                            <i class="search icon empty-icon"></i>
-                                            <h3 class="empty-title">Ready to search</h3>
-                                            <p class="empty-description">
-                                                Enter your search term above to find frames.
-                                            </p>
-                                        </div>
-                                    @endif
+{{--                                    <!-- Empty State -->--}}
+{{--                                    @if(count($corpus) == 0)--}}
+{{--                                        <div class="empty-state" id="emptyState">--}}
+{{--                                            <i class="search icon empty-icon"></i>--}}
+{{--                                            <h3 class="empty-title">Ready to search</h3>--}}
+{{--                                            <p class="empty-description">--}}
+{{--                                                Enter your search term above to find frames.--}}
+{{--                                            </p>--}}
+{{--                                        </div>--}}
+{{--                                    @endif--}}
 
                                     @if(count($corpus) > 0)
                                         <div class="tree-view" x-transition>
                                             <div class="search-results-tree">
-                                                <x-ui::tree title="" url="/annotation/fe/tree" :data="$corpus"></x-ui::tree>
-
-{{--                                                <wt-tree--}}
-{{--                                                    url="/annotation/fe"--}}
-{{--                                                    height="100%"--}}
-{{--                                                    initial-data='{!! json_encode($corpus) !!}'--}}
-{{--                                                >--}}
-{{--                                                </wt-tree>--}}
+                                                <x-ui::tree title="" url="/annotation/fe/tree"
+                                                            :data="$corpus"></x-ui::tree>
                                             </div>
                                         </div>
-                                        <!-- Card View -->
-                                        {{--                                        <div class="card-view" x-transition>--}}
-                                        {{--                                            <div class="search-results-grid">--}}
-                                        {{--                                                @foreach($frames as $frame)--}}
-                                        {{--                                                    <div class="ui card fluid result-card"--}}
-                                        {{--                                                         data-id="{{$frame->idFrame}}"--}}
-                                        {{--                                                         @click="window.location.assign(`/report/frame/{{$frame->idFrame}}`)"--}}
-                                        {{--                                                         tabindex="0"--}}
-                                        {{--                                                         @keydown.enter="window.location.assign(`/report/frame/{{$frame->idFrame}}`)"--}}
-                                        {{--                                                         role="button">--}}
-                                        {{--                                                        <div class="content">--}}
-                                        {{--                                                            <div class="header">--}}
-                                        {{--                                                                <x-ui::element.frame--}}
-                                        {{--                                                                    name="{{$frame->name}}"></x-ui::element.frame>--}}
-                                        {{--                                                            </div>--}}
-                                        {{--                                                            <div class="description">--}}
-                                        {{--                                                                {{$frame->description}}--}}
-                                        {{--                                                            </div>--}}
-                                        {{--                                                        </div>--}}
-                                        {{--                                                    </div>--}}
-                                        {{--                                                @endforeach--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
                                     @endif
                                 </div>
                             @endfragment
@@ -135,4 +108,15 @@
             </div>
         </main>
     </div>
+    <script>
+        $(function() {
+            document.addEventListener("tree-item-selected", function(event) {
+                if ((event.detail.type === "corpus") || (event.detail.type === "document")) {
+                    event.detail.tree.toggleNodeState(event.detail.id);
+                } else if (event.detail.type === "sentence") {
+                    window.open(`/annotation/fe/sentence/${event.detail.id}`, "_blank");
+                }
+            });
+        });
+    </script>
 </x-layout::index>

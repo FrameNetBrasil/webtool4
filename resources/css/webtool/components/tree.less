@@ -15,9 +15,24 @@
             }
 
             tr {
+
+
+
+                &.row-data {
+                    border-bottom:  1px dotted #ccc;
+
+                    &:hover {
+                        background-color: @treeHoverBackground
+                    }
+
+                    //&:last-child {
+                    //    border-bottom: none;
+                    //}
+                }
+
                 td {
                     //border: 1px solid #ddd;
-                    padding: @relativeMini;
+                    //padding: @relativeMini;
                     vertical-align: top;
 
                     &.toggle {
@@ -57,13 +72,12 @@
                             border-radius: 3px;
                             transition: background-color 0.2s ease;
 
-                            &:hover {
-                                background-color: #f0f0f0;
-                            }
                         }
                     }
                 }
             }
+
+
 
             .tree-content {
                 //margin-top: 10px;
