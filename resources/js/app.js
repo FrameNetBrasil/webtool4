@@ -1,6 +1,6 @@
 import './bootstrap';
 import './webcomponents';
-import './components/wt-tree';
+//import './components/wt-tree';
 
 import Chart from 'chart.js/auto';
 

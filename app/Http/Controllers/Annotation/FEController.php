@@ -30,9 +30,28 @@ class FEController extends Controller
     {
         $search = session('searchFEAnnotation') ?? SearchData::from();
         $corpus = AnnotationService::browseCorpusBySearch($search);
-        debug($corpus);
         return view("Annotation.FE.browse", [
-            'corpus' => $corpus
+            'corpus' => $corpus,
+        ]);
+    }
+
+    #[Get(path: '/annotation/fe/tree/{type?}/{id?}')]
+    public function tree(string $type = null, int $id = null)
+    {
+        debug($type);
+        debug($id);
+        $search = session('searchFEAnnotation') ?? SearchData::from();
+        if (is_null($type)) {
+            $data = AnnotationService::browseCorpusBySearch($search);
+//        debug($corpus);
+        } else if ($type == 'corpus') {
+            $search->idCorpus = $id;
+            $data = AnnotationService::browseDocumentBySearch($search);
+        } else if ($type == 'document') {
+            $data = AnnotationService::browseSentences(AnnotationFEService::listSentences($id));
+        }
+        return view("Annotation.FE.tree", [
+            'data' => $data
         ]);
     }
 
@@ -57,7 +76,7 @@ class FEController extends Controller
     }
 
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
-    public function sentence(int $idDocumentSentence,int $idAnnotationSet = null)
+    public function sentence(int $idDocumentSentence, int $idAnnotationSet = null)
     {
         $data = AnnotationFEService::getAnnotationData($idDocumentSentence);
         if (!is_null($idAnnotationSet)) {
@@ -148,7 +167,7 @@ class FEController extends Controller
     public function deleteAS(int $idAnnotationSet)
     {
         try {
-            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $idAnnotationSet);
+            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $idAnnotationSet);
             AnnotationSet::delete($idAnnotationSet);
             return $this->clientRedirect("/annotation/fe/sentence/{$annotationSet->idDocumentSentence}");
         } catch (\Exception $e) {
@@ -168,6 +187,7 @@ class FEController extends Controller
             'object' => $object
         ]);
     }
+
     #[Post(path: '/annotation/fe/updateObjectComment')]
     public function updateObjectComment(CommentData $data)
     {
@@ -180,6 +200,7 @@ class FEController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
     #[Delete(path: '/annotation/fe/comment/{idAnnotationSet}')]
     public function deleteObjectComment(int $idAnnotationSet)
     {

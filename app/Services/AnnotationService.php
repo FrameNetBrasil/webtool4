@@ -121,5 +121,20 @@ class AnnotationService
         return $data;
     }
 
+    public static function browseSentences(array $sentences): array
+    {
+        $data = [];
+        foreach ($sentences as $sentence) {
+            $data[] = [
+                'id' => $sentence->idDocumentSentence,
+                'text' => '#' . $sentence->idDocumentSentence . '  ' . htmlentities($sentence->text),
+                'state' => 'closed',
+                'type' => 'sentence',
+                'leaf' => true
+            ];
+        }
+        return $data;
+    }
+
 
 }
