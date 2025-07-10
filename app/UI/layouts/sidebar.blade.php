@@ -14,7 +14,7 @@
     $hrefLogin = (env('AUTH0_CLIENT_ID') == 'auth0') ? '/auth0Login' : '/';
 
 @endphp
-
+<script src="/scripts/app/sidebar.js"></script>
 <div class="app-sidebar">
     <div class="main">
 

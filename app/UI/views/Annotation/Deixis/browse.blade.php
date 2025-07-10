@@ -3,7 +3,7 @@
         @include('layouts.header')
         @include("layouts.sidebar")
         <main class="app-main">
-            <x-ui::breadcrumb :sections="[['/','Home'],['','FE Annotation']]"></x-ui::breadcrumb>
+            <x-ui::breadcrumb :sections="[['/','Home'],['','Deixis Annotation']]"></x-ui::breadcrumb>
             <div class="page-content">
                 <div class="content-container">
                     <div class="app-search">
@@ -29,7 +29,6 @@
                                                     type="search"
                                                     name="corpus"
                                                     placeholder="Search Corpus"
-                                                    {{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -41,19 +40,6 @@
                                                     type="search"
                                                     name="document"
                                                     placeholder="Search Document"
-                                                    {{--                                                    x-model="searchQuery"--}}
-                                                    autocomplete="off"
-                                                >
-                                            </div>
-                                        </div>
-                                        <div class="field">
-                                            <div class="ui left icon input w-full">
-                                                <i class="search icon"></i>
-                                                <input
-                                                    type="search"
-                                                    name="idDocumentSentence"
-                                                    placeholder="Search #idSentence"
-                                                    {{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -76,8 +62,8 @@
                                         <div class="tree-view" x-transition>
                                             <div class="search-results-tree">
                                                 @fragment("tree")
-                                                    <x-ui::tree :title="$title ?? ''" url="/annotation/fe/tree"
-                                                                :data="$data"></x-ui::tree>
+                                                <x-ui::tree :title="$title ?? ''" url="/annotation/deixis/tree"
+                                                            :data="$data"></x-ui::tree>
                                                 @endfragment
                                             </div>
                                         </div>
@@ -93,10 +79,10 @@
     <script>
         $(function() {
             document.addEventListener("tree-item-selected", function(event) {
-                if ((event.detail.type === "corpus") || (event.detail.type === "document")) {
+                if (event.detail.type === "corpus") {
                     event.detail.tree.toggleNodeState(event.detail.id);
-                } else if (event.detail.type === "sentence") {
-                    window.open(`/annotation/fe/sentence/${event.detail.id}`, "_blank");
+                } else if  (event.detail.type === "document")  {
+                    window.open(`/annotation/deixis/${event.detail.id}`, "_blank");
                 }
             });
         });

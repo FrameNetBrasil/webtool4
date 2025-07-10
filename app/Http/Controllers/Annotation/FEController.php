@@ -30,7 +30,7 @@ class FEController extends Controller
     {
         $corpus = AnnotationService::browseCorpusBySearch($search);
         return view("Annotation.FE.browse", [
-            'corpus' => $corpus,
+            'data' => $corpus,
         ]);
     }
 
@@ -50,9 +50,9 @@ class FEController extends Controller
                 }
             }
         }
-        return view("Annotation.FE.tree", [
+        return view("Annotation.FE.browse", [
             'data' => $data
-        ]);
+        ])->fragment("tree");
     }
 
 //    #[Post(path: '/annotation/fe/grid')]

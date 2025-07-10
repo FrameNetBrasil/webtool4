@@ -51,7 +51,7 @@
 {{$slot}}
 
 <!-- App Scripts Go Here -->
-<script src="/scripts/app/sidebar.js"></script>
+
 <script src="/scripts/lodash/lodash.js"></script>
 <script src="/scripts/backbone/backbone.js"></script>
 <script src="/scripts/jointjs/dist/joint.js"></script>
