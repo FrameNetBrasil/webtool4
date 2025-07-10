@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Interface</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .timeline-container {
+            border: 1px solid #ccc;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .timeline-ruler {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 30px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            overflow: hidden; /* Hide ruler scrollbar */
+        }
+
+        .ruler-content {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            /* Remove padding-left since we're positioning ticks manually */
+        }
+
+        .ruler-tick {
+            position: absolute;
+            height: 20px;
+            border-left: 1px solid #999;
+            font-size: 10px;
+            padding-left: 2px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ruler-tick.major {
+            border-left: 2px solid #333;
+            font-weight: bold;
+        }
+
+        .timeline-content {
+            position: relative;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .timeline-inner {
+            position: relative;
+            min-width: 100%;
+        }
+
+        .layer {
+            position: relative;
+            border-bottom: 1px solid #eee;
+            display: flex;
+        }
+
+        .layer-label {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            width: 150px;
+            background-color: #e9ecef;
+            border-right: 1px solid #ddd;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .layer-objects {
+            position: relative;
+            flex: 1;
+            min-height: 24px;
+        }
+
+        .timeline-object {
+            position: absolute;
+            height: 24px;
+            border: 1px solid rgba(0,0,0,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            font-size: 10px;
+            color: white;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            min-width: 16px;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .timeline-object:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+            z-index: 5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .timeline-info {
+            position: sticky;
+            bottom: 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #ddd;
+            padding: 8px;
+            font-size: 12px;
+            color: #666;
+            z-index: 100;
+        }
+
+        .loading {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="timeline-container">
+        <div class="timeline-ruler">
+            <div class="ruler-content" id="rulerContent">
+                <!-- Ruler ticks will be generated here -->
+            </div>
+        </div>
+
+        <div class="timeline-content" id="timelineContent">
+            <div class="timeline-inner" id="timelineInner">
+                <div class="loading" id="loading">Loading timeline data...</div>
+            </div>
+        </div>
+
+        <div class="timeline-info" id="timelineInfo">
+            Ready to load timeline data
+        </div>
+    </div>
+
+    <script>
+        let timelineData = null;
+        let minFrame = 0;
+        let maxFrame = 0;
+        let timelineWidth = 0;
+        const FRAME_TO_PX = 1; // 1 frame = 1px
+        const MIN_OBJECT_WIDTH = 16; // minimum width in pixels
+        const OBJECT_HEIGHT = 24; // height in pixels
+
+        // Load and parse the timeline data
+        async function loadTimelineData() {
+            try {
+                const response = await fetch('/deixis_layers.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const jsonText = await response.text();
+                timelineData = JSON.parse(jsonText);
+
+                // Calculate frame range
+                calculateFrameRange();
+
+                // Generate timeline
+                generateTimeline();
+
+                // Setup event listeners
+                setupEventListeners();
+
+                updateTimelineInfo();
+
+            } catch (error) {
+                console.error('Error loading timeline data:', error);
+                document.getElementById('loading').textContent = 'Error loading timeline data: ' + error.message;
+            }
+        }
+
+        function calculateFrameRange() {
+            minFrame = Infinity;
+            maxFrame = -Infinity;
+
+            timelineData.forEach(layer => {
+                layer.objects.forEach(obj => {
+                    minFrame = Math.min(minFrame, obj.startFrame);
+                    maxFrame = Math.max(maxFrame, obj.endFrame);
+                });
+            });
+
+            // Add some padding
+            minFrame = Math.max(0, minFrame - 100);
+            maxFrame = maxFrame + 100;
+
+            timelineWidth = (maxFrame - minFrame) * FRAME_TO_PX;
+        }
+
+        function generateTimeline() {
+            const timelineInner = document.getElementById('timelineInner');
+            timelineInner.innerHTML = '';
+
+            // Set timeline width
+            timelineInner.style.width = (timelineWidth + 150) + 'px';
+
+            // Group layers by name and create visual layers
+            const groupedLayers = groupLayersByName();
+            groupedLayers.forEach((visualLayer, visualLayerIndex) => {
+                const layerDiv = createVisualLayer(visualLayer, visualLayerIndex);
+                timelineInner.appendChild(layerDiv);
+            });
+
+            // Generate ruler
+            generateRuler();
+        }
+
+        function groupLayersByName() {
+            const layerGroups = new Map();
+
+            timelineData.forEach((layer, originalIndex) => {
+                const layerName = layer.layer;
+
+                if (!layerGroups.has(layerName)) {
+                    layerGroups.set(layerName, {
+                        name: layerName,
+                        lines: []
+                    });
+                }
+
+                layerGroups.get(layerName).lines.push({
+                    ...layer,
+                    originalIndex: originalIndex
+                });
+            });
+
+            return Array.from(layerGroups.values());
+        }
+
+        function createVisualLayer(visualLayer, visualLayerIndex) {
+            const layerDiv = document.createElement('div');
+            layerDiv.className = 'layer';
+
+            // Calculate total height: number of lines * OBJECT_HEIGHT
+            const totalHeight = visualLayer.lines.length * OBJECT_HEIGHT;
+            layerDiv.style.height = totalHeight + 'px';
+
+            // Layer label
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'layer-label';
+            labelDiv.style.height = totalHeight + 'px';
+            labelDiv.textContent = visualLayer.name;
+            labelDiv.title = `${visualLayer.name} (${visualLayer.lines.length} line${visualLayer.lines.length > 1 ? 's' : ''})`;
+
+            // Layer objects container
+            const objectsDiv = document.createElement('div');
+            objectsDiv.className = 'layer-objects';
+            objectsDiv.style.width = timelineWidth + 'px';
+            objectsDiv.style.height = totalHeight + 'px';
+
+            // Create objects for each line
+            visualLayer.lines.forEach((line, lineIndex) => {
+                line.objects.forEach((obj, objIndex) => {
+                    const objectDiv = createTimelineObject(obj, objIndex, line.originalIndex, lineIndex);
+                    objectsDiv.appendChild(objectDiv);
+                });
+            });
+
+            layerDiv.appendChild(labelDiv);
+            layerDiv.appendChild(objectsDiv);
+
+            return layerDiv;
+        }
+
+        function createTimelineObject(obj, objIndex, originalLayerIndex, lineIndex) {
+            const objectDiv = document.createElement('div');
+            objectDiv.className = 'timeline-object';
+
+            // Calculate position and dimensions
+            const startPos = (obj.startFrame - minFrame) * FRAME_TO_PX;
+            const duration = obj.endFrame - obj.startFrame;
+            const width = Math.max(MIN_OBJECT_WIDTH, duration * FRAME_TO_PX);
+
+            // Position - all objects in a line go on the same Y position
+            objectDiv.style.left = startPos + 'px';
+            objectDiv.style.top = (lineIndex * OBJECT_HEIGHT) + 'px';
+            objectDiv.style.width = width + 'px';
+
+            // Color
+            const bgColor = obj.bgColorGL || '#999999';
+            objectDiv.style.backgroundColor = bgColor;
+
+            // Text
+            const label = obj.gl || obj.luName || obj.name || `Object ${objIndex + 1}`;
+            objectDiv.textContent = label;
+            objectDiv.title = `${label}\nFrames: ${obj.startFrame}-${obj.endFrame}\nDuration: ${duration} frames`;
+
+            // Data attributes for event handling
+            objectDiv.dataset.originalLayerIndex = originalLayerIndex;
+            objectDiv.dataset.lineIndex = lineIndex;
+            objectDiv.dataset.objectIndex = objIndex;
+            objectDiv.dataset.startFrame = obj.startFrame;
+            objectDiv.dataset.endFrame = obj.endFrame;
+
+            // Click event
+            objectDiv.addEventListener('click', function(e) {
+                handleObjectClick(obj, originalLayerIndex, objIndex, lineIndex, e);
+            });
+
+            return objectDiv;
+        }
+
+        function generateRuler() {
+            const rulerContent = document.getElementById('rulerContent');
+            rulerContent.innerHTML = '';
+
+            // Set ruler width to match timeline content area
+            rulerContent.style.width = (timelineWidth + 150) + 'px';
+
+            // Generate ticks every 100 frames with labels
+            for (let frame = minFrame; frame <= maxFrame; frame += 100) {
+                const tick = document.createElement('div');
+                tick.className = 'ruler-tick';
+
+                const isMajor = frame % 1000 === 0;
+                if (isMajor) {
+                    tick.classList.add('major');
+                }
+
+                // Add label to all ticks (both major and minor)
+                tick.textContent = frame.toLocaleString();
+
+                // Position ticks offset by 150px to align with timeline objects
+                tick.style.left = (150 + (frame - minFrame) * FRAME_TO_PX) + 'px';
+                rulerContent.appendChild(tick);
+            }
+        }
+
+        function setupEventListeners() {
+            const timelineContent = document.getElementById('timelineContent');
+
+            // Update ruler on scroll
+            timelineContent.addEventListener('scroll', updateRulerOnScroll);
+
+            // Sync ruler horizontal scroll with timeline content
+            timelineContent.addEventListener('scroll', syncRulerScroll);
+        }
+
+        function syncRulerScroll() {
+            const timelineContent = document.getElementById('timelineContent');
+            const rulerContent = document.getElementById('rulerContent');
+
+            // Sync ruler position by transforming it instead of scrolling
+            const scrollLeft = timelineContent.scrollLeft;
+            rulerContent.style.transform = `translateX(-${scrollLeft}px)`;
+        }
+
+        // Method to scroll to a specific frame
+        function scrollToFrame(frameNumber) {
+            const timelineContent = document.getElementById('timelineContent');
+
+            // Calculate the pixel position of the frame
+            const framePosition = (frameNumber - minFrame) * FRAME_TO_PX;
+
+            // Get viewport width to center the frame if possible
+            const viewportWidth = timelineContent.clientWidth - 150; // Subtract label width
+            const centerOffset = viewportWidth / 2;
+
+            // Calculate scroll position to center the frame (or show it at left if near start)
+            let scrollPosition = framePosition - centerOffset + 150; // Add label offset
+
+            // Ensure we don't scroll before the beginning
+            scrollPosition = Math.max(0, scrollPosition);
+
+            // Ensure we don't scroll past the end
+            const maxScroll = timelineContent.scrollWidth - timelineContent.clientWidth;
+            scrollPosition = Math.min(scrollPosition, maxScroll);
+
+            // Smooth scroll to the calculated position
+            timelineContent.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+
+            // Update info to show which frame we scrolled to
+            updateTimelineInfo(`Scrolled to frame: ${frameNumber.toLocaleString()}`);
+
+            console.log(`Scrolled to frame ${frameNumber} (position: ${framePosition}px, scroll: ${scrollPosition}px)`);
+        }
+
+        // Helper method to scroll to a frame and highlight objects at that frame
+        function goToFrame(frameNumber) {
+            scrollToFrame(frameNumber);
+
+            // Optional: highlight objects that are active at this frame
+            highlightObjectsAtFrame(frameNumber);
+        }
+
+        function highlightObjectsAtFrame(frameNumber) {
+            // Remove previous highlights
+            document.querySelectorAll('.timeline-object').forEach(obj => {
+                obj.style.outline = '';
+            });
+
+            // Find and highlight objects active at this frame
+            document.querySelectorAll('.timeline-object').forEach(obj => {
+                const startFrame = parseInt(obj.dataset.startFrame);
+                const endFrame = parseInt(obj.dataset.endFrame);
+
+                if (frameNumber >= startFrame && frameNumber <= endFrame) {
+                    obj.style.outline = '2px solid #ff0000';
+                    obj.style.outlineOffset = '1px';
+                }
+            });
+
+            // Remove highlights after 3 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.timeline-object').forEach(obj => {
+                    obj.style.outline = '';
+                });
+            }, 3000);
+        }
+
+        function updateRulerOnScroll() {
+            const timelineContent = document.getElementById('timelineContent');
+            const scrollLeft = timelineContent.scrollLeft;
+            const viewportWidth = timelineContent.clientWidth;
+
+            const startFrame = Math.floor(scrollLeft / FRAME_TO_PX) + minFrame;
+            const endFrame = Math.floor((scrollLeft + viewportWidth) / FRAME_TO_PX) + minFrame;
+
+            updateTimelineInfo(`Viewing frames: ${startFrame.toLocaleString()} - ${endFrame.toLocaleString()}`);
+        }
+
+        function updateTimelineInfo(message = null) {
+            const info = document.getElementById('timelineInfo');
+            if (message) {
+                info.textContent = message;
+            } else {
+                const totalLayers = timelineData ? timelineData.length : 0;
+                const totalObjects = timelineData ? timelineData.reduce((sum, layer) => sum + layer.objects.length, 0) : 0;
+                info.textContent = `Timeline: ${totalLayers} layers, ${totalObjects} objects, frames ${minFrame.toLocaleString()}-${maxFrame.toLocaleString()}`;
+            }
+        }
+
+        function handleObjectClick(obj, originalLayerIndex, objIndex, lineIndex, event) {
+            console.log('Object clicked:', {
+                layer: timelineData[originalLayerIndex].layer,
+                originalLayerIndex,
+                lineIndex,
+                objectIndex: objIndex,
+                object: obj,
+                frameRange: `${obj.startFrame}-${obj.endFrame}`,
+                duration: obj.endFrame - obj.startFrame
+            });
+
+            // Highlight clicked object temporarily
+            const clickedElement = event.target;
+            const originalOpacity = clickedElement.style.opacity;
+            clickedElement.style.opacity = '0.6';
+            setTimeout(() => {
+                clickedElement.style.opacity = originalOpacity;
+            }, 200);
+
+            // Update info
+            updateTimelineInfo(`Clicked: ${obj.gl || 'Object'} (${obj.startFrame}-${obj.endFrame}) - Line ${lineIndex + 1}`);
+
+            // You can add more click handling logic here
+            // For example, navigate to specific frame, show details panel, etc.
+        }
+
+        // Initialize the timeline
+        loadTimelineData();
+    </script>
+</body>
+</html>

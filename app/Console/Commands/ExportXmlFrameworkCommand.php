@@ -425,7 +425,7 @@ class ExportXmlFrameworkCommand extends Command
         $dom = $this->generators->generateFullText($document);
 
         // Generate filename and save
-        $filename = $this->generateFilename('fulltext', $document->idDocument);
+        $filename = $this->generateFilename('fulltext', $document->idDocument, $document->corpusName . '_' . $document->name);
         $this->saveXmlDocument($dom, $filename, 'fulltext');
     }
 
@@ -438,7 +438,7 @@ class ExportXmlFrameworkCommand extends Command
         $dom = $this->generators->generateFrame($frame);
 
         // Generate filename and save
-        $filename = $this->generateFilename('frames', $frame->idFrame);
+        $filename = $this->generateFilename('frames', $frame->idFrame, $frame->name);
         $this->saveXmlDocument($dom, $filename, 'frames');
     }
 
@@ -613,7 +613,7 @@ class ExportXmlFrameworkCommand extends Command
             }
         }
 
-        $filename = "{$this->outputDir}/corpus_{$corpus->idCorpus}.xml";
+        $filename = "{$this->outputDir}/corpus_{$corpus->name}.xml";
         $this->saveXmlFile($sxe, $filename, 'corpus.xsd');
     }
 
@@ -815,7 +815,7 @@ class ExportXmlFrameworkCommand extends Command
     /**
      * Generate filename using configured patterns
      */
-    private function generateFilename(string $type, int $id): string
+    private function generateFilename(string $type, int $id, string $name = ''): string
     {
         $patterns = $this->config['file_naming']['patterns'] ?? [];
 
@@ -844,7 +844,9 @@ class ExportXmlFrameworkCommand extends Command
             '{document_id}',
             '{frame_id}',
             '{lu_id}',
-            '{corpus_id}'
+            '{corpus_id}',
+            '{frame_name}',
+            '{document_name}',
         ], [
             $type,
             $id,
@@ -853,7 +855,9 @@ class ExportXmlFrameworkCommand extends Command
             $id, // fallback for document_id
             $id, // fallback for frame_id
             $id, // fallback for lu_id
-            $id  // fallback for corpus_id
+            $id,  // fallback for corpus_id
+            $name,
+            $name
         ], $pattern);
 
         return $this->outputDir . '/' . $filename;

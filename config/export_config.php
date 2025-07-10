@@ -86,6 +86,11 @@ return [
 //                'rel_requires',
             ],
         ],
+
+        'idCorpus' => [
+            65,82,97,61,56,48,182,
+            92,99,136,154,162
+        ]
     ],
 
     'relation_types' => [
@@ -302,10 +307,10 @@ return [
         'include_language' => true,
         'include_timestamp' => false,
         'patterns' => [
-            'fulltext' => 'fulltext_{document_id}_{language}.xml',
-            'frames' => 'frame_{frame_id}_{language}.xml',
+            'fulltext' => '{document_name}_{language}.xml',
+            'frames' => 'frame_{frame_name}_{language}.xml',
             'lexunit' => 'lu_{lu_id}_{language}.xml',
-            'corpus' => 'corpus_{corpus_id}_{language}.xml',
+            'corpus' => 'corpus_{corpus_name}_{language}.xml',
             'frameIndex' => 'frameIndex_{language}.xml',
             'frRelation' => 'frRelation_{language}.xml',
             'fulltextIndex' => 'fulltextIndex_{language}.xml',
