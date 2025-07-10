@@ -121,4 +121,10 @@ class AppController extends Controller
         return view('App.reports');
     }
 
+    #[Get(path: '/annotation')]
+    public function annotation()
+    {
+        return view('App.annotation');
+    }
+
 }

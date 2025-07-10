@@ -9,11 +9,13 @@
             </div>
         </div>
         <div class="annotation-canvas">
-            <div class="annotation-tools">
-
-            </div>
             <div class="annotation-video">
+                <div class="annotation-player">
                 @include("Annotation.Deixis.Panes.videoPane")
+                </div>
+                <div class="annotation-controls">
+
+                </div>
             </div>
             <div class="annotation-objects">
                 @include("Annotation.Deixis.Panes.gridsPane")

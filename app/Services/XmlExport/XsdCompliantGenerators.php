@@ -38,8 +38,10 @@ class XsdCompliantGenerators
         $root = $dom->documentElement;
 
         // Get corpus information
+        $idCorpus = $this->config['filters']['idCorpus'];
         $corpus = Criteria::table($this->config['database_views']['corpora'] ?? 'view_corpus')
             ->where("idCorpus", $document->idCorpus)
+            ->whereIN("idCorpus", $idCorpus)
             ->where("idLanguage", $this->idLanguage)
             ->first();
 
@@ -223,10 +225,12 @@ class XsdCompliantGenerators
         $dom = XmlUtils::createXmlDocument('fulltextIndex');
         $root = $dom->documentElement;
 
+        $idCorpus = $this->config['filters']['idCorpus'];
         // Get all corpora for the language
         $corpora = Criteria::table($this->config['database_views']['corpora'] ?? 'view_corpus')
             ->where("idLanguage", $this->idLanguage)
-            ->where("active", 1)
+            ->whereIN("idCorpus", $idCorpus)
+//            ->where("active", 1)
             ->orderBy("name")
             ->all();
 
@@ -697,7 +701,6 @@ class XsdCompliantGenerators
                 $elRealization->appendChild($elFE);
                 foreach ($gfptas as $gf => $ptas) {
                     foreach ($ptas as $pt => $idRealization) {
-                        print_r($gf . '   ' . $pt . '    ' . count($realizationAS[$idRealization[0]]) . "\n");
                         $elPattern = $dom->createElement('pattern');
                         $elPattern->setAttribute('total', count($realizationAS[$idRealization[0]]));
                         $elValenceUnit = $dom->createElement('valenceUnit');
@@ -721,38 +724,33 @@ class XsdCompliantGenerators
         $vp = $valences['vp'];
         $patterns = $valences['patterns'];
         $vpfe = $valences['vpfe'];
-        //print_r($vp);
-        foreach ($vp as $idVPFE => $vp1) {
+        foreach ($vp as $idGroupRealization => $vps) {
             $elRealization = $dom->createElement('FEGroupRealization');
-            $elRealization->setAttribute('total', $vpfe[$idVPFE]['count']);
+            $elRealization->setAttribute('total', $vpfe[$idGroupRealization]['count']);
             $elValences->appendChild($elRealization);
-            $i = 0;
-            foreach ($patterns[$idVPFE] as $idVP => $scfegfptas) {
-                foreach ($scfegfptas as $sc => $fegfptas) {
-                    if ($i == 0) {
-                        foreach ($fegfptas as $feIdEntity => $gfptas) {
-                            if ($feIdEntity) {
+            $idFE = [];
+            foreach ($vps as $idVP => $vp) {
+                //$pattern = $patterns[$idGroupRealization][$idVP][40];
+                foreach($patterns[$idGroupRealization][$idVP] as $pattern) {
+                    foreach (array_keys($pattern) as $feIdEntity) {
+                        if ($feIdEntity) {
+                            if (!isset($idFE[$feIdEntity])) {
                                 $elFE = $dom->createElement('FE');
                                 $elFE->setAttribute('name', $fes[$feIdEntity]['name']);
                                 $elRealization->appendChild($elFE);
+                                $idFE[$feIdEntity] = $feIdEntity;
                             }
                         }
-                        ++$i;
                     }
                 }
             }
-
-            foreach ($scfegfptas as $sc => $fegfptas) {
-//                $i = 0;
-                print_r($fegfptas);
-                foreach ($fegfptas as $feIdEntity => $gfptas) {
-
+//            debug($patterns);
+            foreach ($vps as $idVP => $vp) {
+                //$pattern = $patterns[$idGroupRealization][$idVP][40];
+                foreach($patterns[$idGroupRealization][$idVP] as $pattern) {
                     $elPattern = $dom->createElement('pattern');
-                    $elPattern->setAttribute('total', 0);
-                    $elRealization->appendChild($elPattern);
-                    if ($feIdEntity) {
-//                        if ($i == 0) {
-
+                    foreach ($pattern as $feIdEntity => $gfptas) {
+                        if ($feIdEntity) {
                             foreach ($gfptas as $gf => $ptas) {
                                 foreach ($ptas as $pt => $as) {
                                     $elValenceUnit = $dom->createElement('valenceUnit');
@@ -760,19 +758,63 @@ class XsdCompliantGenerators
                                     $elValenceUnit->setAttribute('PT', $pt);
                                     $elValenceUnit->setAttribute('FE', $fes[$feIdEntity]['name']);
                                     $elPattern->appendChild($elValenceUnit);
-//                                        foreach ($as as $a) {
-//                                            $elAS = $dom->createElement('annoSet');
-//                                            $elAS->setAttribute('ID', $a);
-//                                            $elPattern->appendChild($elAS);
-//                                        }
-
                                 }
                             }
-//                            ++$i;
-//                        }
+                        }
                     }
                 }
+                foreach($vp as $as){
+                    $elAS = $dom->createElement('annoSet');
+                    $elAS->setAttribute('ID', $as);
+                    $elPattern->appendChild($elAS);
+                }
+                $elPattern->setAttribute('total', count($vp));
+                $elRealization->appendChild($elPattern);
             }
+
+
+//            $i = 0;
+//            foreach ($patterns[$idVPFE] as $idVP => $scfegfptas) {
+//                foreach ($scfegfptas as $sc => $fegfptas) {
+//                    if ($i == 0) {
+//                        foreach ($fegfptas as $feIdEntity => $gfptas) {
+//                            if ($feIdEntity) {
+//                                $elFE = $dom->createElement('FE');
+//                                $elFE->setAttribute('name', $fes[$feIdEntity]['name']);
+//                                $elRealization->appendChild($elFE);
+//                            }
+//                        }
+//                        ++$i;
+//                    }
+//                }
+//            }
+
+//            foreach ($scfegfptas as $sc => $fegfptas) {
+//                foreach ($fegfptas as $feIdEntity => $gfptas) {
+//
+//                    $elPattern = $dom->createElement('pattern');
+//                    $elPattern->setAttribute('total', 0);
+//                    $elRealization->appendChild($elPattern);
+//                    if ($feIdEntity) {
+//
+//                            foreach ($gfptas as $gf => $ptas) {
+//                                foreach ($ptas as $pt => $as) {
+//                                    $elValenceUnit = $dom->createElement('valenceUnit');
+//                                    $elValenceUnit->setAttribute('GF', $gf);
+//                                    $elValenceUnit->setAttribute('PT', $pt);
+//                                    $elValenceUnit->setAttribute('FE', $fes[$feIdEntity]['name']);
+//                                    $elPattern->appendChild($elValenceUnit);
+////                                        foreach ($as as $a) {
+////                                            $elAS = $dom->createElement('annoSet');
+////                                            $elAS->setAttribute('ID', $a);
+////                                            $elPattern->appendChild($elAS);
+////                                        }
+//
+//                                }
+//                            }
+//                    }
+//                }
+//            }
         }
         AppService::setCurrentLanguage($currentIdLanguage);
 
@@ -837,7 +879,7 @@ class XsdCompliantGenerators
         $elCorpus->setAttribute('ID', $corpus->idCorpus);
         $elCorpus->setAttribute('name', $corpus->name);
         $elCorpus->setAttribute('description', $corpus->description);
-        $dom->appendChild($elCorpus);
+        $root->appendChild($elCorpus);
 
         $documents = Criteria::table($this->config['database_views']['documents'] ?? 'view_document')
             ->where("idLanguage", $this->idLanguage)

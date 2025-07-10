@@ -16,21 +16,32 @@
         height: 100%;
         display:grid;
         grid-template-areas:
-        "tools video objects";
-        grid-template-columns: 280px 800px 1fr;
+        "video objects";
+        grid-template-columns: 880px 1fr;
         grid-template-rows: 1fr;                             // (was var(--toolbar-height))
 
-    }
-
-    .annotation-tools {
-        grid-area: tools;
-        background: @neutral200;
-        height: 100%;
     }
 
     .annotation-video {
         grid-area: video;
         background: @neutral400;
+        height: 100%;
+        padding: @relativeSmall;
+        display:grid;
+        grid-template-areas:
+        "player controls";
+        grid-template-columns: 1fr;
+        grid-template-rows: 560px 1fr;                             // (was var(--toolbar-height))
+    }
+
+    .annotation-player {
+        grid-area: player;
+        background: @neutral200;
+        height: 100%;
+    }
+    .annotation-controls {
+        grid-area: controls;
+        background: @neutral200;
         height: 100%;
     }
 

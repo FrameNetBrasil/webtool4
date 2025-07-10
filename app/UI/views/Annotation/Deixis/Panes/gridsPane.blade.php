@@ -8,7 +8,7 @@
             class="ui tab timeline h-full"
             data-tab="timeline"
         >
-            @include("Annotation.Deixis.Panes.timelinePane")
+{{--            @include("Annotation.Deixis.Panes.timelinePane")--}}
         </div>
         @include("Annotation.Deixis.Panes.objectsPane")
     </div>
