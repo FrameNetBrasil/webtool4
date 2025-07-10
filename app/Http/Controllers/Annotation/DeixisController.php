@@ -16,6 +16,7 @@ use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
 use App\Services\AnnotationDeixisService;
+use App\Services\AnnotationService;
 use App\Services\AppService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -28,21 +29,44 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 class DeixisController extends Controller
 {
     #[Get(path: '/annotation/deixis')]
-    public function browse()
+    public function browse(SearchData $search)
     {
-        $search = session('searchCorpus') ?? SearchData::from();
+        $corpus = AnnotationService::browseCorpusBySearch($search, [], "DeixisAnnotation");
         return view("Annotation.Deixis.browse", [
-            'search' => $search
+            'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/deixis/grid')]
-    public function grid(SearchData $search)
+    #[Post(path: '/annotation/deixis/tree')]
+    public function tree(SearchData $search)
     {
-        return view("Annotation.Deixis.grid", [
-            'search' => $search
-        ]);
+        if (!is_null($search->idCorpus) || ($search->document != '')) {
+            $data = AnnotationService::browseDocumentBySearch($search,[], "DeixisAnnotation", leaf:true);
+        } else {
+            $data = AnnotationService::browseCorpusBySearch($search,[], "DeixisAnnotation");
+        }
+        return view("Annotation.Deixis.browse", [
+            'data' => $data
+        ])->fragment("tree");
     }
+
+
+//    #[Get(path: '/annotation/deixis')]
+//    public function browse()
+//    {
+//        $search = session('searchCorpus') ?? SearchData::from();
+//        return view("Annotation.Deixis.browse", [
+//            'search' => $search
+//        ]);
+//    }
+//
+//    #[Post(path: '/annotation/deixis/grid')]
+//    public function grid(SearchData $search)
+//    {
+//        return view("Annotation.Deixis.grid", [
+//            'search' => $search
+//        ]);
+//    }
 
     private function getData(int $idDocument): DocumentData
     {
@@ -71,6 +95,7 @@ class DeixisController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
     #[Post(path: '/annotation/deixis/formAnnotation')]
     public function formAnnotation(ObjectData $data)
     {
@@ -176,6 +201,7 @@ class DeixisController extends Controller
             'object' => $object
         ]);
     }
+
     #[Post(path: '/annotation/deixis/updateObjectComment')]
     public function updateObjectComment(CommentData $data)
     {
@@ -188,11 +214,12 @@ class DeixisController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
     #[Delete(path: '/annotation/deixis/comment/{idDocument}/{idDynamicObject}')]
-    public function deleteObjectComment(int $idDocument,int $idDynamicObject)
+    public function deleteObjectComment(int $idDocument, int $idDynamicObject)
     {
         try {
-            CommentService::deleteDynamicObjectComment($idDocument,$idDynamicObject);
+            CommentService::deleteDynamicObjectComment($idDocument, $idDynamicObject);
             return $this->renderNotify("success", "Object comment removed.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());

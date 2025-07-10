@@ -58,11 +58,11 @@ class AnnotationService
         return $data;
     }
 
-    public static function browseCorpusBySearch(object $search, array $projects = [], string $projectGroup = '')
+    public static function browseCorpusBySearch(object $search, array $projects = [], string $taskGroupName = '')
     {
         $corpusIcon = view('components.icon.corpus')->render();
         $data = [];
-        $allowed = Project::getAllowedDocsForUser($projects, $projectGroup);
+        $allowed = Project::getAllowedDocsForUser($projects, $taskGroupName);
         $allowedCorpus = array_keys(collect($allowed)->groupBy('idCorpus')->toArray());
         $corpus = Criteria::byFilterLanguage("view_corpus", ["name", "startswith", $search->corpus])
             ->whereIn("idCorpus", $allowedCorpus)
@@ -79,14 +79,14 @@ class AnnotationService
         return $data;
     }
 
-    public static function browseDocumentBySearch(object $search, array $projects = [], string $projectGroup = '')
+    public static function browseDocumentBySearch(object $search, array $projects = [], string $taskGroupName = '', bool $leaf = false)
     {
         $documentIcon = view('components.icon.document')->render();
-        $allowed = Project::getAllowedDocsForUser($projects, $projectGroup);
+        $allowed = Project::getAllowedDocsForUser($projects, $taskGroupName);
         if ($search->document != '') {
             $data = [];
             if (strlen($search->document) > 2) {
-                $allowedCorpus = array_keys(collect($allowed)->groupBy('idCorpus')->toArray());
+                //$allowedCorpus = array_keys(collect($allowed)->groupBy('idCorpus')->toArray());
                 $allowedDocuments = array_keys(
                     collect($allowed)
                         ->groupBy('idDocument')
@@ -101,7 +101,8 @@ class AnnotationService
                             'id' => $document->idDocument,
                             'text' => $documentIcon . $document->corpusName . ' / ' . $document->name,
                             'state' => 'closed',
-                            'type' => 'document'
+                            'type' => 'document',
+                            'leaf' => $leaf
                         ];
                     }
                 }
@@ -117,7 +118,8 @@ class AnnotationService
                 'id' => $item->idDocument,
                 'text' => $documentIcon . $item->name,
                 'state' => 'closed',
-                'type' => 'document'
+                'type' => 'document',
+                'leaf' => $leaf
             ], $documents);
         }
         return $data;

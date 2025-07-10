@@ -29,7 +29,7 @@
                                                     type="search"
                                                     name="corpus"
                                                     placeholder="Search Corpus"
-{{--                                                    x-model="searchQuery"--}}
+                                                    {{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -41,7 +41,7 @@
                                                     type="search"
                                                     name="document"
                                                     placeholder="Search Document"
-{{--                                                    x-model="searchQuery"--}}
+                                                    {{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -53,7 +53,7 @@
                                                     type="search"
                                                     name="idDocumentSentence"
                                                     placeholder="Search #idSentence"
-{{--                                                    x-model="searchQuery"--}}
+                                                    {{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -72,31 +72,13 @@
                                      class="results-container view-cards"
                                 >
 
-{{--                                    <div class="results-header">--}}
-{{--                                        <div class="results-info">--}}
-{{--                                            <div class="results-count" id="resultsCount">{!! count($corpus) !!}--}}
-{{--                                                results--}}
-{{--                                            </div>--}}
-{{--                                            <div class="search-query-display" id="queryDisplay"></div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-
-{{--                                    <!-- Empty State -->--}}
-{{--                                    @if(count($corpus) == 0)--}}
-{{--                                        <div class="empty-state" id="emptyState">--}}
-{{--                                            <i class="search icon empty-icon"></i>--}}
-{{--                                            <h3 class="empty-title">Ready to search</h3>--}}
-{{--                                            <p class="empty-description">--}}
-{{--                                                Enter your search term above to find frames.--}}
-{{--                                            </p>--}}
-{{--                                        </div>--}}
-{{--                                    @endif--}}
-
-                                    @if(count($corpus) > 0)
+                                    @if(count($data) > 0)
                                         <div class="tree-view" x-transition>
                                             <div class="search-results-tree">
-                                                <x-ui::tree title="" url="/annotation/fe/tree"
-                                                            :data="$corpus"></x-ui::tree>
+                                                @fragment("tree")
+                                                    <x-ui::tree :title="$title ?? ''" url="/annotation/fe/tree"
+                                                                :data="$data"></x-ui::tree>
+                                                @endfragment
                                             </div>
                                         </div>
                                     @endif
