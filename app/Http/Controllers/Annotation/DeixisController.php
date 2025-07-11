@@ -355,7 +355,8 @@ class DeixisController extends Controller
             'minObjectWidth' => 16,
             'objectHeight' => 24,
             'labelWidth' => 150,
-            'timelineWidth' => ($maxFrame - $minFrame) * 1
+            'timelineWidth' => ($maxFrame - $minFrame) * 1,
+            'timelineHeight' => (24 * count($timelineData)) + 10
         ];
     }
 

@@ -1,59 +1,86 @@
 <style>
-    /* Container responsiveness - adapts to parent */
+
+    /* Main timeline wrapper - responsive container */
     .timeline-wrapper {
-        width: 100%; /* Takes full width of parent container */
-        max-width: 100%; /* Never exceeds parent */
-        min-width: 300px; /* Minimum usable width */
-        overflow: hidden; /* Clean container boundaries */
+        width: 100%;
+        max-width: 100%;
+        min-width: 400px;
+        overflow: hidden;
     }
 
     .timeline-container {
-        /*width: 100%; !* Fill the wrapper *!*/
+        width: 100%;
         border: 1px solid #ccc;
         background-color: white;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: auto;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
-    /* Fixed timeline internals - no scaling */
+    /* Controls at top */
+    .timeline-controls {
+        flex-shrink: 0;
+        padding: 10px;
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .timeline-controls input {
+        padding: 4px 8px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        width: 80px;
+    }
+
+    .timeline-controls button {
+        padding: 4px 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    .timeline-controls button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Ruler at top - split into label area + ruler content */
     .timeline-ruler {
-        position: sticky;
-        top: 0;
-        z-index: 100;
+        flex-shrink: 0;
         height: 30px;
         background-color: #f8f9fa;
         border-bottom: 1px solid #ddd;
         display: flex;
-        align-items: center;
-        font-size: 12px;
-        color: #666;
-        overflow: hidden; /* Hide ruler scrollbar */
-        width: 100%;
     }
 
-    /* Ruler label area - matches layer labels */
     .ruler-label-area {
-        position: sticky;
-        left: 0;
-        z-index: 11; /* Above layer labels */
         width: 150px;
-        background-color: white;
+        background-color: #e9ecef;
         border-right: 1px solid #ddd;
-        flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: bold;
         font-size: 11px;
-        /*color: #666;*/
+        color: #666;
+        flex-shrink: 0;
+    }
+
+    .ruler-content-area {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
     }
 
     .ruler-content {
         position: relative;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        width: {{ $timeline['config']['timelineWidth'] + $timeline['config']['labelWidth'] }}px; /* Fixed width */
+        height: 30px;
+        width: 22500px; /* Timeline width */
     }
 
     .ruler-tick {
@@ -64,6 +91,7 @@
         padding-left: 2px;
         display: flex;
         align-items: center;
+        top: 5px;
     }
 
     .ruler-tick.major {
@@ -71,96 +99,66 @@
         font-weight: bold;
     }
 
-    /*.timeline-content {*/
-    /*    position: relative;*/
-    /*    overflow-x: auto; !* Horizontal scroll when content exceeds container *!*/
-    /*    overflow-y: auto; !* Vertical scroll for many layers *!*/
-    /*    max-height: 600px;*/
-    /*    width: 100%; !* Responsive container width *!*/
-    /*    display: flex; !* Split into two columns *!*/
-    /*}*/
-
-    .timeline-content {
+    /* Main content area - split into labels + timeline */
+    .timeline-main {
         flex: 1;
-        width: 100%;
-        min-height: 0;
         display: flex;
+        /*overflow: hidden;*/
+        min-height: 0;
     }
 
-    .timeline-inner {
-        position: relative;
-        width: {{ $timeline['config']['timelineWidth'] + $timeline['config']['labelWidth'] }}px; /* Fixed content width */
-        min-width: 100%;
-    }
-
-    .timeline-labels-column {
-        width: 150px; /* Fixed labels column */
-        flex-shrink: 0;
-        overflow-y: auto;
+    /* Labels column - fixed width, scrolls vertically */
+    .labels-column {
+        width: 150px;
         background-color: #e9ecef;
         border-right: 1px solid #ddd;
+        overflow-y: auto;
+        flex-shrink: 0;
+        /* Hide scrollbar cross-browser */
+        scrollbar-width: none;        /* Firefox */
+        -ms-overflow-style: none;     /* IE/Edge */
     }
 
-    .timeline-scrollable-area {
+    .labels-column::-webkit-scrollbar {
+        display: none;                /* Chrome/Safari/WebKit */
+    }
+
+    .label-item {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        font-weight: bold;
+        color: #333;
+        min-height: 24px;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    /* Timeline content area - scrollable */
+    .timeline-content {
         flex: 1;
-        overflow-x: auto; /* Horizontal scroll - ONLY here */
-        overflow-y: auto; /* Vertical scroll */
-        min-height: 0;
+        overflow-x: scroll; /* Horizontal scrollbar appears here */
+        overflow-y: auto; /* Vertical scrollbar appears here */
+        position: relative;
     }
 
     .timeline-inner {
         width: {{ $timeline['config']['timelineWidth'] }}px;
-        min-height: 100%;
         position: relative;
+        /*padding-bottom: 10px; !* Small space for horizontal scrollbar *!*/
     }
 
-    /* Layer label items */
-    .timeline-label-item {
-        width: {{ $timeline['config']['labelWidth'] }}px;
-        background-color: #e9ecef;
-        border-bottom: 1px solid #eee;
-        padding: 8px;
-        font-size: 12px;
-        font-weight: bold;
-        color: #333;
-        display: flex;
-        align-items: center;
-        box-sizing: border-box;
-    }
-
-    .layer {
+    .layer-row {
         position: relative;
         border-bottom: 1px solid #eee;
-        display: flex;
+        min-height: 24px; /* Minimum layer height */
     }
 
-    .layer-label {
-        position: sticky;
-        left: 0;
-        z-index: 10;
-        width: {{ $timeline['config']['labelWidth'] }}px; /* Fixed label width */
-        background-color: #e9ecef;
-        border-right: 1px solid #ddd;
-        padding: 8px;
-        font-size: 12px;
-        font-weight: bold;
-        color: #333;
-        display: flex;
-        align-items: center;
-        box-sizing: border-box;
-        flex-shrink: 0; /* Don't shrink labels */
-    }
-
-    .layer-objects {
-        position: relative;
-        flex: 1;
-        min-height: {{ $timeline['config']['objectHeight'] }}px;
-        width: {{ $timeline['config']['timelineWidth'] }}px; /* Fixed timeline width */
-    }
-
+    /* Timeline objects */
     .timeline-object {
         position: absolute;
-        height: {{ $timeline['config']['objectHeight'] }}px;
+        height: 24px;
         border: 1px solid rgba(0, 0, 0, 0.2);
         border-radius: 2px;
         cursor: pointer;
@@ -174,7 +172,7 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         box-sizing: border-box;
-        min-width: {{ $timeline['config']['minObjectWidth'] }}px;
+        min-width: 16px;
         transition: opacity 0.2s, transform 0.2s;
     }
 
@@ -190,257 +188,100 @@
         outline-offset: 1px;
     }
 
+    /* Info bar at bottom */
     .timeline-info {
-        position: sticky;
-        bottom: 0;
+        flex-shrink: 0;
         background-color: #f8f9fa;
-        border-top: 1px solid #ddd;
+        /*border-top: 1px solid #ddd;*/
         padding: 8px;
         font-size: 12px;
         color: #666;
-        z-index: 100;
-        width: 100%;
-    }
-
-    .timeline-controls {
-        margin-bottom: 10px;
-        padding: 10px;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .timeline-controls input {
-        margin-right: 10px;
-        padding: 4px 8px;
-        border: 1px solid #ccc;
-        border-radius: 2px;
-    }
-
-    .timeline-controls button {
-        padding: 4px 12px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 2px;
-        cursor: pointer;
-        margin-right: 5px;
-    }
-
-    .timeline-controls button:hover {
-        background-color: #0056b3;
-    }
-
-    .object-info {
-        background-color: #e8f4fd;
-        border: 1px solid #bee5eb;
-        border-radius: 4px;
-        padding: 8px;
-        margin-top: 5px;
-    }
-
-    /* Demo: Different container examples */
-    .demo-50 {
-        width: 50%;
-    }
-
-    .demo-75 {
-        width: 75%;
-    }
-
-    .demo-full {
-        width: 100%;
-    }
-
-    .demo-fixed {
-        width: 600px;
-    }
-
-    .demo-container {
-        margin-bottom: 20px;
-        padding: 10px;
-        border: 2px dashed #007bff;
-        background-color: #f8f9fa;
-    }
-
-    .demo-container h3 {
-        margin: 0 0 10px 0;
-        color: #007bff;
-    }
-
-    /* Mobile responsive adjustments for very small screens */
-    @media (max-width: 480px) {
-        .timeline-wrapper {
-            min-width: 250px;
-        }
-
-        .layer-label {
-            font-size: 10px;
-            padding: 4px;
-        }
-
-        .timeline-object {
-            font-size: 9px;
-        }
     }
 </style>
 
 <div class="timeline-wrapper">
-    <!-- Timeline Controls -->
-    <div class="timeline-controls">
-        <form hx-post="/time/scroll-to-frame"
-              hx-target="#timeline-info"
-              hx-swap="innerHTML"
-              hx-trigger="submit">
-            <label>Go to frame:
-                <input type="number" name="frame" placeholder="Enter frame number" value="1000">
-            </label>
-            <button type="submit">Go</button>
-        </form>
-
-        {{--        <form hx-post="/timeline/highlight-frame"--}}
-        {{--              hx-target="#highlight-container"--}}
-        {{--              hx-swap="innerHTML"--}}
-        {{--              hx-trigger="submit">--}}
-        {{--            <label>Highlight frame:--}}
-        {{--                <input type="number" name="frame" placeholder="Enter frame number" value="1500">--}}
-        {{--            </label>--}}
-        {{--            <button type="submit">Highlight</button>--}}
-        {{--        </form>--}}
-    </div>
-
-    <!-- Timeline Component -->
     <div class="timeline-container">
+        <!-- Controls -->
+        <div class="timeline-controls">
+            <label>Go to frame:
+                <input type="number" id="frame-input" value="5000" min="0" max="22000">
+            </label>
+            <button onclick="scrollToFrame()">Go</button>
+            <button onclick="scrollToStart()">Start</button>
+            <button onclick="scrollToEnd()">End</button>
+            <span id="current-frame">Frame: 0</span>
+        </div>
+
         <!-- Ruler -->
         <div class="timeline-ruler">
             <div class="ruler-label-area">
-                Layers
+                Frames
             </div>
-            <div class="ruler-content" id="ruler-content">
-                @for ($frame = $timeline['config']['minFrame']; $frame <= $timeline['config']['maxFrame']; $frame += 100)
-                    @php
-                        $isMajor = $frame % 1000 === 0;
-                        //$left = $timeline['config']['labelWidth'] + ($frame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];
-                    $left = ($frame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];
-                    @endphp
-                    <div class="ruler-tick {{ $isMajor ? 'major' : '' }}"
-                         style="left: {{ $left }}px;">
-                        {{ number_format($frame) }}
-                    </div>
-                @endfor
+            <div class="ruler-content-area">
+                <div class="ruler-content" id="ruler-content">
+                    <!-- Ruler ticks will be generated by JavaScript -->
+                </div>
             </div>
         </div>
 
-        <!-- Timeline Content - Split layout -->
-        <div class="timeline-scrollable">
-            <!-- Labels Column -->
-            <div class="timeline-labels-column" id="timeline-labels">
+        <!-- Main content area -->
+        <div class="timeline-main">
+            <!-- Labels column -->
+            <div class="labels-column" id="labels-column">
                 @foreach ($groupedLayers as $visualLayer)
                     @php $layerHeight = count($visualLayer['lines']) * $timeline['config']['objectHeight']; @endphp
-                    <div class="timeline-label-item" style="height: {{ $layerHeight }}px;">
+                    <div class="label-item" style="height: {{ $layerHeight }}px;">
                         {{ $visualLayer['name'] }}
                     </div>
                 @endforeach
             </div>
-
-            <!-- Scrollable Timeline Area - Gets the scrollbar -->
-            <div class="timeline-scrollable-area" id="timeline-scrollable">
-                <div class="timeline-inner">
-                    @foreach ($groupedLayers as $visualLayer)
-                        <div class="layer-objects-only"
-                             style="height: {{ count($visualLayer['lines']) * $timeline['config']['objectHeight'] }}px;">
-                            @foreach ($visualLayer['lines'] as $lineIndex => $line)
-                                @foreach ($line['objects'] as $objIndex => $object)
-                                    @php
-                                        $startPos = ($object->startFrame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];
-                                        $duration = $object->endFrame - $object->startFrame;
-                                        $width = max($timeline['config']['minObjectWidth'], $duration * $timeline['config']['frameToPixel']);
-                                        $bgColor = $object->bgColorGL ?? '#999999';
-                                        $label = $object->gl ?? $object->luName ?? $object->name ?? "Object " . ($objIndex + 1);
-                                        $top = $lineIndex * $timeline['config']['objectHeight'];
-                                        $tooltip = $label . "\nFrames: " . $object->startFrame . "-" . $object->endFrame . "\nDuration: " . $duration . " frames";
-                                    @endphp
-                                    <div class="timeline-object"
-                                         style="left: {{ $startPos }}px; top: {{ $top }}px; width: {{ $width }}px; background-color: {{ $bgColor }};"
-                                         title="{{ $tooltip }}"
-                                         data-layer-index="{{ $line['originalIndex'] }}"
-                                         data-object-index="{{ $objIndex }}"
-                                         data-line-index="{{ $lineIndex }}"
-                                         data-start-frame="{{ $object->startFrame }}"
-                                         data-end-frame="{{ $object->endFrame }}"
-                                         hx-post="/timeline/object-click"
-                                         hx-vals='{"layerIndex": "{{ $line['originalIndex'] }}", "objectIndex": "{{ $objIndex }}", "lineIndex": "{{ $lineIndex }}"}'
-                                         hx-target="#object-click-info"
-                                         hx-swap="innerHTML">
-                                        {{ $label }}
-                                    </div>
+            <!-- Timeline content -->
+            <div class="timeline-content" id="timeline-content" style="">
+                <div class="timeline-inner" style="width: {{ $timeline['config']['timelineWidth'] }}px;">
+                    @foreach ($groupedLayers as $visualLayerIndex => $visualLayer)
+                        @php
+                            $layerHeight = count($visualLayer['lines']) * $timeline['config']['objectHeight'];
+                        @endphp
+                        <div class="layer-row" style="height: {{ $layerHeight }}px;">
+                            <!-- Layer Objects -->
+                            <div class="layer-objects" style="height: {{ $layerHeight }}px;">
+                                @foreach ($visualLayer['lines'] as $lineIndex => $line)
+                                    @foreach ($line['objects'] as $objIndex => $object)
+                                        @php
+                                            $startPos = ($object->startFrame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];
+                                            $duration = $object->endFrame - $object->startFrame;
+                                            $width = max($timeline['config']['minObjectWidth'], $duration * $timeline['config']['frameToPixel']);
+                                            $bgColor = $object->bgColorGL ?? '#999999';
+                                            $label = $object->gl ?? $object->luName ?? $object->name ?? "Object " . ($objIndex + 1);
+                                            $top = $lineIndex * $timeline['config']['objectHeight'];
+                                            $tooltip = $label . "\nFrames: " . $object->startFrame . "-" . $object->endFrame . "\nDuration: " . $duration . " frames";
+                                        @endphp
+                                        <div class="timeline-object"
+                                             style="left: {{ $startPos }}px; top: {{ $top }}px; width: {{ $width }}px; background-color: {{ $bgColor }};"
+                                             title="{{ $tooltip }}"
+                                             data-layer-index="{{ $line['originalIndex'] }}"
+                                             data-object-index="{{ $objIndex }}"
+                                             data-line-index="{{ $lineIndex }}"
+                                             data-start-frame="{{ $object->startFrame }}"
+                                             data-end-frame="{{ $object->endFrame }}"
+                                             hx-post="/timeline/object-click"
+                                             hx-vals='{"layerIndex": "{{ $line['originalIndex'] }}", "objectIndex": "{{ $objIndex }}", "lineIndex": "{{ $lineIndex }}"}'
+                                             hx-target="#object-click-info"
+                                             hx-swap="innerHTML">
+                                            {{ $label }}
+                                        </div>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
+                            </div>
                         </div>
                     @endforeach
                 </div>
             </div>
         </div>
 
-        <!-- Timeline Content -->
-        {{--        <div class="timeline-content" id="timeline-content">--}}
-        {{--            <div class="timeline-inner">--}}
-        {{--                @foreach ($groupedLayers as $visualLayerIndex => $visualLayer)--}}
-        {{--                    @php--}}
-        {{--                        $layerHeight = count($visualLayer['lines']) * $timeline['config']['objectHeight'];--}}
-        {{--                    @endphp--}}
-        {{--                    <div class="layer" style="height: {{ $layerHeight }}px;">--}}
-        {{--                        <!-- Layer Label -->--}}
-        {{--                        <div class="layer-label"--}}
-        {{--                             style="height: {{ $layerHeight }}px;"--}}
-        {{--                             title="{{ $visualLayer['name'] }} ({{ count($visualLayer['lines']) }} line{{ count($visualLayer['lines']) > 1 ? 's' : '' }})">--}}
-        {{--                            {{ $visualLayer['name'] }}--}}
-        {{--                        </div>--}}
-
-        {{--                        <!-- Layer Objects -->--}}
-        {{--                        <div class="layer-objects" style="height: {{ $layerHeight }}px;">--}}
-        {{--                            @foreach ($visualLayer['lines'] as $lineIndex => $line)--}}
-        {{--                                @foreach ($line['objects'] as $objIndex => $object)--}}
-        {{--                                    @php--}}
-        {{--                                        $startPos = ($object->startFrame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];--}}
-        {{--                                        $duration = $object->endFrame - $object->startFrame;--}}
-        {{--                                        $width = max($timeline['config']['minObjectWidth'], $duration * $timeline['config']['frameToPixel']);--}}
-        {{--                                        $bgColor = $object->bgColorGL ?? '#999999';--}}
-        {{--                                        $label = $object->gl ?? $object->luName ?? $object->name ?? "Object " . ($objIndex + 1);--}}
-        {{--                                        $top = $lineIndex * $timeline['config']['objectHeight'];--}}
-        {{--                                        $tooltip = $label . "\nFrames: " . $object->startFrame . "-" . $object->endFrame . "\nDuration: " . $duration . " frames";--}}
-        {{--                                    @endphp--}}
-        {{--                                    <div class="timeline-object"--}}
-        {{--                                         style="left: {{ $startPos }}px; top: {{ $top }}px; width: {{ $width }}px; background-color: {{ $bgColor }};"--}}
-        {{--                                         title="{{ $tooltip }}"--}}
-        {{--                                         data-layer-index="{{ $line['originalIndex'] }}"--}}
-        {{--                                         data-object-index="{{ $objIndex }}"--}}
-        {{--                                         data-line-index="{{ $lineIndex }}"--}}
-        {{--                                         data-start-frame="{{ $object->startFrame }}"--}}
-        {{--                                         data-end-frame="{{ $object->endFrame }}"--}}
-        {{--                                         hx-post="/timeline/object-click"--}}
-        {{--                                         hx-vals='{"layerIndex": "{{ $line['originalIndex'] }}", "objectIndex": "{{ $objIndex }}", "lineIndex": "{{ $lineIndex }}"}'--}}
-        {{--                                         hx-target="#object-click-info"--}}
-        {{--                                         hx-swap="innerHTML">--}}
-        {{--                                        {{ $label }}--}}
-        {{--                                    </div>--}}
-        {{--                                @endforeach--}}
-        {{--                            @endforeach--}}
-        {{--                        </div>--}}
-        {{--                    </div>--}}
-        {{--                @endforeach--}}
-        {{--            </div>--}}
-        {{--        </div>--}}
-
-        <!-- Timeline Info -->
+        <!-- Info bar -->
         <div class="timeline-info" id="timeline-info">
-            Timeline: {{ count($timeline['data']) }} layers,
-            {{ array_sum(array_map(function($layer) { return count($layer['objects']); }, $timeline['data'])) }}
-            objects,
-            frames {{ number_format($timeline['config']['minFrame']) }}
-            -{{ number_format($timeline['config']['maxFrame']) }}
+            Timeline ready - scroll to navigate
         </div>
     </div>
 </div>
@@ -451,74 +292,408 @@
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get elements by their exact IDs
-        const timelineScrollable = document.getElementById("timeline-scrollable");
-        const timelineLabels = document.getElementById("timeline-labels");
-        const rulerContent = document.getElementById("ruler-content");
-        const timelineInfo = document.getElementById("timeline-info");
+    // Configuration
+    const config = {
+        minFrame: {{$timeline['config']['minFrame']}},
+        maxFrame: {{$timeline['config']['maxFrame']}},
+        frameToPixel: {{$timeline['config']['maxFrame']}},
+        labelWidth: {{$timeline['config']['maxFrame']}}
+    };
 
-        // 1. Timeline scroll → affects ruler + labels
-        timelineScrollable.addEventListener("scroll", function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Timeline config:', config); // Debug config
+        generateRuler();
+        setupScrollSync();
+
+        const timelineContent = document.getElementById('timeline-content');
+        const timelineInfo = document.getElementById('timeline-info');
+        const rulerContent = document.getElementById('ruler-content');
+        const labelsColumn = document.getElementById('labels-column');
+
+        if (timelineContent && timelineInfo) {
+            timelineContent.addEventListener('scroll', function() {
+                const scrollLeft = this.scrollLeft;
+                const scrollTop = this.scrollTop;
+                const viewportWidth = this.clientWidth;
+
+                // Frame calculation (1px = 1 frame, starting from 0)
+                const frameStart = Math.floor(scrollLeft);
+                const frameEnd = Math.floor(scrollLeft + viewportWidth);
+
+                // Update frame info
+                timelineInfo.textContent = `Viewing frames: ${frameStart.toLocaleString()} - ${frameEnd.toLocaleString()}`;
+
+                // Sync ruler
+                if (rulerContent) {
+                    rulerContent.style.transform = `translateX(-${scrollLeft}px)`;
+                }
+
+                // Sync labels
+                if (labelsColumn) {
+                    labelsColumn.scrollTop = scrollTop;
+                }
+            });
+
+            // Labels scroll back to timeline
+            if (labelsColumn) {
+                labelsColumn.addEventListener('scroll', function() {
+                    timelineContent.scrollTop = this.scrollTop;
+                });
+            }
+        }
+    });
+    // Generate ruler ticks
+    function generateRuler() {
+        const rulerContent = document.getElementById('ruler-content');
+        rulerContent.innerHTML = '';
+
+        // Major ticks every 1000 frames
+        // for (let frame = config.minFrame; frame <= config.maxFrame; frame += 1000) {
+        //     const tick = document.createElement('div');
+        //     tick.className = 'ruler-tick major';
+        //     tick.style.left = frame + 'px';
+        //     tick.textContent = frame.toLocaleString();
+        //     rulerContent.appendChild(tick);
+        // }
+        //
+        // Minor ticks every 100 frames
+        for (let frame = 100; frame <= config.maxFrame; frame += 100) {
+            const tick = document.createElement('div');
+            if (frame % 1000 === 0) {
+                tick.className = 'ruler-tick major';
+            } else {
+                tick.className = 'ruler-tick';
+            }
+            tick.style.left = frame + 'px';
+            tick.textContent = frame.toLocaleString();
+            rulerContent.appendChild(tick);
+        }
+    }
+
+    // Setup scroll synchronization
+    function setupScrollSync() {
+        const timelineContent = document.getElementById('timeline-content');
+        const labelsColumn = document.getElementById('labels-column');
+        const rulerContent = document.getElementById('ruler-content');
+        const timelineInfo = document.getElementById('timeline-info');
+        const currentFrame = document.getElementById('current-frame');
+
+        console.log('Setting up scroll sync with elements:', {
+            timelineContent: !!timelineContent,
+            labelsColumn: !!labelsColumn,
+            rulerContent: !!rulerContent,
+            timelineInfo: !!timelineInfo,
+            currentFrame: !!currentFrame
+        });
+
+        if (!timelineContent || !timelineInfo) {
+            console.error('Critical elements not found for scroll sync!');
+            return;
+        }
+
+        // Function to update frame info
+        function updateFrameInfo(scrollLeft, viewportWidth) {
+            const frameStart = Math.floor(scrollLeft / config.frameToPixel) + config.minFrame;
+            const frameEnd = Math.floor((scrollLeft + viewportWidth) / config.frameToPixel) + config.minFrame;
+
+            console.log('Updating frame info:', {
+                scrollLeft,
+                viewportWidth,
+                frameStart,
+                frameEnd
+            });
+
+            if (timelineInfo) {
+                timelineInfo.textContent = `Viewing frames: ${frameStart.toLocaleString()} - ${frameEnd.toLocaleString()}`;
+            }
+
+            if (currentFrame) {
+                currentFrame.textContent = `Frame: ${frameStart.toLocaleString()}`;
+            }
+        }
+
+        // Main timeline scroll event
+        timelineContent.addEventListener('scroll', function(event) {
+            console.log('Scroll event fired!', { scrollLeft: this.scrollLeft, scrollTop: this.scrollTop });
+
             const scrollLeft = this.scrollLeft;
             const scrollTop = this.scrollTop;
+            const viewportWidth = this.clientWidth;
 
             // Sync ruler horizontally
-            rulerContent.style.transform = `translateX(-${scrollLeft}px)`;
+            if (rulerContent) {
+                rulerContent.style.transform = `translateX(-${scrollLeft}px)`;
+            }
 
             // Sync labels vertically
-            timelineLabels.scrollTop = scrollTop;
+            if (labelsColumn) {
+                labelsColumn.scrollTop = scrollTop;
+            }
 
             // Update frame info
-            const frameStart = Math.floor(scrollLeft / {{ $timeline['config']['frameToPixel'] }}) + {{ $timeline['config']['minFrame'] }};
-            const frameEnd = Math.floor((scrollLeft + this.clientWidth) / {{ $timeline['config']['frameToPixel'] }}) + {{ $timeline['config']['minFrame'] }};
+            updateFrameInfo(scrollLeft, viewportWidth);
+        });
+
+        // Labels scroll back to timeline
+        if (labelsColumn) {
+            labelsColumn.addEventListener('scroll', function() {
+                timelineContent.scrollTop = this.scrollTop;
+            });
+        }
+
+        // Initial update
+        const initialScrollLeft = timelineContent.scrollLeft;
+        const initialViewportWidth = timelineContent.clientWidth;
+        updateFrameInfo(initialScrollLeft, initialViewportWidth);
+
+        console.log('Scroll sync setup complete');
+    }
+
+    // Navigation functions
+    function scrollToFrame() {
+        const frameNumber = parseInt(document.getElementById('frame-input').value) || 0;
+        const timelineContent = document.getElementById('timeline-content');
+
+        const framePosition = (frameNumber - config.minFrame) * config.frameToPixel;
+        const viewportWidth = timelineContent.clientWidth;
+        const centerOffset = viewportWidth / 2;
+
+        let scrollPosition = framePosition - centerOffset;
+        scrollPosition = Math.max(0, scrollPosition);
+
+        const maxScroll = timelineContent.scrollWidth - timelineContent.clientWidth;
+        scrollPosition = Math.min(scrollPosition, maxScroll);
+
+        timelineContent.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    function scrollToStart() {
+        document.getElementById('timeline-content').scrollTo({
+            left: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    function scrollToEnd() {
+        const timelineContent = document.getElementById('timeline-content');
+        timelineContent.scrollTo({
+            left: timelineContent.scrollWidth - timelineContent.clientWidth,
+            behavior: 'smooth'
+        });
+    }
+
+    // Object click handler
+    function objectClick(element) {
+        const rect = element.getBoundingClientRect();
+        const timelineContent = document.getElementById('timeline-content');
+        const timelineRect = timelineContent.getBoundingClientRect();
+
+        const relativeLeft = rect.left - timelineRect.left + timelineContent.scrollLeft;
+        const startFrame = Math.round(relativeLeft / config.frameToPixel) + config.minFrame;
+        const width = rect.width;
+        const duration = Math.round(width / config.frameToPixel);
+        const endFrame = startFrame + duration;
+
+        console.log('Object clicked:', {
+            element: element.textContent,
+            startFrame: startFrame,
+            endFrame: endFrame,
+            duration: duration
+        });
+
+        document.getElementById('timeline-info').textContent =
+            `Clicked: ${element.textContent} (${startFrame}-${endFrame})`;
+    }
+
+    // Global functions for external access
+    window.timelineScrollToFrame = scrollToFrame;
+    window.timelineGoToStart = scrollToStart;
+    window.timelineGoToEnd = scrollToEnd;
+
+    // Debug function to test scroll events
+    window.testTimelineScroll = function() {
+        const timelineContent = document.getElementById('timeline-content');
+        const timelineInfo = document.getElementById('timeline-info');
+
+        console.log('=== TIMELINE SCROLL TEST ===');
+        console.log('Timeline element:', timelineContent);
+        console.log('Info element:', timelineInfo);
+        console.log('Current scroll left:', timelineContent.scrollLeft);
+        console.log('Client width:', timelineContent.clientWidth);
+
+        // Test scroll
+        console.log('Setting scroll to 1000...');
+        timelineContent.scrollLeft = 1000;
+
+        // Check if scroll event fired
+        setTimeout(() => {
+            console.log('After scroll - scroll left:', timelineContent.scrollLeft);
+            console.log('Info text:', timelineInfo.textContent);
+        }, 100);
+
+        return 'Test complete - check console for results';
+    };
+
+    // Manual fix function
+    window.fixFrameInfo = function() {
+        const timelineContent = document.getElementById('timeline-content');
+        const timelineInfo = document.getElementById('timeline-info');
+
+        timelineContent.addEventListener('scroll', function() {
+            const scrollLeft = this.scrollLeft;
+            const viewportWidth = this.clientWidth;
+
+            // Simple calculation: 1px = 1 frame, starting from frame 0
+            const frameStart = Math.floor(scrollLeft);
+            const frameEnd = Math.floor(scrollLeft + viewportWidth);
+
+            console.log('Manual calculation:', { scrollLeft, frameStart, frameEnd });
+
             timelineInfo.textContent = `Viewing frames: ${frameStart.toLocaleString()} - ${frameEnd.toLocaleString()}`;
         });
 
-        // 2. Labels scroll → affects timeline
-        timelineLabels.addEventListener("scroll", function() {
-            timelineScrollable.scrollTop = this.scrollTop;
-        });
-    });
+        // Trigger initial update
+        const scrollLeft = timelineContent.scrollLeft;
+        const viewportWidth = timelineContent.clientWidth;
+        const frameStart = Math.floor(scrollLeft);
+        const frameEnd = Math.floor(scrollLeft + viewportWidth);
+        timelineInfo.textContent = `Viewing frames: ${frameStart.toLocaleString()} - ${frameEnd.toLocaleString()}`;
 
-    {{--// Sync ruler scroll with timeline content--}}
-    {{--document.getElementById("timeline-content").addEventListener("scroll", function() {--}}
-    {{--    const scrollLeft = this.scrollLeft;--}}
-    {{--    document.getElementById("ruler-content").style.transform = `translateX(-${scrollLeft}px)`;--}}
+        return 'Manual fix applied';
+    };
 
-    {{--    // Update frame range info--}}
-    {{--    const viewportWidth = this.clientWidth;--}}
-    {{--    const startFrame = Math.floor(scrollLeft / {{ $timeline['config']['frameToPixel'] }}) + {{ $timeline['config']['minFrame'] }};--}}
-    {{--    const endFrame = Math.floor((scrollLeft + viewportWidth) / {{ $timeline['config']['frameToPixel'] }}) + {{ $timeline['config']['minFrame'] }};--}}
 
-    {{--    document.getElementById("timeline-info").textContent = `Viewing frames: ${startFrame.toLocaleString()} - ${endFrame.toLocaleString()}`;--}}
-    {{--});--}}
-
-    {{--// Handle scroll to frame response--}}
-    {{--document.body.addEventListener("htmx:afterRequest", function(event) {--}}
-    {{--    if (event.detail.xhr.responseURL.includes("scroll-to-frame")) {--}}
-    {{--        const response = JSON.parse(event.detail.xhr.responseText);--}}
-    {{--        if (response.scrollPosition !== undefined) {--}}
-    {{--            document.getElementById("timeline-content").scrollTo({--}}
-    {{--                left: response.scrollPosition,--}}
-    {{--                behavior: "smooth"--}}
-    {{--            });--}}
-    {{--        }--}}
-    {{--    }--}}
-    {{--});--}}
-
-    {{--// Global functions for external access--}}
-    {{--window.timelineScrollToFrame = function(frameNumber) {--}}
-    {{--    htmx.ajax("POST", "/timeline/scroll-to-frame", {--}}
-    {{--        values: { frame: frameNumber },--}}
-    {{--        target: "#timeline-info"--}}
-    {{--    });--}}
-    {{--};--}}
-
-    {{--window.timelineHighlightFrame = function(frameNumber) {--}}
-    {{--    htmx.ajax("POST", "/timeline/highlight-frame", {--}}
-    {{--        values: { frame: frameNumber },--}}
-    {{--        target: "#highlight-container"--}}
-    {{--    });--}}
-    {{--};--}}
+    // // Initialize timeline
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     generateRuler();
+    //     setupScrollSync();
+    // });
+    //
+    // // Generate ruler ticks
+    // function generateRuler() {
+    //     const rulerContent = document.getElementById("ruler-content");
+    //     rulerContent.innerHTML = "";
+    //
+    //     // Major ticks every 1000 frames
+    //     // for (let frame = config.minFrame; frame <= config.maxFrame; frame += 1000) {
+    //     //     const tick = document.createElement("div");
+    //     //     tick.className = "ruler-tick major";
+    //     //     tick.style.left = frame + "px";
+    //     //     tick.textContent = frame.toLocaleString();
+    //     //     rulerContent.appendChild(tick);
+    //     // }
+    //
+    //     // Minor ticks every 500 frames
+    //     for (let frame = 100; frame <= config.maxFrame; frame += 100) {
+    //         const tick = document.createElement("div");
+    //         if (frame % 1000 === 0) {
+    //             tick.className = "ruler-tick major";
+    //         } else {
+    //             tick.className = "ruler-tick";
+    //         }
+    //         tick.style.left = frame + "px";
+    //         tick.textContent = frame.toLocaleString();
+    //         rulerContent.appendChild(tick);
+    //     }
+    // }
+    //
+    // // Setup scroll synchronization
+    // function setupScrollSync() {
+    //     const timelineContent = document.getElementById("timeline-content");
+    //     const labelsColumn = document.getElementById("labels-column");
+    //     const rulerContent = document.getElementById("ruler-content");
+    //     const timelineInfo = document.getElementById("timeline-info");
+    //     const currentFrame = document.getElementById("current-frame");
+    //
+    //     // Main timeline scroll
+    //     timelineContent.addEventListener("scroll", function() {
+    //         const scrollLeft = this.scrollLeft;
+    //         const scrollTop = this.scrollTop;
+    //
+    //         // Sync ruler horizontally
+    //         rulerContent.style.transform = `translateX(-${scrollLeft}px)`;
+    //
+    //         // Sync labels vertically
+    //         labelsColumn.scrollTop = scrollTop;
+    //
+    //         // Update frame info
+    //         const frameStart = Math.floor(scrollLeft / config.frameToPixel) + config.minFrame;
+    //         const frameEnd = Math.floor((scrollLeft + this.clientWidth) / config.frameToPixel) + config.minFrame;
+    //
+    //         timelineInfo.textContent = `Viewing frames: ${frameStart.toLocaleString()} - ${frameEnd.toLocaleString()}`;
+    //         currentFrame.textContent = `Frame: ${frameStart.toLocaleString()}`;
+    //     });
+    //
+    //     // Labels scroll back to timeline
+    //     labelsColumn.addEventListener("scroll", function() {
+    //         timelineContent.scrollTop = this.scrollTop;
+    //     });
+    // }
+    //
+    // // Navigation functions
+    // function scrollToFrame() {
+    //     const frameNumber = parseInt(document.getElementById("frame-input").value) || 0;
+    //     const timelineContent = document.getElementById("timeline-content");
+    //
+    //     const framePosition = (frameNumber - config.minFrame) * config.frameToPixel;
+    //     const viewportWidth = timelineContent.clientWidth;
+    //     const centerOffset = viewportWidth / 2;
+    //
+    //     let scrollPosition = framePosition - centerOffset;
+    //     scrollPosition = Math.max(0, scrollPosition);
+    //
+    //     const maxScroll = timelineContent.scrollWidth - timelineContent.clientWidth;
+    //     scrollPosition = Math.min(scrollPosition, maxScroll);
+    //
+    //     timelineContent.scrollTo({
+    //         left: scrollPosition,
+    //         behavior: "smooth"
+    //     });
+    // }
+    //
+    // function scrollToStart() {
+    //     document.getElementById("timeline-content").scrollTo({
+    //         left: 0,
+    //         behavior: "smooth"
+    //     });
+    // }
+    //
+    // function scrollToEnd() {
+    //     const timelineContent = document.getElementById("timeline-content");
+    //     timelineContent.scrollTo({
+    //         left: timelineContent.scrollWidth - timelineContent.clientWidth,
+    //         behavior: "smooth"
+    //     });
+    // }
+    //
+    // // Object click handler
+    // function objectClick(element) {
+    //     const rect = element.getBoundingClientRect();
+    //     const timelineContent = document.getElementById("timeline-content");
+    //     const timelineRect = timelineContent.getBoundingClientRect();
+    //
+    //     const relativeLeft = rect.left - timelineRect.left + timelineContent.scrollLeft;
+    //     const startFrame = Math.round(relativeLeft / config.frameToPixel) + config.minFrame;
+    //     const width = rect.width;
+    //     const duration = Math.round(width / config.frameToPixel);
+    //     const endFrame = startFrame + duration;
+    //
+    //     console.log("Object clicked:", {
+    //         element: element.textContent,
+    //         startFrame: startFrame,
+    //         endFrame: endFrame,
+    //         duration: duration
+    //     });
+    //
+    //     document.getElementById("timeline-info").textContent =
+    //         `Clicked: ${element.textContent} (${startFrame}-${endFrame})`;
+    // }
+    //
+    // // Global functions for external access
+    // window.timelineScrollToFrame = scrollToFrame;
+    // window.timelineGoToStart = scrollToStart;
+    // window.timelineGoToEnd = scrollToEnd;
 </script>

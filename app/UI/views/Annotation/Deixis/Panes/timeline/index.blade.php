@@ -277,44 +277,266 @@
 <div id="object-click-info"></div>
 
 <script>
-    // Sync ruler scroll with timeline content
-    document.getElementById('timeline-content').addEventListener('scroll', function() {
-        const scrollLeft = this.scrollLeft;
-        document.getElementById('ruler-content').style.transform = `translateX(-${scrollLeft}px)`;
+    // Initialize timeline
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Timeline config:', config); // Debug config
+        generateRuler();
+        setupScrollSync();
 
-        // Update frame range info
-        const viewportWidth = this.clientWidth;
-        const startFrame = Math.floor(scrollLeft / {{ $config['frameToPixel'] }}) + {{ $config['minFrame'] }};
-        const endFrame = Math.floor((scrollLeft + viewportWidth) / {{ $config['frameToPixel'] }}) + {{ $config['minFrame'] }};
+        // Force initial update after a short delay to ensure elements are ready
+        setTimeout(function() {
+            const timelineContent = document.getElementById('timeline-content');
+            const timelineInfo = document.getElementById('timeline-info');
+            const currentFrame = document.getElementById('current-frame');
 
-        document.getElementById('timeline-info').textContent = `Viewing frames: ${startFrame.toLocaleString()} - ${endFrame.toLocaleString()}`;
-    });
+            if (timelineContent && timelineInfo && currentFrame) {
+                const scrollLeft = timelineContent.scrollLeft;
+                const viewportWidth = timelineContent.clientWidth;
+                const frameStart = Math.floor(scrollLeft / config.frameToPixel) + config.minFrame;
+                const frameEnd = Math.floor((scrollLeft + viewportWidth) / config.frameToPixel) + config.minFrame;
 
-    // Handle scroll to frame response
-    document.body.addEventListener('htmx:afterRequest', function(event) {
-        if (event.detail.xhr.responseURL.includes('scroll-to-frame')) {
-            const response = JSON.parse(event.detail.xhr.responseText);
-            if (response.scrollPosition !== undefined) {
-                document.getElementById('timeline-content').scrollTo({
-                    left: response.scrollPosition,
-                    behavior: 'smooth'
+                timelineInfo.textContent = `Viewing frames: ${frameStart.toLocaleString()} - ${frameEnd.toLocaleString()}`;
+                currentFrame.textContent = `Frame: ${frameStart.toLocaleString()}`;
+
+                console.log('Initial frame update:', { frameStart, frameEnd });
+            } else {
+                console.log('Timeline elements not found:', {
+                    timelineContent: !!timelineContent,
+                    timelineInfo: !!timelineInfo,
+                    currentFrame: !!currentFrame
                 });
             }
-        }
+        }, 100);
     });
 
-    // Global functions for external access
-    window.timelineScrollToFrame = function(frameNumber) {
-        htmx.ajax('POST', '/timeline/scroll-to-frame', {
-            values: { frame: frameNumber },
-            target: '#timeline-info'
-        });
-    };
+    // Generate ruler ticks
+    function generateRuler() {
+        const rulerContent = document.getElementById('ruler-content');
+        rulerContent.innerHTML = '';
 
-    window.timelineHighlightFrame = function(frameNumber) {
-        htmx.ajax('POST', '/timeline/highlight-frame', {
-            values: { frame: frameNumber },
-            target: '#highlight-container'
+        // Major ticks every 1000 frames
+        for (let frame = config.minFrame; frame <= config.maxFrame; frame += 1000) {
+            const tick = document.createElement('div');
+            tick.className = 'ruler-tick major';
+            tick.style.left = frame + 'px';
+            tick.textContent = frame.toLocaleString();
+            rulerContent.appendChild(tick);
+        }
+
+        // Minor ticks every 500 frames
+        for (let frame = 500; frame <= config.maxFrame; frame += 1000) {
+            const tick = document.createElement('div');
+            tick.className = 'ruler-tick';
+            tick.style.left = frame + 'px';
+            tick.textContent = frame.toLocaleString();
+            rulerContent.appendChild(tick);
+        }
+    }
+
+    // Setup scroll synchronization
+    function setupScrollSync() {
+        const timelineContent = document.getElementById('timeline-content');
+        const labelsColumn = document.getElementById('labels-column');
+        const rulerContent = document.getElementById('ruler-content');
+        const timelineInfo = document.getElementById('timeline-info');
+        const currentFrame = document.getElementById('current-frame');
+
+        console.log('Setting up scroll sync with elements:', {
+            timelineContent: !!timelineContent,
+            labelsColumn: !!labelsColumn,
+            rulerContent: !!rulerContent,
+            timelineInfo: !!timelineInfo,
+            currentFrame: !!currentFrame
         });
+
+        if (!timelineContent || !timelineInfo) {
+            console.error('Critical elements not found for scroll sync!');
+            return;
+        }
+
+        // Function to update frame info
+        function updateFrameInfo(scrollLeft, viewportWidth) {
+            const frameStart = Math.floor(scrollLeft / config.frameToPixel) + config.minFrame;
+            const frameEnd = Math.floor((scrollLeft + viewportWidth) / config.frameToPixel) + config.minFrame;
+
+            console.log('Updating frame info:', {
+                scrollLeft,
+                viewportWidth,
+                frameStart,
+                frameEnd
+            });
+
+            if (timelineInfo) {
+                timelineInfo.textContent = `Viewing frames: ${frameStart.toLocaleString()} - ${frameEnd.toLocaleString()}`;
+            }
+
+            if (currentFrame) {
+                currentFrame.textContent = `Frame: ${frameStart.toLocaleString()}`;
+            }
+        }
+
+        // Main timeline scroll event
+        timelineContent.addEventListener('scroll', function(event) {
+            console.log('Scroll event fired!', { scrollLeft: this.scrollLeft, scrollTop: this.scrollTop });
+
+            const scrollLeft = this.scrollLeft;
+            const scrollTop = this.scrollTop;
+            const viewportWidth = this.clientWidth;
+
+            // Sync ruler horizontally
+            if (rulerContent) {
+                rulerContent.style.transform = `translateX(-${scrollLeft}px)`;
+            }
+
+            // Sync labels vertically
+            if (labelsColumn) {
+                labelsColumn.scrollTop = scrollTop;
+            }
+
+            // Update frame info
+            updateFrameInfo(scrollLeft, viewportWidth);
+        });
+
+        // Labels scroll back to timeline
+        if (labelsColumn) {
+            labelsColumn.addEventListener('scroll', function() {
+                timelineContent.scrollTop = this.scrollTop;
+            });
+        }
+
+        // Initial update
+        const initialScrollLeft = timelineContent.scrollLeft;
+        const initialViewportWidth = timelineContent.clientWidth;
+        updateFrameInfo(initialScrollLeft, initialViewportWidth);
+
+        console.log('Scroll sync setup complete');
+    }
+
+    // Navigation functions
+    function scrollToFrame() {
+        const frameNumber = parseInt(document.getElementById('frame-input').value) || 0;
+        const timelineContent = document.getElementById('timeline-content');
+
+        const framePosition = (frameNumber - config.minFrame) * config.frameToPixel;
+        const viewportWidth = timelineContent.clientWidth;
+        const centerOffset = viewportWidth / 2;
+
+        let scrollPosition = framePosition - centerOffset;
+        scrollPosition = Math.max(0, scrollPosition);
+
+        const maxScroll = timelineContent.scrollWidth - timelineContent.clientWidth;
+        scrollPosition = Math.min(scrollPosition, maxScroll);
+
+        timelineContent.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    function scrollToStart() {
+        document.getElementById('timeline-content').scrollTo({
+            left: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    function scrollToEnd() {
+        const timelineContent = document.getElementById('timeline-content');
+        timelineContent.scrollTo({
+            left: timelineContent.scrollWidth - timelineContent.clientWidth,
+            behavior: 'smooth'
+        });
+    }
+
+    // Object click handler
+    function objectClick(element) {
+        const rect = element.getBoundingClientRect();
+        const timelineContent = document.getElementById('timeline-content');
+        const timelineRect = timelineContent.getBoundingClientRect();
+
+        const relativeLeft = rect.left - timelineRect.left + timelineContent.scrollLeft;
+        const startFrame = Math.round(relativeLeft / config.frameToPixel) + config.minFrame;
+        const width = rect.width;
+        const duration = Math.round(width / config.frameToPixel);
+        const endFrame = startFrame + duration;
+
+        console.log('Object clicked:', {
+            element: element.textContent,
+            startFrame: startFrame,
+            endFrame: endFrame,
+            duration: duration
+        });
+
+        document.getElementById('timeline-info').textContent =
+            `Clicked: ${element.textContent} (${startFrame}-${endFrame})`;
+    }
+
+    // Global functions for external access
+    window.timelineScrollToFrame = scrollToFrame;
+    window.timelineGoToStart = scrollToStart;
+    window.timelineGoToEnd = scrollToEnd;
+
+    // Debug function to test scroll events
+    window.testTimelineScroll = function() {
+        const timelineContent = document.getElementById('timeline-content');
+        const timelineInfo = document.getElementById('timeline-info');
+
+        console.log('=== TIMELINE SCROLL TEST ===');
+        console.log('Timeline element:', timelineContent);
+        console.log('Info element:', timelineInfo);
+        console.log('Current scroll left:', timelineContent.scrollLeft);
+        console.log('Client width:', timelineContent.clientWidth);
+
+        // Test scroll
+        console.log('Setting scroll to 1000...');
+        timelineContent.scrollLeft = 1000;
+
+        // Check if scroll event fired
+        setTimeout(() => {
+            console.log('After scroll - scroll left:', timelineContent.scrollLeft);
+            console.log('Info text:', timelineInfo.textContent);
+        }, 100);
+
+        return 'Test complete - check console for results';
     };
+    {{--// Sync ruler scroll with timeline content--}}
+    {{--document.getElementById('timeline-content').addEventListener('scroll', function() {--}}
+    {{--    const scrollLeft = this.scrollLeft;--}}
+    {{--    document.getElementById('ruler-content').style.transform = `translateX(-${scrollLeft}px)`;--}}
+
+    {{--    // Update frame range info--}}
+    {{--    const viewportWidth = this.clientWidth;--}}
+    {{--    const startFrame = Math.floor(scrollLeft / {{ $config['frameToPixel'] }}) + {{ $config['minFrame'] }};--}}
+    {{--    const endFrame = Math.floor((scrollLeft + viewportWidth) / {{ $config['frameToPixel'] }}) + {{ $config['minFrame'] }};--}}
+
+    {{--    document.getElementById('timeline-info').textContent = `Viewing frames: ${startFrame.toLocaleString()} - ${endFrame.toLocaleString()}`;--}}
+    {{--});--}}
+
+    {{--// Handle scroll to frame response--}}
+    {{--document.body.addEventListener('htmx:afterRequest', function(event) {--}}
+    {{--    if (event.detail.xhr.responseURL.includes('scroll-to-frame')) {--}}
+    {{--        const response = JSON.parse(event.detail.xhr.responseText);--}}
+    {{--        if (response.scrollPosition !== undefined) {--}}
+    {{--            document.getElementById('timeline-content').scrollTo({--}}
+    {{--                left: response.scrollPosition,--}}
+    {{--                behavior: 'smooth'--}}
+    {{--            });--}}
+    {{--        }--}}
+    {{--    }--}}
+    {{--});--}}
+
+    {{--// Global functions for external access--}}
+    {{--window.timelineScrollToFrame = function(frameNumber) {--}}
+    {{--    htmx.ajax('POST', '/timeline/scroll-to-frame', {--}}
+    {{--        values: { frame: frameNumber },--}}
+    {{--        target: '#timeline-info'--}}
+    {{--    });--}}
+    {{--};--}}
+
+    {{--window.timelineHighlightFrame = function(frameNumber) {--}}
+    {{--    htmx.ajax('POST', '/timeline/highlight-frame', {--}}
+    {{--        values: { frame: frameNumber },--}}
+    {{--        target: '#highlight-container'--}}
+    {{--    });--}}
+    {{--};--}}
 </script>
