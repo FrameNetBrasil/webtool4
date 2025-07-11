@@ -10,9 +10,9 @@ document.body.addEventListener("htmx:afterSwap", function(elt) {
     }
 });
 
-document.body.addEventListener("update-current-frame", function(e) {
-    console.log(e);
-    if (e.detail.frame !== undefined) {
-        annotation.video.gotoFrame(e.detail.frame);
-    }
+document.addEventListener("update-current-frame", function(e) {
+    console.log("update-current-frame",e);
+    // if (e.detail.frame !== undefined) {
+    //     annotation.video.gotoFrame(e.detail.frame);
+    // }
 });
