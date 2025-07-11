@@ -94,6 +94,7 @@
                 // console.log("timeupdate timecount ", Alpine.store('doStore').timeCount);
                 Alpine.store('doStore').updateCurrentFrame(currentFrame);
                 annotation.timeline.setTime(Math.trunc(currentTime * 1000));
+                document.dispatchEvent(new CustomEvent('timeupdate', {currentTime, currentFrame}))
                 if (Alpine.store('doStore').newObjectState === 'editing') {
                     Alpine.store('doStore').uiEditingObject();
                 }
@@ -156,10 +157,12 @@
     <div id="boxesContainer">
     </div>
     <div x-data class="info flex flex-row justify-content-between">
-        <div style="width:100px;text-align:left;">
+        <div style="width:100px;text-align:left;" x-data="{ text: '', counter: 0 }" @timeupdate.document="text = $event.detail.currentTime">
             <div class="ui label">
-            <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeFormated($store.doStore.timeCount)"></span>]
+            <span x-text="text"></span> [<span x-text="text"></span>]
             </div>
+            <button @click="$dispatch('data', {})"></button>
+            <button @click="counter++"></button>
         </div>
         <div>
             <div class="flex">

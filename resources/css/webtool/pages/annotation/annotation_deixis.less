@@ -24,9 +24,9 @@
 
     .annotation-video {
         grid-area: video;
-        background: @neutral400;
+        //background: @neutral400;
         height: 100%;
-        padding: @relativeSmall;
+        padding: 0 @relativeSmall;
         display:grid;
         grid-template-areas:
         "player controls";
@@ -36,8 +36,28 @@
 
     .annotation-player {
         grid-area: player;
-        background: @neutral200;
+        //background: @neutral200;
         height: 100%;
+
+        .vjs-control-bar {
+            bottom: -30px;
+            opacity: 1 !important;
+            display: flex !important;
+        }
+
+        .vjs-playback-rate {
+            z-index: 10;
+        }
+
+        .control-bar {
+            //height: 32px;
+            //line-height: 32px;
+            background-color: @neutral200;
+            width: 853px;
+            margin-top: 8px;
+        }
+
+
     }
     .annotation-controls {
         grid-area: controls;

@@ -250,4 +250,150 @@ class DeixisController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
+    /**
+     * timeline
+     */
+
+    #[Get(path: '/timeline')]
+    public function index()
+    {
+        $timelineData = $this->getTimelineData();
+        $config = $this->getTimelineConfig($timelineData);
+        $groupedLayers = $this->groupLayersByName($timelineData);
+
+        return view('Annotation.Deixis.Panes.timeline.index', compact('timelineData', 'config', 'groupedLayers'));
+    }
+
+    #[Post(path: '/timeline/scroll-to-frame')]
+    public function scrollToFrame(Request $request)
+    {
+        $frameNumber = $request->input('frame', 0);
+        $timelineData = $this->getTimelineData();
+        $config = $this->getTimelineConfig($timelineData);
+
+        // Calculate scroll position
+        $framePosition = ($frameNumber - $config['minFrame']) * $config['frameToPixel'];
+        $scrollPosition = max(0, $framePosition - 400 + $config['labelWidth']); // 400px ~ half viewport
+
+        return response()->json([
+            'scrollPosition' => $scrollPosition,
+            'frameNumber' => $frameNumber,
+            'message' => "Scrolled to frame: " . number_format($frameNumber)
+        ]);
+    }
+
+    #[Post(path: '/timeline/highlight-frame')]
+
+    public function highlightFrame(Request $request)
+    {
+        $frameNumber = $request->input('frame', 0);
+        $timelineData = $this->getTimelineData();
+        $activeObjects = $this->getActiveObjectsAtFrame($timelineData, $frameNumber);
+
+        return view('Annotation.Deixis.Panes.timeline.highlight', compact('activeObjects', 'frameNumber'));
+    }
+
+    #[Post(path: '/timeline/object-click')]
+    public function objectClick(Request $request)
+    {
+        $layerIndex = $request->input('layerIndex');
+        $objectIndex = $request->input('objectIndex');
+        $lineIndex = $request->input('lineIndex');
+
+        $timelineData = $this->getTimelineData();
+        $object = $timelineData[$layerIndex]['objects'][$objectIndex] ?? null;
+
+        if (!$object) {
+            return response('Object not found', 404);
+        }
+
+        $clickData = [
+            'layer' => $timelineData[$layerIndex]['layer'],
+            'layerIndex' => $layerIndex,
+            'lineIndex' => $lineIndex,
+            'objectIndex' => $objectIndex,
+            'object' => $object,
+            'frameRange' => $object['startFrame'] . '-' . $object['endFrame'],
+            'duration' => $object['endFrame'] - $object['startFrame']
+        ];
+
+        return view('Annotation.Deixis.Panes.timeline.object-info', compact('clickData', 'object'));
+    }
+
+    private function getTimelineData()
+    {
+        $data = AnnotationDeixisService::getLayersByDocument(1705);
+        return $data;
+    }
+
+    private function getTimelineConfig($timelineData)
+    {
+        $minFrame = PHP_INT_MAX;
+        $maxFrame = PHP_INT_MIN;
+
+        foreach ($timelineData as $layer) {
+            foreach ($layer['objects'] as $object) {
+                $minFrame = min($minFrame, $object->startFrame);
+                $maxFrame = max($maxFrame, $object->endFrame);
+            }
+        }
+
+        // Add padding
+        $minFrame = max(0, $minFrame - 100);
+        $maxFrame = $maxFrame + 100;
+
+        return [
+            'minFrame' => $minFrame,
+            'maxFrame' => $maxFrame,
+            'frameToPixel' => 1,
+            'minObjectWidth' => 16,
+            'objectHeight' => 24,
+            'labelWidth' => 150,
+            'timelineWidth' => ($maxFrame - $minFrame) * 1
+        ];
+    }
+
+    private function groupLayersByName($timelineData)
+    {
+        $layerGroups = [];
+
+        foreach ($timelineData as $originalIndex => $layer) {
+            $layerName = $layer['layer'];
+
+            if (!isset($layerGroups[$layerName])) {
+                $layerGroups[$layerName] = [
+                    'name' => $layerName,
+                    'lines' => []
+                ];
+            }
+
+            $layerGroups[$layerName]['lines'][] = array_merge($layer, [
+                'originalIndex' => $originalIndex
+            ]);
+        }
+
+        return array_values($layerGroups);
+    }
+
+    private function getActiveObjectsAtFrame($timelineData, $frameNumber)
+    {
+        $activeObjects = [];
+
+        foreach ($timelineData as $layerIndex => $layer) {
+            foreach ($layer['objects'] as $objectIndex => $object) {
+                if ($frameNumber >= $object->startFrame && $frameNumber <= $object->endFrame) {
+                    $activeObjects[] = [
+                        'layerIndex' => $layerIndex,
+                        'objectIndex' => $objectIndex,
+                        'object' => $object
+                    ];
+                }
+            }
+        }
+
+        return $activeObjects;
+    }
+
+
 }
