@@ -1,23 +1,23 @@
 <x-layout::index>
     <script type="text/javascript">
-        window.annotation = {
-            _token: "{{ csrf_token() }}",
-            document: {{ Js::from($document) }},
-            video: {{ Js::from($video) }},
-            layerList: [],
-            idDynamicObject:{!! $idDynamicObject ?? 'null' !!},
-            timeFormated: (timeSeconds) => {
-                let minute = Math.trunc(timeSeconds / 60);
-                let seconds = Math.trunc(timeSeconds - (minute * 60));
-                return minute + ":" + seconds;
-            },
-        };
+        {{--window.annotation = {--}}
+        {{--    _token: "{{ csrf_token() }}",--}}
+        {{--    document: {{ Js::from($document) }},--}}
+        {{--    video: {{ Js::from($video) }},--}}
+        {{--    layerList: [],--}}
+        {{--    idDynamicObject:{!! $idDynamicObject ?? 'null' !!},--}}
+        {{--    timeFormated: (timeSeconds) => {--}}
+        {{--        let minute = Math.trunc(timeSeconds / 60);--}}
+        {{--        let seconds = Math.trunc(timeSeconds - (minute * 60));--}}
+        {{--        return minute + ":" + seconds;--}}
+        {{--    },--}}
+        {{--};--}}
         @include("Annotation.Deixis.Scripts.events")
-        @include("Annotation.Deixis.Scripts.components")
+        @include("Annotation.Deixis.Scripts.components.videoComponent")
 
         {{--                @include("Annotation.Deixis.Scripts.DeixisObject")--}}
         {{--                @include("Annotation.Deixis.Scripts.api")--}}
-        @include("Annotation.Deixis.Scripts.video")
+{{--        @include("Annotation.Deixis.Scripts.video")--}}
         {{--                @include("Annotation.Deixis.Scripts.drawBox")--}}
         {{--                @include("Annotation.Deixis.Scripts.objects")--}}
         {{--                @include("Annotation.Deixis.Scripts.timeline")--}}
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="annotation-objects">
-{{--                @include("Annotation.Deixis.Panes.gridsPane")--}}
+                @include("Annotation.Deixis.Panes.gridsPane")
             </div>
         </div>
 {{--            <script type="text/javascript" src="/scripts/vatic/dist/compatibility.js"></script>--}}

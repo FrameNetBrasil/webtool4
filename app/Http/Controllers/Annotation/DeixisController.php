@@ -41,9 +41,9 @@ class DeixisController extends Controller
     public function tree(SearchData $search)
     {
         if (!is_null($search->idCorpus) || ($search->document != '')) {
-            $data = AnnotationService::browseDocumentBySearch($search,[], "DeixisAnnotation", leaf:true);
+            $data = AnnotationService::browseDocumentBySearch($search, [], "DeixisAnnotation", leaf: true);
         } else {
-            $data = AnnotationService::browseCorpusBySearch($search,[], "DeixisAnnotation");
+            $data = AnnotationService::browseCorpusBySearch($search, [], "DeixisAnnotation");
         }
         return view("Annotation.Deixis.browse", [
             'data' => $data
@@ -68,7 +68,7 @@ class DeixisController extends Controller
 //        ]);
 //    }
 
-    private function getData(int $idDocument): DocumentData
+    private function getData(int $idDocument): array //DocumentData
     {
         $document = Document::byId($idDocument);
         $corpus = Corpus::byId($document->idCorpus);
@@ -76,14 +76,33 @@ class DeixisController extends Controller
             ->where("idDocument", $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        return DocumentData::from([
+        $timelineData = AnnotationDeixisService::getLayersByDocument($idDocument);
+        $timelineConfig = $this->getTimelineConfig($timelineData);
+        $groupedLayers = $this->groupLayersByName($timelineData);
+        return [
             'idDocument' => $idDocument,
             'document' => $document,
             'corpus' => $corpus,
             'video' => $video,
-            'fragment' => 'fe'
-        ]);
+            'fragment' => 'fe',
+            'timeline' => [
+                'data' => $timelineData,
+                'config' => $timelineConfig,
+            ],
+            'groupedLayers' => $groupedLayers,
+        ];
     }
+
+    #[Get(path: '/annotation/deixis/{idDocument}/{idDynamicObject?}')]
+    public function annotation(int|string $idDocument, int $idDynamicObject = null)
+    {
+        $data = $this->getData($idDocument);
+        if (!is_null($idDynamicObject)) {
+            $data['idDynamicObject'] = $idDynamicObject;
+        }
+        return view("Annotation.Deixis.annotation", $data);
+    }
+
 
     #[Post(path: '/annotation/deixis/createNewObjectAtLayer')]
     public function createNewObjectAtLayer(CreateObjectData $data)
@@ -226,19 +245,6 @@ class DeixisController extends Controller
         }
     }
 
-    /*
-     * get Object
-     */
-    #[Get(path: '/annotation/deixis/{idDocument}/{idDynamicObject?}')]
-    public function annotation(int|string $idDocument, int $idDynamicObject = null)
-    {
-        $data = $this->getData($idDocument);
-        if (!is_null($idDynamicObject)) {
-            $data->idDynamicObject = $idDynamicObject;
-        }
-        return view("Annotation.Deixis.annotation", $data->toArray());
-    }
-
     #[Post(path: '/annotation/deixis/deleteBBox')]
     public function createBBox(DeleteBBoxData $data)
     {
@@ -284,7 +290,6 @@ class DeixisController extends Controller
     }
 
     #[Post(path: '/timeline/highlight-frame')]
-
     public function highlightFrame(Request $request)
     {
         $frameNumber = $request->input('frame', 0);
