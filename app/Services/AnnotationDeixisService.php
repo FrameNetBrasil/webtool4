@@ -68,7 +68,7 @@ class AnnotationDeixisService
             ->where("idDynamicObject", $idDynamicObject)
             ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idLayerType", "nameLayerType", "idLanguageLT",
                 "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE", "idLanguageFE",
-                "idAnnotationGL", "idGenericLabel", "gl", "bgColorGL", "fgColorGL","idLanguageGL", "layerGroup", "idDocument")
+                "idAnnotationGL", "idGenericLabel", "gl", "bgColorGL", "fgColorGL", "idLanguageGL", "layerGroup", "idDocument")
             ->first();
         return $do;
     }
@@ -87,7 +87,7 @@ class AnnotationDeixisService
             ->where("view_frame.idLanguage", "left", $idLanguage)
             ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin", "ad.idLayerType", "ad.nameLayerType",
                 "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.colorFE",
-                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.bgColorGL", "ad.fgColorGL","ad.layerGroup", "ac.comment")
+                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.bgColorGL", "ad.fgColorGL", "ad.layerGroup", "ac.comment")
             ->orderBy("ad.nameLayerType")
             ->orderBy("ad.startFrame")
             ->orderBy("ad.endFrame")
@@ -112,6 +112,21 @@ class AnnotationDeixisService
             $object->startTime = (int)($object->startTime * 1000);
             $object->endTime = (int)($object->endTime * 1000);
             $object->bboxes = $bboxes[$object->idDynamicObject] ?? [];
+            $object->name = "";
+            $object->bgColor = "white";
+            $object->fgColor = "black";
+            if ($object->gl != '') {
+                $object->name = $object->gl;
+                $object->bgColor = $object->bgColorGL;
+                $object->fgColor = $object->fgColorGL;
+            } else if ($object->lu != '') {
+                $object->name = $object->lu;
+                if ($object->fe != '') {
+                    $object->bgColor = "#EEE";
+                    $object->name .= " | " . $object->frame . "." . $object->fe;
+                }
+
+            }
         }
         $objectsRows = [];
         $objectsRowsEnd = [];
@@ -123,7 +138,7 @@ class AnnotationDeixisService
                 $objectsRowsEnd[$object->idLayerType][0] = $object->endFrame;
             } else {
                 $allocated = false;
-                foreach($objectsRows[$object->idLayerType] as $idLayer => $objectRow) {
+                foreach ($objectsRows[$object->idLayerType] as $idLayer => $objectRow) {
                     if ($object->startFrame > $objectsRowsEnd[$object->idLayerType][$idLayer]) {
                         $objectsRows[$object->idLayerType][$idLayer][] = $object;
                         $objectsRowsEnd[$object->idLayerType][$idLayer] = $object->endFrame;
@@ -141,12 +156,12 @@ class AnnotationDeixisService
         }
 
         $result = [];
-        foreach($objectsRows as $idLayerType => $layers) {
-            foreach($layers as $idLayer => $objects) {
-               $result[] = [
-                  'layer' => $objects[0]->nameLayerType,
-                  'objects' => $objects
-               ];
+        foreach ($objectsRows as $idLayerType => $layers) {
+            foreach ($layers as $idLayer => $objects) {
+                $result[] = [
+                    'layer' => $objects[0]->nameLayerType,
+                    'objects' => $objects
+                ];
             }
         }
         return $result;
@@ -230,7 +245,7 @@ class AnnotationDeixisService
         $idUser = AppService::getCurrentIdUser();
         $bboxes = Criteria::table("view_dynamicobject_boundingbox")
             ->where("idDynamicObject", $data->idDynamicObject)
-            ->chunkResult("idBoundingBox","idBoundingBox");
+            ->chunkResult("idBoundingBox", "idBoundingBox");
         foreach ($bboxes as $idBoundingBox) {
             Criteria::function("boundingbox_dynamic_delete(?,?)", [$idBoundingBox, $idUser]);
         }

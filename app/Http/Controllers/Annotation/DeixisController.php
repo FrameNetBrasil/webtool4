@@ -261,78 +261,78 @@ class DeixisController extends Controller
      * timeline
      */
 
-    #[Get(path: '/timeline')]
-    public function index()
-    {
-        $timelineData = $this->getTimelineData();
-        $config = $this->getTimelineConfig($timelineData);
-        $groupedLayers = $this->groupLayersByName($timelineData);
+//    #[Get(path: '/timeline')]
+//    public function index()
+//    {
+//        $timelineData = $this->getTimelineData();
+//        $config = $this->getTimelineConfig($timelineData);
+//        $groupedLayers = $this->groupLayersByName($timelineData);
+//
+//        return view('Annotation.Deixis.Panes.timeline.index', compact('timelineData', 'config', 'groupedLayers'));
+//    }
 
-        return view('Annotation.Deixis.Panes.timeline.index', compact('timelineData', 'config', 'groupedLayers'));
-    }
+//    #[Post(path: '/timeline/scroll-to-frame')]
+//    public function scrollToFrame(Request $request)
+//    {
+//        $frameNumber = $request->input('frame', 0);
+//        $timelineData = $this->getTimelineData();
+//        $config = $this->getTimelineConfig($timelineData);
+//
+//        // Calculate scroll position
+//        $framePosition = ($frameNumber - $config['minFrame']) * $config['frameToPixel'];
+//        $scrollPosition = max(0, $framePosition - 400 + $config['labelWidth']); // 400px ~ half viewport
+//
+//        return response()->json([
+//            'scrollPosition' => $scrollPosition,
+//            'frameNumber' => $frameNumber,
+//            'message' => "Scrolled to frame: " . number_format($frameNumber)
+//        ]);
+//    }
 
-    #[Post(path: '/timeline/scroll-to-frame')]
-    public function scrollToFrame(Request $request)
-    {
-        $frameNumber = $request->input('frame', 0);
-        $timelineData = $this->getTimelineData();
-        $config = $this->getTimelineConfig($timelineData);
+//    #[Post(path: '/timeline/highlight-frame')]
+//    public function highlightFrame(Request $request)
+//    {
+//        $frameNumber = $request->input('frame', 0);
+//        $timelineData = $this->getTimelineData();
+//        $activeObjects = $this->getActiveObjectsAtFrame($timelineData, $frameNumber);
+//
+//        return view('Annotation.Deixis.Panes.timeline.highlight', compact('activeObjects', 'frameNumber'));
+//    }
 
-        // Calculate scroll position
-        $framePosition = ($frameNumber - $config['minFrame']) * $config['frameToPixel'];
-        $scrollPosition = max(0, $framePosition - 400 + $config['labelWidth']); // 400px ~ half viewport
+//    #[Post(path: '/timeline/object-click')]
+//    public function objectClick(Request $request)
+//    {
+//        $layerIndex = $request->input('layerIndex');
+//        $objectIndex = $request->input('objectIndex');
+//        $lineIndex = $request->input('lineIndex');
+//
+//        $timelineData = $this->getTimelineData();
+//        $object = $timelineData[$layerIndex]['objects'][$objectIndex] ?? null;
+//
+//        if (!$object) {
+//            return response('Object not found', 404);
+//        }
+//
+//        $clickData = [
+//            'layer' => $timelineData[$layerIndex]['layer'],
+//            'layerIndex' => $layerIndex,
+//            'lineIndex' => $lineIndex,
+//            'objectIndex' => $objectIndex,
+//            'object' => $object,
+//            'frameRange' => $object['startFrame'] . '-' . $object['endFrame'],
+//            'duration' => $object['endFrame'] - $object['startFrame']
+//        ];
+//
+//        return view('Annotation.Deixis.Panes.timeline.object-info', compact('clickData', 'object'));
+//    }
 
-        return response()->json([
-            'scrollPosition' => $scrollPosition,
-            'frameNumber' => $frameNumber,
-            'message' => "Scrolled to frame: " . number_format($frameNumber)
-        ]);
-    }
+//    private function getTimelineData()
+//    {
+//        $data = AnnotationDeixisService::getLayersByDocument(1705);
+//        return $data;
+//    }
 
-    #[Post(path: '/timeline/highlight-frame')]
-    public function highlightFrame(Request $request)
-    {
-        $frameNumber = $request->input('frame', 0);
-        $timelineData = $this->getTimelineData();
-        $activeObjects = $this->getActiveObjectsAtFrame($timelineData, $frameNumber);
-
-        return view('Annotation.Deixis.Panes.timeline.highlight', compact('activeObjects', 'frameNumber'));
-    }
-
-    #[Post(path: '/timeline/object-click')]
-    public function objectClick(Request $request)
-    {
-        $layerIndex = $request->input('layerIndex');
-        $objectIndex = $request->input('objectIndex');
-        $lineIndex = $request->input('lineIndex');
-
-        $timelineData = $this->getTimelineData();
-        $object = $timelineData[$layerIndex]['objects'][$objectIndex] ?? null;
-
-        if (!$object) {
-            return response('Object not found', 404);
-        }
-
-        $clickData = [
-            'layer' => $timelineData[$layerIndex]['layer'],
-            'layerIndex' => $layerIndex,
-            'lineIndex' => $lineIndex,
-            'objectIndex' => $objectIndex,
-            'object' => $object,
-            'frameRange' => $object['startFrame'] . '-' . $object['endFrame'],
-            'duration' => $object['endFrame'] - $object['startFrame']
-        ];
-
-        return view('Annotation.Deixis.Panes.timeline.object-info', compact('clickData', 'object'));
-    }
-
-    private function getTimelineData()
-    {
-        $data = AnnotationDeixisService::getLayersByDocument(1705);
-        return $data;
-    }
-
-    private function getTimelineConfig($timelineData)
+    private function getTimelineConfig($timelineData): array
     {
         $minFrame = PHP_INT_MAX;
         $maxFrame = PHP_INT_MIN;
@@ -360,7 +360,7 @@ class DeixisController extends Controller
         ];
     }
 
-    private function groupLayersByName($timelineData)
+    private function groupLayersByName($timelineData): array
     {
         $layerGroups = [];
 
@@ -382,24 +382,24 @@ class DeixisController extends Controller
         return array_values($layerGroups);
     }
 
-    private function getActiveObjectsAtFrame($timelineData, $frameNumber)
-    {
-        $activeObjects = [];
-
-        foreach ($timelineData as $layerIndex => $layer) {
-            foreach ($layer['objects'] as $objectIndex => $object) {
-                if ($frameNumber >= $object->startFrame && $frameNumber <= $object->endFrame) {
-                    $activeObjects[] = [
-                        'layerIndex' => $layerIndex,
-                        'objectIndex' => $objectIndex,
-                        'object' => $object
-                    ];
-                }
-            }
-        }
-
-        return $activeObjects;
-    }
+//    private function getActiveObjectsAtFrame($timelineData, $frameNumber)
+//    {
+//        $activeObjects = [];
+//
+//        foreach ($timelineData as $layerIndex => $layer) {
+//            foreach ($layer['objects'] as $objectIndex => $object) {
+//                if ($frameNumber >= $object->startFrame && $frameNumber <= $object->endFrame) {
+//                    $activeObjects[] = [
+//                        'layerIndex' => $layerIndex,
+//                        'objectIndex' => $objectIndex,
+//                        'object' => $object
+//                    ];
+//                }
+//            }
+//        }
+//
+//        return $activeObjects;
+//    }
 
 
 }
