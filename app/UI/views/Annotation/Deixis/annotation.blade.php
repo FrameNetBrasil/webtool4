@@ -14,6 +14,8 @@
         {{--};--}}
         @include("Annotation.Deixis.Scripts.events")
         @include("Annotation.Deixis.Scripts.components.videoComponent")
+        @include("Annotation.Deixis.Scripts.components.navigationComponent")
+        @include("Annotation.Deixis.Scripts.components.timelineComponent")
 
         {{--                @include("Annotation.Deixis.Scripts.DeixisObject")--}}
         {{--                @include("Annotation.Deixis.Scripts.api")--}}
