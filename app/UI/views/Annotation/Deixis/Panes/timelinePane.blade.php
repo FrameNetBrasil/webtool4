@@ -24,7 +24,7 @@
             <button @click="scrollToStart()">Start</button>
             <button @click="scrollToEnd()">End</button>
             <button @click="scrollToVideoFrame()">as Video</button>
-            <span id="current-frame">Frame: 0</span>
+            <span class="invisible" id="current-frame">Frame: 0</span>
         </div>
 
         <!-- Ruler -->
@@ -82,10 +82,9 @@
                                              data-line-index="{{ $lineIndex }}"
                                              data-start-frame="{{ $object->startFrame }}"
                                              data-end-frame="{{ $object->endFrame }}"
-{{--                                             hx-post="/timeline/object-click"--}}
-{{--                                             hx-vals='{"layerIndex": "{{ $line['originalIndex'] }}", "objectIndex": "{{ $objIndex }}", "lineIndex": "{{ $lineIndex }}"}'--}}
-{{--                                             hx-target="#object-click-info"--}}
-{{--                                             hx-swap="innerHTML"--}}
+                                             hx-get="/annotation/deixis/object/{{$object->idDynamicObject}}"
+                                             hx-target="#formsPane"
+                                             hx-swap="innerHTML"
                                         >
                                             {{ $label }}
                                         </div>

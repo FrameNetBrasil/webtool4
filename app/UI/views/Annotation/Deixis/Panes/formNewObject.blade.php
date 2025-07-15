@@ -1,31 +1,28 @@
-<div class="ui form">
+<h3 class="ui header">Create new object</h3>
+<form class="ui form p-4 border">
+    <div class="field">
+        <x-form::combobox.layer-deixis
+            label="Layer"
+            id="idLayerType"
+            :value="0"
+            class="w-15rem"
+        ></x-form::combobox.layer-deixis>
+    </div>
     <div class="fields">
         <div class="field">
-            <x-form::combobox.layer-deixis
-                label=""
-                id="idLayerType"
-                :value="0"
-                class="w-15rem"
-            ></x-form::combobox.layer-deixis>
-        </div>
-        <div class="two fields" x-data>
-            <button
-                class="ui button basic secondary"
-            >
-                <span x-text="'Start: '"></span>
-            </button>
-            <button
-                class="ui button basic secondary"
-            >
-                <span x-text="'End: '"></span>
-            </button>
+            <label>Start frame <span class="text-primary cursor-pointer"  @click="copyFrameFor('startFrame')">[Copy from video]</span></label>
+            <input type="text" name="startFrame" placeholder="0">
         </div>
         <div class="field">
-            <button
-                type="button"
-                label="Create New Object"
-{{--                onclick="annotation.objects.createNewObjectAtLayer({idLayerType: document.getElementById('idLayerType').value, startFrame: Alpine.store('doStore').newStartFrame, endFrame: Alpine.store('doStore').newEndFrame})"--}}
-            >Create new object</button>
+            <label>End frame  <span class="text-primary cursor-pointer"  @click="copyFrameFor('endFrame')">[Copy from video]</span></label>
+            <input type="text" name="endFrame" placeholder="0">
         </div>
     </div>
-</div>
+    <button
+        type="button"
+        class="ui button"
+        {{--                onclick="annotation.objects.createNewObjectAtLayer({idLayerType: document.getElementById('idLayerType').value, startFrame: Alpine.store('doStore').newStartFrame, endFrame: Alpine.store('doStore').newEndFrame})"--}}
+    >Submit
+    </button>
+</form>
+

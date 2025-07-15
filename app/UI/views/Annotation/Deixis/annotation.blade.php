@@ -13,6 +13,7 @@
         {{--    },--}}
         {{--};--}}
         @include("Annotation.Deixis.Scripts.events")
+        @include("Annotation.Deixis.Scripts.api")
         @include("Annotation.Deixis.Scripts.components.videoComponent")
         @include("Annotation.Deixis.Scripts.components.navigationComponent")
         @include("Annotation.Deixis.Scripts.components.formsComponent")

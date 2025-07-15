@@ -398,8 +398,8 @@
     Border Colors
 -------------------*/
 
-@borderColor: @neutral200;
-@strongBorderColor: @neutral300;
+@borderColor: @neutral300;
+@strongBorderColor: @neutral400;
 @internalBorderColor: @borderColor;
 @selectedBorderColor: @primaryColor;
 

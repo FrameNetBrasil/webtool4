@@ -47,8 +47,8 @@ function timelineComponent(config) {
                 }
             }
 
-            document.addEventListener("update-current-frame", (e) => {
-                this.videoFrame = e.detail.frame;
+            document.addEventListener("video-update-state", (e) => {
+                this.videoFrame = e.detail.frame.current;
             });
         },
 
@@ -197,6 +197,17 @@ function timelineComponent(config) {
             this.frameInput = this.videoFrame;
             this.scrollToFrame();
         },
+
+        selectObject: async function(idDynamicObject) {
+            let dynamicObject = await api.getObject(idDynamicObject);
+            document.dispatchEvent(new CustomEvent("object-selected", {
+                detail: {
+                    dynamicObject
+                }
+            }));
+        }
+
+
         // Object click handler
         // objectClick: function(element) {
         //     const rect = element.getBoundingClientRect();

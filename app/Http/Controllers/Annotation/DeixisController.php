@@ -93,6 +93,16 @@ class DeixisController extends Controller
         ];
     }
 
+    #[Get(path: '/annotation/deixis/object/{idDynamicObject}')]
+    public function getObject(int $idDynamicObject)
+    {
+        $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
+        debug($object);
+        return view("Annotation.Deixis.Panes.objectPane", [
+            'object' => $object
+        ]);
+    }
+
     #[Get(path: '/annotation/deixis/{idDocument}/{idDynamicObject?}')]
     public function annotation(int|string $idDocument, int $idDynamicObject = null)
     {
@@ -102,7 +112,6 @@ class DeixisController extends Controller
         }
         return view("Annotation.Deixis.annotation", $data);
     }
-
 
     #[Post(path: '/annotation/deixis/createNewObjectAtLayer')]
     public function createNewObjectAtLayer(CreateObjectData $data)

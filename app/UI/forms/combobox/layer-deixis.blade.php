@@ -23,7 +23,7 @@
         @if($label != '')
             <label for="{{$id}}">{{$label}}</label>
         @endif
-        <div id="{{$id}}_dropdown" class="ui tiny selection dropdown" style="overflow:initial">
+        <div id="{{$id}}_dropdown" class="ui selection dropdown" style="overflow:initial">
             <input type="hidden" id="{{$id}}" name="{{$id}}" value="{{$value}}">
             <i class="dropdown icon"></i>
             <div class="default text"></div>
