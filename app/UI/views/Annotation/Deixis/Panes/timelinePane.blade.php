@@ -23,6 +23,7 @@
             <button @click="scrollToFrame()">Go</button>
             <button @click="scrollToStart()">Start</button>
             <button @click="scrollToEnd()">End</button>
+            <button @click="scrollToVideoFrame()">as Video</button>
             <span id="current-frame">Frame: 0</span>
         </div>
 

@@ -9,7 +9,14 @@ function videoComponent() {
             height: 480
         },
         player: null,
-        state: "paused",
+        frame: {
+            current: 1,
+            last: 0
+        },
+        time: {
+            current: ""
+        },
+        isPlaying: false,
 
         init() {
             console.log("videoComponent init");
@@ -24,7 +31,7 @@ function videoComponent() {
                 inactivityTimeout: 0,
                 children: {
                     controlBar: {
-                        playToggle: true,
+                        playToggle: false,
                         volumePanel: false,
                         remainingTimeDisplay: false,
                         fullscreenToggle: false,
@@ -40,20 +47,30 @@ function videoComponent() {
             let player = this.player;
             let video = this;
 
+            document.addEventListener("video-seek-frame", (e) => {
+                this.seekToFrame(e.detail.frameNumber);
+            });
+
+            document.addEventListener("video-toggle-play", (e) => {
+                this.togglePlay();
+            });
+
             player.crossOrigin("anonymous");
 
-            player.player_.handleTechClick_ = function() {
-                console.log("video clicking");
+            player.player_.handleTechClick_ = () => {
+                this.togglePlay();
+                // console.log("video clicking");
+                //document.dispatchEvent(new CustomEvent("action-toggle"));
                 //let state = Alpine.store("doStore").currentVideoState;
-                if (video.state === "paused") {
-                    player.play();
-                }
-                if (video.state === "playing") {
-                    player.pause();
-                }
+                // if (video.state === "paused") {
+                //     document.dispatchEvent(new CustomEvent("action-play"));
+                // }
+                // if (video.state === "playing") {
+                //     document.dispatchEvent(new CustomEvent("action-pause"));
+                // }
             };
 
-            player.ready(function() {
+            player.ready(() => {
                 // Alpine.store('doStore').config();
                 player.on("durationchange", () => {
                     let duration = player.duration();
@@ -61,7 +78,7 @@ function videoComponent() {
                     //let lastFrame = video.frameFromTime(duration);
                     // Alpine.store('doStore').frameDuration = lastFrame;
                     //video.framesRange.last = lastFrame;
-                    document.dispatchEvent(new CustomEvent("update-duration", {
+                    document.dispatchEvent(new CustomEvent("video-update-duration", {
                         detail: {
                             duration
                         }
@@ -69,8 +86,8 @@ function videoComponent() {
                 });
 
                 player.on("timeupdate", () => {
-                    let currentTime = player.currentTime();
-                    // let currentFrame = video.frameFromTime(currentTime);
+                    this.time.current = player.currentTime();
+                    this.frame.current = this.frameFromTime(this.time.current);
                     // console.log("timeupdate", currentFrame,currentTime);
                     // Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
                     // Alpine.store('doStore').updateCurrentFrame(currentFrame);
@@ -78,65 +95,98 @@ function videoComponent() {
                     // if (Alpine.store('doStore').newObjectState === 'editing') {
                     //     Alpine.store('doStore').uiEditingObject();
                     // }
-                    document.dispatchEvent(new CustomEvent("update-current-time", {
-                        detail: {
-                            currentTime
-                        }
-                    }));
-                    if (video.playingRange) {
-                        if (currentFrame > video.playingRange.endFrame) {
-                            video.player.pause();
-                            video.playingRange = null;
-                        }
-                    }
+                    this.broadcastState();
+                    // document.dispatchEvent(new CustomEvent("update-current-time", {
+                    //     detail: {
+                    //         currentTime
+                    //     }
+                    // }));
+                    // if (video.playingRange) {
+                    //     if (currentFrame > video.playingRange.endFrame) {
+                    //         video.player.pause();
+                    //         video.playingRange = null;
+                    //     }
+                    // }
                 });
 
                 player.on("play", () => {
+                    this.isPlaying = true;
+                    this.broadcastState();
                     // let state = Alpine.store('doStore').currentVideoState;
-                    if (video.state === "paused") {
+                    // if (video.state === "paused") {
                         // Alpine.store('doStore').currentVideoState = 'playing';
                         //annotation.timeline.onPlayClick();
                         //video.disableSkipFrame();
 //                        video.disableVideoNavigationButtons();
-                        document.dispatchEvent(new CustomEvent("action-play"));
-                        video.state = "playing";
-                    }
+//                         document.dispatchEvent(new CustomEvent("action-play"));
+//                         video.state = "playing";
+//                     }
                 });
 
                 player.on("pause", () => {
+                    this.isPlaying = false;
+                    this.broadcastState();
                     //player.currentTime(Alpine.store('doStore').timeCount);
                     //let currentTime = player.currentTime();
                     // Alpine.store('doStore').currentVideoState = 'paused';
                     //annotation.timeline.onPauseClick();
 //                    video.enableSkipFrame();
 //                     video.enableVideoNavigationButtons();
-                    document.dispatchEvent(new CustomEvent("action-pause"));
-                    video.state = "paused";
+//                     document.dispatchEvent(new CustomEvent("action-pause"));
+//                     video.state = "paused";
 
                 });
+
+
             });
 
 
-
         },
 
-        enablePlayPause() {
-            let $btn = document.querySelector(".vjs-play-control");
-            if ($btn) {
-                $btn.disabled = false;
-                $btn.style.color = "white";
-                $btn.style.cursor = "pointer";
+        broadcastState() {
+            // Send current state to controls
+            window.dispatchEvent(new CustomEvent('video-state-update', {
+                detail: {
+                    frame: this.frame,
+                    time: this.time,
+                    isPlaying: this.isPlaying
+                }
+            }));
+        },
+
+        seekToFrame(frame) {
+            this.frame.current = frame;
+            // this.$refs.video.currentTime = this.frameToTime(frame);
+        },
+
+        togglePlay() {
+            if (this.isPlaying) {
+                this.player.pause();
+            } else {
+                this.player.play();
             }
         },
-        disablePlayPause() {
-            let $btn = document.querySelector(".vjs-play-control");
-            if ($btn) {
-                $btn.disabled = true;
-                $btn.style.color = "grey";
-                $btn.style.cursor = "default";
-            }
-        },
 
+
+        // enablePlayPause() {
+        //     let $btn = document.querySelector(".vjs-play-control");
+        //     if ($btn) {
+        //         $btn.disabled = false;
+        //         $btn.style.color = "white";
+        //         $btn.style.cursor = "pointer";
+        //     }
+        // },
+        // disablePlayPause() {
+        //     let $btn = document.querySelector(".vjs-play-control");
+        //     if ($btn) {
+        //         $btn.disabled = true;
+        //         $btn.style.color = "grey";
+        //         $btn.style.cursor = "default";
+        //     }
+        // },
+        frameFromTime(timeSeconds) {
+            return Math.floor(parseFloat(timeSeconds.toFixed(3)) * this.fps) + 1;
+        },
         playByRange(startTime, endTime, offset) {
             let playRange = {
                 startFrame: this.frameFromTime(startTime - offset),

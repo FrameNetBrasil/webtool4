@@ -29,7 +29,8 @@
         padding: 0 @relativeSmall;
         display:grid;
         grid-template-areas:
-        "player controls";
+        "player"
+        "forms";
         grid-template-columns: 1fr;
         grid-template-rows: 560px 1fr;                             // (was var(--toolbar-height))
     }
@@ -59,8 +60,8 @@
 
 
     }
-    .annotation-controls {
-        grid-area: controls;
+    .annotation-forms {
+        grid-area: forms;
         background: @neutral200;
         height: 100%;
     }
