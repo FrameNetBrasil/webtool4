@@ -5,7 +5,7 @@
     <textarea
         id="{{$id}}"
         name="{{$id}}"
-        placeholder="{{$placeholder}}"
+        placeholder="{{$placeholder ?? ''}}"
         {{$attributes->class(["w-full"])}}
         rows="{{$rows}}"
     >{{$value}}</textarea>

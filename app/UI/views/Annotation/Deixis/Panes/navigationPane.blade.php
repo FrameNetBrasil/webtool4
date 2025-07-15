@@ -8,16 +8,19 @@
     <div id="videoNavigation" class="ui small basic icon buttons">
         <button
             class="ui button nav"
+            :class="isPlaying && 'disabled'"
             @click="gotoFrame(0)"
         ><i class="fast backward icon"></i>
         </button>
         <button
             class="ui button nav"
+            :class="isPlaying && 'disabled'"
             @click="gotoFrame(frame.current - 250)"
         ><i class="backward icon"></i>
         </button>
         <button
             class="ui button nav"
+            :class="isPlaying && 'disabled'"
             @click="gotoFrame(frame.current - 1)"
         ><i class="step backward icon"></i>
         </button>
@@ -28,16 +31,19 @@
         </button>
         <button
             class="ui button nav"
+            :class="isPlaying && 'disabled'"
             @click="gotoFrame(frame.current + 1)"
         ><i class="step forward icon"></i>
         </button>
         <button
             class="ui button nav"
+            :class="isPlaying && 'disabled'"
             @click="gotoFrame(frame.current + 250)"
         ><i class="forward icon"></i>
         </button>
         <button
             class="ui button nav"
+            :class="isPlaying && 'disabled'"
             @click="gotoFrame(frame.last)"
         ><i class="fast forward icon"></i>
         </button>

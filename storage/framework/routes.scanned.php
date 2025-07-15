@@ -3752,6 +3752,14 @@ $router->post('annotation/deixis/tree', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/deixis/object/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@getObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/deixis/{idDocument}/{idDynamicObject?}', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@annotation',
 	'as' => NULL,

@@ -74,13 +74,15 @@ function videoComponent() {
                 // Alpine.store('doStore').config();
                 player.on("durationchange", () => {
                     let duration = player.duration();
+                    let lastFrame = this.frameFromTime(duration);
                     // Alpine.store('doStore').timeDuration = parseInt(duration);
                     //let lastFrame = video.frameFromTime(duration);
                     // Alpine.store('doStore').frameDuration = lastFrame;
                     //video.framesRange.last = lastFrame;
                     document.dispatchEvent(new CustomEvent("video-update-duration", {
                         detail: {
-                            duration
+                            duration,
+                            lastFrame
                         }
                     }));
                 });
@@ -145,7 +147,8 @@ function videoComponent() {
 
         broadcastState() {
             // Send current state to controls
-            window.dispatchEvent(new CustomEvent('video-state-update', {
+            // console.log("broadcastState", this.frame.current, this.time.current, this.isPlaying);
+            document.dispatchEvent(new CustomEvent('video-update-state', {
                 detail: {
                     frame: this.frame,
                     time: this.time,
@@ -156,6 +159,7 @@ function videoComponent() {
 
         seekToFrame(frame) {
             this.frame.current = frame;
+            this.player.currentTime(this.timeFromFrame(frame));
             // this.$refs.video.currentTime = this.frameToTime(frame);
         },
 
@@ -186,6 +190,9 @@ function videoComponent() {
         // },
         frameFromTime(timeSeconds) {
             return Math.floor(parseFloat(timeSeconds.toFixed(3)) * this.fps) + 1;
+        },
+        timeFromFrame(frameNumber) {
+            return Math.floor(((frameNumber - 1) * this.timeInterval) * 1000) / 1000;
         },
         playByRange(startTime, endTime, offset) {
             let playRange = {

@@ -1,10 +1,39 @@
+@php
+    use App\Database\Criteria;
+
+    $name ??= $id;
+    $value = $value ?? $this->nullName ?? '';
+    $options = [];
+    if ($idLayerType > 0) {
+        $filter = [["idLayerType", "=", $idLayerType]];
+        $gls = Criteria::byFilterLanguage("genericlabel", $filter)->all();
+        if ($hasNull) {
+            $options[] = [
+                'idGenericLabel' => '-1',
+                'name' => $nullName ?? "NULL",
+                'idColor' => "color_1"
+            ];
+        }
+        foreach ($gls as $gl) {
+            if ($value == $gl->idGenericLabel) {
+                $default = $gl->name;
+            }
+            $options[] = [
+                'idGenricLabel' => $gl->idGenericLabel,
+                'name' => $gl->name,
+                'idColor' => $gl->idColor
+            ];
+        }
+    }
+@endphp
+
 @if($label!='')
     <label for="{{$id}}">{{$label}}</label>
 @endif
 <div id="{{$id}}_dropdown" class="ui clearable selection dropdown frameElement" style="overflow:initial;">
     <input type="hidden" id="{{$id}}" name="{{$name}}" value="{{$value}}">
     <i class="dropdown icon"></i>
-    <div class="default text">{{$defaultText}}</div>
+    <div class="default text">{{$defaultText ?? ''}}</div>
     <div class="menu">
         @foreach($options as $option)
             <div data-value="{{$option['idGenricLabel']}}"
@@ -17,11 +46,7 @@
 <script>
     $(function() {
         $('#{{$id}}_dropdown').dropdown({
-            @if($onChange)
-            onChange: (value) => {
-                {!! $onChange !!}
-            }
-            @endif
+            onChange: (value) => { {!! $onChange ?? '' !!} }
         });
     });
 </script>

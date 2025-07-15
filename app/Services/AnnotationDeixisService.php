@@ -63,14 +63,26 @@ class AnnotationDeixisService
     public static function getObject(int $idDynamicObject): object|null
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $do = Criteria::table("view_annotation_deixis")
+        $object = Criteria::table("view_annotation_deixis")
             ->where("idLanguageLT", "left", $idLanguage)
             ->where("idDynamicObject", $idDynamicObject)
             ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idLayerType", "nameLayerType", "idLanguageLT",
                 "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE", "idLanguageFE",
                 "idAnnotationGL", "idGenericLabel", "gl", "bgColorGL", "fgColorGL", "idLanguageGL", "layerGroup", "idDocument")
             ->first();
-        return $do;
+        $object->comment = CommentService::getDynamicObjectComment($idDynamicObject);
+        if ($object->gl != '') {
+            $object->name = $object->gl;
+            $object->bgColor = $object->bgColorGL;
+            $object->fgColor = $object->fgColorGL;
+        } else if ($object->lu != '') {
+            $object->name = $object->lu;
+            if ($object->fe != '') {
+                $object->bgColor = "#EEE";
+                $object->name .= " | " . $object->frame . "." . $object->fe;
+            }
+        }
+        return $object;
     }
 
     public static function getLayersByDocument(int $idDocument): array

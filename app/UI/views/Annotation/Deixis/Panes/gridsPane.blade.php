@@ -4,7 +4,7 @@
 </div>
 <div class="gridBody">
     <div
-        class="ui tab timeline h-full w-full"
+        class="ui tab timeline h-full w-full active"
         data-tab="timeline"
     >
         @include("Annotation.Deixis.Panes.timelinePane")

@@ -1,35 +1,29 @@
 function formsComponent() {
     return {
         formsPane: null,
+        currentFrame: 0,
+        currentObject: null,
+        isPlaying: false,
+
         init() {
             this.formsPane = document.getElementById("formsPane");
-            document.addEventListener("action-play", (e) => {
-                this.disableTabs();
-            });
-
-            document.addEventListener("action-pause", (e) => {
-                this.enableTabs();
-            });
         },
 
-        toggleTabs(disabled = true) {
-            const tabs= document.querySelectorAll("#formsPane .item");
-            tabs.forEach(tab => {
-                tab.disabled = disabled;
-                if (disabled) {
-                    tab.classList.add("disabled");
-                } else {
-                    tab.classList.remove("disabled");
-                }
-            });
+        onVideoUpdateState(e) {
+            this.currentFrame = e.detail.frame.current;
+            this.isPlaying = e.detail.isPlaying;
         },
 
-        disableTabs() {
-            this.toggleTabs(true);
+        onObjectSelected(e) {
+            console.log(e.detail.dynamicObject);
+            this.currentObject = e.detail.dynamicObject;
         },
 
-        enableTabs() {
-            this.toggleTabs(false);
-        },
+        copyFrameFor(name) {
+            console.log(name);
+            const input = document.querySelector(`input[name="${name}"]`);
+            input.value = this.currentFrame;
+        }
+
     };
 }

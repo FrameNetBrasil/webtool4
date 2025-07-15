@@ -76,7 +76,6 @@
                         style="width:250px"
                         class="mb-2"
                         :value="$object?->idFrame ?? 0"
-                        :name="$object->frame ?? ''"
                         :hasDescription="false"
                         onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
                     ></x-form::combobox.frame>
