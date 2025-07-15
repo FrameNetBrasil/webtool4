@@ -1,13 +1,9 @@
-<div class="form" style="height:240px">
-    <x-form
-        hx-post="/annotation/dynamicMode/updateObjectComment"
-    >
-        <x-slot:title>
-            @if($order == 0)
-                <div class="flex">
-                    <div class="title">Comment for Object: #none</div>
-                </div>
-            @else
+@if(isset($object))
+    <div class="form" style="height:240px">
+        <form
+            hx-post="/annotation/dynamicMode/updateObjectComment"
+        >
+            <x-slot:title>
                 <div class="flex gap-2">
                     <div class="title">Comment for Object: #{{$order}}</div>
                     <div class="flex h-2rem gap-2">
@@ -23,30 +19,31 @@
                         <div class="text-sm">Created by [{{$object->email}}] at [{{$object->createdAt}}]</div>
                     @endif
                 </div>
-            @endif
-        </x-slot:title>
-        <x-slot:fields>
-            <x-hidden-field id="idDocument" value="{{$idDocument}}"></x-hidden-field>
-            <x-hidden-field id="idDynamicObject" value="{{$object?->idDynamicObject}}"></x-hidden-field>
-            <x-hidden-field id="createdAt" value="{{$object?->createdAt}}"></x-hidden-field>
-            <div class="field mr-1">
-                <x-multiline-field
-                    label="Comment"
-                    id="comment"
-                    rows="4"
-                    :value="$object->comment ?? ''"
-                ></x-multiline-field>
-            </div>
-        </x-slot:fields>
-        <x-slot:buttons>
-            <x-submit label="Save"></x-submit>
-            <x-button
-                type="button"
-                label="Delete"
-                color="danger"
-                onclick="annotation.objects.deleteObjectComment({{$object?->idDynamicObject}})"
-            ></x-button>
-        </x-slot:buttons>
-    </x-form>
-</div>
-
+            </x-slot:title>
+            <x-slot:fields>
+                <x-form::hidden-field id="idDocument" value="{{$idDocument}}"></x-form::hidden-field>
+                <x-form::hidden-field id="idDynamicObject" value="{{$object?->idDynamicObject}}"></x-form::hidden-field>
+                <x-form::hidden-field id="createdAt" value="{{$object?->createdAt}}"></x-form::hidden-field>
+                <div class="field mr-1">
+                    <x-form::multiline-field
+                        label="Comment"
+                        id="comment"
+                        rows="4"
+                        :value="$object->comment ?? ''"
+                    ></x-form::multiline-field>
+                </div>
+            </x-slot:fields>
+            <x-slot:buttons>
+                <button type="submit" class="ui medium button">
+                    Save
+                </button>
+                <button
+                    class="ui medium button danger"
+                    type="button"
+                    onclick="annotation.objects.deleteObjectComment({{$object?->idDynamicObject}})"
+                >Delete
+                </button>
+            </x-slot:buttons>
+        </form>
+    </div>
+@endif

@@ -1,3 +1,4 @@
+@if(isset($object))
 <div class="ui form">
     <div class="bg-white pt-1 pr-1 pl-1 overflow-y-auto overflow-x-hidden">
         <div class="flex flex-row gap-1 justify-content-between pb-1">
@@ -57,18 +58,18 @@
             <div class="fields">
                 @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
                     <div class="field  w-20rem mr-2">
-                        <x-combobox.gl
+                        <x-form::combobox.gl
                             id="idGenericLabel"
                             name="idGenericLabel"
                             label="Label"
                             :value="$object?->idGenericLabel ?? 0"
                             :idLayerType="$object?->idLayerType ?? 0"
                             :hasNull="false"
-                        ></x-combobox.gl>
+                        ></x-form::combobox.gl>
                     </div>
                 @endif
                 <div class="field mr-1">
-                    <x-combobox.frame
+                    <x-form::combobox.frame
                         id="idFrame"
                         label="Frame"
                         placeholder="Frame (min: 3 chars)"
@@ -78,29 +79,29 @@
                         :name="$object->frame ?? ''"
                         :hasDescription="false"
                         onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
-                    ></x-combobox.frame>
+                    ></x-form::combobox.frame>
                 </div>
                 <div id="fes" class="field w-15rem mr-1">
-                    <x-combobox.fe-frame
+                    <x-form::combobox.fe-frame
                         id="idFrameElement"
                         name="idFrameElement"
                         label="FE"
                         :value="$object?->idFrameElement ?? 0"
                         :idFrame="$object?->idFrame ?? 0"
                         :hasNull="false"
-                    ></x-combobox.fe-frame>
+                    ></x-form::combobox.fe-frame>
                 </div>
             </div>
             <div class="fields">
                 <div class="field mr-1">
-                    <x-combobox.lu
+                    <x-form::combobox.lu
                         id="idLU"
                         label="CV Name"
                         placeholder="(min: 3 chars)"
                         class="w-23rem mb-2"
                         :value="$object?->idLU"
                         :name="$object?->lu ?? ''"
-                    ></x-combobox.lu>
+                    ></x-form::combobox.lu>
                 </div>
             </div>
         @endif
@@ -109,20 +110,20 @@
         <div class="controls flex flex-row gap-1 justify-content-between">
             <div>
                 @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
-                    <x-button
+                    <button
                         type="button"
                         label="Save"
                         onclick="annotation.objects.updateObjectAnnotation({idGenericLabel: $('#idGenericLabel').attr('value'),idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value')})"
                         title="Save Object"
-                    ></x-button>
+                    >Save</button>
                 @endif
                 @if(!is_null($object->idAnnotationLU)  || ($object->layerGroup == 'Deixis_lexical'))
-                    <x-button
+                    <button
                         type="button"
                         label="Save"
                         onclick="annotation.objects.updateObjectAnnotation({idLU: $('#idLU').attr('value'),idFrameElement: $('#idFrameElement').attr('value'),})"
                         title="Save Object"
-                    ></x-button>
+                    >Save</button>
                 @endif
                 <button
                     class="ui medium icon button negative"
@@ -131,11 +132,11 @@
                 >
                     <i class="pt-1 trash alternate outline icon"></i>
                 </button>
-                <x-button
+                <button
                     label="Comment"
                     color="secondary"
                     @click.prevent="Alpine.store('doStore').commentObject({{$object->idDynamicObject}})"
-                ></x-button>
+                >Comment</button>
             </div>
             <div>
                 <button
@@ -183,4 +184,4 @@
         </div>
     @endif
 </div>
-
+@endif

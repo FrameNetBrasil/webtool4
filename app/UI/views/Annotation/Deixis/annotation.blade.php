@@ -15,6 +15,7 @@
         @include("Annotation.Deixis.Scripts.events")
         @include("Annotation.Deixis.Scripts.components.videoComponent")
         @include("Annotation.Deixis.Scripts.components.navigationComponent")
+        @include("Annotation.Deixis.Scripts.components.formsComponent")
         @include("Annotation.Deixis.Scripts.components.timelineComponent")
 
         {{--                @include("Annotation.Deixis.Scripts.DeixisObject")--}}
@@ -39,9 +40,10 @@
             <div class="annotation-video">
                 <div class="annotation-player">
                 @include("Annotation.Deixis.Panes.videoPane")
+                    @include("Annotation.Deixis.Panes.navigationPane")
                 </div>
-                <div class="annotation-controls">
-
+                <div class="annotation-forms">
+                    @include("Annotation.Deixis.Panes.formsPane")
                 </div>
             </div>
             <div class="annotation-objects">

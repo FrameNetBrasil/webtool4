@@ -2,6 +2,7 @@ function timelineComponent(config) {
     return {
         frameInput: 0,
         config: {},
+        videoFrame: 0,
 
         init() {
             this.config = config;
@@ -45,6 +46,10 @@ function timelineComponent(config) {
                     });
                 }
             }
+
+            document.addEventListener("update-current-frame", (e) => {
+                this.videoFrame = e.detail.frame;
+            });
         },
 
         generateRuler: function() {
@@ -188,6 +193,10 @@ function timelineComponent(config) {
             });
         },
 
+        scrollToVideoFrame: function() {
+            this.frameInput = this.videoFrame;
+            this.scrollToFrame();
+        },
         // Object click handler
         // objectClick: function(element) {
         //     const rect = element.getBoundingClientRect();
