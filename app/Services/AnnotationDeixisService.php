@@ -82,6 +82,10 @@ class AnnotationDeixisService
                 $object->name .= " | " . $object->frame . "." . $object->fe;
             }
         }
+        $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
+            ->where("idDynamicObject", $idDynamicObject)
+            ->orderBy("frameNumber")
+            ->all();
         return $object;
     }
 

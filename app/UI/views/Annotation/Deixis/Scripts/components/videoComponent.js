@@ -47,6 +47,13 @@ function videoComponent() {
             let player = this.player;
             let video = this;
 
+            drawBoxObject.config({
+                idVideoDOMElement: this.idVideo,
+                videoDimensions: this.dimensions
+            }, vatic.getColor(0));
+            // Initially disable drawing
+            drawBoxObject.disableDrawing();
+
             document.addEventListener("video-seek-frame", (e) => {
                 this.seekToFrame(e.detail.frameNumber);
             });

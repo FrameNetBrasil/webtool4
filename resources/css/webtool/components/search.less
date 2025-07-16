@@ -1,6 +1,23 @@
 /* Search component */
+body.modal-open {
+    overflow: hidden;
+}
+
 .search-component {
     position: relative;
+
+    .ui.input input[readonly] {
+        background-color: #ffffff !important;
+        opacity: 1 !important;
+    }
+
+    .ui.input input[readonly]:focus {
+        border-color: #85b7d9 !important;
+    }
+
+    .list .item:hover {
+        background-color: @neutral50 !important;
+    }
 
     .search-input {
         width: 100%;

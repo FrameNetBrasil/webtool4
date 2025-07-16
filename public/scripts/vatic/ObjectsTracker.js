@@ -6,7 +6,7 @@ class ObjectsTracker {
     constructor(config) {
         this.framesManager = new FramesManager();
         this.annotatedObjects = [];
-        this.opticalFlow = new OpticalFlow();
+        this.opticalFlow = new OpticalFlowObject();
         this.lastFrame = -1;
         this.framesManager.onReset.push(() => {
             this.annotatedObjects = [];

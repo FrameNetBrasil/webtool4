@@ -12,12 +12,20 @@
         {{--        return minute + ":" + seconds;--}}
         {{--    },--}}
         {{--};--}}
+        @include("Annotation.Deixis.Scripts.objects.drawBoxObject")
+        @include("Annotation.Deixis.Scripts.objects.bboxObject")
+        @include("Annotation.Deixis.Scripts.objects.dynamicObject")
+        @include("Annotation.Deixis.Scripts.objects.framesManagerObject")
+        @include("Annotation.Deixis.Scripts.objects.objectTrackerObject")
+        @include("Annotation.Deixis.Scripts.objects.opticalFlowObject")
+
         @include("Annotation.Deixis.Scripts.events")
-        @include("Annotation.Deixis.Scripts.api")
         @include("Annotation.Deixis.Scripts.components.videoComponent")
         @include("Annotation.Deixis.Scripts.components.navigationComponent")
         @include("Annotation.Deixis.Scripts.components.formsComponent")
         @include("Annotation.Deixis.Scripts.components.timelineComponent")
+        @include("Annotation.Deixis.Scripts.components.objectComponent")
+
 
         {{--                @include("Annotation.Deixis.Scripts.DeixisObject")--}}
         {{--                @include("Annotation.Deixis.Scripts.api")--}}
@@ -51,20 +59,20 @@
                 @include("Annotation.Deixis.Panes.gridsPane")
             </div>
         </div>
-{{--            <script type="text/javascript" src="/scripts/vatic/dist/compatibility.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/dist/jszip.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/dist/StreamSaver.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/dist/polyfill.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/dist/jsfeat.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/dist/nudged.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/dist/pouchdb.min.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/vatic.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/FramesManager.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/OpticalFlow.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/BoundingBox.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/DynamicObject.js"></script>--}}
-{{--            <script type="text/javascript" src="/scripts/vatic/ObjectsTracker.js"></script>--}}
     </div>
+    {{--            <script type="text/javascript" src="/scripts/vatic/dist/compatibility.js"></script>--}}
+    {{--            <script type="text/javascript" src="/scripts/vatic/dist/jszip.js"></script>--}}
+    {{--            <script type="text/javascript" src="/scripts/vatic/dist/StreamSaver.js"></script>--}}
+    {{--            <script type="text/javascript" src="/scripts/vatic/dist/polyfill.js"></script>--}}
+                <script type="text/javascript" src="/scripts/vatic/dist/jsfeat.js"></script>
+    {{--            <script type="text/javascript" src="/scripts/vatic/dist/nudged.js"></script>--}}
+    {{--            <script type="text/javascript" src="/scripts/vatic/dist/pouchdb.min.js"></script>--}}
+    <script type="text/javascript" src="/scripts/vatic/vatic.js"></script>
+    {{--            <script type="text/javascript" src="/scripts/vatic/FramesManager.js"></script>--}}
+    {{--            <script type="text/javascript" src="/scripts/vatic/OpticalFlowObject.js"></script>--}}
+    {{--            <script type="text/javascript" src="/scripts/vatic/BoundingBox.js"></script>--}}
+    {{--            <script type="text/javascript" src="/scripts/vatic/DynamicObject.js"></script>--}}
+    {{--            <script type="text/javascript" src="/scripts/vatic/ObjectTrackerObject.js"></script>--}}
 </x-layout::index>
 
 {{--<x-layout.annotation>--}}

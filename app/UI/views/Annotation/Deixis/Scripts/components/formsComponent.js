@@ -2,7 +2,6 @@ function formsComponent() {
     return {
         formsPane: null,
         currentFrame: 0,
-        currentObject: null,
         isPlaying: false,
 
         init() {
@@ -14,9 +13,8 @@ function formsComponent() {
             this.isPlaying = e.detail.isPlaying;
         },
 
-        onObjectSelected(e) {
-            console.log(e.detail.dynamicObject);
-            this.currentObject = e.detail.dynamicObject;
+        onCloseObjectPane() {
+            htmx.ajax('GET', "/annotation/deixis/object/0", {target:'#formsPane', swap:'innerHTML'});
         },
 
         copyFrameFor(name) {
