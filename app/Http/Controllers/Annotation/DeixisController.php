@@ -96,8 +96,10 @@ class DeixisController extends Controller
     #[Get(path: '/annotation/deixis/object/{idDynamicObject}')]
     public function getObject(int $idDynamicObject)
     {
+        if ($idDynamicObject == 0) {
+            return view("Annotation.Deixis.Panes.formNewObject");
+        }
         $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
-        debug($object);
         return view("Annotation.Deixis.Panes.objectPane", [
             'object' => $object
         ]);
@@ -106,8 +108,7 @@ class DeixisController extends Controller
     #[Get(path: '/annotation/deixis/fes/{idFrame}')]
     public function feCombobox(int $idFrame)
     {
-        debug("=======================");
-        return view("Annotation.Deixis.Panes.fes", [
+        return view("Annotation.Deixis.Forms.fes", [
             'idFrame' => $idFrame
         ]);
     }
@@ -117,9 +118,7 @@ class DeixisController extends Controller
     public function annotation(int|string $idDocument, int $idDynamicObject = null)
     {
         $data = $this->getData($idDocument);
-        if (!is_null($idDynamicObject)) {
-            $data['idDynamicObject'] = $idDynamicObject;
-        }
+        $data['idDynamicObject'] = is_null($idDynamicObject) ? 0 : $idDynamicObject;
         return view("Annotation.Deixis.annotation", $data);
     }
 
@@ -199,6 +198,7 @@ class DeixisController extends Controller
     {
         try {
             return AnnotationDeixisService::updateObjectAnnotation($data);
+            return $this->renderNotify("success", "Object updated.");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -257,7 +257,7 @@ class DeixisController extends Controller
     }
 
     #[Post(path: '/annotation/deixis/deleteBBox')]
-    public function createBBox(DeleteBBoxData $data)
+    public function deleteBBox(DeleteBBoxData $data)
     {
         try {
             debug($data);

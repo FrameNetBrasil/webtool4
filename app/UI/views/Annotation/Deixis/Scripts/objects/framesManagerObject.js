@@ -2,9 +2,9 @@ class FramesManager {
     constructor() {
         this.frames = {};
         this.onReset = [];
-        this.canvas = document.createElement("canvas");
-        this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
-        this.dimensionsInitialized = false;
+        // this.canvas = document.createElement("canvas");
+        // this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
+        // this.dimensionsInitialized = false;
         this.totalFrames = 0;
         // this.processedFrames = 0;
         // this.lastApproxFrame = -1;
@@ -14,9 +14,10 @@ class FramesManager {
     }
 
     setConfig(config) {
-//        this.config = config;
-        this.canvas = config.canvas;
-        this.ctx = config.ctx;
+        this.config = config;
+        this.video = this.config.video;
+        this.canvas = this.config.canvas;
+        this.ctx = this.config.ctx;
         // this.video = document.getElementById(config.idVideoDOMElement);
         // this.dimensionsInitialized = true;
         // this.canvas.width = annotation.video.originalDimensions.width;
@@ -28,20 +29,6 @@ class FramesManager {
         this.config.imageMimeType = "image/png";
     }
 
-    async getFrameFromVideo() {
-        // considera que o frame de video está sendo exibido no canvas
-        this.video.crossOrigin = "*";
-        this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
-        return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-        // return new Promise((resolve, reject) => {
-        //     this.canvas.toBlob(
-        //         (blob) => {
-        //             resolve(blob);
-        //         },
-        //         this.config.imageMimeType
-        //     );
-        // });
-    }
 
     addFrame(frameNumber, frameImage) {
         this.frames[frameNumber] = frameImage;
@@ -55,6 +42,13 @@ class FramesManager {
             return frameImage;
         }
         return frameImage;
+    }
+
+    async getFrameFromVideo() {
+        // considera que o frame de video está sendo exibido no canvas
+        this.video.crossOrigin = "*";
+        this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+        return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
     }
 
 }

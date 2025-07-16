@@ -1,6 +1,6 @@
 <div x-data="navigationComponent()" class="control-bar flex-container between">
     <div style="width:128px;text-align:left;">
-        <div class="ui label">
+        <div class="ui label bg-gray-300">
             <span x-text="frame.current"></span> [<span
                 x-text="time.current"></span>]
         </div>
@@ -49,7 +49,7 @@
         </button>
     </div>
     <div style="width:128px;text-align:right;">
-        <div class="ui label">
+        <div class="ui label bg-gray-300">
             <span x-text="frame.last"></span> [<span
                 x-text="time.duration"></span>]
         </div>

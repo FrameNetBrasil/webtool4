@@ -514,6 +514,14 @@
     Form System Variables
 -------------------*/
 
+/* Form Label */
+@labelDistance: @4px;
+@labelMargin: 0 0 @labelDistance 0;
+@labelFontSize: @relativeMedium;
+@labelFontWeight: @bold;
+@labelTextTransform: none;
+@labelColor: @textColor;
+
 // Form field spacing
 @formFieldGap: @relativeMedium;      // 16px - Between form fields
 @formGroupGap: @relativeLarge;       // 24px - Between form groups

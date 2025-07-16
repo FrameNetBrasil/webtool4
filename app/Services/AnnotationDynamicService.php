@@ -308,6 +308,14 @@ class AnnotationDynamicService
 
     public static function createBBox(CreateBBoxData $data): int
     {
+        $boundingBox = Criteria::table("dynamicobject_boundingbox as dbb")
+            ->join("boundingbox as bb", "dbb.idBoundingBox", "=", "bb.idBoundingBox")
+            ->where("dbb.idDynamicObject", $data->idDynamicObject)
+            ->where("bb.frameNumber", $data->frameNumber)
+            ->first();
+        if ($boundingBox) {
+            Criteria::function("boundingbox_dynamic_delete(?,?)", [$boundingBox->idBoundingBox, AppService::getCurrentIdUser()]);;
+        }
         $dynamicObject = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
         if ($dynamicObject->endFrame < $data->frameNumber) {
             Criteria::table("dynamicobject")

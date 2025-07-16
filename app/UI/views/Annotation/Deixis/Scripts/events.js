@@ -1,13 +1,15 @@
-document.body.addEventListener("updateObjectAnnotationEvent", function(evt) {
-    annotation.objects.updateObjectAnnotationEvent();
-});
+// document.body.addEventListener("updateObjectAnnotationEvent", function(evt) {
+//     annotation.objects.updateObjectAnnotationEvent();
+// });
 
 document.body.addEventListener("htmx:afterSwap", function(elt) {
-    if (elt.target.id === "formObject"){
-        if (document.getElementById("btnCreateObject")) {
-            Alpine.store("doStore").uiEditingObject();
-        }
-    }
+
+    console.log('afterSwap',elt.target.id);
+    // if (elt.target.id === "formObject"){
+    //     if (document.getElementById("btnCreateObject")) {
+    //         Alpine.store("doStore").uiEditingObject();
+    //     }
+    // }
 });
 
 // document.addEventListener("update-current-frame", function(e) {

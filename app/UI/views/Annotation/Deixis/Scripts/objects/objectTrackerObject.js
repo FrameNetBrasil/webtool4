@@ -1,8 +1,7 @@
 /**
- * Tracks annotated objects throughout a frame sequence using optical flow.
- * ematos@20211130 - alterado para fazer o tracker de apenas um AnnotatedObject de cada vez
+ * Tracks a single dynamicObject throughout a frame sequence using optical flow.
  */
-class ObjectsTracker {
+class ObjectTrackerObject {
     constructor(config) {
         this.framesManager = new FramesManager();
         this.annotatedObjects = [];

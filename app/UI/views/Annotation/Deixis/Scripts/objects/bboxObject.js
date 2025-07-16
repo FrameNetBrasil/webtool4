@@ -1,7 +1,7 @@
 /**
  * Represents a bounding box at a particular frame.
  */
-class BBoxObject {
+class BoundingBox {
     constructor(frameNumber, x, y, width, height, isGroundTruth, idBoundingBox) {
         this.frameNumber = frameNumber;
         this.x = x;

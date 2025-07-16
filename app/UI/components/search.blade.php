@@ -4,7 +4,8 @@
     'placeholder' => 'Search...',
     'searchUrl' => '/api/search',
     'searchFields' => ['q'], // Array of search field names
-    'displayField' => 'name', // Field to display in readonly input
+    'displayField' => 'name', // Field to display in readonly input OR function name
+    'displayFormatter' => null, // Function name for custom result display formatting
     'valueField' => 'id', // Field to store in hidden input
     'value' => '',
     'displayValue' => '',
@@ -16,7 +17,9 @@
 <div x-data="searchComponent({
     name: '{{ $name }}',
     searchUrl: '{{ $searchUrl }}',
+    searchFields: {!! Js::from($searchFields) !!},
     displayField: '{{ $displayField }}',
+    displayFormatter: '{{ $displayFormatter }}',
     valueField: '{{ $valueField }}',
     initialValue: '{{ $value }}',
     initialDisplayValue: '{{ $displayValue }}',
@@ -72,19 +75,17 @@
         <div class="content" style="flex: 1; overflow-y: auto; padding: 1rem;">
             {{-- Search Form --}}
             <form class="ui form" @submit.prevent="performSearch()">
-                @foreach($searchFields as $field)
+                <template x-for="(fieldValue, fieldName) in searchParams" :key="fieldName">
                     <div class="field">
-                        {{--                        <label>{{ ucfirst($field) }}</label>--}}
                         <div class="ui left icon input">
                             <input type="search"
-                                   x-model="searchParams.{{ $field }}"
-                                   placeholder="Enter {{ $field }}..."
+                                   x-model="searchParams[fieldName]"
+                                   :placeholder="'Enter ' + fieldName + '...'"
                                    @input.debounce.300ms="performSearch()">
                             <i class="search icon"></i>
                         </div>
-
                     </div>
-                @endforeach
+                </template>
             </form>
 
             {{-- Results/Loading Container with fixed height --}}
@@ -96,13 +97,13 @@
 
                 {{-- Results Container --}}
                 <div x-show="!isLoading && searchResults.length > 0" class="ui relaxed divided list" style="height: 100%;">
-                    <template x-for="result in searchResults" :key="result.{{ $valueField }}">
+                    <template x-for="result in searchResults" :key="result[valueField]">
                         <div class="item" style="cursor: pointer; padding: 10px;"
                              @click="selectResult(result)"
                              @mouseenter="$el.style.backgroundColor = '#f8f9fa'"
                              @mouseleave="$el.style.backgroundColor = 'transparent'">
                             <div class="content">
-                                <div class="header" x-text="result.{{ $displayField }}"></div>
+                                <div class="header" x-html="formatResultDisplay(result)"></div>
                                 <div class="description" x-text="result.description || ''"></div>
                             </div>
                         </div>
@@ -132,221 +133,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function searchComponent(config) {
-        return {
-            // Configuration
-            name: config.name,
-            searchUrl: config.searchUrl,
-            displayField: config.displayField,
-            valueField: config.valueField,
-            onChange: config.onChange,
-
-            // State
-            isModalOpen: false,
-            isLoading: false,
-            searchPerformed: false,
-            selectedValue: config.initialValue || '',
-            displayValue: config.initialDisplayValue || '',
-            searchResults: [],
-            errorMessage: '',
-
-            // Search parameters (dynamic based on searchFields)
-            searchParams: {},
-
-            init() {
-                // Initialize search parameters
-                @foreach($searchFields as $field)
-                    this.searchParams['{{ $field }}'] = '';
-                @endforeach
-
-                // Ensure modal starts closed
-                this.isModalOpen = false;
-
-                // Close modal on ESC key
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && this.isModalOpen) {
-                        this.closeModal();
-                    }
-                });
-            },
-
-            openModal() {
-                this.isModalOpen = true;
-                this.errorMessage = '';
-                document.body.classList.add('modal-open');
-
-                // Focus first search field
-                this.$nextTick(() => {
-                    const firstInput = document.querySelector('.ui.modal.active input[type="search"]');
-                    if (firstInput) firstInput.focus();
-                });
-            },
-
-            closeModal() {
-                this.isModalOpen = false;
-                document.body.classList.remove('modal-open');
-                this.resetSearch();
-            },
-
-            resetSearch() {
-                // Clear search parameters
-                Object.keys(this.searchParams).forEach(key => {
-                    this.searchParams[key] = '';
-                });
-                this.searchResults = [];
-                this.searchPerformed = false;
-                this.errorMessage = '';
-            },
-
-            async performSearch() {
-                // Check if any search parameter has value
-                const hasSearchTerms = Object.values(this.searchParams).some(value => value.trim() !== '');
-
-                if (!hasSearchTerms) {
-                    this.searchResults = [];
-                    this.searchPerformed = false;
-                    return;
-                }
-
-                this.isLoading = true;
-                this.errorMessage = '';
-
-                try {
-                    // Build URL with search parameters
-                    const url = new URL(this.searchUrl, window.location.origin);
-                    Object.entries(this.searchParams).forEach(([key, value]) => {
-                        if (value.trim() !== '') {
-                            url.searchParams.append(key, value);
-                        }
-                    });
-
-                    const response = await fetch(url);
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    this.searchResults = data.results || data || [];
-                    this.searchPerformed = true;
-
-                } catch (error) {
-                    console.error('Search error:', error);
-                    this.errorMessage = 'An error occurred while searching. Please try again.';
-                    this.searchResults = [];
-                } finally {
-                    this.isLoading = false;
-                }
-            },
-
-            selectResult(result) {
-                this.selectedValue = result[this.valueField];
-                this.displayValue = result[this.displayField];
-                this.closeModal();
-
-                // Trigger change event for form validation and custom handlers
-                this.$nextTick(() => {
-                    const hiddenInput = document.querySelector(`input[name="${this.name}"]`);
-                    if (hiddenInput) {
-                        // Dispatch standard change event
-                        hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
-
-                        // Dispatch custom event with kebab-case name for Alpine.js
-                        hiddenInput.dispatchEvent(new CustomEvent('search-component-change', {
-                            bubbles: true,
-                            detail: {
-                                value: this.selectedValue,
-                                displayValue: this.displayValue,
-                                selectedItem: result,
-                                componentName: this.name
-                            }
-                        }));
-                    }
-
-                    // Dispatch event on the component container for Alpine.js
-                    this.$el.dispatchEvent(new CustomEvent('search-component-change', {
-                        bubbles: true,
-                        detail: {
-                            value: this.selectedValue,
-                            displayValue: this.displayValue,
-                            selectedItem: result,
-                            componentName: this.name
-                        }
-                    }));
-
-                    // Call custom onChange function if provided
-                    if (this.onChange && typeof window[this.onChange] === 'function') {
-                        window[this.onChange]({
-                            detail: {
-                                value: this.selectedValue,
-                                displayValue: this.displayValue,
-                                selectedItem: result,
-                                componentName: this.name
-                            }
-                        });
-                    }
-                });
-            },
-
-            clearSelection() {
-                this.selectedValue = '';
-                this.displayValue = '';
-
-                // Trigger change event when clearing selection
-                this.$nextTick(() => {
-                    const hiddenInput = document.querySelector(`input[name="${this.name}"]`);
-                    if (hiddenInput) {
-                        // Dispatch standard change event
-                        hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
-
-                        // Dispatch custom event with kebab-case name for Alpine.js
-                        hiddenInput.dispatchEvent(new CustomEvent('search-component-change', {
-                            bubbles: true,
-                            detail: {
-                                value: '',
-                                displayValue: '',
-                                selectedItem: null,
-                                componentName: this.name,
-                                action: 'clear'
-                            }
-                        }));
-                    }
-
-                    // Dispatch event on the component container for Alpine.js
-                    this.$el.dispatchEvent(new CustomEvent('search-component-change', {
-                        bubbles: true,
-                        detail: {
-                            value: '',
-                            displayValue: '',
-                            selectedItem: null,
-                            componentName: this.name,
-                            action: 'clear'
-                        }
-                    }));
-                });
-                // Don't close modal - just clear the selection
-            }
-        }
-    }
-</script>
-
-<style>
-    .search-component .ui.input input[readonly] {
-        background-color: #ffffff !important;
-        opacity: 1 !important;
-    }
-
-    .search-component .ui.input input[readonly]:focus {
-        border-color: #85b7d9 !important;
-    }
-
-    body.modal-open {
-        overflow: hidden;
-    }
-
-    .search-component .list .item:hover {
-        background-color: #f8f9fa !important;
-    }
-</style>

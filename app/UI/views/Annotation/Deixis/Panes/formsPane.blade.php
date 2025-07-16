@@ -4,5 +4,14 @@
     @video-update-state.document="onVideoUpdateState"
     @object-selected.document="onObjectSelected"
 >
-    @include("Annotation.Deixis.Panes.formNewObject")
+    @if ($idDynamicObject == 0)
+        @include("Annotation.Deixis.Forms.formNewObject")
+    @else
+        <div
+            hx-trigger="load"
+            hx-target="#formsPane"
+            hx-get="/annotation/deixis/object/{{$idDynamicObject}}"
+            hx-swap="innerHTML"
+        ></div>
+    @endif
 </div>
