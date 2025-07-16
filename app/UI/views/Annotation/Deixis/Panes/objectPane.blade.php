@@ -1,4 +1,18 @@
-<h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}::{{$object->name}}</h3>
+<div class="flex-container justify-between">
+    <div>
+        <h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}::{{$object->name}}</h3>
+    </div>
+    <div>
+        <button
+            id="btnClose"
+            class="ui small icon button"
+            title="Close Object"
+            @click.prevent="annotation.objects.closeEdition()"
+        >
+            <i class="pt-1 close icon"></i>
+        </button>
+    </div>
+</div>
 <div
     id="objectPane"
     class="ui pointing secondary menu tabs"
