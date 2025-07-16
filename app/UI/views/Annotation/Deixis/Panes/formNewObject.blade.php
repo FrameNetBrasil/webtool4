@@ -20,7 +20,7 @@
     </div>
     <button
         type="button"
-        class="ui button"
+        class="ui button medium"
         {{--                onclick="annotation.objects.createNewObjectAtLayer({idLayerType: document.getElementById('idLayerType').value, startFrame: Alpine.store('doStore').newStartFrame, endFrame: Alpine.store('doStore').newEndFrame})"--}}
     >Submit
     </button>

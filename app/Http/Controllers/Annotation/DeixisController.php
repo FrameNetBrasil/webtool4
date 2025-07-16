@@ -103,6 +103,16 @@ class DeixisController extends Controller
         ]);
     }
 
+    #[Get(path: '/annotation/deixis/fes/{idFrame}')]
+    public function feCombobox(int $idFrame)
+    {
+        debug("=======================");
+        return view("Annotation.Deixis.Panes.fes", [
+            'idFrame' => $idFrame
+        ]);
+    }
+
+
     #[Get(path: '/annotation/deixis/{idDocument}/{idDynamicObject?}')]
     public function annotation(int|string $idDocument, int $idDynamicObject = null)
     {
@@ -205,14 +215,6 @@ class DeixisController extends Controller
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
         }
-    }
-
-    #[Get(path: '/annotation/deixis/fes/{idFrame}')]
-    public function feCombobox(int $idFrame)
-    {
-        return view("Annotation.Deixis.Panes.fes", [
-            'idFrame' => $idFrame
-        ]);
     }
 
     /*
