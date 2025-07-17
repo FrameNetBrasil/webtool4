@@ -24,15 +24,10 @@
                     <label for="idFrame">Frame</label>
                     <div
                         @search-component-change="if ($event.detail.value) { htmx.ajax('GET', '/annotation/deixis/fes/' + $event.detail.value, '#fes'); }">
-                        <x-ui::search
-                            name="idFrame"
-                            display-name="frame"
-                            placeholder="Select a frame"
-                            search-url="/frame/list/forSelect"
+                        <x-form::search.frame
+                            id="idFrame"
                             value="{{ old('idFrame', $object?->idFrame ?? '') }}"
                             display-value="{{ old('frame', $object->frame ?? '') }}"
-                            display-field="name"
-                            value-field="idFrame"
                             modal-title="Search Frame"
                         />
                     </div>

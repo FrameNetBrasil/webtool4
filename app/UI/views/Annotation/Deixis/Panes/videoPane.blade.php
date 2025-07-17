@@ -1,5 +1,7 @@
 <div
     x-data="videoComponent()"
+    @video-seek-frame.document="onVideoSeekFrame"
+    @video-toggle-play.document="onVideoTogglePlay"
     style="position:relative; width:852px;height:480px"
 >
     <video-js

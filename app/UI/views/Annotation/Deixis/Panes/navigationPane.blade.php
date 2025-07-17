@@ -1,4 +1,11 @@
-<div x-data="navigationComponent()" class="control-bar flex-container between">
+<div
+    x-data="navigationComponent()"
+    @video-update-state.document="onVideoUpdateState"
+    @video-update-duration.document="onVideoUpdateDuration"
+    @tracking-start.document="onTrackingStart"
+    @tracking-stop.document="onTrackingStop"
+    class="control-bar flex-container between"
+>
     <div style="width:128px;text-align:left;">
         <div class="ui label bg-gray-300">
             <span x-text="frame.current"></span> [<span
@@ -8,43 +15,44 @@
     <div id="videoNavigation" class="ui small basic icon buttons">
         <button
             class="ui button nav"
-            :class="isPlaying && 'disabled'"
-            @click="gotoFrame(0)"
+            :class="(isPlaying || isTracking) && 'disabled'"
+            @click="gotoStart()"
         ><i class="fast backward icon"></i>
         </button>
         <button
             class="ui button nav"
-            :class="isPlaying && 'disabled'"
-            @click="gotoFrame(frame.current - 250)"
+            :class="(isPlaying || isTracking) && 'disabled'"
+            @click="gotoPrevious10Second()"
         ><i class="backward icon"></i>
         </button>
         <button
             class="ui button nav"
             :class="isPlaying && 'disabled'"
-            @click="gotoFrame(frame.current - 1)"
+            @click="gotoPreviousFrame()"
         ><i class="step backward icon"></i>
         </button>
         <button
             class="ui button toggle"
+            :class="isTracking && 'disabled'"
             @click="toggle()"
         ><i :class="isPlaying ? 'pause icon' : 'play icon'"></i>
         </button>
         <button
             class="ui button nav"
             :class="isPlaying && 'disabled'"
-            @click="gotoFrame(frame.current + 1)"
+            @click="gotoNextFrame()"
         ><i class="step forward icon"></i>
         </button>
         <button
             class="ui button nav"
-            :class="isPlaying && 'disabled'"
-            @click="gotoFrame(frame.current + 250)"
+            :class="(isPlaying || isTracking) && 'disabled'"
+            @click="gotoNext10Second()"
         ><i class="forward icon"></i>
         </button>
         <button
             class="ui button nav"
-            :class="isPlaying && 'disabled'"
-            @click="gotoFrame(frame.last)"
+            :class="(isPlaying || isTracking) && 'disabled'"
+            @click="gotoEnd()"
         ><i class="fast forward icon"></i>
         </button>
     </div>
