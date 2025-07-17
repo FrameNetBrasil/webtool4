@@ -1,6 +1,7 @@
 {{-- Custom Search Component --}}
 @props([
     'name' => 'search',
+    'displayName' => null, // Name for the display field (optional)
     'placeholder' => 'Search...',
     'searchUrl' => '/api/search',
     'searchFields' => ['q'], // Array of search field names
@@ -11,7 +12,8 @@
     'displayValue' => '',
     'modalTitle' => 'Search',
     'required' => false,
-    'onChange' => null // Function name as string
+    'onChange' => null, // Function name as string
+    'resolveUrl' => null // URL to resolve display value from value
 ])
 
 <div x-data="searchComponent({
@@ -23,7 +25,8 @@
     valueField: '{{ $valueField }}',
     initialValue: '{{ $value }}',
     initialDisplayValue: '{{ $displayValue }}',
-    onChange: '{{ $onChange }}'
+    onChange: '{{ $onChange }}',
+    resolveUrl: '{{ $resolveUrl }}'
 })" class="search-component">
 
     {{-- Hidden field to store the selected value --}}
@@ -31,6 +34,13 @@
            name="{{ $name }}"
            x-model="selectedValue"
         {{ $required ? 'required' : '' }}>
+
+    @if($displayName)
+        {{-- Hidden field to store the display value for form repopulation --}}
+        <input type="hidden"
+               name="{{ $displayName }}"
+               x-model="displayValue">
+    @endif
 
     {{-- Display field (readonly) --}}
     <div class="ui fluid left icon input">

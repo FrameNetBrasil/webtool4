@@ -4,54 +4,66 @@
 >
     <x-form::hidden-field id="idDocument" value="{{$object->idDocument}}"></x-form::hidden-field>
     <x-form::hidden-field id="idDynamicObject" value="{{$object?->idDynamicObject}}"></x-form::hidden-field>
-    <div class="fields">
-        @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
-            <div class="field w-1/4">
-                <x-form::combobox.gl
-                    id="idGenericLabel"
-                    name="idGenericLabel"
-                    label="Label"
-                    :value="$object?->idGenericLabel ?? 0"
-                    :idLayerType="$object?->idLayerType ?? 0"
-                    :hasNull="false"
-                ></x-form::combobox.gl>
-            </div>
-        @endif
+    @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
         <div class="field w-1/4">
-            <label for="idFrame">Frame</label>
-            <div
-                @search-component-change="if ($event.detail.value) { htmx.ajax('GET', '/annotation/deixis/fes/' + $event.detail.value, '#fes'); }">
-                <x-ui::search
-                    name="idFrame"
-                    placeholder="Select a frame"
-                    search-url="/frame/list/forSelect"
-                    display-field="name"
-                    value-field="idFrame"
-                    modal-title="Search Frame"
-                />
-            </div>
-        </div>
-        <div id="fes" class="field w-1/4">
-            <x-form::combobox.fe-frame
-                id="idFrameElement"
-                name="idFrameElement"
-                label="FE"
-                :value="$object?->idFrameElement ?? 0"
-                :idFrame="$object?->idFrame ?? 0"
+            <x-form::combobox.gl
+                id="idGenericLabel"
+                name="idGenericLabel"
+                label="Label"
+                :value="$object?->idGenericLabel ?? 0"
+                :idLayerType="$object?->idLayerType ?? 0"
                 :hasNull="false"
-            ></x-form::combobox.fe-frame>
+            ></x-form::combobox.gl>
         </div>
-    </div>
-    <div class="fields">
-        <div class="field w-1/4">
-            <x-form::search.lu
-                id="idLU"
-                label="CV Name"
-                placeholder="Select a CV name"
-                search-url="/lu/list/forSelect"
-                value-field="idLU"
-                modal-title="Search CV Name"
-            ></x-form::search.lu>
+    @endif
+
+    <div class="ui two column stackable grid relative">
+        <div class="column pr-8">
+            <div class="two fields">
+                <div class="field">
+                    <label for="idFrame">Frame</label>
+                    <div
+                        @search-component-change="if ($event.detail.value) { htmx.ajax('GET', '/annotation/deixis/fes/' + $event.detail.value, '#fes'); }">
+                        <x-ui::search
+                            name="idFrame"
+                            display-name="frame"
+                            placeholder="Select a frame"
+                            search-url="/frame/list/forSelect"
+                            value="{{ old('idFrame', $object?->idFrame ?? '') }}"
+                            display-value="{{ old('frame', $object->frame ?? '') }}"
+                            display-field="name"
+                            value-field="idFrame"
+                            modal-title="Search Frame"
+                        />
+                    </div>
+                </div>
+                <div id="fes" class="field">
+                    <x-form::combobox.fe-frame
+                        id="idFrameElement"
+                        name="idFrameElement"
+                        label="FE"
+                        :value="$object?->idFrameElement ?? 0"
+                        :idFrame="$object?->idFrame ?? 0"
+                        :hasNull="false"
+                    ></x-form::combobox.fe-frame>
+                </div>
+            </div>
+        </div>
+        <div class="column pl-8">
+            <div class="field w-full">
+                <x-form::search.lu
+                    id="idLU"
+                    label="CV Name"
+                    placeholder="Select a CV name"
+                    search-url="/lu/list/forSelect"
+                    value="{{ old('idFrame', $object?->idLU ?? '') }}"
+                    display-value="{{ old('frame', $object->lu ?? '') }}"
+                    modal-title="Search CV Name"
+                ></x-form::search.lu>
+            </div>
+        </div>
+        <div class="ui vertical divider">
+            and
         </div>
     </div>
     <button type="submit" class="ui medium button">

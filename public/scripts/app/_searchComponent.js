@@ -7,7 +7,6 @@ function searchComponent(config) {
         displayFormatter: config.displayFormatter,
         valueField: config.valueField,
         onChange: config.onChange,
-        resolveUrl: config.resolveUrl,
 
         // State
         isModalOpen: false,
@@ -29,33 +28,6 @@ function searchComponent(config) {
             return result[this.displayField] || '';
         },
 
-        // Helper method to resolve display value from value ID
-        async resolveDisplayValue(value) {
-            if (!value || !this.resolveUrl) return '';
-
-            try {
-                const url = new URL(this.resolveUrl, window.location.origin);
-                url.searchParams.append(this.valueField, value);
-
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const item = data.result || data;
-
-                if (this.displayFormatter && typeof window[this.displayFormatter] === 'function') {
-                    return window[this.displayFormatter](item);
-                }
-                return item[this.displayField] || '';
-
-            } catch (error) {
-                console.error('Error resolving display value:', error);
-                return `ID: ${value}`; // Fallback display
-            }
-        },
-
         init() {
             // Initialize search parameters from config
             if (Array.isArray(config.searchFields)) {
@@ -64,13 +36,6 @@ function searchComponent(config) {
                 });
             } else {
                 this.searchParams = config.searchFields || {};
-            }
-
-            // Resolve display value if we have a value but no display value
-            if (this.selectedValue && !this.displayValue && this.resolveUrl) {
-                this.resolveDisplayValue(this.selectedValue).then(resolved => {
-                    this.displayValue = resolved;
-                });
             }
 
             // Ensure modal starts closed
