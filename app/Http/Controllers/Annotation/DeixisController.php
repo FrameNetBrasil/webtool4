@@ -100,6 +100,9 @@ class DeixisController extends Controller
             return view("Annotation.Deixis.Forms.formNewObject");
         }
         $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
+        if (is_null($object)) {
+            return $this->renderNotify("error", "Object not found.");
+        }
         return view("Annotation.Deixis.Panes.objectPane", [
             'object' => $object
         ]);
@@ -126,7 +129,8 @@ class DeixisController extends Controller
     public function createNewObjectAtLayer(CreateObjectData $data)
     {
         try {
-            return AnnotationDeixisService::createNewObjectAtLayer($data);
+            $object = AnnotationDeixisService::createNewObjectAtLayer($data);
+            return $this->redirect("/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -137,10 +141,12 @@ class DeixisController extends Controller
     public function formAnnotation(ObjectData $data)
     {
         $object = AnnotationDeixisService::getObject($data->idDynamicObject ?? 0);
-        return view("Annotation.Deixis.Panes.formPane", [
-            'order' => $data->order,
-            'object' => $object
-        ]);
+        return $this->redirect("/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
+
+//        return view("Annotation.Deixis.Panes.formPane", [
+//            'order' => $data->order,
+//            'object' => $object
+//        ]);
     }
 
     #[Get(path: '/annotation/deixis/formAnnotation/{idDynamicObject}')]
@@ -197,7 +203,7 @@ class DeixisController extends Controller
     public function updateObjectAnnotation(ObjectAnnotationData $data)
     {
         try {
-            return AnnotationDeixisService::updateObjectAnnotation($data);
+            AnnotationDeixisService::updateObjectAnnotation($data);
             return $this->renderNotify("success", "Object updated.");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -205,12 +211,25 @@ class DeixisController extends Controller
         }
     }
 
-    #[Delete(path: '/annotation/deixis/{idDynamicObject}')]
-    public function deleteObject(int $idDynamicObject)
+    #[Delete(path: '/annotation/deixis/deleteAllBBoxes/{idDocument}/{idDynamicObject}')]
+    public function deleteAllBBoxes(int $idDocument, int $idDynamicObject)
+    {
+        try {
+            AnnotationDeixisService::deleteBBoxesFromObject($idDynamicObject);
+            //return $this->renderNotify("success", "All BBoxes removed.");
+            return $this->redirect("/annotation/deixis/{$idDocument}/{$idDynamicObject}");
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+    #[Delete(path: '/annotation/deixis/{idDocument}/{idDynamicObject}')]
+    public function deleteObject(int $idDocument, int $idDynamicObject)
     {
         try {
             AnnotationDeixisService::deleteObject($idDynamicObject);
-            return $this->renderNotify("success", "Object removed.");
+            return $this->redirect("/annotation/deixis/{$idDocument}");
+            //return $this->renderNotify("success", "Object removed.");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -256,17 +275,7 @@ class DeixisController extends Controller
         }
     }
 
-    #[Post(path: '/annotation/deixis/deleteBBox')]
-    public function deleteBBox(DeleteBBoxData $data)
-    {
-        try {
-            debug($data);
-            return AnnotationDeixisService::deleteBBoxesFromObject($data);
-        } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
+
 
     /**
      * timeline

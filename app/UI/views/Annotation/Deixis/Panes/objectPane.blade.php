@@ -3,7 +3,7 @@
     @bbox-drawn.document="bboxDrawn"
     @video-update-state.document="onVideoUpdateState"
 >
-    <div class="flex-container justify-between">
+    <div class="flex-container h-2-5 items-center justify-between bg-gray-300">
         <div>
             <h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}</h3>
         </div>
@@ -21,12 +21,18 @@
                 EndFrame: {{$object->endFrame}}
             </button>
             <button
+                class="ui tiny icon button danger"
+                @click.prevent="manager.confirmDelete('Removing object #{{$object->idDynamicObject}}.', '/annotation/deixis/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
+            >
+                Delete Object
+            </button>
+            <button
                 id="btnClose"
-                class="ui medium icon button"
+                class="ui mini icon button"
                 title="Close Object"
                 @click="window.location.assign('/annotation/deixis/{{$object->idDocument}}')"
             >
-                <i class="pt-1 close icon"></i>
+                <i class="close icon"></i>
             </button>
         </div>
     </div>

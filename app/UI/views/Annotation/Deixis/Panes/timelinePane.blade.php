@@ -3,7 +3,9 @@
             maxFrame: {{$timeline['config']['maxFrame']}},
             frameToPixel: {{$timeline['config']['frameToPixel']}},
             labelWidth: {{$timeline['config']['labelWidth']}}
-    })" class="timeline">
+    })" class="timeline"
+    @timeline-seek-frame.document="onSeekObject"
+>
     <div class="container">
         <!-- Controls -->
         <div class="controls">
@@ -82,9 +84,10 @@
                                              data-line-index="{{ $lineIndex }}"
                                              data-start-frame="{{ $object->startFrame }}"
                                              data-end-frame="{{ $object->endFrame }}"
-                                             hx-get="/annotation/deixis/object/{{$object->idDynamicObject}}"
-                                             hx-target="#formsPane"
-                                             hx-swap="innerHTML"
+                                             @click="window.location.assign('/annotation/deixis/{{$idDocument}}/{{$object->idDynamicObject}}')"
+{{--                                             hx-get="/annotation/deixis/object/{{$object->idDynamicObject}}"--}}
+{{--                                             hx-target="#formsPane"--}}
+{{--                                             hx-swap="innerHTML"--}}
                                         >
                                             {{ $label }}
                                         </div>
@@ -108,3 +111,10 @@
 <div id="highlight-container"></div>
 <div id="object-click-info"></div>
 
+@if($idDynamicObject != 0)
+<script type="text/javascript">
+    $(function() {
+        document.dispatchEvent(new CustomEvent("timeline-seek-frame", { detail: { frameNumber: {{$object->startFrame}} } }));
+    });
+</script>
+@endif

@@ -1,5 +1,9 @@
 <h3 class="ui header">Create new object</h3>
-<form class="ui form p-4 border">
+<form
+    class="ui form p-4 border"
+    hx-post="/annotation/deixis/createNewObjectAtLayer"
+>
+    <x-form::hidden-field id="idDocument" value="{{$idDocument}}"></x-form::hidden-field>
     <div class="field">
         <x-form::combobox.layer-deixis
             label="Layer"
@@ -19,9 +23,8 @@
         </div>
     </div>
     <button
-        type="button"
+        type="submit"
         class="ui button medium"
-        {{--                onclick="annotation.objects.createNewObjectAtLayer({idLayerType: document.getElementById('idLayerType').value, startFrame: Alpine.store('doStore').newStartFrame, endFrame: Alpine.store('doStore').newEndFrame})"--}}
     >Submit
     </button>
 </form>

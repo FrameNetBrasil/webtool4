@@ -119,12 +119,12 @@ class ObjectTrackerObject {
                 this.opticalFlow.init(previousImageData);
                 let bboxes = [{x:bbox.x,y:bbox.y,width:bbox.width,height:bbox.height}];
                 let newBboxes = this.opticalFlow.track(currentImageData, bboxes);
-                console.log("previous bboxes",bboxes);
-                console.log("new bboxes",newBboxes);
+                // console.log("previous bboxes",bboxes);
+                // console.log("new bboxes",newBboxes);
                 let newBbox = new BoundingBox(frameNumber,newBboxes[0].x,newBboxes[0].y,newBboxes[0].width,newBboxes[0].height,false);
                 console.log("newBbox",newBbox);
                 annotatedObject.addBBox(newBbox);
-                console.log("object.bboxes", annotatedObject.bboxes);
+                //console.log("object.bboxes", annotatedObject.bboxes);
                 //toCompute.push({ annotatedObject: annotatedObject, bbox: bbox });
 
             }

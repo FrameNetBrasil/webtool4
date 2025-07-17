@@ -65,7 +65,7 @@
     {{--            <script type="text/javascript" src="/scripts/vatic/dist/StreamSaver.js"></script>--}}
     {{--            <script type="text/javascript" src="/scripts/vatic/dist/polyfill.js"></script>--}}
                 <script type="text/javascript" src="/scripts/vatic/dist/jsfeat.js"></script>
-    {{--            <script type="text/javascript" src="/scripts/vatic/dist/nudged.js"></script>--}}
+                <script type="text/javascript" src="/scripts/vatic/dist/nudged.js"></script>
     {{--            <script type="text/javascript" src="/scripts/vatic/dist/pouchdb.min.js"></script>--}}
     <script type="text/javascript" src="/scripts/vatic/vatic.js"></script>
     {{--            <script type="text/javascript" src="/scripts/vatic/FramesManager.js"></script>--}}
