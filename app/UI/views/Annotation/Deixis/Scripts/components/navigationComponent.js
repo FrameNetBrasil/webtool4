@@ -65,10 +65,12 @@ function navigationComponent() {
         },
 
         onTrackingStart() {
+            console.log("onTrackingStart");
             this.isTracking = true;
         },
 
         onTrackingStop() {
+            console.log("onTrackingStop");
             this.isTracking = false;
         },
 

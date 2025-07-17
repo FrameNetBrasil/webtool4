@@ -4,7 +4,7 @@
 class DynamicObject {
     constructor(object) {
         Object.assign(this, object);
-        this.idObject = 1;
+        this.idObject = object.idDynamicObject;
         this.color = vatic.getColor(0);
         this.visible = true;
         this.hidden = false;

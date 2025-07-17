@@ -45,6 +45,7 @@ class AnnotationDeixisService
         ]);
         $idDynamicObject = Criteria::function("dynamicobject_create(?)", [$do]);
         $dynamicObject = Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+        $dynamicObject->idDocument = $data->idDocument;
         Criteria::table("dynamicobject")
             ->where("idDynamicObject", $idDynamicObject)
             ->update(['idLayerType' => $data->idLayerType]);
@@ -70,22 +71,24 @@ class AnnotationDeixisService
                 "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE", "idLanguageFE",
                 "idAnnotationGL", "idGenericLabel", "gl", "bgColorGL", "fgColorGL", "idLanguageGL", "layerGroup", "idDocument")
             ->first();
-        $object->comment = CommentService::getDynamicObjectComment($idDynamicObject);
-        if ($object->gl != '') {
-            $object->name = $object->gl;
-            $object->bgColor = $object->bgColorGL;
-            $object->fgColor = $object->fgColorGL;
-        } else if ($object->lu != '') {
-            $object->name = $object->lu;
-            if ($object->fe != '') {
-                $object->bgColor = "#EEE";
-                $object->name .= " | " . $object->frame . "." . $object->fe;
+        if (!is_null($object)) {
+            $object->comment = CommentService::getDynamicObjectComment($idDynamicObject);
+            if ($object->gl != '') {
+                $object->name = $object->gl;
+                $object->bgColor = $object->bgColorGL;
+                $object->fgColor = $object->fgColorGL;
+            } else if ($object->lu != '') {
+                $object->name = $object->lu;
+                if ($object->fe != '') {
+                    $object->bgColor = "#EEE";
+                    $object->name .= " | " . $object->frame . "." . $object->fe;
+                }
             }
+            $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
+                ->where("idDynamicObject", $idDynamicObject)
+                ->orderBy("frameNumber")
+                ->all();
         }
-        $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
-            ->where("idDynamicObject", $idDynamicObject)
-            ->orderBy("frameNumber")
-            ->all();
         return $object;
     }
 
@@ -256,16 +259,16 @@ class AnnotationDeixisService
         return $data->idDynamicObject;
     }
 
-    public static function deleteBBoxesFromObject(DeleteBBoxData $data): int
+    public static function deleteBBoxesFromObject(int $idDynamicObject): int
     {
         $idUser = AppService::getCurrentIdUser();
         $bboxes = Criteria::table("view_dynamicobject_boundingbox")
-            ->where("idDynamicObject", $data->idDynamicObject)
+            ->where("idDynamicObject", $idDynamicObject)
             ->chunkResult("idBoundingBox", "idBoundingBox");
         foreach ($bboxes as $idBoundingBox) {
             Criteria::function("boundingbox_dynamic_delete(?,?)", [$idBoundingBox, $idUser]);
         }
-        return $data->idDynamicObject;
+        return $idDynamicObject;
     }
 
 }

@@ -24,21 +24,13 @@ function objectComponent(object, token) {
             });
         },
 
-        onVideoUpdateState(e) {
+        async onVideoUpdateState(e) {
             if (this.currentFrame === 0) {
                 this.annotateObject(object);
             }
             this.currentFrame = e.detail.frame.current;
-            console.log("onVideoUpdateState", this.currentFrame);
-            console.log("onVideoUpdateState",this.isTracking ? "tracking" : "stopped");
-
-            if (this.isTracking) {
-                this.tracking();
-            }
-            this.hasBBoxInCurrentFrame = this.object.hasBBoxInFrame(this.currentFrame);
-            if (this.hasBBoxInCurrentFrame) {
-                this.object.drawBoxInFrame(this.currentFrame, this.isTracking ? "tracking" : "editing");
-            }
+            this.drawFrameBBox();
+            await this.tracking();
         },
 
         annotateObject(object) {
@@ -82,26 +74,29 @@ function objectComponent(object, token) {
         },
 
         async toggleTracking() {
-            console.log("toogle tracking",this.isTracking ? "tracking" : "stopped");
+            console.log("toogle tracking", this.isTracking ? "tracking" : "stopped");
             if (this.isTracking) {
                 this.stopTracking();
             } else {
                 await this.startTracking();
             }
-            // this.isPlayingTracking = !this.isPlayingTracking;
         },
 
         async startTracking() {
             document.dispatchEvent(new CustomEvent("tracking-start"));
+            this.isTracking = true;
             await this.tracking();
         },
 
         async tracking() {
-            const createDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            await new Promise(r => setTimeout(r, 800));
             const nextFrame = this.currentFrame + 1;
-            console.log("tracking....", nextFrame);
-            await createDelay(800);
-            this.gotoFrame(nextFrame);
+            if ((this.isTracking) && (nextFrame >= this.object.startFrame) && (nextFrame <= this.object.endFrame)){
+                console.log("tracking....", nextFrame);
+                this.gotoFrame(nextFrame);
+            } else {
+                this.stopTracking();
+            }
         },
 
         stopTracking() {
@@ -143,6 +138,7 @@ function objectComponent(object, token) {
             }).json();
             this.tracker.getFrameImage(this.currentFrame);
             this.object.drawBoxInFrame(this.currentFrame, "tracking");
+            this.canCreateBBox = false;
             manager.notify("success", "New bbox created.");
         },
 
@@ -218,8 +214,34 @@ function objectComponent(object, token) {
                     frameNumber
                 }
             }));
+        },
+
+        async drawFrameBBox() {
+            if (this.object) {
+                this.clearFrameObject();
+                if (this.isTracking) {
+                    // se está tracking, a box:
+                    // - ou já existe (foi criada antes)
+                    // - ou precisa ser criada
+                    let bbox = this.object.getBoundingBoxAt(this.currentFrame);
+                    if (bbox === null) {
+                        await this.tracker.setBBoxForObject(this.object, this.currentFrame);
+                        let bbox = this.object.getBoundingBoxAt(this.currentFrame);
+                        console.log("creating bbox at frame", this.currentFrame);
+                        bbox.idBoundingBox = await ky.post("/annotation/dynamicMode/createBBox", {
+                            json: {
+                                _token: this._token,
+                                idDynamicObject: this.idDynamicObject,
+                                frameNumber: this.currentFrame,
+                                bbox
+                            }
+                        }).json();
+                    }
+                }
+                let x = this.object.getBoundingBoxAt(this.currentFrame);
+                console.log("drawFrameBBox", this.currentFrame,x ? 'ok' : 'nine');
+                this.object.drawBoxInFrame(this.currentFrame, this.isTracking ? "tracking" : "editing");
+            }
         }
-
-
     };
 }

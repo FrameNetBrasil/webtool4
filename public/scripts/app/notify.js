@@ -1,4 +1,4 @@
-var manager = {
+const manager = {
     messager(type, message) {
         if ((type === 'error') || (type === 'warning')|| (type === 'info')) {
             $.notify.alert( '', message, type);
@@ -31,34 +31,62 @@ var manager = {
         });
     },
     confirmDelete(message, action, onApprove, onDeny) {
-        $('#confirmtemplate')
-            .toast({
-                title: 'Warning',
-                message: message + ' Confirm?',
-                displayTime: 0,
-                position: 'centered',
-                //class:'ui warning message',
-                // className: {
-                //     toast: 'ui message'
-                // },
-                onDeny    : function(){
-                    //$.toast({message:'Wait not yet!'});
-                    console.log('no');
-                    return true;
-                },
-                onApprove : async function() {
-                    //$.toast({message:'Approved'});
-                    console.log('yes');
+        console.log('confirmDelete');
+        $.toast({
+            title: 'Warning',
+            message: message + ' Confirm?',
+            displayTime: 0,
+            position: 'centered',
+            actions:	[{
+                text: 'Yes',
+                icon: 'check',
+                class: 'green',
+                click: async () => {
                     await htmx.ajax('DELETE', action, null);
-                    // if (event) {
-                    //     $("#" + event[0]).trigger(event[1]);
-                    // }
                     if (onApprove) {
                         onApprove();
                     }
-                    return true;
                 }
-            });
+            },{
+                icon: 'ban',
+                class: 'secondary',
+                text: 'No',
+                click: function() {
+                    if (onDeny) {
+                        onDeny();
+                    }
+                }
+            }]
+        });
+
+        // $('#confirmtemplate')
+        //     $.toast({
+        //         title: 'Warning',
+        //         message: message + ' Confirm?',
+        //         displayTime: 0,
+        //         position: 'centered',
+        //         //class:'ui warning message',
+        //         // className: {
+        //         //     toast: 'ui message'
+        //         // },
+        //         onDeny    : function(){
+        //             //$.toast({message:'Wait not yet!'});
+        //             console.log('no');
+        //             return true;
+        //         },
+        //         onApprove : async function() {
+        //             //$.toast({message:'Approved'});
+        //             console.log('yes');
+        //             await htmx.ajax('DELETE', action, null);
+        //             // if (event) {
+        //             //     $("#" + event[0]).trigger(event[1]);
+        //             // }
+        //             if (onApprove) {
+        //                 onApprove();
+        //             }
+        //             return true;
+        //         }
+        //     });
         /*
         $.notify.confirm('',message, function(r) {
             if (r) {

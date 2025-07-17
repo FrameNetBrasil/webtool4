@@ -52,6 +52,13 @@ function timelineComponent(config) {
             });
         },
 
+        onSeekObject(e) {
+            this.frameInput = e.detail.frameNumber;
+            // console.log("onSeekObject", frameNumber);
+            this.scrollToFrame();
+        },
+
+
         generateRuler: function() {
             const rulerContent = document.getElementById("ruler-content");
             rulerContent.innerHTML = "";

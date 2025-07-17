@@ -3840,7 +3840,15 @@ $router->post('annotation/deixis/updateObjectAnnotation', [
 	'domain' => NULL,
 ]);
 
-$router->delete('annotation/deixis/{idDynamicObject}', [
+$router->delete('annotation/deixis/deleteAllBBoxes/{idDocument}/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteAllBBoxes',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/deixis/{idDocument}/{idDynamicObject}', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteObject',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -3866,14 +3874,6 @@ $router->post('annotation/deixis/updateObjectComment', [
 
 $router->delete('annotation/deixis/comment/{idDocument}/{idDynamicObject}', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteObjectComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/deleteBBox', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteBBox',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
