@@ -3,7 +3,7 @@ function videoComponent() {
         idVideoJs: "videoContainer",
         idVideo: "videoContainer_html5_api",
         fps: 25, // frames por segundo
-        timeInterval: 1 / 25, // interval between frames - 0.04s = 40ms
+        timeInterval: 0.04, // interval between frames - 0.04s = 40ms
         dimensions: {
             width: 852,
             height: 480
@@ -14,7 +14,7 @@ function videoComponent() {
             last: 0
         },
         time: {
-            current: ""
+            current: 0.0
         },
         isPlaying: false,
 
@@ -54,38 +54,16 @@ function videoComponent() {
             // Initially disable drawing
             drawBoxObject.disableDrawing();
 
-            document.addEventListener("video-seek-frame", (e) => {
-                this.seekToFrame(e.detail.frameNumber);
-            });
-
-            document.addEventListener("video-toggle-play", (e) => {
-                this.togglePlay();
-            });
-
             player.crossOrigin("anonymous");
 
             player.player_.handleTechClick_ = () => {
                 this.togglePlay();
-                // console.log("video clicking");
-                //document.dispatchEvent(new CustomEvent("action-toggle"));
-                //let state = Alpine.store("doStore").currentVideoState;
-                // if (video.state === "paused") {
-                //     document.dispatchEvent(new CustomEvent("action-play"));
-                // }
-                // if (video.state === "playing") {
-                //     document.dispatchEvent(new CustomEvent("action-pause"));
-                // }
             };
 
             player.ready(() => {
-                // Alpine.store('doStore').config();
                 player.on("durationchange", () => {
                     let duration = player.duration();
                     let lastFrame = this.frameFromTime(duration);
-                    // Alpine.store('doStore').timeDuration = parseInt(duration);
-                    //let lastFrame = video.frameFromTime(duration);
-                    // Alpine.store('doStore').frameDuration = lastFrame;
-                    //video.framesRange.last = lastFrame;
                     document.dispatchEvent(new CustomEvent("video-update-duration", {
                         detail: {
                             duration,
@@ -97,59 +75,27 @@ function videoComponent() {
                 player.on("timeupdate", () => {
                     this.time.current = player.currentTime();
                     this.frame.current = this.frameFromTime(this.time.current);
-                    // console.log("timeupdate", currentFrame,currentTime);
-                    // Alpine.store('doStore').timeCount = Math.floor(currentTime * 1000) /1000;
-                    // Alpine.store('doStore').updateCurrentFrame(currentFrame);
-                    //annotation.timeline.setTime(Math.trunc(currentTime * 1000));
-                    // if (Alpine.store('doStore').newObjectState === 'editing') {
-                    //     Alpine.store('doStore').uiEditingObject();
-                    // }
                     this.broadcastState();
-                    // document.dispatchEvent(new CustomEvent("update-current-time", {
-                    //     detail: {
-                    //         currentTime
-                    //     }
-                    // }));
-                    // if (video.playingRange) {
-                    //     if (currentFrame > video.playingRange.endFrame) {
-                    //         video.player.pause();
-                    //         video.playingRange = null;
-                    //     }
-                    // }
                 });
 
                 player.on("play", () => {
                     this.isPlaying = true;
                     this.broadcastState();
-                    // let state = Alpine.store('doStore').currentVideoState;
-                    // if (video.state === "paused") {
-                        // Alpine.store('doStore').currentVideoState = 'playing';
-                        //annotation.timeline.onPlayClick();
-                        //video.disableSkipFrame();
-//                        video.disableVideoNavigationButtons();
-//                         document.dispatchEvent(new CustomEvent("action-play"));
-//                         video.state = "playing";
-//                     }
                 });
 
                 player.on("pause", () => {
                     this.isPlaying = false;
                     this.broadcastState();
-                    //player.currentTime(Alpine.store('doStore').timeCount);
-                    //let currentTime = player.currentTime();
-                    // Alpine.store('doStore').currentVideoState = 'paused';
-                    //annotation.timeline.onPauseClick();
-//                    video.enableSkipFrame();
-//                     video.enableVideoNavigationButtons();
-//                     document.dispatchEvent(new CustomEvent("action-pause"));
-//                     video.state = "paused";
-
                 });
-
-
             });
+        },
 
+        onVideoSeekFrame(e) {
+            this.seekToFrame(e.detail.frameNumber);
+        },
 
+        onVideoTogglePlay(e) {
+            this.togglePlay();
         },
 
         broadcastState() {
@@ -165,9 +111,9 @@ function videoComponent() {
         },
 
         seekToFrame(frame) {
-            this.frame.current = frame;
-            this.player.currentTime(this.timeFromFrame(frame));
-            // this.$refs.video.currentTime = this.frameToTime(frame);
+            if (frame !== this.frame.current) {
+                this.player.currentTime(this.timeFromFrame(frame));
+            }
         },
 
         togglePlay() {
@@ -178,25 +124,9 @@ function videoComponent() {
             }
         },
 
-
-        // enablePlayPause() {
-        //     let $btn = document.querySelector(".vjs-play-control");
-        //     if ($btn) {
-        //         $btn.disabled = false;
-        //         $btn.style.color = "white";
-        //         $btn.style.cursor = "pointer";
-        //     }
-        // },
-        // disablePlayPause() {
-        //     let $btn = document.querySelector(".vjs-play-control");
-        //     if ($btn) {
-        //         $btn.disabled = true;
-        //         $btn.style.color = "grey";
-        //         $btn.style.cursor = "default";
-        //     }
-        // },
         frameFromTime(timeSeconds) {
-            return Math.floor(parseFloat(timeSeconds.toFixed(3)) * this.fps) + 1;
+            //return Math.floor(parseFloat(timeSeconds.toFixed(3)) * this.fps) + 1;
+            return Math.floor((timeSeconds * 1000 * this.fps) / 1000) + 1;
         },
         timeFromFrame(frameNumber) {
             return Math.floor(((frameNumber - 1) * this.timeInterval) * 1000) / 1000;

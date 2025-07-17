@@ -20,10 +20,10 @@
                 >
             </label>
             </div>
-            <button @click="scrollToFrame()">Go</button>
-            <button @click="scrollToStart()">Start</button>
-            <button @click="scrollToEnd()">End</button>
-            <button @click="scrollToVideoFrame()">as Video</button>
+            <button class="ui tiny button" @click="scrollToFrame()">Go</button>
+            <button class="ui tiny button" @click="scrollToStart()">Start</button>
+            <button class="ui tiny button" @click="scrollToEnd()">End</button>
+            <button class="ui tiny button" @click="scrollToVideoFrame()">as Video</button>
             <span class="invisible" id="current-frame">Frame: 0</span>
         </div>
 

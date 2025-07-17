@@ -7,6 +7,9 @@ function objectComponent(object, token) {
         boxesContainer: null,
         currentFrame: 0,
         tracker: null,
+        isTracking: false,
+        canCreateBBox: false,
+        hasBBoxInCurrentFrame: false,
 
         init() {
             console.log("Object component init");
@@ -19,22 +22,29 @@ function objectComponent(object, token) {
                 ctx: drawBoxObject.ctx,
                 video: drawBoxObject.video
             });
+        },
 
-            document.addEventListener("bbox-drawn", this.bboxDrawn.bind(this));
-            document.addEventListener("video-update-state", (e) => {
-                this.currentFrame = e.detail.frame.current;
-                console.log("%% update object current frame to " + this.currentFrame);
+        onVideoUpdateState(e) {
+            if (this.currentFrame === 0) {
                 this.annotateObject(object);
-            });
+            }
+            this.currentFrame = e.detail.frame.current;
+            console.log("onVideoUpdateState", this.currentFrame);
+            console.log("onVideoUpdateState",this.isTracking ? "tracking" : "stopped");
 
+            if (this.isTracking) {
+                this.tracking();
+            }
+            this.hasBBoxInCurrentFrame = this.object.hasBBoxInFrame(this.currentFrame);
+            if (this.hasBBoxInCurrentFrame) {
+                this.object.drawBoxInFrame(this.currentFrame, this.isTracking ? "tracking" : "editing");
+            }
         },
 
         annotateObject(object) {
+            console.log("annotateObject");
             this.object = new DynamicObject(object);
-            //let annotatedObject = new DeixisObject(object);
             this.object.dom = this.newBboxElement();
-            //annotation.layerList[indexLayer].objects[indexObj] = annotatedObject;
-            //annotation.objects.add(annotatedObject);
             this.interactify(
                 this.object,
                 async (x, y, width, height) => {
@@ -62,7 +72,7 @@ function objectComponent(object, token) {
                 newBBox.blocked = (parseInt(bbox.blocked) === 1);
                 this.object.addBBox(newBBox);
             }
-            this.object.drawBoxInFrame(this.currentFrame, "editing");
+            this.canCreateBBox = !this.object.hasBBox();
         },
 
         createBBox() {
@@ -71,17 +81,39 @@ function objectComponent(object, token) {
             console.log("Drawing mode activated!");
         },
 
-        stopBBox() {
-            drawBoxObject.disableDrawing();
-            console.log("Drawing mode deactivated!");
+        async toggleTracking() {
+            console.log("toogle tracking",this.isTracking ? "tracking" : "stopped");
+            if (this.isTracking) {
+                this.stopTracking();
+            } else {
+                await this.startTracking();
+            }
+            // this.isPlayingTracking = !this.isPlayingTracking;
+        },
+
+        async startTracking() {
+            document.dispatchEvent(new CustomEvent("tracking-start"));
+            await this.tracking();
+        },
+
+        async tracking() {
+            const createDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            const nextFrame = this.currentFrame + 1;
+            console.log("tracking....", nextFrame);
+            await createDelay(800);
+            this.gotoFrame(nextFrame);
+        },
+
+        stopTracking() {
+            console.log("stop tracking");
+            this.isTracking = false;
+            document.dispatchEvent(new CustomEvent("tracking-stop"));
+            this.object.drawBoxInFrame(this.currentFrame, "editing");
         },
 
         async bboxDrawn(e) {
-            console.log("bbox drawn", e);
-
             this.bbox = e.detail.bbox;
             console.log(this.object);
-            //let object = new DynamicObject();
             this.object.setDom(this.newBboxElement());
             let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, null);
             this.object.addBBox(bbox);
@@ -99,7 +131,7 @@ function objectComponent(object, token) {
                     }).json();
                 }
             );
-            console.log(this.idDynamicObject, this.currentFrame, bbox);
+            // console.log(this.idDynamicObject, this.currentFrame, bbox);
             drawBoxObject.disableDrawing();
             await ky.post("/annotation/dynamicMode/createBBox", {
                 json: {
@@ -110,49 +142,8 @@ function objectComponent(object, token) {
                 }
             }).json();
             this.tracker.getFrameImage(this.currentFrame);
-            this.object.drawBoxInFrame(this.currentFrame, "editing");
+            this.object.drawBoxInFrame(this.currentFrame, "tracking");
             manager.notify("success", "New bbox created.");
-
-            // let bbox = new BoundingBox(currentFrame, tempObject.bbox.x, tempObject.bbox.y, tempObject.bbox.width, tempObject.bbox.height, true, null);
-            // console.log(annotatedObject);
-            // annotatedObject.addBBox(bbox);
-            // annotation.objects.interactify(
-            //     annotatedObject,
-            //     async (x, y, width, height, idBoundingBox) => {
-            //
-            //         let currentFrame = Alpine.store("doStore").currentFrame;
-            //         let bbox = new BoundingBox(currentFrame, x, y, width, height, true);
-            //         annotatedObject.updateBBox(bbox);
-            //         //console.log("update annotated object bbox", bbox);
-            //         //let bbox = annotatedObject.getBoundingBoxAt(currentFrame);
-            //         annotation.api.updateBBox({
-            //             idBoundingBox: bbox.idBoundingBox,
-            //             bbox: bbox
-            //         });
-            //     }
-            // );
-            // //console.log("##### creating newBBox");
-            // //let data = await annotation.objects.createBBox(annotatedObject);
-            // let paramsBBox = {
-            //     idDynamicObject: annotatedObject.idDynamicObject,
-            //     frameNumber: currentFrame,
-            //     bbox: bbox
-            // };
-            // console.log("##### creating new BBox");
-            // await annotation.api.createBBox(paramsBBox, async (idBoundingBox) => {
-            //     console.log(idBoundingBox);
-            //     console.log("new BoundingBox", idBoundingBox);
-            //     bbox.idBoundingBox = idBoundingBox;
-            // });
-            // //await Alpine.store("doStore").loadLayerList();
-            // console.log("##### New bbox created.");
-            // Alpine.store("doStore").newObjectState = "tracking";
-            // annotation.objects.tracker.getFrameImage(currentFrame);
-            // annotatedObject.drawBoxInFrame(currentFrame, "editing");
-            // Alpine.store("doStore").uiEnableTracking();
-            // manager.notify("success", "New bbox created.");
-
-
         },
 
         newBboxElement: () => {
@@ -221,6 +212,13 @@ function objectComponent(object, token) {
             $(".bbox").css("display", "none");
         },
 
+        gotoFrame(frameNumber) {
+            document.dispatchEvent(new CustomEvent("video-seek-frame", {
+                detail: {
+                    frameNumber
+                }
+            }));
+        }
 
 
     };

@@ -24,6 +24,10 @@ class DynamicObject {
         return (this.object.startFrame <= frameNumber) && (this.object.endFrame >= frameNumber);
     }
 
+    hasBBoxInFrame(frameNumber) {
+        return (this.getBoundingBoxAt(frameNumber) !== null);
+    }
+
     getBoundingBoxAt(frameNumber) {
         for (let i = 0; i < this.bboxes.length; i++) {
             let currentBBox = this.bboxes[i];
@@ -41,7 +45,7 @@ class DynamicObject {
         this.dom.style.display = "none";
         let bbox = this.getBoundingBoxAt(frameNumber);
         if (bbox) {
-            console.log(state, this.hidden ? " hidden" : " not hidden");
+            // console.log(state, this.hidden ? " hidden" : " not hidden");
             if (!this.hidden) {
                 if (bbox.isVisible()) {
                     this.dom.style.position = "absolute";

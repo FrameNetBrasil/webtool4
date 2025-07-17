@@ -1,42 +1,36 @@
 <button
     id="btnCreateObject"
     class="ui button primary"
+    :class="!canCreateBBox && 'disabled'"
     @click="createBBox()"
 >
     <i class="plus square outline icon"></i>
     Create BBox
 </button>
 <button
-    id="btnStartTracking"
-    class="ui button primary"
-    x-data @click="$store.doStore.startTracking()"
->
-    <i class="play icon"></i>
-    Start
+    class="ui button primary toggle"
+    @click="toggleTracking()"
+><i :class="isTracking ? 'stop icon' : 'play icon'"></i>
+    <span x-text="isTracking ? 'Stop' : 'Track'">
+
+    </span>
 </button>
-<button
-    id="btnPauseTracking"
-    class="ui button primary"
-    x-data @click="$store.doStore.pauseTracking()"
->
-    <i class="pause icon"></i>
-    Pause
-</button>
-<button
-    id="btnStopObject"
-    class="ui button primary"
-    @click="stopBBox()"
->
-    <i class="window stop icon"></i>
-{{--    <span x-data x-text="'Stop at #' + ($store.doStore.currentFrame || '')"></span>--}}
-    Stop
-</button>
+{{--<button--}}
+{{--    id="btnStopObject"--}}
+{{--    :class="isPlayingTracking && 'disabled'"--}}
+{{--    class="ui button primary"--}}
+{{--    @click="stopTracking()"--}}
+{{-->--}}
+{{--    <i class="window stop icon"></i>--}}
+{{--    Stop--}}
+{{--</button>--}}
 <button
     id="btnDeleteBBox"
     class="ui medium icon button negative"
+    :class="isTracking && 'disabled'"
     title="Delete BBoxes from Object"
-    @click.prevent="annotation.objects.deleteBBox({{$object->idDynamicObject}})"
+    @click.prevent="deleteBBox({{$object->idDynamicObject}})"
 >
     <i class="trash alternate outline icon"></i>
-    Delete BBox
+    Delete All BBoxes
 </button>

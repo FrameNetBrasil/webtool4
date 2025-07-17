@@ -1,5 +1,7 @@
 <div
     x-data="objectComponent({!! Js::from($object) !!} ,'{{ csrf_token() }}')"
+    @bbox-drawn.document="bboxDrawn"
+    @video-update-state.document="onVideoUpdateState"
 >
     <div class="flex-container justify-between">
         <div>
@@ -7,8 +9,20 @@
         </div>
         <div>
             <button
+                class="ui tiny icon button"
+                @click="gotoFrame({{$object->startFrame}})"
+            >
+                StartFrame: {{$object->startFrame}}
+            </button>
+            <button
+                class="ui tiny icon button"
+                @click="gotoFrame({{$object->endFrame}})"
+            >
+                EndFrame: {{$object->endFrame}}
+            </button>
+            <button
                 id="btnClose"
-                class="ui small icon button"
+                class="ui medium icon button"
                 title="Close Object"
                 @click="window.location.assign('/annotation/deixis/{{$object->idDocument}}')"
             >

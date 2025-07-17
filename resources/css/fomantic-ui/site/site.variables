@@ -10,8 +10,8 @@
     Font System
 -------------------*/
 
-@fontName: 'Inter';
-@fontFamily: 'Inter','Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+@fontName: 'Noto Sans';
+@fontFamily: 'Noto Sans','Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
 @fallbackFonts: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 
 @codeFont: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
@@ -41,14 +41,23 @@
 @bodyFontSize: @fontSizeBase;
 
 // Harmonic scale raw values (for Fomantic override)
-@harmonicMiniRaw: 0.5;       // 7px
-@harmonicTinyRaw: 0.625;     // 8.75px
-@harmonicSmallRaw: 0.75;     // 10.5px
-@harmonicMediumRaw: 1.0;     // 14px (base)
-@harmonicLargeRaw: 1.25;     // 17.5px
-@harmonicBigRaw: 1.5;        // 21px
-@harmonicHugeRaw: 1.875;     // 26.25px
-@harmonicMassiveRaw: 2.25;   // 31.5px
+//@harmonicMiniRaw: 0.5;       // 7px
+//@harmonicTinyRaw: 0.625;     // 8.75px
+//@harmonicSmallRaw: 0.75;     // 10.5px
+//@harmonicMediumRaw: 1.0;     // 14px (base)
+//@harmonicLargeRaw: 1.25;     // 17.5px
+//@harmonicBigRaw: 1.5;        // 21px
+//@harmonicHugeRaw: 1.875;     // 26.25px
+//@harmonicMassiveRaw: 2.25;   // 31.5px
+
+@harmonicMiniRaw: 0.579;     // 8.1px
+@harmonicTinyRaw: 0.694;     // 9.7px
+@harmonicSmallRaw: 0.833;    // 11.7px
+@harmonicMediumRaw: 1.0;     // 14px
+@harmonicLargeRaw: 1.2;      // 16.8px
+@harmonicBigRaw: 1.44;       // 20.2px
+@harmonicHugeRaw: 1.728;     // 24.2px
+@harmonicMassiveRaw: 2.074;  // 29px
 
 // Override Fomantic's core size variables
 @miniRaw: @harmonicMiniRaw;
