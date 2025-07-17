@@ -6,6 +6,9 @@
     placeholder="{{$placeholder}}"
     search-url="/lu/list/forSelect"
     display-formatter="displayFormaterLUSearch"
+    display-field="name"
+    value="{{$value}}"
+    display-value="{{ $displayValue }}"
     value-field="idLU"
     modal-title="{{$modalTitle}}"
 />

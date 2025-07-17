@@ -97,7 +97,7 @@ class DeixisController extends Controller
     public function getObject(int $idDynamicObject)
     {
         if ($idDynamicObject == 0) {
-            return view("Annotation.Deixis.Panes.formNewObject");
+            return view("Annotation.Deixis.Forms.formNewObject");
         }
         $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
         return view("Annotation.Deixis.Panes.objectPane", [

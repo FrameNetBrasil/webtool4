@@ -38,7 +38,6 @@ class DynamicObject {
     }
 
     drawBoxInFrame(frameNumber, state) {
-        console.log(this.bboxes);
         this.dom.style.display = "none";
         let bbox = this.getBoundingBoxAt(frameNumber);
         if (bbox) {

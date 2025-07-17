@@ -3,22 +3,21 @@
 >
     <div class="flex-container justify-between">
         <div>
-            <h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}
-                ::{{$object->name}}</h3>
+            <h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}</h3>
         </div>
         <div>
             <button
                 id="btnClose"
                 class="ui small icon button"
                 title="Close Object"
-                @click="onCloseObjectPane"
+                @click="window.location.assign('/annotation/deixis/{{$object->idDocument}}')"
             >
                 <i class="pt-1 close icon"></i>
             </button>
         </div>
     </div>
     <div
-        class="objectPane ui pointing secondary menu tabs"
+        class="objectPane ui pointing secondary menu tabs mt-0"
     >
         <a class="item" data-tab="edit-object" :class="isPlaying && 'disabled'">Edit object</a>
         <a class="item" data-tab="create-bbox" :class="isPlaying && 'disabled'">BBox</a>
