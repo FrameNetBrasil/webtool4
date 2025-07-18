@@ -90,6 +90,7 @@ class DeixisController extends Controller
                 'config' => $timelineConfig,
             ],
             'groupedLayers' => $groupedLayers,
+            'searchResults' => []
         ];
     }
 

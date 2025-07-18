@@ -10,8 +10,7 @@
         @include("Annotation.Deixis.Panes.timelinePane")
     </div>
     <div class="ui tab objects" data-tab="objects">
-        {{--        @include("Annotation.Deixis.Panes.objectsPane")--}}
-        <div>b</div>
+        @include("Annotation.Deixis.Panes.searchPane")
     </div>
 </div>
 <script type="text/javascript">

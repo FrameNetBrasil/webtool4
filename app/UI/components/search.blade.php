@@ -43,7 +43,7 @@
     @endif
 
     {{-- Display field (readonly) --}}
-    <div class="ui fluid left icon input">
+    <div class="ui small fluid left icon input">
         <input type="text"
                x-model="displayValue"
                placeholder="{{ $placeholder }}"

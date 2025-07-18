@@ -14,12 +14,16 @@
     </div>
     <div class="fields">
         <div class="field">
-            <label>Start frame <span class="text-primary cursor-pointer"  @click="copyFrameFor('startFrame')">[Copy from video]</span></label>
-            <input type="text" name="startFrame" placeholder="0">
+            <label>Start frame <span class="text-primary cursor-pointer" @click="copyFrameFor('startFrame')">[Copy from video]</span></label>
+            <div class="ui medium input">
+                <input type="text" name="startFrame" placeholder="0">
+            </div>
         </div>
         <div class="field">
-            <label>End frame  <span class="text-primary cursor-pointer"  @click="copyFrameFor('endFrame')">[Copy from video]</span></label>
-            <input type="text" name="endFrame" placeholder="0">
+            <label>End frame <span class="text-primary cursor-pointer" @click="copyFrameFor('endFrame')">[Copy from video]</span></label>
+            <div class="ui medium input">
+                <input type="text" name="endFrame" placeholder="0">
+            </div>
         </div>
     </div>
     <button
