@@ -8,9 +8,9 @@
 >
     <div class="container">
         <!-- Controls -->
-        <div class="controls">
-            <div class="ui medium input">
-            <label>Go to frame:
+        <div class="controls ui form">
+                <label>Go to frame:</label>
+            <div class="ui small input">
                 <input
                     type="number"
                     id="frame-input"
@@ -20,12 +20,11 @@
                     x-model="frameInput"
                     @keydown.enter="scrollToFrame()"
                 >
-            </label>
             </div>
-            <button class="ui tiny button" @click="scrollToFrame()">Go</button>
-            <button class="ui tiny button" @click="scrollToStart()">Start</button>
-            <button class="ui tiny button" @click="scrollToEnd()">End</button>
-            <button class="ui tiny button" @click="scrollToVideoFrame()">as Video</button>
+            <button class="ui small button" @click="scrollToFrame()">Go</button>
+            <button class="ui small button" @click="scrollToStart()">Start</button>
+            <button class="ui small button" @click="scrollToEnd()">End</button>
+            <button class="ui small button" @click="scrollToVideoFrame()">as Video</button>
             <span class="invisible" id="current-frame">Frame: 0</span>
         </div>
 

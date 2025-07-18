@@ -29,8 +29,10 @@
             <div class="default text"></div>
             <div class="menu">
                 @foreach($options as $option)
-                    <div data-value="{{$option['id']}}"
-                         class="item p-1 min-h-0"
+                    <div
+                        data-value="{{$option['id']}}"
+                        class="item"
+{{--                         class="item p-1 min-h-0"--}}
                     >
                         {{$option['text']}}
                     </div>

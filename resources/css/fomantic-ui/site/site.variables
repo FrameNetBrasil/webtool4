@@ -69,6 +69,25 @@
 @hugeRaw: @harmonicHugeRaw;
 @massiveRaw: @harmonicMassiveRaw;
 
+//// Semantic size names (now harmonic)
+@relativeMini: unit(@miniRaw, em);
+@relativeTiny: unit(@tinyRaw, em);
+@relativeSmall: unit(@smallRaw, em);
+@relativeMedium: unit(@mediumRaw, em);
+@relativeLarge: unit(@largeRaw, em);
+@relativeBig: unit(@bigRaw, em);
+@relativeHuge: unit(@hugeRaw, em);
+@relativeMassive: unit(@massiveRaw, em);
+
+@mini: unit(@miniRaw, rem);
+@tiny: unit(@tinyRaw, rem);
+@small: unit(@smallRaw, rem);
+@medium: unit(@mediumRaw, rem);
+@large: unit(@largeRaw, rem);
+@big: unit(@bigRaw, rem);
+@huge: unit(@hugeRaw, rem);
+@massive: unit(@massiveRaw, rem);
+
 // Pixel equivalents for reference (these will be automatic via em conversion)
 @relative8px: @relativeMini;
 @relative10px: @relativeTiny;
@@ -539,11 +558,29 @@
 @formHelpGap: @relative4px;          // 4px - Input to help text
 @formErrorGap: @relative4px;         // 4px - Input to error text
 
-// Input styling (14px base)
+
+/* --------------
+   Form Input
+--------------- */
+
+/* This adjusts the default form input across all elements */
 @inputBackground: @surfacePrimary;
+@inputVerticalPadding: @relative8px;
+@inputHorizontalPadding: @relative12px;
+@inputPadding: @inputVerticalPadding @inputHorizontalPadding;
+
+/* Input Text Color */
+@inputColor: @textColor;
+@inputPlaceholderColor: if(iscolor(@inputColor), lighten(@inputColor, 75), @inputColor);
+@inputPlaceholderFocusColor: if(iscolor(@inputColor), lighten(@inputColor, 45), @inputColor);
+
+/* Line Height Default For Inputs in Browser (Descenders are 17px at 14px base em) */
+@inputLineHeight: unit((14 / 14), em);
+
+// Input styling (14px base)
 @inputBorder: 1px solid @borderDefault;
 @inputColor: @textPrimary;
-@inputFontSize: @fontSizeBase;         // 14px - matches your app's base size
+@inputFontSize: @fontSizeBase;
 @inputPlaceholderColor: @neutral400;
 @inputPlaceholderFocusColor: @neutral500;
 
