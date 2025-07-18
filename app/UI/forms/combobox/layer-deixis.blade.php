@@ -18,27 +18,22 @@
     }
 @endphp
 
-<div {{$attributes}}>
-    <div class="form-field field" style="overflow:initial">
-        @if($label != '')
-            <label for="{{$id}}">{{$label}}</label>
-        @endif
-        <div id="{{$id}}_dropdown" class="ui selection dropdown" style="overflow:initial">
-            <input type="hidden" id="{{$id}}" name="{{$id}}" value="{{$value}}">
-            <i class="dropdown icon"></i>
-            <div class="default text"></div>
-            <div class="menu">
-                @foreach($options as $option)
-                    <div
-                        data-value="{{$option['id']}}"
-                        class="item"
-{{--                         class="item p-1 min-h-0"--}}
-                    >
-                        {{$option['text']}}
-                    </div>
-                @endforeach
+@if($label != '')
+    <label for="{{$id}}">{{$label}}</label>
+@endif
+<div id="{{$id}}_dropdown" class="ui selection dropdown" style="overflow:initial">
+    <input type="hidden" id="{{$id}}" name="{{$id}}" value="{{$value}}">
+    <i class="dropdown icon"></i>
+    <div class="medium default text">Select layer</div>
+    <div class="ui menu">
+        @foreach($options as $option)
+            <div
+                data-value="{{$option['id']}}"
+                class="item"
+            >
+                {{$option['text']}}
             </div>
-        </div>
+        @endforeach
     </div>
 </div>
 <script>

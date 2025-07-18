@@ -95,7 +95,7 @@
                         annotation.objects.updateObjectAnnotationEvent();
                     })
 
-                    @include("Annotation.StaticBBox.Scripts.api")
+                    @include("Annotation.StaticBBox.Scripts.__api")
                     @include("Annotation.StaticBBox.Scripts.image")
                     @include("Annotation.StaticBBox.Scripts.objects")
                     @include("Annotation.StaticBBox.Scripts.drawBox")

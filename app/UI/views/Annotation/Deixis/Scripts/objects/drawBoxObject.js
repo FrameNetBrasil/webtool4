@@ -2,7 +2,7 @@ let drawBoxObject = {
     canvas: null,
     ctx: null,
     video: null,
-    color: '#000',
+    color: "#000",
     offsetX: 0,
     offsetY: 0,
     startX: 0,
@@ -57,10 +57,10 @@ let drawBoxObject = {
         this.boundHandleMouseOut = this.handleMouseOut.bind(this);
         this.boundHandleMouseMove = this.handleMouseMove.bind(this);
 
-        this.canvas.addEventListener('mousedown', this.boundHandleMouseDown);
-        this.canvas.addEventListener('mouseup', this.boundHandleMouseUp);
-        this.canvas.addEventListener('mouseout', this.boundHandleMouseOut);
-        this.canvas.addEventListener('mousemove', this.boundHandleMouseMove);
+        this.canvas.addEventListener("mousedown", this.boundHandleMouseDown);
+        this.canvas.addEventListener("mouseup", this.boundHandleMouseUp);
+        this.canvas.addEventListener("mouseout", this.boundHandleMouseOut);
+        this.canvas.addEventListener("mousemove", this.boundHandleMouseMove);
         console.log("Drawing event listeners enabled.");
     },
 
@@ -68,10 +68,10 @@ let drawBoxObject = {
         this.isDown = false;
         // Use the same bound functions to remove listeners
         if (this.boundHandleMouseDown) {
-            this.canvas.removeEventListener('mousedown', this.boundHandleMouseDown);
-            this.canvas.removeEventListener('mouseup', this.boundHandleMouseUp);
-            this.canvas.removeEventListener('mouseout', this.boundHandleMouseOut);
-            this.canvas.removeEventListener('mousemove', this.boundHandleMouseMove);
+            this.canvas.removeEventListener("mousedown", this.boundHandleMouseDown);
+            this.canvas.removeEventListener("mouseup", this.boundHandleMouseUp);
+            this.canvas.removeEventListener("mouseout", this.boundHandleMouseOut);
+            this.canvas.removeEventListener("mousemove", this.boundHandleMouseMove);
         }
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Clear canvas on disable
         console.log("Drawing event listeners disabled and canvas cleared.");
@@ -165,3 +165,4 @@ let drawBoxObject = {
         };
     }
 };
+

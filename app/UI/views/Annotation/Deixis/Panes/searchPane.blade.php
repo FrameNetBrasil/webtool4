@@ -1,28 +1,46 @@
-<div class="app-search">
+<div class="app-search p-1">
     <!-- Search Section -->
     <div class="search-section"
-         x-data="searchForm()"
+         x-data="searchObjectComponent()"
          @htmx:before-request="onSearchStart"
          @htmx:after-request="onSearchComplete"
          @htmx:after-swap="onResultsUpdated"
     >
         <div class="search-input-group">
             <form class="ui form"
-                  hx-post="/annotation/deixis/search"
+                  hx-post="/annotation/deixis/object/search"
                   hx-target="#gridArea"
-                  hx-swap="innerHTML"
-                  hx-trigger="submit, input delay:500ms from:input[name='frame']">
+                  hx-swap="innerHTML">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                <div class="field">
-                    <div class="ui left icon input w-full">
-                        <i class="search icon"></i>
-                        <input
-                            type="search"
-                            name="frame"
-                            placeholder="Search Frame"
-                            x-model="searchQuery"
-                            autocomplete="off"
-                        >
+                <div class="fields">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="search icon"></i>
+                            <input
+                                type="search"
+                                name="frame"
+                                placeholder="Search Frame"
+                                x-model="searchQueryFrame"
+                                autocomplete="off"
+                            >
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="search icon"></i>
+                            <input
+                                type="search"
+                                name="lue"
+                                placeholder="Search CV name"
+                                x-model="searchQueryLU"
+                                autocomplete="off"
+                            >
+                        </div>
+                    </div>
+                    <div class="field button-field">
+                        <button type="submit" class="ui icon button">
+                            <i class="search icon"></i>
+                        </button>
                     </div>
                 </div>
             </form>

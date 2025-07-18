@@ -74,7 +74,7 @@
                         videoObject: {{ Js::from($video) }},
                         wordList: [],
                     }
-                    @include("Annotation.DynamicMode.Scripts.api")
+                    @include("Annotation.DynamicMode.Scripts.__api")
                     @include("Annotation.DynamicMode.Scripts.videoBuildSentences")
                     @include("Annotation.DynamicMode.Scripts.storeBuildSentences")
                     $(function() {

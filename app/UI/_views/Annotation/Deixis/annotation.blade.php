@@ -79,8 +79,8 @@
                 }
             });
 
-            @include("Annotation.Deixis.Scripts.DeixisObject")
-            @include("Annotation.Deixis.Scripts.api")
+            @include("Annotation.Deixis.Scripts.__DeixisObject")
+            @include("Annotation.Deixis.Scripts.__api")
             @include("Annotation.Deixis.Scripts.video")
             @include("Annotation.Deixis.Scripts.drawBox")
             @include("Annotation.Deixis.Scripts.objects")

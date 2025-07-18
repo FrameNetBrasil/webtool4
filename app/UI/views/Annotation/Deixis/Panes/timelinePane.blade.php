@@ -1,3 +1,6 @@
+@php
+    $currentObject = null;
+@endphp
 <div x-data="timelineComponent({
             minFrame: {{$timeline['config']['minFrame']}},
             maxFrame: {{$timeline['config']['maxFrame']}},
@@ -62,18 +65,24 @@
                             <!-- Layer Objects -->
                             <div class="objects" style="height: {{ $layerHeight }}px;">
                                 @foreach ($visualLayer['lines'] as $lineIndex => $line)
-                                    @foreach ($line['objects'] as $objIndex => $object)
+                                    @foreach ($line['objects'] as $objIndex => $objectData)
                                         @php
-                                            $startPos = ($object->startFrame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];
-                                            $duration = $object->endFrame - $object->startFrame;
+                                            $startPos = ($objectData->startFrame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];
+                                            $duration = $objectData->endFrame - $objectData->startFrame;
                                             $width = max($timeline['config']['minObjectWidth'], $duration * $timeline['config']['frameToPixel']);
-//                                            $bgColor = $object->bgColorGL ?? '#999999';
-//                                            $label = $object->gl ?? $object->luName ?? $object->name ?? "Object " . ($objIndex + 1);
-                                            $bgColor = $object->bgColor;
-                                            $fgColor = $object->fgColor;
-                                            $label = $object->name;
+//                                            $bgColor = $objectData->bgColorGL ?? '#999999';
+//                                            $label = $objectData->gl ?? $objectData->luName ?? $objectData->name ?? "Object " . ($objIndex + 1);
+                                            $bgColor = $objectData->bgColor;
+                                            $fgColor = $objectData->fgColor;
+                                            $label = $objectData->name;
                                             $top = $lineIndex * $timeline['config']['objectHeight'];
-                                            $tooltip = $label . "\nFrames: " . $object->startFrame . "-" . $object->endFrame . "\nDuration: " . $duration . " frames";
+                                            $tooltip = $label . "\nFrames: " . $objectData->startFrame . "-" . $objectData->endFrame . "\nDuration: " . $duration . " frames";
+                                            if (trim($objectData->comment) != '') {
+                                                $label = "*" . $label;
+                                            }
+                                            if ($objectData->idDynamicObject == $idDynamicObject) {
+                                                $currentObject = $objectData;
+                                            }
                                         @endphp
                                         <div class="object"
                                              style="left: {{ $startPos }}px; top: {{ $top }}px; width: {{ $width }}px; background-color: {{ $bgColor }};color: {{$fgColor}}"
@@ -81,12 +90,12 @@
                                              data-layer-index="{{ $line['originalIndex'] }}"
                                              data-object-index="{{ $objIndex }}"
                                              data-line-index="{{ $lineIndex }}"
-                                             data-start-frame="{{ $object->startFrame }}"
-                                             data-end-frame="{{ $object->endFrame }}"
-                                             @click="window.location.assign('/annotation/deixis/{{$idDocument}}/{{$object->idDynamicObject}}')"
-{{--                                             hx-get="/annotation/deixis/object/{{$object->idDynamicObject}}"--}}
-{{--                                             hx-target="#formsPane"--}}
-{{--                                             hx-swap="innerHTML"--}}
+                                             data-start-frame="{{ $objectData->startFrame }}"
+                                             data-end-frame="{{ $objectData->endFrame }}"
+{{--                                             @click="window.location.assign('/annotation/deixis/{{$idDocument}}/{{$objectData->idDynamicObject}}')"--}}
+                                             hx-get="/annotation/deixis/object/{{$objectData->idDynamicObject}}"
+                                             hx-target="#formsPane"
+                                             hx-swap="innerHTML"
                                         >
                                             {{ $label }}
                                         </div>
@@ -110,10 +119,10 @@
 <div id="highlight-container"></div>
 <div id="object-click-info"></div>
 
-@if($idDynamicObject != 0)
+@if($currentObject)
 <script type="text/javascript">
     $(function() {
-        document.dispatchEvent(new CustomEvent("timeline-seek-frame", { detail: { frameNumber: {{$object->startFrame}} } }));
+        document.dispatchEvent(new CustomEvent("timeline-seek-frame", { detail: { frameNumber: {{$currentObject->startFrame}} } }));
     });
 </script>
 @endif

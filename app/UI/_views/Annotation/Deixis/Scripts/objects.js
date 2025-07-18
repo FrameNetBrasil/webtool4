@@ -98,7 +98,7 @@ annotation.objects = {
         for (let [indexLayer, layer] of objectsFromServer.entries()) {
             for (let [indexObj, object] of layer.objects.entries()) {
                 if ((object.startFrame >= annotation.video.framesRange.first) && (object.startFrame <= annotation.video.framesRange.last)) {
-                    let annotatedObject = new DeixisObject(object);
+                    let annotatedObject = new __DeixisObject(object);
                     annotatedObject.dom = annotation.objects.newBboxElement();
                     annotation.layerList[indexLayer].objects[indexObj] = annotatedObject;
                     annotation.objects.add(annotatedObject);

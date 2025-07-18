@@ -565,7 +565,7 @@
 
 /* This adjusts the default form input across all elements */
 @inputBackground: @surfacePrimary;
-@inputVerticalPadding: @relative8px;
+@inputVerticalPadding:unit((6.5 / 14), em);// @relative8px;
 @inputHorizontalPadding: @relative12px;
 @inputPadding: @inputVerticalPadding @inputHorizontalPadding;
 
@@ -575,7 +575,7 @@
 @inputPlaceholderFocusColor: if(iscolor(@inputColor), lighten(@inputColor, 45), @inputColor);
 
 /* Line Height Default For Inputs in Browser (Descenders are 17px at 14px base em) */
-@inputLineHeight: unit((14 / 14), em);
+@inputLineHeight: unit((17 / 14), em);
 
 // Input styling (14px base)
 @inputBorder: 1px solid @borderDefault;
@@ -597,6 +597,8 @@
 @disabledColor: @neutral400;
 @disabledBorderColor: @borderDefault;
 @disabledPointerEvents: none;
+
+@selectionLineHeight: @lineHeight;
 
 /*-------------------
     Card System Variables

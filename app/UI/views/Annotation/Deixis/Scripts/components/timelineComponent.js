@@ -53,8 +53,8 @@ function timelineComponent(config) {
         },
 
         onSeekObject(e) {
+            console.log("onSeekObject", e);
             this.frameInput = e.detail.frameNumber;
-            // console.log("onSeekObject", frameNumber);
             this.scrollToFrame();
         },
 
@@ -93,13 +93,13 @@ function timelineComponent(config) {
             const timelineInfo = document.getElementById("timeline-info");
             const currentFrame = document.getElementById("current-frame");
 
-            console.log("Setting up scroll sync with elements:", {
-                timelineContent: !!timelineContent,
-                labelsColumn: !!labelsColumn,
-                rulerContent: !!rulerContent,
-                timelineInfo: !!timelineInfo,
-                currentFrame: !!currentFrame
-            });
+            // console.log("Setting up scroll sync with elements:", {
+            //     timelineContent: !!timelineContent,
+            //     labelsColumn: !!labelsColumn,
+            //     rulerContent: !!rulerContent,
+            //     timelineInfo: !!timelineInfo,
+            //     currentFrame: !!currentFrame
+            // });
 
             if (!timelineContent || !timelineInfo) {
                 console.error("Critical elements not found for scroll sync!");
@@ -111,12 +111,12 @@ function timelineComponent(config) {
                 const frameStart = Math.floor(scrollLeft / config.frameToPixel) + config.minFrame;
                 const frameEnd = Math.floor((scrollLeft + viewportWidth) / config.frameToPixel) + config.minFrame;
 
-                console.log("Updating frame info:", {
-                    scrollLeft,
-                    viewportWidth,
-                    frameStart,
-                    frameEnd
-                });
+                // console.log("Updating frame info:", {
+                //     scrollLeft,
+                //     viewportWidth,
+                //     frameStart,
+                //     frameEnd
+                // });
 
                 if (timelineInfo) {
                     timelineInfo.textContent = `Viewing frames: ${frameStart.toLocaleString()} - ${frameEnd.toLocaleString()}`;
@@ -129,7 +129,7 @@ function timelineComponent(config) {
 
             // Main timeline scroll event
             timelineContent.addEventListener("scroll", function(event) {
-                console.log("Scroll event fired!", { scrollLeft: this.scrollLeft, scrollTop: this.scrollTop });
+                // console.log("Scroll event fired!", { scrollLeft: this.scrollLeft, scrollTop: this.scrollTop });
 
                 const scrollLeft = this.scrollLeft;
                 const scrollTop = this.scrollTop;
@@ -161,7 +161,7 @@ function timelineComponent(config) {
             const initialViewportWidth = timelineContent.clientWidth;
             updateFrameInfo(initialScrollLeft, initialViewportWidth);
 
-            console.log("Scroll sync setup complete");
+            // console.log("Scroll sync setup complete");
         },
 
         // Navigation functions
@@ -206,7 +206,7 @@ function timelineComponent(config) {
         },
 
         selectObject: async function(idDynamicObject) {
-            let dynamicObject = await api.getObject(idDynamicObject);
+            let dynamicObject = await __api.getObject(idDynamicObject);
             document.dispatchEvent(new CustomEvent("object-selected", {
                 detail: {
                     dynamicObject

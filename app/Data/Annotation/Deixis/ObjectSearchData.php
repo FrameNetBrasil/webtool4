@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Data\Annotation\Deixis;
+
+use Spatie\LaravelData\Data;
+
+class ObjectSearchData extends Data
+{
+    public function __construct(
+        public ?string $frame = '',
+        public ?string $lu = '',
+        public string $_token = '',
+    )
+    {
+        $this->_token = csrf_token();
+    }
+}

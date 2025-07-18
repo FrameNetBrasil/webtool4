@@ -1,7 +1,7 @@
 /**
  * Represents a dynamic object that has bounding boxes throughout the entire frame sequence.
  */
-class DeixisObject {
+class __DeixisObject {
     constructor(object) {
         // this.object = object;
         Object.assign(this, object);

@@ -39,7 +39,7 @@
     <div
         class="objectPane ui pointing secondary menu tabs mt-0"
     >
-        <a class="item" data-tab="edit-object" :class="isPlaying && 'disabled'">Edit object</a>
+        <a class="item" data-tab="edit-object" :class="isPlaying && 'disabled'">Annotate object</a>
         <a class="item" data-tab="create-bbox" :class="isPlaying && 'disabled'">BBox</a>
         <a class="item" data-tab="comment" :class="isPlaying && 'disabled'">Comment</a>
     </div>
