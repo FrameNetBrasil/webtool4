@@ -36,7 +36,7 @@
     <script type="text/javascript" src="/scripts/video-js-8.11.5/video.min.js"></script>
     <link href="/scripts/video-js-8.11.5/video-js.css" rel="stylesheet" />
 
-{{--    <script src="/scripts/animation-timeline-js/lib/animation-timeline.js?v=2" type="text/javascript"></script>--}}
+{{--    <script src="/scripts/animation-timeline-js/lib/animation-__timeline.js?v=2" type="text/javascript"></script>--}}
 
     <script src="/scripts/fomantic-ui/semantic.min.js"></script>
 
@@ -46,6 +46,7 @@
 <body
 {{--    class="wt-index"--}}
     hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}'
+    hx-history="false"
 >
 {{--@include('components.confirm')--}}
 

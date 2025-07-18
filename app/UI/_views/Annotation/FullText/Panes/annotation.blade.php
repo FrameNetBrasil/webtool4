@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    @include("Annotation.FullText.Scripts.api")
+    @include("Annotation.FullText.Scripts.__api")
     @include("Annotation.FullText.Scripts.store")
 
     $(function() {

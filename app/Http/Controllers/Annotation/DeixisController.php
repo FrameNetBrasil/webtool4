@@ -8,6 +8,7 @@ use App\Data\Annotation\Deixis\DocumentData;
 use App\Data\Annotation\Deixis\ObjectAnnotationData;
 use App\Data\Annotation\Deixis\ObjectData;
 use App\Data\Annotation\Deixis\ObjectFrameData;
+use App\Data\Annotation\Deixis\ObjectSearchData;
 use App\Data\Annotation\Deixis\SearchData;
 use App\Data\Comment\CommentData;
 use App\Database\Criteria;
@@ -28,6 +29,15 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'auth')]
 class DeixisController extends Controller
 {
+    #[Get(path: '/annotation/deixis/script/{folder}')]
+    public function jsObjects(string $folder)
+    {
+        return response()
+            ->view("Annotation.Deixis.Scripts.{$folder}")
+            ->header('Content-type', "text/javascript")
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+
     #[Get(path: '/annotation/deixis')]
     public function browse(SearchData $search)
     {
@@ -104,9 +114,19 @@ class DeixisController extends Controller
         if (is_null($object)) {
             return $this->renderNotify("error", "Object not found.");
         }
-        return view("Annotation.Deixis.Panes.objectPane", [
-            'object' => $object
-        ]);
+        return response()
+            ->view("Annotation.Deixis.Panes.objectPane", [
+                'object' => $object
+            ])->header('HX-Push-Url', "/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
+    }
+
+    #[Post(path: '/annotation/deixis/object/search')]
+    public function objectSearch(ObjectSearchData $data)
+    {
+        debug($data);
+        return view("Annotation.Deixis.Panes.searchPane", [
+            'searchResults' => []
+        ])->fragment("search");
     }
 
     #[Get(path: '/annotation/deixis/fes/{idFrame}')]
@@ -123,7 +143,10 @@ class DeixisController extends Controller
     {
         $data = $this->getData($idDocument);
         $data['idDynamicObject'] = is_null($idDynamicObject) ? 0 : $idDynamicObject;
-        return view("Annotation.Deixis.annotation", $data);
+        debug($data['idDynamicObject']);
+        return response()
+            ->view("Annotation.Deixis.annotation", $data)
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
 
     #[Post(path: '/annotation/deixis/createNewObjectAtLayer')]
@@ -276,82 +299,9 @@ class DeixisController extends Controller
         }
     }
 
-
-
     /**
      * timeline
      */
-
-//    #[Get(path: '/timeline')]
-//    public function index()
-//    {
-//        $timelineData = $this->getTimelineData();
-//        $config = $this->getTimelineConfig($timelineData);
-//        $groupedLayers = $this->groupLayersByName($timelineData);
-//
-//        return view('Annotation.Deixis.Panes.timeline.index', compact('timelineData', 'config', 'groupedLayers'));
-//    }
-
-//    #[Post(path: '/timeline/scroll-to-frame')]
-//    public function scrollToFrame(Request $request)
-//    {
-//        $frameNumber = $request->input('frame', 0);
-//        $timelineData = $this->getTimelineData();
-//        $config = $this->getTimelineConfig($timelineData);
-//
-//        // Calculate scroll position
-//        $framePosition = ($frameNumber - $config['minFrame']) * $config['frameToPixel'];
-//        $scrollPosition = max(0, $framePosition - 400 + $config['labelWidth']); // 400px ~ half viewport
-//
-//        return response()->json([
-//            'scrollPosition' => $scrollPosition,
-//            'frameNumber' => $frameNumber,
-//            'message' => "Scrolled to frame: " . number_format($frameNumber)
-//        ]);
-//    }
-
-//    #[Post(path: '/timeline/highlight-frame')]
-//    public function highlightFrame(Request $request)
-//    {
-//        $frameNumber = $request->input('frame', 0);
-//        $timelineData = $this->getTimelineData();
-//        $activeObjects = $this->getActiveObjectsAtFrame($timelineData, $frameNumber);
-//
-//        return view('Annotation.Deixis.Panes.timeline.highlight', compact('activeObjects', 'frameNumber'));
-//    }
-
-//    #[Post(path: '/timeline/object-click')]
-//    public function objectClick(Request $request)
-//    {
-//        $layerIndex = $request->input('layerIndex');
-//        $objectIndex = $request->input('objectIndex');
-//        $lineIndex = $request->input('lineIndex');
-//
-//        $timelineData = $this->getTimelineData();
-//        $object = $timelineData[$layerIndex]['objects'][$objectIndex] ?? null;
-//
-//        if (!$object) {
-//            return response('Object not found', 404);
-//        }
-//
-//        $clickData = [
-//            'layer' => $timelineData[$layerIndex]['layer'],
-//            'layerIndex' => $layerIndex,
-//            'lineIndex' => $lineIndex,
-//            'objectIndex' => $objectIndex,
-//            'object' => $object,
-//            'frameRange' => $object['startFrame'] . '-' . $object['endFrame'],
-//            'duration' => $object['endFrame'] - $object['startFrame']
-//        ];
-//
-//        return view('Annotation.Deixis.Panes.timeline.object-info', compact('clickData', 'object'));
-//    }
-
-//    private function getTimelineData()
-//    {
-//        $data = AnnotationDeixisService::getLayersByDocument(1705);
-//        return $data;
-//    }
 
     private function getTimelineConfig($timelineData): array
     {
@@ -402,25 +352,5 @@ class DeixisController extends Controller
 
         return array_values($layerGroups);
     }
-
-//    private function getActiveObjectsAtFrame($timelineData, $frameNumber)
-//    {
-//        $activeObjects = [];
-//
-//        foreach ($timelineData as $layerIndex => $layer) {
-//            foreach ($layer['objects'] as $objectIndex => $object) {
-//                if ($frameNumber >= $object->startFrame && $frameNumber <= $object->endFrame) {
-//                    $activeObjects[] = [
-//                        'layerIndex' => $layerIndex,
-//                        'objectIndex' => $objectIndex,
-//                        'object' => $object
-//                    ];
-//                }
-//            }
-//        }
-//
-//        return $activeObjects;
-//    }
-
 
 }

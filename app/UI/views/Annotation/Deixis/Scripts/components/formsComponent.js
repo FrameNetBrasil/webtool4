@@ -1,10 +1,12 @@
-function formsComponent() {
+function formsComponent(idDocument) {
     return {
+        idDocument: 0,
         formsPane: null,
         currentFrame: 0,
         isPlaying: false,
 
         init() {
+            this.idDocument = idDocument;
             this.formsPane = document.getElementById("formsPane");
         },
 
@@ -14,7 +16,8 @@ function formsComponent() {
         },
 
         onCloseObjectPane() {
-            htmx.ajax('GET', "/annotation/deixis/object/0", {target:'#formsPane', swap:'innerHTML'});
+            //htmx.ajax('GET', "/annotation/deixis/object/0", {target:'#formsPane', swap:'innerHTML'});
+            window.location.assign(`/annotation/deixis/${this.idDocument}`);
         },
 
         copyFrameFor(name) {

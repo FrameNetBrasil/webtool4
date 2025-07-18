@@ -82,7 +82,7 @@
                         annotation.objects.updateObjectAnnotationEvent();
                     })
 
-                    @include("Annotation.DynamicMode.Scripts.api")
+                    @include("Annotation.DynamicMode.Scripts.__api")
                     @include("Annotation.DynamicMode.Scripts.video")
                     @include("Annotation.DynamicMode.Scripts.drawBox")
                     @include("Annotation.DynamicMode.Scripts.objects")

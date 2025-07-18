@@ -3,7 +3,7 @@
     'name' => 'search',
     'displayName' => null, // Name for the display field (optional)
     'placeholder' => 'Search...',
-    'searchUrl' => '/api/search',
+    'searchUrl' => '/__api/search',
     'searchFields' => ['q'], // Array of search field names
     'displayField' => 'name', // Field to display in readonly input OR function name
     'displayFormatter' => null, // Function name for custom result display formatting

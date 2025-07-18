@@ -1,4 +1,4 @@
-const api = {
+const __api = {
     getObject: async (idDynamicObject) => {
         return await ky.get("/annotation/deixis/object/"+ idDynamicObject).json();
         //

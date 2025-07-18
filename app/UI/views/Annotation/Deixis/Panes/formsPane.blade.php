@@ -1,6 +1,6 @@
 <div
     id="formsPane"
-    x-data="formsComponent()"
+    x-data="formsComponent({{$idDocument}})"
     @video-update-state.document="onVideoUpdateState"
     @object-selected.document="onObjectSelected"
 >
