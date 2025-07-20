@@ -24,8 +24,12 @@
                     <label for="idFrame">Frame</label>
                     <div
                         @search-component-change="if ($event.detail.value) { htmx.ajax('GET', '/annotation/deixis/fes/' + $event.detail.value, '#fes'); }">
+                        hx-get=""
+                        hx-trigger="search-component-change"
+                        hx-on::before-request="if (....) even.preventDefault()"
+                        hx-on::config-request="event.details.request.queryParams[x} = y"
                         <x-form::search.frame
-                            id="idFrame"
+                            name="idFrame"
                             value="{{ old('idFrame', $object?->idFrame ?? '') }}"
                             display-value="{{ old('frame', $object->frame ?? '') }}"
                             modal-title="Search Frame"
@@ -34,7 +38,6 @@
                 </div>
                 <div id="fes" class="field">
                     <x-form::combobox.fe-frame
-                        id="idFrameElement"
                         name="idFrameElement"
                         label="FE"
                         :value="$object?->idFrameElement ?? 0"
