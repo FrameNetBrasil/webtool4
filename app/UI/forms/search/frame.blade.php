@@ -2,7 +2,8 @@
 <label for="{{$id}}">{{$label}}</label>
 @endif
 <x-ui::search
-    name="{{$id}}"
+    {{ $attributes }}
+    name="{{$name}}"
     placeholder="{{$placeholder ?? 'Select a frame'}}"
     search-url="/frame/list/forSelect"
     display-name="frame"
