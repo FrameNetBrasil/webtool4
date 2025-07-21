@@ -10,6 +10,7 @@ use App\Data\Annotation\Deixis\ObjectData;
 use App\Data\Annotation\Deixis\ObjectFrameData;
 use App\Data\Annotation\Deixis\ObjectSearchData;
 use App\Data\Annotation\Deixis\SearchData;
+use App\Data\ComboBox\FrameData;
 use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
@@ -61,23 +62,6 @@ class DeixisController extends Controller
     }
 
 
-//    #[Get(path: '/annotation/deixis')]
-//    public function browse()
-//    {
-//        $search = session('searchCorpus') ?? SearchData::from();
-//        return view("Annotation.Deixis.browse", [
-//            'search' => $search
-//        ]);
-//    }
-//
-//    #[Post(path: '/annotation/deixis/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        return view("Annotation.Deixis.grid", [
-//            'search' => $search
-//        ]);
-//    }
-
     private function getData(int $idDocument): array //DocumentData
     {
         $document = Document::byId($idDocument);
@@ -95,12 +79,12 @@ class DeixisController extends Controller
             'corpus' => $corpus,
             'video' => $video,
             'fragment' => 'fe',
+            'searchResults' => [],
             'timeline' => [
                 'data' => $timelineData,
                 'config' => $timelineConfig,
             ],
             'groupedLayers' => $groupedLayers,
-            'searchResults' => []
         ];
     }
 
@@ -129,25 +113,6 @@ class DeixisController extends Controller
         ])->fragment("search");
     }
 
-    #[Get(path: '/annotation/deixis/fes/{idFrame}')]
-    public function feCombobox(int $idFrame)
-    {
-        return view("Annotation.Deixis.Forms.fes", [
-            'idFrame' => $idFrame
-        ]);
-    }
-
-
-    #[Get(path: '/annotation/deixis/{idDocument}/{idDynamicObject?}')]
-    public function annotation(int|string $idDocument, int $idDynamicObject = null)
-    {
-        $data = $this->getData($idDocument);
-        $data['idDynamicObject'] = is_null($idDynamicObject) ? 0 : $idDynamicObject;
-        debug($data['idDynamicObject']);
-        return response()
-            ->view("Annotation.Deixis.annotation", $data)
-            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
 
     #[Post(path: '/annotation/deixis/createNewObjectAtLayer')]
     public function createNewObjectAtLayer(CreateObjectData $data)
@@ -188,17 +153,17 @@ class DeixisController extends Controller
         return AnnotationDeixisService::getLayersByDocument($idDocument);
     }
 
-    #[Post(path: '/annotation/deixis/updateObject')]
-    public function updateObject(ObjectData $data)
-    {
-        try {
-            $idDynamicObject = AnnotationDeixisService::updateObject($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
-        } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
+//    #[Post(path: '/annotation/deixis/updateObject')]
+//    public function updateObject(ObjectData $data)
+//    {
+//        try {
+//            $idDynamicObject = AnnotationDeixisService::updateObject($data);
+//            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+//        } catch (\Exception $e) {
+//            debug($e->getMessage());
+//            return $this->renderNotify("error", $e->getMessage());
+//        }
+//    }
 
     #[Post(path: '/annotation/deixis/updateObjectRange')]
     public function updateObjectRange(ObjectFrameData $data)
@@ -228,7 +193,13 @@ class DeixisController extends Controller
     {
         try {
             AnnotationDeixisService::updateObjectAnnotation($data);
-            return $this->renderNotify("success", "Object updated.");
+            $object = AnnotationDeixisService::getObject($data->idDynamicObject);
+            $this->notify("success", "Object updated.");
+            debug($object);
+            return view("Annotation.Deixis.Panes.timeline.object", [
+                'duration' => $object->endFrame - $object->startFrame,
+                'objectData' => $object
+            ])->fragment("object");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -247,6 +218,7 @@ class DeixisController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
+
     #[Delete(path: '/annotation/deixis/{idDocument}/{idDynamicObject}')]
     public function deleteObject(int $idDocument, int $idDynamicObject)
     {
@@ -302,7 +274,6 @@ class DeixisController extends Controller
     /**
      * timeline
      */
-
     private function getTimelineConfig($timelineData): array
     {
         $minFrame = PHP_INT_MAX;
@@ -351,6 +322,20 @@ class DeixisController extends Controller
         }
 
         return array_values($layerGroups);
+    }
+
+    /**
+     * Page
+     */
+    #[Get(path: '/annotation/deixis/{idDocument}/{idDynamicObject?}')]
+    public function annotation(int|string $idDocument, int $idDynamicObject = null)
+    {
+        $data = $this->getData($idDocument);
+        $data['idDynamicObject'] = is_null($idDynamicObject) ? 0 : $idDynamicObject;
+        debug($data['idDynamicObject']);
+        return response()
+            ->view("Annotation.Deixis.annotation", $data)
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
 
 }

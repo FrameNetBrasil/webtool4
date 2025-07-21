@@ -8,6 +8,7 @@
             labelWidth: {{$timeline['config']['labelWidth']}}
     })" class="timeline"
     @timeline-seek-frame.document="onSeekObject"
+    @update-object.document="onUpdateObject"
 >
     <div class="container">
         <!-- Controls -->
@@ -70,34 +71,24 @@
                                             $startPos = ($objectData->startFrame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];
                                             $duration = $objectData->endFrame - $objectData->startFrame;
                                             $width = max($timeline['config']['minObjectWidth'], $duration * $timeline['config']['frameToPixel']);
-//                                            $bgColor = $objectData->bgColorGL ?? '#999999';
-//                                            $label = $objectData->gl ?? $objectData->luName ?? $objectData->name ?? "Object " . ($objIndex + 1);
-                                            $bgColor = $objectData->bgColor;
-                                            $fgColor = $objectData->fgColor;
-                                            $label = $objectData->name;
                                             $top = $lineIndex * $timeline['config']['objectHeight'];
-                                            $tooltip = $label . "\nFrames: " . $objectData->startFrame . "-" . $objectData->endFrame . "\nDuration: " . $duration . " frames";
-                                            if (trim($objectData->comment) != '') {
-                                                $label = "*" . $label;
-                                            }
                                             if ($objectData->idDynamicObject == $idDynamicObject) {
                                                 $currentObject = $objectData;
                                             }
                                         @endphp
-                                        <div class="object"
-                                             style="left: {{ $startPos }}px; top: {{ $top }}px; width: {{ $width }}px; background-color: {{ $bgColor }};color: {{$fgColor}}"
-                                             title="{{ $tooltip }}"
-                                             data-layer-index="{{ $line['originalIndex'] }}"
-                                             data-object-index="{{ $objIndex }}"
-                                             data-line-index="{{ $lineIndex }}"
-                                             data-start-frame="{{ $objectData->startFrame }}"
-                                             data-end-frame="{{ $objectData->endFrame }}"
-{{--                                             @click="window.location.assign('/annotation/deixis/{{$idDocument}}/{{$objectData->idDynamicObject}}')"--}}
-                                             hx-get="/annotation/deixis/object/{{$objectData->idDynamicObject}}"
-                                             hx-target="#formsPane"
-                                             hx-swap="innerHTML"
+                                        <div
+                                            class="object"
+                                            style="left: {{ $startPos }}px; top: {{ $top }}px; width: {{ $width }}px;"
+                                            data-layer-index="{{ $line['originalIndex'] }}"
+                                            data-object-index="{{ $objIndex }}"
+                                            data-line-index="{{ $lineIndex }}"
+                                            data-start-frame="{{ $objectData->startFrame }}"
+                                            data-end-frame="{{ $objectData->endFrame }}"
+                                            hx-get="/annotation/deixis/object/{{$objectData->idDynamicObject}}"
+                                            hx-target="#formsPane"
+                                            hx-swap="innerHTML"
                                         >
-                                            {{ $label }}
+                                            @include("Annotation.Deixis.Panes.timeline.object")
                                         </div>
                                     @endforeach
                                 @endforeach

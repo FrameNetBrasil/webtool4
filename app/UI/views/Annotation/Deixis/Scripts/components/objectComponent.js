@@ -13,7 +13,9 @@ function objectComponent(object, token) {
 
         init() {
             console.log("Object component init");
+            this.annotateObject(object);
             this.idDynamicObject = object.idDynamicObject;
+            this.currentFrame = object.startFrame;
             this._token = token;
             this.boxesContainer = document.querySelector("#boxesContainer");
             this.tracker = new ObjectTrackerObject();
@@ -25,13 +27,49 @@ function objectComponent(object, token) {
         },
 
         async onVideoUpdateState(e) {
-            if (this.currentFrame === 0) {
-                this.annotateObject(object);
-            }
             this.currentFrame = e.detail.frame.current;
             this.drawFrameBBox();
             await this.tracking();
         },
+
+        async onBboxDrawn(e) {
+            this.bbox = e.detail.bbox;
+            // this.object = new DynamicObject();
+            console.log("bboxDrawn",this.object);
+            // this.object.setDom(this.newBboxElement());
+            let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, null);
+            this.object.addBBox(bbox);
+            this.interactify(
+                this.object,
+                async (x, y, width, height, idBoundingBox) => {
+                    let bbox = new BoundingBox(this.currentFrame, x, y, width, height, true);
+                    this.object.updateBBox(bbox);
+                    await ky.post("/annotation/dynamicMode/updateBBox", {
+                        json: {
+                            _token: this._token,
+                            idBoundingBox: bbox.idBoundingBox,
+                            bbox
+                        }
+                    }).json();
+                }
+            );
+            // console.log(this.idDynamicObject, this.currentFrame, bbox);
+            drawBoxObject.disableDrawing();
+            bbox.idBoundingBox = await ky.post("/annotation/dynamicMode/createBBox", {
+                json: {
+                    _token: this._token,
+                    idDynamicObject: this.idDynamicObject,
+                    frameNumber: this.currentFrame,
+                    bbox//     bbox: bbox
+                }
+            }).json();
+            console.log("bbox created: ", bbox.idBoundingBox);
+            this.tracker.getFrameImage(this.currentFrame);
+            this.object.drawBoxInFrame(this.currentFrame, "editing");
+            this.canCreateBBox = false;
+            manager.notify("success", "New bbox created.");
+        },
+
 
         annotateObject(object) {
             console.log("annotateObject");
@@ -78,7 +116,11 @@ function objectComponent(object, token) {
             if (this.isTracking) {
                 this.stopTracking();
             } else {
-                await this.startTracking();
+                if (this.object.getBoundingBoxAt(this.currentFrame)) {
+                    await this.startTracking();
+                } else {
+                    manager.notify("error", "No bbox found at this frame.");
+                }
             }
         },
 
@@ -91,8 +133,9 @@ function objectComponent(object, token) {
         async tracking() {
             await new Promise(r => setTimeout(r, 800));
             const nextFrame = this.currentFrame + 1;
+            // console.log("tracking....", nextFrame,this.object.startFrame, this.object.endFrame);
             if ((this.isTracking) && (nextFrame >= this.object.startFrame) && (nextFrame <= this.object.endFrame)){
-                console.log("tracking....", nextFrame);
+                // console.log("goto Frame ", nextFrame);
                 this.gotoFrame(nextFrame);
             } else {
                 this.stopTracking();
@@ -100,47 +143,12 @@ function objectComponent(object, token) {
         },
 
         stopTracking() {
-            console.log("stop tracking");
+            //console.log("stop tracking");
             this.isTracking = false;
             document.dispatchEvent(new CustomEvent("tracking-stop"));
             this.object.drawBoxInFrame(this.currentFrame, "editing");
         },
 
-        async bboxDrawn(e) {
-            this.bbox = e.detail.bbox;
-            console.log(this.object);
-            this.object.setDom(this.newBboxElement());
-            let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, null);
-            this.object.addBBox(bbox);
-            this.interactify(
-                this.object,
-                async (x, y, width, height, idBoundingBox) => {
-                    let bbox = new BoundingBox(this.currentFrame, x, y, width, height, true);
-                    this.object.updateBBox(bbox);
-                    await ky.post("/annotation/dynamicMode/updateBBox", {
-                        json: {
-                            _token: this._token,
-                            idBoundingBox: bbox.idBoundingBox,
-                            bbox
-                        }
-                    }).json();
-                }
-            );
-            // console.log(this.idDynamicObject, this.currentFrame, bbox);
-            drawBoxObject.disableDrawing();
-            await ky.post("/annotation/dynamicMode/createBBox", {
-                json: {
-                    _token: this._token,
-                    idDynamicObject: this.idDynamicObject,
-                    frameNumber: this.currentFrame,
-                    bbox//     bbox: bbox
-                }
-            }).json();
-            this.tracker.getFrameImage(this.currentFrame);
-            this.object.drawBoxInFrame(this.currentFrame, "tracking");
-            this.canCreateBBox = false;
-            manager.notify("success", "New bbox created.");
-        },
 
         newBboxElement: () => {
             let dom = document.createElement("div");
@@ -171,7 +179,7 @@ function objectComponent(object, token) {
                 handles: "n, e, s, w",
                 onStopResize: (e) => {
                     let position = bbox.position();
-                    onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
+                    onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.outerWidth()), Math.round(bbox.outerHeight()));
                 }
             });
             i.addEventListener("click", function() {
@@ -198,7 +206,7 @@ function objectComponent(object, token) {
                 onStopDrag: (e) => {
                     let position = bbox.position();
                     // console.log("stopdrag position", position);
-                    onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
+                    onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.outerWidth()), Math.round(bbox.outerHeight()));
                 }
             });
             bbox.css("display", "none");
@@ -238,8 +246,8 @@ function objectComponent(object, token) {
                         }).json();
                     }
                 }
-                let x = this.object.getBoundingBoxAt(this.currentFrame);
-                console.log("drawFrameBBox", this.currentFrame,x ? 'ok' : 'nine');
+                // let x = this.object.getBoundingBoxAt(this.currentFrame);
+                // console.log("drawFrameBBox", this.currentFrame,x ? 'ok' : 'nine');
                 this.object.drawBoxInFrame(this.currentFrame, this.isTracking ? "tracking" : "editing");
             }
         }

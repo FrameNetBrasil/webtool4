@@ -10,20 +10,12 @@
 <button
     class="ui button primary toggle"
     @click="toggleTracking()"
-><i :class="isTracking ? 'stop icon' : 'play icon'"></i>
+    :class="canCreateBBox && 'disabled'"
+>
+    <i :class="isTracking ? 'stop icon' : 'play icon'"></i>
     <span x-text="isTracking ? 'Stop' : 'Track'">
-
     </span>
 </button>
-{{--<button--}}
-{{--    id="btnStopObject"--}}
-{{--    :class="isPlayingTracking && 'disabled'"--}}
-{{--    class="ui button primary"--}}
-{{--    @click="stopTracking()"--}}
-{{-->--}}
-{{--    <i class="window stop icon"></i>--}}
-{{--    Stop--}}
-{{--</button>--}}
 <button
     id="btnDeleteBBox"
     class="ui medium icon button negative"

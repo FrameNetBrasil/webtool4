@@ -66,6 +66,8 @@ class AnnotationDeixisService
         $idLanguage = AppService::getCurrentIdLanguage();
         $object = Criteria::table("view_annotation_deixis")
             ->where("idLanguageLT", "left", $idLanguage)
+            ->where("idLanguageFE", "left", $idLanguage)
+            ->where("idLanguageGL", "left", $idLanguage)
             ->where("idDynamicObject", $idDynamicObject)
             ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idLayerType", "nameLayerType", "idLanguageLT",
                 "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE", "idLanguageFE",
@@ -73,16 +75,19 @@ class AnnotationDeixisService
             ->first();
         if (!is_null($object)) {
             $object->comment = CommentService::getDynamicObjectComment($idDynamicObject);
+            $object->textComment = $object->comment?->comment;
+            $object->bgColor = "white";
+            $object->fgColor = "black";
             if ($object->gl != '') {
                 $object->name = $object->gl;
                 $object->bgColor = $object->bgColorGL;
                 $object->fgColor = $object->fgColorGL;
-            } else if ($object->lu != '') {
-                $object->name = $object->lu;
-                if ($object->fe != '') {
-                    $object->bgColor = "#EEE";
-                    $object->name .= " | " . $object->frame . "." . $object->fe;
-                }
+            }
+            if ($object->lu != '') {
+                $object->name .= " | " . $object->lu;
+            }
+            if ($object->fe != '') {
+                $object->name .= " | " . $object->frame . "." . $object->fe;
             }
             $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
                 ->where("idDynamicObject", $idDynamicObject)
@@ -96,6 +101,8 @@ class AnnotationDeixisService
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $objects = Criteria::table("view_annotation_deixis as ad")
+            ->join("layertype as lt", "ad.idLayerType", "=", "lt.idLayerType")
+            ->join("layergroup as lg", "lt.idLayerGroup", "=", "lg.idLayerGroup")
             ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
             ->leftJoin("annotationcomment as ac", "ad.idDynamicObject", "=", "ac.idDynamicObject")
@@ -106,7 +113,8 @@ class AnnotationDeixisService
             ->where("view_frame.idLanguage", "left", $idLanguage)
             ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin", "ad.idLayerType", "ad.nameLayerType",
                 "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.colorFE",
-                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.bgColorGL", "ad.fgColorGL", "ad.layerGroup", "ac.comment")
+                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.bgColorGL", "ad.fgColorGL", "ad.layerGroup", "ac.comment as textComment")
+            ->orderBy("lg.name")
             ->orderBy("ad.nameLayerType")
             ->orderBy("ad.startFrame")
             ->orderBy("ad.endFrame")
@@ -138,13 +146,12 @@ class AnnotationDeixisService
                 $object->name = $object->gl;
                 $object->bgColor = $object->bgColorGL;
                 $object->fgColor = $object->fgColorGL;
-            } else if ($object->lu != '') {
-                $object->name = $object->lu;
-                if ($object->fe != '') {
-                    $object->bgColor = "#EEE";
-                    $object->name .= " | " . $object->frame . "." . $object->fe;
-                }
-
+            }
+            if ($object->lu != '') {
+                $object->name .= " | " . $object->lu;
+            }
+            if ($object->fe != '') {
+                $object->name .= " | " . $object->frame . "." . $object->fe;
             }
         }
         $objectsRows = [];
@@ -205,8 +212,7 @@ class AnnotationDeixisService
             $lu = Criteria::byId("lu", "idLU", $data->idLU);
             $json = json_encode([
                 'idEntity' => $lu->idEntity,
-                'idAnnotationObject' => $do->idAnnotationObject,
-                'relationType' => 'rel_annotation',
+                'idDynamicObject' => $do->idDynamicObject,
                 'idUserTask' => $usertask->idUserTask
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
