@@ -3,8 +3,29 @@ input[type="text" i] {
     padding-inline: 0;
 }
 
+.ui.selection.dropdown.frameElement {
+    .text {
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+}
+
 .ui.dropdown > .text {
     display: inline-block;
     transition: none;
     line-height:@inputLineHeight;
+}
+
+.ui.selection.dropdown .menu {
+    width: max-content;
+    min-width: 100%; /* At least as wide as the dropdown */
+    max-width: 300px; /* Prevent excessive width */
+}
+
+.ui.selection.dropdown .menu .item {
+    white-space: nowrap; /* Prevent item text wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px; /* Slightly less than menu max-width */
 }

@@ -1,24 +1,6 @@
 <x-layout::index>
     <script type="text/javascript" src="/annotation/deixis/script/objects"></script>
     <script type="text/javascript" src="/annotation/deixis/script/components"></script>
-{{--    <script type="text/javascript">--}}
-{{--        @include("Annotation.Deixis.Scripts.events")--}}
-{{--        @include("Annotation.Deixis.Scripts.components.videoComponent")--}}
-{{--        @include("Annotation.Deixis.Scripts.components.navigationComponent")--}}
-{{--        @include("Annotation.Deixis.Scripts.components.formsComponent")--}}
-{{--        @include("Annotation.Deixis.Scripts.components.timelineComponent")--}}
-{{--        @include("Annotation.Deixis.Scripts.components.objectComponent")--}}
-
-
-        {{--                @include("Annotation.Deixis.Scripts.__DeixisObject")--}}
-        {{--                @include("Annotation.Deixis.Scripts.__api")--}}
-{{--        @include("Annotation.Deixis.Scripts.video")--}}
-        {{--                @include("Annotation.Deixis.Scripts.drawBox")--}}
-        {{--                @include("Annotation.Deixis.Scripts.objects")--}}
-        {{--                @include("Annotation.Deixis.Scripts.timeline")--}}
-        {{--                @include("Annotation.Deixis.Scripts.store")--}}
-{{--    </script>--}}
-
     <div class="app-layout annotation-deixis">
         <div class="annotation-header">
             <div class="flex-container between">
@@ -50,7 +32,7 @@
                 <script type="text/javascript" src="/scripts/vatic/dist/jsfeat.js"></script>
                 <script type="text/javascript" src="/scripts/vatic/dist/nudged.js"></script>
     {{--            <script type="text/javascript" src="/scripts/vatic/dist/pouchdb.min.js"></script>--}}
-    <script type="text/javascript" src="/scripts/vatic/vatic.js"></script>
+{{--    <script type="text/javascript" src="/scripts/vatic/vatic.js"></script>--}}
     {{--            <script type="text/javascript" src="/scripts/vatic/FramesManager.js"></script>--}}
     {{--            <script type="text/javascript" src="/scripts/vatic/OpticalFlowObject.js"></script>--}}
     {{--            <script type="text/javascript" src="/scripts/vatic/BoundingBox.js"></script>--}}

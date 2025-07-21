@@ -15,6 +15,14 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'web')]
 class ReportController extends Controller
 {
+    #[Get(path: '/report/frame/script/{file}')]
+    public function scripts(string $file)
+    {
+        return response()
+            ->view("Frame.Report.{$file}")
+            ->header('Content-type', "text/javascript");
+    }
+
     #[Get(path: '/report/frame')]
     public function main()
     {

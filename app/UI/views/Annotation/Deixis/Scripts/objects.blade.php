@@ -1,3 +1,4 @@
+@include("Annotation.Deixis.Scripts.objects.vaticObject")
 @include("Annotation.Deixis.Scripts.objects.drawBoxObject")
 @include("Annotation.Deixis.Scripts.objects.bboxObject")
 @include("Annotation.Deixis.Scripts.objects.dynamicObject")

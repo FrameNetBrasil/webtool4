@@ -22,7 +22,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
     <script type="text/javascript" src="/scripts/app/notify.js"></script>
-    <script type="text/javascript" src="/scripts/app/search.js"></script>
     <script type="text/javascript" src="/scripts/app/treeComponent.js"></script>
     <script type="text/javascript" src="/scripts/app/searchComponent.js"></script>
     <script type="text/javascript" src="/scripts/pdf/jspdf.debug.js"></script>

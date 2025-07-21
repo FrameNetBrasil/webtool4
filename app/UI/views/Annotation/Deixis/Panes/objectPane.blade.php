@@ -1,6 +1,6 @@
 <div
     x-data="objectComponent({!! Js::from($object) !!} ,'{{ csrf_token() }}')"
-    @bbox-drawn.document="bboxDrawn"
+    @bbox-drawn.document="onBboxDrawn"
     @video-update-state.document="onVideoUpdateState"
 >
     <div class="flex-container h-2-5 items-center justify-between bg-gray-300">

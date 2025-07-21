@@ -1,4 +1,5 @@
 <x-layout::index>
+    <script type="text/javascript" src="/report/frame/script/searchFrame"></script>
     <div class="app-layout no-tools">
         @include('layouts.header')
         @include("layouts.sidebar")
