@@ -1,3 +1,9 @@
+@props([
+    'idFrame' => 'idFrame',
+    'idFrameElement' => 'idFrameElement',
+    'object' => null
+])
+
 @php
 
     use App\Database\Criteria;
@@ -37,7 +43,7 @@
     <label for="{{$name}}">{{$label}}</label>
 @endif
 <div
-    class="ui clearable selection dropdown frameElement"
+    class="ui floating dropdown frameElement"
     style="overflow:initial;"
     x-init="$($el).dropdown()"
 >

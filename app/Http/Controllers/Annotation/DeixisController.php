@@ -88,13 +88,13 @@ class DeixisController extends Controller
         ];
     }
 
-    #[Get(path: '/annotation/deixis/object/{idDynamicObject}')]
-    public function getObject(int $idDynamicObject)
+    #[Get(path: '/annotation/deixis/object')]
+    public function getObject(ObjectSearchData $data)
     {
-        if ($idDynamicObject == 0) {
+        if ($data->idDynamicObject == 0) {
             return view("Annotation.Deixis.Forms.formNewObject");
         }
-        $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
+        $object = AnnotationDeixisService::getObject($data->idDynamicObject ?? 0);
         if (is_null($object)) {
             return $this->renderNotify("error", "Object not found.");
         }

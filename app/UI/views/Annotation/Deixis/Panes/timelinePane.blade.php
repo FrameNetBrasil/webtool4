@@ -8,7 +8,6 @@
             labelWidth: {{$timeline['config']['labelWidth']}}
     })" class="timeline"
     @timeline-seek-frame.document="onSeekObject"
-    @update-object.document="onUpdateObject"
 >
     <div class="container">
         <!-- Controls -->
@@ -64,7 +63,14 @@
                         @endphp
                         <div class="layer-row" style="height: {{ $layerHeight }}px;">
                             <!-- Layer Objects -->
-                            <div class="objects" style="height: {{ $layerHeight }}px;">
+                            <div
+                                class="objects"
+                                style="height: {{ $layerHeight }}px;"
+                                hx-get="/annotation/deixis/object"
+                                hx-target="#formsPane"
+                                hx-swap="innerHTML"
+                                hx-on::config-request="event.detail.parameters.append('idDynamicObject', event.detail.triggeringEvent.target.dataset.id)"
+                            >
                                 @foreach ($visualLayer['lines'] as $lineIndex => $line)
                                     @foreach ($line['objects'] as $objIndex => $objectData)
                                         @php
@@ -84,9 +90,6 @@
                                             data-line-index="{{ $lineIndex }}"
                                             data-start-frame="{{ $objectData->startFrame }}"
                                             data-end-frame="{{ $objectData->endFrame }}"
-                                            hx-get="/annotation/deixis/object/{{$objectData->idDynamicObject}}"
-                                            hx-target="#formsPane"
-                                            hx-swap="innerHTML"
                                         >
                                             @include("Annotation.Deixis.Panes.timeline.object")
                                         </div>

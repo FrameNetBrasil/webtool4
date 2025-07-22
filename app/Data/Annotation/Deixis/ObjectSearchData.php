@@ -7,6 +7,7 @@ use Spatie\LaravelData\Data;
 class ObjectSearchData extends Data
 {
     public function __construct(
+        public ?int $idDynamicObject = 0,
         public ?string $frame = '',
         public ?string $lu = '',
         public string $_token = '',

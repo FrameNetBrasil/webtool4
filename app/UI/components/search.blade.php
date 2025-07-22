@@ -43,14 +43,14 @@
     @endif
 
     {{-- Display field (readonly) --}}
-    <div class="ui small fluid left icon input">
+    <div class="ui medium fluid left icon input">
         <input type="text"
                x-model="displayValue"
                placeholder="{{ $placeholder }}"
                readonly
                @click="openModal()"
                style="cursor: pointer;">
-        <i class="search icon" style="cursor: pointer;" @click="openModal()"></i>
+        <i class="stream icon" style="cursor: pointer;" @click="openModal()"></i>
     </div>
 
     {{-- Modal Background --}}

@@ -28,11 +28,11 @@
             </button>
             <button
                 id="btnClose"
-                class="ui mini icon button"
+                class="ui tiny icon button"
                 title="Close Object"
                 @click="window.location.assign('/annotation/deixis/{{$object->idDocument}}')"
             >
-                <i class="close icon"></i>
+                <i class="close tiny icon"></i>
             </button>
         </div>
     </div>
