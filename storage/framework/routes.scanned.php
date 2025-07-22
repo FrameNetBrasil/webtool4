@@ -984,6 +984,14 @@ $router->get('lu/list/forSelect', [
 	'domain' => NULL,
 ]);
 
+$router->get('report/lu/script/{file}', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@scripts',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('report/lu/grid', [
 	'uses' => 'App\Http\Controllers\LU\ReportController@grid',
 	'as' => NULL,
