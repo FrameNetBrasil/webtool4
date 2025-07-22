@@ -6,7 +6,6 @@ use App\Services\AppService;
 use App\Services\AuthUserService;
 use Closure;
 use Illuminate\Http\Request;
-use Orkester\Manager;
 use Symfony\Component\HttpFoundation\Response;
 
 class Data

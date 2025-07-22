@@ -14,9 +14,6 @@ use App\Models\SentenceModel;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
-use Orkester\Persistence\Criteria\Criteria;
-use Orkester\Persistence\Enum\Join;
-use Orkester\Persistence\PersistenceManager;
 use PHPSQLParser\builders\IndexTypeBuilder;
 
 class GTService extends AppService

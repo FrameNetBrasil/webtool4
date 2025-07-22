@@ -1,11 +1,12 @@
 @php
-    use Orkester\Security\MAuth;
+    use Illuminate\Support\Facades\Auth;
     use App\Data\MenuData;
+    use App\Services\AppService;
 
     $actions = config('webtool.actions');
-    $isLogged = MAuth::isLogged();
+    $isLogged = Auth::check();
     if ($isLogged) {
-        $user = MAuth::getLogin();
+        $user = Auth::user();
         $userLevel = session('userLevel');
     }
     $currentLanguage = session('currentLanguage');
@@ -47,7 +48,7 @@
                         'items' => $action[3]
                     ]);
                 @endphp
-                @if (MAuth::checkAccess($menuData->group))
+                @if (AppService::checkAccess($menuData->group))
                     <a class="item" href="{{$menuData->href}}">
                         {!! $menuData->label !!}
                     </a>

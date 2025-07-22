@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Exceptions\AuthenticateException;
 use Illuminate\Http\Request;
-use Orkester\Security\MAuth;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Closure;
 
@@ -17,7 +17,7 @@ class Authenticate
     }
     protected function authenticate($request)
     {
-        if (MAuth::isLogged()) {
+        if (Auth::check()) {
             return true;
         }
         $this->unauthenticated($request);

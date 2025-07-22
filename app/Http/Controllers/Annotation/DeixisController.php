@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\Deixis\CreateObjectData;
-use App\Data\Annotation\Deixis\DocumentData;
 use App\Data\Annotation\Deixis\ObjectAnnotationData;
 use App\Data\Annotation\Deixis\ObjectData;
 use App\Data\Annotation\Deixis\ObjectFrameData;
@@ -110,26 +109,21 @@ class DeixisController extends Controller
         debug($data);
         $searchResults = [];
 
-        if (!empty($data->frame) || !empty($data->lu) || !empty($data->searchIdLayerType)) {
+        if (!empty($data->frame) || !empty($data->lu) || !empty($data->searchIdLayerType) || ($data->idDynamicObject > 0)) {
             $idLanguage = AppService::getCurrentIdLanguage();
 
             $query = Criteria::table('view_annotation_deixis as ad')
                 ->join('layertype as lt', 'ad.idLayerType', '=', 'lt.idLayerType')
                 ->join('layergroup as lg', 'lt.idLayerGroup', '=', 'lg.idLayerGroup')
-//                ->leftJoin('view_lu', 'ad.idLu', '=', 'view_lu.idLU')
-//                ->leftJoin('view_frame', 'view_lu.idFrame', '=', 'view_frame.idFrame')
-//                ->leftJoin('annotationcomment as ac', 'ad.idDynamicObject', '=', 'ac.idDynamicObject')
                 ->where('ad.idLanguageFE', 'left', $idLanguage)
                 ->where('ad.idLanguageGL', 'left', $idLanguage)
                 ->where('ad.idLanguageLT', '=', $idLanguage)
                 ->where('ad.idDocument', $data->idDocument);
-//                ->where('view_frame.idLanguage', 'left', $idLanguage);
 
             // Apply search filters
             if (!empty($data->searchIdLayerType) && $data->searchIdLayerType > 0) {
                 $query->where('ad.idLayerType', $data->searchIdLayerType);
             }
-
 
             if (!empty($data->frame)) {
                 $query->whereRaw('(ad.frame LIKE ? OR ad.lu LIKE ?)', [
@@ -139,14 +133,14 @@ class DeixisController extends Controller
             }
 
             if (!empty($data->lu)) {
-                // Search in LU name, frame name, FE name, or GL name
                 $searchTerm = '%' . $data->lu . '%';
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('ad.lu', 'like', $searchTerm);
-//                        ->orWhere('view_frame.name', 'like', $searchTerm)
-//                        ->orWhere('ad.fe', 'like', $searchTerm)
-//                        ->orWhere('ad.gl', 'like', $searchTerm);
                 });
+            }
+
+            if ($data->idDynamicObject != 0) {
+                $query->where('ad.idDynamicObject', $data->idDynamicObject);
             }
 
             $searchResults = $query
@@ -185,9 +179,6 @@ class DeixisController extends Controller
                 if (empty($object->displayName)) {
                     $object->displayName = 'None';
                 }
-//                $object->displayName .= ' ['.$object->startFrame.'-'.$object->endFrame.']';
-//                $object->displayName .= ' ('.$object->layerGroup.'/'.$object->nameLayerType.')';
-
             }
         }
 
@@ -202,7 +193,6 @@ class DeixisController extends Controller
     {
         try {
             $object = AnnotationDeixisService::createNewObjectAtLayer($data);
-
             return $this->redirect("/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -215,20 +205,13 @@ class DeixisController extends Controller
     public function formAnnotation(ObjectData $data)
     {
         $object = AnnotationDeixisService::getObject($data->idDynamicObject ?? 0);
-
         return $this->redirect("/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
-
-        //        return view("Annotation.Deixis.Panes.formPane", [
-        //            'order' => $data->order,
-        //            'object' => $object
-        //        ]);
     }
 
     #[Get(path: '/annotation/deixis/formAnnotation/{idDynamicObject}')]
     public function getFormAnnotation(int $idDynamicObject)
     {
         $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
-
         return view('Annotation.Deixis.Panes.formAnnotation', [
             'object' => $object,
         ]);
@@ -239,18 +222,6 @@ class DeixisController extends Controller
     {
         return AnnotationDeixisService::getLayersByDocument($idDocument);
     }
-
-    //    #[Post(path: '/annotation/deixis/updateObject')]
-    //    public function updateObject(ObjectData $data)
-    //    {
-    //        try {
-    //            $idDynamicObject = AnnotationDeixisService::updateObject($data);
-    //            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
-    //        } catch (\Exception $e) {
-    //            debug($e->getMessage());
-    //            return $this->renderNotify("error", $e->getMessage());
-    //        }
-    //    }
 
     #[Post(path: '/annotation/deixis/updateObjectRange')]
     public function updateObjectRange(ObjectFrameData $data)
@@ -304,7 +275,6 @@ class DeixisController extends Controller
         try {
             AnnotationDeixisService::deleteBBoxesFromObject($idDynamicObject);
 
-            // return $this->renderNotify("success", "All BBoxes removed.");
             return $this->redirect("/annotation/deixis/{$idDocument}/{$idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -320,7 +290,6 @@ class DeixisController extends Controller
             AnnotationDeixisService::deleteObject($idDynamicObject);
 
             return $this->redirect("/annotation/deixis/{$idDocument}");
-            // return $this->renderNotify("success", "Object removed.");
         } catch (\Exception $e) {
             debug($e->getMessage());
 

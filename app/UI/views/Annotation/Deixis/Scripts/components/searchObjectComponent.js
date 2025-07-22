@@ -3,6 +3,7 @@ function searchObjectComponent() {
     return {
         searchQueryFrame: "",
         searchQueryLU: "",
+        searchQueryIdDynamicObject: "",
         currentToast: null,
 
         onSearchStart(event) {

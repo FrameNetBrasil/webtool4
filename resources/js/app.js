@@ -7,6 +7,8 @@ import Chart from 'chart.js/auto';
 import svgPanZoom from "svg-pan-zoom";
 import ky from 'ky';
 import Split from 'split.js';
+// import jsfeat from 'jsfeat';
+// import nudged from 'nudged';
 
 // import '../css/fomantic-ui/semantic.less';
 //import 'primeflex/primeflex.css';
@@ -17,3 +19,5 @@ window.Chart = Chart;
 window.svgPanZoom = svgPanZoom;
 window.ky = ky;
 window.Split = Split;
+// window.jsfeat = jsfeat;
+// window.nudged = nudged;

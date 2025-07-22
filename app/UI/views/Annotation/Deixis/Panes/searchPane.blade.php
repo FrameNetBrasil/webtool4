@@ -44,6 +44,18 @@
                             >
                         </div>
                     </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="search icon"></i>
+                            <input
+                                type="search"
+                                name="idDynamicObject"
+                                placeholder="Search #idObject"
+                                x-model="searchQueryIdDynamicObject"
+                                autocomplete="off"
+                            >
+                        </div>
+                    </div>
                     <div class="field button-field">
                         <button type="submit" class="ui icon button">
                             <i class="search icon"></i>

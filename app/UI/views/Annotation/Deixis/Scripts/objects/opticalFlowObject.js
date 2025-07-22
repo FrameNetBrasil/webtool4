@@ -9,7 +9,7 @@ class OpticalFlowObject {
     }
 
     init(imageData) {
-        console.log(imageData);
+//        console.log(imageData, jsfeat);
         this.previousPyramid.allocate(imageData.width, imageData.height, jsfeat.U8_t | jsfeat.C1_t);
         this.currentPyramid.allocate(imageData.width, imageData.height, jsfeat.U8_t | jsfeat.C1_t);
         jsfeat.imgproc.grayscale(imageData.data, imageData.width, imageData.height, this.previousPyramid.data[0]);
@@ -86,7 +86,7 @@ class OpticalFlowObject {
                         after.push([currentPoints[x], currentPoints[y]]);
                     }
                 }
-//console.log(before);
+
                 if (before.length > 0) {
                     let diff = nudged.estimate('T', before, after);
                     let translation = diff.getTranslation();
