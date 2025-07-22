@@ -1,6 +1,6 @@
 @php
     $reports = [
-        'annotationfe' => ['FE', '/annotation/frame', 'Corpus annotation for just the FE layer','ui::icon.frame'],
+        'annotationfe' => ['FE', '/annotation/fe', 'Corpus annotation for just the FE layer','ui::icon.frame'],
         'annotationfulltext' => ['Full text', '/annotation/fullText', 'Corpus annotation for all layers','ui::icon.frame'],
         'annotationdynamic' => ['Dynamic mode', '/annotation/dynamicMode', 'Video annotation.', 'ui::icon.frame' ],
         'annotationdeixis' => ['Deixis', '/annotation/deixis', 'Video annotation for deixis.', 'ui::icon.frame'],

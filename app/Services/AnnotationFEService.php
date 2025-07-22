@@ -214,7 +214,8 @@ class AnnotationFEService
             'sentence' => $sentence,
             'text' => $sentence->text,
             'tokens' => $words,
-            'idAnnotationSet' => null
+            'idAnnotationSet' => null,
+            'word' => ''
         ];
 
     }

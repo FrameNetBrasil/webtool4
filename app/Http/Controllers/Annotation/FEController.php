@@ -55,34 +55,12 @@ class FEController extends Controller
         ])->fragment("tree");
     }
 
-//    #[Post(path: '/annotation/fe/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        return view("Annotation.FE.grids", [
-//            'search' => $search,
-//            'sentences' => [],
-//        ]);
-//    }
-
-//    #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
-//    public function documentSentences(int $idDocument)
-//    {
-//        $document = Document::byId($idDocument);
-//        $sentences = AnnotationFEService::listSentences($idDocument);
-//        return view("Annotation.FE.sentences", [
-//            'document' => $document,
-//            'sentences' => $sentences
-//        ]);
-//    }
-
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
     public function sentence(int $idDocumentSentence, int $idAnnotationSet = null)
     {
         $data = AnnotationFEService::getAnnotationData($idDocumentSentence);
-        if (!is_null($idAnnotationSet)) {
-            $data['idAnnotationSet'] = $idAnnotationSet;
-        }
-        return view("Annotation.FE.annotationSentence", $data);
+        $data['idAnnotationSet'] = is_null($idAnnotationSet) ? - 1 : $idAnnotationSet;
+        return view("Annotation.FE.annotation", $data);
     }
 
     #[Get(path: '/annotation/fe/annotations/{idSentence}')]
@@ -92,8 +70,8 @@ class FEController extends Controller
         return view("Annotation.FE.Panes.annotations", $data);
     }
 
-    #[Get(path: '/annotation/fe/as/{idAS}/{token}')]
-    public function annotationSet(int $idAS, string $token)
+    #[Get(path: '/annotation/fe/as/{idAS}/{token?}')]
+    public function annotationSet(int $idAS, string $token = '')
     {
         $data = AnnotationFEService::getASData($idAS, $token);
         debug($data);

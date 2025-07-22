@@ -400,8 +400,6 @@ class DeixisController extends Controller
     {
         $data = $this->getData($idDocument);
         $data['idDynamicObject'] = is_null($idDynamicObject) ? 0 : $idDynamicObject;
-        debug($data['idDynamicObject']);
-
         return response()
             ->view('Annotation.Deixis.annotation', $data)
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
