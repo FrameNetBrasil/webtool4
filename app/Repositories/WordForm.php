@@ -115,6 +115,9 @@ class WordForm
 //                    having count(l.idLU) > 0
 //                ");
         $wf1 = mb_strtolower($wordform);
+        if ($wf1 == "'") {
+            $wf1 = "\'";
+        }
         $r = DB::select("
                     select l.form,count(l.idLU) as n
                     from view_lexicon l

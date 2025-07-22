@@ -20,9 +20,10 @@ use Orkester\Persistence\Repository;
 class ReportLUService
 {
 
-    public static function FERealizations($idLU)
+    public static function FERealizations($idLU, $idLanguageFE = null)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
+        $idLanguageFE = $idLanguageFE ?: $idLanguage;
         $cmd = <<<HERE
 select a.idAnnotationSet, IFNULL(afe.startChar,1000) startChar, afe.endChar, afe.layerTypeEntry layerEntry, it.name itName, it.entry itEntry, afe.idEntity feIdEntity,
 afe.name feName, afe.idFrameElement feId, afe.coreType feTypeEntry, afe.idColor, gf.name gfName, pt.name ptName
@@ -40,8 +41,8 @@ left join (
     where  ((apt.name is null) or (apt.name <> 'Target')) and (apt.idLanguage = {$idLanguage}) and (apt.layerTypeEntry = 'lty_pt')
 ) pt on (a.idAnnotationSet = pt.idAnnotationSet) and (afe.startChar = pt.startChar)
 where (a.idLU = {$idLU})
-and ((afe.idLanguage = {$idLanguage}) or (afe.idLanguage is null))
-and ((it.idLanguage = {$idLanguage}) or (it.idLanguage is null))
+and ((afe.idLanguage = {$idLanguageFE}) or (afe.idLanguage is null))
+and ((it.idLanguage = {$idLanguageFE}) or (it.idLanguage is null))
 order by afe.coreType,afe.name, a.idAnnotationSet, 2, afe.endChar, afe.layerOrder, afe.layerTypeEntry
 HERE;
 

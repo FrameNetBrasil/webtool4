@@ -3,6 +3,10 @@
 namespace App\Services\XmlExport;
 
 use App\Database\Criteria;
+use App\Repositories\Frame;
+use App\Repositories\LU;
+use App\Services\AppService;
+use App\Services\ReportLUService;
 use App\Services\XmlExport\XmlUtils;
 use DOMDocument;
 use DOMElement;
@@ -124,6 +128,7 @@ class XsdCompliantGenerators
         $root->setAttribute('name', XmlUtils::xmlEscape($lu->name));
         $root->setAttribute('POS', $lu->POS ?? 'N');
         $root->setAttribute('status', 'Created'); // Required by XSD
+        $root->setAttribute('language', $lu->language);
         $root->setAttribute('frameID', $lu->idFrame);
         $root->setAttribute('frameName', XmlUtils::xmlEscape($lu->frameName ?? ''));
 
@@ -263,11 +268,11 @@ class XsdCompliantGenerators
 
         // Get all lexical units for the language
         $lexicalUnits = Criteria::table($this->config['database_views']['lexical_units'] ?? 'view_lu')
-            ->join("view_frame as f","lu.idFrame","=","f.idFrame")
-            ->join("language as l","lu.idLanguage","=","l.idLanguage")
+            ->join("view_frame as f", "lu.idFrame", "=", "f.idFrame")
+            ->join("language as l", "lu.idLanguage", "=", "l.idLanguage")
             ->where("f.idLanguage", $this->idLanguage)
             ->where("lu.active", 1)
-            ->select("lu.idLU","lu.name","f.name as frameName","lu.idFrame","l.language")
+            ->select("lu.idLU", "lu.name", "f.name as frameName", "lu.idFrame", "l.language")
             ->orderBy("lu.name")
             ->all();
 
@@ -285,8 +290,8 @@ class XsdCompliantGenerators
             $luElement->setAttribute('hasAnnotation', $hasAnnotation ? 'true' : 'false');
 
             //if ($hasAnnotation) {
-                $numInstances = $this->getLexicalUnitAnnotationCount($lu->idLU);
-                $luElement->setAttribute('numAnnotInstances', $numInstances);
+            $numInstances = $this->getLexicalUnitAnnotationCount($lu->idLU);
+            $luElement->setAttribute('numAnnotInstances', $numInstances);
             //}
 
             $root->appendChild($luElement);
@@ -585,6 +590,38 @@ class XsdCompliantGenerators
     {
         // Implementation for FE core sets
         // This would require checking frame element relations for core sets
+        $result = Criteria::table("view_fe_internal_relation")
+            ->where("relationType", 'rel_coreset')
+            ->where("fe1IdFrame", $frameId)
+            ->where("idLanguage", $this->idLanguage)
+            ->all();
+        $index = [];
+        $i = 0;
+        foreach ($result as $row) {
+            if (!isset($index[$row->fe1Name]) && !isset($index[$row->fe2Name])) {
+                $i++;
+                $index[$row->fe1Name] = [$i, $row->fe1IdFrameElement];
+                $index[$row->fe2Name] = [$i, $row->fe2IdFrameElement];
+            } elseif (!isset($index[$row->fe1Name])) {
+                $index[$row->fe1Name] = $index[$row->fe2Name];
+            } else {
+                $index[$row->fe2Name] = $index[$row->fe1Name];
+            }
+        }
+        $feCoreSet = [];
+        foreach ($index as $fe => $i) {
+            $feCoreSet[$i[0]][$i[1]] = $fe;
+        }
+        foreach ($feCoreSet as $cs) {
+            $elCs = $dom->createElement('FEcoreset');
+            $frameElement->appendChild($elCs);
+            foreach ($cs as $idFE => $fe) {
+                $elFE = $dom->createElement('memberFE');
+                $elFE->setAttribute('name', $fe);
+                $elFE->setAttribute('ID', $idFE);
+                $elCs->appendChild($elFE);
+            }
+        }
     }
 
     private function addFrameRelations(DOMDocument $dom, DOMElement $frameElement, int $frameId): void
@@ -600,25 +637,21 @@ class XsdCompliantGenerators
         foreach ($allowedRelations as $relationType) {
             $rt = $this->config['relation_types'][$relationType];
 
-            $elR = $dom->createElement('frameRelationType');
-            $elR->setAttribute('subFrameName', $rt['sub']);
-            $elR->setAttribute('superFrameName', $rt['super']);
-            $elR->setAttribute('name', $rt['name']);
-            $root->appendChild($elR);
+            $elR = $dom->createElement('frameRelation');
+            $elR->setAttribute('type', $rt['name']);
+            $frameElement->appendChild($elR);
 
             $relations = Criteria::table($this->config['database_views']['frame_relations'] ?? 'view_frame_relation')
                 ->where("idLanguage", $this->idLanguage)
                 ->where("relationType", $relationType)
+                ->where("f1IdFrame", $frameId)
                 ->orderBy("f1Name")
                 ->all();
 
             foreach ($relations as $relation) {
-                $elRelation = $dom->createElement('frameRelation');
-                $elRelation->setAttribute('subID', $relation->f2IdFrame);
-                $elRelation->setAttribute('supID', $relation->f1IdFrame);
-                $elRelation->setAttribute('subFrameName', $relation->f2Name);
-                $elRelation->setAttribute('superFrameName', $relation->f1Name);
-                $elRelation->setAttribute('ID', $relation->idEntityRelation);
+                $elRelation = $dom->createElement('relatedFrame');
+                $elRelation->setAttribute('ID', $relation->f2IdFrame);
+                $elRelation->appendChild($dom->createTextNode($relation->f2Name));
                 $elR->appendChild($elRelation);
             }
         }
@@ -646,6 +679,96 @@ class XsdCompliantGenerators
     {
         // Implementation for valence patterns
         // This is a complex structure defined in the XSD
+        $currentIdLanguage = AppService::getCurrentIdLanguage();
+        $lu = LU::byId($idLU);
+        AppService::setCurrentLanguage($lu->idLanguage);
+        $valences = ReportLUService::FERealizations($idLU, $this->idLanguage);
+        $elValences = $dom->createElement('valences');
+        $realizations = $valences['realizations'];
+        $fes = $valences['fes'];
+        $realizationAS = $valences['realizationAS'];
+        foreach ($realizations as $feIdEntity => $gfptas) {
+            if ($feIdEntity) {
+                $elRealization = $dom->createElement('FERealization');
+                $elRealization->setAttribute('total', count($fes[$feIdEntity]['as']));
+                $elValences->appendChild($elRealization);
+                $elFE = $dom->createElement('FE');
+                $elFE->setAttribute('name', $fes[$feIdEntity]['name']);
+                $elRealization->appendChild($elFE);
+                foreach ($gfptas as $gf => $ptas) {
+                    foreach ($ptas as $pt => $idRealization) {
+                        print_r($gf . '   ' . $pt . '    ' . count($realizationAS[$idRealization[0]]) . "\n");
+                        $elPattern = $dom->createElement('pattern');
+                        $elPattern->setAttribute('total', count($realizationAS[$idRealization[0]]));
+                        $elValenceUnit = $dom->createElement('valenceUnit');
+                        $elValenceUnit->setAttribute('GF', $gf);
+                        $elValenceUnit->setAttribute('PT', $pt);
+                        $elValenceUnit->setAttribute('FE', $fes[$feIdEntity]['name']);
+                        $elPattern->appendChild($elValenceUnit);
+                        foreach ($realizationAS[$idRealization[0]] as $as) {
+                            $elAS = $dom->createElement('annoSet');
+                            $elAS->setAttribute('ID', $as);
+                            $elPattern->appendChild($elAS);
+                        }
+                        $elRealization->appendChild($elPattern);
+                    }
+                }
+
+            }
+        }
+        $root->appendChild($elValences);
+
+        $vp = $valences['vp'];
+        $patterns = $valences['patterns'];
+        $vpfe = $valences['vpfe'];
+        //print_r($vp);
+        foreach ($vp as $idVPFE => $vp1) {
+            $elRealization = $dom->createElement('FEGroupRealization');
+            $elRealization->setAttribute('total', $vpfe[$idVPFE]['count']);
+            $elValences->appendChild($elRealization);
+            $i = 0;
+            foreach ($patterns[$idVPFE] as $idVP => $scfegfptas) {
+                foreach ($scfegfptas as $sc => $fegfptas) {
+                    if ($i == 0) {
+                        foreach ($fegfptas as $feIdEntity => $gfptas) {
+                            if ($feIdEntity) {
+                                $elFE = $dom->createElement('FE');
+                                $elFE->setAttribute('name', $fes[$feIdEntity]['name']);
+                                $elRealization->appendChild($elFE);
+                            }
+                        }
+                        ++$i;
+                    }
+                }
+            }
+            $i = 0;
+            foreach ($scfegfptas as $sc => $fegfptas) {
+                foreach ($fegfptas as $feIdEntity => $gfptas) {
+                    $elPattern = $dom->createElement('pattern');
+                    $elPattern->setAttribute('total', 0);
+                    $elRealization->appendChild($elPattern);
+//                    if ($feIdEntity) {
+//                        foreach ($gfptas as $gf => $ptas) {
+//                            foreach ($ptas as $pt => $as) {
+//                                $elValenceUnit = $dom->createElement('valenceUnit');
+//                                $elValenceUnit->setAttribute('GF', $gf);
+//                                $elValenceUnit->setAttribute('PT', $pt);
+//                                $elValenceUnit->setAttribute('FE', $fes[$feIdEntity]['name']);
+//                                $elPattern->appendChild($elValenceUnit);
+////                                        foreach ($as as $a) {
+////                                            $elAS = $dom->createElement('annoSet');
+////                                            $elAS->setAttribute('ID', $a);
+////                                            $elPattern->appendChild($elAS);
+////                                        }
+//
+//                            }
+//                        }
+//                    }
+                }
+            }
+        }
+        AppService::setCurrentLanguage($currentIdLanguage);
+
     }
 
     private function addLexUnitSubCorpora(DOMDocument $dom, DOMElement $root, int $idLU): void
@@ -730,7 +853,7 @@ class XsdCompliantGenerators
         $superTypes = Criteria::table("view_semantictype_relation as str")
             ->where("idLanguage", $this->idLanguage)
             ->where("st1IdSemanticType", $idSemanticType)
-            ->select("st2IdSemanticType as idSuperType","st2Name as name")
+            ->select("st2IdSemanticType as idSuperType", "st2Name as name")
             ->orderBy("st2Name")
             ->all();
         foreach ($superTypes as $superType) {
