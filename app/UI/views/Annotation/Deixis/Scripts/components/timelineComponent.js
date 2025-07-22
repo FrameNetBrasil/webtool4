@@ -58,11 +58,6 @@ function timelineComponent(config) {
             this.scrollToFrame();
         },
 
-        onUpdateObject(params) {
-            console.log("onUpdateObject", params);
-        },
-
-
         generateRuler: function() {
             const rulerContent = document.getElementById("ruler-content");
             rulerContent.innerHTML = "";

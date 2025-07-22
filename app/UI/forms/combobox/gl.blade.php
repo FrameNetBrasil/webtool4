@@ -1,7 +1,16 @@
+@props([
+    'idGenericLabel' => 0,
+    'idLayerType' => 0,
+    'label' => '',
+    'name' => 'idGenericLabel',
+    'value' => null,
+    'defaultText' => 'Select Label',
+    'hasNull' => false
+])
+
 @php
     use App\Database\Criteria;
 
-    $name ??= $id;
     $value = $value ?? $this->nullName ?? '';
     $options = [];
     if ($idLayerType > 0) {
@@ -28,25 +37,22 @@
 @endphp
 
 @if($label!='')
-    <label for="{{$id}}">{{$label}}</label>
+    <label for="{{$name}}">{{$label}}</label>
 @endif
-<div id="{{$id}}_dropdown" class="ui clearable selection dropdown frameElement" style="overflow:initial;">
-    <input type="hidden" id="{{$id}}" name="{{$name}}" value="{{$value}}">
+<div
+    class="ui selection dropdown frameElement"
+    style="overflow:initial;"
+    x-init="$($el).dropdown()"
+>
+    <input type="hidden" name="{{$name}}" value="{{$value}}">
     <i class="dropdown icon"></i>
     <div class="default text">{{$defaultText ?? ''}}</div>
     <div class="menu">
         @foreach($options as $option)
             <div data-value="{{$option['idGenricLabel']}}"
-                 class="item p-1 min-h-0">
+                 class="item">
                 <x-element.gl name="{{$option['name']}}" idColor="{{$option['idColor']}}"></x-element.gl>
             </div>
         @endforeach
     </div>
 </div>
-<script>
-    $(function() {
-        $('#{{$id}}_dropdown').dropdown({
-            onChange: (value) => { {!! $onChange ?? '' !!} }
-        });
-    });
-</script>

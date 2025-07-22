@@ -12,10 +12,9 @@
                   hx-target="#gridArea"
                   hx-swap="innerHTML">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                <div class="fields">
+                <div class="four fields">
                     <div class="field">
                         <x-form::combobox.layer-deixis
-                            label="Layer"
                             name="searchIdLayerType"
                             :value="0"
                         ></x-form::combobox.layer-deixis>

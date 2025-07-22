@@ -3,6 +3,7 @@
     'label' => 'FE',
     'name' => 'idFrameElement',
     'value' => null,
+    'defaultText' => 'Select FE'
 ])
 
 @php
@@ -40,30 +41,38 @@
 @endphp
 
 @if($label!='')
-    <label for="{{$name}}">{{$label}}</label>
+    <label>{{$label}}</label>
 @endif
 <div
-    class="ui clearable selection dropdown frameElement"
+    class="ui floating medium dropdown frameElement border rounded"
     style="overflow:initial;"
     x-init="$($el).dropdown()"
 >
     <input type="hidden" name="{{$name}}" value="{{$value}}">
-    <i class="dropdown icon"></i>
-    <div class="default text">{{$defaultText ?? ''}}</div>
+{{--    <i class="dropdown icon"></i>--}}
+    <div class="text">{!! ($idFrame == 0) ? 'No frame selected' : ($defaultText ?? '') !!}</div>
     <div class="menu">
         @foreach($options as $fe)
             <div
                 data-value="{{$fe['idFrameElement']}}"
-                class="item p-1 min-h-0"
+                class="item"
             >
                 @if($fe['coreType'] != '')
-                    <x-ui::element.fe
-                        name="{{$fe['name']}}"
-                        type="{{$fe['coreType']}}"
-                        idColor="{{$fe['idColor']}}"
-                    ></x-ui::element.fe>
+                    @php
+                        $icon = config("webtool.fe.icon")[$fe['coreType']]
+                    @endphp
+                <div
+                    class="fe color_{{$fe['idColor']}}"
+                >
+                    <i class="{{$icon}} icon" style="visibility: visible;font-size:0.875em"></i>
+                    {{$fe['name']}}
+                </div>
                 @else
+                    <div
+                        class="fe color_{{$fe['idColor']}}"
+                    >
                     <span>{{$fe['name']}}</span>
+                    </div>
                 @endif
             </div>
         @endforeach

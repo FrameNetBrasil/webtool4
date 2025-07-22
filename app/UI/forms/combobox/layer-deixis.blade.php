@@ -1,3 +1,9 @@
+@props([
+    'label' => '',
+    'name' => 'idLayerType',
+    'value' => 0
+])
+
 @php
     use App\Database\Criteria;
     use App\Services\AppService;

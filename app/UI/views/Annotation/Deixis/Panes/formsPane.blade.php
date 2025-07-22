@@ -10,7 +10,8 @@
         <div
             hx-trigger="load"
             hx-target="#formsPane"
-            hx-get="/annotation/deixis/object/{{$idDynamicObject}}"
+            hx-get="/annotation/deixis/object"
+            hx-vals='{"idDynamicObject": {{$idDynamicObject}} }'
             hx-swap="innerHTML"
         ></div>
     @endif
