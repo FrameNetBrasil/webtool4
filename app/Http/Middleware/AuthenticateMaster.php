@@ -4,8 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Exceptions\AuthenticateException;
 use Illuminate\Http\Request;
-use Orkester\Security\MAuth;
-use Orkester\Manager;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Closure;
 
@@ -18,7 +17,7 @@ class AuthenticateMaster
     }
     protected function authenticate($request)
     {
-        if (MAuth::isLogged()) {
+        if (Auth::check()) {
             if(session('isAdmin') || session('isMaster') || session('isManager')) {
                 return true;
             }

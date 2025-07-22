@@ -17,9 +17,6 @@ use App\Repositories\User;
 use App\Repositories\UserAnnotation;
 use App\Repositories\Timeline;
 use Illuminate\Support\Facades\DB;
-use Orkester\Persistence\Model;
-use Orkester\Manager;
-use Orkester\Persistence\Repository;
 
 
 class AnnotationStaticEventService

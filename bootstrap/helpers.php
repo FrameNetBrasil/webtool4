@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Log;
-use Orkester\Manager;
 
 if (!function_exists('ddump')) {
     function ddump(mixed ...$var)
@@ -37,13 +36,14 @@ if (!function_exists('debugQuery')) {
 if (!function_exists('data')) {
     function data($name = null, $value = null, $default = null)
     {
-        $data = Manager::getData();
+        // Use Laravel session for data storage
         if (is_null($name)) {
-            return $data;
+            return (object) session()->all();
         }
         if (is_null($value)) {
-            return $data->$name ?? $default;
+            return session($name, $default);
         }
-        $data->$name = $value;
+        session([$name => $value]);
+        return $value;
     }
 }

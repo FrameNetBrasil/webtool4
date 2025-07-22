@@ -1,10 +1,10 @@
 @php
-    use Orkester\Security\MAuth;
+    use Illuminate\Support\Facades\Auth;
 
     $actions = config('webtool.actions');
-    $isLogged = MAuth::isLogged();
+    $isLogged = Auth::check();
     if ($isLogged) {
-        $user = MAuth::getLogin();
+        $user = Auth::user();
         $userLevel = session('userLevel');
     }
     $currentLanguage = session('currentLanguage');

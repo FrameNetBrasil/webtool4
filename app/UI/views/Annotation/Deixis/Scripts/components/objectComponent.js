@@ -235,7 +235,7 @@ function objectComponent(object, token) {
                     if (bbox === null) {
                         await this.tracker.setBBoxForObject(this.object, this.currentFrame);
                         let bbox = this.object.getBoundingBoxAt(this.currentFrame);
-                        console.log("creating bbox at frame", this.currentFrame);
+                        // console.log("creating bbox at frame", this.currentFrame);
                         bbox.idBoundingBox = await ky.post("/annotation/dynamicMode/createBBox", {
                             json: {
                                 _token: this._token,
