@@ -12,6 +12,7 @@
                   hx-target="#gridArea"
                   hx-swap="innerHTML">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                <input type="hidden" name="idDocument" value="{{ $idDocument ?? 0 }}" />
                 <div class="four fields">
                     <div class="field">
                         <x-form::combobox.layer-deixis
@@ -36,7 +37,7 @@
                             <i class="search icon"></i>
                             <input
                                 type="search"
-                                name="lue"
+                                name="lu"
                                 placeholder="Search CV name"
                                 x-model="searchQueryLU"
                                 autocomplete="off"
@@ -61,7 +62,7 @@
 
                 <div class="results-header">
                     <div class="results-info">
-                        <div class="results-count" id="resultsCount">{!! count($searchResults) !!}
+                        <div class="results-count" id="resultsCount">{!! count($searchResults ?? []) !!}
                             results
                         </div>
                         <div class="search-query-display" id="queryDisplay"></div>
@@ -69,7 +70,7 @@
                 </div>
 
                 <!-- Empty State -->
-                @if(count($searchResults) == 0)
+                @if(count($searchResults ?? []) == 0)
                     <div class="empty-state" id="emptyState">
                         <i class="search icon empty-icon"></i>
                         <h3 class="empty-title">Ready to search</h3>
@@ -79,20 +80,38 @@
                     </div>
                 @endif
 
-                @if(count($searchResults) > 0)
+                @if(count($searchResults ?? []) > 0)
                     <!-- Card View -->
                     <div class="card-view" x-transition>
-                        <div class="search-results-grid">
+                        <div
+                            class="search-results-grid"
+                            hx-get="/annotation/deixis/object"
+                            hx-target="#formsPane"
+                            hx-swap="innerHTML"
+                            hx-on::config-request="event.detail.parameters.append('idDynamicObject', event.detail.triggeringEvent.target.dataset.id)"
+                        >
                             @foreach($searchResults as $object)
                                 <div class="ui card fluid result-card"
-                                     data-id="{{$object->idDynamicObject}}"
-                                     @click="window.location.assign(`/annotation/deixis/{{$idDocument}}/{{$object->idDynamicObject}}`)"
+
                                      tabindex="0"
-                                     @keydown.enter="window.location.assign(`/annotation/deixis/{{$idDocument}}/{{$object->idDynamicObject}}`)"
                                      role="button">
-                                    <div class="content">
-                                        <div class="header">
-                                            {{$object->name}}
+                                    <div
+                                        class="content"
+                                        data-id="{{$object->idDynamicObject}}"
+                                    >
+                                        <div
+                                            class="header"
+                                            data-id="{{$object->idDynamicObject}}"
+                                        >
+                                            {{$object->layerGroup}}/{{$object->nameLayerType}}
+                                        </div>
+                                        <div
+                                            class="meta"
+                                            data-id="{{$object->idDynamicObject}}"
+                                        >
+                                            {{$object->displayName}}<br/>
+                                            Frames: {{$object->startFrame}}-{{$object->endFrame}}<br/>
+                                            Object: #{{$object->idDynamicObject}}
                                         </div>
                                     </div>
                                 </div>

@@ -22,7 +22,7 @@
     <label for="{{$name}}">{{$label}}</label>
 @endif
 <div
-    class="ui selection dropdown"
+    class="ui selection clearable dropdown"
     style="overflow:initial"
     x-init="$($el).dropdown()"
 >

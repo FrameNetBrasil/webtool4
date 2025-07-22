@@ -11,7 +11,7 @@
         @include("Annotation.Deixis.Panes.timelinePane")
     </div>
     <div class="ui tab objects" data-tab="objects">
-        @include("Annotation.Deixis.Panes.searchPane")
+        @include("Annotation.Deixis.Panes.searchPane", ['idDocument' => $idDocument])
     </div>
 </div>
 <script type="text/javascript">
