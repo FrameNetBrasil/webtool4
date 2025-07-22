@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div id="gridArea" class="h-full">
+    <div id="gridArea" class="h-full pb-1">
         @fragment("search")
             <div class="results-container"
                  class="results-container view-cards"
@@ -83,39 +83,41 @@
                 @if(count($searchResults ?? []) > 0)
                     <!-- Card View -->
                     <div class="card-view" x-transition>
-                        <div
-                            class="search-results-grid"
-                            hx-get="/annotation/deixis/object"
-                            hx-target="#formsPane"
-                            hx-swap="innerHTML"
-                            hx-on::config-request="event.detail.parameters.append('idDynamicObject', event.detail.triggeringEvent.target.dataset.id)"
-                        >
-                            @foreach($searchResults as $object)
-                                <div class="ui card fluid result-card"
+                        <div class="card-container">
+                            <div
+                                class="search-results-grid "
+                                hx-get="/annotation/deixis/object"
+                                hx-target="#formsPane"
+                                hx-swap="innerHTML"
+                                hx-on::config-request="event.detail.parameters.append('idDynamicObject', event.detail.triggeringEvent.target.dataset.id)"
+                            >
+                                @foreach($searchResults as $object)
+                                    <div class="ui card fluid result-card"
 
-                                     tabindex="0"
-                                     role="button">
-                                    <div
-                                        class="content"
-                                        data-id="{{$object->idDynamicObject}}"
-                                    >
+                                         tabindex="0"
+                                         role="button">
                                         <div
-                                            class="header"
+                                            class="content"
                                             data-id="{{$object->idDynamicObject}}"
                                         >
-                                            {{$object->layerGroup}}/{{$object->nameLayerType}}
-                                        </div>
-                                        <div
-                                            class="meta"
-                                            data-id="{{$object->idDynamicObject}}"
-                                        >
-                                            {{$object->displayName}}<br/>
-                                            Frames: {{$object->startFrame}}-{{$object->endFrame}}<br/>
-                                            Object: #{{$object->idDynamicObject}}
+                                            <div
+                                                class="header"
+                                                data-id="{{$object->idDynamicObject}}"
+                                            >
+                                                {{$object->layerGroup}}/{{$object->nameLayerType}}
+                                            </div>
+                                            <div
+                                                class="meta"
+                                                data-id="{{$object->idDynamicObject}}"
+                                            >
+                                                {{$object->displayName}}<br />
+                                                Frames: {{$object->startFrame}}-{{$object->endFrame}}<br />
+                                                Object: #{{$object->idDynamicObject}}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 @endif
