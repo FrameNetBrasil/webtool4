@@ -74,6 +74,8 @@
         width: 100%;
         overflow: hidden;
         padding: 0 @relativeSmall 0 0;
+        display: flex;
+        flex-direction: column;
 
         /* Main timeline wrapper - responsive container */
         .timeline {
@@ -264,6 +266,89 @@
                 color: #666;
             }
 
+        }
+
+        // Grid Body - Flex layout for tabs
+        .gridBody {
+            //display: flex;
+            //flex-direction: column;
+            flex: 1;
+            //min-height: 0;
+
+            //.ui.tab {
+            //    &.objects {
+            //        flex: 1;
+            //        display: flex;
+            //        flex-direction: column;
+            //        min-height: 0; // Important for flex child overflow
+            //    }
+            //
+            //    &.timeline {
+            //        flex: 1;
+            //        display: flex;
+            //        flex-direction: column;
+            //        min-height: 0;
+            //    }
+            //}
+        }
+
+        // Annotation-specific search styles
+        .app-search {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+
+            .search-section {
+                flex-shrink: 0; // Fixed height for search inputs
+            }
+
+            #gridArea {
+                //flex: 1;
+                //min-height: 0;
+                //overflow-y: auto;
+
+                .results-container {
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+
+                    .results-header {
+                        flex-shrink: 0;
+                    }
+
+                    .card-view {
+                        flex: 1;
+                        overflow-y: auto;
+                        min-height: 0;
+                        position:relative;
+                        height:100%;
+                        padding-bottom:@relativeSmall;
+
+                        .card-container {
+                            position:absolute;
+                            top:0;
+                            left:0;
+                            bottom:0;
+                            right:0;
+
+                            .search-results-grid {
+                                max-height: none; // Remove any height restrictions
+
+                                .result-card {
+                                    min-height: auto;
+                                }
+                            }
+                        }
+                    }
+
+                    .empty-state {
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+            }
         }
 
     }
