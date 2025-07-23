@@ -62,8 +62,8 @@ vendor/bin/pint
 
 ### Core Framework Structure
 - **Laravel 11**: Primary framework with custom routing via annotations
-- **Orkester**: Custom persistence layer and framework manager (legacy components mostly commented out)
 - **HTMX**: Frontend reactivity via HX-* headers in controllers
+- **Custom Database Layer**: Custom `Criteria` class extending Laravel's Query Builder
 
 ### Key Directories
 
@@ -82,20 +82,21 @@ vendor/bin/pint
 - **JointJS**: Graph visualization library
 - **Tailwind CSS**: Utility CSS framework
 
-#### Custom Framework (`orkester/`)
-- Legacy custom framework components
-- Database abstraction layer (`Persistence/`)
-- Custom authentication (`Security/MAuth.php`)
+#### Custom Authentication (`app/Auth/`)
+- Custom Laravel session guards and user providers
+- Session-based authentication with Auth0 integration support
+- Role-based access control system
 
 ### Authentication & Authorization
 - Configurable auth handlers (internal/Auth0)
 - Role-based access control (ADMIN, MASTER, MANAGER levels)
-- Session-based authentication with custom MAuth class
+- Laravel-based session authentication with custom guards and providers
 
 ### Database Architecture
-- Custom `Criteria` class for database queries
-- Repository pattern implementation
+- Custom `Criteria` class extending Laravel's Query Builder with specialized operators
+- Repository pattern implementation for data access layer
 - Multi-language support built into data models
+- MariaDB with custom sequence management
 
 ### Frontend Architecture
 - HTMX-driven interactions with server-side rendering
@@ -138,6 +139,8 @@ vendor/bin/pint
 - Multi-language support throughout the application
 - Docker-based development environment
 - Integration with Google Cloud services (Speech, Storage)
+- Fully migrated from custom Orkester framework to Laravel 11
+- Uses custom database abstraction layer for domain-specific query operations
 
 # Claude rules
 

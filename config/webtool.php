@@ -54,6 +54,7 @@ return [
             'fullText' => ['Full text', '/annotation/fullText', 'MASTER', []],
             'staticBBox' => ['Static BBox', '/annotation/staticBBox', 'MASTER', []],
             'deixis' => ['Deixis', '/annotation/deixis', 'MASTER', []],
+            'dynamic' => ['Dynamic', '/annotation/dynamic', 'MASTER', []],
             'annotationSets' => ['AnnotationSets', '/annotation/as', 'MANAGER', []],
 //            'layers' => ['Manage Layers', '/layer/formManager', 'fa fa-list fa16px', 'JUNIOR', 1, []],
         ]],
