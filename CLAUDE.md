@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FNBr Webtool 4.0 is a web annotation and database management application developed by the FrameNet Brasil Project. It's built with Laravel 11 and focuses on multilingual framenets and constructicons annotation.
+FNBr Webtool 4.0 is a web annotation and database management application developed by the FrameNet Brasil Project. It's built with Laravel 12 and focuses on multilingual framenets and constructicons annotation.
 
 ## Development Commands
 
@@ -61,7 +61,7 @@ vendor/bin/pint
 ## Architecture Overview
 
 ### Core Framework Structure
-- **Laravel 11**: Primary framework with custom routing via annotations
+- **Laravel 12**: Primary framework with custom routing via annotations
 - **HTMX**: Frontend reactivity via HX-* headers in controllers
 - **Custom Database Layer**: Custom `Criteria` class extending Laravel's Query Builder
 
@@ -139,7 +139,8 @@ vendor/bin/pint
 - Multi-language support throughout the application
 - Docker-based development environment
 - Integration with Google Cloud services (Speech, Storage)
-- Fully migrated from custom Orkester framework to Laravel 11
+- Fully migrated from custom Orkester framework to Laravel 12
+- Runs on PHP 8.4 for enhanced performance and latest language features
 - Uses custom database abstraction layer for domain-specific query operations
 
 # Claude rules
