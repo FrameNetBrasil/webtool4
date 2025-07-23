@@ -159,7 +159,7 @@ class AnnotationFEService
         }
     }
 
-    public static function getAnnotationData(int $idDocumentSentence): array
+    public static function getAnnotationData(int $idDocumentSentence, ?int $idAnnotationSet = 0): array
     {
         $sentence = Criteria::table("view_sentence as s")
             ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
@@ -203,19 +203,28 @@ class AnnotationFEService
             $idNext = $i ?? null;
         }
 
-        //
+        // tokens
+
+        $tokens = [];
+        $word = '';
+        foreach ($words as $i => $token) {
+            $tokens[$i] = $token;
+            if ($token['idAS'] == $idAnnotationSet) {
+                $word = $token['word'];
+            }
+        }
 
         return [
             'idDocumentSentence' => $idDocumentSentence,
-            'idPrevious' => $idPrevious,//self::getPrevious($sentence->idDocument, $idDocumentSentence),
-            'idNext' => $idNext,//self::getNext($sentence->idDocument, $idDocumentSentence),
+            'idPrevious' => $idPrevious,
+            'idNext' => $idNext,
             'corpus' => $corpus,
             'document' => $document,
             'sentence' => $sentence,
             'text' => $sentence->text,
-            'tokens' => $words,
-            'idAnnotationSet' => null,
-            'word' => ''
+            'tokens' => $tokens,
+            'idAnnotationSet' => $idAnnotationSet,
+            'word' => $word
         ];
 
     }
@@ -253,7 +262,8 @@ class AnnotationFEService
                     'word' => $wordsByChar[$nextChar]['word'],
                     'startChar' => $wordsByChar[$nextChar]['startChar'],
                     'endChar' => $wordsByChar[$nextChar]['endChar'],
-                    'hasLU' => false
+                    'hasLU' => false,
+                    'idAS' => -1
                 ];
                 $nextChar = $wordsByChar[$nextChar]['endChar'] + 1;
             }
@@ -272,6 +282,14 @@ class AnnotationFEService
         $wordsToShow = [];
         for ($i = $idWord - 10; $i <= $idWord + 10; $i++) {
             if (isset($words[$i])) {
+                if($words[$i]['idAS'] != -1) {
+                    if ($i >= $idWord) {
+                        break;
+                    } else {
+                        $wordsToShow = [];
+                        continue;
+                    }
+                };
                 if ($words[$i]['word'] != ' ') {
                     $wordsToShow[$i] = $words[$i];
                 }
@@ -280,8 +298,9 @@ class AnnotationFEService
         return [
             'lus' => WordForm::getLUs($words[$idWord]['word']),
             'words' => $wordsToShow,
+            'idWord' => $idWord,
+            'idDocumentSentence' => $idDocumentSentence
         ];
-
     }
 
     public static function getASData(int $idAS, string $token = ''): array
