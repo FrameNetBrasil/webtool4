@@ -1,4 +1,4 @@
-FROM framenetbrasil/php-fpm:8.3
+FROM framenetbrasil/php-fpm:8.4
 
 ARG WWWGROUP=1001
 ARG WWWUSER=1000
