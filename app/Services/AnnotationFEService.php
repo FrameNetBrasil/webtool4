@@ -330,10 +330,24 @@ class AnnotationFEService
         $fes = Criteria::table("view_frameelement")
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->where("idFrame", $lu->idFrame)
+            ->orderBy("name")
             ->keyBy("idEntity")
             ->all();
+        $fesByType = [
+            "Core" => [],
+            "Peripheral" => [],
+            "Extra-thematic" => [],
+        ];
+        foreach ($fes as $fe) {
+            if (($fe->coreType == "cty_core") || ($fe->coreType == "cty_core-unexpressed")) {
+                $fesByType["Core"][] = $fe;
+            } else if ($fe->coreType == "cty_peripheral") {
+                $fesByType["Peripheral"][] = $fe;
+            } else {
+                $fesByType["Extra-thematic"][] = $fe;
+            }
+        }
         $layers = AnnotationSet::getLayers($idAS);
-        debug($layers);
         $target = array_filter($layers, fn($x) => ($x->layerTypeEntry == 'lty_target'));
         foreach ($target as $tg) {
             $tg->startWord = $wordsChars->chars[$tg->startChar]['order'];
@@ -353,7 +367,6 @@ class AnnotationFEService
                 $spans[$i][$idLayer] = null;
             }
             foreach ($existingSpans as $span) {
-                debug($span);
                 if ($span->idTextSpan != '') {
                     $span->startWord = ($span->startChar != -1) ? $wordsChars->chars[$span->startChar]['order'] : -1;
                     $span->endWord = ($span->endChar != -1) ? $wordsChars->chars[$span->endChar]['order'] : -1;
@@ -397,8 +410,10 @@ class AnnotationFEService
             'target' => $target[0],
             'spans' => $spans,
             'fes' => $fes,
+            'fesByType' => $fesByType,
             'nis' => $nis,
-            'word' => $token
+            'word' => $token,
+            'comment' => CommentService::getAnnotationSetComment($idAS)
         ];
 
     }
