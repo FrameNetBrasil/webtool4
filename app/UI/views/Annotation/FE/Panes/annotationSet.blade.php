@@ -1,37 +1,48 @@
 <div
-    id="formAnnotationSet"
+    x-data="annotationSetComponent({{$idAnnotationSet}},'{{$word}}')"
+    @selectionchange.document="onSelectionChange"
     class="h-full"
-    hx-trigger="reload-annotationSet from:body"
-    hx-target="#workArea"
-    hx-swap="innerHTML"
-    hx-get="/annotation/fe/as/{{$idAnnotationSet}}/{{$word}}"
+    {{--    hx-trigger="reload-annotationSet from:body"--}}
+    {{--    hx-target="#workArea"--}}
+    {{--    hx-swap="innerHTML"--}}
+    {{--    hx-get="/annotation/fe/as/{{$idAnnotationSet}}/{{$word}}"--}}
 >
     <div class="ui card w-full">
         <div class="content">
             <div class="header">
-                <div class="grid">
-                    <div class="col-8">
+                <div class="flex-container between">
+                    <div>
                         LU: {{$lu->frame->name}}.{{$lu->name}}
                     </div>
-                    <div class="col-4 text-right">
-                        <div class="ui dropdown alternativeLU">
-                            <div class="text">Alternative LUs</div>
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                                @foreach($alternativeLU as $lu)
-                                    <div class="item">{{$lu->frameName}}.{{$lu->lu}}</div>
-                                @endforeach
+                    <div class="text-right">
+                        <div class="ui compact menu">
+                            <div class="ui simple dropdown item">
+                                Alternative LUs
+                                <i class="dropdown icon"></i>
+                                <div class="menu">
+                                    @foreach($alternativeLU as $lu)
+                                        <div class="item">{{$lu->frameName}}.{{$lu->lu}}</div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                         <div class="ui label wt-tag-id">
                             #{{$idAnnotationSet}}
                         </div>
+                        <button
+                            class="ui button negative"
+                            onclick="manager.confirmDelete(`Removing AnnotationSet #{{$idAnnotationSet}}'.`, '/annotation/fe/annotationset/{{$idAnnotationSet}}', null, '#workArea')"
+                            hx-indicator="#htmx-indicator"
+                        >
+                            Delete this AnnotationSet
+                        </button>
+
                     </div>
                 </div>
             </div>
             <hr>
-            <div id="formDescription" class="description">
-                <div class="flex flex-row">
+            <div class="annotationSet">
+                <div class="flex-container">
                     <div class="" style="width:150px">
                         <div class="rowNI">
                             @foreach($it as $i => $type)
@@ -54,23 +65,22 @@
                                                         {{--                                                                            <span class="line" style="background:#{{$fes[$idEntityFE]->rgbBg}}; top:{{$topLine}}px">--}}
                                                         <span class="line color_{{$fes[$idEntityFE]->idColor}}"
                                                               style="top:{{$topLine}}px">
-                                        <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
-                                              style="top:0px">{{$niFE['label']}}</span>
-                            </span>
+                                            <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
+                                                  style="top:0px">{{$niFE['label']}}</span>
+                                        </span>
                                                         @php($topLine += 24)
                                                     @endforeach
                                                 @endif
                                             @endforeach
-                    </span>
+                                        </span>
                                     </div>
                                 @endif
                             @endforeach
                         </div>
 
                     </div>
-                    <div>
+                    <div class="annotationSentence">
                         <div class="rowWord">
-
                             @foreach($words as $i => $w)
                                 {{--                            @if($word['word'] != ' ')--}}
                                 <div class="{!! ($w['word'] != ' ') ? 'colWord' : 'colSpace' !!}">
@@ -115,76 +125,55 @@
 
                     </div>
                 </div>
-
-
-                <div class="rowFE">
-                    @foreach($fes as $fe)
-                        <div class="colFE">
-                            <button
-                                class="ui right labeled icon button color_{{$fe->idColor}}"
-                                hx-on:click="event.stopPropagation()"
-                                hx-post="/annotation/fe/annotate"
-                                hx-target="#workArea"
-                                hx-swap="innerHTML"
-                                hx-vals="js:{idAnnotationSet: {{$idAnnotationSet}}, token: '{{$word}}', idFrameElement:{{$fe->idFrameElement}}, selection: annotationFE.selection}"
-                            >
-                                <i
-                                    class="delete icon"
-                                    hx-on:click="event.stopPropagation()"
-                                    hx-delete="/annotation/fe/frameElement"
-                                    hx-vals="js:{idAnnotationSet: {{$idAnnotationSet}}, token: '{{$word}}', idFrameElement:{{$fe->idFrameElement}}}"
-                                    hx-target="#workArea"
-                                    hx-swap="innerHTML"
-                                >
-                                </i>
-                                <x-element.fe
-                                    name="{{$fe->name}}"
-                                    type="{{$fe->coreType}}"
-                                    idColor="{{$fe->idColor}}"
-                                ></x-element.fe>
-                            </button>
-                        </div>
-                    @endforeach
+            </div>
+            <div class="annotationTab">
+                <div class="ui pointing secondary menu tabs">
+                    <a class="item" data-tab="labels">Labels</a>
+                    <a class="item" data-tab="comment">Comment</a>
                 </div>
-                <hr />
-                <div class="rowDanger flex">
-                    <button
-                        class="ui button secondary"
-                        hx-get="/annotation/fe/formComment/{{$idAnnotationSet}}"
-                        hx-target="#formDescription"
-                        hx-swap="innerHTML"
+                <div class="gridBody">
+                    <div
+                        class="ui tab active"
+                        data-tab="labels"
                     >
-                        Comment
-                    </button>
-                    <button
-                        class="ui button negative"
-                        onclick="manager.confirmDelete(`Removing AnnotationSet #{{$idAnnotationSet}}'.`, '/annotation/fe/annotationset/{{$idAnnotationSet}}', null, '#workArea')"
-                        hx-indicator="#htmx-indicator"
-                    >
-                        Delete this AnnotationSet
-                    </button>
-                    <div id="htmx-indicator" class="htmx-indicator">
-                        <div class="ui page">
-                            <div class="ui loader active tiny text inverted">Processing</div>
-                        </div>
+                        @foreach($fesByType as $type => $fesData)
+                            <div>{{$type}}</div>
+                            <div class="rowFE">
+                                @foreach($fesData as $fe)
+                                    <div class="colFE">
+                                        <button
+                                            class="ui right labeled icon button color_{{$fe->idColor}}"
+                                            @click.stop="onLabelAnnotate({{$fe->idFrameElement}})"
+                                        >
+                                            <i
+                                                class="delete icon"
+                                                @click.stop="onLabelDelete({{$fe->idFrameElement}})"
+                                            >
+                                            </i>
+                                            <div class="d-flex">
+                                                <i class="{!! config("webtool.fe.icon")[$fe->coreType] !!} icon text-small"></i>{{$fe->name}}
+                                            </div>
+{{--                                            <x-element.fe--}}
+{{--                                                name="{{$fe->name}}"--}}
+{{--                                                type="{{$fe->coreType}}"--}}
+{{--                                                idColor="{{$fe->idColor}}"--}}
+{{--                                            ></x-element.fe>--}}
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="ui tab" data-tab="comment">
+                        @include("Annotation.FE.Forms.formComment")
                     </div>
                 </div>
+                <script type="text/javascript">
+                    $(".tabs .item")
+                        .tab()
+                    ;
+                </script>
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    annotationObject.selection = {
-        type: "",
-        id: "",
-        start: 0,
-        end: 0
-    };
-
-    $(function() {
-        $(".alternativeLU")
-            .dropdown({
-                action: "hide"
-            });
-    });
-</script>

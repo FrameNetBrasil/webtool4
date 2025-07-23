@@ -3712,6 +3712,30 @@ $router->get('annotation/fe/as/{idAS}/{token?}', [
 	'domain' => NULL,
 ]);
 
+$router->post('annotation/fe/annotate', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@annotate',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/fe/frameElement', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@deleteFE',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/fe/annotationset/{idAnnotationSet}', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@deleteAS',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/fe/formComment/{idAnnotationSet}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@getFormComment',
 	'as' => NULL,

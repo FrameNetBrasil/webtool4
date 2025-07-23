@@ -61,6 +61,7 @@ class WordForm
         $idLanguage = AppService::getCurrentIdLanguage();
         $wf1 = mb_strtolower(str_replace("'", "\'", $wordform));
         $criteria = Criteria::table("view_lexicon as l")
+            ->distinct()
             ->select("idLU", "lu", "senseDescription", "frame.name as frameName")
             ->join("view_frame as frame", "l.idFrame", "=", "frame.idFrame")
             ->whereRaw("l.form = '{$wf1}'  collate 'utf8mb4_bin'")

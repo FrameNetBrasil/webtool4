@@ -90,18 +90,8 @@ class FEController extends Controller
     public function annotationSet(int $idAS, string $token = '')
     {
         $data = AnnotationFEService::getASData($idAS, $token);
-        debug($data);
         return view("Annotation.FE.Panes.annotationSet", $data);
     }
-
-    /*
-    #[Get(path: '/annotation/fe/annotations/{idSentence}')]
-    public function annotations(int $idSentence)
-    {
-        $data = AnnotationFEService::getAnnotationData($idSentence);
-        return view("Annotation.FE.Panes.annotations", $data);
-    }
-
 
     #[Post(path: '/annotation/fe/annotate')]
     public function annotate(AnnotationData $input)
@@ -113,13 +103,7 @@ class FEController extends Controller
             }
             if ($input->range->type != '') {
                 $data = AnnotationFEService::annotateFE($input);
-                //$data['alternativeLU'] = [];
-//                debug("#######################################################");
-
-//                $this->trigger('reload-annotationSet');
-//                $this->trigger('reload-annotationSet');
                 return view("Annotation.FE.Panes.annotationSet", $data);
-//                return $input->idAnnotationSet;
             } else {
                 return $this->renderNotify("error", "No selection.");
             }
@@ -134,14 +118,11 @@ class FEController extends Controller
         try {
             AnnotationFEService::deleteFE($data);
             $data = AnnotationFEService::getASData($data->idAnnotationSet, $data->token);
-            debug("--------------------------------------------------------");
-            //$data['alternativeLU'] = [];
             return view("Annotation.FE.Panes.annotationSet", $data);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
-
 
     #[Delete(path: '/annotation/fe/annotationset/{idAnnotationSet}')]
     public function deleteAS(int $idAnnotationSet)
@@ -154,7 +135,6 @@ class FEController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
-    */
 
     /*
      * Comment
