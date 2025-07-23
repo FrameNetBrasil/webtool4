@@ -174,7 +174,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    annotationFE.selection = {
+    annotationObject.selection = {
         type: "",
         id: "",
         start: 0,
