@@ -41,31 +41,33 @@
                     </div>
                 </div>
             </div>
-            <div class="annotation-sentence">
-                @foreach($tokens as $i => $token)
-                    @php($hasAS = ($token['idAS'] != -1))
-                    @if(!$token['hasLU'] && !$hasAS)
-                        <div
-                            class="ui medium button hasNone"
-                        >{{$token['word']}}</div>
-                    @else
-                        <div
-                            class="ui medium button {!! $hasAS ? 'hasAS' : 'hasLU' !!}"
-                            hx-get="{!! $hasAS ? '/annotation/fe/as/' . $token['idAS'] . '/' . $token['word'] : '/annotation/fe/lus/'. $idDocumentSentence . '/'. $i !!}"
-                            hx-target=".annotation-workarea"
-                            hx-swap="innerHTML"
-                        >{{$token['word']}}
-                        </div>
-                    @endif
-                @endforeach
-            </div>
             <div class="annotation-workarea">
+                <div class="flex-container wrap gap-0">
+                    @foreach($tokens as $i => $token)
+                        @php($hasAS = ($token['idAS'] != -1))
+                        @if(!$token['hasLU'] && !$hasAS)
+                            <div
+                                class="ui medium button mb-2 hasNone"
+                            >{{$token['word']}}</div>
+                        @else
+                            <div
+                                class="ui medium button mb-2 {!! $hasAS ? 'hasAS' : 'hasLU' !!}"
+                                hx-get="{!! $hasAS ? '/annotation/fe/as/' . $token['idAS'] . '/' . $token['word'] : '/annotation/fe/lus/'. $idDocumentSentence . '/'. $i !!}"
+                                hx-target=".annotation-panel"
+                                hx-swap="innerHTML"
+                            >{{$token['word']}}
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+                <div
+                    class="annotation-panel"
+                ></div>
                 @if(!is_null($idAnnotationSet))
                     <div
-                        class="annotation-panel"
                         hx-trigger="load"
                         hx-get="/annotation/fe/as/{{$idAnnotationSet}}/{{$word}}"
-                        hx-target=".annotation-workarea"
+                        hx-target=".annotation-panel"
                         hx-swap="innerHTML"
                     >
                     </div>

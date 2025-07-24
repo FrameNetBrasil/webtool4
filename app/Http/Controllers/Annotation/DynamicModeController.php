@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Annotation\DynamicMode\AnnotationCommentData;
 use App\Data\Annotation\DynamicMode\CloneData;
 use App\Data\Annotation\DynamicMode\CreateBBoxData;
 use App\Data\Annotation\DynamicMode\DocumentData;
@@ -18,7 +17,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
-use App\Services\AnnotationDynamicService;
+use App\Services\Annotation\DynamicService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -66,7 +65,7 @@ class DynamicModeController extends Controller
     #[Get(path: '/annotation/dynamicMode/object/{idDynamicObject}')]
     public function getObject(int $idDynamicObject)
     {
-        return AnnotationDynamicService::getObject($idDynamicObject ?? 0);
+        return DynamicService::getObject($idDynamicObject ?? 0);
     }
 
 
@@ -74,7 +73,7 @@ class DynamicModeController extends Controller
     public function formObject(ObjectData $data)
     {
         debug($data);
-        $object = AnnotationDynamicService::getObject($data->idDynamicObject ?? 0);
+        $object = DynamicService::getObject($data->idDynamicObject ?? 0);
         return view("Annotation.DynamicMode.Panes.formPane", [
             'order' => $data->order,
             'object' => $object
@@ -85,13 +84,13 @@ class DynamicModeController extends Controller
     #[Get(path: '/annotation/dynamicMode/gridObjects/{idDocument}')]
     public function objectsForGrid(int $idDocument)
     {
-        return AnnotationDynamicService::getObjectsByDocument($idDocument);
+        return DynamicService::getObjectsByDocument($idDocument);
     }
 
     #[Get(path: '/annotation/dynamicMode/formObject/{idDynamicObject}/{order}')]
     public function getFormObject(int $idDynamicObject, int $order)
     {
-        $object = AnnotationDynamicService::getObject($idDynamicObject ?? 0);
+        $object = DynamicService::getObject($idDynamicObject ?? 0);
         return view("Annotation.DynamicMode.Panes.formPane", [
             'order' => $order,
             'object' => $object
@@ -102,7 +101,7 @@ class DynamicModeController extends Controller
     {
         debug($data);
         try {
-            $idDynamicObject = AnnotationDynamicService::updateObject($data);
+            $idDynamicObject = DynamicService::updateObject($data);
             return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -115,7 +114,7 @@ class DynamicModeController extends Controller
     {
         debug($data);
         try {
-            $idDynamicObject = AnnotationDynamicService::updateObjectAnnotation($data);
+            $idDynamicObject = DynamicService::updateObjectAnnotation($data);
             $this->trigger('updateObjectAnnotationEvent');
             //return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
             return $this->renderNotify("success", "Object updated.");
@@ -130,7 +129,7 @@ class DynamicModeController extends Controller
     {
         debug($data);
         try {
-            $idDynamicObject = AnnotationDynamicService::cloneObject($data);
+            $idDynamicObject = DynamicService::cloneObject($data);
             return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -142,7 +141,7 @@ class DynamicModeController extends Controller
     public function deleteObject(int $idDynamicObject)
     {
         try {
-            AnnotationDynamicService::deleteObject($idDynamicObject);
+            DynamicService::deleteObject($idDynamicObject);
             return $this->renderNotify("success", "Object removed.");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -155,7 +154,7 @@ class DynamicModeController extends Controller
     {
         try {
             debug($data);
-            $idBoundingBox = AnnotationDynamicService::updateBBox($data);
+            $idBoundingBox = DynamicService::updateBBox($data);
             return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -168,7 +167,7 @@ class DynamicModeController extends Controller
     {
         try {
             debug($data);
-            return AnnotationDynamicService::createBBox($data);
+            return DynamicService::createBBox($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -186,7 +185,7 @@ class DynamicModeController extends Controller
     #[Get(path: '/annotation/dynamicMode/sentences/{idDocument}')]
     public function gridSentences(int $idDocument)
     {
-        $sentences = AnnotationDynamicService::listSentencesByDocument($idDocument);
+        $sentences = DynamicService::listSentencesByDocument($idDocument);
         return view("Annotation.DynamicMode.Panes.sentences", [
             'sentences' => $sentences
         ]);
@@ -237,9 +236,9 @@ class DynamicModeController extends Controller
             }
             debug($data);
             if ($data->idSentence == 0) {
-                AnnotationDynamicService::createSentence($data);
+                DynamicService::createSentence($data);
             } else {
-                AnnotationDynamicService::updateSentence($data);
+                DynamicService::updateSentence($data);
             }
             $this->trigger('reload-gridSentence');
             return $this->renderNotify("success", "Sentence updated.");
@@ -263,7 +262,7 @@ class DynamicModeController extends Controller
     {
         try {
             debug($data);
-            $idSentence = AnnotationDynamicService::buildSentenceFromWords($data);
+            $idSentence = DynamicService::buildSentenceFromWords($data);
             if ($idSentence == 0) {
                 throw new \Exception("Error joining words.");
             }
@@ -277,7 +276,7 @@ class DynamicModeController extends Controller
     public function buildSentenceSentences(int $idDocument)
     {
 
-        $sentences = AnnotationDynamicService::listSentencesByDocument($idDocument);
+        $sentences = DynamicService::listSentencesByDocument($idDocument);
         return view("Annotation.DynamicMode.Panes.buildSentences", [
             'idDocument' => $idDocument,
             'sentences' => $sentences
@@ -288,7 +287,7 @@ class DynamicModeController extends Controller
     public function splitSentence(SentenceData $data)
     {
         try {
-            AnnotationDynamicService::splitSentence($data);
+            DynamicService::splitSentence($data);
             $this->trigger('reload-gridSentence');
             return $this->renderNotify("success", "Sentence updated.");
         } catch (\Exception $e) {

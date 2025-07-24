@@ -16,10 +16,9 @@
         display: grid;
         grid-template-areas:
         "navigation"
-        "sentence"
         "workarea";
         grid-template-columns: 1fr;
-        grid-template-rows: 3em 3em 1fr;
+        grid-template-rows: 3em 1fr;
     }
 
     .annotation-navigation {
@@ -27,10 +26,9 @@
         padding: @relativeSmall;
     }
 
-    .annotation-sentence {
-        grid-area: sentence;
+    .annotation-workarea {
+        grid-area: workarea;
         padding: @relativeSmall;
-        display: flex;
 
         .hasNone {
             cursor: default;
@@ -59,13 +57,6 @@
             padding: 0.125em 0.75em;
             font-weight: normal !important;
         }
-
-
-    }
-
-    .annotation-workarea {
-        grid-area: workarea;
-        padding: @relativeSmall;
 
         .annotationSet {
 

@@ -9,7 +9,7 @@
                         LU: {{$lu->frame->name}}.{{$lu->name}}
                     </div>
                     <div class="text-right">
-                        <div class="ui compact menu">
+                        <div class="ui small compact menu">
                             <div class="ui simple dropdown item">
                                 Alternative LUs
                                 <i class="dropdown icon"></i>
@@ -40,9 +40,9 @@
                 class="h-full"
             >
                 <div class="annotationSet">
-                    @include("Annotation.FE.Panes.annotation")
+                    @include("Annotation.FE.Panes.asAnnotation")
                 </div>
-                @include("Annotation.FE.Panes.labels")
+                @include("Annotation.FE.Panes.asLabels")
             </div>
         </div>
     </div>

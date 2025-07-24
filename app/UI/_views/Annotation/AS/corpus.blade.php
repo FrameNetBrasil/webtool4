@@ -1,6 +1,6 @@
 @php
-    use App\Services\AnnotationService;
-    $data = AnnotationService::browseCorpusDocumentBySearch($search, [],'CorpusAnnotation');
+    use App\Services\Annotation\BrowseService;
+    $data = BrowseService::browseCorpusDocumentBySearch($search, [],'CorpusAnnotation');
     $id = uniqid("corpusTree");
 @endphp
 <div
@@ -33,7 +33,7 @@
                                     $("#corpusTree").treegrid("toggle", row.id);
                                 }
                                 if (row.type === "document") {
-                                     htmx.ajax("GET",`/annotation/as/grid/${row.id}/sentences`,"#sentenceTableContainer");
+                                    htmx.ajax("GET", `/annotation/as/grid/${row.id}/sentences`, "#sentenceTableContainer");
                                 }
                             }
                         });

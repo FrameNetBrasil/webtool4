@@ -9,7 +9,7 @@ use Spatie\LaravelData\Normalizers\JsonNormalizer;
 class CreateASData extends Data
 {
     public function __construct(
-        public ?int          $idSentence,
+        public ?int          $idDocumentSentence,
         public ?int          $idLU,
         public mixed       $wordList,
     )

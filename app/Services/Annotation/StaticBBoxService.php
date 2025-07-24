@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Annotation;
 
 use App\Data\Annotation\StaticBBox\CloneData;
 use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
@@ -13,9 +13,10 @@ use App\Repositories\Image;
 use App\Repositories\Task;
 use App\Repositories\Timeline;
 use App\Repositories\User;
+use App\Services\AppService;
 use Illuminate\Support\Facades\DB;
 
-class AnnotationStaticBBoxService
+class StaticBBoxService
 {
     private static function deleteBBoxesByStaticBBoxObject(int $idStaticObject)
     {

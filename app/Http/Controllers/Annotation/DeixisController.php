@@ -14,8 +14,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
-use App\Services\AnnotationDeixisService;
-use App\Services\AnnotationService;
+use App\Services\Annotation\DeixisService;
+use App\Services\Annotation\BrowseService;
 use App\Services\AppService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -38,7 +38,7 @@ class DeixisController extends Controller
     #[Get(path: '/annotation/deixis')]
     public function browse(SearchData $search)
     {
-        $corpus = AnnotationService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
+        $corpus = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
 
         return view('Annotation.Deixis.browse', [
             'data' => $corpus,
@@ -49,9 +49,9 @@ class DeixisController extends Controller
     public function tree(SearchData $search)
     {
         if (!is_null($search->idCorpus) || ($search->document != '')) {
-            $data = AnnotationService::browseDocumentBySearch($search, [], 'DeixisAnnotation', leaf: true);
+            $data = BrowseService::browseDocumentBySearch($search, [], 'DeixisAnnotation', leaf: true);
         } else {
-            $data = AnnotationService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
+            $data = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
         }
 
         return view('Annotation.Deixis.browse', [
@@ -67,7 +67,7 @@ class DeixisController extends Controller
             ->where('idDocument', $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        $timelineData = AnnotationDeixisService::getLayersByDocument($idDocument);
+        $timelineData = DeixisService::getLayersByDocument($idDocument);
         $timelineConfig = $this->getTimelineConfig($timelineData);
         $groupedLayers = $this->groupLayersByName($timelineData);
 
@@ -92,7 +92,7 @@ class DeixisController extends Controller
         if ($data->idDynamicObject == 0) {
             return view('Annotation.Deixis.Forms.formNewObject');
         }
-        $object = AnnotationDeixisService::getObject($data->idDynamicObject ?? 0);
+        $object = DeixisService::getObject($data->idDynamicObject ?? 0);
         if (is_null($object)) {
             return $this->renderNotify('error', 'Object not found.');
         }
@@ -192,7 +192,7 @@ class DeixisController extends Controller
     public function createNewObjectAtLayer(CreateObjectData $data)
     {
         try {
-            $object = AnnotationDeixisService::createNewObjectAtLayer($data);
+            $object = DeixisService::createNewObjectAtLayer($data);
             return $this->redirect("/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -204,14 +204,14 @@ class DeixisController extends Controller
     #[Post(path: '/annotation/deixis/formAnnotation')]
     public function formAnnotation(ObjectData $data)
     {
-        $object = AnnotationDeixisService::getObject($data->idDynamicObject ?? 0);
+        $object = DeixisService::getObject($data->idDynamicObject ?? 0);
         return $this->redirect("/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
     }
 
     #[Get(path: '/annotation/deixis/formAnnotation/{idDynamicObject}')]
     public function getFormAnnotation(int $idDynamicObject)
     {
-        $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
+        $object = DeixisService::getObject($idDynamicObject ?? 0);
         return view('Annotation.Deixis.Panes.formAnnotation', [
             'object' => $object,
         ]);
@@ -220,7 +220,7 @@ class DeixisController extends Controller
     #[Get(path: '/annotation/deixis/loadLayerList/{idDocument}')]
     public function loadLayerList(int $idDocument)
     {
-        return AnnotationDeixisService::getLayersByDocument($idDocument);
+        return DeixisService::getLayersByDocument($idDocument);
     }
 
     #[Post(path: '/annotation/deixis/updateObjectRange')]
@@ -229,7 +229,7 @@ class DeixisController extends Controller
         try {
             debug($data);
 
-            return AnnotationDeixisService::updateObjectFrame($data);
+            return DeixisService::updateObjectFrame($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
 
@@ -241,7 +241,7 @@ class DeixisController extends Controller
     public function updateObjectFrame(ObjectFrameData $data)
     {
         try {
-            return AnnotationDeixisService::updateObjectFrame($data);
+            return DeixisService::updateObjectFrame($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
 
@@ -253,8 +253,8 @@ class DeixisController extends Controller
     public function updateObjectAnnotation(ObjectAnnotationData $data)
     {
         try {
-            AnnotationDeixisService::updateObjectAnnotation($data);
-            $object = AnnotationDeixisService::getObject($data->idDynamicObject);
+            DeixisService::updateObjectAnnotation($data);
+            $object = DeixisService::getObject($data->idDynamicObject);
             $this->notify('success', 'Object updated.');
             debug($object);
 
@@ -273,7 +273,7 @@ class DeixisController extends Controller
     public function deleteAllBBoxes(int $idDocument, int $idDynamicObject)
     {
         try {
-            AnnotationDeixisService::deleteBBoxesFromObject($idDynamicObject);
+            DeixisService::deleteBBoxesFromObject($idDynamicObject);
 
             return $this->redirect("/annotation/deixis/{$idDocument}/{$idDynamicObject}");
         } catch (\Exception $e) {
@@ -287,7 +287,7 @@ class DeixisController extends Controller
     public function deleteObject(int $idDocument, int $idDynamicObject)
     {
         try {
-            AnnotationDeixisService::deleteObject($idDynamicObject);
+            DeixisService::deleteObject($idDynamicObject);
 
             return $this->redirect("/annotation/deixis/{$idDocument}");
         } catch (\Exception $e) {

@@ -6,7 +6,7 @@ use App\Data\Annotation\FE\AnnotationData;
 use App\Data\Annotation\FE\SelectionData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
-use App\Services\AnnotationFEService;
+use App\Services\Annotation\FEService;
 use App\Services\LOME\LOMEService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -113,7 +113,7 @@ where d.idCorpus between 204 and 217 LIMIT 10
                                     "idFrameElement" => $idFrameElement,
                                     "range" => $selectionData
                                 ]);
-                                AnnotationFEService::annotateFELOME($annotationData, $sentence->idLanguage);
+                                FEService::annotateFELOME($annotationData, $sentence->idLanguage);
                             }
                         }
                     }

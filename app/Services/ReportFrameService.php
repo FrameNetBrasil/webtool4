@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Database\Criteria;
 use App\Repositories\Frame;
+use App\Services\Annotation\StaticEventService;
 
 class ReportFrameService
 {
@@ -140,7 +141,7 @@ class ReportFrameService
 
     public static function getVUs($frame, $idLanguage)
     {
-        $vus = AnnotationStaticEventService::getDocumentsForVU($frame->idFrame, $idLanguage);
+        $vus = StaticEventService::getDocumentsForVU($frame->idFrame, $idLanguage);
         return $vus;
     }
 

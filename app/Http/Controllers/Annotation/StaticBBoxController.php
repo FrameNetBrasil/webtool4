@@ -14,8 +14,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Image;
-use App\Services\AnnotationService;
-use App\Services\AnnotationStaticBBoxService;
+use App\Services\Annotation\BrowseService;
+use App\Services\Annotation\StaticBBoxService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -50,9 +50,9 @@ class StaticBBoxController extends Controller
         debug($listProjects);
         // get the documents allowed to this user
         if (($search->document != '') || ($search->idCorpus != '')) {
-            $data = AnnotationService::browseDocumentBySearch($search, $listProjects);
+            $data = BrowseService::browseDocumentBySearch($search, $listProjects);
         } else {
-            $data = AnnotationService::browseCorpusBySearch($search, $listProjects);
+            $data = BrowseService::browseCorpusBySearch($search, $listProjects);
         }
         return $data;
     }
@@ -79,8 +79,8 @@ class StaticBBoxController extends Controller
             'corpus' => $corpus,
             'image' => $image,
             'fragment' => 'fe',
-            'idPrevious' => AnnotationStaticBBoxService::getPrevious($document),
-            'idNext' => AnnotationStaticBBoxService::getNext($document),
+            'idPrevious' => StaticBBoxService::getPrevious($document),
+            'idNext' => StaticBBoxService::getNext($document),
         ]);
     }
 
@@ -89,7 +89,7 @@ class StaticBBoxController extends Controller
     public function formObject(ObjectData $data)
     {
         debug($data);
-        $object = AnnotationStaticBBoxService::getObject($data->idStaticObject ?? 0);
+        $object = StaticBBoxService::getObject($data->idStaticObject ?? 0);
         return view("Annotation.StaticBBox.Panes.formPane", [
             'order' => $data->order,
             'object' => $object
@@ -99,7 +99,7 @@ class StaticBBoxController extends Controller
     #[Get(path: '/annotation/staticBBox/formObject/{idDynamicObject}/{order}')]
     public function getFormObject(int $idStaticObject, int $order)
     {
-        $object = AnnotationStaticBBoxService::getObject($idStaticObject ?? 0);
+        $object = StaticBBoxService::getObject($idStaticObject ?? 0);
         return view("Annotation.StaticBBox.Panes.formPane", [
             'order' => $order,
             'object' => $object
@@ -109,7 +109,7 @@ class StaticBBoxController extends Controller
     #[Get(path: '/annotation/staticBBox/gridObjects/{idDocument}')]
     public function objectsForGrid(int $idDocument)
     {
-        return AnnotationStaticBBoxService::getObjectsByDocument($idDocument);
+        return StaticBBoxService::getObjectsByDocument($idDocument);
     }
 
     #[Post(path: '/annotation/staticBBox/updateObject')]
@@ -117,7 +117,7 @@ class StaticBBoxController extends Controller
     {
         debug($data);
         try {
-            $idStaticObject = AnnotationStaticBBoxService::updateObject($data);
+            $idStaticObject = StaticBBoxService::updateObject($data);
             return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -130,7 +130,7 @@ class StaticBBoxController extends Controller
     {
         debug($data);
         try {
-            $idStaticObject = AnnotationStaticBBoxService::updateObjectAnnotation($data);
+            $idStaticObject = StaticBBoxService::updateObjectAnnotation($data);
             $this->trigger('updateObjectAnnotationEvent');
             //return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
             return $this->renderNotify("success", "Object updated.");
@@ -145,7 +145,7 @@ class StaticBBoxController extends Controller
     {
         debug($data);
         try {
-            $idStaticObject = AnnotationStaticBBoxService::cloneObject($data);
+            $idStaticObject = StaticBBoxService::cloneObject($data);
             return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
@@ -156,7 +156,7 @@ class StaticBBoxController extends Controller
     public function deleteObject(int $idStaticObject)
     {
         try {
-            AnnotationStaticBBoxService::deleteObject($idStaticObject);
+            StaticBBoxService::deleteObject($idStaticObject);
             return $this->renderNotify("success", "Object removed.");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -169,7 +169,7 @@ class StaticBBoxController extends Controller
     {
         try {
             debug($data);
-            $idBoundingBox = AnnotationStaticBBoxService::updateBBox($data);
+            $idBoundingBox = StaticBBoxService::updateBBox($data);
             return Criteria::byId("dynamicobject", "idDynamicObject", $data->idStaticObject);
             //return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
         } catch (\Exception $e) {
@@ -189,7 +189,7 @@ class StaticBBoxController extends Controller
     #[Get(path: '/annotation/staticBBox/sentences/{idDocument}')]
     public function gridSentences(int $idDocument)
     {
-        $sentences = AnnotationStaticBBoxService::listSentencesByDocument($idDocument);
+        $sentences = StaticBBoxService::listSentencesByDocument($idDocument);
         return view("Annotation.StaticBBox.Panes.sentences", [
             'sentences' => $sentences
         ]);

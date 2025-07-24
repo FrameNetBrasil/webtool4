@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Annotation;
 
 use App\Data\Annotation\FullText\AnnotationData;
 use App\Data\Annotation\FullText\CreateASData;
@@ -12,10 +12,11 @@ use App\Repositories\Document;
 use App\Repositories\LU;
 use App\Repositories\Timeline;
 use App\Repositories\WordForm;
+use App\Services\AppService;
 use Illuminate\Support\Facades\DB;
 
 
-class AnnotationFullTextService
+class FullTextService
 {
     private static function hasTimespan(int $idDocument): bool
     {

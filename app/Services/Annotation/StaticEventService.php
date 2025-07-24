@@ -1,30 +1,26 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Annotation;
 
 use App\Database\Criteria;
-use App\Repositories\AnnotationSet;
 use App\Repositories\Base;
-use App\Repositories\Corpus;
-use App\Repositories\Document;
-use App\Repositories\FrameElement;
 use App\Repositories\StaticAnnotationMM;
 use App\Repositories\StaticBBoxMM;
 use App\Repositories\StaticObjectSentenceMM;
 use App\Repositories\StaticSentenceMM;
 use App\Repositories\Task;
-use App\Repositories\User;
-use App\Repositories\UserAnnotation;
 use App\Repositories\Timeline;
+use App\Repositories\UserAnnotation;
+use App\Services\AppService;
 use Illuminate\Support\Facades\DB;
 
 
-class AnnotationStaticEventService
+class StaticEventService
 {
 
     public static function listSentences(int $idDocument): array
     {
-        $userTask = AnnotationService::getCurrentUserTask($idDocument);
+        $userTask = BrowseService::getCurrentUserTask($idDocument);
         $task = Task::byId($userTask->idTask);
         $text = ($task->type == 'sentence') ? "sentence.text" : "'' as text";
         $sentences = Criteria::table("sentence")
@@ -62,7 +58,7 @@ class AnnotationStaticEventService
 
     public static function getObjectsForAnnotationImage(int $idDocument, int $idSentence): array
     {
-        $usertask = AnnotationService::getCurrentUserTask($idDocument);
+        $usertask = BrowseService::getCurrentUserTask($idDocument);
         if (is_null($usertask)) {
             return [
                 'objects' => [],
@@ -244,7 +240,7 @@ class AnnotationStaticEventService
 
     public static function getObjectsForVU(int $idDocument, int $idSentence): array
     {
-        $usertask = AnnotationService::getCurrentUserTask($idDocument);
+        $usertask = BrowseService::getCurrentUserTask($idDocument);
         if (is_null($usertask)) {
             return [
                 'objects' => [],

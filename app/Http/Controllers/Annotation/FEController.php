@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Annotation;
 
+use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\FE\AnnotationData;
-use App\Data\Annotation\FE\CreateASData;
 use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\FE\SearchData;
 use App\Data\Annotation\FE\SelectionData;
@@ -11,8 +11,9 @@ use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
-use App\Services\AnnotationFEService;
-use App\Services\AnnotationService;
+use App\Services\Annotation\CorpusService;
+use App\Services\Annotation\FEService;
+use App\Services\Annotation\BrowseService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -33,7 +34,7 @@ class FEController extends Controller
     #[Get(path: '/annotation/fe')]
     public function browse(SearchData $search)
     {
-        $corpus = AnnotationService::browseCorpusBySearch($search);
+        $corpus = BrowseService::browseCorpusBySearch($search);
         return view("Annotation.FE.browse", [
             'data' => $corpus,
         ]);
@@ -43,15 +44,15 @@ class FEController extends Controller
     public function tree(SearchData $search)
     {
         if (!is_null($search->idDocumentSentence)) {
-            $data = AnnotationService::browseSentences(AnnotationFEService::getSentence($search->idDocumentSentence));
+            $data = BrowseService::browseSentence($search->idDocumentSentence);
         } else {
             if (!is_null($search->idDocument)) {
-                $data = AnnotationService::browseSentences(AnnotationFEService::listSentences($search->idDocument));
+                $data = BrowseService::browseSentencesByDocument($search->idDocument);
             } else {
                 if (!is_null($search->idCorpus) || ($search->document != '')) {
-                    $data = AnnotationService::browseDocumentBySearch($search);
+                    $data = BrowseService::browseDocumentBySearch($search);
                 } else {
-                    $data = AnnotationService::browseCorpusBySearch($search);
+                    $data = BrowseService::browseCorpusBySearch($search);
                 }
             }
         }
@@ -63,22 +64,21 @@ class FEController extends Controller
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
     public function sentence(int $idDocumentSentence, int $idAnnotationSet = null)
     {
-        $data = AnnotationFEService::getAnnotationData($idDocumentSentence,$idAnnotationSet);
+        $data = CorpusService::getAnnotationData($idDocumentSentence,$idAnnotationSet);
         return view("Annotation.FE.annotation", $data);
     }
 
     #[Get(path: '/annotation/fe/lus/{idDocumentSentence}/{idWord}')]
     public function getLUs(int $idDocumentSentence, int $idWord)
     {
-        $data = AnnotationFEService::getLUs($idDocumentSentence, $idWord);
+        $data = CorpusService::getLUs($idDocumentSentence, $idWord);
         return view("Annotation.FE.Panes.lus", $data);
     }
 
     #[Post(path: '/annotation/fe/createAS')]
     public function createAS(CreateASData $input)
     {
-        debug($input);
-        $idAnnotationSet = AnnotationFEService::createAnnotationSet($input);
+        $idAnnotationSet = CorpusService::createAnnotationSet($input);
         if (is_null($idAnnotationSet)) {
             return $this->renderNotify("error", "Error creating AnnotationSet.");
         } else {
@@ -89,7 +89,7 @@ class FEController extends Controller
     #[Get(path: '/annotation/fe/as/{idAS}/{token?}')]
     public function annotationSet(int $idAS, string $token = '')
     {
-        $data = AnnotationFEService::getASData($idAS, $token);
+        $data = FEService::getASData($idAS, $token);
         return view("Annotation.FE.Panes.annotationSet", $data);
     }
 
@@ -103,8 +103,8 @@ class FEController extends Controller
                 throw new \Exception("Wrong selection.");
             }
             if ($input->range->type != '') {
-                $data = AnnotationFEService::annotateFE($input);
-                return view("Annotation.FE.Panes.annotation", $data);
+                $data = FEService::annotateFE($input);
+                return view("Annotation.FE.Panes.asAnnotation", $data);
             } else {
                 return $this->renderNotify("error", "No selection.");
             }
@@ -117,9 +117,9 @@ class FEController extends Controller
     public function deleteFE(DeleteFEData $data)
     {
         try {
-            AnnotationFEService::deleteFE($data);
-            $data = AnnotationFEService::getASData($data->idAnnotationSet, $data->token);
-            return view("Annotation.FE.Panes.annotation", $data);
+            FEService::deleteFE($data);
+            $data = FEService::getASData($data->idAnnotationSet, $data->token);
+            return view("Annotation.FE.Panes.asAnnotation", $data);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

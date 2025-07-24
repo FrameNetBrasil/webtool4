@@ -14,8 +14,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
-use App\Services\AnnotationDynamicService;
-use App\Services\AnnotationService;
+use App\Services\Annotation\DynamicService;
+use App\Services\Annotation\BrowseService;
 use App\Services\AppService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -38,7 +38,7 @@ class DynamicController extends Controller
     #[Get(path: '/annotation/dynamic')]
     public function browse(SearchData $search)
     {
-        $corpus = AnnotationService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
+        $corpus = BrowseService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
 
         return view('Annotation.Dynamic.browse', [
             'data' => $corpus,
@@ -49,9 +49,9 @@ class DynamicController extends Controller
     public function tree(SearchData $search)
     {
         if (!is_null($search->idCorpus) || ($search->document != '')) {
-            $data = AnnotationService::browseDocumentBySearch($search, [], 'DynamicAnnotation', leaf: true);
+            $data = BrowseService::browseDocumentBySearch($search, [], 'DynamicAnnotation', leaf: true);
         } else {
-            $data = AnnotationService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
+            $data = BrowseService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
         }
 
         return view('Annotation.Dynamic.browse', [
@@ -67,7 +67,7 @@ class DynamicController extends Controller
             ->where('idDocument', $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        $timelineData = AnnotationDynamicService::getLayersByDocument($idDocument);
+        $timelineData = DynamicService::getLayersByDocument($idDocument);
         $timelineConfig = $this->getTimelineConfig($timelineData);
         $groupedLayers = $this->groupLayersByName($timelineData);
 
@@ -92,7 +92,7 @@ class DynamicController extends Controller
         if ($data->idDynamicObject == 0) {
             return view('Annotation.Dynamic.Forms.formNewObject');
         }
-        $object = AnnotationDynamicService::getObject($data->idDynamicObject ?? 0);
+        $object = DynamicService::getObject($data->idDynamicObject ?? 0);
         if (is_null($object)) {
             return $this->renderNotify('error', 'Object not found.');
         }
@@ -192,7 +192,7 @@ class DynamicController extends Controller
     public function createNewObjectAtLayer(CreateObjectData $data)
     {
         try {
-            $object = AnnotationDynamicService::createNewObjectAtLayer($data);
+            $object = DynamicService::createNewObjectAtLayer($data);
             return $this->redirect("/annotation/dynamic/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -204,14 +204,14 @@ class DynamicController extends Controller
     #[Post(path: '/annotation/dynamic/formAnnotation')]
     public function formAnnotation(ObjectData $data)
     {
-        $object = AnnotationDynamicService::getObject($data->idDynamicObject ?? 0);
+        $object = DynamicService::getObject($data->idDynamicObject ?? 0);
         return $this->redirect("/annotation/dynamic/{$object->idDocument}/{$object->idDynamicObject}");
     }
 
     #[Get(path: '/annotation/dynamic/formAnnotation/{idDynamicObject}')]
     public function getFormAnnotation(int $idDynamicObject)
     {
-        $object = AnnotationDynamicService::getObject($idDynamicObject ?? 0);
+        $object = DynamicService::getObject($idDynamicObject ?? 0);
         return view('Annotation.Dynamic.Panes.formAnnotation', [
             'object' => $object,
         ]);
@@ -220,7 +220,7 @@ class DynamicController extends Controller
     #[Get(path: '/annotation/dynamic/loadLayerList/{idDocument}')]
     public function loadLayerList(int $idDocument)
     {
-        return AnnotationDynamicService::getLayersByDocument($idDocument);
+        return DynamicService::getLayersByDocument($idDocument);
     }
 
     #[Post(path: '/annotation/dynamic/updateObjectRange')]
@@ -229,7 +229,7 @@ class DynamicController extends Controller
         try {
             debug($data);
 
-            return AnnotationDynamicService::updateObjectFrame($data);
+            return DynamicService::updateObjectFrame($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
 
@@ -241,7 +241,7 @@ class DynamicController extends Controller
     public function updateObjectFrame(ObjectFrameData $data)
     {
         try {
-            return AnnotationDynamicService::updateObjectFrame($data);
+            return DynamicService::updateObjectFrame($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
 
@@ -253,8 +253,8 @@ class DynamicController extends Controller
     public function updateObjectAnnotation(ObjectAnnotationData $data)
     {
         try {
-            AnnotationDynamicService::updateObjectAnnotation($data);
-            $object = AnnotationDynamicService::getObject($data->idDynamicObject);
+            DynamicService::updateObjectAnnotation($data);
+            $object = DynamicService::getObject($data->idDynamicObject);
             $this->notify('success', 'Object updated.');
             debug($object);
 
@@ -273,7 +273,7 @@ class DynamicController extends Controller
     public function deleteAllBBoxes(int $idDocument, int $idDynamicObject)
     {
         try {
-            AnnotationDynamicService::deleteBBoxesFromObject($idDynamicObject);
+            DynamicService::deleteBBoxesFromObject($idDynamicObject);
 
             return $this->redirect("/annotation/dynamic/{$idDocument}/{$idDynamicObject}");
         } catch (\Exception $e) {
@@ -287,7 +287,7 @@ class DynamicController extends Controller
     public function deleteObject(int $idDocument, int $idDynamicObject)
     {
         try {
-            AnnotationDynamicService::deleteObject($idDynamicObject);
+            DynamicService::deleteObject($idDynamicObject);
 
             return $this->redirect("/annotation/dynamic/{$idDocument}");
         } catch (\Exception $e) {
