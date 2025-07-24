@@ -3,19 +3,15 @@
 namespace App\Http\Controllers\Annotation;
 
 
+use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\FullText\AnnotationData;
-use App\Data\Annotation\FullText\CreateASData;
 use App\Data\Annotation\FullText\DeleteLabelData;
 use App\Data\Annotation\FullText\SearchData;
 use App\Data\Annotation\FullText\SelectionData;
-use App\Data\Comment\CommentData;
-use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\AnnotationSet;
-use App\Repositories\Document;
 use App\Services\Annotation\BrowseService;
+use App\Services\Annotation\CorpusService;
 use App\Services\Annotation\FullTextService;
-use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -45,10 +41,10 @@ class FullTextController extends Controller
     public function tree(SearchData $search)
     {
         if (!is_null($search->idDocumentSentence)) {
-            $data = BrowseService::browseSentences(FullTextService::getSentence($search->idDocumentSentence));
+            $data = BrowseService::browseSentence($search->idDocumentSentence);
         } else {
             if (!is_null($search->idDocument)) {
-                $data = BrowseService::browseSentences(FullTextService::listSentences($search->idDocument));
+                $data = BrowseService::browseSentencesByDocument($search->idDocument);
             } else {
                 if (!is_null($search->idCorpus) || ($search->document != '')) {
                     $data = BrowseService::browseDocumentBySearch($search);
@@ -65,9 +61,68 @@ class FullTextController extends Controller
     #[Get(path: '/annotation/fullText/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
     public function sentence(int $idDocumentSentence, int $idAnnotationSet = null)
     {
-        $data = FullTextService::getAnnotationData($idDocumentSentence,$idAnnotationSet);
-        return view("Annotation.FE.annotation", $data);
+        $data = CorpusService::getAnnotationData($idDocumentSentence,$idAnnotationSet);
+        return view("Annotation.FullText.annotation", $data);
     }
+    #[Get(path: '/annotation/fullText/lus/{idDocumentSentence}/{idWord}')]
+    public function getLUs(int $idDocumentSentence, int $idWord)
+    {
+        $data = CorpusService::getLUs($idDocumentSentence, $idWord);
+        return view("Annotation.FullText.Panes.lus", $data);
+    }
+
+    #[Post(path: '/annotation/fullText/createAS')]
+    public function createAS(CreateASData $input)
+    {
+        $idAnnotationSet = CorpusService::createAnnotationSet($input);
+        if (is_null($idAnnotationSet)) {
+            return $this->renderNotify("error", "Error creating AnnotationSet.");
+        } else {
+            return $this->clientRedirect("/annotation/fullText/sentence/{$input->idDocumentSentence}/{$idAnnotationSet}");
+        }
+    }
+
+    #[Get(path: '/annotation/fullText/as/{idAS}/{token?}')]
+    public function annotationSet(int $idAS, string $token = '')
+    {
+        $data = FullTextService::getASData($idAS, $token);
+        return view("Annotation.FullText.Panes.annotationSet", $data);
+    }
+
+    #[Post(path: '/annotation/fullText/annotate')]
+    public function annotate(AnnotationData $input)
+    {
+        try {
+            //debug($input);
+            //debug(request("selection"));
+            $input->range = SelectionData::from(request("selection"));
+            if ($input->range->end < $input->range->start) {
+                throw new \Exception("Wrong selection.");
+            }
+            if ($input->range->type != '') {
+                $data = FullTextService::annotateEntity($input);
+                return view("Annotation.FullText.Panes.asAnnotation", $data);
+            } else {
+                throw new \Exception("No selection.");
+            }
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/annotation/fullText/label')]
+    public function deleteLabel(DeleteLabelData $data)
+    {
+        try {
+            FullTextService::deleteLabel($data);
+            $data = FullTextService::getASData($data->idAnnotationSet, $data->token);
+            return view("Annotation.FullText.Panes.asAnnotation", $data);
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+
 
 //    #[Get(path: '/annotation/fullText/{idDocument?}')]
 //    public function browse(int $idDocument = null)
@@ -146,26 +201,7 @@ class FullTextController extends Controller
 //        return view("Annotation.FullText.Panes.lus", $data);
 //    }
 //
-//    #[Post(path: '/annotation/fullText/annotate')]
-//    public function annotate(AnnotationData $input)
-//    {
-//        try {
-//            //debug($input);
-//            //debug(request("selection"));
-//            $input->range = SelectionData::from(request("selection"));
-//            if ($input->range->end < $input->range->start) {
-//                throw new \Exception("Wrong selection.");
-//            }
-//            if ($input->range->type != '') {
-//                FullTextService::annotateEntity($input);
-//                return $input->idAnnotationSet;
-//            } else {
-//                throw new \Exception("No selection.");
-//            }
-//        } catch (\Exception $e) {
-//            return $this->renderNotify("error", $e->getMessage());
-//        }
-//    }
+
 //
 //    #[Delete(path: '/annotation/fullText/label')]
 //    public function deleteFE(DeleteLabelData $data)

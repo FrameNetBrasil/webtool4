@@ -1,11 +1,11 @@
 <x-layout::index>
-    <script type="text/javascript" src="/annotation/fe/script/components"></script>
+    <script type="text/javascript" src="/annotation/fullText/script/components"></script>
     <div class="app-layout annotation-corpus">
         <div class="annotation-header">
             <div class="flex-container between">
                 <div class="flex-item">
                     <x-ui::breadcrumb
-                        :sections="[['/','Home'],['/annotation/fe','FE Annotation'],['','#' . $idDocumentSentence]]"></x-ui::breadcrumb>
+                        :sections="[['/','Home'],['/annotation/fe','FullText Annotation'],['','#' . $idDocumentSentence]]"></x-ui::breadcrumb>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
                         @else
                             <div
                                 class="ui medium button mb-2 {!! $hasAS ? 'hasAS' : 'hasLU' !!}"
-                                hx-get="{!! $hasAS ? '/annotation/fe/as/' . $token['idAS'] . '/' . $token['word'] : '/annotation/fe/lus/'. $idDocumentSentence . '/'. $i !!}"
+                                hx-get="{!! $hasAS ? '/annotation/fullText/as/' . $token['idAS'] . '/' . $token['word'] : '/annotation/fullText/lus/'. $idDocumentSentence . '/'. $i !!}"
                                 hx-target=".annotation-panel"
                                 hx-swap="innerHTML"
                             >{{$token['word']}}
@@ -65,7 +65,7 @@
                 @if(!is_null($idAnnotationSet))
                     <div
                         hx-trigger="load"
-                        hx-get="/annotation/fe/as/{{$idAnnotationSet}}/{{$word}}"
+                        hx-get="/annotation/fullText/as/{{$idAnnotationSet}}/{{$word}}"
                         hx-target=".annotation-panel"
                         hx-swap="innerHTML"
                     >

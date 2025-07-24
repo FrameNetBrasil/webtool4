@@ -12,8 +12,14 @@
                             data-name="{{$type->name}}"
                             data-id="{{$type->idType}}"
                             style="height:{{$height}}px"
+                            @click="onSelectNI($el)"
                         >{{$type->name}}
-                            @foreach($nis as $idInstantiationType => $niFEs)
+                        </span>
+                    </div>
+                    @foreach($nis as $idInstantiationType => $niFEs)
+                    <div
+                        class="colNILabel"
+                    >
                                 @php($topLine = 30)
                                 @if($type->idType == $idInstantiationType)
                                     @foreach($niFEs as $niFE)
@@ -21,20 +27,19 @@
                                         <span class="line color_{{$fes[$idEntityFE]->idColor}}"
                                               style="top:{{$topLine}}px">
                                             <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
-                                                  style="top:0px">{{$niFE['label']}}</span>
+                                                  style="top:0">{{$niFE['label']}}</span>
                                         </span>
-                                        @php($topLine += 24)
+{{--                                        @php($topLine += 24)--}}
                                     @endforeach
                                 @endif
-                            @endforeach
-                                        </span>
                     </div>
+                    @endforeach
                 @endif
             @endforeach
         </div>
 
     </div>
-    <div class="annotationSentence">
+    <div class="annotationSentenceFE">
         <div class="rowWord">
             @foreach($words as $i => $w)
                 <div class="{!! ($w['word'] != ' ') ? 'colWord' : 'colSpace' !!}">

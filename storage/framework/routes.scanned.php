@@ -4560,6 +4560,46 @@ $router->get('annotation/fullText/sentence/{idDocumentSentence}/{idAnnotationSet
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/fullText/lus/{idDocumentSentence}/{idWord}', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@getLUs',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/fullText/createAS', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@createAS',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/fullText/as/{idAS}/{token?}', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@annotationSet',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/fullText/annotate', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@annotate',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/fullText/label', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteLabel',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/corpus', [
 	'uses' => 'App\Http\Controllers\Annotation\CorpusController@browse',
 	'as' => NULL,

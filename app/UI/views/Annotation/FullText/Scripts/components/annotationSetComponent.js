@@ -2,15 +2,7 @@ function annotationSetComponent(idAnnotationSet, token) {
     return {
         idAnnotationSet: null,
         selectionRaw: null,
-        selectionNI: null,
-        token: "",
-        // selection: {
-        //     type: "",
-        //     id: "",
-        //     start: 0,
-        //     end: 0
-        // },
-
+        token: '',
 
         init() {
             this.idAnnotationSet = idAnnotationSet;
@@ -18,7 +10,7 @@ function annotationSetComponent(idAnnotationSet, token) {
         },
 
         get selection() {
-            let type = "", id = "", start = 0, end = 0;
+            let type = '',id = '',start = 0,end = 0;
             if (this.selectionRaw) {
                 let { anchorNode, anchorOffset, focusNode, focusOffset } = this.selectionRaw;
                 var startNode = anchorNode?.parentNode || null;
@@ -44,12 +36,6 @@ function annotationSetComponent(idAnnotationSet, token) {
                     }
                 }
             }
-            if (this.selectionNI) {
-                console.log("get selection NI",this.selectionNI);
-                type = "ni";
-                id = this.selectionNI.dataset.id;
-                start = end = 0;
-            }
             return {
                 type,
                 id,
@@ -58,42 +44,32 @@ function annotationSetComponent(idAnnotationSet, token) {
             };
         },
 
-        onSelectNI(e) {
-            this.selectionNI = e;
-            let range = new Range();
-            range.setStart(e, 0);
-            range.setEnd(e, 1);
-            document.getSelection().removeAllRanges();
-            document.getSelection().addRange(range);
-            console.log("on select NI",this.selectionNI);
-        },
-
-        onLabelAnnotate(idFrameElement) {
-            console.log(this.selection);
+        onLabelAnnotate(idEntity, layerType) {
             let values = {
                 idAnnotationSet: this.idAnnotationSet,
                 token: this.token,
-                idFrameElement,
+                idEntity,
+                layerType,
                 selection: this.selection
             };
-            htmx.ajax("POST", "/annotation/fe/annotate", {
-                target: ".annotationSet",
-                swap: "innerHTML",
-                values: values
-            });
+            htmx.ajax('POST', '/annotation/fullText/annotate', {target:'.annotationSet', swap:'innerHTML',values: values });
         },
 
-        onLabelDelete(idFrameElement) {
+        onLabelDelete(idEntity, layerType) {
             let values = {
                 idAnnotationSet: this.idAnnotationSet,
                 token: this.token,
-                idFrameElement
+                idEntity
             };
-            htmx.ajax("DELETE", "/annotation/fe/frameElement", {
-                target: ".annotationSet",
-                swap: "innerHTML",
-                values: values
-            });
+            console.log(values);
+            htmx.ajax('DELETE', '/annotation/fullText/label', {target:'.annotationSet', swap:'innerHTML',values: values });
+        },
+
+        onChangeLabelTab(e) {
+            console.log(e);
+            $(".tabs .item")
+                .tab('change tab', e.detail)
+            ;
         }
     };
 }
