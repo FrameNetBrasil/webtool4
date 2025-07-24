@@ -96,6 +96,7 @@ class FEController extends Controller
     #[Post(path: '/annotation/fe/annotate')]
     public function annotate(AnnotationData $input)
     {
+        debug($input);
         try {
             $input->range = SelectionData::from(request("selection"));
             if ($input->range->end < $input->range->start) {
@@ -103,7 +104,7 @@ class FEController extends Controller
             }
             if ($input->range->type != '') {
                 $data = AnnotationFEService::annotateFE($input);
-                return view("Annotation.FE.Panes.annotationSet", $data);
+                return view("Annotation.FE.Panes.annotation", $data);
             } else {
                 return $this->renderNotify("error", "No selection.");
             }
@@ -118,7 +119,7 @@ class FEController extends Controller
         try {
             AnnotationFEService::deleteFE($data);
             $data = AnnotationFEService::getASData($data->idAnnotationSet, $data->token);
-            return view("Annotation.FE.Panes.annotationSet", $data);
+            return view("Annotation.FE.Panes.annotation", $data);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
