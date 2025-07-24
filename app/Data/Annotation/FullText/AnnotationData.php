@@ -10,6 +10,7 @@ class AnnotationData extends Data
         public int          $idEntity,
         public ?SelectionData $range = null,
         public ?string        $layerType = '',
+        public string        $token = '',
         public ?string        $_token = '',
     )
     {

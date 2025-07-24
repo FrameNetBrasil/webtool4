@@ -1,5 +1,4 @@
 <x-layout::index>
-    <script type="text/javascript" src="/annotation/fe/script/objects"></script>
     <script type="text/javascript" src="/annotation/fe/script/components"></script>
     <div class="app-layout annotation-corpus">
         <div class="annotation-header">

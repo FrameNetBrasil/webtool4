@@ -13,167 +13,12 @@ use App\Repositories\LU;
 use App\Repositories\Timeline;
 use App\Repositories\WordForm;
 use App\Services\AppService;
+use App\Services\CommentService;
 use Illuminate\Support\Facades\DB;
 
 
 class FullTextService
 {
-    private static function hasTimespan(int $idDocument): bool
-    {
-        $timespan = Criteria::table("document_sentence as ds")
-            ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
-            ->where("ds.idDocument", $idDocument)
-            ->first();
-        return !is_null($timespan);
-    }
-
-    public static function listSentences(int $idDocument): array
-    {
-        $u = DB::select("select SESSION_USER()");
-        debug($u);
-        $hasTimespan = self::hasTimespan($idDocument);
-        if ($hasTimespan) {
-            $sentences = Criteria::table("view_sentence as s")
-                ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
-                ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
-                ->join("document as d", "ds.idDocument", "=", "d.idDocument")
-                ->where("d.idDocument", $idDocument)
-                ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ts.startTime", "ts.endTime")
-                ->orderBy("ts.startTime")
-                ->orderBy("ds.idDocumentSentence")
-                ->limit(1000)
-                ->get()->keyBy("idDocumentSentence")->all();
-        } else {
-            $sentences = Criteria::table("view_sentence as s")
-                ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
-                ->join("document as d", "ds.idDocument", "=", "d.idDocument")
-                ->where("d.idDocument", $idDocument)
-                ->select("s.idSentence", "s.text", "ds.idDocumentSentence")
-                ->orderBy("ds.idDocumentSentence")
-                ->limit(1000)
-                ->get()->keyBy("idDocumentSentence")->all();
-        }
-        if (!empty($sentences)) {
-            $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
-            foreach ($targets as $idDocumentSentence => $spans) {
-                $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);
-            }
-        }
-        return $sentences;
-    }
-
-    public static function getPrevious(int $idDocument, int $idDocumentSentence)
-    {
-        $i = Criteria::table("document_sentence")
-            ->where("idDocument", "=", $idDocument)
-            ->where("idDocumentSentence", "<", $idDocumentSentence)
-            ->max('idDocumentSentence');
-        return $i ?? null;
-    }
-
-    public static function getNext(int $idDocument, int $idDocumentSentence)
-    {
-        $i = Criteria::table("document_sentence")
-            ->where("idDocument", "=", $idDocument)
-            ->where("idDocumentSentence", ">", $idDocumentSentence)
-            ->min('idDocumentSentence');
-        return $i ?? null;
-    }
-
-    public static function getAnnotationData(int $idDocumentSentence): array
-    {
-        $sentence = Criteria::table("view_sentence as s")
-            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
-            ->where("ds.idDocumentSentence", $idDocumentSentence)
-            ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
-            ->first();
-        $words = self::getWords($sentence);
-        foreach ($words as $i => $word) {
-            if (!$word['hasLU']) {
-                $words[$i]['hasLU'] = WordForm::wordHasLU($word['word']);
-            }
-        }
-//        debug($words);
-        $document = Document::byId($sentence->idDocument);
-        $corpus = Corpus::byId($document->idCorpus);
-        return [
-            'idDocumentSentence' => $idDocumentSentence,
-            'idPrevious' => self::getPrevious($sentence->idDocument, $idDocumentSentence),
-            'idNext' => self::getNext($sentence->idDocument, $idDocumentSentence),
-            'corpus' => $corpus,
-            'document' => $document,
-            'sentence' => $sentence,
-            'text' => $sentence->text,
-            'tokens' => $words,
-            'idAnnotationSet' => null
-        ];
-
-    }
-
-    public static function getWords(object $sentence): array
-    {
-        $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
-        // get words/chars
-        $wordsChars = AnnotationSet::getWordsChars(htmlspecialchars_decode($sentence->text));
-//        debug($wordsChars);
-        $words = $wordsChars->words;
-        $wordsByChar = [];
-        foreach ($words as $word) {
-            $wordsByChar[$word['startChar']] = $word;
-        }
-//        debug($wordsChars->chars);
-        $wordTarget = [];
-        foreach ($targets as $target) {
-            $wordTarget[$target->startChar] = [
-                'word' => mb_substr($sentence->text, $target->startChar, ($target->endChar - $target->startChar + 1)),
-                'startChar' => $target->startChar,
-                'endChar' => $target->endChar,
-                'hasLU' => true,
-                'idAS' => $target->idAnnotationSet
-            ];
-        }
-        $wordList = [];
-        $nextChar = 0;
-        while ($nextChar < count($wordsChars->chars)) {
-            if (isset($wordTarget[$nextChar])) {
-                $wordList[] = $wordTarget[$nextChar];
-                $nextChar = $wordTarget[$nextChar]['endChar'] + 1;
-            } else {
-                $wordList[] = [
-                    'word' => $wordsByChar[$nextChar]['word'],
-                    'startChar' => $wordsByChar[$nextChar]['startChar'],
-                    'endChar' => $wordsByChar[$nextChar]['endChar'],
-                    'hasLU' => false
-                ];
-                $nextChar = $wordsByChar[$nextChar]['endChar'] + 1;
-            }
-        }
-        return $wordList;
-    }
-
-    public static function getLUs(int $idDocumentSentence, int $idWord): array
-    {
-        $sentence = Criteria::table("view_sentence as s")
-            ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
-            ->where("ds.idDocumentSentence", $idDocumentSentence)
-            ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
-            ->first();
-        $words = self::getWords($sentence);
-        $wordsToShow = [];
-        for ($i = $idWord - 10; $i <= $idWord + 10; $i++) {
-            if (isset($words[$i])) {
-                if ($words[$i]['word'] != ' ') {
-                    $wordsToShow[$i] = $words[$i];
-                }
-            }
-        }
-        return [
-            'lus' => WordForm::getLUs($words[$idWord]['word']),
-            'words' => $wordsToShow,
-        ];
-
-    }
-
     public static function getASData(int $idAS, string $token = ''): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
@@ -193,9 +38,28 @@ class FullTextService
             $wordsChars->words[$i]['hasFE'] = false;
         }
         $lu = LU::byId($as->idLU);
+        $fesByType = [
+            "Core" => [],
+            "Peripheral" => [],
+            "Extra-thematic" => [],
+        ];
+        $fes = Criteria::table("view_frameelement")
+            ->where('idLanguage', AppService::getCurrentIdLanguage())
+            ->where("idFrame", $lu->idFrame)
+            ->orderBy("name")
+            ->all();
+        foreach ($fes as $fe) {
+            if (($fe->coreType == "cty_core") || ($fe->coreType == "cty_core-unexpressed")) {
+                $fesByType["Core"][] = $fe;
+            } else if ($fe->coreType == "cty_peripheral") {
+                $fesByType["Peripheral"][] = $fe;
+            } else {
+                $fesByType["Extra-thematic"][] = $fe;
+            }
+        }
         $pos = Criteria::byId("pos", "idPOS", $lu->idPOS);
         $layerPOS = ['pos_n' => 'lty_noun', 'pos_v' => 'lty_verb', 'pos_a' => 'lty_adj', 'pos_prep' => 'lty_prep',
-            'pos_adv' => 'lty_adv', 'pos_num' => 'lty_num', 'pos_pron' => 'lty_pron', 'pos_ccon' => 'lty_ccon', 'pos_scon' => 'lty_scon' /*, 'pos_intj' => 'lty_intj'*/];
+            'pos_adv' => 'lty_adv', 'pos_num' => 'lty_num', 'pos_pron' => 'lty_pron', 'pos_ccon' => 'lty_ccon', 'pos_scon' => 'lty_scon'];
         $labels = [];
         $labels['lty_fe'] = Criteria::table("view_frameelement")
             ->where('idLanguage', $idLanguage)
@@ -217,6 +81,11 @@ class FullTextService
             ->where("entry", "lty_other")
             ->keyBy("idEntityGenericLabel")
             ->all();
+        $labels['lty_sent'] = Criteria::table("view_layertype_gl")
+            ->where('idLanguage', $idLanguage)
+            ->where("entry", "lty_sent")
+            ->keyBy("idEntityGenericLabel")
+            ->all();
         if (isset($layerPOS[$pos->entry])) {
             $labels[$layerPOS[$pos->entry]] = Criteria::table("view_layertype_gl")
                 ->where('idLanguage', $idLanguage)
@@ -224,22 +93,15 @@ class FullTextService
                 ->keyBy("idEntityGenericLabel")
                 ->all();
         }
-        $labels['lty_sent'] = Criteria::table("view_layertype_gl")
-            ->where('idLanguage', $idLanguage)
-            ->where("entry", "lty_sent")
-            ->keyBy("idEntityGenericLabel")
-            ->all();
         $entities = [];
         foreach ($labels as $type => $labelNames) {
             foreach ($labelNames as $idEntity => $label) {
                 $label->type = $type;
                 $entities[$idEntity] = $label;
-//                $idLayerTypes[$type] = $label->idLayerType;
             }
         }
         $layers = AnnotationSet::getLayers($idAS);
         $target = array_filter($layers, fn($x) => ($x->layerTypeEntry == 'lty_target'));
-        debug('target', $target);
         foreach ($target as $tg) {
             $tg->startWord = $wordsChars->chars[$tg->startChar]['order'];
             $tg->endWord = $wordsChars->chars[$tg->endChar]['order'];
@@ -257,6 +119,7 @@ class FullTextService
                 $spans[$i][$idLayer] = null;
             }
             foreach ($existingSpans as $span) {
+                debug($span);
                 if ($span->idTextSpan != '') {
                     $span->startWord = ($span->startChar != -1) ? $wordsChars->chars[$span->startChar]['order'] : -1;
                     $span->endWord = ($span->endChar != -1) ? $wordsChars->chars[$span->endChar]['order'] : -1;
@@ -268,6 +131,7 @@ class FullTextService
                             $spans[$i][$idLayer] = [
                                 'idEntity' => $span->idEntity,
                                 'label' => $name,
+                                'idColor' => $span->idColor
                             ];
                             $wordsChars->words[$i]['hasAnnotation'] = true;
                             $hasLabel = true;
@@ -277,7 +141,8 @@ class FullTextService
                             $name = $entities[$span->idEntity]->name;
                             $nis[$span->idInstantiationType][] = [
                                 'idEntityFE' => $span->idEntity,
-                                'label' => $name
+                                'label' => $name,
+                                'idColor' => $span->idColor
                             ];
                         }
                     }
@@ -322,9 +187,11 @@ class FullTextService
             'spans' => $spans,
             'labels' => $labels,
             'entities' => $entities,
+            'fesByType' => $fesByType,
             'nis' => $nis,
             'alternativeLU' => $alternativeLU,
-            'word' => $token
+            'word' => $token,
+            'comment' => CommentService::getAnnotationSetComment($idAS)
         ];
 
     }
@@ -423,7 +290,7 @@ class FullTextService
     /**
      * @throws \Exception
      */
-    public static function annotateEntity(AnnotationData $data): void
+    public static function annotateEntity(AnnotationData $data): array
     {
         DB::transaction(function () use ($data) {
             $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $data->idAnnotationSet);
@@ -527,6 +394,7 @@ class FullTextService
             }
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         });
+        return self::getASData($data->idAnnotationSet, $data->token);
     }
 
     public static function deleteLabel(DeleteLabelData $data): void
@@ -550,53 +418,16 @@ class FullTextService
                 Criteria::deleteById("textspan", "idTextSpan", $annotation->idTextSpan);
             }
             // if FE layer was empty, remove it
-            foreach ($annotations as $annotation) {
-                $annotationsByLayer = Criteria::table("view_annotation_text_fe")
-                    ->where("idLayer", $annotation->idLayer)
-                    ->count();
-                //debug("count = " . $annotationsByLayer);
-                if ($annotationsByLayer == 0) {
-                    Criteria::deleteById("layer", "idLayer", $annotation->idLayer);
-                }
-            }
+//            foreach ($annotations as $annotation) {
+//                $annotationsByLayer = Criteria::table("view_annotation_text_fe")
+//                    ->where("idLayer", $annotation->idLayer)
+//                    ->count();
+//                //debug("count = " . $annotationsByLayer);
+//                if ($annotationsByLayer == 0) {
+//                    Criteria::deleteById("layer", "idLayer", $annotation->idLayer);
+//                }
+//            }
         });
-    }
-
-    public static function createAnnotationSet(CreateASData $data): ?int
-    {
-        //debug($data);
-        $startChar = 4000;
-        $endChar = -1;
-        foreach ($data->wordList as $word) {
-            if ($word->startChar < $startChar) {
-                $startChar = $word->startChar;
-            }
-            if ($word->endChar > $endChar) {
-                $endChar = $word->endChar;
-            }
-        }
-        $idAnnotationSet = null;
-        if (($startChar != -1) && ($endChar != 4000)) {
-            $idAnnotationSet = AnnotationSet::createForLU($data->idDocumentSentence, $data->idLU, $startChar, $endChar);
-        }
-        return $idAnnotationSet;
-    }
-
-    public static function decorateSentenceTarget($text, $spans)
-    {
-        $decorated = "";
-        $ni = "";
-        $i = 0;
-        foreach ($spans as $span) {
-            //$style = 'background-color:#' . $label['rgbBg'] . ';color:#' . $label['rgbFg'] . ';';
-            if ($span->startChar >= 0) {
-                $decorated .= mb_substr($text, $i, $span->startChar - $i);
-                $decorated .= "<span class='color_target'>" . mb_substr($text, $span->startChar, $span->endChar - $span->startChar + 1) . "</span>";
-                $i = $span->endChar + 1;
-            }
-        }
-        $decorated = $decorated . mb_substr($text, $i);
-        return $decorated;
     }
 
 }
