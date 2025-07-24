@@ -17,9 +17,8 @@
             tr {
 
 
-
                 &.row-data {
-                    border-bottom:  1px dotted #ccc;
+                    border-bottom: 1px dotted #ccc;
 
                     &:hover {
                         background-color: @treeHoverBackground
@@ -61,8 +60,8 @@
                     }
 
                     &.content-cell {
-                        min-height:1em;
-                        line-height:1;
+                        min-height: 1em;
+                        line-height: 1;
                         vertical-align: middle;
                         padding: @relativeMini @relativeMini;
 
@@ -74,9 +73,12 @@
 
                         }
                     }
+
+                    .loading {
+                        height: 2em;
+                    }
                 }
             }
-
 
 
             .tree-content {
@@ -96,6 +98,14 @@
                 .tree-table td {
                     //border: 1px solid #eee;
                     //padding: 6px;
+
+                    .text-time {
+                        white-space: nowrap;
+                        text-align: right;
+                        display: inline-block;
+                        width: 72px;
+                    }
+
                 }
 
             }

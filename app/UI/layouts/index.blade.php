@@ -24,6 +24,7 @@
     <script type="text/javascript" src="/scripts/app/notify.js"></script>
     <script type="text/javascript" src="/scripts/app/treeComponent.js"></script>
     <script type="text/javascript" src="/scripts/app/searchComponent.js"></script>
+    <script type="text/javascript" src="/scripts/app/browseSearchComponent.js"></script>
     <script type="text/javascript" src="/scripts/pdf/jspdf.debug.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2canvas.min.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2pdf.min.js"></script>

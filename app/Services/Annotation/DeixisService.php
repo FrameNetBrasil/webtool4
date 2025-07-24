@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Annotation;
 
 use App\Data\Annotation\Deixis\CreateObjectData;
-use App\Data\Annotation\Deixis\DeleteBBoxData;
 use App\Data\Annotation\Deixis\ObjectAnnotationData;
 use App\Data\Annotation\Deixis\ObjectFrameData;
 use App\Database\Criteria;
@@ -11,10 +10,12 @@ use App\Repositories\Task;
 use App\Repositories\Timeline;
 use App\Repositories\User;
 use App\Repositories\Video;
+use App\Services\AppService;
+use App\Services\CommentService;
 use Illuminate\Support\Facades\DB;
 
 
-class AnnotationDeixisService
+class DeixisService
 {
     private static function deleteBBoxesByDynamicObject(int $idDynamicObject)
     {

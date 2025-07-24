@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Annotation;
 use App\Data\Annotation\FE\SearchData;
 use App\Http\Controllers\Controller;
 use App\Repositories\Document;
-use App\Services\AnnotationASService;
+use App\Services\Annotation\ASService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -36,7 +36,7 @@ class AnnotationSetController extends Controller
     public function documentSentences(int $idDocument)
     {
         $document = Document::byId($idDocument);
-        $sentences = AnnotationASService::listSentences($idDocument);
+        $sentences = ASService::listSentences($idDocument);
         return view("Annotation.AS.sentences", [
             'document' => $document,
             'sentences' => $sentences
@@ -46,7 +46,7 @@ class AnnotationSetController extends Controller
     #[Get(path: '/annotation/as/sentence/{idDocumentSentence}')]
     public function sentence(int $idDocumentSentence)
     {
-        $data = AnnotationASService::getAnnotationData($idDocumentSentence);
+        $data = ASService::getAnnotationData($idDocumentSentence);
 //        if (!is_null($idAnnotationSet)) {
 //            $data['idAnnotationSet'] = $idAnnotationSet;
 //        }
@@ -63,14 +63,14 @@ class AnnotationSetController extends Controller
     #[Get(path: '/annotation/as/as/{idAS}')]
     public function annotationSet(int $idAS)
     {
-        $data = AnnotationASService::getASData($idAS, '');
+        $data = ASService::getASData($idAS, '');
         return view("Annotation.AS.Panes.annotationSet", $data);
     }
 
     #[Get(path: '/annotation/as/lus/{idDocumentSentence}/{idWord}')]
     public function getLUs(int $idDocumentSentence, int $idWord)
     {
-        $data = AnnotationASService::getLUs($idDocumentSentence, $idWord);
+        $data = ASService::getLUs($idDocumentSentence, $idWord);
         $data['idWord'] = $idWord;
         $data['idDocumentSentence'] = $idDocumentSentence;
         return view("Annotation.AS.Panes.lus", $data);
@@ -105,7 +105,7 @@ class AnnotationSetController extends Controller
     public function deleteFE(DeleteFEData $data)
     {
         try {
-            AnnotationASService::deleteFE($data);
+            ASService::deleteFE($data);
             $data = AnnotationFEService::getASData($data->idAnnotationSet, $data->token);
             debug("--------------------------------------------------------");
             //$data['alternativeLU'] = [];
@@ -118,7 +118,7 @@ class AnnotationSetController extends Controller
     #[Post(path: '/annotation/as/create')]
     public function createAS(CreateASData $input)
     {
-        $idAnnotationSet = AnnotationASService::createAnnotationSet($input);
+        $idAnnotationSet = ASService::createAnnotationSet($input);
         if (is_null($idAnnotationSet)) {
             return $this->renderNotify("error", "Error creating AnnotationSet.");
         } else {

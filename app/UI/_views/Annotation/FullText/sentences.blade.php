@@ -1,7 +1,7 @@
 @php
-    use App\Services\AnnotationFEService;
+    use App\Services\Annotation\FEService;
     if (($search->idSentence ?? '') != '') {
-        $sentences = AnnotationFEService::getSentence($search->idSentence);
+        $sentences = FEService::getSentence($search->idSentence);
         debug($sentences);
     }
 @endphp

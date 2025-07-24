@@ -13,15 +13,13 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Sentence;
-use App\Services\AnnotationCorpusService;
-use App\Services\AnnotationService;
+use App\Services\Annotation\CorpusService;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 use Collective\Annotations\Routing\Attributes\Attributes\Put;
-use Illuminate\Http\Request;
 
 #[Middleware(name: 'auth')]
 class CorpusController extends Controller
@@ -46,51 +44,51 @@ class CorpusController extends Controller
         $corpusName = 'Corpus';
         $documentName = '';
         if ($search->idCorpus != '') {
-            $corpus = AnnotationCorpusService::listCorpus(new SearchData);
+            $corpus = CorpusService::listCorpus(new SearchData);
             $corpusName = $corpus[$search->idCorpus]->name;
-            $documents = AnnotationCorpusService::listDocuments($search);
+            $documents = CorpusService::listDocuments($search);
             if (!empty($documents)) {
                 $key = array_key_first($documents);
                 $search->idDocument = $documents[$key]->idDocument;
                 $documentName = $documents[$key]->name;
-                $sentences = AnnotationCorpusService::listSentences($search);
+                $sentences = CorpusService::listSentences($search);
             }
         } elseif ($search->idDocument != '') {
             $document = Document::getById($search->idDocument);
-            $corpus = AnnotationCorpusService::listCorpus(new SearchData);
+            $corpus = CorpusService::listCorpus(new SearchData);
             $search->idDocument = null;
             $search->idCorpus = $document->idCorpus;
-            $documents = AnnotationCorpusService::listDocuments($search);
+            $documents = CorpusService::listDocuments($search);
             $search->idDocument = $document->idDocument;
             $corpusName = Corpus::getById($document->idCorpus)->name;
             $documentName = $document->name;
-            $sentences = AnnotationCorpusService::listSentences($search);
+            $sentences = CorpusService::listSentences($search);
         } else {
             if (($search->sentence != '') || ($search->idSentence != '')) {
-                $sentences = AnnotationCorpusService::listSentences($search);
+                $sentences = CorpusService::listSentences($search);
                 $display = 'sentence';
             } else {
                 if (($search->document != '')) {
-                    $documents = AnnotationCorpusService::listDocuments($search);
+                    $documents = CorpusService::listDocuments($search);
                     if (!empty($documents)) {
                         $key = array_key_first($documents);
                         $search->idDocument = $documents[$key]->idDocument;
-                        $sentences = AnnotationCorpusService::listSentences($search);
+                        $sentences = CorpusService::listSentences($search);
                     }
                     $corpusName = $search->document . '*';
                     $display = 'document';
                 } else {
-                    $corpus = AnnotationCorpusService::listCorpus($search);
+                    $corpus = CorpusService::listCorpus($search);
                     if (!empty($corpus)) {
                         $key = array_key_first($corpus);
                         $search->idCorpus = $corpus[$key]->idCorpus;
-                        $documents = AnnotationCorpusService::listDocuments($search);
+                        $documents = CorpusService::listDocuments($search);
                         if (!empty($documents)) {
                             $key = array_key_first($documents);
                             $search->idDocument = $documents[$key]->idDocument;
                             $corpusName = Corpus::getById($documents[$search->idDocument]->idCorpus)->name;
                             $documentName = $documents[$search->idDocument]->name;
-                            $sentences = AnnotationCorpusService::listSentences($search);
+                            $sentences = CorpusService::listSentences($search);
                         }
                     }
                 }
@@ -110,7 +108,7 @@ class CorpusController extends Controller
     #[Post(path: '/annotation/corpus/listForTree')]
     public function listForTree()
     {
-        return AnnotationCorpusService::listForTree();
+        return CorpusService::listForTree();
     }
 
     #[Get(path: '/annotation/corpus/sentence/{idSentence}')]
@@ -122,8 +120,8 @@ class CorpusController extends Controller
         //$data['isSenior'] = $data['isMaster'];////Manager::checkAccess('SENIOR', A_EXECUTE) ? 'true' : 'false';
 //        $data['rgbColors'] = AnnotationService::getColor();
 //        $data['colorsArray = AnnotationService::getColorArray();
-        $data['layerType'] = AnnotationCorpusService::getLayerType();
-        $it = AnnotationCorpusService::getInstantiationType();
+        $data['layerType'] = CorpusService::getLayerType();
+        $it = CorpusService::getInstantiationType();
         $data['instantiationType'] = $it['array'];
         $data['instantiationTypeObj'] = $it['obj'];
         $data['idInstantiationType'] = $it['id'];
@@ -131,7 +129,7 @@ class CorpusController extends Controller
         $data['idSentence'] = $idSentence;
         $sentence = new Sentence($idSentence);
         $data['idLanguage'] = AppService::getCurrentIdLanguage();
-        $layersData = AnnotationCorpusService::getLayers($data);
+        $layersData = CorpusService::getLayers($data);
         $data['metadata'] = $layersData['metadata'];
         $data['words'] = $layersData['words'];
 //        $data['chars = $layersData['chars'];
@@ -159,7 +157,7 @@ class CorpusController extends Controller
     #[Get(path: '/annotation/corpus/lus/{idSentence}/{idWord}')]
     public function getLUs(int $idSentence, int $idWord)
     {
-        $data = AnnotationCorpusService::getLUs($idSentence, $idWord);
+        $data = CorpusService::getLUs($idSentence, $idWord);
         $data['idWord'] = $idWord;
         $data['idSentence'] = $idSentence;
         return view("Panes.Corpus.lus", $data);
@@ -168,14 +166,14 @@ class CorpusController extends Controller
     #[Get(path: '/annotation/corpus/sentence/{idSentence}/data')]
     public function annotationSentenceData(int $idSentence)
     {
-        return AnnotationCorpusService::getLayersData($idSentence);
+        return CorpusService::getLayersData($idSentence);
     }
 
     #[Put(path: '/annotation/corpus/label')]
     public function saveLabel(SaveLabelData $data)
     {
         try {
-            AnnotationCorpusService::saveLabel($data);
+            CorpusService::saveLabel($data);
             return $this->notify('success', 'Label updated.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -186,7 +184,7 @@ class CorpusController extends Controller
     public function saveNI(SaveLabelData $data)
     {
         try {
-            $idLabel = AnnotationCorpusService::saveNI($data);
+            $idLabel = CorpusService::saveNI($data);
             return response(['idLabel' => $idLabel])
                 ->header('HX-Trigger', $this->notify('success', 'NI updated.'));
 //            return $this->notify('success', 'NI updated.');
@@ -199,7 +197,7 @@ class CorpusController extends Controller
     public function deleteLabel(DeleteLabelData $data)
     {
         try {
-            AnnotationCorpusService::deleteLabel($data);
+            CorpusService::deleteLabel($data);
             return $this->notify('success', 'Label deleted.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -210,7 +208,7 @@ class CorpusController extends Controller
     public function createAnnotationSet(CreateASData $data)
     {
         try {
-            $idAnnotationSet = AnnotationCorpusService::createAnnotationSet($data);
+            $idAnnotationSet = CorpusService::createAnnotationSet($data);
             return $this->clientRedirect("/annotation/corpus/sentence/" . $data->idSentence);
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -221,7 +219,7 @@ class CorpusController extends Controller
     public function deleteAnnotationSet(DeleteASData $data)
     {
         try {
-            AnnotationCorpusService::deleteAnnotationSet($data->idAnnotationSet);
+            CorpusService::deleteAnnotationSet($data->idAnnotationSet);
             return $this->notify('success', 'AnnotationSet deleted.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -232,7 +230,7 @@ class CorpusController extends Controller
     public function deleteLastFELayer(DeleteLastFELayerData $data)
     {
         try {
-            AnnotationCorpusService::deleteLastFELayer($data->idLayer);
+            CorpusService::deleteLastFELayer($data->idLayer);
             return $this->notify('success', 'Layer FE deleted.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -243,7 +241,7 @@ class CorpusController extends Controller
     public function addFELayer(AddFELayerData $data)
     {
         try {
-            AnnotationCorpusService::addFELayer($data->idAnnotationSet);
+            CorpusService::addFELayer($data->idAnnotationSet);
             return $this->notify('success', 'New FE Layer created.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());

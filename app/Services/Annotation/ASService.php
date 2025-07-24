@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Annotation;
 
 use App\Data\Annotation\FE\AnnotationData;
 use App\Data\Annotation\FE\CreateASData;
@@ -13,10 +13,11 @@ use App\Repositories\FrameElement;
 use App\Repositories\LU;
 use App\Repositories\Timeline;
 use App\Repositories\WordForm;
+use App\Services\AppService;
 use Illuminate\Support\Facades\DB;
 
 
-class AnnotationFEService
+class ASService
 {
     private static function hasTimespan(int $idDocument): bool
     {
@@ -43,22 +44,22 @@ class AnnotationFEService
     {
         $hasTimespan = self::hasTimespan($idDocument);
         if ($hasTimespan) {
-            $sentences = Criteria::table("view_sentence as s")
-                ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            $sentences = Criteria::table("sentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("view_sentence_timespan as ts", "ds.idSentence", "=", "ts.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
-                ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ts.startTime", "ts.endTime")
+                ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence", "ts.startTime", "ts.endTime")
                 ->orderBy("ts.startTime")
                 ->orderBy("ds.idDocumentSentence")
                 ->limit(1000)
                 ->get()->keyBy("idDocumentSentence")->all();
         } else {
-            $sentences = Criteria::table("view_sentence as s")
-                ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
+            $sentences = Criteria::table("sentence")
+                ->join("document_sentence as ds", "sentence.idSentence", "=", "ds.idSentence")
                 ->join("document as d", "ds.idDocument", "=", "d.idDocument")
                 ->where("d.idDocument", $idDocument)
-                ->select("s.idSentence", "s.text", "ds.idDocumentSentence")
+                ->select("sentence.idSentence", "sentence.text", "ds.idDocumentSentence")
                 ->orderBy("ds.idDocumentSentence")
                 ->limit(1000)
                 ->get()->keyBy("idDocumentSentence")->all();
@@ -159,7 +160,7 @@ class AnnotationFEService
         }
     }
 
-    public static function getAnnotationData(int $idDocumentSentence, ?int $idAnnotationSet = 0): array
+    public static function getAnnotationData(int $idDocumentSentence): array
     {
         $sentence = Criteria::table("view_sentence as s")
             ->join("document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
@@ -203,28 +204,20 @@ class AnnotationFEService
             $idNext = $i ?? null;
         }
 
-        // tokens
-
-        $tokens = [];
-        $word = '';
-        foreach ($words as $i => $token) {
-            $tokens[$i] = $token;
-            if ($token['idAS'] == $idAnnotationSet) {
-                $word = $token['word'];
-            }
-        }
+        //
+        $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
+        debug($targets);
 
         return [
             'idDocumentSentence' => $idDocumentSentence,
-            'idPrevious' => $idPrevious,
-            'idNext' => $idNext,
+            'idPrevious' => $idPrevious,//self::getPrevious($sentence->idDocument, $idDocumentSentence),
+            'idNext' => $idNext,//self::getNext($sentence->idDocument, $idDocumentSentence),
             'corpus' => $corpus,
             'document' => $document,
             'sentence' => $sentence,
             'text' => $sentence->text,
-            'tokens' => $tokens,
-            'idAnnotationSet' => $idAnnotationSet,
-            'word' => $word
+            'tokens' => $words,
+            'annotationSets' => $targets
         ];
 
     }
@@ -262,8 +255,7 @@ class AnnotationFEService
                     'word' => $wordsByChar[$nextChar]['word'],
                     'startChar' => $wordsByChar[$nextChar]['startChar'],
                     'endChar' => $wordsByChar[$nextChar]['endChar'],
-                    'hasLU' => false,
-                    'idAS' => -1
+                    'hasLU' => false
                 ];
                 $nextChar = $wordsByChar[$nextChar]['endChar'] + 1;
             }
@@ -282,14 +274,6 @@ class AnnotationFEService
         $wordsToShow = [];
         for ($i = $idWord - 10; $i <= $idWord + 10; $i++) {
             if (isset($words[$i])) {
-                if($words[$i]['idAS'] != -1) {
-                    if ($i >= $idWord) {
-                        break;
-                    } else {
-                        $wordsToShow = [];
-                        continue;
-                    }
-                };
                 if ($words[$i]['word'] != ' ') {
                     $wordsToShow[$i] = $words[$i];
                 }
@@ -298,9 +282,8 @@ class AnnotationFEService
         return [
             'lus' => WordForm::getLUs($words[$idWord]['word']),
             'words' => $wordsToShow,
-            'idWord' => $idWord,
-            'idDocumentSentence' => $idDocumentSentence
         ];
+
     }
 
     public static function getASData(int $idAS, string $token = ''): array
@@ -330,23 +313,8 @@ class AnnotationFEService
         $fes = Criteria::table("view_frameelement")
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->where("idFrame", $lu->idFrame)
-            ->orderBy("name")
             ->keyBy("idEntity")
             ->all();
-        $fesByType = [
-            "Core" => [],
-            "Peripheral" => [],
-            "Extra-thematic" => [],
-        ];
-        foreach ($fes as $fe) {
-            if (($fe->coreType == "cty_core") || ($fe->coreType == "cty_core-unexpressed")) {
-                $fesByType["Core"][] = $fe;
-            } else if ($fe->coreType == "cty_peripheral") {
-                $fesByType["Peripheral"][] = $fe;
-            } else {
-                $fesByType["Extra-thematic"][] = $fe;
-            }
-        }
         $layers = AnnotationSet::getLayers($idAS);
         $target = array_filter($layers, fn($x) => ($x->layerTypeEntry == 'lty_target'));
         foreach ($target as $tg) {
@@ -360,7 +328,7 @@ class AnnotationFEService
         $firstWord = array_key_first($wordsChars->words);
         $lastWord = array_key_last($wordsChars->words);
         $spansByLayer = collect($feSpans)->groupBy('idLayer')->all();
-//        debug($fes);
+        debug($fes);
         foreach ($spansByLayer as $idLayer => $existingSpans) {
             $idLayers[] = $idLayer;
             for ($i = $firstWord; $i <= $lastWord; $i++) {
@@ -404,16 +372,15 @@ class AnnotationFEService
             'it' => $it,
             'idLayers' => $idLayers,
             'words' => $wordsChars->words,
+            'idDocumentSentence' => $as->idDocumentSentence,
             'idAnnotationSet' => $idAS,
             'lu' => $lu,
             'alternativeLU' => $alternativeLU,
             'target' => $target[0],
             'spans' => $spans,
             'fes' => $fes,
-            'fesByType' => $fesByType,
             'nis' => $nis,
-            'word' => $token,
-            'comment' => CommentService::getAnnotationSetComment($idAS)
+            'word' => $token
         ];
 
     }
@@ -424,7 +391,6 @@ class AnnotationFEService
     public static function annotateFE(AnnotationData $data): array
     {
         DB::transaction(function () use ($data) {
-            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $data->idAnnotationSet);
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
                 ->where("ut.idUser", -2)
@@ -478,14 +444,13 @@ class AnnotationFEService
                     'multi' => 0,
                     'idLayer' => $idLayer,
                     'idInstantiationType' => $it->idInstantiationType,
-                    'idSentence' => $annotationSet->idSentence,
                 ]);
                 $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
                 $ts = Criteria::table("textspan")
                     ->where("idTextSpan", $idTextSpan)
                     ->first();
                 $data = json_encode([
-                    'idTextSpan' => $ts->idTextSpan,
+                    'idAnnotationObject' => $ts->idAnnotationObject,
                     'idEntity' => $fe->idEntity,
                     'relationType' => 'rel_annotation',
                     'idUserTask' => $userTask->idUserTask
@@ -498,14 +463,13 @@ class AnnotationFEService
                     'multi' => 0,
                     'idLayer' => $idLayer,
                     'idInstantiationType' => (int)$data->range->id,
-                    'idSentence' => $annotationSet->idSentence,
                 ]);
                 $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
                 $ts = Criteria::table("textspan")
                     ->where("idTextSpan", $idTextSpan)
                     ->first();
                 $data = json_encode([
-                    'idTextSpan' => $ts->idTextSpan,
+                    'idAnnotationObject' => $ts->idAnnotationObject,
                     'idEntity' => $fe->idEntity,
                     'relationType' => 'rel_annotation',
                     'idUserTask' => $userTask->idUserTask
@@ -582,75 +546,6 @@ class AnnotationFEService
         }
         $decorated = $decorated . mb_substr($text, $i);
         return $decorated;
-    }
-
-    public static function annotateFELOME(AnnotationData $data, int $idLanguage): void
-    {
-        DB::transaction(function () use ($data, $idLanguage) {
-            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $data->idAnnotationSet);
-            $fe = Criteria::byFilterLanguage("view_frameelement", ['idFrameElement', '=', $data->idFrameElement])->first();
-            if ($fe) {
-                $spans = Criteria::table("view_annotation_text_fe")
-                    ->where('idAnnotationSet', $data->idAnnotationSet)
-                    ->where("layerTypeEntry", "lty_fe")
-                    ->where("idLanguage", $idLanguage)
-                    ->select('idAnnotationSet', 'idLayerType', 'idLayer', 'startChar', 'endChar', 'idEntity', 'idTextSpan', 'layerTypeEntry', 'idInstantiationType')
-                    ->all();
-                $layers = Criteria::table("view_layer")
-                    ->where('idAnnotationSet', $data->idAnnotationSet)
-                    ->where("entry", "lty_fe")
-                    ->where("idLanguage", $idLanguage)
-                    ->all();
-                // verify if exists a layer with no overlap, else create one
-                $idLayer = 0;
-                foreach ($layers as $layer) {
-                    $overlap = false;
-                    foreach ($spans as $span) {
-                        if ($span->idLayer == $layer->idLayer) {
-                            if (!(($data->range->end < $span->startChar) || ($data->range->start > $span->endChar))) {
-                                $overlap |= true;
-                            }
-                        }
-                    }
-                    if (!$overlap) {
-                        $idLayer = $layer->idLayer;
-                        break;
-                    }
-                }
-                if ($idLayer == 0) {
-                    $layerType = Criteria::byId("layertype", "entry", "lty_fe");
-                    $idLayer = Criteria::create("layer", [
-                        'rank' => 0,
-                        'idLayerType' => $layerType->idLayerType,
-                        'idAnnotationSet' => $data->idAnnotationSet
-
-                    ]);
-                }
-                //
-                $it = Criteria::table("view_instantiationtype")
-                    ->where('entry', 'int_normal')
-                    ->first();
-                $data = json_encode([
-                    'startChar' => (int)$data->range->start,
-                    'endChar' => (int)$data->range->end,
-                    'multi' => 0,
-                    'idLayer' => $idLayer,
-                    'idInstantiationType' => $it->idInstantiationType,
-                    'idSentence' => $annotationSet->idSentence,
-                ]);
-                $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
-                $ts = Criteria::table("textspan")
-                    ->where("idTextSpan", $idTextSpan)
-                    ->first();
-                $data = json_encode([
-                    'idTextSpan' => $ts->idTextSpan,
-                    'idEntity' => $fe->idEntity,
-                    'idUserTask' => 1
-                ]);
-                $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
-            }
-        });
-
     }
 
 }

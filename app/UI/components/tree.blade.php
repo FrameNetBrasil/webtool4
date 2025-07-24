@@ -13,16 +13,17 @@
         <table class="tree-table">
             <tbody>
             @foreach($data as $item)
+                @php($idNode = $item['type'] . '_' . $item['id'])
                 <tr
                     class="row-data"
                 >
                     @if(!($item['leaf'] ?? false))
                         <!-- Toggle Cell -->
                         <td class="toggle"
-                            @click="toggleNode({{$item['id']}})"
+                            @click="toggleNode('{{$idNode}}')"
                         >
                             <span class="toggle-icon"
-                                  :class="expandedNodes[{{$item['id']}}] ? 'expanded' : 'collapsed'"
+                                  :class="expandedNodes['{{$idNode}}'] ? 'expanded' : 'collapsed'"
                             >
                             </span>
                         </td>
@@ -31,6 +32,24 @@
                     @endif
 
                     <!-- Content Cell -->
+                    @if(isset($item['formatedId']))
+                        <td class="content-cell">
+                            <span class="tree-item-text"
+                                  @click="selectItem({{$item['id']}},'{{$item['type']}}')"
+                            >
+                                {!! $item['formatedId'] !!}
+                            </span>
+                        </td>
+                    @endif
+                    @if(isset($item['extra']))
+                        <td class="content-cell">
+                            <span class="tree-item-text"
+                                  @click="selectItem({{$item['id']}},'{{$item['type']}}')"
+                            >
+                                {!! $item['extra'] !!}
+                            </span>
+                        </td>
+                    @endif
                     <td class="content-cell">
                             <span class="tree-item-text"
                                   @click="selectItem({{$item['id']}},'{{$item['type']}}')"
@@ -40,31 +59,36 @@
                     </td>
                 </tr>
                 <tr
-                    id="row_{{$item['type']}}_{{$item['id']}}"
-                    :class="expandedNodes[{{$item['id']}}] ? '' : 'hidden'"
+                    id="row_{{$idNode}}"
+                    :class="expandedNodes['{{$idNode}}'] ? '' : 'hidden'"
                 >
                     <td></td>
                     <td>
                         <!-- Tree Content Container -->
-                        <div id="tree_{{$item['id']}}"
+                        <div id="tree_{{$idNode}}"
                              class="tree-content"
-                             :class="{ 'hidden': !expandedNodes[{{$item['id']}}] }"
-                             x-show="expandedNodes[{{$item['id']}}]"
+                             :class="{ 'hidden': !expandedNodes['{{$idNode}}'] }"
+                             x-show="expandedNodes['{{$idNode}}']"
                              x-transition>
 
                             <!-- Loading indicator -->
                             <div x-show="loadingNodes[{{$item['id']}}]" class="loading">
-                                Loading...
+                                <div class="ui segment border-none">
+                                    <div class="ui active inverted dimmer">
+                                        <div class="ui text loader">Loading</div>
+                                    </div>
+                                    <p></p>
+                                </div>
                             </div>
 
                             <!-- HTMX will populate this area -->
                             <div hx-post="{{$url}}"
                                  hx-vals='{"type": "{{$item['type']}}", "id" : "{{$item['id']}}"}'
-                                 hx-target="#tree_{{$item['id']}}"
+                                 hx-target="#tree_{{$idNode}}"
                                  hx-swap="innerHTML"
-                                 hx-trigger="load-{{$item['id']}} from:body"
-                                 @htmx:before-request="loadingNodes[{{$item['id']}}] = true"
-                                 @htmx:after-request="loadingNodes[{{$item['id']}}] = false; processLoadedContent($event.target)">
+                                 hx-trigger="load-{{$idNode}} from:body"
+                                 @htmx:before-request="loadingNodes['{{$idNode}}'] = true"
+                                 @htmx:after-request="loadingNodes['{{$idNode}}'] = false; processLoadedContent($event.target)">
                             </div>
                         </div>
                     </td>

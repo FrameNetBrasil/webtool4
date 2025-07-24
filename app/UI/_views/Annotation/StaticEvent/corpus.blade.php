@@ -1,6 +1,6 @@
 @php
-    use App\Services\AnnotationService;
-    $data = AnnotationService::browseCorpusDocumentBySearch($search, [], 'StaticEventAnnotation');
+    use App\Services\Annotation\BrowseService;
+    $data = BrowseService::browseCorpusDocumentBySearch($search, [], 'StaticEventAnnotation');
     $id = uniqid("corpusTree");
 @endphp
 <div

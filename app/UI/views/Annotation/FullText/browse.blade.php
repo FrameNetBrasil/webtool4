@@ -3,7 +3,7 @@
         @include('layouts.header')
         @include("layouts.sidebar")
         <main class="app-main">
-            <x-ui::breadcrumb :sections="[['/','Home'],['','FE Annotation']]"></x-ui::breadcrumb>
+            <x-ui::breadcrumb :sections="[['/','Home'],['','Fulltext Annotation']]"></x-ui::breadcrumb>
             <div class="page-content">
                 <div class="content-container">
                     <div class="app-search">
@@ -16,7 +16,7 @@
                         >
                             <div class="search-input-group">
                                 <form class="ui form"
-                                      hx-post="/annotation/fe/tree"
+                                      hx-post="/annotation/fullText/tree"
                                       hx-target=".search-results-tree"
                                       hx-swap="innerHTML"
                                       hx-trigger="submit, input delay:500ms from:input[name='frame']">
@@ -83,14 +83,14 @@
                                                     if ((type === 'corpus') || (type === 'document')) {
                                                         event.detail.tree.toggleNodeState(idNode);
                                                     } else if (type === 'sentence') {
-                                                        window.open(`/annotation/fe/sentence/${event.detail.id}`, '_blank');
+                                                        window.open(`/annotation/fullText/sentence/${event.detail.id}`, '_blank');
                                                     }
                                                 }"
                                             >
                                                 @fragment("tree")
                                                     <x-ui::tree
                                                         :title="$title ?? ''"
-                                                        url="/annotation/fe/tree"
+                                                        url="/annotation/fullText/tree"
                                                         :data="$data"
                                                     ></x-ui::tree>
                                                 @endfragment

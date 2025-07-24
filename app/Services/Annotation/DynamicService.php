@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Annotation;
 
 use App\Data\Annotation\Dynamic\CreateObjectData;
 use App\Data\Annotation\Dynamic\ObjectFrameData;
@@ -17,11 +17,12 @@ use App\Repositories\Task;
 use App\Repositories\Timeline;
 use App\Repositories\User;
 use App\Repositories\Video;
+use App\Services\AppService;
 use App\Services\CommentService;
 use Illuminate\Support\Facades\DB;
 
 
-class AnnotationDynamicService
+class DynamicService
 {
     private static function deleteBBoxesByDynamicObject(int $idDynamicObject)
     {
