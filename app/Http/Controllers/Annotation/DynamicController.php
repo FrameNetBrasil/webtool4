@@ -59,7 +59,7 @@ class DynamicController extends Controller
         ])->fragment('tree');
     }
 
-    private function getData(int $idDocument): array // DocumentData
+    private function getData(int $idDocument, int $idDynamicObject = null): array
     {
         $document = Document::byId($idDocument);
         $corpus = Corpus::byId($document->idCorpus);
@@ -83,6 +83,7 @@ class DynamicController extends Controller
                 'config' => $timelineConfig,
             ],
             'groupedLayers' => $groupedLayers,
+            'idDynamicObject' => is_null($idDynamicObject) ? 0 : $idDynamicObject
         ];
     }
 
@@ -398,8 +399,7 @@ class DynamicController extends Controller
     #[Get(path: '/annotation/dynamic/{idDocument}/{idDynamicObject?}')]
     public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
     {
-        $data = $this->getData($idDocument);
-        $data['idDynamicObject'] = is_null($idDynamicObject) ? 0 : $idDynamicObject;
+        $data = $this->getData($idDocument, $idDynamicObject);
         return response()
             ->view('Annotation.Dynamic.annotation', $data)
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate');

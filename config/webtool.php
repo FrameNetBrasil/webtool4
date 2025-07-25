@@ -50,7 +50,6 @@ return [
 //            'staticFrameMode2' => ['Static Frame Mode 2', '/annotation/staticFrameMode2', 'MASTER', []],
             'staticEvent' => ['Static Event', '/annotation/staticEvent', 'MASTER', []],
             'fe' => ['FE', '/annotation/fe', 'MASTER', []],
-            'dynamicMode' => ['Dynamic Mode', '/annotation/dynamicMode', 'MASTER', []],
             'fullText' => ['Full text', '/annotation/fullText', 'MASTER', []],
             'staticBBox' => ['Static BBox', '/annotation/staticBBox', 'MASTER', []],
             'deixis' => ['Deixis', '/annotation/deixis', 'MASTER', []],
