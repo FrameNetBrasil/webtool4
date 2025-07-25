@@ -21,7 +21,7 @@
     class="ui medium icon button negative"
     :class="isTracking && 'disabled'"
     title="Delete BBoxes from Object"
-    @click.prevent="manager.confirmDelete('Removing all BBoxes of object #{{$object->idDynamicObject}}.', '/annotation/deixis/deleteAllBBoxes/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
+    @click.prevent="messenger.confirmDelete('Removing all BBoxes of object #{{$object->idDynamicObject}}.', '/annotation/deixis/deleteAllBBoxes/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
 >
     <i class="trash alternate outline icon"></i>
     Delete All BBoxes

@@ -13,13 +13,9 @@ function annotationSetComponent(idAnnotationSet, token) {
         get selection() {
             let type = "", id = "", start = 0, end = 0;
             if (this.selectionRaw) {
-                console.log(this.selectionRaw);
                 let { anchorNode, anchorOffset, focusNode, focusOffset } = this.selectionRaw;
                 var startNode = anchorNode?.parentNode || null;
                 var endNode = focusNode?.parentNode || null;
-                console.log(startNode);
-                console.log(endNode);
-
                 if ((startNode !== null) && (endNode !== null)) {
                     if (startNode.dataset.type === "word") {
                         type = "word";
@@ -29,9 +25,6 @@ function annotationSetComponent(idAnnotationSet, token) {
                         if (endNode.dataset.endchar) {
                             end = endNode.dataset.endchar;
                         }
-                    }
-                    if (end === 0) {
-                        messenger.notify("error","Invalid selection.");
                     }
                 }
             }

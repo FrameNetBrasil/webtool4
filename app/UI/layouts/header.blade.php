@@ -22,7 +22,7 @@
             <div>
                 <img src="/images/fnbr_logo_header_alpha.png" />
             </div>
-            <span>{!! config('webtool.headerTitle') !!}</span>
+            <span>{!! config('webtool.headerTitle') !!} <span class="header-version">{!! config('webtool.version') !!}</span></span>
         </a>
     </div>
     <div class="header-center">

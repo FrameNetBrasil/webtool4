@@ -1,7 +1,7 @@
 <div class="annotationTab">
     <div class="ui pointing secondary menu tabs">
         <a class="item" data-tab="labels">FE</a>
-        <a class="item" data-tab="comment">Comment</a>
+        <a class="item" data-tab="comment"><i class="comment dots outline icon"></i>Comment</a>
     </div>
     <div class="gridBody">
         <div

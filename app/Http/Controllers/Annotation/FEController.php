@@ -100,7 +100,7 @@ class FEController extends Controller
         try {
             $input->range = SelectionData::from(request("selection"));
             if ($input->range->end < $input->range->start) {
-                throw new \Exception("Wrong selection.");
+                throw new \Exception("Selection failed. Make new selection.");
             }
             if ($input->range->type != '') {
                 $data = FEService::annotateFE($input);

@@ -97,7 +97,7 @@ class FullTextController extends Controller
             //debug(request("selection"));
             $input->range = SelectionData::from(request("selection"));
             if ($input->range->end < $input->range->start) {
-                throw new \Exception("Wrong selection.");
+                throw new \Exception("Selection failed. Make a new selection.");
             }
             if ($input->range->type != '') {
                 $data = FullTextService::annotateEntity($input);
