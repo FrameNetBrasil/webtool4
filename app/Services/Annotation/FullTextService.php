@@ -47,6 +47,7 @@ class FullTextService
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->where("idFrame", $lu->idFrame)
             ->orderBy("name")
+            ->keyBy("idEntity")
             ->all();
         foreach ($fes as $fe) {
             if (($fe->coreType == "cty_core") || ($fe->coreType == "cty_core-unexpressed")) {
@@ -187,6 +188,7 @@ class FullTextService
             'spans' => $spans,
             'labels' => $labels,
             'entities' => $entities,
+            'fes' => $fes,
             'fesByType' => $fesByType,
             'nis' => $nis,
             'alternativeLU' => $alternativeLU,

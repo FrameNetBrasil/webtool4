@@ -252,6 +252,7 @@
             .rowNI {
                 display: flex;
                 flex-direction: column;
+                gap: 0;
                 //flex-wrap: wrap;
                 //justify-content: left;
                 //height: auto;
@@ -268,9 +269,9 @@
                         position: relative;
                         z-index: 1;
 
-                        .line {
-                            width: 8rem;
-                        }
+                        //.line {
+                        //    width: 8rem;
+                        //}
                     }
 
                     .ni::selection {
@@ -279,40 +280,55 @@
                 }
 
                 .colNILabel {
-                    font-size: 1.25rem;
-                    padding: 0 0;
-                    width: 0.75rem;
-                    position: relative;
+                    //font-size: 1.25rem;
+                    padding: 0 0 0 8px;
+                    width: 100%;
+                    //position: relative;
+                    height:auto;
 
-                    .label {
-                        box-sizing: border-box;
-                        border-top: 1px solid white;
-                        height: 24px;
-                        position: relative;
-
-                        .line {
-                            width: calc(100%);
-                            height: 3px;
-                            background: black;
-                            z-index: 1;
-                        }
+                    .feLabel {
+                        //top: 32px;
+                        //left: -1px;
+                        padding: 2px 3px;
+                        //z-index: 10;
+                        //position: absolute;
+                        font-size: 0.75rem;
+                        //background: black;
+                        font-weight: bold;
+                        font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
+                        line-height: 1;
+                        //border-radius: 1px;
                     }
+
+                    //.label {
+                    //    box-sizing: border-box;
+                    //    border-top: 1px solid white;
+                    //    height: 24px;
+                    //    position: relative;
+                    //
+                    //    //.line {
+                    //    //    width: calc(100%);
+                    //    //    height: 3px;
+                    //    //    background: black;
+                    //    //    z-index: 1;
+                    //    //}
+                    //}
                 }
 
-                .feLabel {
-                    top: 32px;
-                    left: -1px;
-                    padding: 2px 3px;
-                    z-index: 10;
-                    position: absolute;
-                    font-size: 0.75rem;
-                    background: black;
-                    font-weight: bold;
-                    font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
-                    line-height: 1;
-                    border-radius: 1px;
-                }
-
+                //.feLabel {
+                //    top: 32px;
+                //    left: -1px;
+                //    padding: 2px 3px;
+                //    z-index: 10;
+                //    position: absolute;
+                //    font-size: 0.75rem;
+                //    background: black;
+                //    font-weight: bold;
+                //    font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
+                //    line-height: 1;
+                //    border-radius: 1px;
+                //}
+                //
 
 
             }

@@ -4,13 +4,6 @@ function annotationSetComponent(idAnnotationSet, token) {
         selectionRaw: null,
         selectionNI: null,
         token: "",
-        // selection: {
-        //     type: "",
-        //     id: "",
-        //     start: 0,
-        //     end: 0
-        // },
-
 
         init() {
             this.idAnnotationSet = idAnnotationSet;
@@ -20,19 +13,14 @@ function annotationSetComponent(idAnnotationSet, token) {
         get selection() {
             let type = "", id = "", start = 0, end = 0;
             if (this.selectionRaw) {
+                console.log(this.selectionRaw);
                 let { anchorNode, anchorOffset, focusNode, focusOffset } = this.selectionRaw;
                 var startNode = anchorNode?.parentNode || null;
                 var endNode = focusNode?.parentNode || null;
+                console.log(startNode);
+                console.log(endNode);
+
                 if ((startNode !== null) && (endNode !== null)) {
-                    if (startNode.dataset.type === "ni") {
-                        let range = new Range();
-                        range.setStart(startNode, 0);
-                        range.setEnd(startNode, 1);
-                        document.getSelection().removeAllRanges();
-                        document.getSelection().addRange(range);
-                        type = "ni";
-                        id = startNode.dataset.id;
-                    }
                     if (startNode.dataset.type === "word") {
                         type = "word";
                         if (startNode.dataset.startchar) {
@@ -42,10 +30,12 @@ function annotationSetComponent(idAnnotationSet, token) {
                             end = endNode.dataset.endchar;
                         }
                     }
+                    if (end === 0) {
+                        messenger.notify("error","Invalid selection.");
+                    }
                 }
             }
             if (this.selectionNI) {
-                console.log("get selection NI",this.selectionNI);
                 type = "ni";
                 id = this.selectionNI.dataset.id;
                 start = end = 0;
@@ -65,7 +55,6 @@ function annotationSetComponent(idAnnotationSet, token) {
             range.setEnd(e, 1);
             document.getSelection().removeAllRanges();
             document.getSelection().addRange(range);
-            console.log("on select NI",this.selectionNI);
         },
 
         onLabelAnnotate(idFrameElement) {
