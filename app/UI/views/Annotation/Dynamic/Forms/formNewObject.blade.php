@@ -5,13 +5,13 @@
 >
     <div class="w-1/2">
         <x-form::hidden-field id="idDocument" value="{{$idDocument}}"></x-form::hidden-field>
-        <div class="field">
-            <x-form::combobox.layer-deixis
-                label="Layer"
-                name="idLayerType"
-                :value="0"
-            ></x-form::combobox.layer-deixis>
-        </div>
+{{--        <div class="field">--}}
+{{--            <x-form::combobox.layer-deixis--}}
+{{--                label="Layer"--}}
+{{--                name="idLayerType"--}}
+{{--                :value="0"--}}
+{{--            ></x-form::combobox.layer-deixis>--}}
+{{--        </div>--}}
         <div class="two fields">
             <div class="field">
                 <label>Start frame <span class="text-primary cursor-pointer" @click="copyFrameFor('startFrame')">[Copy from video]</span></label>
