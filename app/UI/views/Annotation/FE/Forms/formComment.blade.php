@@ -64,7 +64,7 @@
 {{--                type="button"--}}
 {{--                label="Delete"--}}
 {{--                color="danger"--}}
-{{--                onclick="manager.confirmDelete(`Removing Comment for #{{$comment->idAnnotationSet}}'.`, '/annotation/fe/comment/{{$comment->idAnnotationSet}}', null, '')"--}}
+{{--                onclick="messenger.confirmDelete(`Removing Comment for #{{$comment->idAnnotationSet}}'.`, '/annotation/fe/comment/{{$comment->idAnnotationSet}}', null, '')"--}}
 {{--            ></x-button>--}}
 {{--        </x-slot:buttons>--}}
 {{--    </x-form>--}}

@@ -39,7 +39,7 @@ class ObjectTrackerObject {
             }
         } catch (e) {
             console.error(e.message);
-            manager.notify("error", e.message);
+            messenger.notify("error", e.message);
         }
     }
 
@@ -69,7 +69,7 @@ class ObjectTrackerObject {
                 trackNextFrameObject();
             } catch (e) {
                 console.error(e.message);
-                manager.notify("error", e.message);
+                messenger.notify("error", e.message);
             }
         });
     }

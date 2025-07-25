@@ -15,14 +15,17 @@
     $hrefLogin = (env('AUTH0_CLIENT_ID') == 'auth0') ? '/auth0Login' : '/';
 
 @endphp
-<script src="/scripts/app/sidebar.js"></script>
 <div class="app-sidebar">
     <div class="main">
 
         <div class="ui secondary vertical menu">
             @if($isLogged)
-                <div class="ui accordion">
-                    <div class="title d-flex flex-row user-menu item">
+                <div
+                    class="ui accordion"
+                    x-init="$($el).accordion()"
+                >
+                    <div class="title d-flex flex-row user-menu item p-0">
+                        <i class="dropdown icon m-0"></i>
                         <div class="user-avatar">{!! strtoupper($user->email[0]) !!}</div>
                         <div class="user-email">{{$user->email}}
                             <div class="user-level">{{$userLevel}} #{{$user->idUser}}</div>
@@ -60,9 +63,3 @@
 <div class="app-sidebar-footer">
     {!! config('webtool.footer') !!}
 </div>
-<script>
-    $(function() {
-        $(".ui.accordion")
-            .accordion();
-    });
-</script>

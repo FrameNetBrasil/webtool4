@@ -3,7 +3,7 @@
         @foreach($layerTypes as $layerType)
             <a class="item" data-tab="{{$layerType->entry}}">{{$layerType->name}}</a>
         @endforeach
-        <a class="item" data-tab="comment">Comment</a>
+            <a class="item" data-tab="comment"><i class="comment dots outline icon"></i>Comment</a>
     </div>
     <div class="gridBody">
         @foreach($labels as $layerType => $labelData)

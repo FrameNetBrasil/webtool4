@@ -22,7 +22,7 @@
             </button>
             <button
                 class="ui tiny icon button danger"
-                @click.prevent="manager.confirmDelete('Removing object #{{$object->idDynamicObject}}.', '/annotation/deixis/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
+                @click.prevent="messenger.confirmDelete('Removing object #{{$object->idDynamicObject}}.', '/annotation/deixis/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
             >
                 Delete Object
             </button>

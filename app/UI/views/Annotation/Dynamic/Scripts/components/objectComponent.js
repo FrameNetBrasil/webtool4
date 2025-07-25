@@ -67,7 +67,7 @@ function objectComponent(object, token) {
             this.tracker.getFrameImage(this.currentFrame);
             this.object.drawBoxInFrame(this.currentFrame, "editing");
             this.canCreateBBox = false;
-            manager.notify("success", "New bbox created.");
+            messenger.notify("success", "New bbox created.");
         },
 
 
@@ -119,7 +119,7 @@ function objectComponent(object, token) {
                 if (this.object.getBoundingBoxAt(this.currentFrame)) {
                     await this.startTracking();
                 } else {
-                    manager.notify("error", "No bbox found at this frame.");
+                    messenger.notify("error", "No bbox found at this frame.");
                 }
             }
         },
