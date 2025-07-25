@@ -4,31 +4,31 @@
             @foreach($it as $i => $type)
                 @if(($type->entry != 'int_normal') && ($type->entry != 'int_apos'))
                     <div class="colNI">
-                        @php($height = 24 + (isset($nis[$type->idType]) ? (count($nis[$type->idType]) * 30) : 0))
                         <span
                             class="ni"
                             id="ni_{{$i}}"
                             data-type="ni"
                             data-name="{{$type->name}}"
                             data-id="{{$type->idType}}"
-                            style="height:{{$height}}px"
+                            @click="onSelectNI($el)"
                         >{{$type->name}}
-                            @foreach($nis as $idInstantiationType => $niFEs)
-                                @php($topLine = 30)
-                                @if($type->idType == $idInstantiationType)
-                                    @foreach($niFEs as $niFE)
-                                        @php($idEntityFE = $niFE['idEntityFE'])
-                                        <span class="line color_{{$fes[$idEntityFE]->idColor}}"
-                                              style="top:{{$topLine}}px">
-                                            <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
-                                                  style="top:0">{{$niFE['label']}}</span>
-                                        </span>
-                                        @php($topLine += 24)
-                                    @endforeach
-                                @endif
-                            @endforeach
                         </span>
                     </div>
+                    @foreach($nis as $idInstantiationType => $niFEs)
+                        @if($type->idType == $idInstantiationType)
+                            @foreach($niFEs as $niFE)
+                                @php($idEntityFE = $niFE['idEntityFE'])
+                                <div
+                                    class="colNILabel"
+                                >
+                                            <span
+                                                class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
+                                            >{{$niFE['label']}}
+                                            </span>
+                                </div>
+                            @endforeach
+                        @endif
+                    @endforeach
                 @endif
             @endforeach
         </div>

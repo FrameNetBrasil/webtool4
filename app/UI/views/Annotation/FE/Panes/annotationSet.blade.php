@@ -6,7 +6,7 @@
             <div class="header">
                 <div class="flex-container between">
                     <div>
-                        LU: {{$lu->frame->name}}.{{$lu->name}}
+                        LU: <span class="color_frame">{{$lu->frame->name}}</span>.{{$lu->name}}
                     </div>
                     <div class="text-right">
                         <div class="ui small compact menu">
