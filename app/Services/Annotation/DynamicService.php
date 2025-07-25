@@ -545,21 +545,15 @@ class DynamicService
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $objects = Criteria::table("view_annotation_dynamic as ad")
-            ->join("layertype as lt", "ad.idLayerType", "=", "lt.idLayerType")
-            ->join("layergroup as lg", "lt.idLayerGroup", "=", "lg.idLayerGroup")
             ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
             ->leftJoin("annotationcomment as ac", "ad.idDynamicObject", "=", "ac.idDynamicObject")
-            ->where("ad.idLanguageFE", "left", $idLanguage)
-            ->where("ad.idLanguageGL", "left", $idLanguage)
-            ->where("ad.idLanguageLT", "=", $idLanguage)
+            ->where("ad.idLanguage", "left", $idLanguage)
             ->where("ad.idDocument", $idDocument)
             ->where("view_frame.idLanguage", "left", $idLanguage)
-            ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin", "ad.idLayerType", "ad.nameLayerType",
-                "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.colorFE",
-                "ad.idAnnotationGL", "ad.idGenericLabel", "ad.gl", "ad.bgColorGL", "ad.fgColorGL", "ad.layerGroup", "ac.comment as textComment")
-            ->orderBy("lg.name")
-            ->orderBy("ad.nameLayerType")
+            ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin",
+                "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.color",
+                "ac.comment as textComment")
             ->orderBy("ad.startFrame")
             ->orderBy("ad.endFrame")
             ->orderBy("ad.idDynamicObject")
@@ -578,19 +572,12 @@ class DynamicService
         $order = 0;
         foreach ($objects as $object) {
             $object->order = ++$order;
-            $object->bgColorGL = '#' . $object->bgColorGL;
-            $object->fgColorGL = '#' . $object->fgColorGL;
             $object->startTime = (int)($object->startTime * 1000);
             $object->endTime = (int)($object->endTime * 1000);
             $object->bboxes = $bboxes[$object->idDynamicObject] ?? [];
             $object->name = "";
             $object->bgColor = "white";
             $object->fgColor = "black";
-            if ($object->gl != '') {
-                $object->name = $object->gl;
-                $object->bgColor = $object->bgColorGL;
-                $object->fgColor = $object->fgColorGL;
-            }
             if ($object->lu != '') {
                 $object->name .= " | " . $object->lu;
             }
@@ -600,36 +587,18 @@ class DynamicService
         }
         $objectsRows = [];
         $objectsRowsEnd = [];
-        $idLayerTypeCurrent = 0;
+        // Para manter o paralelismo com a Deixis annotation,
+        // estou considerando que todos os objetos estão num "layer fictício", com idLayerType = 0 e idLabel (idLayer) = 0
         foreach ($objects as $i => $object) {
-            if ($object->idLayerType != $idLayerTypeCurrent) {
-                $idLayerTypeCurrent = $object->idLayerType;
-                $objectsRows[$object->idLayerType][0][] = $object;
-                $objectsRowsEnd[$object->idLayerType][0] = $object->endFrame;
-            } else {
-                $allocated = false;
-                foreach ($objectsRows[$object->idLayerType] as $idLayer => $objectRow) {
-                    if ($object->startFrame > $objectsRowsEnd[$object->idLayerType][$idLayer]) {
-                        $objectsRows[$object->idLayerType][$idLayer][] = $object;
-                        $objectsRowsEnd[$object->idLayerType][$idLayer] = $object->endFrame;
-                        $allocated = true;
-                        break;
-                    }
-                }
-                if (!$allocated) {
-                    $idLayer = count($objectsRows[$object->idLayerType]);
-                    $objectsRows[$object->idLayerType][$idLayer][] = $object;
-                    $objectsRowsEnd[$object->idLayerType][$idLayer] = $object->endFrame;
-                }
-
-            }
+            $objectsRows[0][0][] = $object;
+            $objectsRowsEnd[0][0] = $object->endFrame;
         }
 
         $result = [];
         foreach ($objectsRows as $idLayerType => $layers) {
             foreach ($layers as $idLayer => $objects) {
                 $result[] = [
-                    'layer' => $objects[0]->nameLayerType,
+                    'layer' => 'commonLayer',
                     'objects' => $objects
                 ];
             }

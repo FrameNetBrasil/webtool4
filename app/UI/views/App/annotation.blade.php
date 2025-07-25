@@ -2,7 +2,7 @@
     $reports = [
         'annotationfe' => ['FE', '/annotation/fe', 'Corpus annotation for just the FE layer','ui::icon.frame'],
         'annotationfulltext' => ['Full text', '/annotation/fullText', 'Corpus annotation for all layers','ui::icon.frame'],
-        'annotationdynamic' => ['Dynamic mode', '/annotation/dynamicMode', 'Video annotation.', 'ui::icon.frame' ],
+        'annotationdynamic' => ['Dynamic mode', '/annotation/dynamic', 'Video annotation.', 'ui::icon.frame' ],
         'annotationdeixis' => ['Deixis', '/annotation/deixis', 'Video annotation for deixis.', 'ui::icon.frame'],
         'annotationstaticbox' => ['Static bbox', '/annotation/staticBbox', 'Image annotation.','ui::icon.frame'],
         'annotationstaticevent' => ['Static event', '/annotation/staticEvent', 'Image annotation for eventive frames.','ui::icon.frame'],

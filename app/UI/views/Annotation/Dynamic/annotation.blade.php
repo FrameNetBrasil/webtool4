@@ -6,7 +6,7 @@
             <div class="flex-container between">
                 <div class="flex-item">
                     <x-ui::breadcrumb
-                        :sections="[['/','Home'],['/annotation/dynamic','Deixis Annotation'],['',$document->name]]"></x-ui::breadcrumb>
+                        :sections="[['/','Home'],['/annotation/dynamic','Dynamic Annotation'],['',$document->name]]"></x-ui::breadcrumb>
                 </div>
             </div>
         </div>

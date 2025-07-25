@@ -3,7 +3,7 @@
         @include('layouts.header')
         @include("layouts.sidebar")
         <main class="app-main">
-            <x-ui::breadcrumb :sections="[['/','Home'],['','Deixis Annotation']]"></x-ui::breadcrumb>
+            <x-ui::breadcrumb :sections="[['/','Home'],['','Dynamic Annotation']]"></x-ui::breadcrumb>
             <div class="page-content">
                 <div class="content-container">
                     <div class="app-search">
@@ -16,7 +16,7 @@
                         >
                             <div class="search-input-group">
                                 <form class="ui form"
-                                      hx-post="/annotation/fe/tree"
+                                      hx-post="/annotation/dynamic/tree"
                                       hx-target=".search-results-tree"
                                       hx-swap="innerHTML"
                                       hx-trigger="submit, input delay:500ms from:input[name='frame']">
