@@ -5,7 +5,7 @@
 >
     <div class="flex-container h-2-5 items-center justify-between bg-gray-300">
         <div>
-            <h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}</h3>
+            <h3 class="ui header">Object #{{$object->idDynamicObject}}</h3>
         </div>
         <div>
             <button

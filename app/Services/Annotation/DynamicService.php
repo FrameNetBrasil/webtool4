@@ -41,30 +41,28 @@ class DynamicService
     public static function getObject(int $idDynamicObject): object|null
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $object = Criteria::table("view_annotation_dynamic")
-            ->where("idLanguageLT", "left", $idLanguage)
-            ->where("idLanguageFE", "left", $idLanguage)
-            ->where("idLanguageGL", "left", $idLanguage)
-            ->where("idDynamicObject", $idDynamicObject)
-            ->select("idDynamicObject", "name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin", "idLayerType", "nameLayerType", "idLanguageLT",
-                "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "colorFE", "idLanguageFE",
-                "idAnnotationGL", "idGenericLabel", "gl", "bgColorGL", "fgColorGL", "idLanguageGL", "layerGroup", "idDocument")
+        $object = Criteria::table("view_annotation_dynamic as ad")
+            ->leftJoin("frameelement as fe", "ad.idFrameElement", "=", "fe.idFrameElement")
+            ->leftJoin("color", "fe.idColor", "=", "color.idColor")
+            ->where("ad.idLanguage", "left", $idLanguage)
+            ->where("ad.idDynamicObject", $idDynamicObject)
+            ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin",
+                "ad.idAnnotationLU", "ad.idLU", "ad.lu", "ad.idAnnotationFE", "ad.idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "color.rgbBg", "color.rgbFg", "ad.idLanguage",
+                "ad.idDocument")
             ->first();
         if (!is_null($object)) {
             $object->comment = CommentService::getDynamicObjectComment($idDynamicObject);
             $object->textComment = $object->comment?->comment;
+            $object->name = "";
             $object->bgColor = "white";
             $object->fgColor = "black";
-            if ($object->gl != '') {
-                $object->name = $object->gl;
-                $object->bgColor = $object->bgColorGL;
-                $object->fgColor = $object->fgColorGL;
-            }
             if ($object->lu != '') {
-                $object->name .= " | " . $object->lu;
+                $object->name .= $object->lu;
             }
             if ($object->fe != '') {
-                $object->name .= " | " . $object->frame . "." . $object->fe;
+                $object->bgColor = "#{$object->rgbBg}";
+                $object->fgColor = "#{$object->rgbFg}";
+                $object->name .= ($object->name != "" ? " | ": "") . $object->frame . "." . $object->fe;
             }
             $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
                 ->where("idDynamicObject", $idDynamicObject)
@@ -79,6 +77,8 @@ class DynamicService
         $idLanguage = AppService::getCurrentIdLanguage();
         $result = Criteria::table("view_annotation_dynamic as ad")
             ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
+            ->leftJoin("frameelement as fe", "ad.idFrameElement", "=", "fe.idFrameElement")
+            ->leftJoin("color", "fe.idColor", "=", "color.idColor")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
             ->leftJoin("annotationcomment as ac", "ad.idDynamicObject", "=", "ac.idDynamicObject")
             ->where("ad.idLanguage", "left", $idLanguage)
@@ -86,7 +86,7 @@ class DynamicService
             ->where("view_frame.idLanguage", "left", $idLanguage)
             ->select("ad.idDynamicObject", "ad.name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin",
                 "idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName",
-                "idAnnotationFE", "idFrameElement", "ad.idFrame", "frame", "fe", "color", "ac.comment")
+                "idAnnotationFE", "idFrameElement", "ad.idFrame", "frame", "fe", "color.rgbBg","color.rgbFg","ac.comment")
             ->orderBy("startFrame")
             ->orderBy("endFrame")
             ->orderBy("ad.idDynamicObject")
@@ -546,14 +546,16 @@ class DynamicService
         $idLanguage = AppService::getCurrentIdLanguage();
         $objects = Criteria::table("view_annotation_dynamic as ad")
             ->leftJoin("view_lu", "ad.idLu", "=", "view_lu.idLU")
+            ->leftJoin("frameelement as fe", "ad.idFrameElement", "=", "fe.idFrameElement")
+            ->leftJoin("color", "fe.idColor", "=", "color.idColor")
             ->leftJoin("view_frame", "view_lu.idFrame", "=", "view_frame.idFrame")
             ->leftJoin("annotationcomment as ac", "ad.idDynamicObject", "=", "ac.idDynamicObject")
             ->where("ad.idLanguage", "left", $idLanguage)
             ->where("ad.idDocument", $idDocument)
             ->where("view_frame.idLanguage", "left", $idLanguage)
             ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin",
-                "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "ad.color",
-                "ac.comment as textComment")
+                "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "ad.idFrameElement", "ad.idFrame", "ad.frame", "ad.fe",
+                "color.rgbFg", "color.rgbBg","ac.comment as textComment")
             ->orderBy("ad.startFrame")
             ->orderBy("ad.endFrame")
             ->orderBy("ad.idDynamicObject")
@@ -579,26 +581,48 @@ class DynamicService
             $object->bgColor = "white";
             $object->fgColor = "black";
             if ($object->lu != '') {
-                $object->name .= " | " . $object->lu;
+                $object->name .= $object->lu;
             }
             if ($object->fe != '') {
-                $object->name .= " | " . $object->frame . "." . $object->fe;
+                $object->bgColor = "#{$object->rgbBg}";
+                $object->fgColor = "#{$object->rgbFg}";
+                $object->name .= ($object->name != "" ? " | ": "") . $object->frame . "." . $object->fe;
             }
         }
         $objectsRows = [];
         $objectsRowsEnd = [];
         // Para manter o paralelismo com a Deixis annotation,
         // estou considerando que todos os objetos estão num "layer fictício", com idLayerType = 0 e idLabel (idLayer) = 0
+        $idLayerTypeCurrent = -1;
+        $idLayerType = 0;
         foreach ($objects as $i => $object) {
-            $objectsRows[0][0][] = $object;
-            $objectsRowsEnd[0][0] = $object->endFrame;
+            if ($idLayerType != $idLayerTypeCurrent) {
+                $idLayerTypeCurrent = $idLayerType;
+                $objectsRows[$idLayerType][0][] = $object;
+                $objectsRowsEnd[$idLayerType][0] = $object->endFrame;
+            } else {
+                $allocated = false;
+                foreach ($objectsRows[$idLayerType] as $idLayer => $objectRow) {
+                    if ($object->startFrame > $objectsRowsEnd[$idLayerType][$idLayer]) {
+                        $objectsRows[$idLayerType][$idLayer][] = $object;
+                        $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
+                        $allocated = true;
+                        break;
+                    }
+                }
+                if (!$allocated) {
+                    $idLayer = count($objectsRows[$idLayerType]);
+                    $objectsRows[$idLayerType][$idLayer][] = $object;
+                    $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
+                }
+            }
         }
 
         $result = [];
-        foreach ($objectsRows as $idLayerType => $layers) {
-            foreach ($layers as $idLayer => $objects) {
+        foreach ($objectsRows as $layers) {
+            foreach ($layers as $objects) {
                 $result[] = [
-                    'layer' => 'commonLayer',
+                    'layer' => 'Single_layer',
                     'objects' => $objects
                 ];
             }
