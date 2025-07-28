@@ -20,6 +20,7 @@
 
     <script type="text/javascript" src="https://unpkg.com/htmx.org@2.0.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+{{--    <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>--}}
 
 {{--    <script type="text/javascript" src="/scripts/app/messengerComponent.js"></script>--}}
 {{--    <script type="text/javascript" src="/scripts/app/treeComponent.js"></script>--}}
@@ -61,6 +62,7 @@
 <script src="/scripts/utils/md5.min.js"></script>
 <script src="/scripts/utils/jsfeat.js"></script>
 <script src="/scripts/utils/nudged.js"></script>
+
 
 </body>
 </html>

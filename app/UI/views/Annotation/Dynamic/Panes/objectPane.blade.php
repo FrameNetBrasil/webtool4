@@ -5,7 +5,7 @@
 >
     <div class="flex-container h-2-5 items-center justify-between bg-gray-300">
         <div>
-            <h3 class="ui header">Object #{{$object->idDynamicObject}}</h3>
+            <h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}</h3>
         </div>
         <div>
             <button
@@ -22,7 +22,7 @@
             </button>
             <button
                 class="ui tiny icon button danger"
-                @click.prevent="messenger.confirmDelete('Removing object #{{$object->idDynamicObject}}.', '/annotation/dynamic/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
+                @click.prevent="messenger.confirmDelete('Removing object #{{$object->idDynamicObject}}.', '/annotation/deixis/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
             >
                 Delete Object
             </button>
@@ -30,7 +30,7 @@
                 id="btnClose"
                 class="ui tiny icon button"
                 title="Close Object"
-                @click="window.location.assign('/annotation/dynamic/{{$object->idDocument}}')"
+                @click="window.location.assign('/annotation/deixis/{{$object->idDocument}}')"
             >
                 <i class="close tiny icon"></i>
             </button>
@@ -41,6 +41,7 @@
     >
         <a class="item" data-tab="edit-object" :class="isPlaying && 'disabled'">Annotate object</a>
         <a class="item" data-tab="create-bbox" :class="isPlaying && 'disabled'">BBox</a>
+        <a class="item" data-tab="modify-range" :class="isPlaying && 'disabled'">Modify range</a>
         <a class="item" data-tab="comment" :class="isPlaying && 'disabled'">Comment</a>
     </div>
     <div class="gridBody">
@@ -48,19 +49,25 @@
             class="ui tab h-full w-full active"
             data-tab="edit-object"
         >
-            @include("Annotation.Dynamic.Forms.formAnnotation")
+            @include("Annotation.Deixis.Forms.formAnnotation")
         </div>
         <div
             class="ui tab h-full w-full"
             data-tab="create-bbox"
         >
-            @include("Annotation.Dynamic.Forms.formBBox")
+            @include("Annotation.Deixis.Forms.formBBox")
+        </div>
+        <div
+            class="ui tab h-full w-full"
+            data-tab="modify-range"
+        >
+            @include("Annotation.Deixis.Forms.formModifyRange")
         </div>
         <div
             class="ui tab h-full w-full"
             data-tab="comment"
         >
-            @include("Annotation.Dynamic.Forms.formComment")
+            @include("Annotation.Deixis.Forms.formComment")
         </div>
     </div>
     <script type="text/javascript">

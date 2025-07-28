@@ -260,9 +260,41 @@ class DeixisService
 
     public static function updateObjectFrame(ObjectFrameData $data): int
     {
+        $object = self::getObject($data->idDynamicObject);
+        debug($object->bboxes);
+        if (!empty($object->bboxes)) {
+            $frameFirstBBox = $object->bboxes[0]->frameNumber;
+            // se o novo startFrame for menor que o atual, remove todas as bboxes
+            if ($data->startFrame < $frameFirstBBox) {
+                self::deleteBBoxesByDynamicObject($data->idDynamicObject);
+            } else {
+                $idUser = AppService::getCurrentIdUser();
+                // remove as bboxes em frames menores que o newStartFrame
+                $bboxes = Criteria::table("view_dynamicobject_boundingbox")
+                    ->where("idDynamicObject", $data->idDynamicObject)
+                    ->where("frameNumber", "<", $data->startFrame)
+                    ->chunkResult("idBoundingBox", "idBoundingBox");
+                foreach ($bboxes as $idBoundingBox) {
+                    Criteria::function("boundingbox_dynamic_delete(?,?)", [$idBoundingBox, $idUser]);
+                }
+                // remove as bboxes em frames maiores que o newEndFrame
+                $bboxes = Criteria::table("view_dynamicobject_boundingbox")
+                    ->where("idDynamicObject", $data->idDynamicObject)
+                    ->where("frameNumber", ">", $data->endFrame)
+                    ->chunkResult("idBoundingBox", "idBoundingBox");
+                foreach ($bboxes as $idBoundingBox) {
+                    Criteria::function("boundingbox_dynamic_delete(?,?)", [$idBoundingBox, $idUser]);
+                }
+            }
+        }
         Criteria::table("dynamicobject")
             ->where("idDynamicObject", $data->idDynamicObject)
-            ->update($data->toArray());
+            ->update([
+                'startFrame' => $data->startFrame,
+                'endFrame' => $data->endFrame,
+                'startTime' => $data->startTime,
+                'endTime' => $data->endTime,
+            ]);
         return $data->idDynamicObject;
     }
 

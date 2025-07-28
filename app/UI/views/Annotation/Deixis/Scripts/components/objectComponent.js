@@ -163,10 +163,9 @@ function objectComponent(object, token) {
                 registra os listeners para interação com a boundingbox (dom) associada com o objeto
              */
             let dom = object.dom;
-            console.log("dom", dom);
+            console.log(dom);
             let bbox = $(dom);
-            console.log("bbox", bbox);
-
+            console.log(bbox);
             let createHandleDiv = (className, content = null) => {
                 //console.log('className = ' + className + '  content = ' + content);
                 let handle = document.createElement("div");
@@ -181,8 +180,52 @@ function objectComponent(object, token) {
             let i = createHandleDiv("objectId", object.idObject);
             bbox.resizable({
                 handles: "n, e, s, w",
-                onStopResize: (e) => {
+                // containment: "#canvas",
+                resize: (e,ui) => {
+                    const $container = $("#canvas");
+                    const containerWidth = $container.outerWidth();
+                    const containerHeight = $container.outerHeight();
+
+                    let { width, height } = ui.size;
+                    let { top, left } = ui.position;
+
+                    // Right boundary check
+                    if (left + width > containerWidth) {
+                        width = containerWidth - left;
+                    }
+
+                    // Bottom boundary check
+                    if (top + height > containerHeight) {
+                        height = containerHeight - top;
+                    }
+
+                    // Left boundary check (when resizing from left edge)
+                    if (left < 0) {
+                        width += left; // Compensate width
+                        left = 0;
+                    }
+
+                    // Top boundary check (when resizing from top edge)
+                    if (top < 0) {
+                        height += top; // Compensate height
+                        top = 0;
+                    }
+
+                    // Minimum size constraints
+                    width = Math.max(width, 20);  // min width
+                    height = Math.max(height, 20); // min height
+
+                    // Apply the corrected values
+                    ui.size.width = width;
+                    ui.size.height = height;
+                    ui.position.top = top;
+                    ui.position.left = left;
+                },
+                stop: (e) => {
                     let position = bbox.position();
+                    console.log("stopd resize position", position);
+                    console.log("resize width", bbox.outerWidth());
+                     console.log("resize height", bbox.outerHeight());
                     onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.outerWidth()), Math.round(bbox.outerHeight()));
                 }
             });
@@ -192,24 +235,47 @@ function objectComponent(object, token) {
             });
             bbox.draggable({
                 handle: $(x),
-                onDrag: (e) => {
-                    var d = e.data;
-                    if (d.left < 0) {
-                        d.left = 0;
-                    }
-                    if (d.top < 0) {
-                        d.top = 0;
-                    }
-                    if (d.left + $(d.target).outerWidth() > $("#canvas").width()) {
-                        d.left = $("#canvas").width() - $(d.target).outerWidth();
-                    }
-                    if (d.top + $(d.target).outerHeight() > $("#canvas").height()) {
-                        d.top = $("#canvas").height() - $(d.target).outerHeight();
-                    }
+                containment: "#canvas",
+                scroll: false,
+                drag: (e) => {
+                    // const position = bbox.position();
+                    // const width = bbox.outerWidth();
+                    // const height = bbox.outerHeight();
+                    // console.log("drag position", position);
+                    // console.log("drag width", bbox.outerWidth());
+                    // console.log("drag height", bbox.outerHeight());
+                    //
+                    // if (position.left < 0) {
+                    //     bbox.left = 0;
+                    // }
+                    // if (position.top < 0) {
+                    //     e.target.top = 0;
+                    // }
+                    // if (position.left + width > $("#canvas").width()) {
+                    //     bbox.left = $("#canvas").width() - width;
+                    // }
+                    // if (position.top + height > $("#canvas").height()) {
+                    //     bbox.top = $("#canvas").height() - height;
+                    // }
+
+                    // var d = e.data;
+                    // console.log("e", e);
+                    // if (d.left < 0) {
+                    //     d.left = 0;
+                    // }
+                    // if (d.top < 0) {
+                    //     d.top = 0;
+                    // }
+                    // if (d.left + $(d.target).outerWidth() > $("#canvas").width()) {
+                    //     d.left = $("#canvas").width() - $(d.target).outerWidth();
+                    // }
+                    // if (d.top + $(d.target).outerHeight() > $("#canvas").height()) {
+                    //     d.top = $("#canvas").height() - $(d.target).outerHeight();
+                    // }
                 },
-                onStopDrag: (e) => {
+                stop: (e) => {
                     let position = bbox.position();
-                    // console.log("stopdrag position", position);
+                    console.log("stopdrag position", position);
                     onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.outerWidth()), Math.round(bbox.outerHeight()));
                 }
             });

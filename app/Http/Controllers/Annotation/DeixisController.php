@@ -228,20 +228,8 @@ class DeixisController extends Controller
     {
         try {
             debug($data);
-
-            return DeixisService::updateObjectFrame($data);
-        } catch (\Exception $e) {
-            debug($e->getMessage());
-
-            return $this->renderNotify('error', $e->getMessage());
-        }
-    }
-
-    #[Post(path: '/annotation/deixis/updateObjectFrame')]
-    public function updateObjectFrame(ObjectFrameData $data)
-    {
-        try {
-            return DeixisService::updateObjectFrame($data);
+            DeixisService::updateObjectFrame($data);
+            return $this->redirect("/annotation/deixis/{$data->idDocument}/{$data->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
 

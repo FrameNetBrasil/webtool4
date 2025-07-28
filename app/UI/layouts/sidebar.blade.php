@@ -22,7 +22,7 @@
             @if($isLogged)
                 <div
                     class="ui accordion"
-                    x-init="$($el).accordion()"
+                    x-init="$($el).accordion();"
                 >
                     <div class="title d-flex flex-row user-menu item p-0">
                         <i class="dropdown icon m-0"></i>
