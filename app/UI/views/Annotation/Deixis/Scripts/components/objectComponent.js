@@ -103,6 +103,7 @@ function objectComponent(object, token) {
                 this.object.addBBox(newBBox);
             }
             this.canCreateBBox = !this.object.hasBBox();
+            console.log("Object annotated");
         },
 
         createBBox() {
@@ -162,7 +163,10 @@ function objectComponent(object, token) {
                 registra os listeners para interação com a boundingbox (dom) associada com o objeto
              */
             let dom = object.dom;
+            console.log("dom", dom);
             let bbox = $(dom);
+            console.log("bbox", bbox);
+
             let createHandleDiv = (className, content = null) => {
                 //console.log('className = ' + className + '  content = ' + content);
                 let handle = document.createElement("div");
