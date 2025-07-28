@@ -10,7 +10,8 @@
         src="{!! config('webtool.mediaURL') . "/" . $video->currentURL !!}"
     >
     </video-js>
-    <canvas id="canvas" width=0 height=0></canvas>
+    <canvas id="canvas" width=0 height=0>
+    </canvas>
     <div id="boxesContainer">
     </div>
 </div>
