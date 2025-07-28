@@ -26,3 +26,7 @@
     <i class="trash alternate outline icon"></i>
     Delete All BBoxes
 </button>
+<div class="coordinates" id="coordinates">
+    Position: (50, 50)<br>
+    Size: 150 × 100
+</div>

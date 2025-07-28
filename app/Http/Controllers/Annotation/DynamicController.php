@@ -229,20 +229,8 @@ class DynamicController extends Controller
     {
         try {
             debug($data);
-
-            return DynamicService::updateObjectFrame($data);
-        } catch (\Exception $e) {
-            debug($e->getMessage());
-
-            return $this->renderNotify('error', $e->getMessage());
-        }
-    }
-
-    #[Post(path: '/annotation/dynamic/updateObjectFrame')]
-    public function updateObjectFrame(ObjectFrameData $data)
-    {
-        try {
-            return DynamicService::updateObjectFrame($data);
+            DynamicService::updateObjectFrame($data);
+            return $this->redirect("/annotation/deixis/{$data->idDocument}/{$data->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
 
