@@ -1,6 +1,6 @@
 <form
     class="ui form p-4 border"
-    hx-post="/annotation/dynamicMode/updateObjectComment"
+    hx-post="/annotation/dynamic/updateObjectComment"
 >
 {{--    <div class="flex gap-2">--}}
 {{--        <div class="title">Comment for Object: #{{$order}}</div>--}}

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\DynamicMode;
+namespace App\Data\Annotation\Dynamic;
 
 use Spatie\LaravelData\Data;
 

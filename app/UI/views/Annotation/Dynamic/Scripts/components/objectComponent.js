@@ -32,30 +32,56 @@ function objectComponent(object, token) {
             await this.tracking();
         },
 
+        async onBBoxBlocked() {
+            console.log($('.bbox'));
+            let blocked = $('.bbox').data('blocked');
+            console.log("on bbox blocked", blocked);
+            let bbox = this.object.getBoundingBoxAt(this.currentFrame);
+            bbox.blocked = !blocked;
+            await this.onBBoxChange(bbox);
+            this.object.drawBoxInFrame(this.currentFrame, this.isTracking ? "tracking" : "editing");
+            $('.bbox').data('blocked', bbox.blocked);
+
+            // console.log("blocked", this.object.blocked);
+            // this.object.blocked = !this.object.blocked;
+            // let bbox = this.object.getBoundingBoxAt(this.currentFrame);
+            // console.log(bbox);
+            // bbox.blocked = this.object.blocked;
+            // this.object.updateBBox(bbox);
+            //
+            // await ky.post("/annotation/dynamic/updateBBox", {
+            //     json: {
+            //         _token: this._token,
+            //         idBoundingBox: bbox.idBoundingBox,
+            //         bbox
+            //     }
+            // }).json();
+            //
+            // this.object.drawBoxInFrame(this.currentFrame, this.isTracking ? "tracking" : "editing");
+            //
+            // console.log("after", this.object.blocked);
+        },
+
+        async onBBoxChange(bbox) {
+            console.log("on bbox change ", bbox);
+            this.object.updateBBox(bbox);
+            await ky.post("/annotation/dynamic/updateBBox", {
+                json: {
+                    _token: this._token,
+                    idBoundingBox: bbox.idBoundingBox,
+                    bbox
+                }
+            }).json();
+        },
+
         async onBboxDrawn(e) {
             this.bbox = e.detail.bbox;
-            // this.object = new DynamicObject();
-            console.log("bboxDrawn",this.object);
-            // this.object.setDom(this.newBboxElement());
-            let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, null);
+            console.log("bboxDrawn", this.object);
+            let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, false);
             this.object.addBBox(bbox);
-            this.interactify(
-                this.object,
-                async (x, y, width, height, idBoundingBox) => {
-                    let bbox = new BoundingBox(this.currentFrame, x, y, width, height, true);
-                    this.object.updateBBox(bbox);
-                    await ky.post("/annotation/dynamicMode/updateBBox", {
-                        json: {
-                            _token: this._token,
-                            idBoundingBox: bbox.idBoundingBox,
-                            bbox
-                        }
-                    }).json();
-                }
-            );
-            // console.log(this.idDynamicObject, this.currentFrame, bbox);
+            this.interactify(this.object, this.onBBoxChange);
             drawBoxObject.disableDrawing();
-            bbox.idBoundingBox = await ky.post("/annotation/dynamicMode/createBBox", {
+            bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
                 json: {
                     _token: this._token,
                     idDynamicObject: this.idDynamicObject,
@@ -72,34 +98,22 @@ function objectComponent(object, token) {
 
 
         annotateObject(object) {
-            console.log("annotateObject");
             this.object = new DynamicObject(object);
             this.object.dom = this.newBboxElement();
-            this.interactify(
-                this.object,
-                async (x, y, width, height) => {
-                    let bbox = new BoundingBox(this.currentFrame, x, y, width, height, true);
-                    this.object.updateBBox(bbox);
-                    await ky.post("/annotation/dynamicMode/updateBBox", {
-                        json: {
-                            _token: this._token,
-                            idBoundingBox: bbox.idBoundingBox,
-                            bbox
-                        }
-                    }).json();
-                }
-            );
+            this.interactify(this.object, this.onBBoxChange);
             let bboxes = object.bboxes;
             for (let j = 0; j < bboxes.length; j++) {
                 let bbox = object.bboxes[j];
-                let frameNumber = parseInt(bbox.frameNumber);
-                let isGroundThrough = true;// parseInt(topLeft.find('l').text()) == 1;
-                let x = parseInt(bbox.x);
-                let y = parseInt(bbox.y);
-                let w = parseInt(bbox.width);
-                let h = parseInt(bbox.height);
-                let newBBox = new BoundingBox(frameNumber, x, y, w, h, isGroundThrough, parseInt(bbox.idBoundingBox));
-                newBBox.blocked = (parseInt(bbox.blocked) === 1);
+                let newBBox = new BoundingBox(
+                    parseInt(bbox.frameNumber),
+                    parseInt(bbox.x),
+                    parseInt(bbox.y),
+                    parseInt(bbox.width),
+                    parseInt(bbox.height),
+                    true,
+                    (parseInt(bbox.blocked) === 1),
+                    parseInt(bbox.idBoundingBox)
+                );
                 this.object.addBBox(newBBox);
             }
             this.canCreateBBox = !this.object.hasBBox();
@@ -134,7 +148,7 @@ function objectComponent(object, token) {
             await new Promise(r => setTimeout(r, 800));
             const nextFrame = this.currentFrame + 1;
             // console.log("tracking....", nextFrame,this.object.startFrame, this.object.endFrame);
-            if ((this.isTracking) && (nextFrame >= this.object.startFrame) && (nextFrame <= this.object.endFrame)){
+            if ((this.isTracking) && (nextFrame >= this.object.startFrame) && (nextFrame <= this.object.endFrame)) {
                 // console.log("goto Frame ", nextFrame);
                 this.gotoFrame(nextFrame);
             } else {
@@ -153,41 +167,83 @@ function objectComponent(object, token) {
         newBboxElement: () => {
             let dom = document.createElement("div");
             dom.className = "bbox";
+            dom.dataset.blocked = false;
             this.boxesContainer.appendChild(dom);
             return dom;
         },
 
         interactify: (object, onChange) => {
-            /*
-                registra os listeners para interação com a boundingbox (dom) associada com o objeto
-             */
             let dom = object.dom;
             let bbox = $(dom);
-            let createHandleDiv = (className, content = null) => {
-                //console.log('className = ' + className + '  content = ' + content);
-                let handle = document.createElement("div");
-                handle.className = className;
-                bbox.append(handle);
-                if (content !== null) {
-                    handle.innerHTML = content;
-                }
-                return handle;
-            };
-            let x = createHandleDiv("handle center-drag");
-            let i = createHandleDiv("objectId", object.idObject);
+            let canvasHeight = $("#canvas").height();
+            let canvasWidth = $("#canvas").width();
+            let drag = document.createElement("div");
+            drag.className = "handle center-drag";
+            bbox.append(drag);
+            let objectId = document.createElement("div");
+            objectId.className = "objectId";
+            bbox.append(objectId);
+            objectId.innerHTML = object.idObject;
+
             bbox.resizable({
-                handles: "n, e, s, w",
+                handles: "n, e, s, w, ne, nw, se, sw",
+                onResize: (e) => {
+                    let d = e.data;
+                    if (d.left < 0) {
+                        d.width += d.left;
+                        d.left = 0;
+                        return false;
+                    }
+                    if (d.top < 0) {
+                        d.height += d.top;
+                        d.top = 0;
+                        return false;
+                    }
+                    if (d.left + $(d.target).outerWidth() > canvasWidth) {
+                        d.width = canvasWidth - d.left;
+                    }
+                    if (d.top + $(d.target).outerHeight() > canvasHeight) {
+                        d.height = canvasHeight - d.top;
+                    }
+                },
                 onStopResize: (e) => {
-                    let position = bbox.position();
-                    onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.outerWidth()), Math.round(bbox.outerHeight()));
+                    bbox.css("display", "none");
+                    let d = e.data;
+                    if (d.left < 0) {
+                        d.width += d.left;
+                        d.left = 0;
+                    }
+                    if (d.top < 0) {
+                        d.height += d.top;
+                        d.top = 0;
+                    }
+                    if (d.left + $(d.target).outerWidth() > canvasWidth) {
+                        d.width = canvasWidth - d.left;
+                    }
+                    if (d.top + $(d.target).outerHeight() > canvasHeight) {
+                        d.height = canvasHeight - d.top;
+                    }
+                    bbox.css({
+                        "top": d.top + "px",
+                        "left": d.left + "px",
+                        "width": d.width + "px",
+                        "height": d.height + "px"
+                    });
+                    bbox.css("display", "block");
+                    let bboxChanged = new BoundingBox(
+                        this.currentFrame,
+                        Math.round(d.left),
+                        Math.round(d.top),
+                        Math.round(d.width),
+                        Math.round(d.height),
+                        true,
+                        dom.dataset.blocked
+                    );
+                    onChange(bboxChanged);
                 }
-            });
-            i.addEventListener("click", function() {
-                let idObject = parseInt(this.innerHTML);
-                //Alpine.store("doStore").selectObject(idObject);
             });
             bbox.draggable({
-                handle: $(x),
+                // handle: $(x),
                 onDrag: (e) => {
                     var d = e.data;
                     if (d.left < 0) {
@@ -205,8 +261,16 @@ function objectComponent(object, token) {
                 },
                 onStopDrag: (e) => {
                     let position = bbox.position();
-                    // console.log("stopdrag position", position);
-                    onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.outerWidth()), Math.round(bbox.outerHeight()));
+                    let bboxChanged = new BoundingBox(
+                        this.currentFrame,
+                        Math.round(position.left),
+                        Math.round(position.top),
+                        Math.round(bbox.outerWidth()),
+                        Math.round(bbox.outerHeight()),
+                        true,
+                        dom.dataset.blocked
+                    );
+                    onChange(bboxChanged);
                 }
             });
             bbox.css("display", "none");
@@ -235,8 +299,9 @@ function objectComponent(object, token) {
                     if (bbox === null) {
                         await this.tracker.setBBoxForObject(this.object, this.currentFrame);
                         let bbox = this.object.getBoundingBoxAt(this.currentFrame);
+                        bbox.blocked = this.object.blocked;
                         // console.log("creating bbox at frame", this.currentFrame);
-                        bbox.idBoundingBox = await ky.post("/annotation/dynamicMode/createBBox", {
+                        bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
                             json: {
                                 _token: this._token,
                                 idDynamicObject: this.idDynamicObject,
@@ -250,6 +315,29 @@ function objectComponent(object, token) {
                 // console.log("drawFrameBBox", this.currentFrame,x ? 'ok' : 'nine');
                 this.object.drawBoxInFrame(this.currentFrame, this.isTracking ? "tracking" : "editing");
             }
+        },
+
+        async toggleBBoxBlocked() {
+
+            // console.log("blocked", this.object.blocked);
+            // this.object.blocked = !this.object.blocked;
+            // let bbox = this.object.getBoundingBoxAt(this.currentFrame);
+            // console.log(bbox);
+            // bbox.blocked = this.object.blocked;
+            // this.object.updateBBox(bbox);
+            //
+            // await ky.post("/annotation/dynamic/updateBBox", {
+            //     json: {
+            //         _token: this._token,
+            //         idBoundingBox: bbox.idBoundingBox,
+            //         bbox
+            //     }
+            // }).json();
+            //
+            // this.object.drawBoxInFrame(this.currentFrame, this.isTracking ? "tracking" : "editing");
+            //
+            // console.log("after", this.object.blocked);
         }
+
     };
 }

@@ -31,11 +31,11 @@ class Controller extends BaseController
 
     public function render(string $viewName, array $data = [], ?string $fragment = null)
     {
-        $response = response()
-            ->view($viewName, $data);
+        $view = view($viewName, $data);
         if (!is_null($fragment)) {
-            $response->fragment($fragment);
+            $view->fragment($fragment);
         }
+        $response = response($view, 200);
         if (!empty($this->hx_trigger)) {
             $trigger = json_encode($this->hx_trigger);
             $response->header('HX-Trigger', $trigger);

@@ -2,6 +2,7 @@
     x-data="objectComponent({!! Js::from($object) !!} ,'{{ csrf_token() }}')"
     @bbox-drawn.document="onBboxDrawn"
     @video-update-state.document="onVideoUpdateState"
+    @change-bbox-blocked.document="onBBoxBlocked"
 >
     <div class="flex-container h-2-5 items-center justify-between bg-gray-300">
         <div>
@@ -12,17 +13,24 @@
                 class="ui tiny icon button"
                 @click="gotoFrame({{$object->startFrame}})"
             >
-                StartFrame: {{$object->startFrame}}
+                Go to StartFrame: {{$object->startFrame}}
             </button>
             <button
                 class="ui tiny icon button"
                 @click="gotoFrame({{$object->endFrame}})"
             >
-                EndFrame: {{$object->endFrame}}
+                Go to EndFrame: {{$object->endFrame}}
+            </button>
+            <button
+                class="ui tiny icon button"
+                hx-post="/annotation/dynamic/cloneObject"
+                hx-vals='js:{"idDocument":{{$object->idDocument}},"idDynamicObject":{{$object->idDynamicObject}}}'
+            >
+                Clone object
             </button>
             <button
                 class="ui tiny icon button danger"
-                @click.prevent="messenger.confirmDelete('Removing object #{{$object->idDynamicObject}}.', '/annotation/deixis/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
+                @click.prevent="messenger.confirmDelete('Removing object #{{$object->idDynamicObject}}.', '/annotation/dynamic/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
             >
                 Delete Object
             </button>
@@ -30,7 +38,7 @@
                 id="btnClose"
                 class="ui tiny icon button"
                 title="Close Object"
-                @click="window.location.assign('/annotation/deixis/{{$object->idDocument}}')"
+                @click="window.location.assign('/annotation/dynamic/{{$object->idDocument}}')"
             >
                 <i class="close tiny icon"></i>
             </button>
@@ -42,32 +50,32 @@
         <a class="item" data-tab="edit-object" :class="isPlaying && 'disabled'">Annotate object</a>
         <a class="item" data-tab="create-bbox" :class="isPlaying && 'disabled'">BBox</a>
         <a class="item" data-tab="modify-range" :class="isPlaying && 'disabled'">Modify range</a>
-        <a class="item" data-tab="comment" :class="isPlaying && 'disabled'">Comment</a>
+        <a class="item" data-tab="comment" :class="isPlaying && 'disabled'"><i class="comment dots outline icon"></i>Comment</a>
     </div>
     <div class="gridBody">
         <div
             class="ui tab h-full w-full active"
             data-tab="edit-object"
         >
-            @include("Annotation.Deixis.Forms.formAnnotation")
+            @include("Annotation.Dynamic.Forms.formAnnotation")
         </div>
         <div
             class="ui tab h-full w-full"
             data-tab="create-bbox"
         >
-            @include("Annotation.Deixis.Forms.formBBox")
+            @include("Annotation.Dynamic.Forms.formBBox")
         </div>
         <div
             class="ui tab h-full w-full"
             data-tab="modify-range"
         >
-            @include("Annotation.Deixis.Forms.formModifyRange")
+            @include("Annotation.Dynamic.Forms.formModifyRange")
         </div>
         <div
             class="ui tab h-full w-full"
             data-tab="comment"
         >
-            @include("Annotation.Deixis.Forms.formComment")
+            @include("Annotation.Dynamic.Forms.formComment")
         </div>
     </div>
     <script type="text/javascript">

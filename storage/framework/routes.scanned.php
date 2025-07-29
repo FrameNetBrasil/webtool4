@@ -4000,6 +4000,30 @@ $router->delete('annotation/dynamic/{idDocument}/{idDynamicObject}', [
 	'domain' => NULL,
 ]);
 
+$router->post('annotation/dynamic/cloneObject', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicController@cloneObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/dynamic/createBBox', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicController@createBBox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/dynamic/updateBBox', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicController@updateBBox',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/dynamic/formComment', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicController@getFormComment',
 	'as' => NULL,
