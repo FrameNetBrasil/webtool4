@@ -58,15 +58,15 @@ class DynamicObject {
                     if (state === "tracking") {
                         let color = vatic.getColor(0);
                         this.dom.style.borderColor = color.bg;
-                        // this.dom.querySelector(".objectId").style.backgroundColor = color.bg;
-                        // this.dom.querySelector(".objectId").style.color = color.fg;
+                        this.dom.querySelector(".objectId").style.backgroundColor = color.bg;
+                        this.dom.querySelector(".objectId").style.color = color.fg;
                         this.dom.style.borderStyle = "dotted";
                         this.dom.style.borderWidth = "2px";
                     }
                     if (state === "editing") {
                         this.dom.style.borderColor = this.color.bg;
-                        // this.dom.querySelector(".objectId").style.backgroundColor = this.color.bg;
-                        // this.dom.querySelector(".objectId").style.color = this.color.fg;
+                        this.dom.querySelector(".objectId").style.backgroundColor = this.color.bg;
+                        this.dom.querySelector(".objectId").style.color = this.color.fg;
                         this.dom.style.borderStyle = "solid";
                         this.dom.style.borderWidth = "4px";
                     }
@@ -122,7 +122,7 @@ class DynamicObject {
     }
 
     removeFromFrameToBeRecomputedFrom(bboxIndex) {
-        // console.log('=========== removeFromFrameToBeRecomputedFrom', bboxIndex, this.bboxes[bboxIndex]);
+        // console.log('=========== removeFromFrameToBeRecomputedFrom', bboxIndex, this.bboxes.length, this.bboxes[bboxIndex]);
         let count = 0;
         for (let i = bboxIndex; i < this.bboxes.length; i++) {
             // if (this.bboxes[i].isGroundTruth) {

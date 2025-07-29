@@ -4,13 +4,13 @@ namespace App\Services\Annotation;
 
 use App\Data\Annotation\Dynamic\CreateObjectData;
 use App\Data\Annotation\Dynamic\ObjectFrameData;
-use App\Data\Annotation\DynamicMode\CloneData;
-use App\Data\Annotation\DynamicMode\CreateBBoxData;
-use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
-use App\Data\Annotation\DynamicMode\ObjectData;
-use App\Data\Annotation\DynamicMode\SentenceData;
-use App\Data\Annotation\DynamicMode\UpdateBBoxData;
-use App\Data\Annotation\DynamicMode\WordData;
+use App\Data\Annotation\Dynamic\CloneData;
+use App\Data\Annotation\Dynamic\CreateBBoxData;
+use App\Data\Annotation\Dynamic\ObjectAnnotationData;
+use App\Data\Annotation\Dynamic\ObjectData;
+use App\Data\Annotation\Dynamic\SentenceData;
+use App\Data\Annotation\Dynamic\UpdateBBoxData;
+use App\Data\Annotation\Dynamic\WordData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Task;
@@ -49,6 +49,7 @@ class DynamicService
             ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin",
                 "ad.idAnnotationLU", "ad.idLU", "ad.lu", "ad.idAnnotationFE", "ad.idFrameElement", "ad.idFrame", "ad.frame", "ad.fe", "color.rgbBg", "color.rgbFg", "ad.idLanguage",
                 "ad.idDocument")
+            ->selectRaw("'Single_layer' as nameLayerType")
             ->first();
         if (!is_null($object)) {
             $object->comment = CommentService::getDynamicObjectComment($idDynamicObject);
@@ -138,56 +139,56 @@ class DynamicService
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         }
-        if (($data->startFrame) && ($data->endFrame)) {
-            $idUser = AppService::getCurrentIdUser();
-            $bboxes = Criteria::table("view_dynamicobject_boundingbox")
-                ->where("idDynamicObject", $data->idDynamicObject)
-                ->orderBy("frameNumber")
-                ->all();
-            $iFirst = array_key_first($bboxes);
-            $firstBBox = $bboxes[$iFirst];
-            $isBlocked = $data->isBlocked;
-            // update first bbox because the status of blocked
-            Criteria::table("boundingbox")
-                ->where("idBoundingBox", $firstBBox->idBoundingBox)
-                ->update(["blocked" => $isBlocked]);
-            //
-            if ($data->startFrame >= $firstBBox->frameNumber) {
-                $iLast = array_key_last($bboxes);
-                $lastBBox = $bboxes[$iLast];
-                $lastFrame = $lastBBox->frameNumber;
-                foreach ($bboxes as $bbox) {
-                    if ($bbox->frameNumber < $data->startFrame) {
-                        $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
-                    } else if ($bbox->frameNumber > $data->endFrame) {
-                        $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
-                    }
-                }
-                if ($lastFrame < $data->endFrame) {
-                    for ($i = ($lastFrame + 1); $i <= $data->endFrame; $i++) {
-                        $json = json_encode([
-                            'frameNumber' => $i,
-                            'frameTime' => ($i - 1) * 0.04,
-                            'x' => (int)$lastBBox->x,
-                            'y' => (int)$lastBBox->y,
-                            'width' => (int)$lastBBox->width,
-                            'height' => (int)$lastBBox->height,
-                            'blocked' => (int)$isBlocked, //(int)$lastBBox->blocked,
-                            'idDynamicObject' => $data->idDynamicObject
-                        ]);
-                        $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
-                    }
-                }
-                Criteria::table("dynamicobject")
-                    ->where("idDynamicObject", $data->idDynamicObject)
-                    ->update([
-                        "startFrame" => $data->startFrame,
-                        "endFrame" => $data->endFrame
-                    ]);
-            } else {
-                throw new \Exception("First BBox must be created mannualy.");
-            }
-        }
+//        if (($data->startFrame) && ($data->endFrame)) {
+//            $idUser = AppService::getCurrentIdUser();
+//            $bboxes = Criteria::table("view_dynamicobject_boundingbox")
+//                ->where("idDynamicObject", $data->idDynamicObject)
+//                ->orderBy("frameNumber")
+//                ->all();
+//            $iFirst = array_key_first($bboxes);
+//            $firstBBox = $bboxes[$iFirst];
+//            $isBlocked = $data->isBlocked;
+//            // update first bbox because the status of blocked
+//            Criteria::table("boundingbox")
+//                ->where("idBoundingBox", $firstBBox->idBoundingBox)
+//                ->update(["blocked" => $isBlocked]);
+//            //
+//            if ($data->startFrame >= $firstBBox->frameNumber) {
+//                $iLast = array_key_last($bboxes);
+//                $lastBBox = $bboxes[$iLast];
+//                $lastFrame = $lastBBox->frameNumber;
+//                foreach ($bboxes as $bbox) {
+//                    if ($bbox->frameNumber < $data->startFrame) {
+//                        $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
+//                    } else if ($bbox->frameNumber > $data->endFrame) {
+//                        $idBoundingBox = Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, $idUser]);
+//                    }
+//                }
+//                if ($lastFrame < $data->endFrame) {
+//                    for ($i = ($lastFrame + 1); $i <= $data->endFrame; $i++) {
+//                        $json = json_encode([
+//                            'frameNumber' => $i,
+//                            'frameTime' => ($i - 1) * 0.04,
+//                            'x' => (int)$lastBBox->x,
+//                            'y' => (int)$lastBBox->y,
+//                            'width' => (int)$lastBBox->width,
+//                            'height' => (int)$lastBBox->height,
+//                            'blocked' => (int)$isBlocked, //(int)$lastBBox->blocked,
+//                            'idDynamicObject' => $data->idDynamicObject
+//                        ]);
+//                        $idBoundingBox = Criteria::function("boundingbox_dynamic_create(?)", [$json]);
+//                    }
+//                }
+//                Criteria::table("dynamicobject")
+//                    ->where("idDynamicObject", $data->idDynamicObject)
+//                    ->update([
+//                        "startFrame" => $data->startFrame,
+//                        "endFrame" => $data->endFrame
+//                    ]);
+//            } else {
+//                throw new \Exception("First BBox must be created mannualy.");
+//            }
+//        }
         return $data->idDynamicObject;
     }
 
@@ -520,7 +521,7 @@ class DynamicService
             'startTime' => ($data->startFrame - 1) * 0.040,
             'endTime' => ($data->endFrame) * 0.040,
             'status' => 0,
-            'origin' => 5,
+            'origin' => 2,
             'idUser' => $idUser
         ]);
         $idDynamicObject = Criteria::function("dynamicobject_create(?)", [$do]);

@@ -4,16 +4,15 @@ namespace App\Data\Annotation\Dynamic;
 
 use Spatie\LaravelData\Data;
 
-class UpdateBBoxData extends Data
+class CreateBBoxData extends Data
 {
     public function __construct(
-        public ?int   $idBoundingBox = null,
+        public ?int   $idDynamicObject = null,
+        public ?int   $frameNumber = null,
         public ?array $bbox = [],
         public string $_token = '',
     )
     {
-        unset($this->bbox['isGroundTruth']);
-        unset($this->bbox['visible']);
         $this->_token = csrf_token();
     }
 

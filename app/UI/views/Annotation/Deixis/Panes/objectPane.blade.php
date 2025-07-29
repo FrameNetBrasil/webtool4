@@ -42,7 +42,7 @@
         <a class="item" data-tab="edit-object" :class="isPlaying && 'disabled'">Annotate object</a>
         <a class="item" data-tab="create-bbox" :class="isPlaying && 'disabled'">BBox</a>
         <a class="item" data-tab="modify-range" :class="isPlaying && 'disabled'">Modify range</a>
-        <a class="item" data-tab="comment" :class="isPlaying && 'disabled'">Comment</a>
+        <a class="item" data-tab="comment" :class="isPlaying && 'disabled'"><i class="comment dots outline icon"></i>Comment</a>
     </div>
     <div class="gridBody">
         <div

@@ -1,5 +1,7 @@
 <x-layout::index>
-{{--    <script src="/scripts/utils/jquery-ui.js"></script>--}}
+    <script src="/scripts/utils/jquery.parser.js"></script>
+    <script src="/scripts/utils/jquery.draggable.js"></script>
+    <script src="/scripts/utils/jquery.resizable.js"></script>
     <script type="text/javascript" src="/annotation/deixis/script/objects"></script>
     <script type="text/javascript" src="/annotation/deixis/script/components"></script>
     <div class="app-layout annotation-deixis">

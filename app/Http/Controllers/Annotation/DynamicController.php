@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Annotation;
 
+use App\Data\Annotation\Dynamic\CloneData;
+use App\Data\Annotation\Dynamic\CreateBBoxData;
 use App\Data\Annotation\Dynamic\CreateObjectData;
 use App\Data\Annotation\Dynamic\ObjectAnnotationData;
 use App\Data\Annotation\Dynamic\ObjectData;
 use App\Data\Annotation\Dynamic\ObjectFrameData;
 use App\Data\Annotation\Dynamic\ObjectSearchData;
 use App\Data\Annotation\Dynamic\SearchData;
+use App\Data\Annotation\Dynamic\UpdateBBoxData;
 use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
@@ -114,20 +117,21 @@ class DynamicController extends Controller
             $idLanguage = AppService::getCurrentIdLanguage();
 
             $query = Criteria::table('view_annotation_dynamic as ad')
-                ->join('layertype as lt', 'ad.idLayerType', '=', 'lt.idLayerType')
-                ->join('layergroup as lg', 'lt.idLayerGroup', '=', 'lg.idLayerGroup')
-                ->where('ad.idLanguageFE', 'left', $idLanguage)
-                ->where('ad.idLanguageGL', 'left', $idLanguage)
-                ->where('ad.idLanguageLT', '=', $idLanguage)
+                ->where('ad.idLanguage', 'left', $idLanguage)
+//                ->leftJoin('layertype as lt', 'ad.idLayerType', '=', 'lt.idLayerType')
+//                ->leftJoin('layergroup as lg', 'lt.idLayerGroup', '=', 'lg.idLayerGroup')
+//                ->where('ad.idLanguageFE', 'left', $idLanguage)
+//                ->where('ad.idLanguageGL', 'left', $idLanguage)
+//                ->where('ad.idLanguageLT', 'left', $idLanguage)
                 ->where('ad.idDocument', $data->idDocument);
 
             // Apply search filters
-            if (!empty($data->searchIdLayerType) && $data->searchIdLayerType > 0) {
-                $query->where('ad.idLayerType', $data->searchIdLayerType);
-            }
+//            if (!empty($data->searchIdLayerType) && $data->searchIdLayerType > 0) {
+//                $query->where('ad.idLayerType', $data->searchIdLayerType);
+//            }
 
             if (!empty($data->frame)) {
-                $query->whereRaw('(ad.frame LIKE ? OR ad.lu LIKE ?)', [
+                $query->whereRaw('(ad.frame LIKE ? OR ad.fe LIKE ?)', [
                     $data->frame . '%',
                     $data->frame . '%'
                 ]);
@@ -152,15 +156,16 @@ class DynamicController extends Controller
                     'ad.endFrame',
                     'ad.startTime',
                     'ad.endTime',
-                    'ad.nameLayerType',
+//                    'ad.nameLayerType',
                     'ad.lu',
                     'ad.frame',
                     'ad.fe',
-                    'ad.gl',
-                    'ad.layerGroup'
+//                    'ad.gl',
+//                    'ad.layerGroup'
                 )
-                ->orderBy('lg.name')
-                ->orderBy('ad.nameLayerType')
+//                ->orderBy('lg.name')
+//                ->orderBy('ad.nameLayerType')
+                ->orderBy('ad.idDynamicObject')
                 ->orderBy('ad.startFrame')
                 ->orderBy('ad.endFrame')
                 ->all();
@@ -168,9 +173,9 @@ class DynamicController extends Controller
             // Format search results for display
             foreach ($searchResults as $object) {
                 $object->displayName = '';
-                if (!empty($object->gl)) {
-                    $object->displayName = $object->gl;
-                }
+//                if (!empty($object->gl)) {
+//                    $object->displayName = $object->gl;
+//                }
                 if (!empty($object->lu)) {
                     $object->displayName .= ($object->displayName ? ' | ' : '') . $object->lu;
                 }
@@ -230,7 +235,7 @@ class DynamicController extends Controller
         try {
             debug($data);
             DynamicService::updateObjectFrame($data);
-            return $this->redirect("/annotation/deixis/{$data->idDocument}/{$data->idDynamicObject}");
+            return $this->redirect("/annotation/dynamic/{$data->idDocument}/{$data->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
 
@@ -245,12 +250,10 @@ class DynamicController extends Controller
             DynamicService::updateObjectAnnotation($data);
             $object = DynamicService::getObject($data->idDynamicObject);
             $this->notify('success', 'Object updated.');
-            debug($object);
-
-            return view('Annotation.Dynamic.Panes.timeline.object', [
+            return $this->render('Annotation.Dynamic.Panes.timeline.object', [
                 'duration' => $object->endFrame - $object->startFrame,
                 'objectData' => $object,
-            ])->fragment('object');
+            ],'object');
         } catch (\Exception $e) {
             debug($e->getMessage());
 
@@ -285,6 +288,45 @@ class DynamicController extends Controller
             return $this->renderNotify('error', $e->getMessage());
         }
     }
+
+    #[Post(path: '/annotation/dynamic/cloneObject')]
+    public function cloneObject(CloneData $data)
+    {
+        debug($data);
+        try {
+            $idDynamicObjectClone = DynamicService::cloneObject($data);
+            return $this->redirect("/annotation/dynamic/{$data->idDocument}/{$idDynamicObjectClone}");
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/dynamic/createBBox')]
+    public function createBBox(CreateBBoxData $data)
+    {
+        try {
+            debug($data);
+            return DynamicService::createBBox($data);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/dynamic/updateBBox')]
+    public function updateBBox(UpdateBBoxData $data)
+    {
+        try {
+            debug($data);
+            $idBoundingBox = DynamicService::updateBBox($data);
+            return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
 
     /*
      * Comment

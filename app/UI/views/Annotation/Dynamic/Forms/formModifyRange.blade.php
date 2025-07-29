@@ -1,6 +1,6 @@
 <form
     class="ui form p-4 border"
-    hx-post="/annotation/deixis/updateObjectRange"
+    hx-post="/annotation/dynamic/updateObjectRange"
 >
     <div class="w-2/3">
         <x-form::hidden-field id="idDocument" value="{{$object->idDocument}}"></x-form::hidden-field>

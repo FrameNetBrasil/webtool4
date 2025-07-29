@@ -13,20 +13,20 @@
                   hx-swap="innerHTML">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                 <input type="hidden" name="idDocument" value="{{ $idDocument ?? 0 }}" />
-                <div class="four fields">
-                    <div class="field">
-                        <x-form::combobox.layer-deixis
-                            name="searchIdLayerType"
-                            :value="0"
-                        ></x-form::combobox.layer-deixis>
-                    </div>
+                <div class="three fields">
+{{--                    <div class="field">--}}
+{{--                        <x-form::combobox.layer-deixis--}}
+{{--                            name="searchIdLayerType"--}}
+{{--                            :value="0"--}}
+{{--                        ></x-form::combobox.layer-deixis>--}}
+{{--                    </div>--}}
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="search icon"></i>
                             <input
                                 type="search"
                                 name="frame"
-                                placeholder="Search Frame"
+                                placeholder="Search Frame/FE"
                                 x-model="searchQueryFrame"
                                 autocomplete="off"
                             >
@@ -116,7 +116,8 @@
                                                 class="header"
                                                 data-id="{{$object->idDynamicObject}}"
                                             >
-                                                {{$object->layerGroup}}/{{$object->nameLayerType}}
+                                                Object: #{{$object->idDynamicObject}}
+{{--                                                {{$object->layerGroup}}/{{$object->nameLayerType}}--}}
                                             </div>
                                             <div
                                                 class="meta"
@@ -124,7 +125,6 @@
                                             >
                                                 {{$object->displayName}}<br />
                                                 Frames: {{$object->startFrame}}-{{$object->endFrame}}<br />
-                                                Object: #{{$object->idDynamicObject}}
                                             </div>
                                         </div>
                                     </div>
