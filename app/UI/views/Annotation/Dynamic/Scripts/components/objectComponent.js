@@ -24,6 +24,7 @@ function objectComponent(object, token) {
                 ctx: drawBoxObject.ctx,
                 video: drawBoxObject.video
             });
+            //this.$watch('object', v => console.log(v, 'bbox'));
         },
 
         async onVideoUpdateState(e) {
@@ -172,7 +173,7 @@ function objectComponent(object, token) {
             return dom;
         },
 
-        interactify: (object, onChange) => {
+        interactify: function (object, onChange) {
             let dom = object.dom;
             let bbox = $(dom);
             let canvasHeight = $("#canvas").height();
@@ -184,6 +185,8 @@ function objectComponent(object, token) {
             objectId.className = "objectId";
             bbox.append(objectId);
             objectId.innerHTML = object.idObject;
+
+            //bbox.on('click', () => this.bbox = bbox);
 
             bbox.resizable({
                 handles: "n, e, s, w, ne, nw, se, sw",
