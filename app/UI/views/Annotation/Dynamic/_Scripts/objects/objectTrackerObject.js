@@ -131,37 +131,6 @@ class ObjectTrackerObject {
         }
     }
 
-    async trackBBox(frameNumber, previousBbox) {
-        let currentImageData = await this.framesManager.getFrameImage(frameNumber);
-        // let currentImageData = await vatic.blobToImage(blob);
-        //let previousImageData = this.imageData();
-        // let bbox = annotatedObject.getBoundingBoxAt(frameNumber);
-        // if (bbox === null) {
-            //não existe bbox para o AnnotatedObject no frame frameNumber
-            // bbox = annotatedObject.getBoundingBoxAt(frameNumber - 1);
-            if (previousBbox == null) {
-                // também não existe bbox no frame no anterior
-                throw new Error("Tracking must be done sequentially!");
-            } else {
-                this.opticalFlow.reset();
-                let previousImageData = await this.framesManager.getFrameImage(frameNumber - 1);
-                //let previousImageData = await vatic.blobToImage(blob);
-                // let previousImageData = this.imageData();
-                this.opticalFlow.init(previousImageData);
-                let bboxes = [{x:previousBbox.x,y:previousBbox.y,width:previousBbox.width,height:previousBbox.height}];
-                let newBboxes = this.opticalFlow.track(currentImageData, bboxes);
-                // console.log("previous bboxes",bboxes);
-                // console.log("new bboxes",newBboxes);
-                let newBbox = new BoundingBox(frameNumber,newBboxes[0].x,newBboxes[0].y,newBboxes[0].width,newBboxes[0].height,false);
-                console.log("newBbox",newBbox);
-                // annotatedObject.addBBox(newBbox);
-                //console.log("object.bboxes", annotatedObject.bboxes);
-                //toCompute.push({ annotatedObject: annotatedObject, bbox: bbox });
-                return newBbox;
-
-            }
-        // }
-    }
 
     trackObject_old(frameNumber, annotatedObject) {
         return new Promise((resolve, _) => {

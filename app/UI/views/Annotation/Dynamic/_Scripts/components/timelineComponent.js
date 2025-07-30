@@ -6,7 +6,7 @@ function timelineComponent(config) {
 
         init() {
             this.config = config;
-            // console.log("Timeline config:", config); // Debug config
+            console.log("Timeline config:", config); // Debug config
             this.generateRuler();
             this.setupScrollSync();
 
@@ -53,7 +53,7 @@ function timelineComponent(config) {
         },
 
         onSeekObject(e) {
-            // console.log("onSeekObject", e);
+            console.log("onSeekObject", e);
             this.frameInput = e.detail.frameNumber;
             this.scrollToFrame();
         },
@@ -204,14 +204,14 @@ function timelineComponent(config) {
             this.scrollToFrame();
         },
 
-        // selectObject: async function(idDynamicObject) {
-        //     let dynamicObject = await __api.getObject(idDynamicObject);
-        //     document.dispatchEvent(new CustomEvent("object-selected", {
-        //         detail: {
-        //             dynamicObject
-        //         }
-        //     }));
-        // }
+        selectObject: async function(idDynamicObject) {
+            let dynamicObject = await __api.getObject(idDynamicObject);
+            document.dispatchEvent(new CustomEvent("object-selected", {
+                detail: {
+                    dynamicObject
+                }
+            }));
+        }
 
 
         // Object click handler

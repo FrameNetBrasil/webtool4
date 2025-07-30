@@ -45,17 +45,14 @@ function videoComponent() {
                 }
             });
             let player = this.player;
+            let video = this;
 
-            // let video = this;
-
-            // drawBoxObject.config({
-            //     idVideoDOMElement: this.idVideo,
-            //     videoDimensions: this.dimensions
-            // }, vatic.getColor(0));
-            // // Initially disable drawing
-            // drawBoxObject.disableDrawing();
-
-            document.dispatchEvent(new CustomEvent("disable-drawing"));
+            drawBoxObject.config({
+                idVideoDOMElement: this.idVideo,
+                videoDimensions: this.dimensions
+            }, vatic.getColor(0));
+            // Initially disable drawing
+            drawBoxObject.disableDrawing();
 
             player.crossOrigin("anonymous");
 
@@ -99,10 +96,6 @@ function videoComponent() {
 
         onVideoTogglePlay(e) {
             this.togglePlay();
-        },
-
-        onObjectSelected(e) {
-            this.seekToFrame(e.detail.dynamicObject.startFrame);
         },
 
         broadcastState() {

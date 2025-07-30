@@ -2,7 +2,13 @@ class FramesManager {
     constructor() {
         this.frames = {};
         this.onReset = [];
+        // this.canvas = document.createElement("canvas");
+        // this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
+        // this.dimensionsInitialized = false;
         this.totalFrames = 0;
+        // this.processedFrames = 0;
+        // this.lastApproxFrame = -1;
+        // this.lastProgressFrame = -1;
         this.frameNumber = -1;
         this.interval = 0;
     }
@@ -12,6 +18,14 @@ class FramesManager {
         this.video = this.config.video;
         this.canvas = this.config.canvas;
         this.ctx = this.config.ctx;
+        // this.video = document.getElementById(config.idVideoDOMElement);
+        // this.dimensionsInitialized = true;
+        // this.canvas.width = annotation.video.originalDimensions.width;
+        // this.canvas.height = annotation.video.originalDimensions.height;
+        // this.canvas.style.position = "absolute";
+        // this.canvas.style.top = "0px";
+        // this.canvas.style.left = "0px";
+        // this.canvas.style.backgroundColor = "transparent";
         this.config.imageMimeType = "image/png";
     }
 

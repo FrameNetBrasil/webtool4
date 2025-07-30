@@ -1,9 +1,8 @@
 <div
     x-data="objectComponent({!! Js::from($object) !!} ,'{{ csrf_token() }}')"
-    @bbox-drawn.document="onBboxDrawn"
     @video-update-state.document="onVideoUpdateState"
-    @change-bbox-blocked.document="onBBoxBlocked"
 >
+    <input type="hidden" id="idDynamicObject" value="{{$object->idDynamicObject}}"/>
     <div class="flex-container h-2-5 items-center justify-between bg-gray-300">
         <div>
             <h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}</h3>
@@ -47,12 +46,31 @@
     <div
         class="objectPane ui pointing secondary menu tabs mt-0"
     >
-        <a class="item" data-tab="edit-object" :class="isPlaying && 'disabled'">Annotate object</a>
-        <a class="item" data-tab="create-bbox" :class="isPlaying && 'disabled'">BBox</a>
-        <a class="item" data-tab="modify-range" :class="isPlaying && 'disabled'">Modify range</a>
-        <a class="item" data-tab="comment" :class="isPlaying && 'disabled'"><i class="comment dots outline icon"></i>Comment</a>
+        <a
+            class="item active"
+            data-tab="edit-object"
+            :class="isPlaying && 'disabled'"
+        >Annotate object</a>
+        <a
+            class="item"
+            data-tab="create-bbox"
+            :class="isPlaying && 'disabled'"
+        >BBox</a>
+        <a
+            class="item"
+            data-tab="modify-range"
+            :class="isPlaying && 'disabled'"
+        >Modify range</a>
+        <a
+            class="item"
+            data-tab="comment"
+            :class="isPlaying && 'disabled'"
+        ><i class="comment dots outline icon"></i>Comment</a>
     </div>
-    <div class="gridBody">
+    <div
+        class="gridBody"
+        x-init="$('.menu .item').tab()"
+    >
         <div
             class="ui tab h-full w-full active"
             data-tab="edit-object"
@@ -78,13 +96,4 @@
             @include("Annotation.Dynamic.Forms.formComment")
         </div>
     </div>
-    <script type="text/javascript">
-        $(function() {
-            $(".objectPane .item")
-                .tab()
-            ;
-            document.dispatchEvent(new CustomEvent("video-seek-frame", { detail: { frameNumber: {{$object->startFrame}} } }));
-        });
-    </script>
-
 </div>

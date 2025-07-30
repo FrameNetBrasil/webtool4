@@ -5,7 +5,7 @@
                     id="btnCreateObject"
                     class="ui button primary"
                     :class="!canCreateBBox && 'disabled'"
-                    @click="createBBox()"
+                    @click="$dispatch('bbox-create')"
                 >
                     <i class="plus square outline icon"></i>
                     Create BBox
@@ -15,7 +15,7 @@
                 <button
                     class="ui button primary toggle"
                     @click="toggleTracking()"
-                    :class="canCreateBBox && 'disabled'"
+                    :class="!canTrack && 'disabled'"
                 >
                     <i :class="isTracking ? 'stop icon' : 'play icon'"></i>
                     <span x-text="isTracking ? 'Stop' : 'Track'"></span>
@@ -25,7 +25,7 @@
                 <div
                     class="ui checkbox"
                     x-init="$($el).checkbox()"
-                    @click="$dispatch('change-bbox-blocked')"
+                    @click="$dispatch('bbox-change-blocked')"
                 >
                     <input type="checkbox" tabindex="0" class="hidden">
                     <label class="pl-6">is blocked?</label>
