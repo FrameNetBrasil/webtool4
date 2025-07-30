@@ -13,6 +13,7 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" id="_token" value="{{ csrf_token() }}" />
         <div class="annotation-canvas">
             <div class="annotation-video">
                 <div class="annotation-player">

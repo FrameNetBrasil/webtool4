@@ -65,10 +65,14 @@ class DynamicService
                 $object->fgColor = "#{$object->rgbFg}";
                 $object->name .= ($object->name != "" ? " | ": "") . $object->frame . "." . $object->fe;
             }
-            $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
+//            $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
+//                ->where("idDynamicObject", $idDynamicObject)
+//                ->orderBy("frameNumber")
+//                ->all();
+            $countBBoxes = Criteria::table("view_dynamicobject_boundingbox")
                 ->where("idDynamicObject", $idDynamicObject)
-                ->orderBy("frameNumber")
-                ->all();
+                ->count();
+            $object->hasBBoxes = ($countBBoxes > 0);
         }
         return $object;
     }

@@ -16,7 +16,6 @@ function formsComponent(idDocument) {
         },
 
         onCloseObjectPane() {
-            //htmx.ajax('GET', "/annotation/dynamic/object/0", {target:'#formsPane', swap:'innerHTML'});
             window.location.assign(`/annotation/dynamic/${this.idDocument}`);
         },
 

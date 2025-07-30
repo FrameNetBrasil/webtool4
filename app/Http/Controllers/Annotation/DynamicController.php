@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Annotation;
 use App\Data\Annotation\Dynamic\CloneData;
 use App\Data\Annotation\Dynamic\CreateBBoxData;
 use App\Data\Annotation\Dynamic\CreateObjectData;
+use App\Data\Annotation\Dynamic\GetBBoxData;
 use App\Data\Annotation\Dynamic\ObjectAnnotationData;
-use App\Data\Annotation\Dynamic\ObjectData;
 use App\Data\Annotation\Dynamic\ObjectFrameData;
 use App\Data\Annotation\Dynamic\ObjectSearchData;
 use App\Data\Annotation\Dynamic\SearchData;
@@ -207,28 +207,6 @@ class DynamicController extends Controller
         }
     }
 
-    #[Post(path: '/annotation/dynamic/formAnnotation')]
-    public function formAnnotation(ObjectData $data)
-    {
-        $object = DynamicService::getObject($data->idDynamicObject ?? 0);
-        return $this->redirect("/annotation/dynamic/{$object->idDocument}/{$object->idDynamicObject}");
-    }
-
-    #[Get(path: '/annotation/dynamic/formAnnotation/{idDynamicObject}')]
-    public function getFormAnnotation(int $idDynamicObject)
-    {
-        $object = DynamicService::getObject($idDynamicObject ?? 0);
-        return view('Annotation.Dynamic.Panes.formAnnotation', [
-            'object' => $object,
-        ]);
-    }
-
-    #[Get(path: '/annotation/dynamic/loadLayerList/{idDocument}')]
-    public function loadLayerList(int $idDocument)
-    {
-        return DynamicService::getLayersByDocument($idDocument);
-    }
-
     #[Post(path: '/annotation/dynamic/updateObjectRange')]
     public function updateObjectRange(ObjectFrameData $data)
     {
@@ -296,6 +274,44 @@ class DynamicController extends Controller
         try {
             $idDynamicObjectClone = DynamicService::cloneObject($data);
             return $this->redirect("/annotation/dynamic/{$data->idDocument}/{$idDynamicObjectClone}");
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    /*
+     * BBox
+     */
+
+    #[Get(path: '/annotation/dynamic/getBBox')]
+    public function getBBox(GetBBoxData $data)
+    {
+        try {
+            debug($data);
+            return Criteria::table("view_dynamicobject_boundingbox")
+                ->where("idDynamicObject", $data->idDynamicObject)
+                ->where("frameNumber", $data->frameNumber)
+                ->first();
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Get(path: '/annotation/dynamic/getBBoxView')]
+    public function getBBoxView(GetBBoxData $data)
+    {
+        try {
+            debug($data);
+            $bbox = Criteria::table("view_dynamicobject_boundingbox")
+                ->where("idDynamicObject", $data->idDynamicObject)
+                ->where("frameNumber", $data->frameNumber)
+                ->first();
+            return view("Annotation.Dynamic.Forms.bbox", [
+                'data' => $data,
+                'bbox' => $bbox
+            ]);
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
