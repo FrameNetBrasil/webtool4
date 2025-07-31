@@ -2,49 +2,46 @@ function objectComponent(object) {
     return {
         object: null,
         idDynamicObject: null,
-        // _token: "",
-        // bbox: null,
-        // boxesContainer: null,
-        // currentFrame: 0,
-        // tracker: null,
+        currentFrame: 0,
         isTracking: false,
-        canCreateBBox: false,
-        canTrack: false,
-        // hasBBoxInCurrentFrame: false,
 
-        init() {
+        async init() {
             console.log("Object component init");
-            //this.annotateObject(object);
             this.object = object;
             console.log(this.object);
             this.idDynamicObject = object.idDynamicObject;
-            // this.currentFrame = object.startFrame;
-            // this._token = token;
-            this.canCreateBBox = !this.object.hasBBoxes;
-            this.canTrack = this.object.hasBBoxes;
-            // this.boxesContainer = document.querySelector("#boxesContainer");
-            // this.tracker = new ObjectTrackerObject();
-            // this.tracker.config({
-            //     canvas: drawBoxObject.canvas,
-            //     ctx: drawBoxObject.ctx,
-            //     video: drawBoxObject.video
-            // });
-            document.dispatchEvent(new CustomEvent("object-selected", {
-                detail: {
-                    dynamicObject: this.object
-                }
-            }));
-            // document.dispatchEvent(new CustomEvent("video-seek-frame", {
-            //     detail: {
-            //         frameNumber: object.startFrame
-            //     }
-            // }));
+            this.currentFrame = object.startFrame;
+            htmx.ajax("GET", "/annotation/dynamic/getBoxesContainer/" + this.idDynamicObject, {
+                target: "#boxes",
+                swap: "innerHTML"
+            }).then(() => {
+                console.log("## dispatching video-seek-frame",this.object.startFrame);
+                document.dispatchEvent(new CustomEvent("video-seek-frame", {
+                    detail: {
+                        frameNumber: this.object.startFrame
+                    }
+                }));
+            });
         },
 
         async onVideoUpdateState(e) {
-            this.canCreateBBox = !this.object.hasBBoxes && (e.detail.frame.current === this.object.startFrame);
+            this.currentFrame = e.detail.frame.current;
         },
 
+        async onBBoxCreated(e) {
+            if (e.detail.idDynamicObject === this.object.idDynamicObject) {
+                this.object.hasBBoxes = true;
+            }
+        },
+
+        get canCreateBBox() {
+            console.log("h",this.object.hasBBoxes);
+            return (!this.object.hasBBoxes) && (this.currentFrame === this.object.startFrame);
+        },
+
+        get canTrack() {
+            return (this.object.hasBBoxes) && (!this.canCreateBBox);
+        },
 
         // async onBBoxBlocked() {
         //     console.log($('.bbox'));

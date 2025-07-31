@@ -299,18 +299,13 @@ class DynamicController extends Controller
         }
     }
 
-    #[Get(path: '/annotation/dynamic/getBBoxView')]
-    public function getBBoxView(GetBBoxData $data)
+    #[Get(path: '/annotation/dynamic/getBoxesContainer/{idDynamicObject}')]
+    public function getBoxesContainer(int $idDynamicObject)
     {
         try {
-            debug($data);
-            $bbox = Criteria::table("view_dynamicobject_boundingbox")
-                ->where("idDynamicObject", $data->idDynamicObject)
-                ->where("frameNumber", $data->frameNumber)
-                ->first();
-            return view("Annotation.Dynamic.Forms.bbox", [
-                'data' => $data,
-                'bbox' => $bbox
+            $dynamicObject = Criteria::byId("dynamicObject","idDynamicObject", $idDynamicObject);
+            return view("Annotation.Dynamic.Forms.boxesContainer",[
+                'object' => $dynamicObject,
             ]);
         } catch (\Exception $e) {
             debug($e->getMessage());

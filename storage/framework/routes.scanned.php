@@ -3992,8 +3992,8 @@ $router->get('annotation/dynamic/getBBox', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/dynamic/getBBoxView', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicController@getBBoxView',
+$router->get('annotation/dynamic/getBoxesContainer/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicController@getBoxesContainer',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

@@ -1,4 +1,4 @@
-function boxesComponent(idVideoDOMElement, width, height) {
+function boxesComponent(idVideoDOMElement, object) {
     return {
 
         idVideoDOMElement: "",
@@ -32,21 +32,26 @@ function boxesComponent(idVideoDOMElement, width, height) {
         hasBBox: false,
         dom: null,
         _token: "",
-        bboxes: {},
+        currentBBox: null,
+        bboxes:{},
 
 
-        init() {
+        async init() {
             console.log("Boxes component init");
             this._token = $("#_token").val();
 
             this.idVideoDOMElement = idVideoDOMElement;
+            this.object = object;
+            console.log(this.object);
 
             this.canvas = document.getElementById("canvas");
             if (!this.canvas) {
                 console.error("Canvas element with ID 'canvas' not found.");
                 return;
             }
-            this.ctx = this.canvas.getContext("2d");
+            this.ctx = this.canvas.getContext("2d", {
+                willReadFrequently: true
+            });
 
             this.video = document.getElementById(this.idVideoDOMElement);
             if (this.video) {
@@ -60,13 +65,9 @@ function boxesComponent(idVideoDOMElement, width, height) {
                 this.offsetY = canvasRect.top;
             }
 
-            this.canvas.width = width;
-            this.canvas.height = height;
-            this.canvas.style.position = "absolute";
-            this.canvas.style.top = "0";
-            this.canvas.style.left = "0";
-            this.canvas.style.backgroundColor = "transparent";
-            this.canvas.style.zIndex = 1;
+            this.startFrame = this.object.startFrame;
+            this.endFrame = this.object.endFrame;
+            this.currentFrame = this.object.startFrame;
 
             this.tracker = new ObjectTrackerObject();
             this.tracker.config({
@@ -74,49 +75,16 @@ function boxesComponent(idVideoDOMElement, width, height) {
                 ctx: this.ctx,
                 video: this.video
             });
-
-            // this.boxesContainer = document.querySelector("#boxesContainer");
-            // this.newBboxElement(this.onBBoxChange);
-
-        },
-
-        getBBoxFromDb: async (idDynamicObject, frame) => {
-            // return await ky.get("/annotation/dynamic/getBBox", {
-            //     searchParams: {
-            //         idDynamicObject: idDynamicObject,
-            //         frameNumber: frame
-            //     }
-            // }).json();
         },
 
         async onVideoUpdateState(e) {
             this.clearBBox();
-            if (this.object) {
-                this.currentFrame = e.detail.frame.current;
-                console.log("current frame", this.currentFrame, this.startFrame, this.endFrame);
-                if ((this.currentFrame >= this.startFrame) && (this.currentFrame <= this.endFrame)) {
-                    await this.showBBox();
-                    await this.tracking();
-                }
+            this.currentFrame = e.detail.frame.current;
+            console.log("current frame", this.currentFrame, this.startFrame, this.endFrame);
+            if ((this.currentFrame >= this.startFrame) && (this.currentFrame <= this.endFrame)) {
+                await this.showBBox();
+                await this.tracking();
             }
-            //
-            //
-            // let idDynamicObject = $("#idDynamicObject").val();
-            // console.log("onVideoUpdateState",e.detail.frame.current, idDynamicObject);
-            // this.currentFrame = e.detail.frame.current;
-            // if (this.object) {
-            //     let rawBBox = await this.getBBoxFromDb(this.object.idDynamicObject, this.currentFrame);
-            //     this.initializeBBox(this.object.idDynamicObject,rawBBox);
-            //     await this.tracking();
-            // }
-        },
-
-        async onObjectSelected(e) {
-            this.object = e.detail.dynamicObject;
-            this.startFrame = this.object.startFrame;
-            this.endFrame = this.object.endFrame;
-            this.currentFrame = this.object.startFrame;
-            this.showBBox();
         },
 
         async onStartTracking() {
@@ -132,12 +100,10 @@ function boxesComponent(idVideoDOMElement, width, height) {
             //this.object.drawBoxInFrame(this.currentFrame, "editing");
         },
 
-        async onBboxDrawn(e) {
+        async onBBoxDrawn(e) {
             this.bbox = e.detail.bbox;
             console.log("bboxDrawn", this.object);
             let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, false);
-            // this.object.addBBox(bbox);
-            // this.interactify(this.object, this.onBBoxChange);
             this.disableDrawing();
             bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
                 json: {
@@ -149,10 +115,12 @@ function boxesComponent(idVideoDOMElement, width, height) {
             }).json();
             console.log("bbox created: ", bbox.idBoundingBox);
             this.tracker.getFrameImage(this.currentFrame);
-            //this.object.drawBoxInFrame(this.currentFrame, "editing");
             this.showBBox();
-            this.canCreateBBox = false;
-            this.canTrack = true;
+            document.dispatchEvent(new CustomEvent("bbox-created", {
+                detail: {
+                    idDynamicObject: this.object.idDynamicObject,
+                }
+            }));
             messenger.notify("success", "New bbox created.");
         },
 
@@ -166,6 +134,20 @@ function boxesComponent(idVideoDOMElement, width, height) {
                     bbox
                 }
             }).json();
+        },
+
+        async onBBoxChangeBlocked(e) {
+            let bbox = this.currentBBox;
+            bbox.blocked = e.target.classList.contains('checked') ? 1 : 0;
+            console.log("on bbox change blocked ", this.currentBBox,bbox.blocked);
+            await ky.post("/annotation/dynamic/updateBBox", {
+                json: {
+                    _token: this._token,
+                    idBoundingBox: bbox.idBoundingBox,
+                    bbox
+                }
+            }).json();
+            this.showBBox();
         },
 
         enableDrawing() {
@@ -196,51 +178,90 @@ function boxesComponent(idVideoDOMElement, width, height) {
             console.log("Drawing event listeners disabled and canvas cleared.");
         },
 
-        async showBBox() {
-            // console.log(this.object);
-            htmx.ajax("GET", "/annotation/dynamic/getBBoxView", {
-                values: {
+        async getCurrentBBox() {
+            let bbox = await ky.get("/annotation/dynamic/getBBox", {
+                searchParams: {
                     idDynamicObject: this.object.idDynamicObject,
-                    frameNumber: this.currentFrame
-                },
-                target: "#boxesContainer",
-                swap: "innerHTML"
-            });
+                    frameNumber: this.currentFrame,
+                    isTracking: this.isTracking ? 1 : 0
+                }
+            }).json();
+            const { idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked} = bbox;
+            this.currentBBox = { idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked };
+            return bbox;
         },
 
-        storeCurrentBBox(frameNumber, rawBBox) {
-            console.log(rawBBox);
-            this.bboxes[frameNumber] = new BoundingBox(
-                rawBBox.frameNumber,
-                rawBBox.x,
-                rawBBox.y,
-                rawBBox.width,
-                rawBBox.height,
-                true,
-                rawBBox.blocked,
-                rawBBox.idBoundingBox
-            );
-            console.log(this.bboxes);
-
-        },
-
-        async createNewBBoxViaTracking(frameNumber) {
-            let previousBBox = this.bboxes[frameNumber - 1];
-            if (previousBBox) {
-                console.log("create new bbox via tracking on frame", frameNumber, previousBBox);
-                bbox = await this.tracker.trackBBox(frameNumber, previousBBox);
-                bbox.blocked = previousBBox.blocked;
-                bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
-                    json: {
-                        _token: this._token,
-                        idDynamicObject: this.object.idDynamicObject,
-                        frameNumber,
-                        bbox
-                    }
-                }).json();
-                await this.showBBox();
+        async showBBox() {
+            let bbox = await this.getCurrentBBox();
+            if (bbox) {
+                this.drawBBox(bbox);
+                this.bboxes[this.currentFrame] = bbox;
+            } else {
+                let previousBBox = this.bboxes[this.currentFrame - 1];
+                if (previousBBox) {
+                    console.log("create new bbox via tracking on frame", this.currentFrame, previousBBox);
+                    bbox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
+                    console.log("generated bbox", bbox);
+                    bbox.blocked = previousBBox.blocked;
+                    bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
+                        json: {
+                            _token: this._token,
+                            idDynamicObject: this.object.idDynamicObject,
+                            frameNumber: this.currentFrame,
+                            bbox
+                        }
+                    }).json();
+                    this.showBBox();
+                    // this.drawBBox(bbox);
+                    // this.bboxes[this.currentFrame] = bbox;
+                }
             }
+
+
+            // await htmx.ajax("GET", "/annotation/dynamic/getBBoxView", {
+            //     values: {
+            //         idDynamicObject: this.object.idDynamicObject,
+            //         frameNumber: this.currentFrame,
+            //         isTracking: this.isTracking
+            //     },
+            //     target: "#boxesContainer",
+            //     swap: "innerHTML"
+            // });
         },
+
+        // storeCurrentBBox(frameNumber, rawBBox) {
+        //     console.log(rawBBox);
+        //     this.bboxes[frameNumber] = new BoundingBox(
+        //         rawBBox.frameNumber,
+        //         rawBBox.x,
+        //         rawBBox.y,
+        //         rawBBox.width,
+        //         rawBBox.height,
+        //         true,
+        //         rawBBox.blocked,
+        //         rawBBox.idBoundingBox
+        //     );
+        //     console.log(this.bboxes);
+        //
+        // },
+
+        // async createNewBBoxViaTracking(frameNumber) {
+        //     let previousBBox = this.bboxes[frameNumber - 1];
+        //     if (previousBBox) {
+        //         console.log("create new bbox via tracking on frame", frameNumber, previousBBox);
+        //         bbox = await this.tracker.trackBBox(frameNumber, previousBBox);
+        //         bbox.blocked = previousBBox.blocked;
+        //         bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
+        //             json: {
+        //                 _token: this._token,
+        //                 idDynamicObject: this.object.idDynamicObject,
+        //                 frameNumber,
+        //                 bbox
+        //             }
+        //         }).json();
+        //         await this.showBBox();
+        //     }
+        // },
 
         initializeBBox: (idDynamicObject, rawBBox) => {
             // this.bbox = new BoundingBox(
@@ -431,50 +452,52 @@ function boxesComponent(idVideoDOMElement, width, height) {
             }));
         },
 
-        // drawBox: (bbox) =>{
-        //     console.log("bbox", bbox);
-        //     this.dom.style.display = "none";
-        //     // let bbox = this.bbox;//getBoundingBoxAt(frameNumber);
-        //     // console.log("drawBoxInFrame", this.bbox);
-        //     if (bbox) {
-        //         // console.log(state, this.hidden ? " hidden" : " not hidden");
-        //         if (!this.hidden) {
-        //             if (bbox.isVisible()) {
-        //                 console.log("change dom");
-        //                 this.dom.style.position = "absolute";
-        //                 this.dom.style.display = "block";
-        //                 this.dom.style.width = bbox.width + "px";
-        //                 this.dom.style.height = bbox.height + "px";
-        //                 this.dom.style.left = bbox.x + "px";
-        //                 this.dom.style.top = bbox.y + "px";
-        //
-        //                 this.dom.style.borderColor = this.bgColor;
-        //                 // this.dom.querySelector(".objectId").style.backgroundColor = this.bgColor;
-        //                 // this.dom.querySelector(".objectId").style.color = this.fgColor;
-        //
-        //                 if (this.isTracking) {
-        //                     this.dom.style.borderStyle = "dotted";
-        //                     this.dom.style.borderWidth = "2px";
-        //                 } else {
-        //                     this.dom.style.borderStyle = "solid";
-        //                     this.dom.style.borderWidth = "4px";
-        //                 }
-        //                 this.dom.style.backgroundColor = "transparent";
-        //                 this.dom.style.opacity = 1;
-        //                 this.visible = true;
-        //                 if (bbox.blocked) {
-        //                     this.dom.style.opacity = 0.5;
-        //                     this.dom.style.backgroundColor = "white";
-        //                     this.dom.style.borderStyle = "dashed";
-        //                 }
-        //             } else {
-        //                 this.dom.style.display = "none";
-        //                 this.visible = false;
-        //             }
-        //         }
-        //     }
-        //
-        // },
+        drawBBox(bbox) {
+            let $dom = $(".bbox");
+            console.log("drawBBox", bbox, $dom, this.bgColor);
+            $dom.css("display", "none");
+            if (bbox) {
+                if (!this.hidden) {
+                    $dom.css({
+                        position: "absolute",
+                        display: "block",
+                        width: bbox.width + "px",
+                        height: bbox.height + "px",
+                        left: bbox.x + "px",
+                        top: bbox.y + "px",
+                        borderColor: this.bgColor,
+                        backgroundColor: "transparent",
+                        opacity: 1
+                    });
+
+                    $dom.find(".objectId").css({
+                        backgroundColor: this.bgColor,
+                        color: this.fgColor
+                    });
+
+                    if (this.isTracking) {
+                        $dom.css({
+                            borderStyle: "dotted",
+                            borderWidth: "2px"
+                        });
+                    } else {
+                        $dom.css({
+                            borderStyle: "solid",
+                            borderWidth: "4px"
+                        });
+                    }
+                    this.visible = true;
+                    if (bbox.blocked) {
+                        $dom.css({
+                            borderStyle: "dashed",
+                            backgroundColor: "white",
+                            opacity: 0.4
+                        });
+                    }
+                    $dom.css("display", "block");
+                }
+            }
+        },
 
 
         handleMouseDown(e) {
