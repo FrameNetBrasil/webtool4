@@ -7,10 +7,10 @@ class ObjectTrackerObject {
         this.annotatedObjects = [];
         this.opticalFlow = new OpticalFlowObject();
         this.lastFrame = -1;
-        this.framesManager.onReset.push(() => {
-            this.annotatedObjects = [];
-            this.lastFrame = -1;
-        });
+        // this.framesManager.onReset.push(() => {
+        //     this.annotatedObjects = [];
+        //     this.lastFrame = -1;
+        // });
     }
 
     config(config) {

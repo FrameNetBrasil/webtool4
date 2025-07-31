@@ -1,6 +1,7 @@
 <div
     x-data="objectComponent({!! Js::from($object) !!} ,'{{ csrf_token() }}')"
     @video-update-state.document="onVideoUpdateState"
+    @bbox-created.document="onBBoxCreated"
 >
     <input type="hidden" id="idDynamicObject" value="{{$object->idDynamicObject}}"/>
     <div class="flex-container h-2-5 items-center justify-between bg-gray-300">

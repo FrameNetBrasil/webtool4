@@ -18,7 +18,6 @@
             <div class="annotation-video">
                 <div class="annotation-player">
                 @include("Annotation.Dynamic.Panes.videoPane")
-                    @include("Annotation.Dynamic.Panes.navigationPane")
                 </div>
                 <div class="annotation-forms">
                     @include("Annotation.Dynamic.Panes.formsPane")

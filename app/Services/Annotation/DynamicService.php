@@ -63,7 +63,7 @@ class DynamicService
             if ($object->fe != '') {
                 $object->bgColor = "#{$object->rgbBg}";
                 $object->fgColor = "#{$object->rgbFg}";
-                $object->name .= ($object->name != "" ? " | ": "") . $object->frame . "." . $object->fe;
+                $object->name .= ($object->name != "" ? " | " : "") . $object->frame . "." . $object->fe;
             }
 //            $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
 //                ->where("idDynamicObject", $idDynamicObject)
@@ -91,7 +91,7 @@ class DynamicService
             ->where("view_frame.idLanguage", "left", $idLanguage)
             ->select("ad.idDynamicObject", "ad.name", "startFrame", "endFrame", "startTime", "endTime", "status", "origin",
                 "idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName",
-                "idAnnotationFE", "idFrameElement", "ad.idFrame", "frame", "fe", "color.rgbBg","color.rgbFg","ac.comment")
+                "idAnnotationFE", "idFrameElement", "ad.idFrame", "frame", "fe", "color.rgbBg", "color.rgbFg", "ac.comment")
             ->orderBy("startFrame")
             ->orderBy("endFrame")
             ->orderBy("ad.idDynamicObject")
@@ -560,7 +560,7 @@ class DynamicService
             ->where("view_frame.idLanguage", "left", $idLanguage)
             ->select("ad.idDynamicObject", "ad.name", "ad.startFrame", "ad.endFrame", "ad.startTime", "ad.endTime", "ad.status", "ad.origin",
                 "ad.idAnnotationLU", "ad.idLU", "lu", "view_lu.name as luName", "view_frame.name as luFrameName", "idAnnotationFE", "ad.idFrameElement", "ad.idFrame", "ad.frame", "ad.fe",
-                "color.rgbFg", "color.rgbBg","ac.comment as textComment")
+                "color.rgbFg", "color.rgbBg", "ac.comment as textComment")
             ->orderBy("ad.startFrame")
             ->orderBy("ad.endFrame")
             ->orderBy("ad.idDynamicObject")
@@ -591,7 +591,7 @@ class DynamicService
             if ($object->fe != '') {
                 $object->bgColor = "#{$object->rgbBg}";
                 $object->fgColor = "#{$object->rgbFg}";
-                $object->name .= ($object->name != "" ? " | ": "") . $object->frame . "." . $object->fe;
+                $object->name .= ($object->name != "" ? " | " : "") . $object->frame . "." . $object->fe;
             }
         }
         $objectsRows = [];
@@ -638,6 +638,10 @@ class DynamicService
     public static function updateObjectFrame(ObjectFrameData $data): int
     {
         $object = self::getObject($data->idDynamicObject);
+        $object->bboxes = Criteria::table("view_dynamicobject_boundingbox")
+            ->where("idDynamicObject", $data->idDynamicObject)
+            ->orderBy("frameNumber")
+            ->all();
         debug($object->bboxes);
         if (!empty($object->bboxes)) {
             $frameFirstBBox = $object->bboxes[0]->frameNumber;
