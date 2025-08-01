@@ -1,4 +1,4 @@
-function objectComponent(object) {
+function _objectComponent(object) {
     return {
         object: null,
         idDynamicObject: null,
