@@ -11,17 +11,17 @@ function objectComponent(object) {
             console.log(this.object);
             this.idDynamicObject = object.idDynamicObject;
             this.currentFrame = object.startFrame;
-            htmx.ajax("GET", "/annotation/dynamic/getBoxesContainer/" + this.idDynamicObject, {
-                target: "#boxes",
-                swap: "innerHTML"
-            }).then(() => {
-                console.log("## dispatching video-seek-frame",this.object.startFrame);
-                document.dispatchEvent(new CustomEvent("video-seek-frame", {
-                    detail: {
-                        frameNumber: this.object.startFrame
-                    }
-                }));
-            });
+            // htmx.ajax("GET", "/annotation/dynamic/getBoxesContainer/" + this.idDynamicObject, {
+            //     target: "#boxes",
+            //     swap: "innerHTML"
+            // }).then(() => {
+            //     console.log("## dispatching video-seek-frame",this.object.startFrame);
+            //     document.dispatchEvent(new CustomEvent("video-seek-frame", {
+            //         detail: {
+            //             frameNumber: this.object.startFrame
+            //         }
+            //     }));
+            // });
         },
 
         async onVideoUpdateState(e) {

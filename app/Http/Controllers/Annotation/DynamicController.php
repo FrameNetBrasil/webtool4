@@ -442,7 +442,7 @@ class DynamicController extends Controller
     {
         $data = $this->getData($idDocument, $idDynamicObject);
         return response()
-            ->view('Annotation.Dynamic.annotation', $data)
+            ->view('Annotation.Dynamic.main', $data)
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
 }
