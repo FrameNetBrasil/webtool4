@@ -40,7 +40,9 @@
              x-text="'Seeking to frame ' + seekingToFrame + '...'">
         </div>
 
-        <div id="boxes">
+        <canvas id="canvas" width=852 height=480 style="position: absolute; top: 0; left: 0; background-color: transparent; z-index: 1;"></canvas>
+
+        <div id="boxesContainer">
 
         </div>
     </div>
