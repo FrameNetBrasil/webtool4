@@ -155,10 +155,8 @@ function videoComponent() {
         },
         // Event handlers (matching your original structure)
         async onVideoSeekFrame(e) {
-            console.log(e.detail.frameNumber, this.player);
+            // console.log(e.detail.frameNumber, this.player);
             await this.waitForPlayerReady();
-//            this.reloadVideo();
-//            this.seekToFrame(e.detail.frameNumber);
             this.seekToFrame(e.detail.frameNumber);
         },
 

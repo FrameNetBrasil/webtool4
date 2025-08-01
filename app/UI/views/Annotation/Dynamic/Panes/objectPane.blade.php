@@ -7,13 +7,13 @@
         <div>
             <button
                 class="ui tiny icon button"
-                @click="gotoFrame({{$object->startFrame}})"
+                @click="$dispatch('video-seek-frame', {frameNumber: {{$object->startFrame}} })"
             >
                 Go to StartFrame: {{$object->startFrame}}
             </button>
             <button
                 class="ui tiny icon button"
-                @click="gotoFrame({{$object->endFrame}})"
+                @click="$dispatch('video-seek-frame', {frameNumber: {{$object->endFrame}} })"
             >
                 Go to EndFrame: {{$object->endFrame}}
             </button>
@@ -100,7 +100,7 @@
     @disable-drawing.document="onDisableDrawing"
     @enable-drawing.document="onEnableDrawing"
     @bbox-create.document="onBBoxCreate"
-    @bbox-drawn.document="onBBoxDrawn"
+    @bbox-created.document="onBBoxCreated"
     @bbox-change-blocked.document="onBBoxChangeBlocked"
     @video-update-state.document="onVideoUpdateState"
     @tracking-start.document="onStartTracking"

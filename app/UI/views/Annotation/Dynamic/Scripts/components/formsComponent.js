@@ -5,6 +5,7 @@ function formsComponent(idDocument) {
         currentFrame: 0,
         isPlaying: false,
         isTracking: false,
+        bboxDrawn: null,
 
         init() {
             this.idDocument = idDocument;
@@ -23,6 +24,11 @@ function formsComponent(idDocument) {
             } else {
                 document.dispatchEvent(new CustomEvent("tracking-stop"));
             }
+        },
+
+        onBBoxDrawn(e) {
+            console.log("onBBoxDrawn", e.detail.bbox);
+            this.bboxDrawn = e.detail.bbox;
         },
 
         onCloseObjectPane() {

@@ -1,15 +1,16 @@
 <div class="flex-container between">
     <div class="flex-container">
-            <div>
-                <button
-                    id="btnCreateObject"
-                    class="ui button primary {!! $object->hasBBoxes ? 'disabled' : '' !!}"
-                    @click="$dispatch('bbox-create')"
-                >
-                    <i class="plus square outline icon"></i>
-                    Create BBox
-                </button>
-            </div>
+        <div  x-show="currentFrame === {!! $object->startFrame !!}">
+            <button
+                id="btnCreateObject"
+                class="ui button primary {!! $object->hasBBoxes ? 'disabled' : '' !!}"
+                @click="$dispatch('bbox-create')"
+            >
+                <i class="plus square outline icon"></i>
+                Create BBox
+            </button>
+        </div>
+        <div class="flex-container" x-show="bboxDrawn">
             <div>
                 <button
                     class="ui button primary toggle {!! $object->hasBBoxes ? '' : 'disabled' !!}"
@@ -25,10 +26,15 @@
                     x-init="$($el).checkbox()"
                     @click="$dispatch('bbox-change-blocked')"
                 >
-                    <input type="checkbox" tabindex="0" class="hidden">
+                    <input
+                        type="checkbox"
+                        tabindex="0"
+                        :checked="bboxDrawn && (bboxDrawn.blocked === 1)"
+                    >
                     <label class="pl-6">is blocked?</label>
                 </div>
             </div>
+        </div>
     </div>
     <div>
         <button
@@ -42,4 +48,11 @@
             Delete All BBoxes
         </button>
     </div>
+</div>
+<div class="flex-container pt-3">
+    <div>Current BBox: <span x-text="bboxDrawn ? '#' + bboxDrawn.idBoundingBox : 'none' "></span></div>
+    <div x-text="bboxDrawn && 'x: ' + bboxDrawn.x"></div>
+    <div x-text="bboxDrawn && 'y: ' + bboxDrawn.y"></div>
+    <div x-text="bboxDrawn && 'width: ' + bboxDrawn.width"></div>
+    <div x-text="bboxDrawn && 'height: ' + bboxDrawn.height"></div>
 </div>

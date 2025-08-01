@@ -89,6 +89,12 @@ function boxesComponent(idVideoDOMElement, object) {
             if ((this.currentFrame >= this.startFrame) && (this.currentFrame <= this.endFrame)) {
                 await this.showBBox();
                 await this.tracking();
+            } else {
+                document.dispatchEvent(new CustomEvent("bbox-drawn", {
+                    detail: {
+                        bbox: null
+                    }
+                }));
             }
         },
 
@@ -109,9 +115,9 @@ function boxesComponent(idVideoDOMElement, object) {
             //this.object.drawBoxInFrame(this.currentFrame, "editing");
         },
 
-        async onBBoxDrawn(e) {
+        async onBBoxCreated(e) {
             this.bbox = e.detail.bbox;
-            console.log("bboxDrawn", this.object);
+            console.log("bbox created object", this.object);
             let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, false);
             this.disableDrawing();
             bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
@@ -122,14 +128,14 @@ function boxesComponent(idVideoDOMElement, object) {
                     bbox//     bbox: bbox
                 }
             }).json();
-            console.log("bbox created: ", bbox.idBoundingBox);
+            console.log("bbox created id ", bbox.idBoundingBox);
             this.tracker.getFrameImage(this.currentFrame);
             this.showBBox();
-            document.dispatchEvent(new CustomEvent("bbox-created", {
-                detail: {
-                    idDynamicObject: this.object.idDynamicObject,
-                }
-            }));
+            // document.dispatchEvent(new CustomEvent("bbox-created", {
+            //     detail: {
+            //         idDynamicObject: this.object.idDynamicObject,
+            //     }
+            // }));
             messenger.notify("success", "New bbox created.");
         },
 
@@ -205,6 +211,11 @@ function boxesComponent(idVideoDOMElement, object) {
             if (bbox) {
                 this.drawBBox(bbox);
                 this.bboxes[this.currentFrame] = bbox;
+                document.dispatchEvent(new CustomEvent("bbox-drawn", {
+                    detail: {
+                        bbox,
+                    }
+                }));
             } else {
                 let previousBBox = this.bboxes[this.currentFrame - 1];
                 if (previousBBox) {
@@ -463,7 +474,7 @@ function boxesComponent(idVideoDOMElement, object) {
 
         drawBBox(bbox) {
             let $dom = $(".bbox");
-            console.log("drawBBox", bbox, $dom, this.bgColor);
+            // console.log("drawBBox", bbox, $dom, this.bgColor);
             $dom.css("display", "none");
             if (bbox) {
                 if (!this.hidden) {
@@ -533,7 +544,7 @@ function boxesComponent(idVideoDOMElement, object) {
                 console.log("Box Finalized:", this.box);
 
                 // Dispatch the custom event, using 'this.box' directly
-                document.dispatchEvent(new CustomEvent("bbox-drawn", {
+                document.dispatchEvent(new CustomEvent("bbox-created", {
                     detail: {
                         bbox: { // Recreate the bbox object with absolute values for consistency
                             x: Math.min(this.startX, this.mouseX), // Take the smaller X for the top-left
