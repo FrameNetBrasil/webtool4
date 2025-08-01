@@ -75,6 +75,11 @@ function boxesComponent(idVideoDOMElement, object) {
                 ctx: this.ctx,
                 video: this.video
             });
+            document.dispatchEvent(new CustomEvent("video-seek-frame", {
+                detail: {
+                    frameNumber: this.object.startFrame
+                }
+            }));
         },
 
         async onVideoUpdateState(e) {
@@ -85,6 +90,10 @@ function boxesComponent(idVideoDOMElement, object) {
                 await this.showBBox();
                 await this.tracking();
             }
+        },
+
+        async onBBoxToggleTracking() {
+            this.isTracking = !this.isTracking;
         },
 
         async onStartTracking() {
@@ -322,7 +331,7 @@ function boxesComponent(idVideoDOMElement, object) {
         async tracking() {
             await new Promise(r => setTimeout(r, 800));
             const nextFrame = this.currentFrame + 1;
-            // console.log("tracking....", nextFrame,this.object.startFrame, this.object.endFrame);
+            console.log("tracking....", nextFrame,this.object.startFrame, this.object.endFrame);
             if ((this.isTracking) && (nextFrame >= this.startFrame) && (nextFrame <= this.endFrame)) {
                 // console.log("goto Frame ", nextFrame);
                 //this.previousBBox = JSON.parse(JSON.stringify(this.bbox));

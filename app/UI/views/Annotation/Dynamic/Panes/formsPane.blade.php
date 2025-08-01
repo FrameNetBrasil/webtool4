@@ -2,7 +2,7 @@
     id="formsPane"
     x-data="formsComponent({{$idDocument}})"
     @video-update-state.document="onVideoUpdateState"
-{{--    @object-selected.document="onObjectSelected"--}}
+    @bbox-toggle-tracking.document="onBBoxToggleTracking"
 >
     @if ($idDynamicObject == 0)
         @include("Annotation.Dynamic.Forms.formNewObject")

@@ -1,8 +1,4 @@
-<div
-    x-data="objectComponent({!! Js::from($object) !!} ,'{{ csrf_token() }}')"
-    @video-update-state.document="onVideoUpdateState"
-    @bbox-created.document="onBBoxCreated"
->
+<div>
     <input type="hidden" id="idDynamicObject" value="{{$object->idDynamicObject}}"/>
     <div class="flex-container h-2-5 items-center justify-between bg-gray-300">
         <div>
@@ -109,6 +105,7 @@
     @video-update-state.document="onVideoUpdateState"
     @tracking-start.document="onStartTracking"
     @tracking-stop.document="onStopTracking"
+    @bbox-toggle-tracking.document="onBBoxToggleTracking"
     id="boxesContainer"
     style="position: absolute; top: 0; left: 0; width:852px; height:480px; background-color: transparent"
     hx-swap-oob="true"

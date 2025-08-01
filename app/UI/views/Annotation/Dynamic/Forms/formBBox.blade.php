@@ -3,8 +3,7 @@
             <div>
                 <button
                     id="btnCreateObject"
-                    class="ui button primary"
-                    :class="!canCreateBBox && 'disabled'"
+                    class="ui button primary {!! $object->hasBBoxes ? 'disabled' : '' !!}"
                     @click="$dispatch('bbox-create')"
                 >
                     <i class="plus square outline icon"></i>
@@ -13,9 +12,8 @@
             </div>
             <div>
                 <button
-                    class="ui button primary toggle"
-                    @click="toggleTracking()"
-                    :class="!canTrack && 'disabled'"
+                    class="ui button primary toggle {!! $object->hasBBoxes ? '' : 'disabled' !!}"
+                    @click="$dispatch('bbox-toggle-tracking')"
                 >
                     <i :class="isTracking ? 'stop icon' : 'play icon'"></i>
                     <span x-text="isTracking ? 'Stop' : 'Track'"></span>
