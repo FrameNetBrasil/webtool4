@@ -1,0 +1,97 @@
+             let bbox = $('.bbox');
+             let containerHeight = $("#boxesContainer").height();
+             let containerWidth = $("#boxesContainer").width();
+             let drag = document.createElement("div");
+             drag.className = "handle center-drag";
+             bbox.append(drag);
+             let objectId = document.createElement("div");
+             objectId.className = "objectId";
+             bbox.append(objectId);
+             bbox.resizable({
+                 handles: "n, e, s, w, ne, nw, se, sw",
+                 onResize: (e) => {
+                     let d = e.data;
+                     if (d.left < 0) {
+                         d.width += d.left;
+                         d.left = 0;
+                         return false;
+                     }
+                     if (d.top < 0) {
+                         d.height += d.top;
+                         d.top = 0;
+                         return false;
+                     }
+                     if (d.left + $(d.target).outerWidth() > containerWidth) {
+                         d.width = containerWidth - d.left;
+                     }
+                     if (d.top + $(d.target).outerHeight() > containerHeight) {
+                         d.height = containerHeight - d.top;
+                     }
+                 },
+                 onStopResize: (e) => {
+                     bbox.css("display", "none");
+                     let d = e.data;
+                     if (d.left < 0) {
+                         d.width += d.left;
+                         d.left = 0;
+                     }
+                     if (d.top < 0) {
+                         d.height += d.top;
+                         d.top = 0;
+                     }
+                     if (d.left + $(d.target).outerWidth() > containerWidth) {
+                         d.width = containerWidth - d.left;
+                     }
+                     if (d.top + $(d.target).outerHeight() > containerHeight) {
+                         d.height = containerHeight - d.top;
+                     }
+                     bbox.css({
+                         "top": d.top + "px",
+                         "left": d.left + "px",
+                         "width": d.width + "px",
+                         "height": d.height + "px"
+                     });
+                     bbox.css("display", "block");
+                     let bboxChanged = new BoundingBox(
+                         this.currentFrame,
+                         Math.round(d.left),
+                         Math.round(d.top),
+                         Math.round(d.width),
+                         Math.round(d.height),
+                         true,
+                         dom.dataset.blocked
+                     );
+                     onBBoxChange(bboxChanged);
+                 }
+             });
+             bbox.draggable({
+                  handle: $(x),
+                 onDrag: (e) => {
+                     var d = e.data;
+                     if (d.left < 0) {
+                         d.left = 0;
+                     }
+                     if (d.top < 0) {
+                         d.top = 0;
+                     }
+                     if (d.left + $(d.target).outerWidth() > containerWidth) {
+                         d.left = containerWidth - $(d.target).outerWidth();
+                     }
+                     if (d.top + $(d.target).outerHeight() > containerHeight) {
+                         d.top = containerHeight - $(d.target).outerHeight();
+                     }
+                 },
+                 onStopDrag: (e) => {
+                     let position = bbox.position();
+                     let bboxChanged = new BoundingBox(
+                         this.currentFrame,
+                         Math.round(position.left),
+                         Math.round(position.top),
+                         Math.round(bbox.outerWidth()),
+                         Math.round(bbox.outerHeight()),
+                         true,
+                         dom.dataset.blocked
+                     );
+                     onBBoxChange(bboxChanged);
+                 }
+             });
