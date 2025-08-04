@@ -37,7 +37,7 @@ class ScenarioController extends Controller
     }
 
     #[Post(path: '/grapher/scenario/graph/{idEntity?}')]
-    public function scenarioGraph(ScenarioData $data, int $idEntity = null)
+    public function scenarioGraph(ScenarioData $data, ?int $idEntity = null)
     {
         $nodes = session("graphNodes") ?? [];
         if (!is_null($data->idFrame)) {

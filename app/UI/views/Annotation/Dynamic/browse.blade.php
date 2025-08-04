@@ -9,7 +9,7 @@
                     <div class="app-search">
                         <!-- Search Section -->
                         <div class="search-section"
-                             x-data="searchForm()"
+                             x-data="searchFormComponent()"
                              @htmx:before-request="onSearchStart"
                              @htmx:after-request="onSearchComplete"
                              @htmx:after-swap="onResultsUpdated"
@@ -60,7 +60,18 @@
 
                                     @if(count($data) > 0)
                                         <div class="tree-view" x-transition>
-                                            <div class="search-results-tree">
+                                            <div class="search-results-tree"
+                                                 x-data
+                                                 @tree-item-selected.document="(event) => {
+                                                    let type =  event.detail.type;
+                                                    let idNode = type + '_' + event.detail.id;
+                                                    if (type === 'corpus') {
+                                                        event.detail.tree.toggleNodeState(idNode);
+                                                    } else {
+                                                        window.open(`/annotation/dynamic/${event.detail.id}`, '_blank');
+                                                    }
+                                                }"
+                                            >
                                                 @fragment("tree")
                                                 <x-ui::tree :title="$title ?? ''" url="/annotation/dynamic/tree"
                                                             :data="$data"></x-ui::tree>
@@ -76,15 +87,4 @@
             </div>
         </main>
     </div>
-    <script>
-        $(function() {
-            document.addEventListener("tree-item-selected", function(event) {
-                if (event.detail.type === "corpus") {
-                    event.detail.tree.toggleNodeState(event.detail.id);
-                } else if  (event.detail.type === "document")  {
-                    window.open(`/annotation/dynamic/${event.detail.id}`, "_blank");
-                }
-            });
-        });
-    </script>
 </x-layout::index>

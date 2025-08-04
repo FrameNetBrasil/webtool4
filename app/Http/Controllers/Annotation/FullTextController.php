@@ -59,7 +59,7 @@ class FullTextController extends Controller
     }
 
     #[Get(path: '/annotation/fullText/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
-    public function sentence(int $idDocumentSentence, int $idAnnotationSet = null)
+    public function sentence(int $idDocumentSentence, ?int $idAnnotationSet = null)
     {
         $data = CorpusService::getAnnotationData($idDocumentSentence,$idAnnotationSet);
         return view("Annotation.FullText.annotation", $data);

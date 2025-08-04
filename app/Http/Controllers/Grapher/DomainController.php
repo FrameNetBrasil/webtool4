@@ -39,7 +39,7 @@ class DomainController extends Controller
     }
 
     #[Post(path: '/grapher/domain/graph/{idEntity?}')]
-    public function domainGraph(DomainData $data,int $idEntity = null)
+    public function domainGraph(DomainData $data, ?int $idEntity = null)
     {
         $nodes = session("graphNodes") ?? [];
         if (is_null($data->idSemanticType)) {
@@ -65,7 +65,7 @@ class DomainController extends Controller
     }
 
     #[Post(path: '/grapher/framefe/graph/{idEntityRelation}')]
-    public function frameFeGraph(int $idEntityRelation = null)
+    public function frameFeGraph(?int $idEntityRelation = null)
     {
         ddump($this->data);
         $nodes = session("graphNodes") ?? [];

@@ -83,7 +83,7 @@ class ResourceController extends Controller
     }
 
     #[Get(path: '/lexicon/lemma/{idLemma}/{fragment?}')]
-    public function lemma(int $idLemma, string $fragment = null)
+    public function lemma(int $idLemma, ?string $fragment = null)
     {
         $lemma = Lemma::byId($idLemma);
         $lexemeentries = Criteria::table("lexemeentry as le")
@@ -189,7 +189,7 @@ class ResourceController extends Controller
     }
 
     #[Get(path: '/lexicon/lexeme/{idLexeme}/{fragment?}')]
-    public function lexeme(int $idLexeme, string $fragment = null)
+    public function lexeme(int $idLexeme, ?string $fragment = null)
     {
         $lexeme = Lexeme::byId($idLexeme);
         $wordforms = Criteria::table("wordform")

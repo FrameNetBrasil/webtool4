@@ -1,5 +1,4 @@
 <x-layout::index>
-    <script type="text/javascript" src="/report/frame/script/searchFrame"></script>
     <div class="app-layout no-tools">
         @include('layouts.header')
         @include("layouts.sidebar")
@@ -10,7 +9,7 @@
                     <div class="app-search">
                         <!-- Search Section -->
                         <div class="search-section"
-                             x-data="searchForm()"
+                             x-data="searchFormComponent()"
                              @htmx:before-request="onSearchStart"
                              @htmx:after-request="onSearchComplete"
                              @htmx:after-swap="onResultsUpdated"
