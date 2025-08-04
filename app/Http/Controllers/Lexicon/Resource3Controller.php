@@ -116,7 +116,7 @@ class Resource3Controller extends Controller
     }
 
     #[Get(path: '/lexicon3/lemma/{idLemma}/{fragment?}')]
-    public function lemma(int $idLemma, string $fragment = null)
+    public function lemma(int $idLemma, ?string $fragment = null)
     {
         $lemma = Lexicon::LemmabyId($idLemma);
         $expressions = Criteria::table("view_lexicon_expression as e")
@@ -273,7 +273,7 @@ class Resource3Controller extends Controller
     }
 
     #[Get(path: '/lexicon3/form/{idLexicon}/{fragment?}')]
-    public function lexicon(int $idLexicon, string $fragment = null)
+    public function lexicon(int $idLexicon, ?string $fragment = null)
     {
         $lexicon = Lexicon::byId($idLexicon);
         $lexicon->group = Criteria::byId("lexicon_group", "idLexiconGroup", $lexicon->idLexiconGroup);

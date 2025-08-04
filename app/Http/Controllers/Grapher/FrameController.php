@@ -40,7 +40,7 @@ class FrameController extends Controller
     }
 
     #[Post(path: '/grapher/frame/graph/{idEntity?}')]
-    public function frameGraph(FrameData $data, int $idEntity = null)
+    public function frameGraph(FrameData $data, ?int $idEntity = null)
     {
         $nodes = session("graphNodes") ?? [];
         if (!is_null($data->idFrame)) {
@@ -67,7 +67,7 @@ class FrameController extends Controller
     }
 
     #[Post(path: '/grapher/framefe/graph/{idEntityRelation}')]
-    public function frameFeGraph(int $idEntityRelation = null)
+    public function frameFeGraph(?int $idEntityRelation = null)
     {
         if (empty($data->frameRelation)) {
             $frameRelation = session('frameRelation') ?? [];

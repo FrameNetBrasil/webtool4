@@ -238,7 +238,7 @@ class StaticBBoxController extends Controller
      * get Object
      */
     #[Get(path: '/annotation/staticBBox/{idDocument}/{idStaticObject?}')]
-    public function annotation(int $idDocument, int $idStaticObject = null)
+    public function annotation(int $idDocument, ?int $idStaticObject = null)
     {
         $data = $this->getData($idDocument);
         if (!is_null($idStaticObject)) {
