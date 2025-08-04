@@ -34,6 +34,7 @@ function boxesComponent(idVideoDOMElement, object) {
         _token: "",
         currentBBox: null,
         bboxes:{},
+        interactionInitialized: false,
 
 
         async init() {
@@ -109,10 +110,8 @@ function boxesComponent(idVideoDOMElement, object) {
         },
 
         onStopTracking() {
-            //console.log("stop tracking");
             console.log("bbox onStopTracking");
             this.isTracking = false;
-            //this.object.drawBoxInFrame(this.currentFrame, "editing");
         },
 
         async onBBoxCreated(e) {
@@ -131,17 +130,11 @@ function boxesComponent(idVideoDOMElement, object) {
             console.log("bbox created id ", bbox.idBoundingBox);
             this.tracker.getFrameImage(this.currentFrame);
             this.showBBox();
-            // document.dispatchEvent(new CustomEvent("bbox-created", {
-            //     detail: {
-            //         idDynamicObject: this.object.idDynamicObject,
-            //     }
-            // }));
             messenger.notify("success", "New bbox created.");
         },
 
         async onBBoxChange(bbox) {
             console.log("on bbox change ", bbox);
-            // this.object.updateBBox(bbox);
             await ky.post("/annotation/dynamic/updateBBox", {
                 json: {
                     _token: this._token,
@@ -209,6 +202,11 @@ function boxesComponent(idVideoDOMElement, object) {
         async showBBox() {
             let bbox = await this.getCurrentBBox();
             if (bbox) {
+                // Initialize interaction handlers only once
+                if (!this.interactionInitialized) {
+                    this.initializeBBoxInteraction();
+                }
+                
                 this.drawBBox(bbox);
                 this.bboxes[this.currentFrame] = bbox;
                 document.dispatchEvent(new CustomEvent("bbox-drawn", {
@@ -232,105 +230,8 @@ function boxesComponent(idVideoDOMElement, object) {
                         }
                     }).json();
                     this.showBBox();
-                    // this.drawBBox(bbox);
-                    // this.bboxes[this.currentFrame] = bbox;
                 }
             }
-
-
-            // await htmx.ajax("GET", "/annotation/dynamic/getBBoxView", {
-            //     values: {
-            //         idDynamicObject: this.object.idDynamicObject,
-            //         frameNumber: this.currentFrame,
-            //         isTracking: this.isTracking
-            //     },
-            //     target: "#boxesContainer",
-            //     swap: "innerHTML"
-            // });
-        },
-
-        // storeCurrentBBox(frameNumber, rawBBox) {
-        //     console.log(rawBBox);
-        //     this.bboxes[frameNumber] = new BoundingBox(
-        //         rawBBox.frameNumber,
-        //         rawBBox.x,
-        //         rawBBox.y,
-        //         rawBBox.width,
-        //         rawBBox.height,
-        //         true,
-        //         rawBBox.blocked,
-        //         rawBBox.idBoundingBox
-        //     );
-        //     console.log(this.bboxes);
-        //
-        // },
-
-        // async createNewBBoxViaTracking(frameNumber) {
-        //     let previousBBox = this.bboxes[frameNumber - 1];
-        //     if (previousBBox) {
-        //         console.log("create new bbox via tracking on frame", frameNumber, previousBBox);
-        //         bbox = await this.tracker.trackBBox(frameNumber, previousBBox);
-        //         bbox.blocked = previousBBox.blocked;
-        //         bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
-        //             json: {
-        //                 _token: this._token,
-        //                 idDynamicObject: this.object.idDynamicObject,
-        //                 frameNumber,
-        //                 bbox
-        //             }
-        //         }).json();
-        //         await this.showBBox();
-        //     }
-        // },
-
-        initializeBBox: (idDynamicObject, rawBBox) => {
-            // this.bbox = new BoundingBox(
-            //     rawBBox.frameNumber,
-            //     rawBBox.x,
-            //     rawBBox.y,
-            //     rawBBox.width,
-            //     rawBBox.height,
-            //     true,
-            //     rawBBox.blocked,
-            //     rawBBox.idBoundingBox
-            // );
-            // let objectidElement = $('.objectId');
-            // objectidElement.innerHTML = idDynamicObject;
-            // this.drawBox(this.bbox);
-            // console.log("initialized BBox", this.bbox);
-        },
-
-        drawFrameBBox: async () => {
-            // if (this.hasBBox) {
-            // this.clearFrameObject();
-            // let bbox = this.bbox;
-            // if (this.isTracking) {
-            //     // se está tracking, a box:
-            //     // - ou já existe (foi criada antes)
-            //     // - ou precisa ser criada
-            //     // let bbox = this.object.getBoundingBoxAt(this.currentFrame);
-            //     // if (bbox === null) {
-            //     if (!this.hasBBox) {
-            //         bbox = await this.tracker.trackBBox(this.currentFrame, this.previousBBox);
-            //         // let bbox = this.object.getBoundingBoxAt(this.currentFrame);
-            //         bbox.blocked = this.previousBBox.blocked;
-            //         // console.log("creating bbox at frame", this.currentFrame);
-            //         bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
-            //             json: {
-            //                 _token: this._token,
-            //                 idDynamicObject: this.idDynamicObject,
-            //                 frameNumber: this.currentFrame,
-            //                 bbox
-            //             }
-            //         }).json();
-            //     }
-            // }
-            // this.initializeBBox(bbox);
-            // let x = this.object.getBoundingBoxAt(this.currentFrame);
-            // console.log("drawFrameBBox", this.currentFrame,x ? 'ok' : 'nine');
-            // console.log(this.bbox);
-            // this.drawBoxInFrame(this.bbox, this.currentFrame, this.isTracking ? "tracking" : "editing");
-            // }
         },
 
         onBBoxCreate() {
@@ -353,112 +254,125 @@ function boxesComponent(idVideoDOMElement, object) {
         },
 
 
-        // newBboxElement: (onChange) => {
-        //     this.dom = document.createElement("div");
-        //     this.dom.className = "bbox";
-        //     this.dom.dataset.blocked = false;
-        //     this.boxesContainer.appendChild(this.dom);
-        //     //let dom = object.dom;
-        //     let bbox = $(this.dom);
-        //     let containerHeight = $("#boxesContainer").height();
-        //     let containerWidth = $("#boxesContainer").width();
-        //     let drag = document.createElement("div");
-        //     drag.className = "handle center-drag";
-        //     bbox.append(drag);
-        //     let objectId = document.createElement("div");
-        //     objectId.className = "objectId";
-        //     bbox.append(objectId);
-        //     bbox.resizable({
-        //         handles: "n, e, s, w, ne, nw, se, sw",
-        //         onResize: (e) => {
-        //             let d = e.data;
-        //             if (d.left < 0) {
-        //                 d.width += d.left;
-        //                 d.left = 0;
-        //                 return false;
-        //             }
-        //             if (d.top < 0) {
-        //                 d.height += d.top;
-        //                 d.top = 0;
-        //                 return false;
-        //             }
-        //             if (d.left + $(d.target).outerWidth() > containerWidth) {
-        //                 d.width = containerWidth - d.left;
-        //             }
-        //             if (d.top + $(d.target).outerHeight() > containerHeight) {
-        //                 d.height = containerHeight - d.top;
-        //             }
-        //         },
-        //         onStopResize: (e) => {
-        //             bbox.css("display", "none");
-        //             let d = e.data;
-        //             if (d.left < 0) {
-        //                 d.width += d.left;
-        //                 d.left = 0;
-        //             }
-        //             if (d.top < 0) {
-        //                 d.height += d.top;
-        //                 d.top = 0;
-        //             }
-        //             if (d.left + $(d.target).outerWidth() > containerWidth) {
-        //                 d.width = containerWidth - d.left;
-        //             }
-        //             if (d.top + $(d.target).outerHeight() > containerHeight) {
-        //                 d.height = containerHeight - d.top;
-        //             }
-        //             bbox.css({
-        //                 "top": d.top + "px",
-        //                 "left": d.left + "px",
-        //                 "width": d.width + "px",
-        //                 "height": d.height + "px"
-        //             });
-        //             bbox.css("display", "block");
-        //             let bboxChanged = new BoundingBox(
-        //                 this.currentFrame,
-        //                 Math.round(d.left),
-        //                 Math.round(d.top),
-        //                 Math.round(d.width),
-        //                 Math.round(d.height),
-        //                 true,
-        //                 dom.dataset.blocked
-        //             );
-        //             onChange(bboxChanged);
-        //         }
-        //     });
-        //     bbox.draggable({
-        //         // handle: $(x),
-        //         onDrag: (e) => {
-        //             var d = e.data;
-        //             if (d.left < 0) {
-        //                 d.left = 0;
-        //             }
-        //             if (d.top < 0) {
-        //                 d.top = 0;
-        //             }
-        //             if (d.left + $(d.target).outerWidth() > containerWidth) {
-        //                 d.left = containerWidth - $(d.target).outerWidth();
-        //             }
-        //             if (d.top + $(d.target).outerHeight() > containerHeight) {
-        //                 d.top = containerHeight - $(d.target).outerHeight();
-        //             }
-        //         },
-        //         onStopDrag: (e) => {
-        //             let position = bbox.position();
-        //             let bboxChanged = new BoundingBox(
-        //                 this.currentFrame,
-        //                 Math.round(position.left),
-        //                 Math.round(position.top),
-        //                 Math.round(bbox.outerWidth()),
-        //                 Math.round(bbox.outerHeight()),
-        //                 true,
-        //                 dom.dataset.blocked
-        //             );
-        //             onChange(bboxChanged);
-        //         }
-        //     });
-        //     bbox.css("display", "none");
-        //     console.log("new BBox element created", this.dom);
-        // },
+        initializeBBoxInteraction() {
+            let bbox = $('.bbox');
+            if (bbox.length === 0) return false; // No bbox element found
+            
+            let containerHeight = $("#boxesContainer").height();
+            let containerWidth = $("#boxesContainer").width();
+            
+            // Ensure the bbox has required child elements
+            if (bbox.find('.handle.center-drag').length === 0) {
+                let drag = document.createElement("div");
+                drag.className = "handle center-drag";
+                bbox.append(drag);
+            }
+            
+            if (bbox.find('.objectId').length === 0) {
+                let objectId = document.createElement("div");
+                objectId.className = "objectId";
+                bbox.append(objectId);
+            }
+            
+            // Setup resizable
+            bbox.resizable({
+                handles: "n, e, s, w, ne, nw, se, sw",
+                onResize: (e) => {
+                    let d = e.data;
+                    if (d.left < 0) {
+                        d.width += d.left;
+                        d.left = 0;
+                        return false;
+                    }
+                    if (d.top < 0) {
+                        d.height += d.top;
+                        d.top = 0;
+                        return false;
+                    }
+                    if (d.left + $(d.target).outerWidth() > containerWidth) {
+                        d.width = containerWidth - d.left;
+                    }
+                    if (d.top + $(d.target).outerHeight() > containerHeight) {
+                        d.height = containerHeight - d.top;
+                    }
+                },
+                onStopResize: (e) => {
+                    bbox.css("display", "none");
+                    let d = e.data;
+                    if (d.left < 0) {
+                        d.width += d.left;
+                        d.left = 0;
+                    }
+                    if (d.top < 0) {
+                        d.height += d.top;
+                        d.top = 0;
+                    }
+                    if (d.left + $(d.target).outerWidth() > containerWidth) {
+                        d.width = containerWidth - d.left;
+                    }
+                    if (d.top + $(d.target).outerHeight() > containerHeight) {
+                        d.height = containerHeight - d.top;
+                    }
+                    bbox.css({
+                        "top": d.top + "px",
+                        "left": d.left + "px",
+                        "width": d.width + "px",
+                        "height": d.height + "px"
+                    });
+                    bbox.css("display", "block");
+                    
+                    let bboxChanged = new BoundingBox(
+                        this.currentFrame,
+                        Math.round(d.left),
+                        Math.round(d.top),
+                        Math.round(d.width),
+                        Math.round(d.height),
+                        true,
+                        this.currentBBox?.blocked || false
+                    );
+                    bboxChanged.idBoundingBox = this.currentBBox?.idBoundingBox;
+                    this.onBBoxChange(bboxChanged);
+                }
+            });
+            
+            // Setup draggable
+            bbox.draggable({
+                handle: '.handle.center-drag',
+                onDrag: (e) => {
+                    var d = e.data;
+                    if (d.left < 0) {
+                        d.left = 0;
+                    }
+                    if (d.top < 0) {
+                        d.top = 0;
+                    }
+                    if (d.left + $(d.target).outerWidth() > containerWidth) {
+                        d.left = containerWidth - $(d.target).outerWidth();
+                    }
+                    if (d.top + $(d.target).outerHeight() > containerHeight) {
+                        d.top = containerHeight - $(d.target).outerHeight();
+                    }
+                },
+                onStopDrag: (e) => {
+                    let position = bbox.position();
+                    let bboxChanged = new BoundingBox(
+                        this.currentFrame,
+                        Math.round(position.left),
+                        Math.round(position.top),
+                        Math.round(bbox.outerWidth()),
+                        Math.round(bbox.outerHeight()),
+                        true,
+                        this.currentBBox?.blocked || false
+                    );
+                    bboxChanged.idBoundingBox = this.currentBBox?.idBoundingBox;
+                    this.onBBoxChange(bboxChanged);
+                }
+            });
+            
+            this.interactionInitialized = true;
+            console.log("BBox interaction initialized once");
+            return true;
+        },
 
         clearBBox: function() {
             $(".bbox").css("display", "none");
