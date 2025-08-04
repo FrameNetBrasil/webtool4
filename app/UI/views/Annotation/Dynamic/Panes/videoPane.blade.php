@@ -99,14 +99,17 @@
             ><i class="fast forward icon"></i>
             </button>
         </div>
-        
+
         <!-- Playback Rate Selector -->
-        <div class="ui compact dropdown playback-rate-selector">
+        <div
+            class="ui compact dropdown playback-rate-selector"
+            x-init="$($el).dropdown();"
+        >
             <div class="text" x-text="currentPlaybackRate === 1 ? 'Normal' : currentPlaybackRate + 'x'"></div>
             <i class="dropdown icon"></i>
             <div class="menu">
                 <template x-for="rate in playbackRates" :key="rate">
-                    <div class="item" 
+                    <div class="item"
                          :class="rate === currentPlaybackRate && 'active'"
                          @click="setPlaybackRate(rate)"
                          x-text="rate === 1 ? 'Normal' : rate + 'x'">
@@ -114,7 +117,7 @@
                 </template>
             </div>
         </div>
-        
+
         <div style="width:128px;text-align:right;">
             <div class="ui label bg-gray-300">
                 <span x-text="frame.last"></span> [<span
@@ -124,9 +127,3 @@
     </div>
 
 </div>
-
-<script>
-$(function() {
-    $('.playback-rate-selector').dropdown();
-});
-</script>

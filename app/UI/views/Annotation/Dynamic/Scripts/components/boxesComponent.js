@@ -194,42 +194,107 @@ function boxesComponent(idVideoDOMElement, object) {
                     isTracking: this.isTracking ? 1 : 0
                 }
             }).json();
-            const { idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked} = bbox;
-            this.currentBBox = { idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked };
+            const { idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked, isGroundTruth} = bbox;
+            this.currentBBox = { idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked, isGroundTruth };
             return bbox;
         },
 
         async showBBox() {
             let bbox = await this.getCurrentBBox();
             if (bbox) {
-                // Initialize interaction handlers only once
-                if (!this.interactionInitialized) {
-                    this.initializeBBoxInteraction();
-                }
-                
-                this.drawBBox(bbox);
-                this.bboxes[this.currentFrame] = bbox;
-                document.dispatchEvent(new CustomEvent("bbox-drawn", {
-                    detail: {
-                        bbox,
+                // Check if bbox is ground truth or needs to be recreated via tracking
+                if (bbox.isGroundTruth) {
+                    // Ground truth bbox - use as is
+                    console.log("Using ground truth bbox for frame", this.currentFrame);
+                    
+                    // Initialize interaction handlers only once
+                    if (!this.interactionInitialized) {
+                        this.initializeBBoxInteraction();
                     }
-                }));
+                    
+                    this.drawBBox(bbox);
+                    this.bboxes[this.currentFrame] = bbox;
+                    document.dispatchEvent(new CustomEvent("bbox-drawn", {
+                        detail: {
+                            bbox,
+                        }
+                    }));
+                } else {
+                    // Non-ground truth bbox - recreate via tracking
+                    console.log("Recreating non-ground truth bbox via tracking for frame", this.currentFrame);
+                    let previousBBox = this.bboxes[this.currentFrame - 1];
+                    if (previousBBox) {
+                        let trackedBBox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
+                        console.log("generated tracked bbox", trackedBBox);
+                        
+                        // Create BoundingBox object with isGroundTruth: false
+                        let newBBox = new BoundingBox(
+                            this.currentFrame,
+                            trackedBBox.x,
+                            trackedBBox.y,
+                            trackedBBox.width,
+                            trackedBBox.height,
+                            false, // isGroundTruth: false for tracked bbox
+                            bbox.blocked
+                        );
+                        newBBox.idBoundingBox = bbox.idBoundingBox; // Keep same ID, update position
+                        
+                        // Update existing bbox in database
+                        await ky.post("/annotation/dynamic/updateBBox", {
+                            json: {
+                                _token: this._token,
+                                idBoundingBox: bbox.idBoundingBox,
+                                bbox: newBBox
+                            }
+                        }).json();
+                        
+                        this.showBBox(); // Refresh to show updated bbox
+                    } else {
+                        // No previous bbox to track from - use existing bbox as is
+                        console.log("No previous bbox for tracking, using existing bbox");
+                        
+                        // Initialize interaction handlers only once
+                        if (!this.interactionInitialized) {
+                            this.initializeBBoxInteraction();
+                        }
+                        
+                        this.drawBBox(bbox);
+                        this.bboxes[this.currentFrame] = bbox;
+                        document.dispatchEvent(new CustomEvent("bbox-drawn", {
+                            detail: {
+                                bbox,
+                            }
+                        }));
+                    }
+                }
             } else {
+                // No bbox exists - create new one via tracking
                 let previousBBox = this.bboxes[this.currentFrame - 1];
                 if (previousBBox) {
                     console.log("create new bbox via tracking on frame", this.currentFrame, previousBBox);
-                    bbox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
-                    console.log("generated bbox", bbox);
-                    bbox.blocked = previousBBox.blocked;
-                    bbox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
+                    let trackedBBox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
+                    console.log("generated bbox", trackedBBox);
+                    
+                    // Create BoundingBox object with isGroundTruth: false
+                    let newBBox = new BoundingBox(
+                        this.currentFrame,
+                        trackedBBox.x,
+                        trackedBBox.y,
+                        trackedBBox.width,
+                        trackedBBox.height,
+                        false, // isGroundTruth: false for new tracked bbox
+                        previousBBox.blocked
+                    );
+                    
+                    newBBox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
                         json: {
                             _token: this._token,
                             idDynamicObject: this.object.idDynamicObject,
                             frameNumber: this.currentFrame,
-                            bbox
+                            bbox: newBBox
                         }
                     }).json();
-                    this.showBBox();
+                    this.showBBox(); // Refresh to show new bbox
                 }
             }
         },
@@ -327,7 +392,7 @@ function boxesComponent(idVideoDOMElement, object) {
                         Math.round(d.top),
                         Math.round(d.width),
                         Math.round(d.height),
-                        true,
+                        true, // User-modified bbox is ground truth
                         this.currentBBox?.blocked || false
                     );
                     bboxChanged.idBoundingBox = this.currentBBox?.idBoundingBox;
@@ -361,7 +426,7 @@ function boxesComponent(idVideoDOMElement, object) {
                         Math.round(position.top),
                         Math.round(bbox.outerWidth()),
                         Math.round(bbox.outerHeight()),
-                        true,
+                        true, // User-dragged bbox is ground truth
                         this.currentBBox?.blocked || false
                     );
                     bboxChanged.idBoundingBox = this.currentBBox?.idBoundingBox;
