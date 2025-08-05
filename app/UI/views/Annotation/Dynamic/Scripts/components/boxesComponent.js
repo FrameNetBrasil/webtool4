@@ -199,103 +199,107 @@ function boxesComponent(idVideoDOMElement, object) {
             return bbox;
         },
 
+        displayBBox(bbox) {
+            // Initialize interaction handlers only once
+            if (!this.interactionInitialized) {
+                this.initializeBBoxInteraction();
+            }
+            
+            this.drawBBox(bbox);
+            this.bboxes[this.currentFrame] = bbox;
+            document.dispatchEvent(new CustomEvent("bbox-drawn", {
+                detail: {
+                    bbox,
+                }
+            }));
+        },
+
+        createTrackedBBox(trackedBBox, blocked, isGroundTruth = false) {
+            return new BoundingBox(
+                this.currentFrame,
+                trackedBBox.x,
+                trackedBBox.y,
+                trackedBBox.width,
+                trackedBBox.height,
+                isGroundTruth,
+                blocked
+            );
+        },
+
+        async performTracking(previousBBox) {
+            console.log("Performing tracking for frame", this.currentFrame);
+            let trackedBBox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
+            console.log("Generated tracked bbox", trackedBBox);
+            return trackedBBox;
+        },
+
+        async updateExistingBBox(bboxId, newBBox) {
+            await ky.post("/annotation/dynamic/updateBBox", {
+                json: {
+                    _token: this._token,
+                    idBoundingBox: bboxId,
+                    bbox: newBBox
+                }
+            }).json();
+        },
+
+        async createNewBBox(newBBox) {
+            newBBox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
+                json: {
+                    _token: this._token,
+                    idDynamicObject: this.object.idDynamicObject,
+                    frameNumber: this.currentFrame,
+                    bbox: newBBox
+                }
+            }).json();
+            return newBBox;
+        },
+
+        async handleNonGroundTruthBBox(bbox) {
+            console.log("Recreating non-ground truth bbox via tracking for frame", this.currentFrame);
+            let previousBBox = this.bboxes[this.currentFrame - 1];
+            
+            if (previousBBox) {
+                let trackedBBox = await this.performTracking(previousBBox);
+                let newBBox = this.createTrackedBBox(trackedBBox, bbox.blocked, false);
+                newBBox.idBoundingBox = bbox.idBoundingBox; // Keep same ID, update position
+                
+                await this.updateExistingBBox(bbox.idBoundingBox, newBBox);
+                this.showBBox(); // Refresh to show updated bbox
+            } else {
+                // No previous bbox to track from - use existing bbox as is
+                console.log("No previous bbox for tracking, using existing bbox");
+                this.displayBBox(bbox);
+            }
+        },
+
+        async handleMissingBBox() {
+            let previousBBox = this.bboxes[this.currentFrame - 1];
+            if (previousBBox) {
+                console.log("create new bbox via tracking on frame", this.currentFrame, previousBBox);
+                let trackedBBox = await this.performTracking(previousBBox);
+                let newBBox = this.createTrackedBBox(trackedBBox, previousBBox.blocked, false);
+                
+                await this.createNewBBox(newBBox);
+                this.showBBox(); // Refresh to show new bbox
+            }
+        },
+
         async showBBox() {
             let bbox = await this.getCurrentBBox();
+            
             if (bbox) {
-                // Check if bbox is ground truth or needs to be recreated via tracking
                 if (bbox.isGroundTruth) {
                     // Ground truth bbox - use as is
                     console.log("Using ground truth bbox for frame", this.currentFrame);
-                    
-                    // Initialize interaction handlers only once
-                    if (!this.interactionInitialized) {
-                        this.initializeBBoxInteraction();
-                    }
-                    
-                    this.drawBBox(bbox);
-                    this.bboxes[this.currentFrame] = bbox;
-                    document.dispatchEvent(new CustomEvent("bbox-drawn", {
-                        detail: {
-                            bbox,
-                        }
-                    }));
+                    this.displayBBox(bbox);
                 } else {
                     // Non-ground truth bbox - recreate via tracking
-                    console.log("Recreating non-ground truth bbox via tracking for frame", this.currentFrame);
-                    let previousBBox = this.bboxes[this.currentFrame - 1];
-                    if (previousBBox) {
-                        let trackedBBox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
-                        console.log("generated tracked bbox", trackedBBox);
-                        
-                        // Create BoundingBox object with isGroundTruth: false
-                        let newBBox = new BoundingBox(
-                            this.currentFrame,
-                            trackedBBox.x,
-                            trackedBBox.y,
-                            trackedBBox.width,
-                            trackedBBox.height,
-                            false, // isGroundTruth: false for tracked bbox
-                            bbox.blocked
-                        );
-                        newBBox.idBoundingBox = bbox.idBoundingBox; // Keep same ID, update position
-                        
-                        // Update existing bbox in database
-                        await ky.post("/annotation/dynamic/updateBBox", {
-                            json: {
-                                _token: this._token,
-                                idBoundingBox: bbox.idBoundingBox,
-                                bbox: newBBox
-                            }
-                        }).json();
-                        
-                        this.showBBox(); // Refresh to show updated bbox
-                    } else {
-                        // No previous bbox to track from - use existing bbox as is
-                        console.log("No previous bbox for tracking, using existing bbox");
-                        
-                        // Initialize interaction handlers only once
-                        if (!this.interactionInitialized) {
-                            this.initializeBBoxInteraction();
-                        }
-                        
-                        this.drawBBox(bbox);
-                        this.bboxes[this.currentFrame] = bbox;
-                        document.dispatchEvent(new CustomEvent("bbox-drawn", {
-                            detail: {
-                                bbox,
-                            }
-                        }));
-                    }
+                    await this.handleNonGroundTruthBBox(bbox);
                 }
             } else {
                 // No bbox exists - create new one via tracking
-                let previousBBox = this.bboxes[this.currentFrame - 1];
-                if (previousBBox) {
-                    console.log("create new bbox via tracking on frame", this.currentFrame, previousBBox);
-                    let trackedBBox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
-                    console.log("generated bbox", trackedBBox);
-                    
-                    // Create BoundingBox object with isGroundTruth: false
-                    let newBBox = new BoundingBox(
-                        this.currentFrame,
-                        trackedBBox.x,
-                        trackedBBox.y,
-                        trackedBBox.width,
-                        trackedBBox.height,
-                        false, // isGroundTruth: false for new tracked bbox
-                        previousBBox.blocked
-                    );
-                    
-                    newBBox.idBoundingBox = await ky.post("/annotation/dynamic/createBBox", {
-                        json: {
-                            _token: this._token,
-                            idDynamicObject: this.object.idDynamicObject,
-                            frameNumber: this.currentFrame,
-                            bbox: newBBox
-                        }
-                    }).json();
-                    this.showBBox(); // Refresh to show new bbox
-                }
+                await this.handleMissingBBox();
             }
         },
 
