@@ -140,12 +140,16 @@ class BrowseController extends Controller
 
         //$frames = ViewFrame::listByFilter($search)->all();
         foreach ($frames as $row) {
+            $classification = Frame::getClassificationLabels($row->idFrame);
+            debug($classification);
+            $domains = implode(",",$classification['rel_framal_domain'] ?? []);
             $result[$row->idFrame] = [
                 'id' => 'f' . $row->idFrame,
                 'idFrame' => $row->idFrame,
                 'type' => 'frame',
                 'name' => [$row->name, $row->description],
                 'iconCls' => 'material-icons-outlined wt-icon wt-icon-frame',
+                'domains' => $domains,
             ];
         }
         return $result;

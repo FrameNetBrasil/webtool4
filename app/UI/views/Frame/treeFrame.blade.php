@@ -10,7 +10,7 @@
 {{--    <div class="datagrid-header">--}}
 {{--            {{$currentGroup ?: $search->frame ?: "Frames"}}--}}
 {{--    </div>--}}
-    <div class="table" style="position:relative;height:100%">
+    <div class="table" style="position:relative;height:100%;">
         <table id="frameTable">
             <tbody>
             @foreach($frames as $idFrame => $frame)
@@ -22,6 +22,7 @@
 {{--                        hx-target="#feluTableContainer"--}}
 {{--                        hx-swap="outerHTML"--}}
                         class="cursor-pointer name"
+                        style="width:90%"
                     >
                         <div>
                             <a href="/frame/{{$idFrame}}">
@@ -36,6 +37,10 @@
                                 <div class='definition'>{{$frame['name'][1]}}</div>
                             </a>
                         </div>
+                    </td>
+                    <td
+                    >
+                        {{$frame["domains"]}}
                     </td>
 {{--                    <td--}}
 {{--                        class="edit"--}}
