@@ -40,7 +40,7 @@
                     </td>
                     <td
                     >
-                        {{$frame["domains"]}}
+                        {{$frame["domain"]}}
                     </td>
 {{--                    <td--}}
 {{--                        class="edit"--}}
