@@ -60,13 +60,6 @@
         @foreach($layerTypes as $layerType)
             <a class="item" data-tab="{{$layerType->entry}}">{{$layerType->name}}</a>
         @endforeach
-
-        {{--    <a class="item" data-tab="lty_fe">FE</a>--}}
-        {{--    <a class="item" data-tab="lty_gf">GF</a>--}}
-        {{--    <a class="item" data-tab="lty_pt">PT</a>--}}
-        {{--    <a class="item" data-tab="lty_other">Other</a>--}}
-        {{--    <a class="item" data-tab="lty_pos">{{$pos->POS}}</a>--}}
-        {{--    <a class="item" data-tab="lty_sent">Sent</a>--}}
     </div>
     <div class="gridLabels">
         <div class="labels">
