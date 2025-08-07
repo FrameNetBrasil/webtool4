@@ -13,6 +13,7 @@ use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
+use Illuminate\Database\Query\JoinClause;
 
 #[Middleware("master")]
 class BrowseController extends Controller
@@ -117,6 +118,11 @@ class BrowseController extends Controller
     public static function listFrame(SearchData $search)
     {
         $result = [];
+        $subQuery = Criteria::table("view_frame_classification")
+            ->selectRaw("idFrame, group_concat(name) as domain")
+            ->where("relationType","rel_framal_domain")
+            ->where("idLanguage", AppService::getCurrentIdLanguage())
+            ->groupBy('idFrame');
         if (!is_null($search->idFramalDomain)) {
             $frames = Criteria::table("view_frame as f")
                 ->join("view_frame_classification as c", "f.idFrame", "=", "c.idFrame")
@@ -134,22 +140,24 @@ class BrowseController extends Controller
         } else if (!is_null($search->idFrameScenario)) {
             $frames = Frame::listScenarioFrames($search->idFrameScenario);
         } else {
-            $frames = Criteria::byFilterLanguage("view_frame", ['name', "startswith", $search->frame])
+            $frames = Criteria::table("view_frame as f")
+                ->where('f.name', "startswith", $search->frame)
+                ->where("f.idLanguage", AppService::getCurrentIdLanguage())
+                ->joinSub($subQuery, 'domains', function (JoinClause $join) {
+                    $join->on('f.idFrame', '=', 'domains.idFrame');
+                })
                 ->orderBy('name')->all();
         }
 
         //$frames = ViewFrame::listByFilter($search)->all();
         foreach ($frames as $row) {
-            $classification = Frame::getClassificationLabels($row->idFrame);
-            debug($classification);
-            $domains = implode(",",$classification['rel_framal_domain'] ?? []);
             $result[$row->idFrame] = [
                 'id' => 'f' . $row->idFrame,
                 'idFrame' => $row->idFrame,
                 'type' => 'frame',
                 'name' => [$row->name, $row->description],
                 'iconCls' => 'material-icons-outlined wt-icon wt-icon-frame',
-                'domains' => $domains,
+                'domain' => $row->domain,
             ];
         }
         return $result;
