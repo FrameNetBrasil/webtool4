@@ -12,6 +12,7 @@ import browseSearchComponent from './components/browseSearchComponent.js';
 import searchComponent from './components/searchComponent.js';
 import treeComponent from './components/treeComponent.js';
 import searchFormComponent from './components/searchFormComponent.js';
+import dataGridComponent from './components/dataGridComponent.js';
 
 import '../css/app.less';
 
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Alpine.data('searchComponent', searchComponent);
     Alpine.data('treeComponent', treeComponent);
     Alpine.data('browseSearchComponent', browseSearchComponent);
+    Alpine.data('dataGrid', dataGridComponent);
     Alpine.start();
 });
 

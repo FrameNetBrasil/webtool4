@@ -12,7 +12,7 @@ class LOMEService extends AppService
 
         $client = new Client([
             'base_uri' => 'http://server4.framenetbr.ufjf.br:8410',
-            //'base_uri' => 'http://200.131.61.134:80',
+            // 'base_uri' => 'http://200.131.61.134:80',
             'timeout' => 300.0,
         ]);
 
@@ -23,19 +23,21 @@ class LOMEService extends AppService
                 ],
                 'json' => [
                     'articles' => [
-                        ['text' => $sentence]
+                        ['text' => $sentence],
                     ],
-                    "model" => 'portuguese'
-                ]
+                    'model' => 'portuguese',
+                ],
             ]);
-//            echo $response->getBody();
+            //            echo $response->getBody();
 
             $body = json_decode($response->getBody());
-//            //debug($body);
+
+            //            //debug($body);
             return $body;
         } catch (\Exception $e) {
 
-            echo $e->getMessage() . "\n";
+            echo $e->getMessage()."\n";
+
             return '';
         }
     }
@@ -45,7 +47,7 @@ class LOMEService extends AppService
 
         $client = new Client([
             'base_uri' => 'http://localhost:7749',
-            //'base_uri' => 'http://200.131.61.134:80',
+            // 'base_uri' => 'http://200.131.61.134:80',
             'timeout' => 300.0,
         ]);
 
@@ -56,50 +58,52 @@ class LOMEService extends AppService
                 ],
                 'json' => [
                     'sentences' => [
-                        $sentence
+                        $sentence,
                     ],
-                ]
+                ],
             ]);
-//            echo $response->getBody();
+            //            echo $response->getBody();
 
             $body = json_decode($response->getBody());
-//            //debug($body);
+
+            //            //debug($body);
             return $body;
         } catch (\Exception $e) {
 
-            echo $e->getMessage() . "\n";
+            echo $e->getMessage()."\n";
+
             return '';
         }
     }
 
-//    public function process2($sentence, $idLanguage = 1)
-//    {
-//
-//        $client = new Client([
-//            'base_uri' => 'http://server4.framenetbr.ufjf.br:8410',
-//            'timeout' => 300.0,
-//        ]);
-//
-//        try {
-//            $response = $client->request('post', 'parser2', [
-//                'headers' => [
-//                    'Accept' => 'application/text',
-//                ],
-//                'body' => json_encode([
-//                    'articles' => [
-//                        ['text' => $sentence]
-//                    ],
-//                    "model" => ''
-//                ])
-//            ]);
-//
-//            $body = json_decode($response->getBody());
-//            return $body;
-//        } catch (\Exception $e) {
-//
-//            echo $e->getMessage() . "\n";
-//            return '';
-//        }
-//    }
+    //    public function process2($sentence, $idLanguage = 1)
+    //    {
+    //
+    //        $client = new Client([
+    //            'base_uri' => 'http://server4.framenetbr.ufjf.br:8410',
+    //            'timeout' => 300.0,
+    //        ]);
+    //
+    //        try {
+    //            $response = $client->request('post', 'parser2', [
+    //                'headers' => [
+    //                    'Accept' => 'application/text',
+    //                ],
+    //                'body' => json_encode([
+    //                    'articles' => [
+    //                        ['text' => $sentence]
+    //                    ],
+    //                    "model" => ''
+    //                ])
+    //            ]);
+    //
+    //            $body = json_decode($response->getBody());
+    //            return $body;
+    //        } catch (\Exception $e) {
+    //
+    //            echo $e->getMessage() . "\n";
+    //            return '';
+    //        }
+    //    }
 
 }

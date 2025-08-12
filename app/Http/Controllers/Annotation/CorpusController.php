@@ -28,8 +28,9 @@ class CorpusController extends Controller
     public function browse()
     {
         $search = session('searchCorpus') ?? SearchData::from();
-        return view("Panes.Corpus.tree", [
-            'search' => $search
+
+        return view('Panes.Corpus.tree', [
+            'search' => $search,
         ]);
     }
 
@@ -47,7 +48,7 @@ class CorpusController extends Controller
             $corpus = CorpusService::listCorpus(new SearchData);
             $corpusName = $corpus[$search->idCorpus]->name;
             $documents = CorpusService::listDocuments($search);
-            if (!empty($documents)) {
+            if (! empty($documents)) {
                 $key = array_key_first($documents);
                 $search->idDocument = $documents[$key]->idDocument;
                 $documentName = $documents[$key]->name;
@@ -70,20 +71,20 @@ class CorpusController extends Controller
             } else {
                 if (($search->document != '')) {
                     $documents = CorpusService::listDocuments($search);
-                    if (!empty($documents)) {
+                    if (! empty($documents)) {
                         $key = array_key_first($documents);
                         $search->idDocument = $documents[$key]->idDocument;
                         $sentences = CorpusService::listSentences($search);
                     }
-                    $corpusName = $search->document . '*';
+                    $corpusName = $search->document.'*';
                     $display = 'document';
                 } else {
                     $corpus = CorpusService::listCorpus($search);
-                    if (!empty($corpus)) {
+                    if (! empty($corpus)) {
                         $key = array_key_first($corpus);
                         $search->idCorpus = $corpus[$key]->idCorpus;
                         $documents = CorpusService::listDocuments($search);
-                        if (!empty($documents)) {
+                        if (! empty($documents)) {
                             $key = array_key_first($documents);
                             $search->idDocument = $documents[$key]->idDocument;
                             $corpusName = Corpus::getById($documents[$search->idDocument]->idCorpus)->name;
@@ -94,7 +95,8 @@ class CorpusController extends Controller
                 }
             }
         }
-        return view("Panes.Corpus.grids", [
+
+        return view('Panes.Corpus.grids', [
             'search' => $search,
             'display' => $display,
             'corpus' => $corpus,
@@ -114,12 +116,12 @@ class CorpusController extends Controller
     #[Get(path: '/annotation/corpus/sentence/{idSentence}')]
     public function annotationSentence(int $idSentence)
     {
-        $data['sessionTimeout'] = 300;// Manager::getConf('session.timeout');
+        $data['sessionTimeout'] = 300; // Manager::getConf('session.timeout');
         $canSave = true;
-        $data['canSave'] = true;//$canSave && Manager::checkAccess('BEGINNER', A_EXECUTE);
-        //$data['isSenior'] = $data['isMaster'];////Manager::checkAccess('SENIOR', A_EXECUTE) ? 'true' : 'false';
-//        $data['rgbColors'] = AnnotationService::getColor();
-//        $data['colorsArray = AnnotationService::getColorArray();
+        $data['canSave'] = true; // $canSave && Manager::checkAccess('BEGINNER', A_EXECUTE);
+        // $data['isSenior'] = $data['isMaster'];////Manager::checkAccess('SENIOR', A_EXECUTE) ? 'true' : 'false';
+        //        $data['rgbColors'] = AnnotationService::getColor();
+        //        $data['colorsArray = AnnotationService::getColorArray();
         $data['layerType'] = CorpusService::getLayerType();
         $it = CorpusService::getInstantiationType();
         $data['instantiationType'] = $it['array'];
@@ -132,21 +134,21 @@ class CorpusController extends Controller
         $layersData = CorpusService::getLayers($data);
         $data['metadata'] = $layersData['metadata'];
         $data['words'] = $layersData['words'];
-//        $data['chars = $layersData['chars'];
+        //        $data['chars = $layersData['chars'];
         $data['annotationSets'] = $layersData['annotationSets'];
         $data['layers'] = $layersData['layers'];
         $data['labelTypes'] = $layersData['labelTypes'];
         $data['layerLabels'] = $layersData['layerLabels'];
         $data['nis'] = $layersData['nis'];
-//        $data['lus'] = $layersData['lus'];
-        $data['layersToShow'] = [];//MUtil::php2js(fnbr\models\Base::getCurrentUser()->getConfigObject('fnbrLayers'));
-//        $data['columns'] = $layersData['jsColumns'];
-//        $data['frozenColumns'] = $layersData['jsFrozenColumns'];
+        //        $data['lus'] = $layersData['lus'];
+        $data['layersToShow'] = []; // MUtil::php2js(fnbr\models\Base::getCurrentUser()->getConfigObject('fnbrLayers'));
+        //        $data['columns'] = $layersData['jsColumns'];
+        //        $data['frozenColumns'] = $layersData['jsFrozenColumns'];
         $data['columns'] = $layersData['columns'];
         $data['frozenColumns'] = $layersData['frozenColumns'];
         $data['keyEvent'] = null;
 
-        return view("Panes.Corpus.annotationSentence", [
+        return view('Panes.Corpus.annotationSentence', [
             'idSentence' => $idSentence,
             'data' => $data,
             'idSentencePrevious' => null,
@@ -160,7 +162,8 @@ class CorpusController extends Controller
         $data = CorpusService::getLUs($idSentence, $idWord);
         $data['idWord'] = $idWord;
         $data['idSentence'] = $idSentence;
-        return view("Panes.Corpus.lus", $data);
+
+        return view('Panes.Corpus.lus', $data);
     }
 
     #[Get(path: '/annotation/corpus/sentence/{idSentence}/data')]
@@ -174,6 +177,7 @@ class CorpusController extends Controller
     {
         try {
             CorpusService::saveLabel($data);
+
             return $this->notify('success', 'Label updated.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -185,9 +189,10 @@ class CorpusController extends Controller
     {
         try {
             $idLabel = CorpusService::saveNI($data);
+
             return response(['idLabel' => $idLabel])
                 ->header('HX-Trigger', $this->notify('success', 'NI updated.'));
-//            return $this->notify('success', 'NI updated.');
+            //            return $this->notify('success', 'NI updated.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
         }
@@ -198,6 +203,7 @@ class CorpusController extends Controller
     {
         try {
             CorpusService::deleteLabel($data);
+
             return $this->notify('success', 'Label deleted.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -209,7 +215,8 @@ class CorpusController extends Controller
     {
         try {
             $idAnnotationSet = CorpusService::createAnnotationSet($data);
-            return $this->clientRedirect("/annotation/corpus/sentence/" . $data->idSentence);
+
+            return $this->clientRedirect('/annotation/corpus/sentence/'.$data->idSentence);
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
         }
@@ -220,6 +227,7 @@ class CorpusController extends Controller
     {
         try {
             CorpusService::deleteAnnotationSet($data->idAnnotationSet);
+
             return $this->notify('success', 'AnnotationSet deleted.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -231,6 +239,7 @@ class CorpusController extends Controller
     {
         try {
             CorpusService::deleteLastFELayer($data->idLayer);
+
             return $this->notify('success', 'Layer FE deleted.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
@@ -242,10 +251,10 @@ class CorpusController extends Controller
     {
         try {
             CorpusService::addFELayer($data->idAnnotationSet);
+
             return $this->notify('success', 'New FE Layer created.');
         } catch (\Exception $e) {
             return $this->notify('error', $e->getMessage());
         }
     }
-
 }

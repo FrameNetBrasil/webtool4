@@ -10,9 +10,8 @@ class SearchData extends Data
         public ?string $lu = '',
         public ?string $sort = '',
         public ?string $order = '',
-        public string  $_token = '',
-    )
-    {
+        public string $_token = '',
+    ) {
         if ($this->sort == '') {
             $this->sort = 'name';
         }

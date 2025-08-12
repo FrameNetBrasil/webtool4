@@ -8,45 +8,45 @@ use App\Data\Corpus\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
-use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
-#[Middleware("master")]
+#[Middleware('master')]
 class ResourceController extends Controller
 {
     #[Get(path: '/corpus')]
     public function resource()
     {
-        return view("Corpus.resource");
+        return view('Corpus.resource');
     }
 
     #[Get(path: '/corpus/grid/{fragment?}')]
     #[Post(path: '/corpus/grid/{fragment?}')]
     public function grid(SearchData $search, ?string $fragment = null)
     {
-        $view = view("Corpus.grid",[
+        $view = view('Corpus.grid', [
             'search' => $search,
             'sentences' => [],
         ]);
-        return (is_null($fragment) ? $view : $view->fragment('search'));
+
+        return is_null($fragment) ? $view : $view->fragment('search');
     }
 
     #[Get(path: '/corpus/{id}/edit')]
     public function edit(string $id)
     {
-        return view("Corpus.edit",[
-            'corpus' => Corpus::byId($id)
+        return view('Corpus.edit', [
+            'corpus' => Corpus::byId($id),
         ]);
     }
 
     #[Get(path: '/corpus/{id}/formEdit')]
     public function formEdit(string $id)
     {
-        return view("Corpus.formEdit",[
-            'corpus' => Corpus::byId($id)
+        return view('Corpus.formEdit', [
+            'corpus' => Corpus::byId($id),
         ]);
     }
 
@@ -55,17 +55,18 @@ class ResourceController extends Controller
     {
         try {
             Criteria::function('dataset_update(?)', [$data->toJson()]);
-            $this->trigger("reload-gridDataset");
-            return $this->renderNotify("success", "Dataset updated.");
+            $this->trigger('reload-gridDataset');
+
+            return $this->renderNotify('success', 'Dataset updated.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
     #[Get(path: '/corpus/new')]
     public function new()
     {
-        return view("Corpus.formNew");
+        return view('Corpus.formNew');
     }
 
     #[Post(path: '/corpus/new')]
@@ -73,10 +74,11 @@ class ResourceController extends Controller
     {
         try {
             Criteria::function('corpus_create(?)', [$data->toJson()]);
-            $this->trigger("reload-gridCorpus");
-            return $this->renderNotify("success", "Corpus created.");
+            $this->trigger('reload-gridCorpus');
+
+            return $this->renderNotify('success', 'Corpus created.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -84,10 +86,11 @@ class ResourceController extends Controller
     public function delete(string $id)
     {
         try {
-            Criteria::deleteById("corpus","idCorpus",$id);
-            return $this->clientRedirect("/corpus");
+            Criteria::deleteById('corpus', 'idCorpus', $id);
+
+            return $this->clientRedirect('/corpus');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -95,6 +98,7 @@ class ResourceController extends Controller
     public function listForSelect(QData $data)
     {
         $name = (strlen($data->q) > 2) ? $data->q : 'none';
-        return ['results' => Criteria::byFilterLanguage("view_corpus",["name","startswith",$name])->orderby("name")->all()];
+
+        return ['results' => Criteria::byFilterLanguage('view_corpus', ['name', 'startswith', $name])->orderby('name')->all()];
     }
 }

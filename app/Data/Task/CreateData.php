@@ -15,8 +15,7 @@ class CreateData extends Data
         public ?int $idDataset = null,
         public ?string $type = '',
         public ?string $createdAt = null
-    )
-    {
+    ) {
         $this->createdAt = Carbon::now();
     }
 

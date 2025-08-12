@@ -13,8 +13,7 @@ class UpdateData extends Data
         public ?string $description = '',
         public ?int $idProject = null,
         public ?int $idUser = null
-    )
-    {
+    ) {
         $this->idUser = AppService::getCurrentIdUser();
     }
 

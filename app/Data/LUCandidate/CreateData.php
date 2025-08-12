@@ -2,7 +2,6 @@
 
 namespace App\Data\LUCandidate;
 
-use App\Repositories\Lemma;
 use App\Services\AppService;
 use Carbon\Carbon;
 use Spatie\LaravelData\Data;
@@ -23,8 +22,7 @@ class CreateData extends Data
         public ?string $frameCandidate = '',
         public ?int $idUser = null,
         public ?string $createdAt = ''
-    )
-    {
+    ) {
         if (is_null($this->senseDescription)) {
             $this->senseDescription = '';
         }
@@ -37,6 +35,5 @@ class CreateData extends Data
         $this->idUser = AppService::getCurrentIdUser();
         $this->createdAt = Carbon::now();
     }
-
 
 }

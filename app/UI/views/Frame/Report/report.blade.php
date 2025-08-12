@@ -5,343 +5,76 @@
         <main class="app-main">
             <div class="page-header">
                 <div class="page-header-content">
-                    <div class="page-title">
-                        <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
+                    <div class="page-header-main">
+                        <div class="page-title-section">
+                            <div class="page-title">
+                                <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
+                            </div>
+                            <div class="page-subtitle">{!! str_replace('ex>','code>',nl2br($frame->description)) !!}</div>
+                        </div>
+                        <div class="page-actions">
+                            <a href="/report/frame" class="ui button basic icon back-button">
+                                <i class="arrow left icon"></i>
+                                Back to Frames
+                            </a>
+                        </div>
                     </div>
-                    <div class="page-subtitle">{!! str_replace('ex>','code>',nl2br($frame->description)) !!}</div>
                 </div>
             </div>
             <div class="page-content">
                 <div class="content-container">
-                    <h1 class="ui header">Frame Elements</h1>
-                    <h2 class="ui header" id="core"><a href="#core">Core</a></h2>
-                    @foreach ($fe['core'] as $feObj)
-                        <div class="ui card fluid data-card"
-                             data-entity-id="{{$feObj->idFrameElement}}">
-                            <div class="content">
-                                <div class="header">
-                                    <x-ui::element.fe name="{{$feObj->name}}" type="cty_core"
-                                                      :idColor="$feObj->idColor"></x-ui::element.fe>
-                                </div>
-                                <div class="description">
-                                    {!! $feObj->description !!}
-                                </div>
-                            </div>
-                            @if($feObj->relations)
-                                <div class="extra content">
-                                    <div class="data-card-info">
-                                        @foreach ($feObj->relations as $relation)
-                                            <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
-                            @if(isset($fe['semanticTypes'][$feObj->idFrameElement]))
-                                <div class="extra content">
-                                    <div class="data-card-tags">
-                                        <div
-                                            class="ui label semantictype">{{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}</div>
-                                    </div>
-                                </div>
-                            @endif
+                    {{-- Frame Metadata Section --}}
+                    <div class="frame-metadata-section">
+                        @include('Frame.Report.partials.frame-metadata')
+                    </div>
+                    
+                    {{-- Stats Section --}}
+                    <div class="stats-section mb-8">
+                        @include('Frame.Report.partials.stats-card')
+                    </div>
+                    
+                    {{-- Frame Elements Section --}}
+                    <div class="frame-elements-section mb-8">
+                        @include('Frame.Report.partials.frame-elements-cards')
+                    </div>
+                    
+                    {{-- Frame Relations Section --}}
+                    <div class="frame-relations-section mb-8">
+                        <div class="section-header">
+                            <h1 class="ui header section-title" id="frame-relations">
+                                <a href="#frame-relations">Frame-Frame Relations</a>
+                            </h1>
+                            <button class="ui button basic icon section-toggle" 
+                                    onclick="toggleSection('relations-content')" 
+                                    aria-expanded="true">
+                                <i class="chevron up icon"></i>
+                            </button>
                         </div>
-                    @endforeach
-                    @if ($fe['core_unexpressed'])
-                        <h2 class="ui header" id="core-unexpressed""><a href="#core-unexpressed">Core
-                            Unexpressed</a></h2>
-                        @foreach ($fe['core_unexpressed'] as $feObj)
-                            <div class="ui card fluid data-card"
-                                 data-entity-id="{{$feObj->idFrameElement}}">
-                                <div class="content">
-                                    <div class="header">
-                                        <x-ui::element.fe name="{{$feObj->name}}" type="cty_core"
-                                                          :idColor="$feObj->idColor"></x-ui::element.fe>
-                                    </div>
-                                    <div class="description">
-                                        {!! $feObj->description !!}
-                                    </div>
-                                </div>
-                                @if($feObj->relations)
-                                    <div class="extra content">
-                                        <div class="data-card-info">
-                                            @foreach ($feObj->relations as $relation)
-                                                <b>{{$relation['name']}}
-                                                    :&nbsp;</b>{{$relation['relatedFEName']}}
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
-                                @if(isset($fe['semanticTypes'][$feObj->idFrameElement]))
-                                    <div class="extra content">
-                                        <div class="data-card-tags">
-                                            <div
-                                                class="ui label semantictype">{{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}</div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    @endif
-                    @if ($fecoreset)
-                        <h3 class="ui header">FE Core set(s)</h3>
-                        <div class="ui fluid card data-card">
-                            <div class="content">{{$fecoreset}}</div>
+                        <div class="section-content" id="relations-content">
+                            @include('Frame.Report.partials.relations-card')
                         </div>
-                    @endif
-                    @if ($fe['peripheral'])
-                        <h2 class="ui header" id="peripheral"><a href="#peripheral">Peripheral</a></h2>
-                        @foreach ($fe['peripheral'] as $feObj)
-                            <div class="ui card fluid data-card"
-                                 data-entity-id="{{$feObj->idFrameElement}}">
-                                <div class="content">
-                                    <div class="header">
-                                        <x-ui::element.fe name="{{$feObj->name}}" type="cty_core"
-                                                          :idColor="$feObj->idColor"></x-ui::element.fe>
-                                    </div>
-                                    <div class="description">
-                                        {!! $feObj->description !!}
-                                    </div>
-                                </div>
-                                @if(isset($fe['semanticTypes'][$feObj->idFrameElement]))
-                                    <div class="extra content">
-                                        <div class="data-card-tags">
-                                            <div
-                                                class="ui label semantictype">{{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}</div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    @endif
-                    @if ($fe['extra_thematic'])
-                        <h3 class="ui header" id="extra-thematic"><a href="#extra-thematic">Extra-thematic</a></h3>
-                        @foreach ($fe['extra_thematic'] as $feObj)
-                            <div class="ui card fluid data-card"
-                                 data-entity-id="{{$feObj->idFrameElement}}">
-                                <div class="content">
-                                    <div class="header">
-                                        <x-ui::element.fe name="{{$feObj->name}}" type="cty_core"
-                                                          :idColor="$feObj->idColor"></x-ui::element.fe>
-                                    </div>
-                                    <div class="description">
-                                        {!! $feObj->description !!}
-                                    </div>
-                                </div>
-                                @if(isset($fe['semanticTypes'][$feObj->idFrameElement]))
-                                    <div class="extra content">
-                                        <div class="data-card-tags">
-                                            <div
-                                                class="ui label semantictype">{{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}</div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    @endif
+                    </div>
+                    
+                    {{-- Lexical Units Section --}}
+                    <div class="lexical-units-section mb-8">
+                        <div class="section-header">
+                            <h1 class="ui header section-title" id="lexical-units">
+                                <a href="#lexical-units">Lexical Units</a>
+                            </h1>
+                            <button class="ui button basic icon section-toggle" 
+                                    onclick="toggleSection('lexical-units-content')" 
+                                    aria-expanded="true">
+                                <i class="chevron up icon"></i>
+                            </button>
+                        </div>
+                        <div class="section-content" id="lexical-units-content">
+                            @include('Frame.Report.partials.lexical-units-card')
+                        </div>
+                    </div>
+                    
+                    {{-- Visual Units Section --}}
+                    @include('Frame.Report.partials.visual-units-section')
                 </div>
-
-
-                {{--                <div id="frameReport">--}}
-                {{--                    <div class="flex flex-row align-content-start flex-wrap">--}}
-                {{--                        <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">--}}
-                {{--                            <h1>--}}
-                {{--                                <x-element.frame name="{{$frame->name}}"></x-element.frame>--}}
-                {{--                            </h1>--}}
-                {{--                            <div>--}}
-                {{--                                @foreach ($classification as $name => $classes)--}}
-                {{--                                    @if(($name == 'rel_framal_domain') || ($name == 'rel_framal_type'))--}}
-                {{--                                        @foreach ($classes as $value)--}}
-                {{--                                            <div class="ui small label">--}}
-                {{--                                                {{$value}}--}}
-                {{--                                            </div>--}}
-                {{--                                        @endforeach--}}
-                {{--                                    @endif--}}
-                {{--                                @endforeach--}}
-                {{--                            </div>--}}
-                {{--                        </div>--}}
-                {{--                        <div--}}
-                {{--                            class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">--}}
-                {{--                            <div class="ui label wt-tag-id">--}}
-                {{--                                {{$classification['id'][0]}}--}}
-                {{--                            </div>--}}
-                {{--                            <div class="ui label wt-tag-en">--}}
-                {{--                                {{$classification['en'][0]}}--}}
-                {{--                            </div>--}}
-                {{--                            <button--}}
-                {{--                                id="btnDownload"--}}
-                {{--                                class="ui button mini basic secondary"--}}
-                {{--                            ><i class="icon material">download</i>PDF--}}
-                {{--                            </button>--}}
-                {{--                        </div>--}}
-                {{--                    </div>--}}
-                {{--                    <x-card title="Definition">--}}
-                {{--                        {!! str_replace('ex>','code>',nl2br($frame->description)) !!}--}}
-                {{--                    </x-card>--}}
-                {{--                    <x-card title="Frame Elements">--}}
-                {{--                        <table class="ui celled striped table">--}}
-                {{--                            <thead>--}}
-                {{--                            <tr>--}}
-                {{--                                <th colspan="4">Core</th>--}}
-                {{--                            </tr>--}}
-                {{--                            </thead>--}}
-                {{--                            <tbody>--}}
-                {{--                            @foreach ($fe['core'] as $feObj)--}}
-                {{--                                <tr>--}}
-                {{--                                    <td class="collapsing">--}}
-                {{--                                        <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>--}}
-                {{--                                    </td>--}}
-                {{--                                    <td class="pl-2">{!! $feObj->description !!}</td>--}}
-                {{--                                    <td>--}}
-                {{--                                        @foreach ($feObj->relations as $relation)--}}
-                {{--                                            <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}--}}
-                {{--                                        @endforeach--}}
-                {{--                                    </td>--}}
-                {{--                                    <td class="right aligned collapsing">--}}
-                {{--                                        {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}--}}
-                {{--                                    </td>--}}
-                {{--                                </tr>--}}
-                {{--                            @endforeach--}}
-                {{--                            </tbody>--}}
-                {{--                        </table>--}}
-
-                {{--                        @if ($fe['core_unexpressed'])--}}
-                {{--                            <table class="ui celled striped table">--}}
-                {{--                                <thead>--}}
-                {{--                                <tr>--}}
-                {{--                                    <th colspan="4">Core-Unexpressed</th>--}}
-                {{--                                </tr>--}}
-                {{--                                </thead>--}}
-                {{--                                <tbody>--}}
-                {{--                                @foreach ($fe['core_unexpressed'] as $feObj)--}}
-                {{--                                    <tr>--}}
-                {{--                                        <td class="collapsing">--}}
-                {{--                                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>--}}
-                {{--                                        </td>--}}
-                {{--                                        <td class="pl-2">{!! $feObj->description !!}</td>--}}
-                {{--                                        <td>--}}
-                {{--                                            @foreach ($feObj->relations as $relation)--}}
-                {{--                                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}--}}
-                {{--                                            @endforeach--}}
-                {{--                                        </td>--}}
-                {{--                                        <td class="right aligned collapsing">--}}
-                {{--                                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}--}}
-                {{--                                        </td>--}}
-                {{--                                    </tr>--}}
-                {{--                                @endforeach--}}
-                {{--                                </tbody>--}}
-                {{--                            </table>--}}
-                {{--                        @endif--}}
-                {{--                        @if ($fecoreset)--}}
-                {{--                            <x-card title="FE Core set(s)">--}}
-                {{--                                <table id="feCoreSet" class="frameReport__table">--}}
-                {{--                                    <tbody>--}}
-                {{--                                    <tr>--}}
-                {{--                                        <td class="pl-2">{{$fecoreset}}</td>--}}
-                {{--                                    </tr>--}}
-                {{--                                    </tbody>--}}
-                {{--                                </table>--}}
-                {{--                            </x-card>--}}
-                {{--                        @endif--}}
-                {{--                        @if ($fe['peripheral'])--}}
-                {{--                            <table class="ui celled striped table">--}}
-                {{--                                <thead>--}}
-                {{--                                <tr>--}}
-                {{--                                    <th colspan="4">Peripheral</th>--}}
-                {{--                                </tr>--}}
-                {{--                                </thead>--}}
-                {{--                                <tbody>--}}
-                {{--                                @foreach ($fe['peripheral'] as $feObj)--}}
-                {{--                                    <tr>--}}
-                {{--                                        <td class="collapsing">--}}
-                {{--                                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>--}}
-                {{--                                        </td>--}}
-                {{--                                        <td class="pl-2">{!! $feObj->description !!}</td>--}}
-                {{--                                        <td>--}}
-                {{--                                            @foreach ($feObj->relations as $relation)--}}
-                {{--                                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}--}}
-                {{--                                            @endforeach--}}
-                {{--                                        </td>--}}
-                {{--                                        <td class="right aligned collapsing">--}}
-                {{--                                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}--}}
-                {{--                                        </td>--}}
-                {{--                                    </tr>--}}
-                {{--                                @endforeach--}}
-                {{--                                </tbody>--}}
-                {{--                            </table>--}}
-                {{--                        @endif--}}
-                {{--                        @if ($fe['extra_thematic'])--}}
-                {{--                            <table class="ui celled striped table">--}}
-                {{--                                <thead>--}}
-                {{--                                <tr>--}}
-                {{--                                    <th colspan="4">Extra-thematic</th>--}}
-                {{--                                </tr>--}}
-                {{--                                </thead>--}}
-                {{--                                <tbody>--}}
-                {{--                                @foreach ($fe['extra_thematic'] as $feObj)--}}
-                {{--                                    <tr>--}}
-                {{--                                        <td class="collapsing">--}}
-                {{--                                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>--}}
-                {{--                                        </td>--}}
-                {{--                                        <td class="pl-2">{!! $feObj->description !!}</td>--}}
-                {{--                                        <td>--}}
-                {{--                                            @foreach ($feObj->relations as $relation)--}}
-                {{--                                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}--}}
-                {{--                                            @endforeach--}}
-                {{--                                        </td>--}}
-                {{--                                        <td class="right aligned collapsing">--}}
-                {{--                                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}--}}
-                {{--                                        </td>--}}
-                {{--                                    </tr>--}}
-                {{--                                @endforeach--}}
-                {{--                                </tbody>--}}
-                {{--                            </table>--}}
-                {{--                        @endif--}}
-                {{--                    </x-card>--}}
-                {{--                    <x-card title="Frame-Frame Relations">--}}
-                {{--                        @php($i = 0)--}}
-                {{--                        @foreach ($relations as $nameEntry => $relations1)--}}
-                {{--                            @php([$entry, $name] = explode('|', $nameEntry))--}}
-                {{--                            @php($relId = str_replace(' ', '_', $name))--}}
-                {{--                            <x-card-plain--}}
-                {{--                                title="<span class='color_{{$entry}}'>{{$name}}</span>">--}}
-                {{--                                <div class="flex flex-wrap gap-1">--}}
-                {{--                                    @foreach ($relations1 as $idFrame => $relation)--}}
-                {{--                                        <button--}}
-                {{--                                            id="btnRelation_{{$relId}}_{{$idFrame}}"--}}
-                {{--                                            class="ui button basic"--}}
-                {{--                                        >--}}
-                {{--                                            <a--}}
-                {{--                                                href="/report/frame/{{$idFrame}}"--}}
-                {{--                                            >--}}
-                {{--                                                <x-element.frame name="{{$relation['name']}}"></x-element.frame>--}}
-                {{--                                            </a>--}}
-                {{--                                        </button>--}}
-                {{--                                    @endforeach--}}
-                {{--                                </div>--}}
-                {{--                            </x-card-plain>--}}
-                {{--                        @endforeach--}}
-                {{--                    </x-card>--}}
-                {{--                    <x-card title="Lexical Units">--}}
-                {{--                        @foreach ($lus as $POS => $posLU)--}}
-                {{--                            <x-card-plain--}}
-                {{--                                title="POS: {{$POS}}"--}}
-                {{--                            >--}}
-                {{--                                <div class="flex flex-wrap gap-1">--}}
-                {{--                                    @foreach ($posLU as $lu)--}}
-                {{--                                        <button--}}
-                {{--                                            id="btnLU{{$lu->idLU}}"--}}
-
-                {{--                                            class="ui button basic"--}}
-                {{--                                        ><a href="/report/lu/{{$lu->idLU}}">{{$lu->name}}</a></button>--}}
-                {{--                                    @endforeach--}}
-                {{--                                </div>--}}
-                {{--                            </x-card-plain>--}}
-                {{--                        @endforeach--}}
-                {{--                    </x-card>--}}
-                {{--                    <x-card title="Visual Units">--}}
-                {{--                        @include("Frame.Report.vu")--}}
-                {{--                    </x-card>--}}
-                {{--                </div>--}}
             </div>
         </main>
         <aside class="app-tools">
@@ -356,6 +89,24 @@
                     <a class="item d-block" href="#peripheral">Peripheral</a>
                     <a class="item d-block" href="#extra-thematic">Extra Thematic</a>
                 </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <b>Relations</b></div>
+                <div class="content">
+                    <a class="item d-block" href="#frame-relations">Frame-Frame Relations</a>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <b>Lexical Units</b></div>
+                <div class="content">
+                    <a class="item d-block" href="#lexical-units">Lexical Units</a>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <b>Visual Units</b></div>
+                <div class="content">
+                    <a class="item d-block" href="#visual-units-vu">Visual Units</a>
+                </div>
             </div>
         </aside>
     </div>
@@ -363,31 +114,44 @@
 
 <script>
     $(function() {
-        $(".ui.accordion")
-            .accordion();
+        $(".ui.accordion").accordion();
     });
 
+    function toggleSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        let button;
+        
+        // Check if button is in the same parent container (new structure)
+        const parent = section.parentElement;
+        const headerButton = parent.querySelector('.section-header .section-toggle i');
+        
+        if (headerButton) {
+            button = headerButton;
+        } else {
+            // Fallback for Frame Elements structure (button in previous sibling)
+            button = section.previousElementSibling.querySelector('.section-toggle i');
+        }
+        
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+            button.className = 'chevron up icon';
+        } else {
+            section.style.display = 'none';
+            button.className = 'chevron down icon';
+        }
+    }
 
-    {{--$("#btnDownload").click(function(e) {--}}
-    {{--    const options = {--}}
-    {{--        margin: 0.5,--}}
-    {{--        filename: '{{$frame->name}}.pdf',--}}
-    {{--        image: {--}}
-    {{--            type: "jpeg",--}}
-    {{--            quality: 500--}}
-    {{--        },--}}
-    {{--        html2canvas: {--}}
-    {{--            scale: 1--}}
-    {{--        },--}}
-    {{--        jsPDF: {--}}
-    {{--            unit: "in",--}}
-    {{--            format: "a4",--}}
-    {{--            orientation: "portrait"--}}
-    {{--        }--}}
-    {{--    };--}}
-
-    {{--    e.preventDefault();--}}
-    {{--    const element = document.getElementById("frameReport");--}}
-    {{--    html2pdf().from(element).set(options).save();--}}
-    {{--});--}}
+    function toggleFeDetails(button) {
+        const targetId = button.getAttribute('data-target');
+        const target = document.querySelector(targetId);
+        const icon = button.querySelector('i');
+        
+        if (target.style.display === 'none') {
+            target.style.display = 'block';
+            icon.className = 'chevron up icon';
+        } else {
+            target.style.display = 'none';
+            icon.className = 'chevron down icon';
+        }
+    }
 </script>

@@ -12,9 +12,8 @@ class ComponentsController extends Controller
     #[Get(path: '/components/fesByFrame')]
     public function feCombobox(FrameFEData $frame)
     {
-        return view("components.fesByFrame", [
-            'idFrame' => $frame->idFrame
+        return view('components.fesByFrame', [
+            'idFrame' => $frame->idFrame,
         ]);
     }
-
 }

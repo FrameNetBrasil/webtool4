@@ -13,12 +13,12 @@ class Controller extends BaseController
     use AuthorizesRequests, ValidatesRequests;
 
     protected object $data;
+
     protected array $hx_trigger;
 
     public function __construct(
         protected readonly Request $request
-    )
-    {
+    ) {
         $this->hx_trigger = [];
     }
 
@@ -26,29 +26,32 @@ class Controller extends BaseController
     public function empty()
     {
         $response = response('', 200);
+
         return $response;
     }
 
     public function render(string $viewName, array $data = [], ?string $fragment = null)
     {
         $view = view($viewName, $data);
-        if (!is_null($fragment)) {
+        if (! is_null($fragment)) {
             $view->fragment($fragment);
         }
         $response = response($view, 200);
-        if (!empty($this->hx_trigger)) {
+        if (! empty($this->hx_trigger)) {
             $trigger = json_encode($this->hx_trigger);
             $response->header('HX-Trigger', $trigger);
         }
+
         return $response;
     }
 
     public function clientRedirect(string $url)
     {
         $response = response();
+
         return response('')
             ->withHeaders([
-                'HX-Redirect' => $url
+                'HX-Redirect' => $url,
             ]);
     }
 
@@ -56,7 +59,7 @@ class Controller extends BaseController
     {
         return response('')
             ->withHeaders([
-                'HX-Redirect' => $url
+                'HX-Redirect' => $url,
             ]);
     }
 
@@ -64,7 +67,7 @@ class Controller extends BaseController
     {
         $this->hx_trigger['notify'] = [
             'type' => $type,
-            'message' => $message
+            'message' => $message,
         ];
     }
 
@@ -78,7 +81,7 @@ class Controller extends BaseController
         $this->notify($type, $message);
         $trigger = json_encode($this->hx_trigger);
         $response = response('', 204)->header('HX-Trigger', $trigger);
+
         return $response;
     }
-
 }

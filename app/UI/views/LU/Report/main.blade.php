@@ -1,16 +1,15 @@
 <x-layout::index>
-    <script type="text/javascript" src="/report/lu/script/searchLU"></script>
     <div class="app-layout no-tools">
         @include('layouts.header')
         @include("layouts.sidebar")
         <main class="app-main">
-            <x-ui::breadcrumb :sections="[['/','Home'],['/reports','Reports'],['','LUs']]"></x-ui::breadcrumb>
+            <x-ui::breadcrumb :sections="[['/','Home'],['/reports','Reports'],['','LU']]"></x-ui::breadcrumb>
             <div class="page-content">
                 <div class="content-container">
                     <div class="app-search">
                         <!-- Search Section -->
                         <div class="search-section"
-                             x-data="searchForm()"
+                             x-data="searchFormComponent()"
                              @htmx:before-request="onSearchStart"
                              @htmx:after-request="onSearchComplete"
                              @htmx:after-swap="onResultsUpdated"
@@ -46,7 +45,7 @@
 
                                     <div class="results-header">
                                         <div class="results-info">
-                                            <div class="results-count" id="resultsCount">{!! count($lus ?? []) !!}
+                                            <div class="results-count" id="resultsCount">{!! count($lus) !!}
                                                 results
                                             </div>
                                             <div class="search-query-display" id="queryDisplay"></div>
@@ -54,21 +53,22 @@
                                     </div>
 
                                     <!-- Empty State -->
-                                    @if(count($lus ?? []) == 0)
+                                    @if(count($lus) == 0)
                                         <div class="empty-state" id="emptyState">
                                             <i class="search icon empty-icon"></i>
                                             <h3 class="empty-title">Ready to search</h3>
                                             <p class="empty-description">
-                                                Enter your search term above to find lexical units.
+                                                Enter your search term above to find LUs.
                                             </p>
                                         </div>
                                     @endif
 
-                                    @if(count($lus ?? []) > 0)
+                                    @if(count($lus) > 0)
                                         <!-- Card View -->
                                         <div class="card-view" x-transition>
                                             <div class="search-results-grid">
                                                 @foreach($lus as $lu)
+                                                    @php(debug($lu))
                                                     <div class="ui card fluid result-card"
                                                          data-id="{{$lu->idLU}}"
                                                          @click="window.location.assign(`/report/lu/{{$lu->idLU}}`)"
@@ -81,7 +81,7 @@
                                                                     name="{{$lu->name}}"></x-ui::element.lu>
                                                             </div>
                                                             <div class="description">
-                                                                {{$lu->frameName}}
+                                                                {{$lu->senseDescription}}
                                                             </div>
                                                         </div>
                                                     </div>

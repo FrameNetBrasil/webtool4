@@ -15,11 +15,10 @@ class SearchData extends Data
         public ?int $idDocument = null,
         public ?string $annotation = 'dynamic',
         public string $_token = '',
-    )
-    {
+    ) {
         if ($type == 'corpus') {
             $this->idCorpus = $id;
-        } else if ($type == 'document') {
+        } elseif ($type == 'document') {
             $this->idDocument = $id;
         }
         $this->_token = csrf_token();

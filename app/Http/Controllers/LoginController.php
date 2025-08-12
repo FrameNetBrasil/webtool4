@@ -26,15 +26,15 @@ class LoginController extends Controller
     {
         $auth0 = new Auth0([
             'domain' => env('AUTH0_DOMAIN'),
-            'clientId' =>  env('AUTH0_CLIENT_ID'),
+            'clientId' => env('AUTH0_CLIENT_ID'),
             'clientSecret' => env('AUTH0_CLIENT_SECRET'),
             'cookieSecret' => env('AUTH0_COOKIE_SECRET'),
             'redirect_uri' => env('AUTH0_CALLBACK_URL'),
-            'tokenAlgorithm' => 'HS256'
+            'tokenAlgorithm' => 'HS256',
         ]);
+
         return $auth0;
     }
-
 
     #[Get(path: '/main/auth0Callback')]
     public function auth0Callback()
@@ -45,7 +45,7 @@ class LoginController extends Controller
             $auth0->exchange($redirectURI);
 
             $userInfo = $auth0->getUser();
-            $user = new AuthUserService();
+            $user = new AuthUserService;
             $status = $user->auth0Login($userInfo);
 
             if ($status == 'new') {
@@ -53,12 +53,12 @@ class LoginController extends Controller
             } elseif ($status == 'pending') {
                 throw new UserPendingException('User already registered, but waiting for Administrator approval.');
             } elseif ($status == 'logged') {
-                return redirect("/");
+                return redirect('/');
             } else {
                 throw new LoginException('Login failed; contact administrator.');
             }
         } catch (StateException $e) {
-            throw new LoginException("Auth0: Invalid authorization code.");
+            throw new LoginException('Auth0: Invalid authorization code.');
         }
     }
 
@@ -68,7 +68,8 @@ class LoginController extends Controller
         $auth0 = $this->getAuth0();
         $auth0->clear();
         $redirectURI = env('AUTH0_CALLBACK_URL');
-        //header("Location: " . $auth0->login($redirectURI));
+
+        // header("Location: " . $auth0->login($redirectURI));
         return redirect($auth0->login($redirectURI));
     }
 
@@ -76,7 +77,7 @@ class LoginController extends Controller
     public function login(LoginData $data)
     {
         debug($data);
-        $user = new AuthUserService();
+        $user = new AuthUserService;
         $status = $user->md5Check($data);
 
         if ($status == 'new') {
@@ -85,7 +86,7 @@ class LoginController extends Controller
             throw new UserPendingException('User already registered, but waiting for Administrator approval.');
         } elseif ($status == 'checked') {
 
-            return $this->redirect("/twofactor");
+            return $this->redirect('/twofactor');
         } else {
             throw new LoginException('Login failed; contact administrator.');
         }
@@ -94,21 +95,23 @@ class LoginController extends Controller
     #[Get(path: '/twofactor')]
     public function twofactor()
     {
-        return view("App.twofactor");
+        return view('App.twofactor');
     }
 
     #[Post(path: '/twofactor')]
     public function twofactorPost(TwoFactorData $data)
     {
         debug($data);
-        $user = new AuthUserService();
+        $user = new AuthUserService;
         $user->md5TwoFactor($data);
-        return $this->redirect("/");
+
+        return $this->redirect('/');
     }
+
     #[Get(path: '/login-error')]
     public function loginError()
     {
-        return view("App.login")->fragment('form');
+        return view('App.login')->fragment('form');
     }
 
     #[Get(path: '/logout')]
@@ -116,7 +119,7 @@ class LoginController extends Controller
     {
         Auth::logout();
         session()->flush();
-        
+
         if (config('webtool.login.handler') == 'auth0') {
             try {
                 $auth0 = $this->getAuth0();
@@ -124,15 +127,16 @@ class LoginController extends Controller
                 // Auth0 will handle logout and redirect back to the return URL
                 $returnUrl = env('APP_URL', 'http://localhost');
                 $logoutUrl = $auth0->logout($returnUrl);
+
                 return redirect($logoutUrl);
             } catch (\Exception $e) {
                 // If Auth0 logout fails, continue with local logout
-                debug("Auth0 logout failed: " . $e->getMessage());
+                debug('Auth0 logout failed: '.$e->getMessage());
             }
         }
-        
+
         // For non-Auth0 users, redirect to home
-        return $this->redirect("/");
+        return $this->redirect('/');
     }
 
     #[Get(path: '/impersonating')]
@@ -140,8 +144,9 @@ class LoginController extends Controller
     {
         $token = md5(uniqid(rand(), true));
         session(['mail_token' => $token]);
-        Mail::to("ely.matos@gmail.com")->send(new WebToolMail($token));
-        return view("App.impersonating", []);
+        Mail::to('ely.matos@gmail.com')->send(new WebToolMail($token));
+
+        return view('App.impersonating', []);
     }
 
     #[Post(path: '/impersonating')]
@@ -150,14 +155,12 @@ class LoginController extends Controller
         $token = session('mail_token');
         if ($token == $data->password) {
             $userInfo = User::byId($data->idUser);
-            $user = new AuthUserService();
+            $user = new AuthUserService;
             $user->impersonate($userInfo);
-            return $this->redirect("/");
+
+            return $this->redirect('/');
         } else {
-            return $this->notify('error', "Access denied.");
+            return $this->notify('error', 'Access denied.');
         }
     }
-
-
-
 }

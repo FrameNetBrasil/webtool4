@@ -14,8 +14,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
-use App\Services\Annotation\DeixisService;
 use App\Services\Annotation\BrowseService;
+use App\Services\Annotation\DeixisService;
 use App\Services\AppService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -48,7 +48,7 @@ class DeixisController extends Controller
     #[Post(path: '/annotation/deixis/tree')]
     public function tree(SearchData $search)
     {
-        if (!is_null($search->idCorpus) || ($search->document != '')) {
+        if (! is_null($search->idCorpus) || ($search->document != '')) {
             $data = BrowseService::browseDocumentBySearch($search, [], 'DeixisAnnotation', leaf: true);
         } else {
             $data = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
@@ -109,7 +109,7 @@ class DeixisController extends Controller
         debug($data);
         $searchResults = [];
 
-        if (!empty($data->frame) || !empty($data->lu) || !empty($data->searchIdLayerType) || ($data->idDynamicObject > 0)) {
+        if (! empty($data->frame) || ! empty($data->lu) || ! empty($data->searchIdLayerType) || ($data->idDynamicObject > 0)) {
             $idLanguage = AppService::getCurrentIdLanguage();
 
             $query = Criteria::table('view_annotation_deixis as ad')
@@ -121,19 +121,19 @@ class DeixisController extends Controller
                 ->where('ad.idDocument', $data->idDocument);
 
             // Apply search filters
-            if (!empty($data->searchIdLayerType) && $data->searchIdLayerType > 0) {
+            if (! empty($data->searchIdLayerType) && $data->searchIdLayerType > 0) {
                 $query->where('ad.idLayerType', $data->searchIdLayerType);
             }
 
-            if (!empty($data->frame)) {
+            if (! empty($data->frame)) {
                 $query->whereRaw('(ad.frame LIKE ? OR ad.lu LIKE ?)', [
-                    $data->frame . '%',
-                    $data->frame . '%'
+                    $data->frame.'%',
+                    $data->frame.'%',
                 ]);
             }
 
-            if (!empty($data->lu)) {
-                $searchTerm = '%' . $data->lu . '%';
+            if (! empty($data->lu)) {
+                $searchTerm = '%'.$data->lu.'%';
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('ad.lu', 'like', $searchTerm);
                 });
@@ -167,14 +167,14 @@ class DeixisController extends Controller
             // Format search results for display
             foreach ($searchResults as $object) {
                 $object->displayName = '';
-                if (!empty($object->gl)) {
+                if (! empty($object->gl)) {
                     $object->displayName = $object->gl;
                 }
-                if (!empty($object->lu)) {
-                    $object->displayName .= ($object->displayName ? ' | ' : '') . $object->lu;
+                if (! empty($object->lu)) {
+                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->lu;
                 }
-                if (!empty($object->fe)) {
-                    $object->displayName .= ($object->displayName ? ' | ' : '') . $object->frame . '.' . $object->fe;
+                if (! empty($object->fe)) {
+                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->frame.'.'.$object->fe;
                 }
                 if (empty($object->displayName)) {
                     $object->displayName = 'None';
@@ -193,6 +193,7 @@ class DeixisController extends Controller
     {
         try {
             $object = DeixisService::createNewObjectAtLayer($data);
+
             return $this->redirect("/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -205,6 +206,7 @@ class DeixisController extends Controller
     public function formAnnotation(ObjectData $data)
     {
         $object = DeixisService::getObject($data->idDynamicObject ?? 0);
+
         return $this->redirect("/annotation/deixis/{$object->idDocument}/{$object->idDynamicObject}");
     }
 
@@ -212,6 +214,7 @@ class DeixisController extends Controller
     public function getFormAnnotation(int $idDynamicObject)
     {
         $object = DeixisService::getObject($idDynamicObject ?? 0);
+
         return view('Annotation.Deixis.Panes.formAnnotation', [
             'object' => $object,
         ]);
@@ -229,6 +232,7 @@ class DeixisController extends Controller
         try {
             debug($data);
             DeixisService::updateObjectFrame($data);
+
             return $this->redirect("/annotation/deixis/{$data->idDocument}/{$data->idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
@@ -365,7 +369,7 @@ class DeixisController extends Controller
         foreach ($timelineData as $originalIndex => $layer) {
             $layerName = $layer['layer'];
 
-            if (!isset($layerGroups[$layerName])) {
+            if (! isset($layerGroups[$layerName])) {
                 $layerGroups[$layerName] = [
                     'name' => $layerName,
                     'lines' => [],
@@ -388,6 +392,7 @@ class DeixisController extends Controller
     {
         $data = $this->getData($idDocument);
         $data['idDynamicObject'] = is_null($idDynamicObject) ? 0 : $idDynamicObject;
+
         return response()
             ->view('Annotation.Deixis.annotation', $data)
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate');

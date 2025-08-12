@@ -17,8 +17,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
-use App\Services\Annotation\DynamicService;
 use App\Services\Annotation\BrowseService;
+use App\Services\Annotation\DynamicService;
 use App\Services\AppService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -51,7 +51,7 @@ class DynamicController extends Controller
     #[Post(path: '/annotation/dynamic/tree')]
     public function tree(SearchData $search)
     {
-        if (!is_null($search->idCorpus) || ($search->document != '')) {
+        if (! is_null($search->idCorpus) || ($search->document != '')) {
             $data = BrowseService::browseDocumentBySearch($search, [], 'DynamicAnnotation', leaf: true);
         } else {
             $data = BrowseService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
@@ -65,24 +65,24 @@ class DynamicController extends Controller
     private function getData(int $idDocument, ?int $idDynamicObject = null): array
     {
         $document = Document::byId($idDocument);
-        if (!$document) {
+        if (! $document) {
             throw new \Exception("Document with ID {$idDocument} not found.");
         }
-        
+
         $corpus = Corpus::byId($document->idCorpus);
-        if (!$corpus) {
+        if (! $corpus) {
             throw new \Exception("Corpus with ID {$document->idCorpus} not found.");
         }
-        
+
         $documentVideo = Criteria::table('view_document_video')
             ->where('idDocument', $idDocument)
             ->first();
-        if (!$documentVideo) {
+        if (! $documentVideo) {
             throw new \Exception("Video not found for document ID {$idDocument}.");
         }
-        
+
         $video = Video::byId($documentVideo->idVideo);
-        if (!$video) {
+        if (! $video) {
             throw new \Exception("Video with ID {$documentVideo->idVideo} not found.");
         }
         $timelineData = DynamicService::getLayersByDocument($idDocument);
@@ -101,7 +101,7 @@ class DynamicController extends Controller
                 'config' => $timelineConfig,
             ],
             'groupedLayers' => $groupedLayers,
-            'idDynamicObject' => is_null($idDynamicObject) ? 0 : $idDynamicObject
+            'idDynamicObject' => is_null($idDynamicObject) ? 0 : $idDynamicObject,
         ];
     }
 
@@ -127,22 +127,22 @@ class DynamicController extends Controller
     {
         $searchResults = [];
 
-        if (!empty($data->frame) || !empty($data->lu) || !empty($data->searchIdLayerType) || ($data->idDynamicObject > 0)) {
+        if (! empty($data->frame) || ! empty($data->lu) || ! empty($data->searchIdLayerType) || ($data->idDynamicObject > 0)) {
             $idLanguage = AppService::getCurrentIdLanguage();
 
             $query = Criteria::table('view_annotation_dynamic as ad')
                 ->where('ad.idLanguage', 'left', $idLanguage)
                 ->where('ad.idDocument', $data->idDocument);
 
-            if (!empty($data->frame)) {
+            if (! empty($data->frame)) {
                 $query->whereRaw('(ad.frame LIKE ? OR ad.fe LIKE ?)', [
-                    $data->frame . '%',
-                    $data->frame . '%'
+                    $data->frame.'%',
+                    $data->frame.'%',
                 ]);
             }
 
-            if (!empty($data->lu)) {
-                $searchTerm = '%' . $data->lu . '%';
+            if (! empty($data->lu)) {
+                $searchTerm = '%'.$data->lu.'%';
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('ad.lu', 'like', $searchTerm);
                 });
@@ -172,11 +172,11 @@ class DynamicController extends Controller
             // Format search results for display
             foreach ($searchResults as $object) {
                 $object->displayName = '';
-                if (!empty($object->lu)) {
-                    $object->displayName .= ($object->displayName ? ' | ' : '') . $object->lu;
+                if (! empty($object->lu)) {
+                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->lu;
                 }
-                if (!empty($object->fe)) {
-                    $object->displayName .= ($object->displayName ? ' | ' : '') . $object->frame . '.' . $object->fe;
+                if (! empty($object->fe)) {
+                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->frame.'.'.$object->fe;
                 }
                 if (empty($object->displayName)) {
                     $object->displayName = 'None';
@@ -195,6 +195,7 @@ class DynamicController extends Controller
     {
         try {
             $object = DynamicService::createNewObjectAtLayer($data);
+
             return $this->redirect("/annotation/dynamic/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
@@ -206,6 +207,7 @@ class DynamicController extends Controller
     {
         try {
             DynamicService::updateObjectFrame($data);
+
             return $this->redirect("/annotation/dynamic/{$data->idDocument}/{$data->idDynamicObject}");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
@@ -218,14 +220,15 @@ class DynamicController extends Controller
         try {
             DynamicService::updateObjectAnnotation($data);
             $object = DynamicService::getObject($data->idDynamicObject);
-            if (!$object) {
+            if (! $object) {
                 return $this->renderNotify('error', 'Object not found after update.');
             }
             $this->notify('success', 'Object updated.');
+
             return $this->render('Annotation.Dynamic.Panes.timeline.object', [
                 'duration' => $object->endFrame - $object->startFrame,
                 'objectData' => $object,
-            ],'object');
+            ], 'object');
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
@@ -260,9 +263,10 @@ class DynamicController extends Controller
     {
         try {
             $idDynamicObjectClone = DynamicService::cloneObject($data);
+
             return $this->redirect("/annotation/dynamic/{$data->idDocument}/{$idDynamicObjectClone}");
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -274,12 +278,12 @@ class DynamicController extends Controller
     public function getBBox(GetBBoxData $data)
     {
         try {
-            return Criteria::table("view_dynamicobject_boundingbox")
-                ->where("idDynamicObject", $data->idDynamicObject)
-                ->where("frameNumber", $data->frameNumber)
+            return Criteria::table('view_dynamicobject_boundingbox')
+                ->where('idDynamicObject', $data->idDynamicObject)
+                ->where('frameNumber', $data->frameNumber)
                 ->first();
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -287,15 +291,16 @@ class DynamicController extends Controller
     public function getBoxesContainer(int $idDynamicObject)
     {
         try {
-            $dynamicObject = Criteria::byId("dynamicObject","idDynamicObject", $idDynamicObject);
-            if (!$dynamicObject) {
-                return $this->renderNotify("error", "Dynamic object with ID {$idDynamicObject} not found.");
+            $dynamicObject = Criteria::byId('dynamicObject', 'idDynamicObject', $idDynamicObject);
+            if (! $dynamicObject) {
+                return $this->renderNotify('error', "Dynamic object with ID {$idDynamicObject} not found.");
             }
-            return view("Annotation.Dynamic.Forms.boxesContainer",[
+
+            return view('Annotation.Dynamic.Forms.boxesContainer', [
                 'object' => $dynamicObject,
             ]);
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -305,7 +310,7 @@ class DynamicController extends Controller
         try {
             return DynamicService::createBBox($data);
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -314,16 +319,16 @@ class DynamicController extends Controller
     {
         try {
             $idBoundingBox = DynamicService::updateBBox($data);
-            $boundingBox = Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
-            if (!$boundingBox) {
-                return $this->renderNotify("error", "Updated bounding box not found.");
+            $boundingBox = Criteria::byId('boundingbox', 'idBoundingBox', $idBoundingBox);
+            if (! $boundingBox) {
+                return $this->renderNotify('error', 'Updated bounding box not found.');
             }
+
             return $boundingBox;
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
-
 
     /*
      * Comment
@@ -405,7 +410,7 @@ class DynamicController extends Controller
         foreach ($timelineData as $originalIndex => $layer) {
             $layerName = $layer['layer'];
 
-            if (!isset($layerGroups[$layerName])) {
+            if (! isset($layerGroups[$layerName])) {
                 $layerGroups[$layerName] = [
                     'name' => $layerName,
                     'lines' => [],
@@ -427,6 +432,7 @@ class DynamicController extends Controller
     public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
     {
         $data = $this->getData($idDocument, $idDynamicObject);
+
         return response()
             ->view('Annotation.Dynamic.main', $data)
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
