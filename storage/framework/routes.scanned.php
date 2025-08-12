@@ -1048,14 +1048,6 @@ $router->get('report/lu/data', [
 	'domain' => NULL,
 ]);
 
-$router->get('report/lu/{idLU?}', [
-	'uses' => 'App\Http\Controllers\LU\ReportController@reportContent',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('report/lu/{idLU}/textual', [
 	'uses' => 'App\Http\Controllers\LU\ReportController@reportTextual',
 	'as' => NULL,

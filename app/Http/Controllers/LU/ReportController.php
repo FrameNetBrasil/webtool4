@@ -34,7 +34,7 @@ class ReportController extends Controller
         if ($search->lu != '') {
             $lus = Criteria::byFilterLanguage('view_lu',
                 ['name', 'startswith', $search->lu])
-                ->select('idLU', 'name', 'frameName','senseDescription')
+                ->select('idLU', 'name', 'frameName', 'senseDescription')
                 ->orderBy('name')
                 ->all();
         }
@@ -60,24 +60,25 @@ class ReportController extends Controller
         return $lus;
     }
 
-    #[Get(path: '/report/lu/{idLU?}')]
-    public function reportContent(int|string $idLU)
-    {
-        $idUser = AppService::getCurrentIdUser();
-        $user = User::byId($idUser);
-        $isMaster = User::isManager($user) || User::isMemberOf($user, 'MASTER');
-        $lu = LU::byId($idLU);
-        $data = [
-            'lu' => $lu,
-            'language' => Criteria::byId('language', 'idLanguage', $lu->idLanguage),
-            'isMaster' => $isMaster,
-        ];
-        if (! is_null($lu->incorporatedFE)) {
-            $data['incorporatedFE'] = FrameElement::byId($lu->incorporatedFE);
-        }
-
-        return view('LU.Report.report', $data);
-    }
+    //    #[Get(path: '/report/lu/{idLU?}')]
+    //    public function reportContent(int|string $idLU)
+    //    {
+    //        debug("====");
+    //        $idUser = AppService::getCurrentIdUser();
+    //        $user = User::byId($idUser);
+    //        $isMaster = User::isManager($user) || User::isMemberOf($user, 'MASTER');
+    //        $lu = LU::byId($idLU);
+    //        $data = [
+    //            'lu' => $lu,
+    //            'language' => Criteria::byId('language', 'idLanguage', $lu->idLanguage),
+    //            'isMaster' => $isMaster,
+    //        ];
+    //        if (! is_null($lu->incorporatedFE)) {
+    //            $data['incorporatedFE'] = FrameElement::byId($lu->incorporatedFE);
+    //        }
+    //
+    //        return view('LU.Report.report', $data);
+    //    }
 
     #[Get(path: '/report/lu/{idLU}/textual')]
     public function reportTextual(int|string $idLU)
@@ -87,7 +88,7 @@ class ReportController extends Controller
         $data['lu'] = $lu;
         $data['language'] = Criteria::byId('language', 'idLanguage', $lu->idLanguage);
 
-        return view('LU.Report.textual', $data);
+        return view('LU.Report.partials.textual', $data);
     }
 
     #[Get(path: '/report/lu/{idLU}/static')]
@@ -110,7 +111,7 @@ class ReportController extends Controller
             'objects' => $objects,
         ];
 
-        return view('LU.Report.static', $data);
+        return view('LU.Report.partials.static', $data);
     }
 
     #[Get(path: '/report/lu/static/object/{idDocument}/{idLU}')]
@@ -155,21 +156,21 @@ class ReportController extends Controller
             'documents' => $documents,
         ];
 
-        return view('LU.Report.dynamic', $data);
+        return view('LU.Report.partials.dynamic', $data);
     }
 
     #[Get(path: '/report/lu/{idLU}/dynamic/objects/{idDocument}')]
     public function reportDynamicObjects(int|string $idLU, int|string $idDocument)
     {
         $lu = LU::byId($idLU);
-        $objects = Criteria::table('view_annotation as a')
-            ->join('lu', 'a.idEntity', '=', 'lu.idEntity')
-            ->join('dynamicobject as do', 'a.idAnnotationObject', '=', 'do.idAnnotationObject')
+        $objects = Criteria::table('view_annotation_dynamic as a')
+            ->join('lu', 'a.idLU', '=', 'lu.idLU')
+            ->where('a.idLanguage', 'LEFT', AppService::getCurrentIdLanguage())
             ->distinct()
-            ->select('do.idDynamicObject')
+            ->select('a.idDynamicObject')
             ->where('lu.idLU', $idLU)
             ->where('a.idDocument', $idDocument)
-            ->orderBy('do.idDynamicObject')
+            ->orderBy('a.idDynamicObject')
             ->all();
         $data = [
             'lu' => $lu,
@@ -177,7 +178,7 @@ class ReportController extends Controller
             'objects' => $objects,
         ];
 
-        return view('LU.Report.objects', $data);
+        return view('LU.Report.partials.objects', $data);
     }
 
     #[Get(path: '/report/lu/dynamic/object/{idDynamicObject}')]
@@ -213,14 +214,20 @@ class ReportController extends Controller
                 'lus' => [],
             ]);
         } else {
+            $idUser = AppService::getCurrentIdUser();
+            $user = User::byId($idUser);
+            $isMaster = User::isManager($user) || User::isMemberOf($user, 'MASTER');
             $lu = LU::byId($idLU);
-            $search->lu = $lu->name;
+            $data = [
+                'lu' => $lu,
+                'language' => Criteria::byId('language', 'idLanguage', $lu->idLanguage),
+                'isMaster' => $isMaster,
+            ];
+            if (! is_null($lu->incorporatedFE)) {
+                $data['incorporatedFE'] = FrameElement::byId($lu->incorporatedFE);
+            }
 
-            return view('LU.Report.main', [
-                'search' => $search,
-                'idLU' => $idLU,
-                'lus' => [],
-            ]);
+            return view('LU.Report.report', $data);
         }
     }
 
