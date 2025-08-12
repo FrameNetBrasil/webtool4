@@ -696,6 +696,46 @@ $router->get('annotation', [
 	'domain' => NULL,
 ]);
 
+$router->get('grapher', [
+	'uses' => 'App\Http\Controllers\AppController@grapher',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('structure', [
+	'uses' => 'App\Http\Controllers\AppController@structure',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('manager', [
+	'uses' => 'App\Http\Controllers\AppController@manager',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('admin', [
+	'uses' => 'App\Http\Controllers\AppController@admin',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('utils', [
+	'uses' => 'App\Http\Controllers\AppController@utils',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('lu/{id}/qualia', [
 	'uses' => 'App\Http\Controllers\LU\QualiaController@qualia',
 	'as' => NULL,
@@ -1008,7 +1048,7 @@ $router->get('report/lu/data', [
 	'domain' => NULL,
 ]);
 
-$router->get('report/lu/content/{idLU?}', [
+$router->get('report/lu/{idLU?}', [
 	'uses' => 'App\Http\Controllers\LU\ReportController@reportContent',
 	'as' => NULL,
 	'middleware' => ['web'],

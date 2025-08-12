@@ -34,7 +34,7 @@ class ReportController extends Controller
         if ($search->lu != '') {
             $lus = Criteria::byFilterLanguage('view_lu',
                 ['name', 'startswith', $search->lu])
-                ->select('idLU', 'name', 'frameName')
+                ->select('idLU', 'name', 'frameName','senseDescription')
                 ->orderBy('name')
                 ->all();
         }
@@ -60,7 +60,7 @@ class ReportController extends Controller
         return $lus;
     }
 
-    #[Get(path: '/report/lu/content/{idLU?}')]
+    #[Get(path: '/report/lu/{idLU?}')]
     public function reportContent(int|string $idLU)
     {
         $idUser = AppService::getCurrentIdUser();

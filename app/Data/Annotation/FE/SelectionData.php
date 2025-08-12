@@ -12,9 +12,7 @@ class SelectionData extends Data
         public ?string $id = '',
         public ?string $start = '',
         public ?string $end = '',
-    )
-    {
-    }
+    ) {}
 
     public static function normalizers(): array
     {
@@ -22,5 +20,4 @@ class SelectionData extends Data
             JsonNormalizer::class,
         ];
     }
-
 }

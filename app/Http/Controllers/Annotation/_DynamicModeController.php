@@ -24,7 +24,6 @@ use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
-
 #[Middleware(name: 'auth')]
 class DynamicModeController extends Controller
 {
@@ -32,16 +31,17 @@ class DynamicModeController extends Controller
     public function browse()
     {
         $search = session('searchCorpus') ?? SearchData::from();
-        return view("Annotation.DynamicMode.browse", [
-            'search' => $search
+
+        return view('Annotation.DynamicMode.browse', [
+            'search' => $search,
         ]);
     }
 
     #[Post(path: '/annotation/dynamicMode/grid')]
     public function grid(SearchData $search)
     {
-        return view("Annotation.DynamicMode.grid", [
-            'search' => $search
+        return view('Annotation.DynamicMode.grid', [
+            'search' => $search,
         ]);
     }
 
@@ -49,10 +49,11 @@ class DynamicModeController extends Controller
     {
         $document = Document::byId($idDocument);
         $corpus = Corpus::byId($document->idCorpus);
-        $documentVideo = Criteria::table("view_document_video")
-            ->where("idDocument", $idDocument)
+        $documentVideo = Criteria::table('view_document_video')
+            ->where('idDocument', $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
+
         return DocumentData::from([
             'idDocument' => $idDocument,
             'document' => $document,
@@ -68,18 +69,17 @@ class DynamicModeController extends Controller
         return DynamicService::getObject($idDynamicObject ?? 0);
     }
 
-
     #[Post(path: '/annotation/dynamicMode/formObject')]
     public function formObject(ObjectData $data)
     {
         debug($data);
         $object = DynamicService::getObject($data->idDynamicObject ?? 0);
-        return view("Annotation.DynamicMode.Panes.formPane", [
+
+        return view('Annotation.DynamicMode.Panes.formPane', [
             'order' => $data->order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
-
 
     #[Get(path: '/annotation/dynamicMode/gridObjects/{idDocument}')]
     public function objectsForGrid(int $idDocument)
@@ -91,21 +91,25 @@ class DynamicModeController extends Controller
     public function getFormObject(int $idDynamicObject, int $order)
     {
         $object = DynamicService::getObject($idDynamicObject ?? 0);
-        return view("Annotation.DynamicMode.Panes.formPane", [
+
+        return view('Annotation.DynamicMode.Panes.formPane', [
             'order' => $order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
+
     #[Post(path: '/annotation/dynamicMode/updateObject')]
     public function updateObject(ObjectData $data)
     {
         debug($data);
         try {
             $idDynamicObject = DynamicService::updateObject($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+
+            return Criteria::byId('dynamicobject', 'idDynamicObject', $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -116,11 +120,13 @@ class DynamicModeController extends Controller
         try {
             $idDynamicObject = DynamicService::updateObjectAnnotation($data);
             $this->trigger('updateObjectAnnotationEvent');
-            //return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
-            return $this->renderNotify("success", "Object updated.");
+
+            // return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            return $this->renderNotify('success', 'Object updated.');
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -130,10 +136,12 @@ class DynamicModeController extends Controller
         debug($data);
         try {
             $idDynamicObject = DynamicService::cloneObject($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+
+            return Criteria::byId('dynamicobject', 'idDynamicObject', $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -142,10 +150,12 @@ class DynamicModeController extends Controller
     {
         try {
             DynamicService::deleteObject($idDynamicObject);
-            return $this->renderNotify("success", "Object removed.");
+
+            return $this->renderNotify('success', 'Object removed.');
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -155,10 +165,12 @@ class DynamicModeController extends Controller
         try {
             debug($data);
             $idBoundingBox = DynamicService::updateBBox($data);
-            return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
+
+            return Criteria::byId('boundingbox', 'idBoundingBox', $idBoundingBox);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -167,18 +179,20 @@ class DynamicModeController extends Controller
     {
         try {
             debug($data);
+
             return DynamicService::createBBox($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
     #[Get(path: '/annotation/dynamicMode/fes/{idFrame}')]
     public function feCombobox(int $idFrame)
     {
-        return view("Annotation.DynamicMode.Panes.fes", [
-            'idFrame' => $idFrame
+        return view('Annotation.DynamicMode.Panes.fes', [
+            'idFrame' => $idFrame,
         ]);
     }
 
@@ -186,8 +200,9 @@ class DynamicModeController extends Controller
     public function gridSentences(int $idDocument)
     {
         $sentences = DynamicService::listSentencesByDocument($idDocument);
-        return view("Annotation.DynamicMode.Panes.sentences", [
-            'sentences' => $sentences
+
+        return view('Annotation.DynamicMode.Panes.sentences', [
+            'sentences' => $sentences,
         ]);
     }
 
@@ -199,31 +214,33 @@ class DynamicModeController extends Controller
     public function buildSentences(int $idDocument)
     {
         $data = $this->getData($idDocument);
-        return view("Annotation.DynamicMode.buildSentences", $data->toArray());
+
+        return view('Annotation.DynamicMode.buildSentences', $data->toArray());
     }
 
     #[Get(path: '/annotation/dynamicMode/formSentence/{idDocument}/{idSentence}')]
     public function formSentence(int $idDocument, int $idSentence)
     {
-        $sentence = Criteria::byId("view_sentence", "idSentence", $idSentence);
+        $sentence = Criteria::byId('view_sentence', 'idSentence', $idSentence);
         if (is_null($sentence)) {
-            $sentence = (object)[
-                "idSentence" => 0,
-                "text" => ''
+            $sentence = (object) [
+                'idSentence' => 0,
+                'text' => '',
             ];
         } else {
-            $ts = Criteria::byId("view_sentence_timespan", "idSentence", $idSentence);
+            $ts = Criteria::byId('view_sentence_timespan', 'idSentence', $idSentence);
             $sentence->startTime = $ts->startTime;
             $sentence->endTime = $ts->endTime;
         }
-        $documentVideo = Criteria::table("view_document_video")
-            ->where("idDocument", $idDocument)
+        $documentVideo = Criteria::table('view_document_video')
+            ->where('idDocument', $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        return view("Annotation.DynamicMode.Panes.formSentencePane", [
+
+        return view('Annotation.DynamicMode.Panes.formSentencePane', [
             'idDocument' => $idDocument,
-            "sentence" => $sentence,
-            'idLanguage' => $video->idLanguage
+            'sentence' => $sentence,
+            'idLanguage' => $video->idLanguage,
         ]);
     }
 
@@ -231,8 +248,8 @@ class DynamicModeController extends Controller
     public function sentence(SentenceData $data)
     {
         try {
-            if ($data->text == "") {
-                return $this->renderNotify("error", "No data.");
+            if ($data->text == '') {
+                return $this->renderNotify('error', 'No data.');
             }
             debug($data);
             if ($data->idSentence == 0) {
@@ -241,19 +258,21 @@ class DynamicModeController extends Controller
                 DynamicService::updateSentence($data);
             }
             $this->trigger('reload-gridSentence');
-            return $this->renderNotify("success", "Sentence updated.");
+
+            return $this->renderNotify('success', 'Sentence updated.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
     #[Get(path: '/annotation/dynamicMode/words/{idVideo}')]
     public function words(int $idVideo)
     {
-        $words = Criteria::table("view_video_wordmm")
-            ->where("idVideo", "=", $idVideo)
-            ->whereNull("idDocumentSentence")
+        $words = Criteria::table('view_video_wordmm')
+            ->where('idVideo', '=', $idVideo)
+            ->whereNull('idDocumentSentence')
             ->all();
+
         return $words;
     }
 
@@ -264,11 +283,12 @@ class DynamicModeController extends Controller
             debug($data);
             $idSentence = DynamicService::buildSentenceFromWords($data);
             if ($idSentence == 0) {
-                throw new \Exception("Error joining words.");
+                throw new \Exception('Error joining words.');
             }
+
             return $idSentence;
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -277,9 +297,10 @@ class DynamicModeController extends Controller
     {
 
         $sentences = DynamicService::listSentencesByDocument($idDocument);
-        return view("Annotation.DynamicMode.Panes.buildSentences", [
+
+        return view('Annotation.DynamicMode.Panes.buildSentences', [
             'idDocument' => $idDocument,
-            'sentences' => $sentences
+            'sentences' => $sentences,
         ]);
     }
 
@@ -289,9 +310,10 @@ class DynamicModeController extends Controller
         try {
             DynamicService::splitSentence($data);
             $this->trigger('reload-gridSentence');
-            return $this->renderNotify("success", "Sentence updated.");
+
+            return $this->renderNotify('success', 'Sentence updated.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -303,12 +325,14 @@ class DynamicModeController extends Controller
     public function getFormComment(CommentData $data)
     {
         $object = CommentService::getDynamicObjectComment($data->idDynamicObject);
-        return view("Annotation.DynamicMode.Panes.formComment", [
+
+        return view('Annotation.DynamicMode.Panes.formComment', [
             'idDocument' => $data->idDocument,
             'order' => $data->order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
+
     #[Post(path: '/annotation/dynamicMode/updateObjectComment')]
     public function updateObjectComment(CommentData $data)
     {
@@ -316,19 +340,22 @@ class DynamicModeController extends Controller
             debug($data);
             CommentService::updateDynamicObjectComment($data);
             $this->trigger('updateObjectAnnotationEvent');
-            return $this->renderNotify("success", "Comment registered.");
+
+            return $this->renderNotify('success', 'Comment registered.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
+
     #[Delete(path: '/annotation/dynamicMode/comment/{idDocument}/{idDynamicObject}')]
-    public function deleteObjectComment(int $idDocument,int $idDynamicObject)
+    public function deleteObjectComment(int $idDocument, int $idDynamicObject)
     {
         try {
-            CommentService::deleteDynamicObjectComment($idDocument,$idDynamicObject);
-            return $this->renderNotify("success", "Object comment removed.");
+            CommentService::deleteDynamicObjectComment($idDocument, $idDynamicObject);
+
+            return $this->renderNotify('success', 'Object comment removed.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -337,15 +364,13 @@ class DynamicModeController extends Controller
      */
 
     #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
-    public function annotation(int|string $idDocument, int $idDynamicObject = null)
+    public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
     {
         $data = $this->getData($idDocument);
-        if (!is_null($idDynamicObject)) {
+        if (! is_null($idDynamicObject)) {
             $data->idDynamicObject = $idDynamicObject;
         }
-        return view("Annotation.DynamicMode.annotation", $data->toArray());
+
+        return view('Annotation.DynamicMode.annotation', $data->toArray());
     }
-
-
-
 }

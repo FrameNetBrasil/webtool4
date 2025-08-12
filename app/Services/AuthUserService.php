@@ -15,18 +15,19 @@ class AuthUserService
 {
     public function auth0Login($userInfo)
     {
-        $userData = (object)[
+        $userData = (object) [
             'auth0IdUser' => $userInfo['user_id'],
             'login' => $userInfo['email'],
             'email' => $userInfo['email'],
             'auth0CreatedAt' => $userInfo['created_at'],
             'name' => $userInfo['name'],
-            'nick' => $userInfo['nickname']
+            'nick' => $userInfo['nickname'],
         ];
         debug($userData);
-        $user = Criteria::one("user", ['email', '=', $userData->email]);
+        $user = Criteria::one('user', ['email', '=', $userData->email]);
         if (is_null($user)) {
             User::create($userData);
+
             return 'new';
         } else {
             $user = User::byId($user->idUser);
@@ -38,7 +39,7 @@ class AuthUserService
                 if ($idLanguage == '') {
                     $idLanguage = config('webtool.defaultIdLanguage');
                 }
-                
+
                 // Set session data (preserve existing behavior)
                 session(['user' => $user]);
                 session(['idLanguage' => $idLanguage]);
@@ -47,12 +48,13 @@ class AuthUserService
                 session(['isMaster' => User::isMemberOf($user, 'MASTER')]);
                 session(['isManager' => User::isMemberOf($user, 'MANAGER')]);
                 session(['isAnno' => User::isMemberOf($user, 'ANNO')]);
-                
+
                 // Integrate with Laravel Auth
                 $userModel = UserModel::fromRepositoryUser($user);
                 Auth::login($userModel);
-                
+
                 debug("[LOGIN] Authenticated {$user->login}");
+
                 return 'logged';
             }
         }
@@ -60,12 +62,13 @@ class AuthUserService
 
     public function md5Check(LoginData $userInfo)
     {
-        $user = Criteria::one("user", ['login', '=', $userInfo->login]);
+        $user = Criteria::one('user', ['login', '=', $userInfo->login]);
         if (is_null($user)) {
-            User::create((object)[
+            User::create((object) [
                 'login' => $userInfo->login,
                 'passMD5' => $userInfo->password,
             ]);
+
             return 'new';
         } else {
             if ($user->status == '0') {
@@ -81,6 +84,7 @@ class AuthUserService
                     session(['mail_token' => $token]);
                     session(['twofactor_iduser' => $user->idUser]);
                     Mail::to($user->email)->send(new WebToolMail($token));
+
                     return 'checked';
                 } else {
                     return 'failed';
@@ -100,7 +104,7 @@ class AuthUserService
             if ($idLanguage == '') {
                 $idLanguage = config('webtool.defaultIdLanguage');
             }
-            
+
             // Set session data (preserve existing behavior)
             session(['user' => $user]);
             session(['idLanguage' => $idLanguage]);
@@ -109,11 +113,11 @@ class AuthUserService
             session(['isMaster' => User::isMemberOf($user, 'MASTER')]);
             session(['isManager' => User::isMemberOf($user, 'MANAGER')]);
             session(['isAnno' => User::isMemberOf($user, 'ANNO')]);
-            
+
             // Integrate with Laravel Auth
             $userModel = UserModel::fromRepositoryUser($user);
             Auth::login($userModel);
-            
+
             debug("[LOGIN] Authenticated {$user->login}");
 
         }
@@ -121,12 +125,13 @@ class AuthUserService
 
     public function md5Login(LoginData $userInfo)
     {
-        $user = Criteria::one("user", ['login', '=', $userInfo->login]);
+        $user = Criteria::one('user', ['login', '=', $userInfo->login]);
         if (is_null($user)) {
-            User::create((object)[
+            User::create((object) [
                 'login' => $userInfo->login,
                 'passMD5' => $userInfo->password,
             ]);
+
             return 'new';
         } else {
             if ($user->status == '0') {
@@ -139,7 +144,7 @@ class AuthUserService
                     if ($idLanguage == '') {
                         $idLanguage = config('webtool.defaultIdLanguage');
                     }
-                    
+
                     // Set session data (preserve existing behavior)
                     session(['user' => $user]);
                     session(['idLanguage' => $idLanguage]);
@@ -148,12 +153,13 @@ class AuthUserService
                     session(['isMaster' => User::isMemberOf($user, 'MASTER')]);
                     session(['isManager' => User::isMemberOf($user, 'MANAGER')]);
                     session(['isAnno' => User::isMemberOf($user, 'ANNO')]);
-                    
+
                     // Integrate with Laravel Auth
                     $userModel = UserModel::fromRepositoryUser($user);
                     Auth::login($userModel);
-                    
+
                     debug("[LOGIN] Authenticated {$user->login}");
+
                     return 'logged';
                 } else {
                     return 'failed';
@@ -168,7 +174,7 @@ class AuthUserService
         if ($idLanguage == '') {
             $idLanguage = config('webtool.defaultIdLanguage');
         }
-        
+
         // Set session data (preserve existing behavior)
         session(['user' => $user]);
         session(['idLanguage' => $idLanguage]);
@@ -176,12 +182,11 @@ class AuthUserService
         session(['isAdmin' => User::isMemberOf($user, 'ADMIN')]);
         session(['isMaster' => User::isMemberOf($user, 'MASTER')]);
         session(['isAnno' => User::isMemberOf($user, 'ANNO')]);
-        
+
         // Integrate with Laravel Auth
         $userModel = UserModel::fromRepositoryUser($user);
         Auth::login($userModel);
-        
+
         debug("[LOGIN] Authenticated {$user->login}");
     }
-
 }

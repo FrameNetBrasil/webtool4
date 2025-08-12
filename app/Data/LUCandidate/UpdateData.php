@@ -2,7 +2,6 @@
 
 namespace App\Data\LUCandidate;
 
-use App\Repositories\Lemma;
 use App\Repositories\Lexicon;
 use Spatie\LaravelData\Data;
 
@@ -21,8 +20,7 @@ class UpdateData extends Data
         public ?int $idBoundingBox = null,
         public ?int $incorporatedFE = null,
         public ?string $frameCandidate = '',
-    )
-    {
+    ) {
         if ($this->idFrame == 0) {
             $this->idFrame = null;
         }
@@ -35,6 +33,5 @@ class UpdateData extends Data
         $lemma = Lexicon::lemmabyId($this->idLexicon);
         $this->name = $lemma->shortName;
     }
-
 
 }

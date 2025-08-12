@@ -22,7 +22,6 @@ use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
-
 #[Middleware(name: 'auth')]
 class StaticBBoxController extends Controller
 {
@@ -30,8 +29,9 @@ class StaticBBoxController extends Controller
     public function browse()
     {
         $search = session('searchCorpus') ?? SearchData::from();
-        return view("Annotation.StaticBBox.browse", [
-            'search' => $search
+
+        return view('Annotation.StaticBBox.browse', [
+            'search' => $search,
         ]);
     }
 
@@ -41,12 +41,12 @@ class StaticBBoxController extends Controller
         debug($search);
 
         // get projects for documents that has images
-        $listProjects = Criteria::table("view_document_image as i")
-            ->join("view_project_docs as p","i.idDocument","=","p.idDocument")
-            ->where("p.idLanguage",\App\Services\AppService::getCurrentIdLanguage())
-            ->where("p.projectName","<>","Default Project")
-            ->select("p.projectName")
-            ->chunkResult("projectName","projectName");
+        $listProjects = Criteria::table('view_document_image as i')
+            ->join('view_project_docs as p', 'i.idDocument', '=', 'p.idDocument')
+            ->where('p.idLanguage', \App\Services\AppService::getCurrentIdLanguage())
+            ->where('p.projectName', '<>', 'Default Project')
+            ->select('p.projectName')
+            ->chunkResult('projectName', 'projectName');
         debug($listProjects);
         // get the documents allowed to this user
         if (($search->document != '') || ($search->idCorpus != '')) {
@@ -54,14 +54,15 @@ class StaticBBoxController extends Controller
         } else {
             $data = BrowseService::browseCorpusBySearch($search, $listProjects);
         }
+
         return $data;
     }
 
     #[Post(path: '/annotation/staticBBox/grid')]
     public function grid(SearchData $search)
     {
-        return view("Annotation.StaticBBox.grid", [
-            'search' => $search
+        return view('Annotation.StaticBBox.grid', [
+            'search' => $search,
         ]);
     }
 
@@ -69,10 +70,11 @@ class StaticBBoxController extends Controller
     {
         $document = Document::byId($idDocument);
         $corpus = Corpus::byId($document->idCorpus);
-        $documentImage = Criteria::table("view_document_image")
-            ->where("idDocument", $idDocument)
+        $documentImage = Criteria::table('view_document_image')
+            ->where('idDocument', $idDocument)
             ->first();
         $image = Image::byId($documentImage->idImage);
+
         return DocumentData::from([
             'idDocument' => $idDocument,
             'document' => $document,
@@ -84,15 +86,15 @@ class StaticBBoxController extends Controller
         ]);
     }
 
-
     #[Post(path: '/annotation/staticBBox/formObject')]
     public function formObject(ObjectData $data)
     {
         debug($data);
         $object = StaticBBoxService::getObject($data->idStaticObject ?? 0);
-        return view("Annotation.StaticBBox.Panes.formPane", [
+
+        return view('Annotation.StaticBBox.Panes.formPane', [
             'order' => $data->order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
 
@@ -100,9 +102,10 @@ class StaticBBoxController extends Controller
     public function getFormObject(int $idStaticObject, int $order)
     {
         $object = StaticBBoxService::getObject($idStaticObject ?? 0);
-        return view("Annotation.StaticBBox.Panes.formPane", [
+
+        return view('Annotation.StaticBBox.Panes.formPane', [
             'order' => $order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
 
@@ -118,10 +121,12 @@ class StaticBBoxController extends Controller
         debug($data);
         try {
             $idStaticObject = StaticBBoxService::updateObject($data);
-            return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
+
+            return Criteria::byId('staticobject', 'idStaticObject', $idStaticObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -132,11 +137,13 @@ class StaticBBoxController extends Controller
         try {
             $idStaticObject = StaticBBoxService::updateObjectAnnotation($data);
             $this->trigger('updateObjectAnnotationEvent');
-            //return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
-            return $this->renderNotify("success", "Object updated.");
+
+            // return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
+            return $this->renderNotify('success', 'Object updated.');
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -146,9 +153,10 @@ class StaticBBoxController extends Controller
         debug($data);
         try {
             $idStaticObject = StaticBBoxService::cloneObject($data);
-            return Criteria::byId("staticobject", "idStaticObject", $idStaticObject);
+
+            return Criteria::byId('staticobject', 'idStaticObject', $idStaticObject);
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -157,10 +165,12 @@ class StaticBBoxController extends Controller
     {
         try {
             StaticBBoxService::deleteObject($idStaticObject);
-            return $this->renderNotify("success", "Object removed.");
+
+            return $this->renderNotify('success', 'Object removed.');
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -170,19 +180,21 @@ class StaticBBoxController extends Controller
         try {
             debug($data);
             $idBoundingBox = StaticBBoxService::updateBBox($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $data->idStaticObject);
-            //return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
+
+            return Criteria::byId('dynamicobject', 'idDynamicObject', $data->idStaticObject);
+            // return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
     #[Get(path: '/annotation/staticBBox/fes/{idFrame}')]
     public function feCombobox(int $idFrame)
     {
-        return view("Annotation.StaticBBox.Panes.fes", [
-            'idFrame' => $idFrame
+        return view('Annotation.StaticBBox.Panes.fes', [
+            'idFrame' => $idFrame,
         ]);
     }
 
@@ -190,8 +202,9 @@ class StaticBBoxController extends Controller
     public function gridSentences(int $idDocument)
     {
         $sentences = StaticBBoxService::listSentencesByDocument($idDocument);
-        return view("Annotation.StaticBBox.Panes.sentences", [
-            'sentences' => $sentences
+
+        return view('Annotation.StaticBBox.Panes.sentences', [
+            'sentences' => $sentences,
         ]);
     }
 
@@ -203,10 +216,11 @@ class StaticBBoxController extends Controller
     public function getFormComment(CommentData $data)
     {
         $object = CommentService::getStaticObjectComment($data->idStaticObject);
-        return view("Annotation.StaticBBox.Panes.formComment", [
+
+        return view('Annotation.StaticBBox.Panes.formComment', [
             'idDocument' => $data->idDocument,
             'order' => $data->order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
 
@@ -217,9 +231,10 @@ class StaticBBoxController extends Controller
             debug($data);
             CommentService::updateStaticObjectComment($data);
             $this->trigger('updateObjectAnnotationEvent');
-            return $this->renderNotify("success", "Comment registered.");
+
+            return $this->renderNotify('success', 'Comment registered.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -228,9 +243,10 @@ class StaticBBoxController extends Controller
     {
         try {
             CommentService::deleteStaticObjectComment($idDocument, $idStaticObject);
-            return $this->renderNotify("success", "Object comment removed.");
+
+            return $this->renderNotify('success', 'Object comment removed.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -241,11 +257,10 @@ class StaticBBoxController extends Controller
     public function annotation(int $idDocument, ?int $idStaticObject = null)
     {
         $data = $this->getData($idDocument);
-        if (!is_null($idStaticObject)) {
+        if (! is_null($idStaticObject)) {
             $data->idStaticObject = $idStaticObject;
         }
 
-        return view("Annotation.StaticBBox.annotation", $data->toArray());
+        return view('Annotation.StaticBBox.annotation', $data->toArray());
     }
-
 }

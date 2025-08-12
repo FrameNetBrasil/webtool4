@@ -14,13 +14,12 @@ class SearchData extends Data
         public ?int $idDocument = null,
         public ?string $annotation = 'staticbbox',
         public string $_token = '',
-    )
-    {
+    ) {
         if ($this->id != '') {
             $type = $this->id[0];
             if ($type == 'c') {
                 $this->idCorpus = substr($this->id, 1);
-            } else if ($type == 'd') {
+            } elseif ($type == 'd') {
                 $this->idDocument = substr($this->id, 1);
             } else {
                 $this->idCorpus = $this->id;
