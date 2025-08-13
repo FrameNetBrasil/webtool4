@@ -1,7 +1,9 @@
+@use "../../abstracts/variables" as *;
+
 /* Masonry-style grid for Pinterest-like layouts */
 .masonry-grid {
     columns: 300px;
-    column-gap: @relativeMedium;                                         // 16px (was var(--spacing-4))
+    column-gap: $size-medium;                                         // 16px (was var(--spacing-4))
 
     &.narrow {
         columns: 250px;
@@ -13,7 +15,7 @@
 
     .masonry-item {
         break-inside: avoid;
-        margin-bottom: @relativeMedium;                                  // 16px (was var(--spacing-4))
+        margin-bottom: $size-medium;                                  // 16px (was var(--spacing-4))
         page-break-inside: avoid;
     }
 }

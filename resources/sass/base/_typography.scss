@@ -3,6 +3,8 @@
 // Typography overrides and extensions for Bulma
 // =============================================================================
 
+@use "../abstracts/variables" as *;
+
 // Font loading optimization
 @font-face {
     font-family: 'Lato';

@@ -19,7 +19,7 @@
 
     <script type="text/javascript" src="https://unpkg.com/htmx.org@2.0.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+{{--    <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>--}}
 
     <script type="text/javascript" src="/scripts/pdf/jspdf.debug.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2canvas.min.js"></script>

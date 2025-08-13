@@ -1,10 +1,12 @@
+@use "../../abstracts/variables" as *;
+
 /* Data Card Component */
 .data-card {
     .data-card-header {
         display: flex;
         align-items: center;
-        gap: @relativeMedium;
-        margin-bottom: @relativeMedium;
+        gap: $size-medium;
+        margin-bottom: $size-medium;
 
         .data-card-avatar {
             width: @relative40px;
@@ -38,8 +40,8 @@
 
     .data-card-stats {
         display: flex;
-        gap: @relativeMedium;
-        margin-top: @relativeMedium;
+        gap: $size-medium;
+        margin-top: $size-medium;
 
         .statistic {
             text-align: center;

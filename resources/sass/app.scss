@@ -1,146 +1,28 @@
 // =============================================================================
 // WEBTOOL 4.0 - MAIN STYLESHEET
-// Built with Bulma CSS Framework
+// Built with Bulma CSS Framework v1.0.4 with Sass Module System
 // =============================================================================
 
-// -----------------------------------------------------------------------------
-// 1. ABSTRACTS - Variables, Functions, Mixins
-// -----------------------------------------------------------------------------
-@import "abstracts/variables";
+// Import custom variables (includes configured Bulma)
+@use "abstracts/variables" as *;
 
-// -----------------------------------------------------------------------------
-// 2. BULMA FRAMEWORK - Import Bulma with our custom variables
-// -----------------------------------------------------------------------------
-@import "bulma";
-
-// -----------------------------------------------------------------------------
-// 3. BASE - Base styles and overrides
-// -----------------------------------------------------------------------------
-@import "base/reset";
-@import "base/typography";
-
-// -----------------------------------------------------------------------------
-// 4. LAYOUT - Grid system, containers, page layouts
-// -----------------------------------------------------------------------------
-@import "layouts/index";
-
-// -----------------------------------------------------------------------------
-// 5. COMPONENTS - UI components and widgets
-// -----------------------------------------------------------------------------
-@import "components/app/index";
-@import "components/buttons";
-@import "components/cards/index";
-@import "components/forms";
-@import "components/modals";
-@import "components/navigation";
-@import "components/bbox";
-@import "components/tree";
-
-@import "colors/index";
-
-// -----------------------------------------------------------------------------
-// 6. PAGES - Page-specific styles
-// -----------------------------------------------------------------------------
-@import "pages/annotation/index";
-@import "pages/report/index";
-
-// -----------------------------------------------------------------------------
-// 7. UTILITIES - Helper classes and overrides
-// -----------------------------------------------------------------------------
-@import "utilities/helpers";
-@import "utilities/overrides";
-@import "utilities/responsive";
-@import "utilities/accessibility";
-@import "utilities/spacing";
-
-// -----------------------------------------------------------------------------
-// 8. DOMAIN-SPECIFIC - FrameNet entities and colors
-// -----------------------------------------------------------------------------
-
-// FrameNet Entity Colors
-:root {
-    // Frames
-    --frame-color: #{$frame-color};
-    --frame-bg: #{$frame-bg};
-    --frame-border: #{$frame-border};
-
-    // Lexical Units
-    --lu-color: #{$lu-color};
-    --lu-bg: #{$lu-bg};
-    --lu-border: #{$lu-border};
-
-    // Constructions
-    --construction-color: #{$construction-color};
-    --construction-bg: #{$construction-bg};
-    --construction-border: #{$construction-border};
-
-    // Semantic Types
-    --semantictype-color: #{$semantictype-color};
-    --semantictype-bg: #{$semantictype-bg};
-    --semantictype-border: #{$semantictype-border};
-
-    // Concept
-    --concept-color: #{$concept-color};
-    --concept-bg: #{$concept-bg};
-    --concept-border: #{$concept-border};
-
-    // Qualia TQR
-    --qualia-color: #{$qualia-color};
-    --qualia-bg: #{$qualia-bg};
-    --qualia-border: #{$qualia-border};
-
-    // Relations
-    --relation-inherits: #{$relation-inherits};
-    --relation-uses: #{$relation-uses};
-    --relation-subframe: #{$relation-subframe};
-    --relation-perspective: #{$relation-perspective};
-
-    // Annotation Layers
-    --layer-frame: #{$layer-frame};
-    --layer-fe: #{$layer-fe};
-    --layer-target: #{$layer-target};
-    --layer-support: #{$layer-support};
-}
-
-// Domain entity utility classes
-.frame {
-    color: var(--frame-color) !important;
-    fill: var(--frame-color) !important;
-    stroke: var(--frame-color) !important;
-    border-color: var(--frame-color) !important;
-}
-
-.lu {
-    color: var(--lu-color) !important;
-    fill: var(--lu-color) !important;
-    stroke: var(--lu-color) !important;
-    border-color: var(--lu-color) !important;
-}
-
-.construction {
-    color: var(--construction-color) !important;
-    fill: var(--construction-color) !important;
-    stroke: var(--construction-color) !important;
-    border-color: var(--construction-color) !important;
-}
-
-.semantictype {
-    color: var(--semantictype-color) !important;
-    fill: var(--semantictype-color) !important;
-    stroke: var(--semantictype-color) !important;
-    border-color: var(--semantictype-color) !important;
-}
-
-.qualia {
-    color: var(--qualia-color) !important;
-    fill: var(--qualia-color) !important;
-    stroke: var(--qualia-color) !important;
-    border-color: var(--qualia-color) !important;
-}
-
-.concept {
-    color: var(--concept-color) !important;
-    fill: var(--concept-color) !important;
-    stroke: var(--concept-color) !important;
-    border-color: var(--concept-color) !important;
-}
+// Import all other modules
+@use "base/reset";
+@use "base/typography";
+@use "layouts/index" as layouts;
+@use "components/app/index" as app;
+@use "components/buttons";
+@use "components/cards/index" as cards;
+@use "components/forms";
+@use "components/modals";
+@use "components/navigation";
+@use "components/bbox";
+@use "components/tree";
+@use "colors/index" as colors;
+@use "pages/annotation/index" as annotation;
+@use "pages/report/index" as report;
+@use "utilities/helpers";
+@use "utilities/overrides";
+@use "utilities/responsive";
+@use "utilities/accessibility";
+@use "utilities/spacing";

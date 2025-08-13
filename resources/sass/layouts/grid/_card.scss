@@ -1,7 +1,9 @@
+@use "../../abstracts/variables" as *;
+
 /* Card grids for data display */
 .card-grid {
     display: grid;
-    gap: @relativeMedium;                                                // 16px (was var(--spacing-4))
+    gap: $size-medium;                                                // 16px (was var(--spacing-4))
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 
     // CRITICAL: Override Fomantic's margin system for grid layouts
@@ -26,17 +28,17 @@
     // Grid variants
     &.dense {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: @relativeSmall;
+        gap: $size-small;
     }
 
     &.wide-cards {
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-        gap: @relativeLarge;
+        gap: $size-large;
     }
 
     &.small-cards {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: @relativeMedium;
+        gap: $size-medium;
     }
 
     &.single-row {
@@ -45,9 +47,9 @@
     }
 
     // Mobile responsiveness
-    @media (max-width: @mobileBreakpoint) {
+    @media (max-width: $mobile-breakpoint) {
         grid-template-columns: 1fr;
-        gap: @relativeMedium;
+        gap: $size-medium;
 
         &.dense,
         &.wide-cards,

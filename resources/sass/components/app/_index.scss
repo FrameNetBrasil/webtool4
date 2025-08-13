@@ -1,6 +1,6 @@
-@import "main";
-@import "header";
-@import "search";
-@import "sidebar";
-@import "tools";
+@forward "main";
+@forward "header";
+@forward "search";
+@forward "sidebar";
+@forward "tools";
 

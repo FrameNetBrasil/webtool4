@@ -1,7 +1,9 @@
+@use "../../abstracts/variables" as *;
+
 /* Auto-fit grids with min/max constraints */
 .auto-grid {
     display: grid;
-    gap: @relativeMedium;                                                // 16px (was var(--spacing-4))
+    gap: $size-medium;                                                // 16px (was var(--spacing-4))
 
     &.min-150 {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

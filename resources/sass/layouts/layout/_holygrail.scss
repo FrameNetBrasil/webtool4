@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 /* Holy grail layout (header, footer, sidebar, main) */
 .holy-grail {
     display: grid;
@@ -6,7 +8,7 @@
         "header header header"
         "sidebar main aside"
         "footer footer footer";
-    grid-template-columns: @sidebarWidthNarrow 1fr 200px;               // 250px (was var(--sidebar-width-narrow))
+    grid-template-columns: $sidebar-width-narrow 1fr 200px;               // 250px (was var(--sidebar-width-narrow))
     grid-template-rows: auto 1fr auto;
 
     .hg-header {

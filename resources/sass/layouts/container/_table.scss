@@ -1,11 +1,13 @@
+@use "../../abstracts/variables" as *;
+
 /* Table container with sticky headers */
 .table-container {
     position: relative;
     overflow: auto;
     max-height: calc(100vh - 200px);
-    border: 1px solid @borderColor;                                     // (was var(--color-border-primary))
-    border-radius: @borderRadiusLG;                                      // 8px (was var(--radius-lg))
-    background: @primaryBackground;                                         // (was var(--color-bg-primary))
+    border: 1px solid $border;                                     // (was var(--color-border-primary))
+    border-radius: $radius-large;                                      // 8px (was var(--radius-lg))
+    background: $background;                                         // (was var(--color-bg-primary))
 
     &.full-height {
         max-height: calc(100vh - 120px);
@@ -28,14 +30,14 @@
         thead th {
             position: sticky;
             top: 0;
-            background: @primaryBackground;                              // (was var(--color-sidebar-bg))
-            z-index: @zIndexDropdown;                                    // (was var(--z-dropdown))
-            border-bottom: 2px solid @borderColor;                     // (was var(--color-border-primary))
-            box-shadow: @shadowSM;                                      // (was var(--shadow-sm))
+            background: $background;                              // (was var(--color-sidebar-bg))
+            z-index: $z-index-dropdown;                                    // (was var(--z-dropdown))
+            border-bottom: 2px solid $border;                     // (was var(--color-border-primary))
+            box-shadow: $shadow;                                      // (was var(--shadow-sm))
         }
 
         &.striped tbody tr:nth-child(2n) {
-            background: @primaryBackground;                              // (was var(--color-sidebar-bg))
+            background: $background;                              // (was var(--color-sidebar-bg))
         }
     }
 }

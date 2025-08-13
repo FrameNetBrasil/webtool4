@@ -1,6 +1,8 @@
+@use "../../abstracts/variables" as *;
+
 /* Option Card Component */
 .option-card {
-    transition: all @transitionNormal;
+    transition: all $transition-normal;
     cursor: pointer;
     //min-height: 9rem !important;
 
@@ -28,7 +30,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: @relativeMedium;
+        margin-bottom: $size-medium;
         font-size: @huge;
         color: @invertedTextColor;
         flex-shrink: 0;
@@ -39,7 +41,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: @relativeMedium;
+        margin-top: $size-medium;
         font-size: @tiny;
         color: @secondaryColor;
 

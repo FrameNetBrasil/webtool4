@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 /* Action Card Component */
 .action-card {
     text-align: center;
@@ -19,7 +21,7 @@
         align-items: center;
         justify-content: center;
         font-size: @huge;
-        margin: 0 auto @relativeMedium;
+        margin: 0 auto $size-medium;
     }
 
     .action-card-shortcut {

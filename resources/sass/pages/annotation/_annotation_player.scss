@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 .annotation-player {
     grid-area: player;
     height: 100%;
@@ -15,19 +17,19 @@
 
     .progress-container {
         position: relative;
-        height: 8px;
-        background: #e9ecef;
-        border-radius: 4px;
+        height: $size-mini;
+        background: $gray-100;
+        border-radius: $radius-medium;
         cursor: pointer;
-        margin: 4px 0 8px 0;
+        margin: $size-mini 0 $size-mini 0;
     }
 
     .progress-bar {
         top:0;
         left:0;
         height: 100%;
-        background: #007bff;
-        border-radius: 4px;
+        background: $primary;
+        border-radius: $radius-medium;
         transition: width 0.1s;
     }
 
@@ -36,24 +38,24 @@
         top: 0;
         left: 0;
         height: 100%;
-        background: rgba(0,123,255,0.3);
-        border-radius: 4px;
+        background: rgba($primary, 0.3);
+        border-radius: $radius-medium;
     }
 
     .control-bar {
         position: relative;
-        background-color: @neutral300;
+        background-color: $neutral-300;
         width: 853px;
         margin-top: 24px;
-        
+
         .playback-rate-selector {
             min-width: 80px;
-            
+
             .text {
                 font-size: 0.9em;
                 font-weight: 500;
             }
-            
+
             &.ui.dropdown {
                 min-height: 2.5em;
                 line-height: 2.5em;

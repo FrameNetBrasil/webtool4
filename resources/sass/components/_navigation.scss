@@ -1,3 +1,5 @@
+@use "../abstracts/variables" as *;
+
 // =============================================================================
 // NAVIGATION COMPONENTS
 // Custom navigation styles extending Bulma navbar and menu
@@ -32,7 +34,7 @@
                 
                 &.is-active {
                     background-color: $primary;
-                    color: $primary-invert;
+                    color: $primary-inverted;
                 }
             }
         }

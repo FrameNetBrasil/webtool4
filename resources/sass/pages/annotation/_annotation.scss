@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 /*******************************
     Annotation Interface Styling
     Updated to use Fomantic-UI variables
@@ -10,70 +12,70 @@
     overflow: hidden;
 
     .annotation-header {
-        padding: $medium $medium;
+        padding: $size-medium $size-medium;
     }
         /* Annotation toolbar */
     .annotation-toolbar {
         display: flex;
         align-items: center;
         background: $neutral-800;
-        color: @invertedTextColor;
-        padding: $small $large;
+        color: $primary-inverted;
+        padding: $size-small $size-large;
         border-bottom: 1px solid $primary;
         flex-shrink: 0;
 
         .toolbar-section {
             display: flex;
             align-items: center;
-            gap: @relativeTiny;
+            gap: $size-tiny;
 
             &:not(:last-child) {
-                margin-right: $large;
-                padding-right: $large;
-                border-right: 1px solid @textSecondary;
+                margin-right: $size-large;
+                padding-right: $size-large;
+                border-right: 1px solid $secondary;
             }
 
             .section-label {
-                color: @textTertiary;
-                font-size: @fontSizeXS;
+                color: $tertiary;
+                font-size: $size-tiny;
                 text-transform: uppercase;
-                letter-spacing: @letterSpacingWide;
-                margin-right: @relativeTiny;
+                letter-spacing: $letter-spacing-wide;
+                margin-right: $size-tiny;
             }
         }
 
         .tool-group {
             display: flex;
             align-items: center;
-            gap: @relativeMini;
+            gap: $size-mini;
 
             .tool-button {
-                padding: @relativeTiny;
+                padding: $size-tiny;
                 background: transparent;
                 border: 1px solid transparent;
-                border-radius: @borderRadiusSM;
-                color: @textTertiary;
+                border-radius: $radius-small;
+                color: $tertiary;
                 cursor: pointer;
-                transition: all @transitionFast;
+                transition: all $transition-fast;
 
                 &:hover {
-                    background: @overlayLight10;
+                    background: $overlay-light-10;
                     color: $neutral-300;
                 }
 
                 &.active {
-                    background: @primaryColor;
-                    border-color: @primaryColor;
-                    color: @invertedTextColor;
+                    background: $primary;
+                    border-color: $primary;
+                    color: $primary-inverted;
                 }
 
                 &.disabled {
-                    opacity: @disabledOpacity;
+                    opacity: $disabled-opacity;
                     cursor: not-allowed;
 
                     &:hover {
                         background: transparent;
-                        color: @textTertiary;
+                        color: $tertiary;
                     }
                 }
             }
@@ -82,12 +84,12 @@
         .zoom-controls {
             display: flex;
             align-items: center;
-            gap: @relativeTiny;
+            gap: $size-tiny;
 
             .zoom-level {
-                min-width: @relativeBig;
+                min-width: $size-big;
                 text-align: center;
-                font-size: @fontSizeSM;
+                font-size: $size-small;
                 color: $neutral-300;
             }
         }
@@ -95,30 +97,30 @@
         .playback-controls {
             display: flex;
             align-items: center;
-            gap: $small;
+            gap: $size-small;
 
             .play-button {
-                width: @relative40px;
-                height: @relative40px;
-                border-radius: @borderRadiusFull;
-                background: @primaryColor;
+                width: 40px;
+                height: 40px;
+                border-radius: $radius-rounded;
+                background: $primary;
                 border: none;
-                color: @invertedTextColor;
+                color: $primary-inverted;
                 cursor: pointer;
                 display: flex;
                 align-items: center;
                 justify-content: center;
 
                 &:hover {
-                    background: @primaryColorHover;
+                    background: $blue-700;
                 }
             }
 
             .time-display {
-                font-family: @codeFont;
-                font-size: @fontSizeSM;
+                font-family: $family-monospace;
+                font-size: $size-small;
                 color: $neutral-300;
-                min-width: @relative80px + @relative16px;
+                min-width: 80px + 16px;
                 text-align: center;
             }
         }
@@ -129,18 +131,18 @@
             .info-item {
                 display: inline-flex;
                 align-items: center;
-                gap: @relativeTiny;
-                margin-left: $medium;
+                gap: $size-tiny;
+                margin-left: $size-medium;
 
                 .info-label {
-                    color: @textTertiary;
-                    font-size: @fontSizeSM;
+                    color: $tertiary;
+                    font-size: $size-small;
                 }
 
                 .info-value {
                     color: $neutral-300;
-                    font-weight: @fontWeightMedium;
-                    font-size: @fontSizeSM;
+                    font-weight: $weight-medium;
+                    font-size: $size-small;
                 }
             }
         }
@@ -156,7 +158,7 @@
         .canvas-container {
             flex: 1;
             position: relative;
-            background: @surfaceSecondary;
+            background: $gray-50;
             overflow: hidden;
 
             .media-canvas {
@@ -185,47 +187,47 @@
 
                 .bounding-box {
                     position: absolute;
-                    border: 2px solid @annotationPrimaryColor;
-                    background: @annotationBackground;
+                    border: 2px solid $primary;
+                    background: $background;
                     pointer-events: all;
                     cursor: move;
 
                     &.selected {
-                        border-color: @annotationSelectedColor;
-                        background: @annotationSelectedBackground;
+                        border-color: $success;
+                        background: $background;
                     }
 
                     &.hover {
-                        border-color: @annotationHoverColor;
-                        background: @annotationHoverBackground;
+                        border-color: $warning;
+                        background: $background;
                     }
 
                     .resize-handle {
                         position: absolute;
-                        width: @relativeTiny;
-                        height: @relativeTiny;
-                        background: @invertedTextColor;
-                        border: 1px solid @annotationPrimaryColor;
+                        width: $size-tiny;
+                        height: $size-tiny;
+                        background: $primary-inverted;
+                        border: 1px solid $primary;
 
-                        &.nw { top: -@relativeMini; left: -@relativeMini; cursor: nw-resize; }
-                        &.ne { top: -@relativeMini; right: -@relativeMini; cursor: ne-resize; }
-                        &.sw { bottom: -@relativeMini; left: -@relativeMini; cursor: sw-resize; }
-                        &.se { bottom: -@relativeMini; right: -@relativeMini; cursor: se-resize; }
-                        &.n { top: -@relativeMini; left: 50%; margin-left: -@relativeMini; cursor: n-resize; }
-                        &.s { bottom: -@relativeMini; left: 50%; margin-left: -@relativeMini; cursor: s-resize; }
-                        &.w { top: 50%; left: -@relativeMini; margin-top: -@relativeMini; cursor: w-resize; }
-                        &.e { top: 50%; right: -@relativeMini; margin-top: -@relativeMini; cursor: e-resize; }
+                        &.nw { top: -$size-mini; left: -$size-mini; cursor: nw-resize; }
+                        &.ne { top: -$size-mini; right: -$size-mini; cursor: ne-resize; }
+                        &.sw { bottom: -$size-mini; left: -$size-mini; cursor: sw-resize; }
+                        &.se { bottom: -$size-mini; right: -$size-mini; cursor: se-resize; }
+                        &.n { top: -$size-mini; left: 50%; margin-left: -$size-mini; cursor: n-resize; }
+                        &.s { bottom: -$size-mini; left: 50%; margin-left: -$size-mini; cursor: s-resize; }
+                        &.w { top: 50%; left: -$size-mini; margin-top: -$size-mini; cursor: w-resize; }
+                        &.e { top: 50%; right: -$size-mini; margin-top: -$size-mini; cursor: e-resize; }
                     }
 
                     .box-label {
                         position: absolute;
-                        top: -$large;
+                        top: -$size-large;
                         left: 0;
-                        background: @overlayDark80;
-                        color: @invertedTextColor;
-                        padding: @relativeMini @relativeTiny;
-                        border-radius: @borderRadiusSM;
-                        font-size: @fontSizeXS;
+                        background: $overlay-dark-80;
+                        color: $primary-inverted;
+                        padding: $size-mini $size-tiny;
+                        border-radius: $radius-small;
+                        font-size: $size-tiny;
                         white-space: nowrap;
                     }
                 }
@@ -234,36 +236,36 @@
             /* Canvas controls */
             .canvas-controls {
                 position: absolute;
-                bottom: $medium;
-                right: $medium;
+                bottom: $size-medium;
+                right: $size-medium;
                 display: flex;
                 flex-direction: column;
-                gap: @relativeTiny;
+                gap: $size-tiny;
 
                 .control-group {
-                    background: @overlayLight80;
-                    border: 1px solid @borderColor;
-                    border-radius: @borderRadiusMD;
-                    padding: @relativeTiny;
-                    backdrop-filter: blur(@relativeMini);
+                    background: $overlay-light-80;
+                    border: 1px solid $border;
+                    border-radius: $radius-large;
+                    padding: $size-tiny;
+                    backdrop-filter: blur($size-mini);
 
                     .control-button {
                         display: block;
-                        width: @relative40px;
-                        height: @relative40px;
+                        width: 40px;
+                        height: 40px;
                         border: none;
                         background: transparent;
-                        color: @textSecondary;
+                        color: $secondary;
                         cursor: pointer;
-                        border-radius: @borderRadiusSM;
+                        border-radius: $radius-small;
 
                         &:hover {
-                            background: @surfaceTertiary;
+                            background: $gray-100;
                             color: $primary;
                         }
 
                         &:not(:last-child) {
-                            margin-bottom: @relativeMini;
+                            margin-bottom: $size-mini;
                         }
                     }
                 }
@@ -272,19 +274,19 @@
 
         /* Properties panel */
         .properties-panel {
-            width: @toolsPanelWidth;
-            background: @sidebarBackground;
-            border-left: 1px solid @borderColor;
+            width: $tools-panel-width;
+            background: $gray-100;
+            border-left: 1px solid $border;
             display: flex;
             flex-direction: column;
 
             .panel-header {
-                padding: $medium $large;
-                border-bottom: 1px solid @borderColor;
-                background: @surfacePrimary;
+                padding: $size-medium $size-large;
+                border-bottom: 1px solid $border;
+                background: $white;
 
                 .panel-title {
-                    font-weight: @fontWeightSemibold;
+                    font-weight: $weight-semibold;
                     color: $primary;
                     margin: 0;
                 }
@@ -295,27 +297,27 @@
                 overflow-y: auto;
 
                 .property-section {
-                    padding: $large;
-                    border-bottom: 1px solid @borderColor;
+                    padding: $size-large;
+                    border-bottom: 1px solid $border;
 
                     .section-title {
-                        font-size: @fontSizeSM;
-                        font-weight: @fontWeightSemibold;
+                        font-size: $size-small;
+                        font-weight: $weight-semibold;
                         color: $primary;
-                        margin-bottom: $medium;
+                        margin-bottom: $size-medium;
                         text-transform: uppercase;
-                        letter-spacing: @letterSpacingWide;
+                        letter-spacing: $letter-spacing-wide;
                     }
 
                     .property-field {
-                        margin-bottom: $medium;
+                        margin-bottom: $size-medium;
 
                         label {
                             display: block;
-                            font-size: @fontSizeSM;
-                            font-weight: @fontWeightMedium;
+                            font-size: $size-small;
+                            font-weight: $weight-medium;
                             color: $primary;
-                            margin-bottom: @relativeTiny;
+                            margin-bottom: $size-tiny;
                         }
 
                         .ui.input,
@@ -326,13 +328,13 @@
 
                     .color-picker {
                         display: flex;
-                        gap: @relativeTiny;
+                        gap: $size-tiny;
                         flex-wrap: wrap;
 
                         .color-option {
-                            width: @relativeBig;
-                            height: @relativeBig;
-                            border-radius: @borderRadiusSM;
+                            width: $size-big;
+                            height: $size-big;
+                            border-radius: $radius-small;
                             border: 2px solid transparent;
                             cursor: pointer;
 
@@ -348,45 +350,45 @@
 
     /* Timeline for video annotation */
     .annotation-timeline {
-        height: @timelineHeight;
-        background: @sidebarBackground;
-        border-top: 1px solid @borderColor;
+        height: $timeline-height;
+        background: $gray-100;
+        border-top: 1px solid $border;
         display: flex;
         flex-direction: column;
 
         .timeline-header {
-            padding: $small $medium;
-            border-bottom: 1px solid @borderColor;
-            background: @surfacePrimary;
+            padding: $size-small $size-medium;
+            border-bottom: 1px solid $border;
+            background: $white;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
 
             .timeline-title {
-                font-size: @fontSizeSM;
-                font-weight: @fontWeightSemibold;
+                font-size: $size-small;
+                font-weight: $weight-semibold;
                 color: $primary;
             }
 
             .timeline-controls {
                 display: flex;
-                gap: @relativeTiny;
+                gap: $size-tiny;
 
                 .timeline-zoom {
                     display: flex;
-                    gap: @relativeMini;
+                    gap: $size-mini;
 
                     button {
-                        padding: @relativeMini @relativeTiny;
-                        background: @surfacePrimary;
-                        border: 1px solid @borderColor;
-                        border-radius: @borderRadiusSM;
-                        font-size: @fontSizeXS;
+                        padding: $size-mini $size-tiny;
+                        background: $white;
+                        border: 1px solid $border;
+                        border-radius: $radius-small;
+                        font-size: $size-tiny;
                         cursor: pointer;
 
                         &:hover {
-                            background: @sidebarBackground;
+                            background: $gray-100;
                         }
                     }
                 }
@@ -400,23 +402,23 @@
             overflow-y: hidden;
 
             .track-ruler {
-                height: @relative20px;
-                background: @surfacePrimary;
-                border-bottom: 1px solid @borderColor;
+                height: 20px;
+                background: $white;
+                border-bottom: 1px solid $border;
                 position: relative;
 
                 .time-marker {
                     position: absolute;
                     top: 0;
                     height: 100%;
-                    border-left: 1px solid @timelineRulerColor;
+                    border-left: 1px solid $gray-400;
 
                     .time-label {
                         position: absolute;
-                        top: @relative2px;
-                        left: @relativeMini;
-                        font-size: @fontSizeXS;
-                        color: @timelineLabelColor;
+                        top: 2px;
+                        left: $size-mini;
+                        font-size: $size-tiny;
+                        color: $gray-600;
                     }
                 }
             }
@@ -427,16 +429,16 @@
 
                 .annotation-segment {
                     position: absolute;
-                    height: @relative32px - @relative2px;
-                    background: @timelineSegmentColor;
-                    border-radius: @borderRadiusSM;
-                    color: @invertedTextColor;
-                    font-size: @fontSizeXS;
-                    padding: @relativeMini @relativeTiny;
+                    height: 32px - 2px;
+                    background: $indigo-600;
+                    border-radius: $radius-small;
+                    color: $primary-inverted;
+                    font-size: $size-tiny;
+                    padding: $size-mini $size-tiny;
                     cursor: pointer;
 
                     &.selected {
-                        background: @timelineSelectedColor;
+                        background: $success;
                     }
 
                     &:hover {
@@ -453,21 +455,21 @@
                 .playhead {
                     position: absolute;
                     top: 0;
-                    width: @relative2px;
+                    width: 2px;
                     height: 100%;
-                    background: @timelinePlayheadColor;
-                    z-index: @zIndexSticky;
+                    background: $danger;
+                    z-index: $z-index-sticky;
                     pointer-events: none;
 
                     &::before {
                         content: '';
                         position: absolute;
-                        top: -@relativeMini - @relative2px;
-                        left: -@relativeMini - @relative2px;
-                        width: @fontSizeSM;
-                        height: @fontSizeSM;
-                        background: @timelinePlayheadColor;
-                        border-radius: @borderRadiusFull;
+                        top: -$size-mini - 2px;
+                        left: -$size-mini - 2px;
+                        width: $size-small;
+                        height: $size-small;
+                        background: $danger;
+                        border-radius: $radius-rounded;
                     }
                 }
             }

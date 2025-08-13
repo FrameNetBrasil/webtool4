@@ -1,40 +1,8 @@
-/* Sidebar */
-//.app-sidebar {
-//    padding: @relativeTiny 0 0 @relativeTiny; // 8px (was @relative2px)
-//
-//    .ui.vertical.menu {
-//        width: 100%;
-//    }
-//
-//    .ui.accordion {
-//        margin-bottom: @relativeTiny; // 8px (was @relative2px)
-//        border-bottom: 1px solid @borderColor; // (was @borderColor)
-//
-//        .content {
-//            padding-top: 0;
-//            padding-left: @relativeBig; // 32px (was @mini)
-//        }
-//    }
-//
-//    // Footer at the end of sidebar
-//    .footer {
-//        margin-top: @relativeMedium; // 16px - adds space above footer
-//        padding: @relativeTiny @relativeTiny @relativeTiny 0; // 8px - consistent with sidebar padding
-//        border-top: 1px solid @borderColor; // Optional: adds separator line
-//
-//        // If you want it to stick to the bottom of the sidebar
-//        &.sticky-bottom {
-//            position: sticky;
-//            bottom: 0;
-//            background: @primaryBackground;
-//        }
-//    }
-//}
-
+@use "../../abstracts/variables" as *;
 
 /* Sidebar */
 .app-sidebar {
-    padding: @relativeTiny 0 0 @relativeTiny; // 8px (was @relative2px)
+    padding: $size-tiny 0 0 $size-tiny; // 8px (was @relative2px)
     display: flex;
     flex-direction: column;
     height: 100%;// (100vh - 64px); // Full viewport height
@@ -49,12 +17,12 @@
         }
 
         .ui.accordion {
-            margin-bottom: @relativeTiny; // 8px (was @relative2px)
-            border-bottom: 1px solid @borderColor; // (was @borderColor)
+            margin-bottom: $size-tiny; // 8px (was @relative2px)
+            border-bottom: 1px solid $border; // (was @borderColor)
 
             .content {
                 padding-top: 0;
-                padding-left: @relativeBig; // 32px (was @mini)
+                padding-left: $size-big; // 32px (was @mini)
             }
         }
     }
@@ -65,8 +33,8 @@
 .app-sidebar-footer {
     min-height: 3rem; // Temporary - remove after testing
     line-height: 3rem;
-    padding-left: @relativeBig;
-    border-top: 1px solid @borderColor;
-    border-right: 1px solid @borderColor;
+    padding-left: $size-big;
+    border-top: 1px solid $border;
+    border-right: 1px solid $border;
 }
 

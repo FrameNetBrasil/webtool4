@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 /* Summary Card Component */
 /*
 .summary-card {
@@ -5,7 +7,7 @@
         display: flex;
         align-items: center;
         //justify-content: space-between;
-        margin-bottom: @relativeMedium;
+        margin-bottom: $size-medium;
 
         .summary-card-icon {
             width: @relative40px;

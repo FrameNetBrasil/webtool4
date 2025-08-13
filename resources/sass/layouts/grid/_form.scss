@@ -1,7 +1,9 @@
+@use "../../abstracts/variables" as *;
+
 /* Form layouts */
 .form-grid {
     display: grid;
-    gap: @relativeLarge;
+    gap: $size-large;
 
     &.single-column {
         grid-template-columns: 1fr;
@@ -9,32 +11,32 @@
 
     &.two-column {
         grid-template-columns: 1fr 1fr;
-        gap: @relativeMedium @relativeBig;
+        gap: $size-medium $size-big;
     }
 
     &.three-column {
         grid-template-columns: 1fr 1fr 1fr;
-        gap: @relativeMedium @relativeLarge;
+        gap: $size-medium $size-large;
     }
 
     &.four-column {
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        gap: @relativeMedium;
+        gap: $size-medium;
     }
 
     &.sidebar-form {
         grid-template-columns: 200px 1fr;
-        gap: @relativeBig;
+        gap: $size-big;
         align-items: start;
     }
 
     &.wide-sidebar {
         grid-template-columns: 300px 1fr;
-        gap: @relative40px;
+        gap: $size-extra-large;
     }
 
     &.auto-fit {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: @relativeLarge;
+        gap: $size-large;
     }
 }

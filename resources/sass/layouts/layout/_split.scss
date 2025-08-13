@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 /* Split layouts for comparison views */
 .split-layout {
     display: grid;
@@ -26,14 +28,14 @@
         position: relative;
 
         &:not(:last-child) {
-            border-right: 1px solid @borderColor;                      // (was var(--color-border-primary))
+            border-right: 1px solid $border;                      // (was var(--color-border-primary))
         }
     }
 
     &.vertical .split-panel {
         &:not(:last-child) {
             border-right: none;
-            border-bottom: 1px solid @borderColor;                     // (was var(--color-border-primary))
+            border-bottom: 1px solid $border;                     // (was var(--color-border-primary))
         }
     }
 }
