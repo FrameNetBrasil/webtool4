@@ -15,51 +15,76 @@
     $hrefLogin = (env('AUTH0_CLIENT_ID') == 'auth0') ? '/auth0Login' : '/';
 
 @endphp
-<div class="app-sidebar">
-    <div class="main">
-
-        <div class="ui secondary vertical menu">
+<aside class="app-sidebar">
+    <div class="sidebar-content">
+        <nav class="menu">
             @if($isLogged)
-                <div
-                    class="ui accordion"
-                    x-init="$($el).accordion();"
-                >
-                    <div class="title d-flex flex-row user-menu item p-0">
-                        <i class="dropdown icon m-0"></i>
-                        <div class="user-avatar">{!! strtoupper($user->email[0]) !!}</div>
-                        <div class="user-email">{{$user->email}}
-                            <div class="user-level">{{$userLevel}} #{{$user->idUser}}</div>
+                <div class="menu-item" x-data="accordion">
+                    <div class="menu-item-header user-menu" @click="toggle">
+                        <span class="icon">
+                            <i class="material-symbols-outlined" :class="{ 'rotate-180': isOpen }">expand_more</i>
+                        </span>
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <span class="has-text-weight-bold">{!! strtoupper($user->email[0]) !!}</span>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-email has-text-weight-medium">{{$user->email}}</div>
+                                <div class="user-level has-text-grey-light is-size-7">{{$userLevel}} #{{$user->idUser}}</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="content">
-                        <a class="item" href="/profile">
-                            Profile
-                        </a>
-                        <a class="item" href="/logout">
-                            Logout
-                        </a>
+                    <div class="menu-item-content" x-show="isOpen" x-transition>
+                        <ul class="menu-list">
+                            <li>
+                                <a href="/profile" class="menu-link">
+                                    <span class="icon">
+                                        <i class="material-symbols-outlined">person</i>
+                                    </span>
+                                    Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/logout" class="menu-link">
+                                    <span class="icon">
+                                        <i class="material-symbols-outlined">logout</i>
+                                    </span>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             @endif
-            @foreach($actions as $id => $action)
-                @php
-                    $menuData = MenuData::from([
-                        'id' => $id . '_small',
-                        'label' => $action[0],
-                        'href' => $action[1],
-                        'group' => $action[2],
-                        'items' => $action[3]
-                    ]);
-                @endphp
-                @if (AppService::checkAccess($menuData->group))
-                    <a class="item" href="{{$menuData->href}}">
-                        {!! $menuData->label !!}
-                    </a>
-                @endif
-            @endforeach
+            
+            <div class="menu-section">
+                <ul class="menu-list">
+                    @foreach($actions as $id => $action)
+                        @php
+                            $menuData = MenuData::from([
+                                'id' => $id . '_small',
+                                'label' => $action[0],
+                                'href' => $action[1],
+                                'group' => $action[2],
+                                'items' => $action[3]
+                            ]);
+                        @endphp
+                        @if (AppService::checkAccess($menuData->group))
+                            <li>
+                                <a href="{{$menuData->href}}" class="menu-link">
+                                    {!! $menuData->label !!}
+                                </a>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+            </div>
+        </nav>
+    </div>
+    
+    <div class="sidebar-footer">
+        <div class="content has-text-centered is-size-7 has-text-grey-light">
+            {!! config('webtool.footer') !!}
         </div>
     </div>
-</div>
-<div class="app-sidebar-footer">
-    {!! config('webtool.footer') !!}
-</div>
+</aside>

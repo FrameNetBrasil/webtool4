@@ -1,0 +1,217 @@
+# npm audit report
+
+@octokit/plugin-paginate-rest  <=9.2.1
+Severity: moderate
+@octokit/plugin-paginate-rest has a Regular Expression in iterator Leads to ReDoS Vulnerability Due to Catastrophic Backtracking - https://github.com/advisories/GHSA-h5c3-5r3r-rr8q
+fix available via `npm audit fix --force`
+Will install fomantic-ui@2.9.2, which is a breaking change
+node_modules/@octokit/plugin-paginate-rest
+  @octokit/rest  16.39.0 - 20.0.1
+  Depends on vulnerable versions of @octokit/core
+  Depends on vulnerable versions of @octokit/plugin-paginate-rest
+  node_modules/@octokit/rest
+    fomantic-ui  <=2.10.0-beta.0
+    Depends on vulnerable versions of @octokit/core
+    Depends on vulnerable versions of @octokit/rest
+    Depends on vulnerable versions of gulp
+    Depends on vulnerable versions of gulp-concat-css
+    Depends on vulnerable versions of gulp-concat-filenames
+    Depends on vulnerable versions of gulp-copy
+    Depends on vulnerable versions of gulp-dedupe
+    Depends on vulnerable versions of gulp-header
+    node_modules/fomantic-ui
+
+@octokit/request  <=8.4.0
+Severity: moderate
+Depends on vulnerable versions of @octokit/request-error
+@octokit/request has a Regular Expression in fetchWrapper that Leads to ReDoS Vulnerability Due to Catastrophic Backtracking - https://github.com/advisories/GHSA-rmvr-2pp2-xj38
+fix available via `npm audit fix --force`
+Will install fomantic-ui@2.9.2, which is a breaking change
+node_modules/@octokit/request
+  @octokit/core  <=5.0.0-beta.5
+  Depends on vulnerable versions of @octokit/graphql
+  Depends on vulnerable versions of @octokit/request
+  Depends on vulnerable versions of @octokit/request-error
+  node_modules/@octokit/core
+  @octokit/graphql  <=2.1.3 || 3.0.0 - 6.0.1
+  Depends on vulnerable versions of @octokit/request
+  node_modules/@octokit/graphql
+
+@octokit/request-error  <=5.1.0
+Severity: moderate
+@octokit/request-error has a Regular Expression in index that Leads to ReDoS Vulnerability Due to Catastrophic Backtracking - https://github.com/advisories/GHSA-xx4v-prfh-6cgc
+fix available via `npm audit fix --force`
+Will install fomantic-ui@2.9.2, which is a breaking change
+node_modules/@octokit/request-error
+
+axios  1.0.0 - 1.8.1
+Severity: high
+Server-Side Request Forgery in axios - https://github.com/advisories/GHSA-8hc4-vh64-cxmj
+axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL - https://github.com/advisories/GHSA-jr5f-v2jv-69x6
+fix available via `npm audit fix`
+node_modules/axios
+
+brace-expansion  1.0.0 - 1.1.11 || 2.0.0 - 2.0.1
+brace-expansion Regular Expression Denial of Service vulnerability - https://github.com/advisories/GHSA-v6h2-p8h4-qcjw
+brace-expansion Regular Expression Denial of Service vulnerability - https://github.com/advisories/GHSA-v6h2-p8h4-qcjw
+fix available via `npm audit fix`
+node_modules/brace-expansion
+node_modules/glob/node_modules/brace-expansion
+node_modules/gulp-match/node_modules/brace-expansion
+node_modules/rework-import/node_modules/brace-expansion
+
+braces  <3.0.3
+Severity: high
+Uncontrolled resource consumption in braces - https://github.com/advisories/GHSA-grv7-fg5c-xmjg
+fix available via `npm audit fix --force`
+Will install fomantic-ui@2.9.2, which is a breaking change
+node_modules/braces
+node_modules/chokidar/node_modules/braces
+node_modules/fast-glob/node_modules/braces
+node_modules/tailwindcss/node_modules/braces
+  chokidar  1.3.0 - 2.1.8
+  Depends on vulnerable versions of anymatch
+  Depends on vulnerable versions of braces
+  Depends on vulnerable versions of readdirp
+  node_modules/glob-watcher/node_modules/chokidar
+    glob-watcher  5.0.0 - 5.0.5
+    Depends on vulnerable versions of anymatch
+    Depends on vulnerable versions of chokidar
+    node_modules/glob-watcher
+      gulp  4.0.0 - 4.0.2
+      Depends on vulnerable versions of glob-watcher
+      Depends on vulnerable versions of gulp-cli
+      node_modules/gulp
+        gulp-copy  4.0.0 - 4.0.1
+        Depends on vulnerable versions of gulp
+        node_modules/gulp-copy
+  micromatch  <=4.0.7
+  Depends on vulnerable versions of braces
+  node_modules/fast-glob/node_modules/micromatch
+  node_modules/micromatch
+  node_modules/tailwindcss/node_modules/micromatch
+    anymatch  1.2.0 - 2.0.0
+    Depends on vulnerable versions of micromatch
+    node_modules/anymatch
+    findup-sync  0.4.0 - 3.0.0
+    Depends on vulnerable versions of micromatch
+    node_modules/findup-sync
+    node_modules/liftoff/node_modules/findup-sync
+      liftoff  2.2.3 - 3.1.0
+      Depends on vulnerable versions of findup-sync
+      node_modules/liftoff
+        gulp-cli  1.3.0 - 2.3.0
+        Depends on vulnerable versions of liftoff
+        Depends on vulnerable versions of matchdep
+        node_modules/gulp-cli
+      matchdep  >=1.0.1
+      Depends on vulnerable versions of findup-sync
+      Depends on vulnerable versions of micromatch
+      node_modules/matchdep
+    readdirp  2.2.0 - 2.2.1
+    Depends on vulnerable versions of micromatch
+    node_modules/glob-watcher/node_modules/readdirp
+
+cross-spawn  7.0.0 - 7.0.4
+Severity: high
+Regular Expression Denial of Service (ReDoS) in cross-spawn - https://github.com/advisories/GHSA-3xgq-45jj-v275
+fix available via `npm audit fix`
+node_modules/cross-spawn
+
+diff  <3.5.0
+Severity: high
+Regular Expression Denial of Service (ReDoS) - https://github.com/advisories/GHSA-h6ch-v84p-w6p9
+fix available via `npm audit fix --force`
+Will install fomantic-ui@2.9.2, which is a breaking change
+node_modules/diff
+  gulp-dedupe  *
+  Depends on vulnerable versions of diff
+  Depends on vulnerable versions of gulp-util
+  node_modules/gulp-dedupe
+
+esbuild  <=0.24.2
+Severity: moderate
+esbuild enables any website to send any requests to the development server and read the response - https://github.com/advisories/GHSA-67mh-4wv8-2f99
+fix available via `npm audit fix`
+node_modules/esbuild
+  vite  0.11.0 - 6.1.6
+  Depends on vulnerable versions of esbuild
+  node_modules/vite
+
+form-data  4.0.0 - 4.0.3
+Severity: critical
+form-data uses unsafe random function in form-data for choosing boundary - https://github.com/advisories/GHSA-fjxv-7rqg-78g4
+fix available via `npm audit fix`
+node_modules/form-data
+
+lodash.template  *
+Severity: high
+Command Injection in lodash - https://github.com/advisories/GHSA-35jh-r3h4-6jhm
+fix available via `npm audit fix --force`
+Will install fomantic-ui@2.9.2, which is a breaking change
+node_modules/gulp-util/node_modules/lodash.template
+node_modules/lodash.template
+  gulp-git  2.5.0 - 2.10.1
+  Depends on vulnerable versions of lodash.template
+  node_modules/gulp-git
+  gulp-header  >=1.8.10
+  Depends on vulnerable versions of lodash.template
+  node_modules/gulp-header
+  gulp-util  >=1.1.0
+  Depends on vulnerable versions of lodash.template
+  node_modules/gulp-util
+    gulp-concat-filenames  *
+    Depends on vulnerable versions of gulp-util
+    node_modules/gulp-concat-filenames
+
+
+nanoid  <3.3.8
+Severity: moderate
+Predictable results in nanoid generation when given non-integer values - https://github.com/advisories/GHSA-mwcw-c2x4-8c55
+fix available via `npm audit fix`
+node_modules/nanoid
+
+rollup  4.0.0 - 4.22.3
+Severity: high
+DOM Clobbering Gadget found in rollup bundled scripts that leads to XSS - https://github.com/advisories/GHSA-gcx4-mw62-g8wm
+fix available via `npm audit fix`
+node_modules/rollup
+
+tmp  <=0.2.3
+tmp allows arbitrary temporary file / directory write via symbolic link `dir` parameter - https://github.com/advisories/GHSA-52f5-9888-hmc6
+fix available via `npm audit fix`
+node_modules/tmp
+  external-editor  >=1.1.1
+  Depends on vulnerable versions of tmp
+  node_modules/external-editor
+    inquirer  3.0.0 - 8.2.6 || 9.0.0 - 9.3.7
+    Depends on vulnerable versions of external-editor
+    node_modules/inquirer
+
+undici  <=5.28.5
+Severity: moderate
+Use of Insufficiently Random Values in undici - https://github.com/advisories/GHSA-c76h-2ccp-4975
+undici Denial of Service attack via bad certificate data - https://github.com/advisories/GHSA-cxrh-j4jr-qwg3
+fix available via `npm audit fix`
+node_modules/undici
+
+url-regex  *
+Severity: high
+Regular expression denial of service in url-regex - https://github.com/advisories/GHSA-v4rh-8p82-6h5w
+fix available via `npm audit fix`
+node_modules/url-regex
+  rework-import  >=2.0.0
+  Depends on vulnerable versions of url-regex
+  node_modules/rework-import
+    gulp-concat-css  >=2.0.0
+    Depends on vulnerable versions of rework-import
+    node_modules/gulp-concat-css
+
+
+41 vulnerabilities (4 low, 16 moderate, 20 high, 1 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force

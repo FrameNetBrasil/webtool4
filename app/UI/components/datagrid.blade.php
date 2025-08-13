@@ -1,5 +1,5 @@
 {{--
-    Alpine.js DataGrid Component Template
+    Alpine.js DataGrid Component Template - Bulma Version
     
     Variables expected:
     - $id: Unique identifier for the grid (optional)
@@ -24,7 +24,9 @@
         'singleSelect' => true,
         'emptyMsg' => 'No records',
         'fit' => false,
-        'striped' => true
+        'striped' => true,
+        'hoverable' => true,
+        'size' => 'is-fullwidth' // is-narrow, is-fullwidth
     ];
     
     $gridConfig = array_merge($defaultConfig, $config);
@@ -41,22 +43,25 @@
     class="datagrid-container"
 >
     <!-- Loading State -->
-    <div x-show="isLoading" class="ui active loader"></div>
+    <div x-show="isLoading" class="has-text-centered py-6">
+        <button class="button is-loading is-large is-ghost"></button>
+        <p class="mt-3 has-text-grey">Loading data...</p>
+    </div>
     
     <!-- Data Table -->
-    <div x-show="!isLoading">
+    <div x-show="!isLoading" class="table-container">
         <table :class="tableClasses">
             <!-- Table Header -->
             <thead x-show="showHeader && hasData">
                 <tr>
                     <!-- Row Numbers Column -->
-                    <th x-show="rownumbers" class="center aligned" style="width: 50px;">#</th>
+                    <th x-show="rownumbers" class="has-text-centered" style="width: 50px;">#</th>
                     
                     <!-- Data Columns -->
                     <template x-for="column in visibleColumns" :key="column.field">
                         <th 
                             :style="'width: ' + getColumnWidth(column)"
-                            :class="column.align ? column.align + ' aligned' : ''"
+                            :class="getColumnClasses(column)"
                         >
                             <span x-text="column.title || column.field"></span>
                         </th>
@@ -76,12 +81,12 @@
                         style="cursor: pointer;"
                     >
                         <!-- Row Number -->
-                        <td x-show="rownumbers" class="center aligned" x-text="index + 1"></td>
+                        <td x-show="rownumbers" class="has-text-centered" x-text="index + 1"></td>
                         
                         <!-- Data Cells -->
                         <template x-for="column in visibleColumns" :key="column.field">
                             <td 
-                                :class="column.align ? column.align + ' aligned' : ''"
+                                :class="getColumnClasses(column)"
                                 x-html="getCellValue(row, column)"
                             ></td>
                         </template>
@@ -92,10 +97,13 @@
                 <tr x-show="!hasData">
                     <td 
                         :colspan="visibleColumns.length + (rownumbers ? 1 : 0)" 
-                        class="center aligned"
+                        class="has-text-centered py-6"
                     >
-                        <div class="ui message">
-                            <span x-text="emptyMsg"></span>
+                        <div class="notification is-light">
+                            <span class="icon has-text-grey">
+                                <i class="material-symbols-outlined">inbox</i>
+                            </span>
+                            <p class="mt-2" x-text="emptyMsg"></p>
                         </div>
                     </td>
                 </tr>
@@ -106,7 +114,7 @@
                 <tr>
                     <th x-show="rownumbers"></th>
                     <template x-for="column in visibleColumns" :key="column.field + '_footer'">
-                        <th x-text="column.footerText || ''"></th>
+                        <th :class="getColumnClasses(column)" x-text="column.footerText || ''"></th>
                     </template>
                 </tr>
             </tfoot>
@@ -119,23 +127,33 @@
         position: relative;
     }
     
-    .datagrid-container .ui.table {
-        margin: 0;
+    .datagrid-container .table {
+        margin-bottom: 0;
     }
     
-    .datagrid-container .ui.table tr.selected {
-        background-color: rgba(33, 133, 208, 0.1) !important;
+    .datagrid-container .table tr.is-selected {
+        background-color: hsl(var(--bulma-primary-h), var(--bulma-primary-s), 95%) !important;
+        color: hsl(var(--bulma-primary-h), var(--bulma-primary-s), 25%);
     }
     
-    .datagrid-container .ui.table tr.hover {
-        background-color: rgba(0, 0, 0, 0.05) !important;
+    .datagrid-container .table tr.is-hovered {
+        background-color: hsl(0, 0%, 98%) !important;
     }
     
-    .datagrid-container .ui.table tr.selected:hover {
-        background-color: rgba(33, 133, 208, 0.2) !important;
+    .datagrid-container .table tr.is-selected.is-hovered {
+        background-color: hsl(var(--bulma-primary-h), var(--bulma-primary-s), 92%) !important;
     }
     
-    .datagrid-container .ui.table tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.05) !important;
+    .datagrid-container .table.is-hoverable tbody tr:hover {
+        background-color: hsl(0, 0%, 98%);
+    }
+    
+    .datagrid-container .table.is-hoverable tbody tr.is-selected:hover {
+        background-color: hsl(var(--bulma-primary-h), var(--bulma-primary-s), 92%);
+    }
+    
+    .datagrid-container .notification {
+        border: none;
+        box-shadow: none;
     }
 </style>

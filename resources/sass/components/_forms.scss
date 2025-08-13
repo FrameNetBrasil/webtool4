@@ -1,0 +1,46 @@
+// =============================================================================
+// FORM COMPONENTS
+// Custom form styles extending Bulma forms
+// =============================================================================
+
+// Form field enhancements
+.field {
+    &.is-grouped {
+        .control:not(:last-child) {
+            margin-right: 0.75rem;
+        }
+    }
+}
+
+// Enhanced input styles
+.input, .textarea, .select select {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    
+    &:focus {
+        box-shadow: 0 0 0 0.125em rgba($primary, 0.25);
+    }
+}
+
+// Custom checkbox and radio styles
+.checkbox, .radio {
+    cursor: pointer;
+    
+    input[type="checkbox"], input[type="radio"] {
+        margin-right: 0.5rem;
+    }
+}
+
+// File upload styling
+.file {
+    &.is-boxed .file-label {
+        border: 2px dashed $gray-300;
+        padding: 2rem;
+        text-align: center;
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+        
+        &:hover {
+            border-color: $primary;
+            background-color: rgba($primary, 0.05);
+        }
+    }
+}
