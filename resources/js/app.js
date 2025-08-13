@@ -20,7 +20,7 @@ import dataGridComponent from './components/dataGridComponent.js';
 // Bulma components will be imported after Alpine is available
 
 // Import stylesheets (SASS will replace LESS gradually)
-import '../css/app.less';
+// import '../css/app.less';
 import '../sass/app.scss';
 
 // Lazy load Chart.js and make it available globally
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Alpine.data('treeComponent', treeComponent);
     Alpine.data('browseSearchComponent', browseSearchComponent);
     Alpine.data('dataGrid', dataGridComponent);
-    
+
     // Import and register Bulma components after Alpine is available globally
     import('./components/bulmaComponents.js').then(() => {
         console.log('Bulma components loaded successfully');

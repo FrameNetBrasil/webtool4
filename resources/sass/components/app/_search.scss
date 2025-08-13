@@ -1,11 +1,13 @@
+@use "../../abstracts/variables" as *;
+
 /* Enhanced Search Section */
 .app-search {
     .search-section {
-        background: @primaryBackground;
-        //border-radius: @borderRadius;
-        //box-shadow: @defaultShadow;
-        //padding: @mini;
-        margin-bottom: @mini;
+        background: $background;
+        //border-radius: $radius;
+        //box-shadow: $shadow-color;
+        //padding: $size-mini;
+        margin-bottom: $size-mini;
 
         .search-input-group {
             position: relative;
@@ -13,77 +15,77 @@
 
         .search-actions {
             display: flex;
-            gap: @relative4px;
+            gap: 4px;
             flex-wrap: wrap;
             align-items: center;
 
             .ui.button {
-                font-family: @fontFamily;
-                transition: all @transitionNormal;
+                font-family: $font-family;
+                transition: all$transition-normal;
 
                 &.primary {
-                    background: @primaryColor;
-                    color: @white;
+                    background: $primary;
+                    color: $white;
 
                     &:hover {
-                        background: @primaryColorHover;
+                        background: $primary-hover;
                         transform: translateY(-1px);
                     }
                 }
 
                 &:not(.primary) {
-                    background: @primaryBackground;
-                    border: 1px solid @borderColor;
-                    color: @secondaryColor;
+                    background: $background;
+                    border: 1px solid $border;
+                    color: $secondary;
 
                     &:hover {
-                        background: @primaryColor;
-                        border-color: @primaryColor;
-                        color: @primaryColor;
+                        background: $primary;
+                        border-color: $primary;
+                        color: $primary;
                     }
                 }
             }
 
             .ui.dropdown.button {
                 .dropdown.icon {
-                    margin-left: @relative2px;
+                    margin-left: 2px;
                 }
             }
         }
 
         .search-suggestions {
-            margin-top: @relative6px;
-            padding-top: @relative6px;
-            border-top: 1px solid @borderColor;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid $border;
 
             .suggestions-label {
-                color: @tertiaryColor;
-                font-size: @small;
-                margin-bottom: @relative4px;
-                font-weight: @fontWeightMedium;
+                color: $tertiary;
+                font-size: $size-small;
+                margin-bottom: 4px;
+                font-weight: $weight-medium;
                 display: block;
             }
 
             .suggestion-tags {
                 display: flex;
-                gap: @relative2px;
+                gap: 2px;
                 flex-wrap: wrap;
 
                 .suggestion-tag {
-                    padding: @relative1px @relative4px;
-                    background: @primaryBackground;
-                    border: 1px solid @borderColor;
-                    border-radius: @borderRadius;
-                    color: @secondaryColor;
+                    padding: 1px 4px;
+                    background: $background;
+                    border: 1px solid $border;
+                    border-radius: $radius;
+                    color: $secondary;
                     text-decoration: none;
-                    font-size: @small;
-                    transition: all @transitionNormal;
+                    font-size: $size-small;
+                    transition: all$transition-normal;
                     cursor: pointer;
 
                     &:hover {
-                        background: @primaryBackground;
-                        border-color: @primaryColor;
-                        color: @primaryColor;
+                        background: $background;
+                        border-color: $primary;
+                        color: $primary;
                         text-decoration: none;
                         transform: translateY(-1px);
                     }
@@ -96,7 +98,7 @@
         }
 
         @media (max-width: 768px) {
-            padding: @relative6px;
+            padding: 6px;
 
             .search-actions {
                 flex-direction: column;
@@ -104,7 +106,7 @@
 
                 .ui.button {
                     width: 100%;
-                    margin-bottom: @relative2px;
+                    margin-bottom: 2px;
 
                     &:last-child {
                         margin-bottom: 0;
@@ -161,91 +163,91 @@
     }
 
     .results-container {
-        background: @primaryBackground;
-        border-radius: @borderRadius;
-        box-shadow: @defaultShadow;
+        background: $background;
+        border-radius: $radius;
+        box-shadow: $shadow-color;
         overflow: hidden;
         //display: none;
 
         &.show {
             display: block;
-            animation: fadeIn @transitionNormal ease;
+            animation: fadeIn$transition-normal ease;
         }
 
         .results-header {
-            background: @primaryBackground;
-            padding: @relative4px @relative6px;
-            border-bottom: 1px solid @borderColor;
+            background: $background;
+            padding: 4px 6px;
+            border-bottom: 1px solid $border;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: @relative4px;
+            gap: 4px;
             height: 3rem;
 
             .results-info {
                 display: flex;
                 align-items: center;
-                gap: @relative4px;
+                gap: 4px;
                 flex-wrap: wrap;
 
                 .results-count {
-                    font-weight: @fontWeightSemibold;
-                    color: @primaryColor;
-                    font-size: @fontSize;
+                    font-weight: $weight-semibold;
+                    color: $primary;
+                    font-size: $size-normal;
                 }
 
                 .search-query-display {
-                    color: @tertiaryColor;
-                    font-size: @small;
+                    color: $tertiary;
+                    font-size: $size-small;
                 }
             }
 
             .results-actions {
                 display: flex;
-                gap: @relative2px;
+                gap: 2px;
                 align-items: center;
                 flex-wrap: wrap;
 
                 .view-toggle {
                     display: flex;
-                    background: @primaryBackground;
-                    border-radius: @borderRadius;
-                    padding: @relative1px;
+                    background: $background;
+                    border-radius: $radius;
+                    padding: 1px;
 
                     .view-btn {
-                        padding: @relative1px @relative4px;
+                        padding: 1px 4px;
                         border: none;
                         background: transparent;
-                        border-radius: @borderRadius;
+                        border-radius: $radius;
                         cursor: pointer;
-                        transition: all @transitionNormal;
-                        font-size: @small;
+                        transition: all$transition-normal;
+                        font-size: $size-small;
                         display: flex;
                         align-items: center;
-                        gap: @relative1px;
-                        color: @secondaryColor;
-                        font-family: @fontFamily;
+                        gap: 1px;
+                        color: $secondary;
+                        font-family: $font-family;
 
                         &.active {
-                            background: @primaryBackground;
+                            background: $background;
                             //box-shadow: var(--shadow-sm);
-                            color: @primaryColor;
+                            color: $primary;
                         }
 
                         &:hover:not(.active) {
-                            background: @overlayPrimary20;
+                            background: $overlay-light-10;
                         }
 
                         i {
-                            font-size: @small;
+                            font-size: $size-small;
                         }
                     }
                 }
 
                 .ui.mini.button {
-                    font-size: @tiny;
-                    padding: @relative2px @relative4px;
+                    font-size: $size-tiny;
+                    padding: 2px 4px;
                 }
             }
         }
@@ -608,7 +610,7 @@
         }
 
         @media (max-width: 768px) {
-            .search-container {
+.search-container {
                 padding: 1rem;
             }
 
@@ -636,26 +638,26 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: @relative4px;
-            padding: @mini;
+            gap: 4px;
+            padding: $size-mini;
             text-align: center;
 
             .empty-icon {
-                font-size: @relative12px;
-                color: @borderColor;
+                font-size: 12px;
+                color: $border;
             }
 
             .empty-title {
-                font-size: @large;
-                font-weight: @fontWeightSemibold;
-                color: @secondaryColor;
+                font-size: $size-large;
+                font-weight: $weight-semibold;
+                color: $secondary;
                 margin: 0;
             }
 
             .empty-description {
-                color: @tertiaryColor;
+                color: $tertiary;
                 max-width: 400px;
-                line-height: @lineHeightRelaxed;
+                line-height: $line-height;
                 margin: 0;
             }
         }
@@ -664,30 +666,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: @relative4px;
-            padding: @mini;
+            gap: 4px;
+            padding: $size-mini;
             text-align: center;
 
             .loading-spinner {
-                width: @mini;
-                height: @mini;
-                border: 3px solid @primaryBackground;
-                border-top: 3px solid @primaryColor;
-                border-radius: @borderRadius;
+                width: $size-mini;
+                height: $size-mini;
+                border: 3px solid $background;
+                border-top: 3px solid $primary;
+                border-radius: $radius;
                 animation: spin 1s linear infinite;
             }
 
             .loading-title {
-                font-size: @large;
-                font-weight: @fontWeightSemibold;
-                color: @secondaryColor;
+                font-size: $size-large;
+                font-weight: $weight-semibold;
+                color: $secondary;
                 margin: 0;
             }
 
             .loading-description {
-                color: @tertiaryColor;
+                color: $tertiary;
                 max-width: 400px;
-                line-height: @lineHeightRelaxed;
+                line-height: $line-height;
                 margin: 0;
             }
         }
@@ -697,7 +699,7 @@
     @keyframes fadeIn {
         from {
             opacity: 0;
-            transform: translateY(@relative2px);
+            transform: translateY(2px);
         }
         to {
             opacity: 1;
@@ -709,22 +711,22 @@
     .ui.button:focus,
     .view-btn:focus,
     .suggestion-tag:focus {
-        outline: 2px solid @primaryColor;
+        outline: 2px solid $primary;
         outline-offset: 2px;
     }
 
     @media print {
         .search-section {
             box-shadow: none;
-            border: 1px solid @borderColor;
+            border: 1px solid $border;
         }
 
         .search-results {
             box-shadow: none;
-            border: 1px solid @borderColor;
+            border: 1px solid $border;
 
             .results-header {
-                background: @white !important;
+                background: $white !important;
                 -webkit-print-color-adjust: exact;
             }
 
@@ -737,15 +739,15 @@
     @media (prefers-contrast: more) {
         .search-section,
         .search-results {
-            border: 2px solid @borderColor;
+            border: 2px solid $border;
         }
 
         .suggestion-tag {
-            border: 2px solid @borderColor;
+            border: 2px solid $border;
         }
 
         .main-search-input {
-            border: 2px solid @borderColor;
+            border: 2px solid $border;
         }
     }
 

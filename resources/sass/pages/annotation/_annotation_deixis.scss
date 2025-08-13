@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 /* Full-screen layout for annotation */
 .app-layout.annotation-deixis {
     grid-template-areas:
@@ -24,7 +26,7 @@
         grid-area: video;
         //background: @neutral400;
         height: 100%;
-        padding: 0 @relativeSmall;
+        padding: 0 $size-small;
         display: grid;
         grid-template-areas:
         "player"
@@ -45,7 +47,7 @@
         min-width: 0;
         width: 100%;
         overflow: hidden;
-        padding: 0 @relativeSmall 0 0;
+        padding: 0 $size-small 0 0;
         display: flex;
         flex-direction: column;
 
@@ -57,9 +59,9 @@
 
             .container {
                 width: 100%;
-                border: 1px solid #ccc;
-                background-color: white;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                border: 1px solid $border;
+                background-color: $white;
+                box-shadow: 0 2px 4px rgba($black, 0.1);
                 display: flex;
                 flex-direction: column;
                 height: 100%;
@@ -67,8 +69,8 @@
                 .controls {
                     flex-shrink: 0;
                     padding: 10px;
-                    background-color: #fff;
-                    border-bottom: 1px solid #ddd;
+                    background-color: $white;
+                    border-bottom: 1px solid $gray-300;
                     display: flex;
                     gap: 10px;
                     align-items: center;
@@ -78,20 +80,20 @@
                 .ruler {
                     flex-shrink: 0;
                     height: 30px;
-                    background-color: #f8f9fa;
-                    border-bottom: 1px solid #ddd;
+                    background-color: $gray-50;
+                    border-bottom: 1px solid $gray-300;
                     display: flex;
 
                     .label-area {
                         width: 150px;
-                        background-color: #e9ecef;
-                        border-right: 1px solid #ddd;
+                        background-color: $gray-100;
+                        border-right: 1px solid $gray-300;
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         font-weight: bold;
-                        font-size: 11px;
-                        color: #666;
+                        font-size: $size-tiny;
+                        color: $gray-500;
                         flex-shrink: 0;
                     }
 
@@ -111,16 +113,16 @@
                     .tick {
                         position: absolute;
                         height: 20px;
-                        border-left: 1px solid #999;
-                        font-size: 10px;
+                        border-left: 1px solid $gray-500;
+                        font-size: $size-tiny;
                         padding-left: 2px;
                         display: flex;
                         align-items: center;
                         top: 5px;
 
                         .major {
-                            border-left: 2px solid #333;
-                            font-weight: bold;
+                            border-left: 2px solid $gray-700;
+                            font-weight: $weight-bold;
                         }
                     }
                 }
@@ -133,8 +135,8 @@
 
                 .labels-column {
                     width: 150px;
-                    background-color: #e9ecef;
-                    border-right: 1px solid #ddd;
+                    background-color: $gray-100;
+                    border-right: 1px solid $gray-300;
                     overflow-y: auto;
                     flex-shrink: 0;
                     scrollbar-width: none; /* Firefox */
@@ -146,10 +148,10 @@
 
                     .label-item {
                         padding: 8px;
-                        border-bottom: 1px solid #ddd;
-                        font-size: 12px;
-                        font-weight: bold;
-                        color: #333;
+                        border-bottom: 1px solid $gray-300;
+                        font-size: $size-small;
+                        font-weight: $weight-bold;
+                        color: $gray-700;
                         min-height: 24px;
                         display: flex;
                         align-items: center;
@@ -169,20 +171,20 @@
 
                         .layer-row {
                             position: relative;
-                            border-bottom: 1px solid #eee;
+                            border-bottom: 1px solid $gray-200;
                             min-height: 24px; /* Minimum layer height */
 
                             .object {
                                 position: absolute;
                                 height: 24px;
-                                border: 1px solid rgba(0, 0, 0, 0.2);
-                                border-radius: 2px;
+                                border: 1px solid rgba($black, 0.2);
+                                border-radius: $radius-small;
                                 cursor: pointer;
                                 display: flex;
                                 align-items: center;
                                 //padding: 0 4px;
-                                font-size: 11px;
-                                color: white;
+                                font-size: $size-tiny;
+                                color: $white;
                                 //text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
                                 overflow: hidden;
                                 white-space: nowrap;
@@ -192,10 +194,10 @@
                                 transition: opacity 0.2s, transform 0.2s;
 
                                 &:hover {
-                                    opacity: 0.8;
+                                    opacity: $opacity-hover;
                                     transform: scale(1.02);
                                     z-index: 5;
-                                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                                    box-shadow: 0 2px 8px rgba($black, 0.3);
                                 }
 
                                 .internal {
@@ -205,7 +207,7 @@
                                 }
 
                                 .highlighted {
-                                    outline: 2px solid #ff0000;
+                                    outline: 2px solid $red-600;
                                     outline-offset: 1px;
                                 }
 
@@ -219,10 +221,10 @@
 
             .info {
                 flex-shrink: 0;
-                background-color: #f8f9fa;
-                padding: 8px;
-                font-size: 12px;
-                color: #666;
+                background-color: $gray-50;
+                padding: $size-mini;
+                font-size: $size-small;
+                color: $gray-500;
             }
         }
 
@@ -257,7 +259,7 @@
                         min-height: 0;
                         position: relative;
                         height: 100%;
-                        padding-bottom: @relativeSmall;
+                        padding-bottom: $size-small;
 
                         .card-container {
                             position: absolute;

@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 /* Full-screen layout for annotation */
 .app-layout.annotation-corpus {
     grid-template-areas:
@@ -23,18 +25,18 @@
 
     .annotation-navigation {
         grid-area: navigation;
-        padding: @relativeSmall;
+        padding: $size-small;
     }
 
     .annotation-workarea {
         grid-area: workarea;
-        padding: @relativeSmall;
+        padding: $size-small;
 
         .hasNone {
             cursor: default;
             box-shadow: none !important;
-            color: black !important;
-            background-color: white !important;
+            color: $black !important;
+            background-color: $white !important;
             padding: 0;
             font-weight: normal !important;
         }
@@ -42,8 +44,8 @@
         .hasLU {
             //cursor: pointer;
             //border: 1px solid var(--gray-400);
-            color: black !important;
-            background-color: var(--gray-200) !important;
+            color: $black !important;
+            background-color: $gray-200 !important;
             padding: 0.125em 0.75em;
             font-weight: normal !important;
         }
@@ -51,8 +53,8 @@
         .hasAS {
             //cursor: pointer;
             //border: 1px solid var(--gray-950);
-            color: white !important;
-            background-color: var(--gray-950) !important;
+            color: $white !important;
+            background-color: $gray-950 !important;
             //padding: 2px;
             padding: 0.125em 0.75em;
             font-weight: normal !important;
@@ -67,12 +69,12 @@
             }
 
             .word::selection {
-                background-color: #ffe184;
+                background-color: $yellow-200;
             }
 
             .target {
-                color: #FFFFFF !important;
-                background-color: #222 !important
+                color: $white !important;
+                background-color: $gray-800 !important
             }
 
             .hasFE {
@@ -84,7 +86,7 @@
                 position: relative;
                 margin-left: 8px;
                 padding-left: 8px;
-                border-left: 2px solid @neutral200;
+                border-left: 2px solid $neutral-200;
 
                 div {
                     height: 24px;
@@ -106,12 +108,12 @@
                     font-variation-settings: "wdth" 75;
 
                     .colWord {
-                        font-size: 1.25rem;
+                        font-size: $size-large;
                         padding: 0 0;
                     }
 
                     .colSpace {
-                        font-size: 1.25rem;
+                        font-size: $size-large;
                         width: 0.75rem;
 
                         .word {
@@ -125,8 +127,8 @@
                         padding: 2px 3px;
                         z-index: 10;
                         position: absolute;
-                        font-size: 0.75rem;
-                        background: black;
+                        font-size: $size-tiny;
+                        background: $black;
                         font-weight: bold;
                         font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
                         line-height: 1;
@@ -139,7 +141,7 @@
                         width: calc(100%);
                         height: 3px;
                         position: absolute;
-                        background: black;
+                        background: $black;
                         z-index: 1;
                     }
                 }
@@ -160,15 +162,15 @@
                     font-variation-settings: "wdth" 75;
 
                     .colWord {
-                        font-size: 1.25rem;
+                        font-size: $size-large;
                         padding: 0 0;
-                        background-color: @neutral200;
+                        background-color: $neutral-200;
                         position: relative;
 
                     }
 
                     .colSpace {
-                        font-size: 1.25rem;
+                        font-size: $size-large;
                         width: 0.75rem;
 
                         .word {
@@ -191,9 +193,9 @@
                     user-select: none; /* Standard syntax */
 
                     .colWord {
-                        font-size: 1.25rem;
+                        font-size: $size-large;
                         padding: 0 0;
-                        background-color: @neutral200;
+                        background-color: $neutral-200;
                         position: relative;
 
                         .label {
@@ -205,7 +207,7 @@
                             .line {
                                 width: calc(100%);
                                 height: 3px;
-                                background: black;
+                                background: $black;
                                 z-index: 1;
                             }
                         }
@@ -213,7 +215,7 @@
 
 
                     .colSpace {
-                        font-size: 1.25rem;
+                        font-size: $size-large;
                         padding: 0 0;
                         width: 0.75rem;
                         position: relative;
@@ -227,7 +229,7 @@
                             .line {
                                 width: calc(100%);
                                 height: 3px;
-                                background: black;
+                                background: $black;
                                 z-index: 1;
                             }
                         }
@@ -239,8 +241,8 @@
                         padding: 2px 3px;
                         z-index: 10;
                         position: absolute;
-                        font-size: 0.75rem;
-                        background: black;
+                        font-size: $size-tiny;
+                        background: $black;
                         font-weight: bold;
                         font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
                         line-height: 1;
@@ -275,12 +277,12 @@
                     }
 
                     .ni::selection {
-                        background-color: #ffe184;
+                        background-color: $yellow-200;
                     }
                 }
 
                 .colNILabel {
-                    //font-size: 1.25rem;
+                    //font-size: $size-large;
                     padding: 0 0 0 8px;
                     width: 100%;
                     //position: relative;
@@ -292,8 +294,8 @@
                         padding: 2px 3px;
                         //z-index: 10;
                         //position: absolute;
-                        font-size: 0.75rem;
-                        //background: black;
+                        font-size: $size-tiny;
+                        //background: $black;
                         font-weight: bold;
                         font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
                         line-height: 1;
@@ -309,7 +311,7 @@
                     //    //.line {
                     //    //    width: calc(100%);
                     //    //    height: 3px;
-                    //    //    background: black;
+                    //    //    background: $black;
                     //    //    z-index: 1;
                     //    //}
                     //}
@@ -321,8 +323,8 @@
                 //    padding: 2px 3px;
                 //    z-index: 10;
                 //    position: absolute;
-                //    font-size: 0.75rem;
-                //    background: black;
+                //    font-size: $size-tiny;
+                //    background: $black;
                 //    font-weight: bold;
                 //    font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
                 //    line-height: 1;

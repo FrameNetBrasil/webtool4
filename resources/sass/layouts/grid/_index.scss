@@ -1,13 +1,13 @@
-@import "auto";
-@import "card";
-@import "crud";
-@import "dashboard";
-@import "debug";
-@import "form";
-@import "gallery";
-@import "mansory";
-@import "nested";
-@import "responsive";
-@import "subgrid";
-@import "stats";
+@forward "auto";
+@forward "card";
+@forward "crud";
+@forward "dashboard";
+@forward "debug";
+@forward "form";
+@forward "gallery";
+@forward "mansory";
+@forward "nested";
+@forward "responsive";
+@forward "subgrid";
+@forward "stats";
 

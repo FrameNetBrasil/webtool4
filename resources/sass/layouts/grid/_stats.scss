@@ -1,9 +1,11 @@
 // Alternative grid systems for different use cases
+@use "../../abstracts/variables" as *;
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: @relativeLarge;                                                 // 24px (was var(--spacing-6))
-    margin-bottom: @relativeBig;                                         // 32px (was var(--spacing-8))
+    gap: $size-large;                                                 // 24px (was var(--spacing-6))
+    margin-bottom: $size-big;                                         // 32px (was var(--spacing-8))
 
     .ui.card {
         margin: 0 !important; // Same fix
@@ -11,12 +13,12 @@
 
     &.large-stats {
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: @relativeBig;                                               // 32px (was var(--spacing-8))
+        gap: $size-big;                                               // 32px (was var(--spacing-8))
     }
 
     &.small-stats {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: @relativeMedium;                                            // 16px (was var(--spacing-4))
+        gap: $size-medium;                                            // 16px (was var(--spacing-4))
     }
 
     &.two-column {

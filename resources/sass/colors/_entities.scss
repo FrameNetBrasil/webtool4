@@ -1,93 +1,142 @@
+@use "../abstracts/variables" as *;
+
 /* FrameNet Entity Colors */
-:root {
-    /* Frames */
-    --frame-color: var(--red-700);
-    --frame-bg: var(--red-50);
-    --frame-border: var(--red-700);
-
-    /* Lexical Units */
-    --lu-color: var(--blue-900);
-    --lu-bg: var(--green-50);
-    --lu-border: var(--blue-900);
-
-    /* Constructions */
-    --construction-color: var(--green-900);
-    --construction-bg: var(--green-50);
-    --construction-border: var(--green-900);
-
-    /* Semantic Types */
-    --semantictype-color: var(--yellow-600);
-    --semantictype-bg: var(--yellow-50);
-    --semantictype-border: var(--yellow-600);
-
-    /* Concept */
-    --concept-color: var(--yellow-600);
-    --concept-bg: var(--yellow-50);
-    --concept-border: var(--yellow-600);
-
-    /* Qualia TQR */
-    --qualia-color: var(--yellow-600);
-    --qualia-bg: var(--yellow-50);
-    --qualia-border: var(--yellow-600);
-
-    /* Relations */
-    --relation-inherits: var(--teal-600);
-    --relation-uses: var(--cyan-600);
-    --relation-subframe: var(--violet-600);
-    --relation-perspective: var(--yellow-600);
-
-    /* Annotation Layers */
-    --layer-frame: var(--blue-500);
-    --layer-fe: var(--green-500);
-    --layer-target: var(--red-500);
-    --layer-support: var(--yellow-500);
+.color-frame {
+    color: $red-700 !important;
+    fill: $red-700 !important;
+    stroke: $red-700 !important;
+    border-color:  $red-700 !important;
 }
 
-/*---------
-   Entities
- */
-
-.frame {
-    color: var(--frame-color) !important;
-    fill: var(--frame-color) !important;
-    stroke: var(--frame-color) !important;
-    border-color:  var(--frame-color) !important;
+.color-lu {
+    color: $blue-900 !important;
+    fill: $blue-900 !important;
+    stroke: $blue-900 !important;
+    border-color:  $blue-900 !important;
 }
 
-.lu {
-    color: var(--lu-color) !important;
-    fill: var(--lu-color) !important;
-    stroke: var(--lu-color) !important;
-    border-color:  var(--lu-color) !important;
+.color-construction {
+    color: $green-900 !important;
+    fill: $green-900 !important;
+    stroke: $green-900 !important;
+    border-color:  $green-900 !important;
 }
 
-.construction {
-    color: var(--construction-color) !important;
-    fill: var(--construction-color) !important;
-    stroke: var(--construction-color) !important;
-    border-color:  var(--construction-color) !important;
+.color-semantictype {
+    color: $yellow-600 !important;
+    fill: $yellow-600 !important;
+    stroke: $yellow-600 !important;
+    border-color:  $yellow-600 !important;
 }
 
-.semantictype {
-    color: var(--semantictype-color) !important;
-    fill: var(--semantictype-color) !important;
-    stroke: var(--semantictype-color) !important;
-    border-color:  var(--semantictype-color) !important;
+.color-qualia {
+    color: $yellow-600 !important;
+    fill: $yellow-600 !important;
+    stroke: $yellow-600 !important;
+    border-color:  $yellow-600 !important;
 }
 
-.qualia {
-    color: var(--qualia-color) !important;
-    fill: var(--qualia-color) !important;
-    stroke: var(--qualia-color) !important;
-    border-color:  var(--qualia-color) !important;
+.color-concept {
+    color: $yellow-600 !important;
+    fill: $yellow-600 !important;
+    stroke: $yellow-600 !important;
+    border-color:  $yellow-600 !important;
 }
 
-.concept {
-    color: var(--concept-color) !important;
-    fill: var(--concept-color) !important;
-    stroke: var(--concept-color) !important;
-    border-color:  var(--concept-color) !important;
+.color-target {
+    color: white !important;
+    background-color: black !important;
 }
+
+.color-qla-agentive {
+    color: $pink-500 !important;
+}
+
+.color-qla-agentive--text {
+    color: $pink-500 !important;
+}
+
+.color-qla-context {
+    color: $yellow-800 !important;
+}
+.color-qla-context--text {
+    color: $yellow-800 !important;
+}
+
+.color-qla-telic {
+    color: $teal-300 !important;
+}
+.color-qla-telic--text {
+    color: $teal-300 !important;
+}
+
+
+.color-qla-constitutive {
+    color: $green-500 !important;
+}
+.color-qla-constitutive--text {
+    color: $green-500 !important;
+}
+
+.color-qla-formal {
+    color: $purple-800 !important;
+}
+
+.color-qla-formal--text {
+    color: $purple-800 !important;
+}
+
+
+.color-generic {
+    color: $cyan-900 !important;
+}
+
+.color-lexicon {
+    color: $blue-900 !important;
+}
+
+.color-corpus {
+    color: $bluegray-400 !important;
+}
+.color-document {
+    color: $bluegray-400 !important;
+}
+
+.color-constraint {
+    color: $purple-800 !important;
+}
+
+.color-concept-cxn {
+    color: $green-900 !important;
+    fill: $green-900 !important;
+    stroke: $green-900 !important;
+}
+
+.color-concept-str {
+    color: $orange-600 !important;
+    fill: $orange-600 !important;
+    stroke: $orange-600 !important;
+}
+
+.color-concept-inf {
+    color: $purple-800 !important;
+    fill: $purple-800 !important;
+    stroke: $purple-800 !important;
+}
+
+.color-concept-sem {
+    color: $red-600 !important;
+    fill: $red-600 !important;
+    stroke: $red-600 !important;
+}
+
+.color-concept-def {
+    color: $blue-800 !important;
+    fill: $blue-800 !important;
+    stroke: $blue-800 !important;
+}
+
+
 
 
 

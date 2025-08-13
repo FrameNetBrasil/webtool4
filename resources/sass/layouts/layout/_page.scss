@@ -1,22 +1,24 @@
 
+@use "../../abstracts/variables" as *;
+
 .page-header {
     flex-shrink: 0;
-    padding: @relativeBig;
-    border-bottom: 1px solid @borderColor;
-    background: @primaryBackground;
+    padding: $size-big;
+    border-bottom: 1px solid $border;
+    background: $background;
 
     .page-header-content {
         .page-area {
-            font-weight: @headerFontWeight;
+            font-weight: $weight-semibold;
         }
 
         .page-title {
-            font-family: @fontFamily;
-            font-size: @relativeMassive;
-            font-weight: @headerFontWeight;
-            line-height: @headerLineHeight;
-            color: @textColor;
-            padding: 0 0 @relative4px 0;
+            font-family: $family-sans-serif;
+            font-size: $size-massive;
+            font-weight: $weight-semibold;
+            line-height: 1.2;
+            color: $text;
+            padding: 0 0 4px 0;
         }
 
         .page-subtitle {
@@ -38,5 +40,5 @@
 }
 
 .page-breadcrumb {
-    padding: @relativeMedium 0 0 @relativeMedium;
+    padding: $size-medium 0 0 $size-medium;
 }

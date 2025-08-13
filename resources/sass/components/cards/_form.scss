@@ -1,8 +1,10 @@
+@use "../../abstracts/variables" as *;
+
 /* Form Card Component */
 .form-card {
     .ui.form {
         .field {
-            margin-bottom: @relativeMedium;
+            margin-bottom: $size-medium;
         }
     }
 

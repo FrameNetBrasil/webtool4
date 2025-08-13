@@ -1,5 +1,5 @@
-@import "annotation";
-@import "annotation_corpus_fe";
-@import "annotation_deixis";
-@import "annotation_dynamic";
-@import "annotation_player";
+@forward "annotation";
+@forward "annotation_corpus_fe";
+@forward "annotation_deixis";
+@forward "annotation_dynamic";
+@forward "annotation_player";

@@ -3,25 +3,20 @@
 // Based on the existing Webtool design system
 // =============================================================================
 
-// size
+// Configure and forward Bulma variables with our customizations
+@use "bulma/sass" as bulma with (
+  // Typography overrides
+  $family-primary: ('Noto Sans', 'Lato', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif),
+  $family-sans-serif: ('Noto Sans', 'Lato', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif),
+  $family-monospace: ('Noto Sans Mono', 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace),
+  
+  // Color overrides  
+  $primary: #2563eb  // blue-600
+);
 
-//@harmonicMiniRaw: 0.579;     // 8.1px
-//@harmonicTinyRaw: 0.694;     // 9.7px
-//@harmonicSmallRaw: 0.833;    // 11.7px
-//@harmonicMediumRaw: 1.0;     // 14px
-//@harmonicLargeRaw: 1.2;      // 16.8px
-//@harmonicBigRaw: 1.44;       // 20.2px
-//@harmonicHugeRaw: 1.728;     // 24.2px
-//@harmonicMassiveRaw: 2.074;  // 29px
-
-$mini: 8.1px;
-$tiny: 9.7px;
-$small: 11.7px;
-$medium: 14px;
-$large: 16.8px;
-$big: 20.2px;
-$huge: 24.2px;
-$massive: 29px;
+// Forward Bulma utilities with our configuration
+@forward "bulma/sass/utilities";
+@forward "bulma/sass/utilities/derived-variables";
 
 // -----------------------------------------------------------------------------
 // Color Palette (based on existing Tailwind-inspired palette)
@@ -155,7 +150,10 @@ $neutral-950: #030712;
 
 // Primary colors mapped to our blue palette
 $primary: $blue-600;
-$primary-invert: $white;
+$primary-inverted: $white;
+$primary-hover: $blue-600;
+$secondary: $neutral-500;
+$tertiary: $neutral-400;
 $success: $green-600;
 $warning: $yellow-500;
 $danger: $red-600;
@@ -167,106 +165,162 @@ $text: $gray-700;
 $text-strong: $gray-900;
 $text-light: $gray-500;
 
-// -----------------------------------------------------------------------------
-// Domain-Specific Colors (FrameNet Entities)
-// -----------------------------------------------------------------------------
-
-// Frames
-$frame-color: $red-700;
-$frame-bg: $red-50;
-$frame-border: $red-700;
-
-// Lexical Units
-$lu-color: $blue-900;
-$lu-bg: $green-50;
-$lu-border: $blue-900;
-
-// Constructions
-$construction-color: $green-900;
-$construction-bg: $green-50;
-$construction-border: $green-900;
-
-// Semantic Types
-$semantictype-color: $yellow-600;
-$semantictype-bg: $yellow-50;
-$semantictype-border: $yellow-600;
-
-// Concept
-$concept-color: $yellow-600;
-$concept-bg: $yellow-50;
-$concept-border: $yellow-600;
-
-// Qualia TQR
-$qualia-color: $yellow-600;
-$qualia-bg: $yellow-50;
-$qualia-border: $yellow-600;
-
-// Relations
-$relation-inherits: $teal-600;
-$relation-uses: #06b6d4; // cyan-500
-$relation-subframe: #8b5cf6; // violet-500
-$relation-perspective: $yellow-600;
-
-// Annotation Layers
-$layer-frame: $blue-500;
-$layer-fe: $green-500;
-$layer-target: $red-500;
-$layer-support: $yellow-500;
+// App
+$app-color: $red-700;
+$app-bg: $red-50;
+$app-border: $red-700;
 
 // -----------------------------------------------------------------------------
 // Typography
 // -----------------------------------------------------------------------------
 
-// Bulma font family overrides
-$family-sans-serif: "Lato", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-$family-monospace: "JetBrains Mono", "Fira Code", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+// Font families
+$family-sans-serif: "Noto Sans", "Lato", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$family-monospace: "Noto Sans Mono","JetBrains Mono", "Fira Code", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+$family-condensed: "Roboto Condensed", "Arial Narrow", sans-serif;
+$font-family: "Noto Sans", "Lato", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$family-primary: $family-sans-serif;
+$family-secondary: $family-condensed;
+$family-code: $family-monospace;
 
-// Font sizes (keeping current scale)
-$size-1: 3rem;     // 48px
-$size-2: 2.5rem;   // 40px
-$size-3: 2rem;     // 32px
-$size-4: 1.5rem;   // 24px
-$size-5: 1.25rem;  // 20px
-$size-6: 1rem;     // 16px
-$size-7: 0.875rem; // 14px
+// Letter spacing
+$letter-spacing-tight: -0.025em;
+$letter-spacing-normal: 0;
+$letter-spacing-wide: 0.05em;
+
+$line-height: 1.05;
 
 // -----------------------------------------------------------------------------
-// Spacing & Layout
+// Bulma Size System Integration
+// -----------------------------------------------------------------------------
+
+// Map custom harmonic sizes to Bulma size system
+$size-small: 11.7px;     // 11.7px
+$size-normal: 14px;   // 14px (base)
+$size-medium: 16.8px;    // 16.8px
+$size-large: 20.2px;       // 20.2px
+
+// Extended sizes for specialized components
+$size-mini: 8.1px;       // 8.1px
+$size-tiny: 9.7px;       // 9.7px
+$size-big: 20.2px;       // 20.2px
+$size-huge: 24.2px;       // 24.2px
+$size-massive: 29px; // 29px
+$size-extra-large: 40px; // For large form gaps
+
+// Size multipliers for consistent scaling
+$size-multipliers: (
+  mini: 0.579,
+  tiny: 0.694,
+  small: 0.833,
+  normal: 1.0,
+  medium: 1.2,
+  large: 1.44,
+  big: 1.44,
+  huge: 1.728,
+  massive: 2.074
+);
+
+// -----------------------------------------------------------------------------
+// Layout & Spacing System
 // -----------------------------------------------------------------------------
 
 // Container max-widths (adjust for webtool needs)
 $container-max-width: 1400px;
 
-// Border radius
-$radius-small: 2px;
-$radius: 4px;
-$radius-medium: 6px;
-$radius-large: 8px;
-$radius-rounded: 290486px;
+// Layout dimensions (from Fomantic UI)
+$sidebar-width: 280px;
+$sidebar-width-narrow: 250px;
+$sidebar-width-wide: 400px;
+$tools-panel-width: 320px;
+$tools-panel-width-narrow: 280px;
+$header-height: 64px;
+$mobile-breakpoint: 768px;  // Based on Bulma's $tablet - 1px (mobile until 768px)
+$timeline-height: 180px;
+
+// Z-index system
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+$z-index-fixed: 1030;
+
+// Shadow system
+$shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+
+// Input system
+$input-background-color: $white;
+$input-placeholder-color: $gray-500;
+
+// Annotation layers
+$layer-fe: $blue-500;  // Frame element layer
+$layer-target: $red-500;  // Target layer
+$layer-frame: $red-500;  // Frame layer
+$layer-lu: $blue-600;  // Lexical unit layer
+$layer-construction: $green-600;  // Construction layer
+$layer-support: #f97316;  // Support layer (orange-500)
+
+// Missing entity colors
+$pink-500: #ec4899;
+$bluegray-400: #94a3b8;  // slate-400
+$cyan-900: #164e63;
+$orange-500: #f97316;
+$orange-600: #ea580c;
+
+// FrameNet Entity Color System
+$frame-color: $red-700;
+$frame-bg: $red-50;
+$frame-border: $red-200;
+
+$lu-color: $blue-700;
+$lu-bg: $blue-50;
+$lu-border: $blue-200;
+
+$construction-color: $green-700;
+$construction-bg: $green-50;
+$construction-border: $green-200;
+
+$semantictype-color: $yellow-600;
+$semantictype-bg: $yellow-50;
+$semantictype-border: $yellow-200;
+
+$concept-color: $purple-700;
+$concept-bg: $purple-50;
+$concept-border: $purple-200;
+
+$qualia-color: $teal-600;
+$qualia-bg: $teal-50;
+$qualia-border: $teal-200;
+
+// Relation colors
+$relation-inherits: $blue-600;
+$relation-uses: $green-600;
+$relation-subframe: $orange-600;
+$relation-perspective: $purple-600;
+
+// Legacy toolbar height
+$toolbar-height: 48px;
 
 // -----------------------------------------------------------------------------
-// Component Specific Variables
+// Extended Color System (Annotation-Specific)
 // -----------------------------------------------------------------------------
 
-// Buttons
-$button-padding-vertical: 0.5rem;
-$button-padding-horizontal: 1rem;
+// Overlay colors
+$overlay-light-10: rgba($white, 0.1);
+$overlay-light-80: rgba($white, 0.8);
+$overlay-dark-80: rgba($black, 0.8);
 
-// Cards
-$card-radius: $radius;
-$card-shadow: 0 0.125em 0.25em rgba(10, 10, 10, 0.15);
+// -----------------------------------------------------------------------------
+// Animation & Transitions
+// -----------------------------------------------------------------------------
 
-// Forms
-$input-radius: $radius;
-$input-border-color: $gray-300;
-$input-focus-border-color: $primary;
+// Transition speeds
+$transition-fast: 0.15s;
+$transition-normal: 0.3s;
+$transition-slow: 0.5s;
 
-// Tables
-$table-row-hover-background-color: $gray-50;
-$table-striped-row-even-background-color: rgba($gray-100, 0.5);
-
-// Navigation
-$navbar-height: 3.25rem;
-$navbar-background-color: $white;
-$navbar-box-shadow-size: 0 2px 0 0;
-$navbar-box-shadow-color: $gray-100;
+// Opacity levels
+$opacity-disabled: 0.4;
+$opacity-hover: 0.8;
+$disabled-opacity: $opacity-disabled;

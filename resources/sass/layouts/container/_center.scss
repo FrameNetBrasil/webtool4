@@ -1,8 +1,10 @@
+@use "../../abstracts/variables" as *;
+
 // Alternative: flex centering container
 .center-container-with-sidebar {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: calc(@sidebarWidth / -2) !important; // Using Fomantic variable
-    // margin-top: calc(@headerHeight / -2);            // Commented as in original
+    margin-left: calc($sidebar-width / -2) !important; // Using Fomantic variable
+    // margin-top: calc($header-height / -2);            // Commented as in original
 }

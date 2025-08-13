@@ -1,7 +1,9 @@
+@use "../../abstracts/variables" as *;
+
 /* Sidebar layouts for detail views */
 .sidebar-layout {
     display: grid;
-    gap: @relativeBig;                                                   // 32px (was var(--spacing-8))
+    gap: $size-big;                                                   // 32px (was var(--spacing-8))
 
     &.left {
         grid-template-columns: 300px 1fr;
@@ -13,32 +15,32 @@
 
     &.wide-sidebar {
         &.left {
-            grid-template-columns: @sidebarWidthWide 1fr;               // 400px (was var(--sidebar-width-wide))
+            grid-template-columns: $sidebar-width-wide 1fr;               // 400px (was var(--sidebar-width-wide))
         }
 
         &.right {
-            grid-template-columns: 1fr @sidebarWidthWide;               // 400px (was var(--sidebar-width-wide))
+            grid-template-columns: 1fr $sidebar-width-wide;               // 400px (was var(--sidebar-width-wide))
         }
     }
 
     &.narrow-sidebar {
         &.left {
-            grid-template-columns: @sidebarWidthNarrow 1fr;             // 250px (was var(--sidebar-width-narrow))
+            grid-template-columns: $sidebar-width-narrow 1fr;             // 250px (was var(--sidebar-width-narrow))
         }
 
         &.right {
-            grid-template-columns: 1fr @sidebarWidthNarrow;             // 250px (was var(--sidebar-width-narrow))
+            grid-template-columns: 1fr $sidebar-width-narrow;             // 250px (was var(--sidebar-width-narrow))
         }
     }
 
     .sidebar-content {
-        background: @primaryBackground;                                  // (was var(--color-sidebar-bg))
-        border: 1px solid @borderColor;                                // (was var(--color-border-primary))
-        border-radius: @borderRadiusLG;                                 // 8px (was var(--radius-lg))
-        padding: @relativeLarge;                                         // 24px (was var(--spacing-6))
+        background: $background;                                  // (was var(--color-sidebar-bg))
+        border: 1px solid $border;                                // (was var(--color-border-primary))
+        border-radius: $radius-large;                                 // 8px (was var(--radius-lg))
+        padding: $size-large;                                         // 24px (was var(--spacing-6))
         height: fit-content;
         position: sticky;
-        top: @relativeMedium;                                            // 16px (was var(--spacing-4))
+        top: $size-medium;                                            // 16px (was var(--spacing-4))
     }
 
     .main-content {

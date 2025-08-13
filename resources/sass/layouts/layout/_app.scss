@@ -1,3 +1,5 @@
+@use "../../abstracts/variables" as *;
+
 /* Main Application Grid */
 .app-layout {
     display: grid;
@@ -7,8 +9,8 @@
     grid-template-areas:
         "header header header"
         "sidebar main tools";
-    grid-template-columns: @sidebarWidth 1fr @toolsPanelWidth;           // (was var(--sidebar-width) var(--tools-panel-width))
-    grid-template-rows: @headerHeight 1fr;                              // (was var(--header-height))
+    grid-template-columns: $sidebar-width 1fr $tools-panel-width;           // (was var(--sidebar-width) var(--tools-panel-width))
+    grid-template-rows: $header-height 1fr;                              // (was var(--header-height))
 
     /* Remove gaps for seamless layout */
     gap: 0;
@@ -17,29 +19,29 @@
 /* Layout Areas */
 .app-header {
     grid-area: header;
-    background: @primaryBackground;                                         // (was var(--color-bg-primary))
-    border-bottom: 1px solid @borderColor;                             // (was var(--color-border-primary))
+    background: $background;                                         // (was var(--color-bg-primary))
+    border-bottom: 1px solid $border;                             // (was var(--color-border-primary))
     display: flex;
     align-items: center;
-    padding: 0 @relativeLarge;                                           // 24px (was var(--spacing-6))
-    z-index: @zIndexSticky;                                              // (was var(--z-sticky))
+    padding: 0 $size-large;                                           // 24px (was var(--spacing-6))
+    z-index: $z-index-sticky;                                              // (was var(--z-sticky))
 }
 
 .app-sidebar {
     grid-area: sidebar;
-    background: @primaryBackground;                                      // (was var(--color-sidebar-bg))
-    border-right: 1px solid @borderColor;                             // (was var(--color-sidebar-border))
+    background: $background;                                      // (was var(--color-sidebar-bg))
+    border-right: 1px solid $border;                             // (was var(--color-sidebar-border))
     overflow-y: auto;
-    z-index: @zIndexFixed;
+    z-index: $z-index-fixed;
 
     .ui.vertical.menu {
-        background: @primaryBackground;                                      // (was var(--color-sidebar-bg))
+        background: $background;                                      // (was var(--color-sidebar-bg))
     }
 }
 
 .app-main {
     grid-area: main;
-    background: @primaryBackground;                                         // (was var(--color-bg-primary))
+    background: $background;                                         // (was var(--color-bg-primary))
     overflow-y: auto;
     position: relative;
 }
@@ -55,8 +57,8 @@
 
 .app-tools {
     grid-area: tools;
-    background: @primaryBackground;                                      // (was var(--color-sidebar-bg))
-    border-left: 1px solid @borderColor;                               // (was var(--color-border-primary))
+    background: $background;                                      // (was var(--color-sidebar-bg))
+    border-left: 1px solid $border;                               // (was var(--color-border-primary))
     overflow-y: auto;
 }
 
@@ -65,14 +67,14 @@
     grid-template-areas:
         "header header"
         "sidebar main";
-    grid-template-columns: @sidebarWidth 1fr;                           // (was var(--sidebar-width))
+    grid-template-columns: $sidebar-width 1fr;                           // (was var(--sidebar-width))
 }
 
 .app-layout.no-sidebar {
     grid-template-areas:
         "header header"
         "main tools";
-    grid-template-columns: 1fr @toolsPanelWidth;                        // (was var(--tools-panel-width))
+    grid-template-columns: 1fr $tools-panel-width;                        // (was var(--tools-panel-width))
 }
 
 .app-layout.minimal {
@@ -89,5 +91,5 @@
         "toolbar"
         "canvas";
     grid-template-columns: 1fr;
-    grid-template-rows: 3em @toolbarHeight 1fr;                             // (was var(--toolbar-height))
+    grid-template-rows: 3em $toolbar-height 1fr;                             // (was var(--toolbar-height))
 }
