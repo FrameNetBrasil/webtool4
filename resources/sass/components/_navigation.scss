@@ -1,0 +1,54 @@
+// =============================================================================
+// NAVIGATION COMPONENTS
+// Custom navigation styles extending Bulma navbar and menu
+// =============================================================================
+
+// Enhanced navbar
+.navbar {
+    // Sticky navbar
+    &.is-sticky {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+    }
+    
+    // Improved dropdown
+    .navbar-dropdown {
+        box-shadow: 0 8px 16px rgba(10, 10, 10, 0.1);
+        border-top: 2px solid $primary;
+    }
+}
+
+// Sidebar navigation
+.sidebar-nav {
+    .menu {
+        .menu-list {
+            a {
+                transition: background-color 0.15s ease, color 0.15s ease;
+                
+                &:hover {
+                    background-color: rgba($primary, 0.1);
+                }
+                
+                &.is-active {
+                    background-color: $primary;
+                    color: $primary-invert;
+                }
+            }
+        }
+    }
+}
+
+// Breadcrumb enhancements
+.breadcrumb {
+    ul li {
+        &.is-active a {
+            color: $text;
+            cursor: default;
+        }
+        
+        &:not(.is-active) a:hover {
+            color: $primary;
+        }
+    }
+}

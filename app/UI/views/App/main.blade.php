@@ -20,75 +20,70 @@
         ->all();
 
 @endphp
-<x-layout::index>
-    <div class="app-layout no-tools">
-        @include('layouts.header')
-        @include("layouts.sidebar")
+<x-layout::index-bulma>
+    <div class="app-layout">
+        @include('layouts.header-bulma')
+        @include("layouts.sidebar-bulma")
         <main class="app-main">
-            <div class="page-content">
-                <div class="content-container">
+            <div class="container is-fluid">
+                <div class="content">
                     @include("App.messages")
+                    
                     @if(count($tasksForManager) > 0)
-                        <h2 class="ui header">Managed project/tasks</h2>
-                        <table class="ui striped small compact table">
-                            <thead>
-                            <tr>
-                                <th>Project</th>
-                                <th>Task</th>
-                                <th>Task group</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($tasksForManager as $task)
-                                <tr>
-                                    <td>
-                                        {{$task->projectName}}
-                                    </td>
-                                    <td>
-                                        {{$task->taskName}}
-                                    </td>
-                                    <td>
-                                        {{$task->taskGroupName}}
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                        <div class="block">
+                            <h2 class="title is-4">Managed project/tasks</h2>
+                            <div class="table-container">
+                                <table class="table is-striped is-narrow is-fullwidth">
+                                    <thead>
+                                        <tr>
+                                            <th>Project</th>
+                                            <th>Task</th>
+                                            <th>Task group</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($tasksForManager as $task)
+                                            <tr>
+                                                <td>{{$task->projectName}}</td>
+                                                <td>{{$task->taskName}}</td>
+                                                <td>{{$task->taskGroupName}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     @endif
 
                     @if(!$isManager)
-                        <h2 class="ui header">My tasks</h2>
-                        <table class="ui striped small compact table">
-                            <thead>
-                            <tr>
-                                <th>Project</th>
-                                <th>Task</th>
-                                <th>Task group</th>
-                                <th>Manager(s)</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($tasks as $task)
-                                <tr>
-                                    <td>
-                                        {{$task->projectName}}
-                                    </td>
-                                    <td>
-                                        {{$task->taskName}}
-                                    </td>
-                                    <td>
-                                        {{$task->taskGroupName}}
-                                    </td>
-                                    <td>
-                                        {{$task->manager}}
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                        <div class="block">
+                            <h2 class="title is-4">My tasks</h2>
+                            <div class="table-container">
+                                <table class="table is-striped is-narrow is-fullwidth">
+                                    <thead>
+                                        <tr>
+                                            <th>Project</th>
+                                            <th>Task</th>
+                                            <th>Task group</th>
+                                            <th>Manager(s)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($tasks as $task)
+                                            <tr>
+                                                <td>{{$task->projectName}}</td>
+                                                <td>{{$task->taskName}}</td>
+                                                <td>{{$task->taskGroupName}}</td>
+                                                <td>{{$task->manager}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     @endif
                 </div>
             </div>
         </main>
     </div>
-</x-layout::index>
+</x-layout::index-bulma>

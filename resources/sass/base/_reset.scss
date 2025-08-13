@@ -1,0 +1,110 @@
+// =============================================================================
+// BASE RESET
+// Additional reset styles for webtool specific needs
+// =============================================================================
+
+// Box sizing for all elements
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+// Remove default margins from common elements
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+dl, dd, ol, ul,
+figure,
+hr,
+fieldset, legend {
+    margin: 0;
+    padding: 0;
+}
+
+// Remove list styles from ul/ol elements with list role
+ul[role='list'],
+ol[role='list'] {
+    list-style: none;
+}
+
+// Set shorter line heights on headings and interactive elements
+h1, h2, h3, h4, 
+button, input, label {
+    line-height: 1.1;
+}
+
+// Balance text wrapping on headings
+h1, h2, h3, h4 {
+    text-wrap: balance;
+}
+
+// Avoid text overflows
+p, li, h1, h2, h3, h4 {
+    word-wrap: break-word;
+}
+
+// Improve media defaults
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+// Inherit fonts for inputs and buttons
+input, button, textarea, select {
+    font: inherit;
+}
+
+// Make sure textareas without a rows attribute are not tiny
+textarea:not([rows]) {
+    min-height: 10em;
+}
+
+// Anything that has been anchored to should have extra scroll margin
+:target {
+    scroll-margin-block: 5ex;
+}
+
+// Smooth scrolling for links within page
+html {
+    scroll-behavior: smooth;
+}
+
+// Focus styles for accessibility
+:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: 2px;
+}
+
+// Remove focus styles for mouse users
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+// Print styles
+@media print {
+    *,
+    *:before,
+    *:after {
+        background: transparent !important;
+        color: black !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}

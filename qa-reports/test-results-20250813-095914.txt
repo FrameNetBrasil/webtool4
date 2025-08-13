@@ -1,0 +1,19 @@
+
+   WARN  XDEBUG_MODE=coverage (environment variable) or xdebug.mode=coverage (PHP configuration setting) has to be set
+
+   PASS  Tests\Feature\BulmaComponentsTest
+  ✓ bulma layout renders                                                 0.08s  
+  ✓ bulma datagrid component                                             0.03s  
+  ✓ bulma css exists                                                     0.03s  
+  ✓ javascript components built                                          0.03s  
+  ✓ migration service                                                    0.02s  
+  ✓ bulma header component                                               0.03s  
+  ✓ bulma sidebar component                                              0.03s  
+  ✓ responsive design                                                    0.03s  
+  ✓ accessibility features                                               0.03s  
+  ✓ performance optimization                                             0.03s  
+  ✓ component library                                                    0.03s  
+
+  Tests:    11 passed (44 assertions)
+  Duration: 0.41s
+

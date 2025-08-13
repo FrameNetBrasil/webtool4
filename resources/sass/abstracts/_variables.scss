@@ -1,0 +1,272 @@
+// =============================================================================
+// BULMA CUSTOM VARIABLES
+// Based on the existing Webtool design system
+// =============================================================================
+
+// size
+
+//@harmonicMiniRaw: 0.579;     // 8.1px
+//@harmonicTinyRaw: 0.694;     // 9.7px
+//@harmonicSmallRaw: 0.833;    // 11.7px
+//@harmonicMediumRaw: 1.0;     // 14px
+//@harmonicLargeRaw: 1.2;      // 16.8px
+//@harmonicBigRaw: 1.44;       // 20.2px
+//@harmonicHugeRaw: 1.728;     // 24.2px
+//@harmonicMassiveRaw: 2.074;  // 29px
+
+$mini: 8.1px;
+$tiny: 9.7px;
+$small: 11.7px;
+$medium: 14px;
+$large: 16.8px;
+$big: 20.2px;
+$huge: 24.2px;
+$massive: 29px;
+
+// -----------------------------------------------------------------------------
+// Color Palette (based on existing Tailwind-inspired palette)
+// -----------------------------------------------------------------------------
+
+// Base colors
+$white: #ffffff;
+$black: #000000;
+
+// Grays - UI Foundation
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+$gray-950: #030712;
+
+// Blues - Primary/Reports
+$blue-50: #eff6ff;
+$blue-100: #dbeafe;
+$blue-200: #bfdbfe;
+$blue-300: #93c5fd;
+$blue-400: #60a5fa;
+$blue-500: #3b82f6;
+$blue-600: #2563eb;
+$blue-700: #1d4ed8;
+$blue-800: #1e40af;
+$blue-900: #1e3a8a;
+$blue-950: #172554;
+
+// Greens - Success/Data
+$green-50: #f0fdf4;
+$green-100: #dcfce7;
+$green-200: #bbf7d0;
+$green-300: #86efac;
+$green-400: #4ade80;
+$green-500: #22c55e;
+$green-600: #16a34a;
+$green-700: #15803d;
+$green-800: #166534;
+$green-900: #14532d;
+$green-950: #052e16;
+
+// Reds - Errors/Critical
+$red-50: #fef2f2;
+$red-100: #fee2e2;
+$red-200: #fecaca;
+$red-300: #fca5a5;
+$red-400: #f87171;
+$red-500: #ef4444;
+$red-600: #dc2626;
+$red-700: #b91c1c;
+$red-800: #991b1b;
+$red-900: #7f1d1d;
+$red-950: #450a0a;
+
+// Yellows - Warnings
+$yellow-50: #fefce8;
+$yellow-100: #fef3c7;
+$yellow-200: #fde68a;
+$yellow-300: #fcd34d;
+$yellow-400: #fbbf24;
+$yellow-500: #f59e0b;
+$yellow-600: #d97706;
+$yellow-700: #b45309;
+$yellow-800: #92400e;
+$yellow-900: #78350f;
+$yellow-950: #451a03;
+
+// Purples - Annotations
+$purple-50: #faf5ff;
+$purple-100: #f3e8ff;
+$purple-200: #e9d5ff;
+$purple-300: #d8b4fe;
+$purple-400: #c084fc;
+$purple-500: #a855f7;
+$purple-600: #9333ea;
+$purple-700: #7c3aed;
+$purple-800: #6b21a8;
+$purple-900: #581c87;
+$purple-950: #3b0764;
+
+// Indigos - Secondary Actions
+$indigo-50: #eef2ff;
+$indigo-100: #e0e7ff;
+$indigo-200: #c7d2fe;
+$indigo-300: #a5b4fc;
+$indigo-400: #818cf8;
+$indigo-500: #6366f1;
+$indigo-600: #4f46e5;
+$indigo-700: #4338ca;
+$indigo-800: #3730a3;
+$indigo-900: #312e81;
+$indigo-950: #1e1b4b;
+
+// Teals - Data Relations
+$teal-50: #f0fdfa;
+$teal-100: #ccfbf1;
+$teal-200: #99f6e4;
+$teal-300: #5eead4;
+$teal-400: #2dd4bf;
+$teal-500: #14b8a6;
+$teal-600: #0d9488;
+$teal-700: #0f766e;
+$teal-800: #115e59;
+$teal-900: #134e4a;
+$teal-950: #042f2e;
+
+// Neutral colors (grayscale)
+$neutral-25: #FCFCFD;
+$neutral-50: #F9FAFB;
+$neutral-100: #F3F4F6;
+$neutral-200: #E5E7EB;
+$neutral-300: #D1D5DB;
+$neutral-400: #9CA3AF;
+$neutral-500: #6B7280;
+$neutral-600: #4B5563;
+$neutral-700: #374151;
+$neutral-800: #1F2937;
+$neutral-900: #111827;
+$neutral-950: #030712;
+
+// -----------------------------------------------------------------------------
+// Bulma Color Overrides
+// -----------------------------------------------------------------------------
+
+// Primary colors mapped to our blue palette
+$primary: $blue-600;
+$primary-invert: $white;
+$success: $green-600;
+$warning: $yellow-500;
+$danger: $red-600;
+$error: $red-600;
+$info: $indigo-600;
+
+// Text colors
+$text: $gray-700;
+$text-strong: $gray-900;
+$text-light: $gray-500;
+
+// -----------------------------------------------------------------------------
+// Domain-Specific Colors (FrameNet Entities)
+// -----------------------------------------------------------------------------
+
+// Frames
+$frame-color: $red-700;
+$frame-bg: $red-50;
+$frame-border: $red-700;
+
+// Lexical Units
+$lu-color: $blue-900;
+$lu-bg: $green-50;
+$lu-border: $blue-900;
+
+// Constructions
+$construction-color: $green-900;
+$construction-bg: $green-50;
+$construction-border: $green-900;
+
+// Semantic Types
+$semantictype-color: $yellow-600;
+$semantictype-bg: $yellow-50;
+$semantictype-border: $yellow-600;
+
+// Concept
+$concept-color: $yellow-600;
+$concept-bg: $yellow-50;
+$concept-border: $yellow-600;
+
+// Qualia TQR
+$qualia-color: $yellow-600;
+$qualia-bg: $yellow-50;
+$qualia-border: $yellow-600;
+
+// Relations
+$relation-inherits: $teal-600;
+$relation-uses: #06b6d4; // cyan-500
+$relation-subframe: #8b5cf6; // violet-500
+$relation-perspective: $yellow-600;
+
+// Annotation Layers
+$layer-frame: $blue-500;
+$layer-fe: $green-500;
+$layer-target: $red-500;
+$layer-support: $yellow-500;
+
+// -----------------------------------------------------------------------------
+// Typography
+// -----------------------------------------------------------------------------
+
+// Bulma font family overrides
+$family-sans-serif: "Lato", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$family-monospace: "JetBrains Mono", "Fira Code", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+
+// Font sizes (keeping current scale)
+$size-1: 3rem;     // 48px
+$size-2: 2.5rem;   // 40px
+$size-3: 2rem;     // 32px
+$size-4: 1.5rem;   // 24px
+$size-5: 1.25rem;  // 20px
+$size-6: 1rem;     // 16px
+$size-7: 0.875rem; // 14px
+
+// -----------------------------------------------------------------------------
+// Spacing & Layout
+// -----------------------------------------------------------------------------
+
+// Container max-widths (adjust for webtool needs)
+$container-max-width: 1400px;
+
+// Border radius
+$radius-small: 2px;
+$radius: 4px;
+$radius-medium: 6px;
+$radius-large: 8px;
+$radius-rounded: 290486px;
+
+// -----------------------------------------------------------------------------
+// Component Specific Variables
+// -----------------------------------------------------------------------------
+
+// Buttons
+$button-padding-vertical: 0.5rem;
+$button-padding-horizontal: 1rem;
+
+// Cards
+$card-radius: $radius;
+$card-shadow: 0 0.125em 0.25em rgba(10, 10, 10, 0.15);
+
+// Forms
+$input-radius: $radius;
+$input-border-color: $gray-300;
+$input-focus-border-color: $primary;
+
+// Tables
+$table-row-hover-background-color: $gray-50;
+$table-striped-row-even-background-color: rgba($gray-100, 0.5);
+
+// Navigation
+$navbar-height: 3.25rem;
+$navbar-background-color: $white;
+$navbar-box-shadow-size: 0 2px 0 0;
+$navbar-box-shadow-color: $gray-100;
