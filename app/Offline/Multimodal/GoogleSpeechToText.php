@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Offline\Multimodal;
+
 use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;

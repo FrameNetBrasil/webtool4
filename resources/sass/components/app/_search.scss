@@ -20,7 +20,7 @@
             align-items: center;
 
             .ui.button {
-                font-family: $font-family;
+                font-family: $font-sans-serif;
                 transition: all$transition-normal;
 
                 &.primary {
@@ -227,7 +227,7 @@
                         align-items: center;
                         gap: 1px;
                         color: $secondary;
-                        font-family: $font-family;
+                        font-family: $font-sans-serif;
 
                         &.active {
                             background: $background;
