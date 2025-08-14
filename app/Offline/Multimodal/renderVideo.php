@@ -12,10 +12,10 @@ Render video from frames
 ffmpeg -framerate 10 -i filename-%03d.jpg output.mp4
 
 */
-
+namespace App\Offline\Multimodal;
 require_once 'SimpleImage.php';
 
-class Multimodal
+class Multimodal_
 {
     public $videoFile;
     public $audioFile;

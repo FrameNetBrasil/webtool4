@@ -3,14 +3,12 @@
 namespace App\Services;
 
 use App\Data\Annotation\StaticBBox\CloneData;
-use App\Data\Annotation\StaticBBox\CommentData;
 use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
 use App\Data\Annotation\StaticBBox\ObjectData;
 use App\Data\Annotation\StaticBBox\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Image;
-use App\Repositories\Task;
 use App\Repositories\Timeline;
 use App\Repositories\User;
 use Illuminate\Support\Facades\DB;
@@ -22,17 +20,14 @@ class AnnotationStaticBBoxService
         $bboxes = Criteria::table("view_staticobject_boundingbox as sb")
             ->join("boundingbox as bb", "sb.idBoundingBox", "=", "bb.idBoundingBox")
             ->where("sb.idStaticObject", $idStaticObject)
-            ->select("bb.idAnnotationObject")
-            ->chunkResult("idAnnotationObject", "idAnnotationObject");
-        Criteria::table("annotationobjectrelation")
-            ->whereIn("idAnnotationObject2", $bboxes)
-            ->delete();
-        Criteria::table("boundingbox")
-            ->whereIn("idAnnotationObject", $bboxes)
-            ->delete();
-        Criteria::table("annotationobject")
-            ->whereIn("idAnnotationObject", $bboxes)
-            ->delete();
+            ->select("bb.idBoundingBox", "bb.idAnnotationObject")
+            ->keyBy("idBoundingBox")
+            ->all();
+
+        foreach ($bboxes as $bbox) {
+            // Remove the boundingbox using the stored function which handles relationships
+            Criteria::function("boundingbox_static_delete(?,?)", [$bbox->idBoundingBox, AppService::getCurrentIdUser()]);
+        }
     }
 
     public static function getPrevious(object $document)
@@ -184,13 +179,10 @@ class AnnotationStaticBBoxService
                 ->where("idDocument", $data->idDocument)
                 ->first();
             $image = Image::byId($documentImage->idImage);
-            // create annotationobjectrelation for rel_image_staobj
-            $relation = json_encode([
-                'idAnnotationObject1' => $image->idAnnotationObject,
-                'idAnnotationObject2' => $staticObject->idAnnotationObject,
-                'relationType' => 'rel_image_staobj'
+            Criteria::create("image_staticobject",[
+                "idImage" => $image->idImage,
+                "idStaticObject" => $staticObject->idStaticObject,
             ]);
-            $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
             if (count($data->bbox)) {
                 $bbox = $data->bbox;
                 $json = json_encode([
@@ -265,13 +257,10 @@ class AnnotationStaticBBoxService
             ->where("idDocument", $data->idDocument)
             ->first();
         $image = Image::byId($documentImage->idImage);
-        // create annotationobjectrelation for rel_image_staobj
-        $relation = json_encode([
-            'idAnnotationObject1' => $image->idAnnotationObject,
-            'idAnnotationObject2' => $staticObjectClone->idAnnotationObject,
-            'relationType' => 'rel_image_staobj'
+        Criteria::create("image_staticobject",[
+            "idImage" => $image->idImage,
+            "idStaticObject" => $staticObjectClone->idStaticObject
         ]);
-        $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
         // cloning bboxes
         $bbox = Criteria::table("view_staticobject_boundingbox")
             ->where("idStaticObject", $idStaticObject)

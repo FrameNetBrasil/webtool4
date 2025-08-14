@@ -13,6 +13,7 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
+use App\Services\Annotation\BrowseService;
 use App\Services\AnnotationFullTextService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -23,33 +24,64 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware("auth")]
 class FullTextController extends Controller
 {
-    #[Get(path: '/annotation/fullText/{idDocument?}')]
-    public function browse(int $idDocument = null)
+//    #[Get(path: '/annotation/fullText/{idDocument?}')]
+//    public function browse(int $idDocument = null)
+//    {
+//        $search = session('searchFEAnnotation') ?? SearchData::from();
+//        return view("Annotation.FullText.browse", [
+//            'idDocument' => $idDocument,
+//            'search' => $search
+//        ]);
+//    }
+//
+//    #[Post(path: '/annotation/fullText/grid/{idDocument?}')]
+//    public function grid(SearchData $search, int $idDocument = null)
+//    {
+//        $sentences = [];
+//        $document = null;
+//        if (!is_null($idDocument)) {
+//            $document = Document::byId($idDocument);
+//            $sentences = AnnotationFullTextService::listSentences($idDocument);
+//        }
+//        return view("Annotation.FullText.grids", [
+//            'idDocument' => $idDocument,
+//            'search' => $search,
+//            'document' => $document,
+//            'sentences' => $sentences,
+//        ]);
+//    }
+
+    #[Get(path: '/annotation/fullText')]
+    public function browse(SearchData $search)
     {
-        $search = session('searchFEAnnotation') ?? SearchData::from();
-        return view("Annotation.FullText.browse", [
-            'idDocument' => $idDocument,
-            'search' => $search
+        $corpus = BrowseService::browseCorpusBySearch($search);
+
+        return view('Annotation.FullText.browse', [
+            'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/fullText/grid/{idDocument?}')]
-    public function grid(SearchData $search, int $idDocument = null)
+    #[Post(path: '/annotation/fullText/tree')]
+    public function tree(SearchData $search)
     {
-        $sentences = [];
-        $document = null;
-        if (!is_null($idDocument)) {
-            $document = Document::byId($idDocument);
-            $sentences = AnnotationFullTextService::listSentences($idDocument);
+        if (! is_null($search->idDocumentSentence)) {
+            $data = BrowseService::browseSentence($search->idDocumentSentence);
+        } else {
+            if (! is_null($search->idDocument)) {
+                $data = BrowseService::browseSentencesByDocument($search->idDocument);
+            } else {
+                if (! is_null($search->idCorpus) || ($search->document != '')) {
+                    $data = BrowseService::browseDocumentBySearch($search);
+                } else {
+                    $data = BrowseService::browseCorpusBySearch($search);
+                }
+            }
         }
-        return view("Annotation.FullText.grids", [
-            'idDocument' => $idDocument,
-            'search' => $search,
-            'document' => $document,
-            'sentences' => $sentences,
-        ]);
-    }
 
+        return view('Annotation.FullText.browse', [
+            'data' => $data,
+        ])->fragment('tree');
+    }
     #[Get(path: '/annotation/fullText/grid/{idDocument}/sentences')]
     public function documentSentences(int $idDocument)
     {

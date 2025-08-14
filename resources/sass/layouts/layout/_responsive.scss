@@ -1,0 +1,21 @@
+@use "../../abstracts/variables" as *;
+
+/* Responsive breakpoints using design system values */
+@media (max-width: $mobile-breakpoint) {                                 // 768px
+    .app-layout {
+        grid-template-areas:
+            "header"
+            "main";
+        grid-template-columns: 1fr;
+        grid-template-rows: $header-height 1fr;                          // (was var(--header-height))
+    }
+
+    .sidebar-layout {
+        grid-template-columns: 1fr;
+        gap: $size-medium;                                            // 16px (was var(--spacing-4))
+
+        .sidebar-content {
+            position: static;
+        }
+    }
+}

@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Image;
+use App\Services\Annotation\BrowseService;
 use App\Services\AnnotationStaticBBoxService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -26,23 +27,46 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'auth')]
 class StaticBBoxController extends Controller
 {
+//    #[Get(path: '/annotation/staticBBox')]
+//    public function browse()
+//    {
+//        $search = session('searchCorpus') ?? SearchData::from();
+//        return view("Annotation.StaticBBox.browse", [
+//            'search' => $search
+//        ]);
+//    }
+//
+//    #[Post(path: '/annotation/staticBBox/grid')]
+//    public function grid(SearchData $search)
+//    {
+//        return view("Annotation.StaticBBox.grid", [
+//            'search' => $search
+//        ]);
+//    }
+
     #[Get(path: '/annotation/staticBBox')]
-    public function browse()
+    public function browse(SearchData $search)
     {
-        $search = session('searchCorpus') ?? SearchData::from();
-        return view("Annotation.StaticBBox.browse", [
-            'search' => $search
+        $corpus = BrowseService::browseCorpusBySearch($search, [], 'StaticBBoxAnnotation');
+
+        return view('Annotation.StaticBBox.browse', [
+            'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/staticBBox/grid')]
-    public function grid(SearchData $search)
+    #[Post(path: '/annotation/staticBBox/tree')]
+    public function tree(SearchData $search)
     {
-        return view("Annotation.StaticBBox.grid", [
-            'search' => $search
-        ]);
-    }
+        if (! is_null($search->idCorpus) || ($search->document != '')) {
+            $data = BrowseService::browseDocumentBySearch($search, [], 'StaticBBoxAnnotation', leaf: true);
+        } else {
+            $data = BrowseService::browseCorpusBySearch($search, [], 'StaticBBoxAnnotation');
+        }
 
+        return view('Annotation.StaticBBox.browse', [
+            'data' => $data,
+        ])->fragment('tree');
+    }
     private function getData(int $idDocument): DocumentData
     {
         $document = Document::byId($idDocument);

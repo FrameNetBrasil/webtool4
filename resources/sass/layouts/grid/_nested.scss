@@ -1,0 +1,24 @@
+/* Nested grids for complex layouts */
+@use "../../abstracts/variables" as *;
+
+.nested-grid {
+    display: grid;
+    gap: $size-medium;                                                // 16px (was var(--spacing-4))
+
+    .grid-section {
+        display: grid;
+        gap: $size-medium;                                            // 16px (was var(--spacing-4))
+
+        &.two-cols {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        &.three-cols {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        &.auto-cols {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+    }
+}

@@ -55,13 +55,13 @@ class AnnotationService
         return $usertask;
     }
 
-    public static function browseCorpusDocumentBySearch(object $search, array $projects = [], string $projectGroup = '')
+    public static function browseCorpusDocumentBySearch(object $search, array $projects = [], string $taskGroup = '')
     {
         $corpusIcon = view('components.icon.corpus')->render();
         $documentIcon = view('components.icon.document')->render();
         $data = [];
 
-        $allowed = Project::getAllowedDocsForUser($projects, $projectGroup);
+        $allowed = Project::getAllowedDocsForUser($projects, $taskGroup);
         $allowedCorpus = collect($allowed)->pluck('idCorpus')->all();
         $allowedDocuments = collect($allowed)->pluck('idDocument')->all();
         if ($search->document == '') {

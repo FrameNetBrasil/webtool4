@@ -100,7 +100,7 @@ class ReportController extends Controller
             ->first();
         $bboxes = Criteria::table("view_annotation as a")
             ->join("lu", "a.idEntity", "=", "lu.idEntity")
-            ->join("staticobject as so", "a.idAnnotationObject", "=", "so.idAnnotationObject")
+            ->join("staticobject as so", "a.idStaticObject", "=", "so.idStaticObject")
             ->join("view_staticobject_boundingbox as bb","so.idStaticObject", "=", "bb.idStaticObject")
             ->select("bb.x","bb.y","bb.width","bb.height")
             ->where("a.idDocument", $idDocument)
@@ -116,12 +116,15 @@ class ReportController extends Controller
     public function reportDynamic(int|string $idLU)
     {
         $lu = LU::byId($idLU);
-        $documents = Criteria::table("view_annotation_dynamic as a")
-            ->join("view_document as d", "a.idDocument", "=", "d.idDocument")
+        $documents = Criteria::table("annotation as a")
+            ->join("dynamicobject as dob", "a.idDynamicObject", "=", "dob.idDynamicObject")
+            ->join("video_dynamicobject as vdo", "dob.idDynamicObject", "=", "vdo.idDynamicObject")
+            ->join("document_video as dv", "vdo.idVideo", "=", "dv.idVideo")
+            ->join("view_document as d", "dv.idDocument", "=", "d.idDocument")
+            ->join("lu", "a.idEntity", "=", "lu.idEntity")
             ->distinct()
             ->select("d.name as documentName","d.idDocument")
-            ->where("a.idLU", $idLU)
-            ->where("a.idLanguage", AppService::getCurrentIdLanguage())
+            ->where("lu.idLU", $idLU)
             ->where("d.idLanguage", AppService::getCurrentIdLanguage())
             ->orderBy("d.name")
             ->all();
@@ -139,7 +142,7 @@ class ReportController extends Controller
         $lu = LU::byId($idLU);
         $objects = Criteria::table("view_annotation as a")
             ->join("lu", "a.idEntity", "=", "lu.idEntity")
-            ->join("dynamicobject as do", "a.idAnnotationObject", "=", "do.idAnnotationObject")
+            ->join("dynamicobject as do", "a.idDynamicObject", "=", "do.idDynamicObject")
             ->distinct()
             ->select("do.idDynamicObject")
             ->where("lu.idLU", $idLU)

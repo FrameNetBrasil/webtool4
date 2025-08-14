@@ -1,0 +1,40 @@
+@use "../../abstracts/variables" as *;
+
+/* Sidebar */
+.app-sidebar {
+    padding: $size-tiny 0 0 $size-tiny; // 8px (was @relative2px)
+    display: flex;
+    flex-direction: column;
+    height: 100%;// (100vh - 64px); // Full viewport height
+
+    // Main sidebar content (scrollable)
+    .main {
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .ui.vertical.menu {
+            width: 100%;
+        }
+
+        .ui.accordion {
+            margin-bottom: $size-tiny; // 8px (was @relative2px)
+            border-bottom: 1px solid $border; // (was @borderColor)
+
+            .content {
+                padding-top: 0;
+                padding-left: $size-big; // 32px (was @mini)
+            }
+        }
+    }
+
+}
+
+// Footer that sticks to bottom of viewport
+.app-sidebar-footer {
+    min-height: 3rem; // Temporary - remove after testing
+    line-height: 3rem;
+    padding-left: $size-big;
+    border-top: 1px solid $border;
+    border-right: 1px solid $border;
+}
+

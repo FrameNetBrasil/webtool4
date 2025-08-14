@@ -12,25 +12,26 @@ class Project
         return Criteria::byFilter("project", ["idProject", "=", $id])->first();
     }
 
-    public static function getAllowedDocsForUser(array $projects = [], string $projectGroup = ''): array
+    public static function getAllowedDocsForUser(array $projects = [], string $taskGroup = ''): array
     {
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
         //debug($projects);
         if (User::isManager($user)) {
             $criteria = Criteria::table("view_project_docs as pd")
-                ->where("idLanguage", AppService::getCurrentIdLanguage())
-                ->where("idProject","<>", 1)
-                ->select("idCorpus","corpusName","idDocument","documentName")
+                ->join("view_project_tasks as pt", "pt.idProject", "=", "pd.idProject")
+                ->where("pd.idLanguage", AppService::getCurrentIdLanguage())
+                ->where("pd.idProject","<>", 1)
+                ->select("pd.idCorpus","pd.corpusName","pd.idDocument","pd.documentName","pt.taskGroupName")
                 ->orderBy("corpusName")
                 ->orderBy("documentName");
             if (!empty($projects)) {
                 $criteria = $criteria
                     ->whereIn('projectName', $projects);
             }
-            if ($projectGroup != '') {
+            if ($taskGroup != '') {
                 $criteria = $criteria
-                    ->where('projectGroup', $projectGroup);
+                    ->where('pt.taskGroupName', $taskGroup);
             }
             $criteria = $criteria
                 ->all();

@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Offline\Multimodal;
 use Google\Cloud\Storage\StorageClient;
 
 class GoogleStorage

@@ -52,12 +52,10 @@ class DocumentController extends Controller
 
         $image = Image::byId($data->idImage);
         $document = Document::byId($data->idDocument);
-        $json = json_encode([
-            'idAnnotationObject1' => $document->idAnnotationObject,
-            'idAnnotationObject2' => $image->idAnnotationObject,
-            'relationType' => 'rel_document_image'
+        Criteria::create("document_image",[
+            "idDocument" => $document->idDocument,
+            "idImage" => $image->idImage
         ]);
-        Criteria::function("objectrelation_create(?)",[$json]);
         $this->trigger('reload-gridImageDocument');
         return $this->renderNotify("success", "Image associated with Document.");
     }
@@ -68,9 +66,9 @@ class DocumentController extends Controller
         try {
             $image = Image::byId($id);
             $document = Document::byId($idDocument);
-            Criteria::table("annotationobjectrelation")
-                ->where("idAnnotationObject1", $document->idAnnotationObject)
-                ->where("idAnnotationObject2", $image->idAnnotationObject)
+            Criteria::table("document_image")
+                ->where("idImage", $id)
+                ->where("idDocument", $idDocument)
                 ->delete();
             $this->trigger('reload-gridImageDocument');
             return $this->renderNotify("success", "Image removed from Document.");

@@ -1,0 +1,497 @@
+@use "../../abstracts/variables" as *;
+
+/*******************************
+    Annotation Interface Styling
+    Updated to use Fomantic-UI variables
+*******************************/
+
+.annotation-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .annotation-header {
+        padding: $size-medium $size-medium;
+    }
+        /* Annotation toolbar */
+    .annotation-toolbar {
+        display: flex;
+        align-items: center;
+        background: $neutral-800;
+        color: $primary-inverted;
+        padding: $size-small $size-large;
+        border-bottom: 1px solid $primary;
+        flex-shrink: 0;
+
+        .toolbar-section {
+            display: flex;
+            align-items: center;
+            gap: $size-tiny;
+
+            &:not(:last-child) {
+                margin-right: $size-large;
+                padding-right: $size-large;
+                border-right: 1px solid $secondary;
+            }
+
+            .section-label {
+                color: $tertiary;
+                font-size: $size-tiny;
+                text-transform: uppercase;
+                letter-spacing: $letter-spacing-wide;
+                margin-right: $size-tiny;
+            }
+        }
+
+        .tool-group {
+            display: flex;
+            align-items: center;
+            gap: $size-mini;
+
+            .tool-button {
+                padding: $size-tiny;
+                background: transparent;
+                border: 1px solid transparent;
+                border-radius: $radius-small;
+                color: $tertiary;
+                cursor: pointer;
+                transition: all $transition-fast;
+
+                &:hover {
+                    background: $overlay-light-10;
+                    color: $neutral-300;
+                }
+
+                &.active {
+                    background: $primary;
+                    border-color: $primary;
+                    color: $primary-inverted;
+                }
+
+                &.disabled {
+                    opacity: $disabled-opacity;
+                    cursor: not-allowed;
+
+                    &:hover {
+                        background: transparent;
+                        color: $tertiary;
+                    }
+                }
+            }
+        }
+
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: $size-tiny;
+
+            .zoom-level {
+                min-width: $size-big;
+                text-align: center;
+                font-size: $size-small;
+                color: $neutral-300;
+            }
+        }
+
+        .playback-controls {
+            display: flex;
+            align-items: center;
+            gap: $size-small;
+
+            .play-button {
+                width: 40px;
+                height: 40px;
+                border-radius: $radius-rounded;
+                background: $primary;
+                border: none;
+                color: $primary-inverted;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:hover {
+                    background: $blue-700;
+                }
+            }
+
+            .time-display {
+                font-family: $family-monospace;
+                font-size: $size-small;
+                color: $neutral-300;
+                min-width: 80px + 16px;
+                text-align: center;
+            }
+        }
+
+        .annotation-info {
+            margin-left: auto;
+
+            .info-item {
+                display: inline-flex;
+                align-items: center;
+                gap: $size-tiny;
+                margin-left: $size-medium;
+
+                .info-label {
+                    color: $tertiary;
+                    font-size: $size-small;
+                }
+
+                .info-value {
+                    color: $neutral-300;
+                    font-weight: $weight-medium;
+                    font-size: $size-small;
+                }
+            }
+        }
+    }
+
+    /* Main annotation area */
+    .annotation-workspace {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+
+        /* Canvas area */
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: $gray-50;
+            overflow: hidden;
+
+            .media-canvas {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                cursor: crosshair;
+
+                &.panning {
+                    cursor: grab;
+                }
+
+                &.pan-active {
+                    cursor: grabbing;
+                }
+            }
+
+            /* Overlay for annotations */
+            .annotation-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+
+                .bounding-box {
+                    position: absolute;
+                    border: 2px solid $primary;
+                    background: $background;
+                    pointer-events: all;
+                    cursor: move;
+
+                    &.selected {
+                        border-color: $success;
+                        background: $background;
+                    }
+
+                    &.hover {
+                        border-color: $warning;
+                        background: $background;
+                    }
+
+                    .resize-handle {
+                        position: absolute;
+                        width: $size-tiny;
+                        height: $size-tiny;
+                        background: $primary-inverted;
+                        border: 1px solid $primary;
+
+                        &.nw { top: -$size-mini; left: -$size-mini; cursor: nw-resize; }
+                        &.ne { top: -$size-mini; right: -$size-mini; cursor: ne-resize; }
+                        &.sw { bottom: -$size-mini; left: -$size-mini; cursor: sw-resize; }
+                        &.se { bottom: -$size-mini; right: -$size-mini; cursor: se-resize; }
+                        &.n { top: -$size-mini; left: 50%; margin-left: -$size-mini; cursor: n-resize; }
+                        &.s { bottom: -$size-mini; left: 50%; margin-left: -$size-mini; cursor: s-resize; }
+                        &.w { top: 50%; left: -$size-mini; margin-top: -$size-mini; cursor: w-resize; }
+                        &.e { top: 50%; right: -$size-mini; margin-top: -$size-mini; cursor: e-resize; }
+                    }
+
+                    .box-label {
+                        position: absolute;
+                        top: -$size-large;
+                        left: 0;
+                        background: $overlay-dark-80;
+                        color: $primary-inverted;
+                        padding: $size-mini $size-tiny;
+                        border-radius: $radius-small;
+                        font-size: $size-tiny;
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            /* Canvas controls */
+            .canvas-controls {
+                position: absolute;
+                bottom: $size-medium;
+                right: $size-medium;
+                display: flex;
+                flex-direction: column;
+                gap: $size-tiny;
+
+                .control-group {
+                    background: $overlay-light-80;
+                    border: 1px solid $border;
+                    border-radius: $radius-large;
+                    padding: $size-tiny;
+                    backdrop-filter: blur($size-mini);
+
+                    .control-button {
+                        display: block;
+                        width: 40px;
+                        height: 40px;
+                        border: none;
+                        background: transparent;
+                        color: $secondary;
+                        cursor: pointer;
+                        border-radius: $radius-small;
+
+                        &:hover {
+                            background: $gray-100;
+                            color: $primary;
+                        }
+
+                        &:not(:last-child) {
+                            margin-bottom: $size-mini;
+                        }
+                    }
+                }
+            }
+        }
+
+        /* Properties panel */
+        .properties-panel {
+            width: $tools-panel-width;
+            background: $gray-100;
+            border-left: 1px solid $border;
+            display: flex;
+            flex-direction: column;
+
+            .panel-header {
+                padding: $size-medium $size-large;
+                border-bottom: 1px solid $border;
+                background: $white;
+
+                .panel-title {
+                    font-weight: $weight-semibold;
+                    color: $primary;
+                    margin: 0;
+                }
+            }
+
+            .panel-content {
+                flex: 1;
+                overflow-y: auto;
+
+                .property-section {
+                    padding: $size-large;
+                    border-bottom: 1px solid $border;
+
+                    .section-title {
+                        font-size: $size-small;
+                        font-weight: $weight-semibold;
+                        color: $primary;
+                        margin-bottom: $size-medium;
+                        text-transform: uppercase;
+                        letter-spacing: $letter-spacing-wide;
+                    }
+
+                    .property-field {
+                        margin-bottom: $size-medium;
+
+                        label {
+                            display: block;
+                            font-size: $size-small;
+                            font-weight: $weight-medium;
+                            color: $primary;
+                            margin-bottom: $size-tiny;
+                        }
+
+                        .ui.input,
+                        .ui.dropdown {
+                            width: 100%;
+                        }
+                    }
+
+                    .color-picker {
+                        display: flex;
+                        gap: $size-tiny;
+                        flex-wrap: wrap;
+
+                        .color-option {
+                            width: $size-big;
+                            height: $size-big;
+                            border-radius: $radius-small;
+                            border: 2px solid transparent;
+                            cursor: pointer;
+
+                            &.selected {
+                                border-color: $primary;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Timeline for video annotation */
+    .annotation-timeline {
+        height: $timeline-height;
+        background: $gray-100;
+        border-top: 1px solid $border;
+        display: flex;
+        flex-direction: column;
+
+        .timeline-header {
+            padding: $size-small $size-medium;
+            border-bottom: 1px solid $border;
+            background: $white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .timeline-title {
+                font-size: $size-small;
+                font-weight: $weight-semibold;
+                color: $primary;
+            }
+
+            .timeline-controls {
+                display: flex;
+                gap: $size-tiny;
+
+                .timeline-zoom {
+                    display: flex;
+                    gap: $size-mini;
+
+                    button {
+                        padding: $size-mini $size-tiny;
+                        background: $white;
+                        border: 1px solid $border;
+                        border-radius: $radius-small;
+                        font-size: $size-tiny;
+                        cursor: pointer;
+
+                        &:hover {
+                            background: $gray-100;
+                        }
+                    }
+                }
+            }
+        }
+
+        .timeline-track {
+            flex: 1;
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+
+            .track-ruler {
+                height: 20px;
+                background: $white;
+                border-bottom: 1px solid $border;
+                position: relative;
+
+                .time-marker {
+                    position: absolute;
+                    top: 0;
+                    height: 100%;
+                    border-left: 1px solid $gray-400;
+
+                    .time-label {
+                        position: absolute;
+                        top: 2px;
+                        left: $size-mini;
+                        font-size: $size-tiny;
+                        color: $gray-600;
+                    }
+                }
+            }
+
+            .track-content {
+                flex: 1;
+                position: relative;
+
+                .annotation-segment {
+                    position: absolute;
+                    height: 32px - 2px;
+                    background: $indigo-600;
+                    border-radius: $radius-small;
+                    color: $primary-inverted;
+                    font-size: $size-tiny;
+                    padding: $size-mini $size-tiny;
+                    cursor: pointer;
+
+                    &.selected {
+                        background: $success;
+                    }
+
+                    &:hover {
+                        opacity: 0.8;
+                    }
+
+                    .segment-label {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+
+                .playhead {
+                    position: absolute;
+                    top: 0;
+                    width: 2px;
+                    height: 100%;
+                    background: $danger;
+                    z-index: $z-index-sticky;
+                    pointer-events: none;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        top: -$size-mini - 2px;
+                        left: -$size-mini - 2px;
+                        width: $size-small;
+                        height: $size-small;
+                        background: $danger;
+                        border-radius: $radius-rounded;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Annotation modes */
+.annotation-page {
+    &.mode-select .media-canvas {
+        cursor: default;
+    }
+
+    &.mode-draw .media-canvas {
+        cursor: crosshair;
+    }
+
+    &.mode-pan .media-canvas {
+        cursor: grab;
+    }
+
+    &.mode-zoom .media-canvas {
+        cursor: zoom-in;
+    }
+}

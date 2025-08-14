@@ -1,0 +1,21 @@
+@use "../../abstracts/variables" as *;
+
+.app-tools {
+    padding: $size-tiny 0 0 $size-tiny; // 8px (was @relative2px)
+
+    .ui.accordion {
+        margin-bottom: $size-tiny; // 8px (was @relative2px)
+
+        .content {
+            margin: 0 !important;
+            //padding:0 !important;
+            padding-top: 0 !important;
+            padding-left: $size-huge !important; // 32px (was @mini)
+
+            a {
+                font-size: $size-small;
+                color: $primary !important;
+            }
+        }
+    }
+}

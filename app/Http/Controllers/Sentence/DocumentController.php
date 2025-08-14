@@ -52,12 +52,10 @@ class DocumentController extends Controller
 
         $sentence = Criteria::byId("view_sentence","idSentence",$data->idSentence);
         $document = Document::byId($data->idDocument);
-        $json = json_encode([
-            'idAnnotationObject1' => $document->idAnnotationObject,
-            'idAnnotationObject2' => $sentence->idAnnotationObject,
-            'relationType' => 'rel_document_sentence'
+        Criteria::create("document_sentence",[
+            "idSentence" => $sentence->idSentence,
+            "idDocument" => $document->idDocument
         ]);
-        Criteria::function("objectrelation_create(?)",[$json]);
         $this->trigger('reload-gridSentenceDocument');
         return $this->renderNotify("success", "Sentence associated with Document.");
     }
@@ -68,9 +66,9 @@ class DocumentController extends Controller
         try {
             $sentence = Criteria::byId("view_sentence","idSentence",$id);
             $document = Document::byId($idDocument);
-            Criteria::table("annotationobjectrelation")
-                ->where("idAnnotationObject1", $document->idAnnotationObject)
-                ->where("idAnnotationObject2", $sentence->idAnnotationObject)
+            Criteria::table("document_sentence")
+                ->where("idDocument", $idDocument)
+                ->where("idSentence", $id)
                 ->delete();
             $this->trigger('reload-gridSentenceDocument');
             return $this->renderNotify("success", "Sentence removed from Document.");

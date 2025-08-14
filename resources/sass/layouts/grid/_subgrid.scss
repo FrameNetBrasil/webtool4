@@ -1,0 +1,16 @@
+@use "../../abstracts/variables" as *;
+
+/* CSS Subgrid support (future-proofing) */
+@supports (grid-template-rows: subgrid) {
+    .subgrid-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: $size-medium;                                            // 16px (was var(--spacing-4))
+
+        .subgrid-item {
+            display: grid;
+            grid-template-rows: subgrid;
+            grid-row: span 3;
+        }
+    }
+}

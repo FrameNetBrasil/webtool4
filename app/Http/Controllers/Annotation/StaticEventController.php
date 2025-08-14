@@ -13,6 +13,7 @@ use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Frame;
 use App\Repositories\LU;
+use App\Services\Annotation\BrowseService;
 use App\Services\AnnotationStaticEventService;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -24,24 +25,55 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware(name: 'auth')]
 class StaticEventController extends Controller
 {
+//    #[Get(path: '/annotation/staticEvent')]
+//    public function browse()
+//    {
+//        $search = session('searchStaticEvent') ?? SearchData::from();
+//        return view("Annotation.StaticEvent.browse", [
+//            'search' => $search
+//        ]);
+//    }
+//
+//    #[Post(path: '/annotation/staticEvent/grid')]
+//    public function grid(SearchData $search)
+//    {
+//        return view("Annotation.StaticEvent.grids", [
+//            'search' => $search,
+//            'sentences' => []
+//        ]);
+//    }
+
     #[Get(path: '/annotation/staticEvent')]
-    public function browse()
+    public function browse(SearchData $search)
     {
-        $search = session('searchStaticEvent') ?? SearchData::from();
-        return view("Annotation.StaticEvent.browse", [
-            'search' => $search
+        $corpus = BrowseService::browseCorpusBySearch($search, [], 'StaticEventAnnotation');
+
+        return view('Annotation.StaticEvent.browse', [
+            'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/staticEvent/grid')]
-    public function grid(SearchData $search)
+    #[Post(path: '/annotation/staticEvent/tree')]
+    public function tree(SearchData $search)
     {
-        return view("Annotation.StaticEvent.grids", [
-            'search' => $search,
-            'sentences' => []
-        ]);
-    }
+        if (! is_null($search->idDocumentSentence)) {
+            $data = BrowseService::browseSentence($search->idDocumentSentence);
+        } else {
+            if (! is_null($search->idDocument)) {
+                $data = BrowseService::browseSentencesByDocument($search->idDocument);
+            } else {
+                if (! is_null($search->idCorpus) || ($search->document != '')) {
+                    $data = BrowseService::browseDocumentBySearch($search, [], 'StaticEventAnnotation');
+                } else {
+                    $data = BrowseService::browseCorpusBySearch($search, [], 'StaticEventAnnotation');
+                }
+            }
+        }
 
+        return view('Annotation.StaticEvent.browse', [
+            'data' => $data,
+        ])->fragment('tree');
+    }
     #[Get(path: '/annotation/staticEvent/grid/{idDocument}/sentences')]
     public function documentSentences(int $idDocument)
     {
