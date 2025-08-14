@@ -1,0 +1,30 @@
+/* Gallery grid for images/videos */
+@use "../../abstracts/variables" as *;
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: $size-medium;                                                // 16px (was var(--spacing-4))
+
+    &.large {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: $size-large;                                             // 24px (was var(--spacing-6))
+    }
+
+    &.small {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: $size-small;                                             // 12px (was var(--spacing-3))
+    }
+
+    &.square {
+        grid-auto-rows: 1fr;
+
+        .gallery-item {
+            aspect-ratio: 1;
+        }
+    }
+
+    &.masonry {
+        grid-template-rows: masonry;
+    }
+}

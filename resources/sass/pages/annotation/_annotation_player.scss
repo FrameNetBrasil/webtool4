@@ -1,0 +1,65 @@
+@use "../../abstracts/variables" as *;
+
+.annotation-player {
+    grid-area: player;
+    height: 100%;
+
+    //.vjs-control-bar {
+    //    bottom: -30px;
+    //    opacity: 1 !important;
+    //    display: flex !important;
+    //}
+    //
+    //.vjs-playback-rate {
+    //    z-index: 10;
+    //}
+
+
+    .progress-container {
+        position: relative;
+        height: $size-mini;
+        background: $gray-100;
+        border-radius: $radius-medium;
+        cursor: pointer;
+        margin: $size-mini 0 $size-mini 0;
+    }
+
+    .progress-bar {
+        top:0;
+        left:0;
+        height: 100%;
+        background: $primary;
+        border-radius: $radius-medium;
+        transition: width 0.1s;
+    }
+
+    .buffer-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: rgba($primary, 0.3);
+        border-radius: $radius-medium;
+    }
+
+    .control-bar {
+        position: relative;
+        background-color: $neutral-300;
+        width: 853px;
+        margin-top: 24px;
+
+        .playback-rate-selector {
+            min-width: 80px;
+
+            .text {
+                font-size: 0.9em;
+                font-weight: 500;
+            }
+
+            &.ui.dropdown {
+                min-height: 2.5em;
+                line-height: 2.5em;
+            }
+        }
+    }
+}

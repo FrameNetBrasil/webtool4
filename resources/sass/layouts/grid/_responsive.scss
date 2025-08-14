@@ -1,0 +1,25 @@
+@use "../../abstracts/variables" as *;
+
+/* Responsive breakpoints using design system values */
+@media (max-width: $mobile-breakpoint) {                                 // 768px
+    .form-grid {
+        &.two-column,
+        &.three-column,
+        &.four-column {
+            grid-template-columns: 1fr;
+            gap: $size-medium;                                        // 16px (was var(--spacing-4))
+        }
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: $size-medium;                                            // 16px (was var(--spacing-4))
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-grid,
+    .card-grid {
+        gap: $size-small;                                             // 12px (was var(--spacing-3))
+    }
+}

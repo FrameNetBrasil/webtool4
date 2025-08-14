@@ -1,0 +1,18 @@
+@use "../../abstracts/variables" as *;
+
+/* Responsive breakpoints using design system values */
+@media (max-width: $mobile-breakpoint) {                                 // 768px
+    .content-container {
+        padding: $size-medium;                                        // 16px (was var(--spacing-4))
+    }
+}
+
+@media (max-width: 480px) {
+    .content-container {
+        padding: $size-small;                                         // 12px (was var(--spacing-3))
+    }
+
+    .flex-container {
+        gap: $size-small;                                             // 12px (was var(--spacing-3))
+    }
+}

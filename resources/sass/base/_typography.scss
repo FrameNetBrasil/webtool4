@@ -1,0 +1,160 @@
+// =============================================================================
+// BASE TYPOGRAPHY
+// Typography overrides and extensions for Bulma
+// =============================================================================
+
+@use "../abstracts/variables" as *;
+
+// Font loading optimization
+@font-face {
+    font-family: 'Lato';
+    src: url('../css/fomantic-ui/themes/default/assets/fonts/Lato-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('../css/fomantic-ui/themes/default/assets/fonts/Lato-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+// Body text improvements
+body {
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Headings enhancements
+h1, h2, h3, h4, h5, h6,
+.title, .subtitle {
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+}
+
+// Code and monospace improvements
+code, kbd, samp, pre {
+    font-feature-settings: "kern" 0, "liga" 0;
+    text-rendering: optimizeSpeed;
+}
+
+// Link styling
+a {
+    transition: color 0.2s ease, border-color 0.2s ease;
+    
+    &:focus {
+        outline: 2px solid $primary;
+        outline-offset: 2px;
+    }
+}
+
+// Text selection
+::selection {
+    background-color: $primary;
+    color: $white;
+}
+
+::-moz-selection {
+    background-color: $primary;
+    color: $white;
+}
+
+// Reading improvements
+p, li {
+    max-width: 70ch; /* Optimal line length for reading */
+}
+
+// Small text
+small,
+.is-small {
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+// Text utilities that extend Bulma's
+.has-text-balance {
+    text-wrap: balance;
+}
+
+.has-text-pretty {
+    text-wrap: pretty;
+}
+
+.has-leading-tight {
+    line-height: 1.1;
+}
+
+.has-leading-normal {
+    line-height: 1.5;
+}
+
+.has-leading-loose {
+    line-height: 1.8;
+}
+
+// Font weight utilities
+.has-text-thin {
+    font-weight: 100;
+}
+
+.has-text-extralight {
+    font-weight: 200;
+}
+
+.has-text-light {
+    font-weight: 300;
+}
+
+.has-text-normal {
+    font-weight: 400;
+}
+
+.has-text-medium {
+    font-weight: 500;
+}
+
+.has-text-semibold {
+    font-weight: 600;
+}
+
+.has-text-bold {
+    font-weight: 700;
+}
+
+.has-text-extrabold {
+    font-weight: 800;
+}
+
+.has-text-black {
+    font-weight: 900;
+}
+
+// Domain-specific typography for annotations
+.annotation-text {
+    font-family: $family-sans-serif;
+    line-height: 1.6;
+    word-spacing: 0.1em;
+    
+    // Ensure good contrast in annotation contexts
+    color: $text-strong;
+}
+
+.frame-element {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+}
+
+.target-word {
+    font-weight: 700;
+    background-color: hsla(var(--warning), 0.2);
+    padding: 0.125rem 0.25rem;
+    border-radius: $radius-small;
+}

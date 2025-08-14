@@ -10,13 +10,13 @@ class SearchData extends Data
         public ?string $concept = '',
         public ?int    $idConcept = 0,
         public ?string $id = '',
-        public ?int    $idTypeInstance = 0,
+        public ?int    $idType = 0,
         public string  $_token = '',
     )
     {
         if ($this->id != '') {
             if ($this->id[0] == 't') {
-                $this->idTypeInstance = substr($this->id, 1);
+                $this->idType = substr($this->id, 1);
             } else {
                 $this->idConcept = substr($this->id, 1);
             }

@@ -1,0 +1,230 @@
+@use "../../abstracts/variables" as *;
+
+// =============================================================================
+// CARD COMPONENTS
+// Custom card styles extending Bulma cards
+// =============================================================================
+
+.card {
+    // Improved hover states for interactive cards
+    &.is-interactive {
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+    }
+
+    // Loading state for cards
+    &.is-loading {
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: loading 1.5s infinite;
+            z-index: 1;
+        }
+    }
+}
+
+@keyframes loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+// Data card for reports and grids
+.card.data-card {
+    .card-content {
+        padding: 1rem;
+
+        .datagrid-wrapper {
+            border: 1px solid $gray-200;
+            border-radius: $radius;
+            overflow: hidden;
+
+            .datagrid-container {
+                max-height: 400px;
+                overflow-y: auto;
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+
+                    th, td {
+                        padding: 0.75rem;
+                        border-bottom: 1px solid $gray-100;
+                        text-align: left;
+
+                        &.center.aligned {
+                            text-align: center;
+                        }
+
+                        &.right.aligned {
+                            text-align: right;
+                        }
+                    }
+
+                    tbody tr {
+                        transition: background-color 0.15s ease;
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: $gray-50;
+                        }
+
+                        &.selected {
+                            background-color: rgba($primary, 0.1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Form card styling
+.card.form-card {
+    .card-header {
+        background-color: $gray-50;
+        border-bottom: 1px solid $gray-200;
+    }
+
+    .card-content {
+        .field {
+            &:not(:last-child) {
+                margin-bottom: 1.5rem;
+            }
+        }
+    }
+}
+
+// Status cards with entity colors
+.card.status-card {
+    &.is-frame {
+        border-left: 4px solid var(--frame-color);
+
+        .card-header {
+            background-color: var(--frame-bg);
+            color: var(--frame-color);
+        }
+    }
+
+    &.is-lu {
+        border-left: 4px solid var(--lu-color);
+
+        .card-header {
+            background-color: var(--lu-bg);
+            color: var(--lu-color);
+        }
+    }
+
+    &.is-construction {
+        border-left: 4px solid var(--construction-color);
+
+        .card-header {
+            background-color: var(--construction-bg);
+            color: var(--construction-color);
+        }
+    }
+}
+
+// Summary cards for statistics
+.card.summary-card {
+    text-align: center;
+
+    .card-content {
+        padding: 2rem 1rem;
+
+        .summary-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            color: $gray-600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-change {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+
+            &.is-positive {
+                color: $success;
+            }
+
+            &.is-negative {
+                color: $danger;
+            }
+        }
+    }
+}
+
+// Media card for annotation content
+.card.media-card {
+    .card-content {
+        .media-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+
+            video, img {
+                width: 100%;
+                height: auto;
+                border-radius: $radius-small;
+            }
+
+            .media-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                pointer-events: none;
+                border-radius: $radius-small;
+
+                // Annotation overlays
+                .bbox-overlay {
+                    position: absolute;
+                    border: 2px solid $layer-fe;
+                    background-color: rgba($layer-fe, 0.1);
+                    pointer-events: auto;
+                    cursor: pointer;
+
+                    &:hover {
+                        border-color: $layer-target;
+                        background-color: rgba($layer-target, 0.2);
+                    }
+                }
+            }
+        }
+
+        .media-controls {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .time-display {
+                font-family: $family-monospace;
+                font-size: 0.875rem;
+                background-color: $gray-100;
+                padding: 0.25rem 0.5rem;
+                border-radius: $radius-small;
+            }
+        }
+    }
+}

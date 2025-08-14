@@ -534,7 +534,7 @@ class AnnotationFullTextService
             //debug($data);
             // get Label spans for this idAnnotationSet based on idEntity
             $annotations = Criteria::table("textspan as ts")
-                ->join("annotation as a", "ts.idAnnotationObject", "=", "a.idAnnotationObject")
+                ->join("annotation as a", "ts.idTextSpan", "=", "a.idTextSpan")
                 ->join("layer as l", "ts.idLayer", "=", "l.idLayer")
                 ->where("l.idAnnotationSet", $data->idAnnotationSet)
                 ->where("a.idEntity", $data->idEntity)

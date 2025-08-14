@@ -24,7 +24,7 @@ Limits the audio codec to 32k/sec
 Scale the video to max-height of 480 pixels
 Compress the video with CRF of 23 (constant rate factor)
 */
-
+namespace App\Offline\Multimodal;
 use App\Database\Criteria;
 use getID3;
 use thiagoalessio\TesseractOCR\TesseractOCR;

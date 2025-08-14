@@ -30,17 +30,14 @@ class AnnotationDynamicService
         $bboxes = Criteria::table("view_dynamicobject_boundingbox as db")
             ->join("boundingbox as bb", "db.idBoundingBox", "=", "bb.idBoundingBox")
             ->where("db.idDynamicObject", $idDynamicObject)
-            ->select("bb.idAnnotationObject")
-            ->chunkResult("idAnnotationObject", "idAnnotationObject");
-        Criteria::table("annotationobjectrelation")
-            ->whereIn("idAnnotationObject2", $bboxes)
-            ->delete();
-        Criteria::table("boundingbox")
-            ->whereIn("idAnnotationObject", $bboxes)
-            ->delete();
-        Criteria::table("annotationobject")
-            ->whereIn("idAnnotationObject", $bboxes)
-            ->delete();
+            ->select("bb.idBoundingBox", "bb.idAnnotationObject")
+            ->keyBy("idBoundingBox")
+            ->all();
+
+        foreach ($bboxes as $bbox) {
+            // Remove the boundingbox using the stored function which handles relationships
+            Criteria::function("boundingbox_dynamic_delete(?,?)", [$bbox->idBoundingBox, AppService::getCurrentIdUser()]);
+        }
     }
 
     public static function getObject(int $idDynamicObject): object|null
@@ -202,13 +199,10 @@ class AnnotationDynamicService
                 ->where("idDocument", $data->idDocument)
                 ->first();
             $video = Video::byId($documentVideo->idVideo);
-            // create annotationobjectrelation for rel_video_dynobj
-            $relation = json_encode([
-                'idAnnotationObject1' => $video->idAnnotationObject,
-                'idAnnotationObject2' => $dynamicObject->idAnnotationObject,
-                'relationType' => 'rel_video_dynobj'
+            Criteria::create("video_dynamicobject",[
+                "idVideo" => $video->idVideo,
+                "idDynamicObject" => $dynamicObject->idDynamicObject
             ]);
-            $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
             if (count($data->frames)) {
                 foreach ($data->frames as $frame) {
                     $json = json_encode([
@@ -260,13 +254,10 @@ class AnnotationDynamicService
             ->where("idDocument", $data->idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
-        // create annotationobjectrelation for rel_video_dynobj
-        $relation = json_encode([
-            'idAnnotationObject1' => $video->idAnnotationObject,
-            'idAnnotationObject2' => $dynamicObjectClone->idAnnotationObject,
-            'relationType' => 'rel_video_dynobj'
+        Criteria::create("video_dynamicobject",[
+            "idVideo" => $video->idVideo,
+            "idDynamicObject" => $dynamicObjectClone->idDynamicObject
         ]);
-        $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
         // cloning bboxes
         $bboxes = Criteria::table("view_dynamicobject_boundingbox")
             ->where("idDynamicObject", $idDynamicObject)
@@ -383,17 +374,18 @@ class AnnotationDynamicService
     {
         if ($data->idSentence > 0) {
             $sentence = Criteria::byId("view_sentence", "idSentence", $data->idSentence);
-            // atualiza timespan associadp
-            $or = Criteria::table("view_object_relation as or")
-                ->where("idAnnotationObject1", $sentence->idAnnotationObject)
-                ->where("relationType", "rel_sentence_time")
+            // atualiza timespan associado usando tabela de link direta
+            $sentenceTimespan = Criteria::table("sentence_timespan")
+                ->where("idSentence", $data->idSentence)
                 ->first();
-            Criteria::table("timespan")
-                ->where("idAnnotationObject", $or->idAnnotationObject2)
-                ->update([
-                    'startTime' => $data->startTime,
-                    'endTime' => $data->endTime
-                ]);
+            if ($sentenceTimespan) {
+                Criteria::table("timespan")
+                    ->where("idTimespan", $sentenceTimespan->idTimespan)
+                    ->update([
+                        'startTime' => $data->startTime,
+                        'endTime' => $data->endTime
+                    ]);
+            }
             // atualiza sentence
             Criteria::table("sentence")
                 ->where("idSentence", $data->idSentence)
@@ -425,14 +417,10 @@ class AnnotationDynamicService
             ]);
             $idTimeSpan = Criteria::function("timespan_create(?)", [$json]);
             $timespan = Criteria::byId("timespan", "idTimeSpan", $idTimeSpan);
-            $json = json_encode([
-                'idAnnotationObject1' => $sentence->idAnnotationObject,
-                'idAnnotationObject2' => $timespan->idAnnotationObject,
-                'relationType' => 'rel_sentence_time'
+            Criteria::create("sentence_timespan",[
+                "idSentence" => $idSentence,
+                "idTimeSpan" => $idTimeSpan
             ]);
-            $idObject = Criteria::function("objectrelation_create(?)", [$json]);
-
-
 //            $sentence = Criteria::byId("view_sentence", "idSentence", $data->idSentence);
 //            // atualiza timespan associadp
 //            $or = Criteria::table("view_object_relation as or")
@@ -490,12 +478,10 @@ class AnnotationDynamicService
         ]);
         $idTimeSpan = Criteria::function("timespan_create(?)", [$json]);
         $timespan = Criteria::byId("timespan", "idTimeSpan", $idTimeSpan);
-        $json = json_encode([
-            'idAnnotationObject1' => $sentence->idAnnotationObject,
-            'idAnnotationObject2' => $timespan->idAnnotationObject,
-            'relationType' => 'rel_sentence_time'
+        Criteria::create("sentence_timespan",[
+            "idSentence" => $idSentence,
+            "idTimeSpan" => $idTimeSpan
         ]);
-        $idObject = Criteria::function("objectrelation_create(?)", [$json]);
         $documentSentence = Criteria::table("view_document_sentence as ds")
             ->where("ds.idSentence", $idSentence)
             ->where("ds.idDocument", $data->idDocument)

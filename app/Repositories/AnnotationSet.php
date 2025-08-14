@@ -176,7 +176,7 @@ HERE;
         try {
             $documentSentence = Criteria::byId("view_document_sentence","idDocumentSentence",$idDocumentSentence);
             $lu = LU::byId($idLU);
-            $ti = Criteria::byId("typeinstance", "entry", 'ast_unann');
+            $ti = Criteria::byId("type", "entry", 'ast_unann');
             $annotationSet = [
                 'idAnnotationObjectRelation' => $idDocumentSentence,
                 'idEntityRelated' => $lu->idEntity,
@@ -184,7 +184,7 @@ HERE;
                 'idAnnotationStatus' => $ti->idTypeInstance
             ];
             $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
-            $ti = Criteria::byId("typeinstance", "entry", 'int_normal');
+            $ti = Criteria::byId("type", "entry", 'int_normal');
             $layerTypes = LayerType::listToLU($lu);
             foreach ($layerTypes as $lt) {
                 $layer = [

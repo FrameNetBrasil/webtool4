@@ -35,17 +35,17 @@ class ReportController extends Controller
             'frame' => view('components.icon.frame')->render(),
         ];
         $tree = [];
+        debug($search);
         if ($search->id == '') {
             if (($search->concept != '')) {
                 $concepts = Concept::listTree($search->concept);
             } else {
                 $types = Concept::listRoots();
                 foreach ($types as $type) {
-                    debug($type);
                     $icon = $icons[$type->type];
                     $n = [];
-                    $n['id'] = 't' . $type->idTypeInstance;
-                    $n['idTypeInstance'] = $type->idTypeInstance;
+                    $n['id'] = 't' . $type->idType;
+                    $n['idType'] = $type->idType;
                     $n['type'] = 'type';
                     $n['text'] = $icon . $type->name;
                     $n['state'] = 'closed';
@@ -55,8 +55,8 @@ class ReportController extends Controller
                 return $tree;
             }
         } else {
-            if ($search->idTypeInstance != 0) {
-                $concepts = Concept::listTypeChildren($search->idTypeInstance);
+            if ($search->idType != 0) {
+                $concepts = Concept::listTypeChildren($search->idType);
             } else {
                 $concepts = Concept::listChildren($search->idConcept);
             }

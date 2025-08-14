@@ -3472,8 +3472,8 @@ $router->get('annotation/fe', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/fe/grid', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@grid',
+$router->post('annotation/fe/tree', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@tree',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3584,8 +3584,8 @@ $router->get('annotation/deixis', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/deixis/grid', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@grid',
+$router->post('annotation/deixis/tree', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@tree',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3720,8 +3720,8 @@ $router->get('annotation/staticEvent', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/staticEvent/grid', [
-	'uses' => 'App\Http\Controllers\Annotation\StaticEventController@grid',
+$router->post('annotation/staticEvent/tree', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticEventController@tree',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3784,8 +3784,8 @@ $router->get('annotation/dynamicMode', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/dynamicMode/grid', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@grid',
+$router->post('annotation/dynamicMode/tree', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@tree',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3984,8 +3984,8 @@ $router->get('annotation/staticBBox', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/staticBBox/grid', [
-	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@grid',
+$router->post('annotation/staticBBox/tree', [
+	'uses' => 'App\Http\Controllers\Annotation\StaticBBoxController@tree',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -4112,8 +4112,8 @@ $router->get('annotation/as', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/as/grid', [
-	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@grid',
+$router->post('annotation/as/tree', [
+	'uses' => 'App\Http\Controllers\Annotation\AnnotationSetController@tree',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -4184,7 +4184,7 @@ $router->delete('annotation/as/annotationset/{idAnnotationSet}', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fullText/{idDocument?}', [
+$router->get('annotation/fullText', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@browse',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -4192,8 +4192,8 @@ $router->get('annotation/fullText/{idDocument?}', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/fullText/grid/{idDocument?}', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@grid',
+$router->post('annotation/fullText/tree', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@tree',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

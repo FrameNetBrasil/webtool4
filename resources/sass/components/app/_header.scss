@@ -1,0 +1,230 @@
+@use "../../abstracts/variables" as *;
+
+/* Header Component */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: $size-medium; // 16px (was @relative4px)
+        flex-shrink: 0;
+    }
+
+    .header-center {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        max-width: 600px;
+        margin: 0 $size-big; // 32px (was @mini)
+
+        .search-bar {
+            width: 100%;
+            max-width: 400px;
+
+            input {
+                background: $input-background-color; // (was var(--color-input-bg-alt))
+                border: 1px solid $border; // (was var(--color-input-border))
+                border-radius: $radius;; // 8px (was $radius)
+                //padding: (@inputVerticalPadding - @lineHeightOffset) @inputHorizontalPadding; // 12px 16px (was @relative4px @relative4px)
+                //font-size: @fontSize; // 14px (was @small)
+                //transition: all @transitionFast; // (was var(--transition-fast))
+
+                &:focus {
+                    background: $background; // (was $background)
+                    //border-color: @focusedFormBorderColor; // (was var(--color-input-focus))
+                    box-shadow: none; //0 0 0 @focusRingWidth fade(@focusRingColor, @focusRingOpacity); // (was @focusRingColor)
+                }
+
+                &::placeholder {
+                    //color: @inputPlaceholderColor; // (was var(--color-input-placeholder))
+                }
+            }
+
+            .ui.input {
+                width: 100%;
+
+                input {
+                    border-radius: $radius; // 8px
+                }
+
+                &.icon input {
+                    padding-left: 40px;
+                }
+
+                > i.icon {
+                    //color: @inputPlaceholderColor; // (was var(--color-input-placeholder))
+                }
+            }
+        }
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: $size-small; // 12px (was @relative4px)
+        flex-shrink: 0;
+
+        .notification-bell {
+            position: relative;
+
+            &.success {
+                border-left: 4px solid $success;
+            }
+
+            &.error {
+                border-left: 4px solid $error;
+            }
+
+            &.warning {
+                border-left: 4px solid $warning;
+            }
+
+            &.info {
+                border-left: 4px solid $info;
+            }
+
+            .toast-content {
+                display: flex;
+                align-items: flex-start;
+                gap: $size-small; // 12px (was @relative4px)
+            }
+
+            .toast-icon {
+                width: 20px; // 20px (was var(--spacing-5))
+                height: 20px; // 20px (was var(--spacing-5))
+                flex-shrink: 0;
+                margin-top: $size-mini; // 4px (was @relative1px)
+
+                &.success {
+                    color: $success; // (was var(--color-success))
+                }
+
+                &.error {
+                    color: $error;
+                }
+
+                &.warning {
+                    color: $warning;
+                }
+
+                &.info {
+                    color: $info;
+                }
+            }
+
+            .toast-message {
+                flex: 1;
+
+                .toast-title {
+                    font-weight: $weight-semibold;
+                    color: $primary; // (was $primary)
+                    margin-bottom: $size-mini;
+                    font-size: $size-small;
+                }
+
+                .toast-description {
+                    font-size: $size-tiny;
+                    color: $gray-600;
+                    line-height: $line-height;
+                }
+            }
+
+            .toast-close {
+                background: none;
+                border: none;
+                color: $gray-600; // (was @tertiaryColor)
+                cursor: pointer;
+                padding: $size-mini; // 4px (was @relative1px)
+                margin: (-$size-mini) (-$size-mini) (-$size-mini) $size-tiny; // -4px -4px -4px 8px
+                border-radius: $radius; // 4px (was $radius)
+                transition: all $transition-fast; // (was var(--transition-fast))
+
+                &:hover {
+                    color: $gray-600; // (was $gray-600)
+                    background: $secondary;
+                }
+            }
+
+            .toast-actions {
+                margin-top: $size-small; // 12px (was @relative4px)
+                display: flex;
+                gap: $size-tiny; // 8px (was @relative2px)
+
+                .toast-action {
+                    padding: $size-mini $size-small; // 4px 12px (was @relative1px @relative4px)
+                    font-size: $size-tiny;
+                    border-radius: $radius; // 4px (was $radius)
+                    border: 1px solid $border; // (was $border)
+                    background: $background; // (was $background)
+                    color: $primary; // (was $primary)
+                    cursor: pointer;
+                    transition: all $transition-fast;
+
+                    &:hover {
+                        background: $background; // (was $background)
+                        border-color: $border; // (was var(--color-border-secondary))
+                    }
+
+                    &.primary {
+                        background: $primary; // (was $primary)
+                        border-color: $primary; // (was $primary)
+                        color: $white; // (was $white)
+
+                        &:hover {
+                            background: $primary-hover; // (was $primary-hover)
+                            border-color: $primary-hover; // (was $primary-hover)
+                        }
+                    }
+                }
+            }
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: $error;
+            color: $white; // (was $white)
+            border-radius: $radius; // (was $radius)
+            width: 18px;
+            height: 18px;
+            font-size: 0.6875rem; // 11px - keeping exact value
+            font-weight: $weight-semibold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid $background; // (was $background)
+        }
+    }
+
+    .header-version {
+        font-size: $size-mini;
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+}

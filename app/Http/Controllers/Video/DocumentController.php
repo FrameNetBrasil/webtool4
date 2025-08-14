@@ -53,12 +53,10 @@ class DocumentController extends Controller
 
         $video = Video::byId($data->idVideo);
         $document = Document::byId($data->idDocument);
-        $json = json_encode([
-            'idAnnotationObject1' => $document->idAnnotationObject,
-            'idAnnotationObject2' => $video->idAnnotationObject,
-            'relationType' => 'rel_document_video'
+        Criteria::create("document_video",[
+            "idDocument" => $document->idDocument,
+            "idVideo" => $video->idVideo
         ]);
-        Criteria::function("objectrelation_create(?)",[$json]);
         $this->trigger('reload-gridVideoDocument');
         return $this->renderNotify("success", "Video associated with Document.");
     }
@@ -69,9 +67,9 @@ class DocumentController extends Controller
         try {
             $video = Video::byId($id);
             $document = Document::byId($idDocument);
-            Criteria::table("annotationobjectrelation")
-                ->where("idAnnotationObject1", $video->idAnnotationObject)
-                ->where("idAnnotationObject2", $document->idAnnotationObject)
+            Criteria::table("document_video")
+                ->where("idVideo", $id)
+                ->where("idDocument", $idDocument)
                 ->delete();
             $this->trigger('reload-gridVideoDocument');
             return $this->renderNotify("success", "Video removed from Document.");

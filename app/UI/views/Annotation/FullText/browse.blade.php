@@ -3,53 +3,103 @@
         <x-breadcrumb :sections="[['/','Home'],['','FullText Annotation']]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:main>
-        <div class="ui card h-full w-full">
-            <div class="flex-grow-0 content h-4rem bg-gray-100">
-                <div class="flex flex align-items-center justify-content-between">
-                    <div><h2 class="ui header">FullText Annotation</h2></div>
-                </div>
-            </div>
-            <div class="flex-grow-0 content h-4rem bg-gray-100">
-                <x-form-search
-                        hx-post="/annotation/fullText/grid"
-                        hx-target="#gridArea"
-                >
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                    <div class="field">
-                        <x-search-field
-                                id="corpus"
-                                value="{{$search->corpus}}"
-                                placeholder="Search Corpus"
-                        ></x-search-field>
+        <div class="page-content h-full">
+            <div class="content-container h-full">
+                <div class="app-search">
+                    <!-- Search Section -->
+                    <div class="search-section"
+                         x-data="browseSearchComponent()"
+                         @htmx:before-request="onSearchStart"
+                         @htmx:after-request="onSearchComplete"
+                         @htmx:after-swap="onResultsUpdated"
+                    >
+                        <div class="search-input-group">
+                            <form class="ui form"
+                                  hx-post="/annotation/fullText/tree"
+                                  hx-target=".search-results-tree"
+                                  hx-swap="innerHTML"
+                                  hx-trigger="submit, input delay:500ms from:input[name='frame']">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                <div class="three fields">
+                                    <div class="field">
+                                        <div class="ui left icon input w-full">
+                                            <i class="search icon"></i>
+                                            <input
+                                                type="search"
+                                                name="corpus"
+                                                placeholder="Search Corpus"
+                                                {{--                                                    x-model="searchQuery"--}}
+                                                autocomplete="off"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input w-full">
+                                            <i class="search icon"></i>
+                                            <input
+                                                type="search"
+                                                name="document"
+                                                placeholder="Search Document"
+                                                {{--                                                    x-model="searchQuery"--}}
+                                                autocomplete="off"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input w-full">
+                                            <i class="search icon"></i>
+                                            <input
+                                                type="search"
+                                                name="idDocumentSentence"
+                                                placeholder="Search #idSentence"
+                                                {{--                                                    x-model="searchQuery"--}}
+                                                autocomplete="off"
+                                            >
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="ui medium primary button">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="field">
-                        <x-search-field
-                                id="document"
-                                value="{{$search->document}}"
-                                placeholder="Search Document"
-                        ></x-search-field>
+
+                    <div id="gridArea" class="h-full">
+                        @fragment("search")
+                            <div class="results-container view-cards"
+                            >
+                                <div class="results-wrapper">
+
+                                    @if(count($data) > 0)
+                                        <div class="tree-view" x-transition>
+                                            <div
+                                                class="search-results-tree"
+                                                x-data
+                                                @tree-item-selected.document="(event) => {
+                                                    let type =  event.detail.type;
+                                                    let idNode = type + '_' + event.detail.id;
+                                                    if ((type === 'corpus') || (type === 'document')) {
+                                                        event.detail.tree.toggleNodeState(idNode);
+                                                    } else if (type === 'sentence') {
+                                                        window.open(`/annotation/fullText/sentence/${event.detail.id}`, '_blank');
+                                                    }
+                                                }"
+                                            >
+                                                @fragment("tree")
+                                                    <x-ui::tree
+                                                        :title="$title ?? ''"
+                                                        url="/annotation/fullText/tree"
+                                                        :data="$data"
+                                                    ></x-ui::tree>
+                                                @endfragment
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endfragment
                     </div>
-                    <div class="field">
-                        <x-search-field
-                                id="idSentence"
-                                value="{{$search->idSentence}}"
-                                placeholder="Search by ID"
-                        ></x-search-field>
-                    </div>
-                    <x-submit label="Search"></x-submit>
-                </x-form-search>
-            </div>
-            <div class="flex-grow-1 content h-full">
-                <div
-                        id="gridArea"
-                        class="h-full"
-                        hx-trigger="load"
-                        @if($idDocument)
-                            hx-post="/annotation/fullText/grid/{{$idDocument}}"
-                        @else
-                            hx-post="/annotation/fullText/grid"
-                        @endif
-                >
                 </div>
             </div>
         </div>

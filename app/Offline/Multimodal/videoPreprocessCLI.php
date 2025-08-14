@@ -21,14 +21,14 @@ Limits the audio codec to 32k/sec
 Scale the video to max-height of 480 pixels
 Compress the video with CRF of 23 (constant rate factor)
 */
-
+namespace App\Offline\Multimodal;
 use thiagoalessio\TesseractOCR\TesseractOCR;
 use GuzzleHttp\Client;
 
 require_once 'GoogleSpeechToText.php';
 require_once 'GoogleStorage.php';
 
-class Multimodal
+class Multimodal__
 {
     public $videoFile;
     public $audioFile;

@@ -71,7 +71,7 @@ class Qualia
 
     public static function listTypes(): array
     {
-        return Criteria::table("view_typeinstance as ti")
+        return Criteria::table("view_type as ti")
             ->join("qualia as q","q.iDTypeInstance","=","ti.idTypeInstance")
             ->select("ti.idTypeInstance", "ti.name")
             ->distinct()

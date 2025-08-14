@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
+use App\Services\Annotation\BrowseService;
 use App\Services\AnnotationDeixisService;
 use App\Services\AppService;
 use App\Services\CommentService;
@@ -27,23 +28,46 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'auth')]
 class DeixisController extends Controller
 {
+//    #[Get(path: '/annotation/deixis')]
+//    public function browse()
+//    {
+//        $search = session('searchCorpus') ?? SearchData::from();
+//        return view("Annotation.Deixis.browse", [
+//            'search' => $search
+//        ]);
+//    }
+//
+//    #[Post(path: '/annotation/deixis/grid')]
+//    public function grid(SearchData $search)
+//    {
+//        return view("Annotation.Deixis.grid", [
+//            'search' => $search
+//        ]);
+//    }
+
     #[Get(path: '/annotation/deixis')]
-    public function browse()
+    public function browse(SearchData $search)
     {
-        $search = session('searchCorpus') ?? SearchData::from();
-        return view("Annotation.Deixis.browse", [
-            'search' => $search
+        $corpus = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
+
+        return view('Annotation.Deixis.browse', [
+            'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/deixis/grid')]
-    public function grid(SearchData $search)
+    #[Post(path: '/annotation/deixis/tree')]
+    public function tree(SearchData $search)
     {
-        return view("Annotation.Deixis.grid", [
-            'search' => $search
-        ]);
-    }
+        if (! is_null($search->idCorpus) || ($search->document != '')) {
+            $data = BrowseService::browseDocumentBySearch($search, [], 'DeixisAnnotation', leaf: true);
+        } else {
+            $data = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
+        }
 
+        return view('Annotation.Deixis.browse', [
+            'data' => $data,
+        ])->fragment('tree');
+    }
     private function getData(int $idDocument): DocumentData
     {
         $document = Document::byId($idDocument);

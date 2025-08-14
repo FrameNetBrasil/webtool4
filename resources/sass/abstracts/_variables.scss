@@ -1,0 +1,334 @@
+// =============================================================================
+// BULMA CUSTOM VARIABLES
+// Based on the existing Webtool design system
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Color Palette (based on existing Tailwind-inspired palette)
+// -----------------------------------------------------------------------------
+
+// Base colors
+$white: #ffffff;
+$black: #000000;
+
+// Grays - UI Foundation
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+$gray-950: #030712;
+
+// Blues - Primary/Reports
+$blue-50: #eff6ff;
+$blue-100: #dbeafe;
+$blue-200: #bfdbfe;
+$blue-300: #93c5fd;
+$blue-400: #60a5fa;
+$blue-500: #3b82f6;
+$blue-600: #2563eb;
+$blue-700: #1d4ed8;
+$blue-800: #1e40af;
+$blue-900: #1e3a8a;
+$blue-950: #172554;
+
+// Greens - Success/Data
+$green-50: #f0fdf4;
+$green-100: #dcfce7;
+$green-200: #bbf7d0;
+$green-300: #86efac;
+$green-400: #4ade80;
+$green-500: #22c55e;
+$green-600: #16a34a;
+$green-700: #15803d;
+$green-800: #166534;
+$green-900: #14532d;
+$green-950: #052e16;
+
+// Reds - Errors/Critical
+$red-50: #fef2f2;
+$red-100: #fee2e2;
+$red-200: #fecaca;
+$red-300: #fca5a5;
+$red-400: #f87171;
+$red-500: #ef4444;
+$red-600: #dc2626;
+$red-700: #b91c1c;
+$red-800: #991b1b;
+$red-900: #7f1d1d;
+$red-950: #450a0a;
+
+// Yellows - Warnings
+$yellow-50: #fefce8;
+$yellow-100: #fef3c7;
+$yellow-200: #fde68a;
+$yellow-300: #fcd34d;
+$yellow-400: #fbbf24;
+$yellow-500: #f59e0b;
+$yellow-600: #d97706;
+$yellow-700: #b45309;
+$yellow-800: #92400e;
+$yellow-900: #78350f;
+$yellow-950: #451a03;
+
+// Purples - Annotations
+$purple-50: #faf5ff;
+$purple-100: #f3e8ff;
+$purple-200: #e9d5ff;
+$purple-300: #d8b4fe;
+$purple-400: #c084fc;
+$purple-500: #a855f7;
+$purple-600: #9333ea;
+$purple-700: #7c3aed;
+$purple-800: #6b21a8;
+$purple-900: #581c87;
+$purple-950: #3b0764;
+
+// Indigos - Secondary Actions
+$indigo-50: #eef2ff;
+$indigo-100: #e0e7ff;
+$indigo-200: #c7d2fe;
+$indigo-300: #a5b4fc;
+$indigo-400: #818cf8;
+$indigo-500: #6366f1;
+$indigo-600: #4f46e5;
+$indigo-700: #4338ca;
+$indigo-800: #3730a3;
+$indigo-900: #312e81;
+$indigo-950: #1e1b4b;
+
+// Teals - Data Relations
+$teal-50: #f0fdfa;
+$teal-100: #ccfbf1;
+$teal-200: #99f6e4;
+$teal-300: #5eead4;
+$teal-400: #2dd4bf;
+$teal-500: #14b8a6;
+$teal-600: #0d9488;
+$teal-700: #0f766e;
+$teal-800: #115e59;
+$teal-900: #134e4a;
+$teal-950: #042f2e;
+
+// Neutral colors (grayscale)
+$neutral-25: #FCFCFD;
+$neutral-50: #F9FAFB;
+$neutral-100: #F3F4F6;
+$neutral-200: #E5E7EB;
+$neutral-300: #D1D5DB;
+$neutral-400: #9CA3AF;
+$neutral-500: #6B7280;
+$neutral-600: #4B5563;
+$neutral-700: #374151;
+$neutral-800: #1F2937;
+$neutral-900: #111827;
+$neutral-950: #030712;
+
+// -----------------------------------------------------------------------------
+// Bulma Color Overrides
+// -----------------------------------------------------------------------------
+
+// Primary colors mapped to our blue palette
+$primary: $blue-600;
+$primary-inverted: $white;
+$primary-hover: $blue-600;
+$secondary: $neutral-500;
+$tertiary: $neutral-400;
+$success: $green-600;
+$warning: $yellow-500;
+$danger: $red-600;
+$error: $red-600;
+$info: $indigo-600;
+
+// Text colors
+$text: $gray-700;
+$text-strong: $gray-900;
+$text-light: $gray-500;
+
+// App
+$app-color: $red-700;
+$app-bg: $red-50;
+$app-border: $red-700;
+
+// -----------------------------------------------------------------------------
+// Typography
+// -----------------------------------------------------------------------------
+
+// Font families
+$family-sans-serif: "Noto Sans", "Lato", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$family-monospace: "Noto Sans Mono","JetBrains Mono", "Fira Code", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+$family-condensed: "Roboto Condensed", "Arial Narrow", sans-serif;
+$font-sans-serif: $family-sans-serif;
+$family-primary: $family-sans-serif;
+$family-secondary: $family-condensed;
+$family-code: $family-monospace;
+
+// Letter spacing
+$letter-spacing-tight: -0.025em;
+$letter-spacing-normal: 0;
+$letter-spacing-wide: 0.05em;
+
+$line-height: 1.05;
+
+// -----------------------------------------------------------------------------
+// Bulma Size System Integration
+// -----------------------------------------------------------------------------
+
+// Map custom harmonic sizes to Bulma size system
+$size-small: 11.7px; // 11.7px
+$size-normal: 14px; // 14px (base)
+$size-medium: 16.8px; // 16.8px
+$size-large: 20.2px; // 20.2px
+
+// Extended sizes for specialized components
+$size-mini: 8.1px; // 8.1px
+$size-tiny: 9.7px; // 9.7px
+$size-big: 20.2px; // 20.2px
+$size-huge: 24.2px; // 24.2px
+$size-massive: 29px; // 29px
+$size-extra-large: 40px; // For large form gaps
+
+// Size multipliers for consistent scaling
+$size-multipliers: (
+    mini: 0.579,
+    tiny: 0.694,
+    small: 0.833,
+    normal: 1.0,
+    medium: 1.2,
+    large: 1.44,
+    big: 1.44,
+    huge: 1.728,
+    massive: 2.074
+);
+
+// -----------------------------------------------------------------------------
+// Layout & Spacing System
+// -----------------------------------------------------------------------------
+
+// Container max-widths (adjust for webtool needs)
+$container-max-width: 1400px;
+
+// Layout dimensions (from Fomantic UI)
+$sidebar-width: 280px;
+$sidebar-width-narrow: 250px;
+$sidebar-width-wide: 400px;
+$tools-panel-width: 320px;
+$tools-panel-width-narrow: 280px;
+$header-height: 64px;
+$mobile-breakpoint: 768px; // Based on Bulma's $tablet - 1px (mobile until 768px)
+$timeline-height: 180px;
+
+// Z-index system
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+$z-index-fixed: 1030;
+
+// Shadow system
+$shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+
+// Input system
+$input-background-color: $white;
+$input-placeholder-color: $gray-500;
+
+// Annotation layers
+$layer-fe: $blue-500; // Frame element layer
+$layer-target: $red-500; // Target layer
+$layer-frame: $red-500; // Frame layer
+$layer-lu: $blue-600; // Lexical unit layer
+$layer-construction: $green-600; // Construction layer
+$layer-support: #f97316; // Support layer (orange-500)
+
+// Missing entity colors
+$pink-500: #ec4899;
+$bluegray-400: #94a3b8; // slate-400
+$cyan-900: #164e63;
+$orange-500: #f97316;
+$orange-600: #ea580c;
+
+// FrameNet Entity Color System
+$frame-color: $red-700;
+$frame-bg: $red-50;
+$frame-border: $red-200;
+
+$lu-color: $blue-700;
+$lu-bg: $blue-50;
+$lu-border: $blue-200;
+
+$construction-color: $green-700;
+$construction-bg: $green-50;
+$construction-border: $green-200;
+
+$semantictype-color: $yellow-600;
+$semantictype-bg: $yellow-50;
+$semantictype-border: $yellow-200;
+
+$concept-color: $purple-700;
+$concept-bg: $purple-50;
+$concept-border: $purple-200;
+
+$qualia-color: $teal-600;
+$qualia-bg: $teal-50;
+$qualia-border: $teal-200;
+
+// Relation colors
+$relation-inherits: $blue-600;
+$relation-uses: $green-600;
+$relation-subframe: $orange-600;
+$relation-perspective: $purple-600;
+
+// Legacy toolbar height
+$toolbar-height: 48px;
+
+// -----------------------------------------------------------------------------
+// Extended Color System (Annotation-Specific)
+// -----------------------------------------------------------------------------
+
+// Overlay colors
+$overlay-light-10: rgba($white, 0.1);
+$overlay-light-80: rgba($white, 0.8);
+$overlay-dark-80: rgba($black, 0.8);
+
+// -----------------------------------------------------------------------------
+// Animation & Transitions
+// -----------------------------------------------------------------------------
+
+// Transition speeds
+$transition-fast: 0.15s;
+$transition-normal: 0.3s;
+$transition-slow: 0.5s;
+
+// Opacity levels
+$opacity-disabled: 0.4;
+$opacity-hover: 0.8;
+$disabled-opacity: $opacity-disabled;
+
+// Border radius
+$radius: 4px;
+
+// Configure and forward Bulma variables with our customizations
+@use "bulma/sass" as bulma with (
+  // Typography overrides
+  $family-primary: ('Noto Sans', 'Lato', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif),
+  $family-sans-serif: ('Noto Sans', 'Lato', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif),
+  $family-monospace: ('Noto Sans Mono', 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace),
+
+  // Color overrides
+    $primary: $blue-600,
+    $success: $green-600,
+    $warning: $yellow-500,
+    $danger: $red-600,
+    $info: $indigo-600
+);
+
+// Forward Bulma utilities with our configuration
+@forward "bulma/sass/utilities";
+@forward "bulma/sass/utilities/derived-variables";
+
