@@ -7,5 +7,5 @@ $id = uniqid($luCandidate->idLUCandidate);
 <x-objectmenu
     id="luCandidateMenu_{{$id}}"
     :items="$items"
-    :path="'luCandidate/' . $luCandidate->idLUCandidate"
+    :path="'/luCandidate/' . $luCandidate->idLUCandidate"
 ></x-objectmenu>

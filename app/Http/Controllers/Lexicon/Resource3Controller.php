@@ -19,6 +19,7 @@ use App\Repositories\Lemma;
 use App\Repositories\Lexeme;
 use App\Repositories\Lexicon;
 use App\Services\AppService;
+use App\Services\Lexicon\BrowseService;
 use App\View\Components\Combobox\LexiconGroup;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -31,23 +32,50 @@ class Resource3Controller extends Controller
 {
 
     #[Get(path: '/lexicon3')]
-    public function browse()
+    public function browse(SearchData $search)
     {
-        $search = session('searchLexicon3') ?? SearchData::from();
-        return view("Lexicon3.resource", [
-            'search' => $search
+        $lemmas = BrowseService::browseLemmaBySearch($search);
+
+        return view("Lexicon3.browse", [
+            'data' => $lemmas
         ]);
     }
 
-    #[Get(path: '/lexicon3/grid/{fragment?}')]
-    #[Post(path: '/lexicon3/grid/{fragment?}')]
-    public function grid(SearchData $search, ?string $fragment = null)
+    #[Post(path: '/lexicon3/tree')]
+    public function tree(SearchData $search)
     {
-        $view = view("Lexicon3.grid", [
-            'search' => $search
+        if ($search->idLemma != 0) {
+            $data = BrowseService::browseFormByLemmaSearch($search);
+        } else if ($search->form != '') {
+            $data = BrowseService::browseFormBySearch($search);
+        } else {
+            $data = BrowseService::browseLemmaBySearch($search);
+        }
+
+        return view("Lexicon3.partials.tree", [
+            'data' => $data
         ]);
-        return (is_null($fragment) ? $view : $view->fragment('search'));
+
     }
+
+//    #[Get(path: '/lexicon3')]
+//    public function browse()
+//    {
+//        $search = session('searchLexicon3') ?? SearchData::from();
+//        return view("Lexicon3.resource", [
+//            'search' => $search
+//        ]);
+//    }
+//
+//    #[Get(path: '/lexicon3/grid/{fragment?}')]
+//    #[Post(path: '/lexicon3/grid/{fragment?}')]
+//    public function grid(SearchData $search, ?string $fragment = null)
+//    {
+//        $view = view("Lexicon3.grid", [
+//            'search' => $search
+//        ]);
+//        return (is_null($fragment) ? $view : $view->fragment('search'));
+//    }
 
     /*------
       Lemma
@@ -115,22 +143,19 @@ class Resource3Controller extends Controller
         ]);
     }
 
-    #[Get(path: '/lexicon3/lemma/{idLemma}/{fragment?}')]
-    public function lemma(int $idLemma, string $fragment = null)
+    #[Get(path: '/lexicon3/lemma/{idLemma}')]
+    public function lemma(int $idLemma)
     {
         $lemma = Lexicon::LemmabyId($idLemma);
         $expressions = Criteria::table("view_lexicon_expression as e")
             ->where("e.idLemma", $idLemma)
             ->orderBy("e.position")
             ->all();
-        $view = view("Lexicon3.lemma", [
+        return view("Lexicon3.lemma", [
             'lemma' => $lemma,
             'expressions' => $expressions
         ]);
-        return (is_null($fragment) ? $view : $view->fragment($fragment));
     }
-
-
 
     #[Put(path: '/lexicon3/lemma')]
     public function updateLemma(UpdateLexiconData $data)
@@ -272,7 +297,7 @@ class Resource3Controller extends Controller
         }
     }
 
-    #[Get(path: '/lexicon3/form/{idLexicon}/{fragment?}')]
+    #[Get(path: '/lexicon3/form/{idLexicon}')]
     public function lexicon(int $idLexicon, string $fragment = null)
     {
         $lexicon = Lexicon::byId($idLexicon);
@@ -282,11 +307,10 @@ class Resource3Controller extends Controller
             ->select("f.idUDFeature","f.name","lf.idLexicon")
             ->where("lf.idLexicon", $idLexicon)
             ->all();
-        $view = view("Lexicon3.lexicon", [
+        return view("Lexicon3.lexicon", [
             'lexicon' => $lexicon,
             'features' => $features,
         ]);
-        return (is_null($fragment) ? $view : $view->fragment($fragment));
     }
 
     #[Put(path: '/lexicon3/lexicon')]

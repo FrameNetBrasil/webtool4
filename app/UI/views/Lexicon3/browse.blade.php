@@ -1,11 +1,23 @@
 <x-layout.browser>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','Frames']]"></x-breadcrumb>
+        <x-breadcrumb :sections="[['/','Home'],['','Lexicon']]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <div class="page-content h-full">
-            <div class="content-container h-full">
-                <div class="app-search">
+            <div class="content-container h-full d-flex flex-col">
+                <div class="text-right mb-2 flex-none">
+                    <a href="/lexicon3/lemma/new"
+                       rel="noopener noreferrer"
+                       class="ui button secondary">
+                        New Lemma
+                    </a>
+                    <a href="/lexicon3/form/new"
+                       rel="noopener noreferrer"
+                       class="ui button secondary">
+                        New Form
+                    </a>
+                </div>
+                <div class="app-search flex-1">
                     <!-- Search Section -->
                     <div class="search-section"
                          x-data="browseSearchComponent()"
@@ -15,10 +27,10 @@
                     >
                         <div class="search-input-group">
                             <form class="ui form"
-                                  hx-post="/frame/tree"
+                                  hx-post="/lexicon3/tree"
                                   hx-target=".search-results-tree"
                                   hx-swap="innerHTML"
-                                  hx-trigger="submit, input delay:500ms from:input[name='frame']">
+                                  hx-trigger="submit, input delay:500ms from:input[name='lemma'], input delay:500ms from:input[name='form']">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                 <div class="two fields">
                                     <div class="field">
@@ -26,8 +38,8 @@
                                             <i class="search icon"></i>
                                             <input
                                                 type="search"
-                                                name="frame"
-                                                placeholder="Search Frame"
+                                                name="lemma"
+                                                placeholder="Search Lemma"
                                                 autocomplete="off"
                                             >
                                         </div>
@@ -37,8 +49,8 @@
                                             <i class="search icon"></i>
                                             <input
                                                 type="search"
-                                                name="lu"
-                                                placeholder="Search LU"
+                                                name="form"
+                                                placeholder="Search Form"
                                                 autocomplete="off"
                                             >
                                         </div>
@@ -53,30 +65,27 @@
 
                     <div id="gridArea" class="h-full">
                         @fragment("search")
-                            <div class="results-container view-cards"
-                            >
+                            <div class="results-container view-cards">
                                 <div class="results-wrapper">
-
-                                    @if(count($data) > 0)
-                                        <div class="tree-view" x-transition>
-                                            <div
-                                                class="search-results-tree"
-                                                x-data
-                                                @tree-item-selected.document="(event) => {
+                                    <div class="tree-view" x-transition>
+                                        <div
+                                            class="search-results-tree"
+                                            x-data
+                                            @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
-                                                    if (type === 'frame') {
-                                                        window.open(`/frame/${event.detail.id}`, '_blank');
+                                                    console.log(event.detail);
+                                                    if (type === 'lemma') {
+                                                        window.location.assign(`/lexicon3/lemma/${event.detail.id}`);
                                                     }
-                                                    if (type === 'lu') {
-                                                        window.open(`/lu/${event.detail.id}/edit`, '_blank');
+                                                    if (type === 'form') {
+                                                        window.location.assign(`/lexicon3/form/${event.detail.id}`);
                                                     }
                                                 }"
-                                            >
-                                                @include("Frame.partials.tree")
-                                            </div>
+                                        >
+                                            @include("Lexicon3.partials.tree")
                                         </div>
-                                    @endif
+                                    </div>
                                 </div>
                             </div>
                         @endfragment

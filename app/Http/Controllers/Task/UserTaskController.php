@@ -23,7 +23,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware("master")]
 class UserTaskController extends Controller
 {
-    #[Get(path: '/usertask/{id}/edit')]
+    #[Get(path: '/usertask/{id}')]
     public function edit(string $id)
     {
         return view("UserTask.edit",[

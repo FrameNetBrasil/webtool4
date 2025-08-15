@@ -7,5 +7,5 @@ $items = [
 <x-objectmenu
     id="taskMenu__{{$task->idTask}}"
     :items="$items"
-    :path="'task/' . $task->idTask"
+    :path="'/task/' . $task->idTask"
 ></x-objectmenu>

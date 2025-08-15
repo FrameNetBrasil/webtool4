@@ -13,7 +13,6 @@ use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 #[Middleware(name: 'auth')]
 class BrowseController extends Controller
 {
-
     public static function listForTreeByFrame(int $idFrame)
     {
         $result = [];

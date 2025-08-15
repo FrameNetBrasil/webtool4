@@ -11,7 +11,7 @@ class SearchData extends Data
         public ?string $cxn = '',
         public ?string $ce = '',
         public ?string $listBy = '',
-        public ?int $idLanguage= 0,
+        public ?int    $cxIdLanguage = 0,
         public ?string $id = '',
         public ?int    $idConstruction = 0,
         public string  $_token = '',
@@ -19,12 +19,9 @@ class SearchData extends Data
         public ?string $language = '',
     )
     {
-        if (($this->id != '') && ($this->id[0] == 'l')) {
-            $this->idLanguage = substr($this->id, 1);
+        if ($this->cxIdLanguage == 0) {
+            $this->cxIdLanguage = AppService::getCurrentIdLanguage();
         }
-//        if ($this->idLanguage == 0) {
-//            $this->idLanguage = AppService::getCurrentIdLanguage();
-//        }
         $this->_token = csrf_token();
     }
 

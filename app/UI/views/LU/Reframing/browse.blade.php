@@ -1,6 +1,6 @@
 <x-layout.browser>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','Frames']]"></x-breadcrumb>
+        <x-breadcrumb :sections="[['/','Home'],['','Reframing']]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <div class="page-content h-full">
@@ -15,23 +15,12 @@
                     >
                         <div class="search-input-group">
                             <form class="ui form"
-                                  hx-post="/frame/tree"
+                                  hx-post="/reframing/tree"
                                   hx-target=".search-results-tree"
                                   hx-swap="innerHTML"
-                                  hx-trigger="submit, input delay:500ms from:input[name='frame']">
+                                  hx-trigger="submit, input delay:500ms from:input[name='lu']">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                                <div class="two fields">
-                                    <div class="field">
-                                        <div class="ui left icon input w-full">
-                                            <i class="search icon"></i>
-                                            <input
-                                                type="search"
-                                                name="frame"
-                                                placeholder="Search Frame"
-                                                autocomplete="off"
-                                            >
-                                        </div>
-                                    </div>
+                                <div class="fields">
                                     <div class="field">
                                         <div class="ui left icon input w-full">
                                             <i class="search icon"></i>
@@ -56,27 +45,21 @@
                             <div class="results-container view-cards"
                             >
                                 <div class="results-wrapper">
-
-                                    @if(count($data) > 0)
-                                        <div class="tree-view" x-transition>
-                                            <div
-                                                class="search-results-tree"
-                                                x-data
-                                                @tree-item-selected.document="(event) => {
+                                    <div class="tree-view" x-transition>
+                                        <div
+                                            class="search-results-tree"
+                                            x-data
+                                            @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
-                                                    if (type === 'frame') {
-                                                        window.open(`/frame/${event.detail.id}`, '_blank');
-                                                    }
                                                     if (type === 'lu') {
-                                                        window.open(`/lu/${event.detail.id}/edit`, '_blank');
+                                                        window.location.assign(`/reframing/lu/${event.detail.id}`);
                                                     }
                                                 }"
-                                            >
-                                                @include("Frame.partials.tree")
-                                            </div>
+                                        >
+                                            @include("LU.Reframing.partials.tree")
                                         </div>
-                                    @endif
+                                    </div>
                                 </div>
                             </div>
                         @endfragment
