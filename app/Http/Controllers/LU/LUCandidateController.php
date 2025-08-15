@@ -23,10 +23,16 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 class LUCandidateController extends Controller
 {
 
+//    #[Get(path: '/luCandidate')]
+//    public function resource()
+//    {
+//        return view("LUCandidate.resource");
+//    }
+
     #[Get(path: '/luCandidate')]
-    public function resource()
+    public function browse()
     {
-        return view("LUCandidate.resource");
+        return view("LUCandidate.browse");
     }
 
     #[Get(path: '/luCandidate/data')]
@@ -48,15 +54,15 @@ class LUCandidateController extends Controller
         return $data;
     }
 
-    #[Get(path: '/luCandidate/grid/{fragment?}')]
-    #[Post(path: '/luCandidate/grid/{fragment?}')]
-    public function grid(SearchData $search, ?string $fragment = null)
-    {
-        $view = view("LUCandidate.grid", [
-            'search' => $search,
-        ]);
-        return (is_null($fragment) ? $view : $view->fragment('search'));
-    }
+//    #[Get(path: '/luCandidate/grid/{fragment?}')]
+//    #[Post(path: '/luCandidate/grid/{fragment?}')]
+//    public function grid(SearchData $search, ?string $fragment = null)
+//    {
+//        $view = view("LUCandidate.grid", [
+//            'search' => $search,
+//        ]);
+//        return (is_null($fragment) ? $view : $view->fragment('search'));
+//    }
 
     #[Get(path: '/luCandidate/new')]
     public function new()
@@ -84,7 +90,7 @@ class LUCandidateController extends Controller
         }
     }
 
-    #[Get(path: '/luCandidate/{id}/edit')]
+    #[Get(path: '/luCandidate/{id}')]
     public function edit(string $id)
     {
         $idUser = AppService::getCurrentIdUser();

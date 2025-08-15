@@ -7,8 +7,8 @@ use App\Data\Task\SearchData;
 use App\Data\Task\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\Project;
 use App\Repositories\Task;
+use App\Services\Task\BrowseService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -17,12 +17,39 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware("master")]
 class ResourceController extends Controller
 {
+//    #[Get(path: '/task')]
+//    public function resource()
+//    {
+//        return view("Task.resource");
+//    }
+
     #[Get(path: '/task')]
-    public function resource()
+    public function browse(SearchData $search)
     {
-        return view("Task.resource");
+        $tasks = BrowseService::browseTaskBySearch($search);
+
+        return view('Task.browse', [
+            'data' => $tasks,
+        ]);
     }
 
+    #[Post(path: '/task/tree')]
+    public function tree(SearchData $search)
+    {
+        if ($search->idUser != 0) {
+            $data = BrowseService::browseTaskForUserBySearch($search);
+        } else if ($search->idTask != 0) {
+            $data = BrowseService::browseUserForTaskBySearch($search);
+        } else if ($search->user != '') {
+            $data = BrowseService::browseUserBySearch($search);
+        } else {
+            $data = BrowseService::browseTaskBySearch($search);
+        }
+
+        return view('Task.partials.tree', [
+            'data' => $data,
+        ]);
+    }
     #[Get(path: '/task/new')]
     public function new()
     {
@@ -42,7 +69,7 @@ class ResourceController extends Controller
         return (is_null($fragment) ? $view : $view->fragment('search'));
     }
 
-    #[Get(path: '/task/{id}/edit')]
+    #[Get(path: '/task/{id}')]
     public function edit(string $id)
     {
         debug($id);

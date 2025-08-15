@@ -6,5 +6,5 @@ $items = [
 <x-objectmenu
     id="usertaskMenu_{{$usertask->idUserTask}}"
     :items="$items"
-    :path="'usertask/' . $usertask->idUserTask"
+    :path="'/usertask/' . $usertask->idUserTask"
 ></x-objectmenu>

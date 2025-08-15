@@ -3,20 +3,14 @@
 namespace App\Http\Controllers\LU;
 
 use App\Data\LU\ReframingData;
-use App\Data\LUCandidate\CreateData;
 use App\Data\LUCandidate\SearchData;
-use App\Data\LUCandidate\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Frame;
-use App\Repositories\Lemma;
 use App\Repositories\LU;
-use App\Repositories\LUCandidate;
 use App\Repositories\User;
 use App\Services\AppService;
-use App\Services\MessageService;
-use Carbon\Carbon;
-use Collective\Annotations\Routing\Attributes\Attributes\Delete;
+use App\Services\Frame\BrowseService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
@@ -25,32 +19,51 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware(name: 'auth')]
 class ReframingController extends Controller
 {
-
     #[Get(path: '/reframing')]
-    public function reframing(int|string $idLU = '')
+    public function browse(SearchData $search)
     {
-        $search = session('searchLU') ?? SearchData::from();
-        if (($idLU == 'list') || ($idLU == '')) {
-            return view("LU.Reframing.main", [
-                'search' => $search
-            ]);
-        } else {
-            $lu = LU::byId($idLU);
-            $search->lu = $lu->name;
-            return view("LU.Reframing.main", [
-                'search' => $search,
-                'idLU' => $idLU
-            ]);
-        }
-    }
+        $lus = BrowseService::browseLUforReframingBySearch($search);
 
-    #[Post(path: '/reframing/grid')]
-    public function grid(SearchData $search)
-    {
-        return view("LU.Reframing.grid", [
-            'search' => $search,
+        return view("LU.Reframing.browse", [
+            'data' => $lus
         ]);
     }
+
+    #[Post(path: '/reframing/tree')]
+    public function tree(SearchData $search)
+    {
+        $data = BrowseService::browseLUforReframingBySearch($search);
+        return view("LU.Reframing.partials.tree", [
+            'data' => $data
+        ]);
+
+    }
+
+//    #[Get(path: '/reframing')]
+//    public function reframing(int|string $idLU = '')
+//    {
+//        $search = session('searchLU') ?? SearchData::from();
+//        if (($idLU == 'list') || ($idLU == '')) {
+//            return view("LU.Reframing.main", [
+//                'search' => $search
+//            ]);
+//        } else {
+//            $lu = LU::byId($idLU);
+//            $search->lu = $lu->name;
+//            return view("LU.Reframing.main", [
+//                'search' => $search,
+//                'idLU' => $idLU
+//            ]);
+//        }
+//    }
+//
+//    #[Post(path: '/reframing/grid')]
+//    public function grid(SearchData $search)
+//    {
+//        return view("LU.Reframing.grid", [
+//            'search' => $search,
+//        ]);
+//    }
 
     #[Get(path: '/reframing/data')]
     public function data(SearchData $search)

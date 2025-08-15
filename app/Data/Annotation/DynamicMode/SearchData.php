@@ -17,9 +17,9 @@ class SearchData extends Data
         public string $_token = '',
     ) {
         if ($type == 'corpus') {
-            $this->idCorpus = $id;
+            $this->idCorpus = $this->id;
         } elseif ($type == 'document') {
-            $this->idDocument = $id;
+            $this->idDocument = $this->id;
         }
         $this->_token = csrf_token();
     }

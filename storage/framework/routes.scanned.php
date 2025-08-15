@@ -120,8 +120,8 @@ $router->get('frame', [
 	'domain' => NULL,
 ]);
 
-$router->post('frame/grid', [
-	'uses' => 'App\Http\Controllers\Frame\BrowseController@grid',
+$router->post('frame/tree', [
+	'uses' => 'App\Http\Controllers\Frame\BrowseController@tree',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -777,15 +777,15 @@ $router->get('lu/{id}/semanticTypes', [
 ]);
 
 $router->get('reframing', [
-	'uses' => 'App\Http\Controllers\LU\ReframingController@reframing',
+	'uses' => 'App\Http\Controllers\LU\ReframingController@browse',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('reframing/grid', [
-	'uses' => 'App\Http\Controllers\LU\ReframingController@grid',
+$router->post('reframing/tree', [
+	'uses' => 'App\Http\Controllers\LU\ReframingController@tree',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -857,7 +857,7 @@ $router->get('lu/{id}/constraints/grid', [
 ]);
 
 $router->get('luCandidate', [
-	'uses' => 'App\Http\Controllers\LU\LUCandidateController@resource',
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@browse',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -866,22 +866,6 @@ $router->get('luCandidate', [
 
 $router->get('luCandidate/data', [
 	'uses' => 'App\Http\Controllers\LU\LUCandidateController@data',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('luCandidate/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\LU\LUCandidateController@grid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('luCandidate/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\LU\LUCandidateController@grid',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -904,7 +888,7 @@ $router->post('luCandidate', [
 	'domain' => NULL,
 ]);
 
-$router->get('luCandidate/{id}/edit', [
+$router->get('luCandidate/{id}', [
 	'uses' => 'App\Http\Controllers\LU\LUCandidateController@edit',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -1264,16 +1248,8 @@ $router->get('lexicon3', [
 	'domain' => NULL,
 ]);
 
-$router->get('lexicon3/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@grid',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('lexicon3/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@grid',
+$router->post('lexicon3/tree', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@tree',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -1312,7 +1288,7 @@ $router->get('lexicon3/lemma/{idLemma}/expressions', [
 	'domain' => NULL,
 ]);
 
-$router->get('lexicon3/lemma/{idLemma}/{fragment?}', [
+$router->get('lexicon3/lemma/{idLemma}', [
 	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@lemma',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -1392,7 +1368,7 @@ $router->delete('lexicon3/wordform/{idWordForm}', [
 	'domain' => NULL,
 ]);
 
-$router->get('lexicon3/form/{idLexicon}/{fragment?}', [
+$router->get('lexicon3/form/{idLexicon}', [
 	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@lexicon',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -2017,7 +1993,15 @@ $router->delete('dataset/{id}/corpus/{idCorpus}', [
 ]);
 
 $router->get('task', [
-	'uses' => 'App\Http\Controllers\Task\ResourceController@resource',
+	'uses' => 'App\Http\Controllers\Task\ResourceController@browse',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('task/tree', [
+	'uses' => 'App\Http\Controllers\Task\ResourceController@tree',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -2048,7 +2032,7 @@ $router->post('task/grid/{fragment?}', [
 	'domain' => NULL,
 ]);
 
-$router->get('task/{id}/edit', [
+$router->get('task/{id}', [
 	'uses' => 'App\Http\Controllers\Task\ResourceController@edit',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -2128,7 +2112,7 @@ $router->delete('task/{id}/users/{idUserTask}', [
 	'domain' => NULL,
 ]);
 
-$router->get('usertask/{id}/edit', [
+$router->get('usertask/{id}', [
 	'uses' => 'App\Http\Controllers\Task\UserTaskController@edit',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -3104,8 +3088,8 @@ $router->get('cxn', [
 	'domain' => NULL,
 ]);
 
-$router->post('cxn/grid', [
-	'uses' => 'App\Http\Controllers\Construction\BrowseController@grid',
+$router->post('cxn/tree', [
+	'uses' => 'App\Http\Controllers\Construction\BrowseController@tree',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],

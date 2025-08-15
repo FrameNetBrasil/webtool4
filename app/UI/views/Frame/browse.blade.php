@@ -3,75 +3,84 @@
         <x-breadcrumb :sections="[['/','Home'],['','Frames']]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:main>
-        <div class="ui card h-full w-full">
-            <div class="flex-grow-0 content h-4rem bg-gray-100">
-                <div class="flex justify-content-between">
-                    <div>
-                        <x-form-search
-                            id="frameSearch"
-                            hx-post="/frame/grid"
-                            hx-target="#gridArea"
-                        >
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                            <div class="field">
-                            <x-search-field
-                                id="frame"
-                                value="{{$search->frame}}"
-                                placeholder="Search Frame"
-                                class="w-20rem"
-                            ></x-search-field>
-                            </div>
-                            <div class="field">
-                            <x-search-field
-                                id="lu"
-                                value="{{$search->lu}}"
-                                placeholder="Search LU"
-                                class="w-20rem"
-                            ></x-search-field>
-                            </div>
-                            <x-submit
-                                label="Search"
-                                class="mb-2"
-                            ></x-submit>
-                            <x-button
-                                label="Domains"
-                                hx-post="/frame/grid"
-                                hx-vals="js:{frame:'',lu:'',byGroup:'domain'}"
-                                hx-target="#gridArea"
-                                hx-on:htmx:before-request="$('#frame').val('');$('#lu').val('');"
-                            ></x-button>
-                            <x-button
-                                label="Types"
-                                hx-post="/frame/grid"
-                                hx-vals="js:{frame:'',lu:'',byGroup:'type'}"
-                                hx-target="#gridArea"
-                                hx-on:htmx:before-request="$('#frame').val('');$('#lu').val('');"
-                            ></x-button>
-                            <x-button
-                                label="Scenarios"
-                                hx-post="/frame/grid"
-                                hx-vals="js:{frame:'',lu:'',byGroup:'scenario'}"
-                                hx-target="#gridArea"
-                                hx-on:htmx:before-request="$('#frame').val('');$('#lu').val('');"
-                            ></x-button>
-                        </x-form-search>
+        <div class="page-content h-full">
+            <div class="content-container h-full">
+                <div class="app-search">
+                    <!-- Search Section -->
+                    <div class="search-section"
+                         x-data="browseSearchComponent()"
+                         @htmx:before-request="onSearchStart"
+                         @htmx:after-request="onSearchComplete"
+                         @htmx:after-swap="onResultsUpdated"
+                    >
+                        <div class="search-input-group">
+                            <form class="ui form"
+                                  hx-post="/frame/tree"
+                                  hx-target=".search-results-tree"
+                                  hx-swap="innerHTML"
+                                  hx-trigger="submit, input delay:500ms from:input[name='frame']">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                <div class="two fields">
+                                    <div class="field">
+                                        <div class="ui left icon input w-full">
+                                            <i class="search icon"></i>
+                                            <input
+                                                type="search"
+                                                name="frame"
+                                                placeholder="Search Frame"
+                                                autocomplete="off"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input w-full">
+                                            <i class="search icon"></i>
+                                            <input
+                                                type="search"
+                                                name="lu"
+                                                placeholder="Search LU"
+                                                autocomplete="off"
+                                            >
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="ui medium primary button">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div>
-                        <x-link-button
-                            label="Create frame"
-                            color="secondary"
-                            href="/frame/new"
-                        ></x-link-button>
+
+                    <div id="gridArea" class="h-full">
+                        @fragment("search")
+                            <div class="results-container view-cards"
+                            >
+                                <div class="results-wrapper">
+
+                                    @if(count($data) > 0)
+                                        <div class="tree-view" x-transition>
+                                            <div
+                                                class="search-results-tree"
+                                                x-data
+                                                @tree-item-selected.document="(event) => {
+                                                    let type =  event.detail.type;
+                                                    let idNode = type + '_' + event.detail.id;
+                                                    if (type === 'frame') {
+                                                        window.open(`/frame/${event.detail.id}`, '_blank');
+                                                    }
+                                                    if (type === 'lu') {
+                                                        window.open(`/lu/${event.detail.id}/edit`, '_blank');
+                                                    }
+                                                }"
+                                            >
+                                                @include("Frame.partials.tree")
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endfragment
                     </div>
-                </div>
-            </div>
-            <div class="flex-grow-1 content h-full">
-                <div
-                    id="gridArea"
-                    class="h-full"
-                    hx-trigger="load"
-                    hx-post="/frame/grid"
-                >
                 </div>
             </div>
         </div>
