@@ -1,8 +1,0 @@
-@mixin hxFileControl($pseudo-state: null) {
-  @if $pseudo-state == focus {
-    box-shadow: $focus-glow;
-  }
-  @else {
-    //no additional styles applied
-  }
-}

@@ -1,0 +1,122 @@
+<x-layout::index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['/reports','Reports'],['','Frames']]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="page-content">
+                <div class="ui container h-full">
+                    <div class="app-search">
+                        <!-- Search Section -->
+                        <div class="search-section"
+                             x-data="searchFormComponent()"
+                             @htmx:before-request="onSearchStart"
+                             @htmx:after-request="onSearchComplete"
+                             @htmx:after-swap="onResultsUpdated"
+                        >
+                            <div class="search-input-group">
+                                <form class="ui form"
+                                      hx-post="/report/frame/tree"
+                                      hx-target="#gridArea"
+                                      hx-swap="innerHTML"
+                                      hx-trigger="submit, input delay:500ms from:input[name='frame']">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                    <div class="field">
+                                        <div class="ui left icon input w-full">
+                                            <i class="search icon"></i>
+                                            <input
+                                                type="search"
+                                                name="frame"
+                                                placeholder="Search Frame"
+                                                x-model="searchQuery"
+                                                autocomplete="off"
+                                            >
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div id="gridArea" class="h-full">
+                            @fragment("search")
+                                <div class="results-container view-cards"
+                                >
+                                    <div class="results-wrapper">
+
+                                        @if(count($data) > 0)
+                                            <div class="tree-view" x-transition>
+                                                <div
+                                                    class="search-results-tree"
+                                                    x-data
+                                                    @tree-item-selected.document="(event) => {
+                                                    let type =  event.detail.type;
+                                                    let idNode = type + '_' + event.detail.id;
+                                                    if (type === 'frame') {
+                                                        window.open(`/report/frame/${event.detail.id}`, '_blank');
+                                                    }
+                                                }"
+                                                >
+                                                    @include("Frame.Report.partials.tree")
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{--                                <div class="results-container view-cards">--}}
+{{--                                    <div class="results-header">--}}
+{{--                                        <div class="results-info">--}}
+{{--                                            <div class="results-count" id="resultsCount">{!! count($frames) !!}--}}
+{{--                                                results--}}
+{{--                                            </div>--}}
+{{--                                            <div class="search-query-display" id="queryDisplay"></div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+
+{{--                                    <!-- Empty State -->--}}
+{{--                                    @if(count($frames) == 0)--}}
+{{--                                        <div class="empty-state" id="emptyState">--}}
+{{--                                            <i class="search icon empty-icon"></i>--}}
+{{--                                            <h3 class="empty-title">Ready to search</h3>--}}
+{{--                                            <p class="empty-description">--}}
+{{--                                                Enter your search term above to find frames.--}}
+{{--                                            </p>--}}
+{{--                                        </div>--}}
+{{--                                    @endif--}}
+
+{{--                                    @if(count($frames) > 0)--}}
+{{--                                        <!-- Card View -->--}}
+{{--                                        <div class="card-view" x-transition>--}}
+{{--                                            <div class="search-results-grid">--}}
+{{--                                                @foreach($frames as $frame)--}}
+{{--                                                    <div class="ui card fluid result-card"--}}
+{{--                                                         data-id="{{$frame->idFrame}}"--}}
+{{--                                                         @click="window.location.assign(`/report/frame/{{$frame->idFrame}}`)"--}}
+{{--                                                         tabindex="0"--}}
+{{--                                                         @keydown.enter="window.location.assign(`/report/frame/{{$frame->idFrame}}`)"--}}
+{{--                                                         role="button">--}}
+{{--                                                        <div class="content">--}}
+{{--                                                            <div class="header">--}}
+{{--                                                                <x-ui::element.frame--}}
+{{--                                                                    name="{{$frame->name}}"></x-ui::element.frame>--}}
+{{--                                                            </div>--}}
+{{--                                                            <div class="description">--}}
+{{--                                                                {{$frame->description}}--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                @endforeach--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    @endif--}}
+{{--                                </div>--}}
+                            @endfragment
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <x-layout::footer></x-layout::footer>
+    </div>
+</x-layout::index>

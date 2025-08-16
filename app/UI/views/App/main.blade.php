@@ -20,73 +20,69 @@
         ->all();
 
 @endphp
-<x-layout.page>
-    <x-slot:head>
-        <x-breadcrumb :sections="[['','Home']]"></x-breadcrumb>
-    </x-slot:head>
-    <x-slot:main>
-        <div class="page-content h-full">
-            <div class="content-container h-full">
-                <div class="container is-fluid">
-                    <div class="content">
-                        @include("App.messages")
+<x-layout::index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['','Home']]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="page-content">
+                <div class="ui container">
+                    @include("App.messages")
+                    @if(count($tasksForManager) > 0)
+                        <div class="segment">
+                            <h2 class="ui header">Managed project/tasks</h2>
+                            <table class="ui striped compact table">
+                                <thead>
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Task</th>
+                                    <th>Task group</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($tasksForManager as $task)
+                                    <tr>
+                                        <td>{{$task->projectName}}</td>
+                                        <td>{{$task->taskName}}</td>
+                                        <td>{{$task->taskGroupName}}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
 
-                        @if(count($tasksForManager) > 0)
-                            <div class="block">
-                                <h2 class="title is-4">Managed project/tasks</h2>
-                                <div class="table-container">
-                                    <table class="table is-striped is-narrow is-fullwidth">
-                                        <thead>
-                                        <tr>
-                                            <th>Project</th>
-                                            <th>Task</th>
-                                            <th>Task group</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($tasksForManager as $task)
-                                            <tr>
-                                                <td>{{$task->projectName}}</td>
-                                                <td>{{$task->taskName}}</td>
-                                                <td>{{$task->taskGroupName}}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        @endif
-
-                        @if(!$isManager)
-                            <div class="block">
-                                <h2 class="title is-4">My tasks</h2>
-                                <div class="table-container">
-                                    <table class="table is-striped is-narrow is-fullwidth">
-                                        <thead>
-                                        <tr>
-                                            <th>Project</th>
-                                            <th>Task</th>
-                                            <th>Task group</th>
-                                            <th>Manager(s)</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($tasks as $task)
-                                            <tr>
-                                                <td>{{$task->projectName}}</td>
-                                                <td>{{$task->taskName}}</td>
-                                                <td>{{$task->taskGroupName}}</td>
-                                                <td>{{$task->manager}}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
+                    @if(!$isManager)
+                        <div class="segment">
+                            <h2 class="ui header">My tasks</h2>
+                            <table class="ui striped compact table">
+                                <thead>
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Task</th>
+                                    <th>Task group</th>
+                                    <th>Manager(s)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($tasks as $task)
+                                    <tr>
+                                        <td>{{$task->projectName}}</td>
+                                        <td>{{$task->taskName}}</td>
+                                        <td>{{$task->taskGroupName}}</td>
+                                        <td>{{$task->manager}}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
                 </div>
             </div>
-        </div>
-    </x-slot:main>
-</x-layout.page>
+        </main>
+        <x-layout::footer></x-layout::footer>
+    </div>
+</x-layout::index>
+

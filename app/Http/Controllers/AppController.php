@@ -9,7 +9,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 use Illuminate\Http\Request;
-use Orkester\Security\MAuth;
+use Illuminate\Support\Facades\Auth;
 
 #[Middleware(name: 'web')]
 class AppController extends Controller
@@ -17,7 +17,7 @@ class AppController extends Controller
     #[Get(path: '/')]
     public function main()
     {
-        if (MAuth::isLogged()) {
+        if (Auth::check()) {
             return view('App.main');
         } else {
             if (config('webtool.login.handler') == 'auth0') {
@@ -114,4 +114,42 @@ class AppController extends Controller
         $msg = session("errors")->all()[0];
         return $this->renderNotify("error", $msg);
     }
+
+    #[Get(path: '/report')]
+    public function report()
+    {
+        return view('App.report');
+    }
+
+    #[Get(path: '/grapher')]
+    public function grapher()
+    {
+        return view('App.grapher');
+    }
+
+    #[Get(path: '/annotation')]
+    public function annotation()
+    {
+        return view('App.annotation');
+    }
+
+    #[Get(path: '/structure')]
+    public function structure()
+    {
+        return view('App.structure');
+    }
+
+    #[Get(path: '/manager')]
+    public function manager()
+    {
+        return view('App.manager');
+    }
+
+    #[Get(path: '/utils')]
+    public function utils()
+    {
+        return view('App.utils');
+    }
+
+
 }

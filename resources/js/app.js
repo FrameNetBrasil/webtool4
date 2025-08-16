@@ -3,7 +3,7 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 
 // Lazy load Chart.js only when needed
-const Chart = () => import('chart.js/auto');
+// const Chart = () => import('chart.js/auto');
 
 // Core utilities - loaded immediately
 import svgPanZoom from "svg-pan-zoom";
@@ -22,14 +22,14 @@ import dataGridComponent from './components/dataGridComponent.js';
 
 // Import stylesheets (SASS will replace LESS gradually)
 //import '../sass/app.scss';
-import 'primeflex/primeflex.css';
+//import 'primeflex/primeflex.css';
 import '../css/app.less';
 
 // Lazy load Chart.js and make it available globally
-window.Chart = async () => {
-    const { default: ChartJS } = await Chart();
-    return ChartJS;
-};
+// window.Chart = async () => {
+//     const { default: ChartJS } = await Chart();
+//     return ChartJS;
+// };
 window.svgPanZoom = svgPanZoom;
 window.ky = ky;
 window.Split = Split;
@@ -44,36 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     Alpine.data('treeComponent', treeComponent);
     Alpine.data('browseSearchComponent', browseSearchComponent);
     Alpine.data('dataGrid', dataGridComponent);
+    Alpine.start();
 
-    // Import and register Bulma components after Alpine is available globally
-    import('./components/bulmaComponents.js').then(() => {
-        console.log('Bulma components loaded successfully');
-        Alpine.start();
-    }).catch(error => {
-        console.error('Error loading Bulma components:', error);
-        Alpine.start(); // Start Alpine even if Bulma components fail to load
-    });
 });
-
-
-
-//
-// import './bootstrap';
-// import './webcomponents';
-//
-// import Chart from 'chart.js/auto';
-//
-// import svgPanZoom from "svg-pan-zoom";
-// import ky from 'ky';
-// import Split from 'split.js'
-//
-// // import '../css/fomantic-ui/semantic.less';
-// import 'primeflex/primeflex.css';
-// import '../css/app.less';
-// import '../css/webcomponents.scss';
-//
-// window.Chart = Chart;
-// window.svgPanZoom = svgPanZoom;
-// window.ky = ky;
-// window.Split = Split;
-//
