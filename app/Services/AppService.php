@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use App\Database\Criteria;
+use App\Repositories\User;
 use Illuminate\Support\Facades\App;
-use Orkester\Security\MAuth;
+use Illuminate\Support\Facades\Auth;
 
 class AppService
 {
-    static public function languagesDescription()
+    public static function languagesDescription()
     {
         return Criteria::table('language')
             ->treeResult('idLanguage');
@@ -18,6 +19,7 @@ class AppService
     {
         return session('currentLanguage')->language;
     }
+
     public static function getCurrentLanguage()
     {
         return session('currentLanguage');
@@ -41,11 +43,12 @@ class AppService
         $data = [];
         $languages = config('webtool.user')[3]['language'][3];
         foreach ($languages as $l => $language) {
-            $data[] = (object)[
+            $data[] = (object) [
                 'idLanguage' => $l,
-                'description' => $language[0]
+                'description' => $language[0],
             ];
         }
+
         return $data;
     }
 
@@ -54,20 +57,41 @@ class AppService
         App::setLocale(AppService::getCurrentLanguage()->language);
     }
 
-    static public function userLevel(): array
+    public static function userLevel(): array
     {
-        return Criteria::table("group")->chunkResult('idGroup', 'name');
+        return Criteria::table('group')->chunkResult('idGroup', 'name');
     }
 
-    static public function getCurrentUser(): ?object
+    public static function getCurrentUser(): ?object
     {
-        return MAuth::getLogin();
+        return Auth::user();
     }
 
-    static public function getCurrentIdUser(): ?int
+    public static function getCurrentIdUser(): ?int
     {
-        $user = MAuth::getLogin();
+        $user = Auth::user();
+
         return $user ? $user->idUser : 0;
     }
 
+    public static function checkAccess(string $group): bool
+    {
+        if ($group == '') {
+            return true;
+        }
+
+        if (! Auth::check()) {
+            return false;
+        }
+
+        $user = Auth::user();
+        if (! $user) {
+            return false;
+        }
+
+        // Get full user with groups
+        $userWithGroups = User::byId($user->idUser);
+
+        return User::isMemberOf($userWithGroups, $group) || User::isManager($userWithGroups);
+    }
 }

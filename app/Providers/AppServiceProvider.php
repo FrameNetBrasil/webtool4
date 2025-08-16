@@ -22,8 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::addExtension('js', 'php');
-        Blade::anonymousComponentPath(app_path('UI/layouts42'), 'layout');
-        Blade::anonymousComponentPath(app_path('UI/components42'), 'ui');
-        Blade::anonymousComponentPath(app_path('UI/forms42'), 'form');
+        Blade::anonymousComponentPath(app_path('UI/layout'), 'layout');
+        Blade::anonymousComponentPath(app_path('UI/components'), 'ui');
     }
 }

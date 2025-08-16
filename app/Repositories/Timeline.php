@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Data\Timeline\CreateData;
 use App\Database\Criteria;
+use Illuminate\Support\Facades\Auth;
 
 class Timeline
 {
@@ -38,7 +39,7 @@ class Timeline
         $this->operation = $operation;
         $this->tlDateTime = Carbon::now();
         $this->idUser = Base::getCurrentUser()->getId();
-        $this->author = MAuth::getLogin() ? MAuth::getLogin()->login : 'offline';
+        $this->author = Auth::user() ? Auth::user()->login : 'offline';
         $this->save();
         return $timeline;
     }
