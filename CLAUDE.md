@@ -4,23 +4,62 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
+### Docker Development Environment (Recommended)
+This project uses Docker for development. The development environment is configured via `docker-compose-dev.yml` and `.env` file.
+
+**Important**: Always use the Docker environment for frontend development to avoid port conflicts and ensure consistency.
+
+#### Starting the Development Environment
+```bash
+# Start all development services
+docker compose -f docker-compose-dev.yml up
+
+# Or start in background
+docker compose -f docker-compose-dev.yml up -d
+```
+
+#### Services and Ports (configured in .env)
+- **Laravel App**: http://localhost:8001 (`FORWARD_PHP_PORT=8001`)
+- **Vite Dev Server**: http://localhost:5173 (`FORWARD_NODE_PORT=5173`)
+- **Reverb WebSocket**: http://localhost:8080 (`FORWARD_REVERB_PORT=8080`)
+- **Redis**: localhost:6379 (`FORWARD_REDIS_PORT=6379`)
+
+#### Frontend Development
+- **DO NOT run `npm run dev` locally** - it will conflict with the Docker container
+- The `node` service in Docker automatically runs `npm run dev -- --host=0.0.0.0 --port=5173`
+- Access Vite dev server at http://localhost:5173 (with hot reload)
+- Changes to `resources/` files are automatically detected and hot-reloaded
+
+#### Container Management
+```bash
+# View running containers
+docker ps
+
+# Stop specific service
+docker compose -f docker-compose-dev.yml stop node
+
+# Restart specific service
+docker compose -f docker-compose-dev.yml restart node
+
+# View logs
+docker compose -f docker-compose-dev.yml logs node
+```
+
 ### PHP & Laravel
-- `php artisan serve` - Start development server
+- `php artisan serve` - Start development server (use Docker instead)
 - `php artisan migrate` - Run database migrations
 - `php artisan tinker` - Open interactive shell
 - `composer install` - Install PHP dependencies
 - `vendor/bin/phpunit` - Run tests
-- `vendor/bin/sail up` - Start Docker containers
 
 ### Frontend Assets
-- `npm run dev` - Start Vite development server with hot reload
 - `npm run build` - Build production assets
 - `npm install` - Install Node.js dependencies
+- **Note**: Use Docker environment for development instead of local `npm run dev`
 
-### Docker
+### Legacy Docker Commands
 - `docker compose build` - Build containers
 - `docker compose up` - Start application stack
-- Access at http://localhost:8001 (default user: webtool, password: test)
 
 ## Architecture Overview
 

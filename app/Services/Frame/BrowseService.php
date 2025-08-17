@@ -28,7 +28,7 @@ class BrowseService
                 'id' => $frame->idFrame,
                 'type' => 'frame',
                 'text' => view('Frame.partials.frame',(array)$frame)->render(),
-                'leaf' => $leaf,
+                'leaf' => false,
             ];
         }
         return $result;
