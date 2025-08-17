@@ -16,8 +16,9 @@
     .tree-body {
         .tree-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+            border:0;
+            //border-collapse: separate;
+            //border-spacing: 0;
             font-size: @fontSize;
 
             .hidden {
@@ -26,23 +27,23 @@
 
             tr {
                 &.row-data {
-                    border-bottom: @relative1px solid @solidInternalBorderColor;
-                    transition: background-color @defaultDuration @defaultEasing;
-
+                    //border-bottom: @relative1px dashed @borderColor !important;
+                    //transition: background-color @defaultDuration @defaultEasing;
+                    //
                     &:hover {
-                        background-color: @offWhite;
+                        background-color: @transparentBlack;
                         cursor: pointer;
                     }
 
                     &:last-child {
-                        border-bottom: none;
+                        border-bottom: none !important;
                     }
                 }
 
                 td {
                     vertical-align: middle;
                     padding: @relative6px @relative8px;
-                    border: none;
+                    //border: none;
 
                     &.toggle {
                         width: @relative32px;
@@ -52,29 +53,19 @@
                         padding: @relative6px @relative4px;
 
                         .toggle-icon {
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
+                            display: inline-block;
                             width: @relative16px;
-                            height: @relative16px;
-                            border-radius: @relativeBorderRadius;
-                            transition: all @defaultDuration @defaultEasing;
-                            color: @lightTextColor;
-                            font-size: @relative12px;
+                            height: @relative18px;
+                            vertical-align: top;
+                            overflow: hidden;
+                            transition: transform @defaultDuration @defaultEasing;
 
-                            &:hover {
-                                background-color: @transparentBlack;
-                                color: @textColor;
+                            &.collapsed {
+                                background: url('/images/easyui/tree_icons.png') no-repeat 0 0;
                             }
 
-                            &.collapsed::before {
-                                content: '▶';
-                                font-size: @relative10px;
-                            }
-
-                            &.expanded::before {
-                                content: '▼';
-                                font-size: @relative10px;
+                            &.expanded {
+                                background: url('/images/easyui/tree_icons.png') no-repeat -18px 0px;
                             }
                         }
                     }
@@ -82,25 +73,15 @@
                     &.content-cell {
                         line-height: @lineHeight;
                         vertical-align: middle;
-                        padding: @relative6px @relative8px;
+                        padding: @relative4px @relative8px;
 
                         .tree-item-text {
                             cursor: pointer;
                             padding: @relative4px @relative6px;
-                            border-radius: @relativeBorderRadius;
-                            transition: all @defaultDuration @defaultEasing;
+                            //border-radius: @relativeBorderRadius;
+                            //transition: all @defaultDuration @defaultEasing;
                             color: @textColor;
                             display: inline-block;
-
-                            &:hover {
-                                background-color: @lightPrimaryColor;
-                                color: @primaryColor;
-                            }
-
-                            &:active {
-                                background-color: @primaryColor;
-                                color: @invertedTextColor;
-                            }
                         }
                     }
 
@@ -121,9 +102,9 @@
 
                 table {
                     width: 100%;
-                    margin-top: @relative4px;
-                    border-left: @relative2px solid @solidBorderColor;
-                    margin-left: @relative16px;
+                    //margin-top: @relative4px;
+                    //border-left: @relative2px solid @solidBorderColor;
+                    //margin-left: @relative16px;
                 }
 
                 .tree-table td {
