@@ -4,67 +4,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-### Docker Development Environment (Recommended)
-This project uses Docker for development. The development environment is configured via `docker-compose-dev.yml` and `.env` file.
+### Frontend Development (Current Setup)
+This project currently uses a local development setup with Vite running directly on the host machine.
 
-**Important**: Always use the Docker environment for frontend development to avoid port conflicts and ensure consistency.
-
-#### Starting the Development Environment
-```bash
-# Start all development services
-docker compose -f docker-compose-dev.yml up
-
-# Or start in background
-docker compose -f docker-compose-dev.yml up -d
-```
-
-#### Services and Ports (configured in .env)
-- **Laravel App**: http://localhost:8001 (`FORWARD_PHP_PORT=8001`)
-- **Vite Dev Server**: http://localhost:5173 (`FORWARD_NODE_PORT=5173`)
-- **Reverb WebSocket**: http://localhost:8080 (`FORWARD_REVERB_PORT=8080`)
-- **Redis**: localhost:6379 (`FORWARD_REDIS_PORT=6379`)
-
-#### Frontend Development
-- **DO NOT run `npm run dev` locally** - it will conflict with the Docker container
-- The `node` service in Docker automatically runs `npm run dev -- --host=0.0.0.0 --port=5173`
-- Access Vite dev server at http://localhost:5173 (with hot reload)
-- Changes to `resources/` files are automatically detected and hot-reloaded
-
-#### Container Management
-```bash
-# View running containers
-docker ps
-
-# Stop specific service
-docker compose -f docker-compose-dev.yml stop node
-
-# Restart specific service
-docker compose -f docker-compose-dev.yml restart node
-
-# View logs
-docker compose -f docker-compose-dev.yml logs node
-```
+**Frontend Development:**
+- `yarn dev` - Start Vite development server with hot reload (current setup)
+- `npm run dev` - Alternative to yarn dev
+- `yarn install` - Install Node.js dependencies  
+- `npm run build` - Build production assets
 
 ### PHP & Laravel
-- `php artisan serve` - Start development server (use Docker instead)
+- `php artisan serve` - Start development server
 - `php artisan migrate` - Run database migrations
 - `php artisan tinker` - Open interactive shell
 - `composer install` - Install PHP dependencies
 - `vendor/bin/phpunit` - Run tests
 
-### Frontend Assets
-- `npm run build` - Build production assets
-- `npm install` - Install Node.js dependencies
-- **Note**: Use Docker environment for development instead of local `npm run dev`
-
-### Legacy Docker Commands
-- `docker compose build` - Build containers
-- `docker compose up` - Start application stack
+#### Services and Ports (configured in .env)
+- **Laravel App**: http://localhost:8001 (`FORWARD_PHP_PORT=8001`)
+- **Reverb WebSocket**: http://localhost:8080 (`FORWARD_REVERB_PORT=8080`)
+- **Redis**: localhost:6379 (`FORWARD_REDIS_PORT=6379`)
 
 ## Architecture Overview
 
 ### Core Framework
-This is a Laravel 11 application with a custom ORM layer called "Orkester" that extends Laravel's capabilities for linguistic data management.
+This is a Laravel 12 application with a custom Query Builder that extends Laravel's capabilities for linguistic data management.
 
 ### Key Directories
 - `app/` - Laravel application code
@@ -72,31 +36,24 @@ This is a Laravel 11 application with a custom ORM layer called "Orkester" that 
   - `Services/` - Business logic layer for annotation, reports, and data processing
   - `Data/` - Data transfer objects and form validation
   - `Repositories/` - Data access layer abstractions
-- `orkester/` - Custom ORM and persistence framework
-  - `Persistence/` - Database abstraction, criteria, and model mapping
-  - `Security/` - Custom authentication system (MAuth)
-- `resources/` - Frontend assets and Blade templates
+  - `UI/` - User interface with Visual components and Blade template views
+- `resources/` - Frontend assets and Javascript app
 - `public/scripts/` - Third-party JavaScript libraries (jQuery EasyUI, JointJS, etc.)
 - `config/webtool.php` - Application-specific configuration and menu structure
 
 ### Authentication & Authorization
-Uses a custom MAuth system with role-based access control (ADMIN, MANAGER, MASTER levels). Can integrate with Auth0 for external authentication.
+Uses a Laravel Authentication and Authorization classes. Can integrate with Auth0 for external authentication.
 
 ### Frontend Architecture
 - Uses Laravel Blade templates with custom UI components
 - Vite for asset compilation with LESS preprocessing
-- Heavy use of jQuery EasyUI for data grids and forms
+- Uses Fomantic-UI CSS components and AlpineJS libraries
 - JointJS for graph visualizations (frame relations, semantic networks)
 - HTMX for dynamic content updates
 
 ### Database Layer
-The Orkester framework provides:
-- Custom Criteria API for complex queries
-- Repository pattern implementation
-- Support for multilingual data structures
-- Specialized handling of linguistic relationships (frames, constructions, semantic types)
 
-**Database Schema (`webtool40_db`)**:
+**Database Schema (file `database/webtool42_db.sql`)**:
 The schema is designed around linguistic annotation and FrameNet concepts:
 
 **Core Linguistic Entities:**
@@ -148,6 +105,42 @@ Uses PHPUnit for testing. Run tests with `vendor/bin/phpunit`.
 - Main app configuration in `config/webtool.php`
 - Environment variables in `.env` file
 - Database configuration supports multiple connections defined in `config/database.php`
+
+## Visual Development
+
+### Design Architecture & Principles
+- **Framework Foundation**: Uses Fomantic-UI (Semantic UI) as the primary CSS framework - maintain framework defaults for consistency, accessibility, and maintainability
+- **LESS-Based Styling**: All customizations use LESS variables, not CSS custom properties
+  - Primary theme customization: `resources/css/fomantic-ui/site/globals/site.variables`
+  - Entity-specific colors: `resources/css/colors/entities.less` (frames, lexical units, frame elements, etc.)
+  - Component styling: Organized in `resources/css/components/` and `resources/css/layout/`
+- **Specialized Academic Context**: Design should reflect the specialized nature of linguistic annotation tools while maintaining usability
+
+### Design Guidelines
+- **Respect Framework Patterns**: Enhance Fomantic-UI components rather than replacing them
+- **Strategic Customization**: Focus enhancements on domain-specific needs (linguistic notation, annotation workflows)
+- **Consistency First**: Use established LESS variables and color schemes before creating new ones
+- **Accessibility**: Maintain framework's built-in accessibility features when customizing
+
+### Quick Visual Check
+IMMEDIATELY after implementing any front-end change:
+1. **Identify what changed** - Review the modified app/UI and resources folders
+2. **Navigate to affected pages** - Use `mcp__playwright__browser_navigate` to visit each changed view
+3. **Verify framework consistency** - Ensure changes work with Fomantic-UI patterns
+4. **Validate feature implementation** - Ensure the change fulfills the user's specific request
+5. **Check LESS compilation** - Verify custom variables compile correctly with framework
+6. **Capture evidence** - Take full page screenshot at desktop viewport (1440px) of each changed view
+7. **Check for errors** - Run `mcp__playwright__browser_console_messages`
+
+This verification ensures changes meet design standards and maintain framework integrity.
+
+### Comprehensive Design Review
+Invoke the `@agent-design-review` subagent for thorough design validation when:
+- Completing significant UI/UX features
+- Before finalizing PRs with visual changes
+- Needing comprehensive accessibility and responsiveness testing
+- Evaluating framework customization approaches
+
 
 ===
 
