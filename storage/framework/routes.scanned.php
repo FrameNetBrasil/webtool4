@@ -152,6 +152,14 @@ $router->post('report/frame/tree', [
 	'domain' => NULL,
 ]);
 
+$router->post('report/frame/data', [
+	'uses' => 'App\Http\Controllers\Frame\ReportController@data',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('report/frame/{idFrame}/{lang?}', [
 	'uses' => 'App\Http\Controllers\Frame\ReportController@report',
 	'as' => NULL,
@@ -920,6 +928,14 @@ $router->get('luCandidate/data', [
 	'domain' => NULL,
 ]);
 
+$router->post('luCandidate/data', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@dataPost',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('luCandidate/new', [
 	'uses' => 'App\Http\Controllers\LU\LUCandidateController@new',
 	'as' => NULL,
@@ -1298,6 +1314,14 @@ $router->get('lexicon3', [
 
 $router->post('lexicon3/tree', [
 	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@tree',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('lexicon3/data', [
+	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@data',
 	'as' => NULL,
 	'middleware' => ['master'],
 	'where' => [],
@@ -3144,6 +3168,14 @@ $router->post('cxn/tree', [
 	'domain' => NULL,
 ]);
 
+$router->post('cxn/data', [
+	'uses' => 'App\Http\Controllers\Construction\BrowseController@data',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('report/cxn/grid', [
 	'uses' => 'App\Http\Controllers\Construction\ReportController@grid',
 	'as' => NULL,
@@ -3618,6 +3650,14 @@ $router->get('annotation/deixis', [
 
 $router->post('annotation/deixis/tree', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@tree',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/deixis/data', [
+	'uses' => 'App\Http\Controllers\Annotation\DeixisController@data',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

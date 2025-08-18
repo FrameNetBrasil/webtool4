@@ -17,33 +17,31 @@ use App\Repositories\Document;
 use App\Repositories\Video;
 use App\Services\Annotation\BrowseService;
 use App\Services\AnnotationDeixisService;
-use App\Services\AppService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
-
 #[Middleware(name: 'auth')]
 class DeixisController extends Controller
 {
-//    #[Get(path: '/annotation/deixis')]
-//    public function browse()
-//    {
-//        $search = session('searchCorpus') ?? SearchData::from();
-//        return view("Annotation.Deixis.browse", [
-//            'search' => $search
-//        ]);
-//    }
-//
-//    #[Post(path: '/annotation/deixis/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        return view("Annotation.Deixis.grid", [
-//            'search' => $search
-//        ]);
-//    }
+    //    #[Get(path: '/annotation/deixis')]
+    //    public function browse()
+    //    {
+    //        $search = session('searchCorpus') ?? SearchData::from();
+    //        return view("Annotation.Deixis.browse", [
+    //            'search' => $search
+    //        ]);
+    //    }
+    //
+    //    #[Post(path: '/annotation/deixis/grid')]
+    //    public function grid(SearchData $search)
+    //    {
+    //        return view("Annotation.Deixis.grid", [
+    //            'search' => $search
+    //        ]);
+    //    }
 
     #[Get(path: '/annotation/deixis')]
     public function browse(SearchData $search)
@@ -68,21 +66,43 @@ class DeixisController extends Controller
             'data' => $data,
         ])->fragment('tree');
     }
+
+    #[Post(path: '/annotation/deixis/data')]
+    public function data(SearchData $search)
+    {
+        if (! is_null($search->idCorpus) || ($search->document != '')) {
+            $data = BrowseService::browseDocumentBySearch($search, [], 'DeixisAnnotation', leaf: true);
+        } else {
+            $data = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'query' => [
+                'corpus' => $search->corpus ?? '',
+                'document' => $search->document ?? '',
+            ],
+            'count' => count($data),
+        ]);
+    }
+
     private function getData(int $idDocument): DocumentData
     {
         $document = Document::byId($idDocument);
         $corpus = Corpus::byId($document->idCorpus);
-        $documentVideo = Criteria::table("view_document_video")
-            ->where("idDocument", $idDocument)
+        $documentVideo = Criteria::table('view_document_video')
+            ->where('idDocument', $idDocument)
             ->first();
         $video = Video::byId($documentVideo->idVideo);
+
         return DocumentData::from([
             'idDocument' => $idDocument,
             'idDocumentVideo' => $documentVideo->idDocumentVideo,
             'document' => $document,
             'corpus' => $corpus,
             'video' => $video,
-            'fragment' => 'fe'
+            'fragment' => 'fe',
         ]);
     }
 
@@ -93,16 +113,19 @@ class DeixisController extends Controller
             return AnnotationDeixisService::createNewObjectAtLayer($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
+
     #[Post(path: '/annotation/deixis/formAnnotation')]
     public function formAnnotation(ObjectData $data)
     {
         $object = AnnotationDeixisService::getObject($data->idDynamicObject ?? 0);
-        return view("Annotation.Deixis.Panes.formPane", [
+
+        return view('Annotation.Deixis.Panes.formPane', [
             'order' => $data->order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
 
@@ -110,8 +133,9 @@ class DeixisController extends Controller
     public function getFormAnnotation(int $idDynamicObject)
     {
         $object = AnnotationDeixisService::getObject($idDynamicObject ?? 0);
-        return view("Annotation.Deixis.Panes.formAnnotation", [
-            'object' => $object
+
+        return view('Annotation.Deixis.Panes.formAnnotation', [
+            'object' => $object,
         ]);
     }
 
@@ -126,10 +150,12 @@ class DeixisController extends Controller
     {
         try {
             $idDynamicObject = AnnotationDeixisService::updateObject($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+
+            return Criteria::byId('dynamicobject', 'idDynamicObject', $idDynamicObject);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -138,10 +164,12 @@ class DeixisController extends Controller
     {
         try {
             debug($data);
+
             return AnnotationDeixisService::updateObjectFrame($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -152,7 +180,8 @@ class DeixisController extends Controller
             return AnnotationDeixisService::updateObjectFrame($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -163,7 +192,8 @@ class DeixisController extends Controller
             return AnnotationDeixisService::updateObjectAnnotation($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -172,18 +202,20 @@ class DeixisController extends Controller
     {
         try {
             AnnotationDeixisService::deleteObject($idDynamicObject);
-            return $this->renderNotify("success", "Object removed.");
+
+            return $this->renderNotify('success', 'Object removed.');
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
     #[Get(path: '/annotation/deixis/fes/{idFrame}')]
     public function feCombobox(int $idFrame)
     {
-        return view("Annotation.Deixis.Panes.fes", [
-            'idFrame' => $idFrame
+        return view('Annotation.Deixis.Panes.fes', [
+            'idFrame' => $idFrame,
         ]);
     }
 
@@ -195,12 +227,14 @@ class DeixisController extends Controller
     public function getFormComment(CommentData $data)
     {
         $object = CommentService::getDynamicObjectComment($data->idDynamicObject);
-        return view("Annotation.Deixis.Panes.formComment", [
+
+        return view('Annotation.Deixis.Panes.formComment', [
             'idDocument' => $data->idDocument,
             'order' => $data->order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
+
     #[Post(path: '/annotation/deixis/updateObjectComment')]
     public function updateObjectComment(CommentData $data)
     {
@@ -208,19 +242,22 @@ class DeixisController extends Controller
             debug($data);
             CommentService::updateDynamicObjectComment($data);
             $this->trigger('updateObjectAnnotationEvent');
-            return $this->renderNotify("success", "Comment registered.");
+
+            return $this->renderNotify('success', 'Comment registered.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
+
     #[Delete(path: '/annotation/deixis/comment/{idDocument}/{idDynamicObject}')]
-    public function deleteObjectComment(int $idDocument,int $idDynamicObject)
+    public function deleteObjectComment(int $idDocument, int $idDynamicObject)
     {
         try {
-            CommentService::deleteDynamicObjectComment($idDocument,$idDynamicObject);
-            return $this->renderNotify("success", "Object comment removed.");
+            CommentService::deleteDynamicObjectComment($idDocument, $idDynamicObject);
+
+            return $this->renderNotify('success', 'Object comment removed.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -228,13 +265,14 @@ class DeixisController extends Controller
      * get Object
      */
     #[Get(path: '/annotation/deixis/{idDocument}/{idDynamicObject?}')]
-    public function annotation(int|string $idDocument, int $idDynamicObject = null)
+    public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
     {
         $data = $this->getData($idDocument);
-        if (!is_null($idDynamicObject)) {
+        if (! is_null($idDynamicObject)) {
             $data->idDynamicObject = $idDynamicObject;
         }
-        return view("Annotation.Deixis.annotation", $data->toArray());
+
+        return view('Annotation.Deixis.annotation', $data->toArray());
     }
 
     #[Post(path: '/annotation/deixis/deleteBBox')]
@@ -242,10 +280,12 @@ class DeixisController extends Controller
     {
         try {
             debug($data);
+
             return AnnotationDeixisService::deleteBBoxesFromObject($data);
         } catch (\Exception $e) {
             debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 }

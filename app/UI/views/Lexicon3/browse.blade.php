@@ -1,70 +1,69 @@
-<x-layout.browser>
-    <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','Lexicon']]"></x-breadcrumb>
-    </x-slot:head>
-    <x-slot:main>
-        <div class="page-content h-full">
-            <div class="content-container h-full d-flex flex-col">
-                <div class="text-right mb-2 flex-none">
-                    <a href="/lexicon3/lemma/new"
-                       rel="noopener noreferrer"
-                       class="ui button secondary">
-                        New Lemma
-                    </a>
-                    <a href="/lexicon3/form/new"
-                       rel="noopener noreferrer"
-                       class="ui button secondary">
-                        New Form
-                    </a>
-                </div>
-                <div class="app-search flex-1">
-                    <!-- Search Section -->
-                    <div class="search-section"
-                         x-data="browseSearchComponent()"
-                         @htmx:before-request="onSearchStart"
-                         @htmx:after-request="onSearchComplete"
-                         @htmx:after-swap="onResultsUpdated"
-                    >
-                        <div class="search-input-group">
-                            <form class="ui form"
-                                  hx-post="/lexicon3/tree"
-                                  hx-target=".search-results-tree"
-                                  hx-swap="innerHTML"
-                                  hx-trigger="submit, input delay:500ms from:input[name='lemma'], input delay:500ms from:input[name='form']">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                                <div class="two fields">
-                                    <div class="field">
-                                        <div class="ui left icon input w-full">
-                                            <i class="search icon"></i>
-                                            <input
-                                                type="search"
-                                                name="lemma"
-                                                placeholder="Search Lemma"
-                                                autocomplete="off"
-                                            >
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <div class="ui left icon input w-full">
-                                            <i class="search icon"></i>
-                                            <input
-                                                type="search"
-                                                name="form"
-                                                placeholder="Search Form"
-                                                autocomplete="off"
-                                            >
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="ui medium primary button">
-                                        Search
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+<x-layout::index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['','Lexicon']]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="page-content">
+                <div class="ui container browse-page">
+                    <div class="new-section">
+                        <a href="/lexicon3/lemma/new"
+                           rel="noopener noreferrer"
+                           class="ui button secondary">
+                            New Lemma
+                        </a>
+                        <a href="/lexicon3/form/new"
+                           rel="noopener noreferrer"
+                           class="ui button secondary">
+                            New Form
+                        </a>
                     </div>
+                    <div class="app-search">
+                        <!-- Search Section -->
+                        <div class="search-section"
+                             x-data="searchFormComponent()"
+                        >
+                            <div class="search-input-group">
+                                <form class="ui form"
+                                      @submit="onSearchStart"
+                                      @input.debounce.500ms="performSearch"
+                                >
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <div class="ui left icon input w-full">
+                                                <i class="search icon"></i>
+                                                <input
+                                                    type="search"
+                                                    name="lemma"
+                                                    placeholder="Search Lemma"
+                                                    autocomplete="off"
+                                                    x-model="searchParams.lemma"
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui left icon input w-full">
+                                                <i class="search icon"></i>
+                                                <input
+                                                    type="search"
+                                                    name="form"
+                                                    placeholder="Search Form"
+                                                    autocomplete="off"
+                                                    x-model="searchParams.form"
+                                                >
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="ui medium primary button">
+                                            Search
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
-                    <div id="gridArea" class="h-full">
-                        @fragment("search")
+                        <div id="gridArea">
+
                             <div class="results-container view-cards">
                                 <div class="results-wrapper">
                                     <div class="tree-view" x-transition>
@@ -83,15 +82,30 @@
                                                     }
                                                 }"
                                         >
-                                            @include("Lexicon3.partials.tree")
+                                            @if(count($data) > 0)
+                                                <x-ui::tree
+                                                    :title="$title ?? ''"
+                                                    url="/lexicon3/data"
+                                                    :data="$data"
+                                                ></x-ui::tree>
+                                            @else
+                                                <div class="empty-state" id="emptyState">
+                                                    <i class="search icon empty-icon"></i>
+                                                    <h3 class="empty-title">No results found.</h3>
+                                                    <p class="empty-description">
+                                                        Enter your search term above to find lemmas/forms.
+                                                    </p>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endfragment
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </x-slot:main>
-</x-layout.browser>
+        </main>
+        <x-layout::footer></x-layout::footer>
+    </div>
+</x-layout::index>

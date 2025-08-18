@@ -1,9 +1,9 @@
 @php
     $options = [
-        'frame' => ['Frame', '/structure/frame', '','ui::icon.frame'],
-        'lexicon' => ['Lexicon', '/structure/lexicon', '','ui::icon.domain'],
-        'lucandidate' => ['Lu Candidate', '/structure/luCandidate', '','ui::icon.frame'],
-        'constructicon' => ['Constructicon', '/structure/constructicon', '','ui::icon.construction'],
+        'frame' => ['Frame', '/frame', '','ui::icon.frame'],
+        'lexicon' => ['Lexicon', '/lexicon3', '','ui::icon.domain'],
+        'lucandidate' => ['Lu Candidate', '/luCandidate', '','ui::icon.frame'],
+        'constructicon' => ['Constructicon', '/constructicon', '','ui::icon.construction'],
         'reframing' => ['Reframing', '/reframing', '','ui::icon.lu'],
     ];
 @endphp

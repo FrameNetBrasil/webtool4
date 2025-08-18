@@ -9,17 +9,34 @@
 <div class="ui tree-container"
      x-data="treeComponent()"
      x-init="init()"
+     data-title="{{ $title }}"
+     data-search-endpoint="{{ $url }}"
+     data-items="{{ json_encode($data) }}"
 >
     <!-- Header -->
     @if($title != '')
         <div class="ui tree-header">{{$title}}</div>
     @endif
 
+    <!-- Loading State -->
+    <div x-show="loading" class="ui segment">
+        <div class="ui active loader"></div>
+        <p>Loading tree data...</p>
+    </div>
+
+    <!-- Error State -->
+    <div x-show="error && !loading" class="ui negative message">
+        <i class="close icon" @click="error = null"></i>
+        <div class="header">Error loading data</div>
+        <p x-text="error"></p>
+    </div>
+
     <!-- Tree Body -->
-    <div class="tree-body">
+    <div class="tree-body" x-show="!loading && !error">
         <table class="ui {{ $bordered ? '' : 'very' }} basic table tree-table">
             <tbody>
             @foreach($data as $item)
+                @php(debug($item))
                 @php($idNode = $item['type'] . '_' . $item['id'])
                 <tr class="row-data transition-enabled">
                     @if(!($item['leaf'] ?? false))
@@ -66,31 +83,20 @@
                 </tr>
                 <tr id="row_{{$idNode}}"
                     class="tree-content-row"
-                    :class="expandedNodes['{{$idNode}}'] ? '' : 'hidden'"
+                    x-show="expandedNodes && expandedNodes['{{$idNode}}'] === true"
+                    x-transition
                 >
                     <td></td>
                     <td colspan="100%">
                         <!-- Tree Content Container -->
                         <div id="tree_{{$idNode}}"
-                             class="ui tree-content transition"
-                             :class="{ 'hidden': !expandedNodes['{{$idNode}}'] }"
-                             x-show="expandedNodes['{{$idNode}}']"
-                             x-transition>
+                             class="ui tree-content transition">
 
-                            <!-- Fomantic UI Loading indicator -->
-                            <div x-show="loadingNodes['{{$idNode}}']" class="ui loading">
-                                <div class="ui active mini inline loader"></div>
-                                <span class="ui text muted">Loading...</span>
-                            </div>
-
-                            <!-- HTMX will populate this area -->
-                            <div hx-post="{{$url}}"
-                                 hx-vals='{"type": "{{$item['type']}}", "id" : "{{$item['id']}}"}'
-                                 hx-target="#tree_{{$idNode}}"
-                                 hx-swap="innerHTML"
-                                 hx-trigger="load-{{$idNode}} from:body"
-                                 @htmx:before-request="loadingNodes['{{$idNode}}'] = true"
-                                 @htmx:after-request="loadingNodes['{{$idNode}}'] = false; processLoadedContent($event.target)">
+                            <!-- Content for leaf nodes or expanded nodes -->
+                            <div class="ui segment">
+                                <p class="ui text muted">
+                                    Node content for {{ $item['type'] }} #{{ $item['id'] }}
+                                </p>
                             </div>
                         </div>
                     </td>

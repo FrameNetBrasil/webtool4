@@ -66,12 +66,10 @@
                     </div>
 
                     <div id="gridArea" class="h-full">
-                        @fragment("search")
                             <div class="results-container view-cards"
                             >
                                 <div class="results-wrapper">
 
-                                    @if(count($data) > 0)
                                         <div class="tree-view" x-transition>
                                             <div
                                                 class="search-results-tree"
@@ -86,19 +84,25 @@
                                                     }
                                                 }"
                                             >
-                                                @fragment("tree")
+                                                @if(count($data) > 0)
                                                     <x-ui::tree
                                                         :title="$title ?? ''"
-                                                        url="/annotation/staticEvent/tree"
+                                                        url="/annotation/staticEvent/data"
                                                         :data="$data"
                                                     ></x-ui::tree>
-                                                @endfragment
+                                                @else
+                                                    <div class="empty-state" id="emptyState">
+                                                        <i class="search icon empty-icon"></i>
+                                                        <h3 class="empty-title">No results found.</h3>
+                                                        <p class="empty-description">
+                                                            Enter your search term above to find frames.
+                                                        </p>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
-                                    @endif
                                 </div>
                             </div>
-                        @endfragment
                     </div>
                 </div>
             </div>

@@ -11,18 +11,13 @@ use App\Services\AppService;
                 <div class="app-search">
                     <!-- Search Section -->
                     <div class="search-section"
-                         x-data="browseSearchComponent()"
-                         @htmx:before-request="onSearchStart"
-                         @htmx:after-request="onSearchComplete"
-                         @htmx:after-swap="onResultsUpdated"
+                         x-data="searchFormComponent()"
                     >
                         <div class="search-input-group">
                             <form class="ui form"
-                                  hx-post="/cxn/tree"
-                                  hx-target=".search-results-tree"
-                                  hx-swap="innerHTML"
-                                  hx-trigger="submit, input delay:500ms from:input[name='cxn']">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                  @submit="onSearchStart"
+                                  @input.debounce.500ms="performSearch"
+                                  >
                                 <div class="two fields">
                                     <div class="field">
                                         <div class="ui left icon input w-full">
@@ -32,6 +27,7 @@ use App\Services\AppService;
                                                 name="cxn"
                                                 placeholder="Search Construction"
                                                 autocomplete="off"
+                                                x-model="searchParams.cxn"
                                             >
                                         </div>
                                     </div>

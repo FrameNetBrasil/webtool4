@@ -29,8 +29,8 @@ class ReportController extends Controller
     {
         $frames = BrowseService::browseFrameBySearch($search);
 
-        return view("Frame.Report.browse", [
-            'data' => $frames
+        return view('Frame.Report.browse', [
+            'data' => $frames,
         ]);
     }
 
@@ -38,34 +38,48 @@ class ReportController extends Controller
     public function tree(SearchData $search)
     {
         $data = BrowseService::browseFrameBySearch($search);
-        return view("Frame.partials.tree", [
-            'data' => $data
-        ]);
+
+        return view('Frame.Report.browse', [
+            'data' => $data,
+        ])->fragment('tree');
 
     }
-//    #[Get(path: '/report/frame')]
-//    public function main()
-//    {
-//        return view('Frame.Report.main', [
-//            'frames' => [],
-//        ]);
-//    }
-//
-//    #[Post(path: '/report/frame/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        debug($search);
-//        $frames = Criteria::byFilterLanguage('view_frame',
-//            ['name', 'startswith', $search->frame])
-//            ->select('idFrame', 'name', 'description')
-//            ->orderBy('name')
-//            ->all();
-//
-//        return view('Frame.Report.main', [
-//            'search' => $search,
-//            'frames' => $frames,
-//        ])->fragment('search');
-//    }
+
+    #[Post(path: '/report/frame/data')]
+    public function data(SearchData $search)
+    {
+        $data = BrowseService::browseFrameBySearch($search);
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'query' => $search->frame ?? '',
+            'count' => count($data),
+        ]);
+    }
+    //    #[Get(path: '/report/frame')]
+    //    public function main()
+    //    {
+    //        return view('Frame.Report.main', [
+    //            'frames' => [],
+    //        ]);
+    //    }
+    //
+    //    #[Post(path: '/report/frame/grid')]
+    //    public function grid(SearchData $search)
+    //    {
+    //        debug($search);
+    //        $frames = Criteria::byFilterLanguage('view_frame',
+    //            ['name', 'startswith', $search->frame])
+    //            ->select('idFrame', 'name', 'description')
+    //            ->orderBy('name')
+    //            ->all();
+    //
+    //        return view('Frame.Report.main', [
+    //            'search' => $search,
+    //            'frames' => $frames,
+    //        ])->fragment('search');
+    //    }
 
     #[Get(path: '/report/frame/{idFrame}/{lang?}')]
     public function report(int|string $idFrame = '', string $lang = '')

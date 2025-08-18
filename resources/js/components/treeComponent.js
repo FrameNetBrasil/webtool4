@@ -2,7 +2,8 @@ export default function () {
     return {
         // Configuration (will be overridden by data attributes)
         title: "",
-        baseUrl: "/api/tree",
+        baseUrl: "/report/frame/data",
+        searchEndpoint: "/report/frame/data",
 
         // Data
         items: [],
@@ -12,6 +13,8 @@ export default function () {
         loadingNodes: {},
         loadedNodes: {},
         selectedItem: null,
+        loading: false,
+        error: null,
 
         // Events
         onItemClick: null, // Function to be set by parent
@@ -26,9 +29,6 @@ export default function () {
             //     baseUrl: this.baseUrl,
             //     itemsCount: this.items.length
             // });
-
-            // Set up HTMX event listeners
-            this.setupHTMXEvents();
         },
 
         // Read data attributes from the element
@@ -40,9 +40,9 @@ export default function () {
                 this.title = element.dataset.title;
             }
 
-            // Read base URL
-            if (element.dataset.baseUrl) {
-                this.baseUrl = element.dataset.baseUrl;
+            // Read search endpoint
+            if (element.dataset.searchEndpoint) {
+                this.searchEndpoint = element.dataset.searchEndpoint;
             }
 
             // Read items
@@ -56,27 +56,78 @@ export default function () {
             }
         },
 
-        // Setup HTMX event handling
-        setupHTMXEvents() {
-            // Listen for HTMX events on the document
-            document.addEventListener("htmx:responseError", (event) => {
-                console.error("HTMX Error:", event.detail);
-                this.loadingNodes[this.getItemIdFromTarget(event.target)] = false;
+        // Collect search parameters from the parent form
+        collectSearchParams() {
+            const searchSection = document.querySelector('.search-section');
+            if (!searchSection) return {};
+
+            const params = {};
+            const inputs = searchSection.querySelectorAll('input[name]:not([name="_token"])');
+            
+            inputs.forEach(input => {
+                if (input.value && input.value.trim() !== '') {
+                    params[input.name] = input.value.trim();
+                }
             });
+
+            return params;
+        },
+
+        // Load data via Ajax with dynamic parameters
+        async loadData(searchParams = {}) {
+            this.loading = true;
+            this.error = null;
+
+            try {
+                // If no params provided, collect them from the form
+                if (Object.keys(searchParams).length === 0) {
+                    searchParams = this.collectSearchParams();
+                }
+
+                const formData = new FormData();
+                
+                // Add all search parameters dynamically
+                Object.entries(searchParams).forEach(([key, value]) => {
+                    if (value) {
+                        formData.append(key, value);
+                    }
+                });
+                
+                const response = await fetch(this.searchEndpoint, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    this.items = result.data;
+                    this.reload(); // Reset tree state
+                    console.log(`Loaded ${result.count} items for search:`, searchParams);
+                } else {
+                    throw new Error(result.message || 'Unknown error occurred');
+                }
+            } catch (error) {
+                console.error('Failed to load tree data:', error);
+                this.error = error.message;
+                this.items = [];
+            } finally {
+                this.loading = false;
+            }
         },
 
         // Toggle node expansion
         toggleNode(itemId) {
             const wasExpanded = this.expandedNodes[itemId];
             this.expandedNodes[itemId] = !wasExpanded;
-
-            // If expanding and not loaded yet, trigger HTMX load
-            if (!wasExpanded && !this.loadedNodes[itemId]) {
-                this.$nextTick(() => {
-                    // Trigger HTMX request
-                    document.body.dispatchEvent(new CustomEvent(`load-${itemId}`));
-                });
-            }
 
             console.log(`Node ${itemId} ${this.expandedNodes[itemId] ? "expanded" : "collapsed"}`);
         },
@@ -102,39 +153,27 @@ export default function () {
             }));
         },
 
-        // Process loaded content from HTMX
-        processLoadedContent(target) {
-            const itemId = this.getItemIdFromTarget(target);
-            this.loadedNodes[itemId] = true;
-
-            // Re-initialize AlpineJS for dynamically loaded content if needed
-            // This would be needed if the loaded content contains Alpine directives
-            // console.log(`Content loaded for: ${itemId}`);
-        },
-
-        // Get item ID from HTMX target
-        getItemIdFromTarget(target) {
-            const treeDiv = target.closest("[id^=\"tree_\"]");
-            return treeDiv ? treeDiv.id.replace("tree_", "") : null;
-        },
 
         // Public API methods
         reload() {
+            // Explicitly reset all state to ensure clean initialization
             this.expandedNodes = {};
             this.loadingNodes = {};
             this.loadedNodes = {};
             this.selectedItem = null;
-            // console.log("Tree reloaded");
+            
+            console.log("Tree component reloaded - all nodes collapsed");
+            
+            // Force reactivity update by triggering a dummy change
+            this.$nextTick(() => {
+                // This ensures Alpine's reactivity system recognizes the state change
+                this.expandedNodes = {...this.expandedNodes};
+            });
         },
 
         expandAll() {
             this.items.forEach(item => {
                 this.expandedNodes[item.id] = true;
-                if (!this.loadedNodes[item.id]) {
-                    this.$nextTick(() => {
-                        document.body.dispatchEvent(new CustomEvent(`load-${item.id}`));
-                    });
-                }
             });
         },
 
