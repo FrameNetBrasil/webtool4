@@ -33,7 +33,7 @@ services:
         command: 'php artisan queue:work'
         ports:
             - '0:8080'
-    redis:
-        image: redis:7.2-alpine
-        ports:
-            - '${FORWARD_REDIS_PORT}:6379'
+#    redis:
+#        image: redis:7.2-alpine
+#        ports:
+#            - '${FORWARD_REDIS_PORT}:6379'
