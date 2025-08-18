@@ -9,7 +9,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
-#[Middleware("master")]
+#[Middleware('master')]
 class BrowseController extends Controller
 {
     #[Get(path: '/cxn')]
@@ -17,8 +17,8 @@ class BrowseController extends Controller
     {
         $cxns = BrowseService::browseCxnBySearch($search);
 
-        return view("Construction.browse", [
-            'data' => $cxns
+        return view('Construction.browse', [
+            'data' => $cxns,
         ]);
     }
 
@@ -27,9 +27,22 @@ class BrowseController extends Controller
     {
         $data = BrowseService::browseCxnBySearch($search);
 
-        return view("Construction.partials.tree", [
-            'data' => $data
+        return view('Construction.partials.tree', [
+            'data' => $data,
         ]);
 
+    }
+
+    #[Post(path: '/cxn/data')]
+    public function data(SearchData $search)
+    {
+        $data = BrowseService::browseCxnBySearch($search);
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'query' => $search->cxn ?? '',
+            'count' => count($data),
+        ]);
     }
 }

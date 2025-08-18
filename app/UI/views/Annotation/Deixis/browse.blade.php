@@ -8,18 +8,13 @@
                 <div class="app-search">
                     <!-- Search Section -->
                     <div class="search-section"
-                         x-data="browseSearchComponent()"
-                         @htmx:before-request="onSearchStart"
-                         @htmx:after-request="onSearchComplete"
-                         @htmx:after-swap="onResultsUpdated"
+                         x-data="searchFormComponent()"
                     >
                         <div class="search-input-group">
                             <form class="ui form"
-                                  hx-post="/annotation/fe/tree"
-                                  hx-target=".search-results-tree"
-                                  hx-swap="innerHTML"
-                                  hx-trigger="submit, input delay:500ms from:input[name='frame']">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                  @submit="onSearchStart"
+                                  @input.debounce.500ms="performSearch"
+                                  >
                                 <div class="three fields">
                                     <div class="field">
                                         <div class="ui left icon input w-full">
@@ -29,6 +24,7 @@
                                                 name="corpus"
                                                 placeholder="Search Corpus"
                                                 autocomplete="off"
+                                                x-model="searchParams.corpus"
                                             >
                                         </div>
                                     </div>
@@ -40,6 +36,7 @@
                                                 name="document"
                                                 placeholder="Search Document"
                                                 autocomplete="off"
+                                                x-model="searchParams.document"
                                             >
                                         </div>
                                     </div>
@@ -52,12 +49,9 @@
                     </div>
 
                     <div id="gridArea" class="h-full">
-                        @fragment("search")
                             <div class="results-container view-cards"
                             >
                                 <div class="results-wrapper">
-
-                                    @if(count($data) > 0)
                                         <div class="tree-view" x-transition>
                                             <div
                                                 class="search-results-tree"
@@ -72,17 +66,26 @@
                                                     }
                                                 }"
                                             >
-
-                                                @fragment("tree")
-                                                    <x-ui::tree :title="$title ?? ''" url="/annotation/deixis/tree"
-                                                                :data="$data"></x-ui::tree>
-                                                @endfragment
+                                                @if(count($data) > 0)
+                                                    <x-ui::tree
+                                                        :title="$title ?? ''"
+                                                        url="/annotation/deixis/data"
+                                                        :data="$data"
+                                                    ></x-ui::tree>
+                                                @else
+                                                    <div class="empty-state" id="emptyState">
+                                                        <i class="search icon empty-icon"></i>
+                                                        <h3 class="empty-title">No results found.</h3>
+                                                        <p class="empty-description">
+                                                            Enter your search term above to find frames.
+                                                        </p>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     @endif
                                 </div>
                             </div>
-                        @endfragment
                     </div>
                 </div>
             </div>

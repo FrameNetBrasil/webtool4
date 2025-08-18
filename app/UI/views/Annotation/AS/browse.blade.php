@@ -66,17 +66,15 @@
                     </div>
 
                     <div id="gridArea" class="h-full">
-                        @fragment("search")
-                            <div class="results-container view-cards"
-                            >
-                                <div class="results-wrapper">
+                        <div class="results-container view-cards"
+                        >
+                            <div class="results-wrapper">
 
-                                    @if(count($data) > 0)
-                                        <div class="tree-view" x-transition>
-                                            <div
-                                                class="search-results-tree"
-                                                x-data
-                                                @tree-item-selected.document="(event) => {
+                                <div class="tree-view" x-transition>
+                                    <div
+                                        class="search-results-tree"
+                                        x-data
+                                        @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
                                                     if ((type === 'corpus') || (type === 'document')) {
@@ -85,20 +83,27 @@
                                                         window.open(`/annotation/as/sentence/${event.detail.id}`, '_blank');
                                                     }
                                                 }"
-                                            >
-                                                @fragment("tree")
-                                                    <x-ui::tree
-                                                        :title="$title ?? ''"
-                                                        url="/annotation/as/tree"
-                                                        :data="$data"
-                                                    ></x-ui::tree>
-                                                @endfragment
+                                    >
+                                        @if(count($data) > 0)
+                                            <x-ui::tree
+                                                :title="$title ?? ''"
+                                                url="/annotation/as/data"
+                                                :data="$data"
+                                            ></x-ui::tree>
+                                        @else
+                                            <div class="empty-state" id="emptyState">
+                                                <i class="search icon empty-icon"></i>
+                                                <h3 class="empty-title">No results found.</h3>
+                                                <p class="empty-description">
+                                                    Enter your search term above to find frames.
+                                                </p>
                                             </div>
-                                        </div>
-                                    @endif
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                        @endfragment
+                        </div>
+
                     </div>
                 </div>
             </div>

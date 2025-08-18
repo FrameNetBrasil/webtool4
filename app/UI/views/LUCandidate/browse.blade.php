@@ -15,18 +15,13 @@
                 <div class="app-search flex-1">
                     <!-- Search Section -->
                     <div class="search-section"
-                         x-data="browseSearchComponent()"
-                         @htmx:before-request="onSearchStart"
-                         @htmx:after-request="onSearchComplete"
-                         @htmx:after-swap="onResultsUpdated"
+                         x-data="searchFormComponent()"
                     >
                         <div class="search-input-group">
                             <form class="ui form"
-                                  hx-post="/lexicon3/tree"
-                                  hx-target=".search-results-tree"
-                                  hx-swap="innerHTML"
-                                  hx-trigger="submit, input delay:500ms from:input[name='lu']">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                  @submit="onSearchStart"
+                                  @input.debounce.500ms="performSearch"
+                                  >
                                 <div class="fields">
                                     <div class="field">
                                         <div class="ui left icon input w-full">
@@ -36,6 +31,7 @@
                                                 name="lu"
                                                 placeholder="Search LU"
                                                 autocomplete="off"
+                                                x-model="searchParams.lu"
                                             >
                                         </div>
                                     </div>
