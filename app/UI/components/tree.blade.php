@@ -1,3 +1,10 @@
+@props([
+    'title' => '',
+    'url' => '',
+    'data' => [],
+    'bordered' => false
+])
+
 <!-- Fomantic UI Tree Component with Alpine.js -->
 <div class="ui tree-container"
      x-data="treeComponent()"
@@ -10,7 +17,7 @@
 
     <!-- Tree Body -->
     <div class="tree-body">
-        <table class="ui basic table tree-table">
+        <table class="ui {{ $bordered ? '' : 'very' }} basic table tree-table">
             <tbody>
             @foreach($data as $item)
                 @php($idNode = $item['type'] . '_' . $item['id'])
