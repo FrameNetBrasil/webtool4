@@ -85,8 +85,10 @@
             </div>
         </main>
         <aside class="app-tools">
-            <h3 class="ui header">{{$frame->name}}</h3>
-            <div class="ui accordion">
+            <div>
+                <h3 class="ui header">{{$frame->name}}</h3>
+            </div>
+            <div class="ui accordion flex-1">
                 <div class="title">
                     <i class="dropdown icon"></i>
                     <b>FrameElements</b></div>
@@ -116,8 +118,8 @@
                 </div>
             </div>
         </aside>
+        <x-layout::footer></x-layout::footer>
     </div>
-    <x-layout::footer></x-layout::footer>
 </x-layout::index>
 
 <script>
