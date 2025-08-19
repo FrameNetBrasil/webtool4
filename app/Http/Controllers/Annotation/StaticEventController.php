@@ -48,32 +48,34 @@ class StaticEventController extends Controller
     {
         $corpus = BrowseService::browseCorpusBySearch($search, [], 'StaticEventAnnotation');
 
-        return view('Annotation.StaticEvent.browse', [
+        return view('Annotation.browseSentences', [
+            'page' => "Static Event Annotation",
+            'url' => "/annotation/staticEvent",
             'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/staticEvent/tree')]
-    public function tree(SearchData $search)
-    {
-        if (! is_null($search->idDocumentSentence)) {
-            $data = BrowseService::browseSentence($search->idDocumentSentence);
-        } else {
-            if (! is_null($search->idDocument)) {
-                $data = BrowseService::browseSentencesByDocument($search->idDocument);
-            } else {
-                if (! is_null($search->idCorpus) || ($search->document != '')) {
-                    $data = BrowseService::browseDocumentBySearch($search, [], 'StaticEventAnnotation');
-                } else {
-                    $data = BrowseService::browseCorpusBySearch($search, [], 'StaticEventAnnotation');
-                }
-            }
-        }
-
-        return view('Annotation.StaticEvent.browse', [
-            'data' => $data,
-        ])->fragment('tree');
-    }
+//    #[Post(path: '/annotation/staticEvent/tree')]
+//    public function tree(SearchData $search)
+//    {
+//        if (! is_null($search->idDocumentSentence)) {
+//            $data = BrowseService::browseSentence($search->idDocumentSentence);
+//        } else {
+//            if (! is_null($search->idDocument)) {
+//                $data = BrowseService::browseSentencesByDocument($search->idDocument);
+//            } else {
+//                if (! is_null($search->idCorpus) || ($search->document != '')) {
+//                    $data = BrowseService::browseDocumentBySearch($search, [], 'StaticEventAnnotation');
+//                } else {
+//                    $data = BrowseService::browseCorpusBySearch($search, [], 'StaticEventAnnotation');
+//                }
+//            }
+//        }
+//
+//        return view('Annotation.StaticEvent.browse', [
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
     #[Get(path: '/annotation/staticEvent/grid/{idDocument}/sentences')]
     public function documentSentences(int $idDocument)
     {

@@ -51,24 +51,27 @@ class DynamicModeController extends Controller
     {
         $corpus = BrowseService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
 
-        return view('Annotation.DynamicMode.browse', [
+        return view('Annotation.browseDocuments', [
+            'page' => "Dynamic Annotation",
+            'url' => "/annotation/dynamicMode",
+            'taskGroupName' => 'DynamicAnnotation',
             'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/dynamicMode/tree')]
-    public function tree(SearchData $search)
-    {
-        if (! is_null($search->idCorpus) || ($search->document != '')) {
-            $data = BrowseService::browseDocumentBySearch($search, [], 'DynamicAnnotation', leaf: true);
-        } else {
-            $data = BrowseService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
-        }
-
-        return view('Annotation.DynamicMode.browse', [
-            'data' => $data,
-        ])->fragment('tree');
-    }
+//    #[Post(path: '/annotation/dynamicMode/tree')]
+//    public function tree(SearchData $search)
+//    {
+//        if (! is_null($search->idCorpus) || ($search->document != '')) {
+//            $data = BrowseService::browseDocumentBySearch($search, [], 'DynamicAnnotation', leaf: true);
+//        } else {
+//            $data = BrowseService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
+//        }
+//
+//        return view('Annotation.DynamicMode.browse', [
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
     private function getData(int $idDocument): DocumentData
     {
         $document = Document::byId($idDocument);

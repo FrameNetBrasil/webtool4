@@ -2,23 +2,11 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['','Lexicon']]"
+            :sections="[['/','Home'],['',$page]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content">
                 <div class="ui container browse-page">
-                    <div class="new-section">
-                        <a href="/lexicon3/lemma/new"
-                           rel="noopener noreferrer"
-                           class="ui button secondary">
-                            New Lemma
-                        </a>
-                        <a href="/lexicon3/form/new"
-                           rel="noopener noreferrer"
-                           class="ui button secondary">
-                            New Form
-                        </a>
-                    </div>
                     <div class="app-search">
                         <div class="search-section"
                              x-data="searchFormComponent()"
@@ -28,19 +16,20 @@
                         >
                             <div class="search-input-group">
                                 <form class="ui form"
-                                      hx-post="/lexicon3/search"
+                                      hx-post="/annotation/browse/searchDocument"
                                       hx-target="#gridArea"
                                       hx-swap="innerHTML"
                                       hx-trigger="submit, input delay:500ms"
                                 >
-                                    <div class="two fields">
+                                    <input type="hidden" name="taskGroupName" value="{{$taskGroupName}}">
+                                    <div class="three fields">
                                         <div class="field">
                                             <div class="ui left icon input w-full">
                                                 <i class="search icon"></i>
                                                 <input
                                                     type="search"
-                                                    name="lemma"
-                                                    placeholder="Search Lemma"
+                                                    name="corpus"
+                                                    placeholder="Search Corpus"
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -50,8 +39,8 @@
                                                 <i class="search icon"></i>
                                                 <input
                                                     type="search"
-                                                    name="form"
-                                                    placeholder="Search Form"
+                                                    name="document"
+                                                    placeholder="Search Document"
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -72,17 +61,16 @@
                                                 @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
-                                                    if (type === 'lemma') {
-                                                        window.location.assign(`/lexicon3/lemma/${event.detail.id}`);
-                                                    }
-                                                    if (type === 'form') {
-                                                        window.location.assign(`/lexicon3/form/${event.detail.id}`);
+                                                    if ((type === 'corpus') || (type === 'document')) {
+                                                        event.detail.tree.toggleNodeState(idNode);
+                                                    } else if (type === 'sentence') {
+                                                        window.open(`{{$url}}/${event.detail.id}`, '_blank');
                                                     }
                                                 }"
                                             >
                                                 <x-ui::tree
                                                     :title="$title ?? ''"
-                                                    url="/lexicon3/tree"
+                                                    url="/annotation/browse/treeDocument"
                                                     :data="$data"
                                                 ></x-ui::tree>
                                             </div>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Annotation\FE\SearchData;
+use App\Data\Annotation\Browse\SearchData;
 use App\Http\Controllers\Controller;
 use App\Repositories\Document;
 use App\Services\Annotation\BrowseService;
@@ -15,55 +15,53 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware("auth")]
 class AnnotationSetController extends Controller
 {
-//    #[Get(path: '/annotation/as')]
-//    public function browse()
-//    {
-//        $search = session('searchFEAnnotation') ?? SearchData::from();
-//        return view("Annotation.AS.browse", [
-//            'search' => $search
-//        ]);
-//    }
-//
-//    #[Post(path: '/annotation/as/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        return view("Annotation.AS.grids", [
-//            'search' => $search,
-//            'sentences' => [],
-//        ]);
-//    }
-
     #[Get(path: '/annotation/as')]
     public function browse(SearchData $search)
     {
         $corpus = BrowseService::browseCorpusBySearch($search);
 
-        return view('Annotation.AS.browse', [
+        return view('Annotation.browseSentences', [
+            'page' => "AnnotationSets",
+            'url' => "/annotation/as",
             'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/as/tree')]
-    public function tree(SearchData $search)
-    {
-        if (! is_null($search->idDocumentSentence)) {
-            $data = BrowseService::browseSentence($search->idDocumentSentence);
-        } else {
-            if (! is_null($search->idDocument)) {
-                $data = BrowseService::browseSentencesByDocument($search->idDocument);
-            } else {
-                if (! is_null($search->idCorpus) || ($search->document != '')) {
-                    $data = BrowseService::browseDocumentBySearch($search);
-                } else {
-                    $data = BrowseService::browseCorpusBySearch($search);
-                }
-            }
-        }
+//    #[Post(path: '/annotation/as/search')]
+//    public function search(SearchData $search)
+//    {
+//        if ($search->idDocumentSentence != '') {
+//            $data = BrowseService::browseSentence($search->idDocumentSentence);
+//            $title = "Sentence";
+//        } elseif ($search->document != '') {
+//            $data = BrowseService::browseDocumentBySearch($search);
+//            $title = "Documents";
+//        } else {
+//            $data = BrowseService::browseCorpusBySearch($search);
+//            $title = "Corpora";
+//        }
+//
+//        return view('Annotation.AS.browse', [
+//            'data' => $data,
+//            'title' => $title,
+//        ])->fragment('search');
+//    }
+//
+//    #[Post(path: '/annotation/as/tree')]
+//    public function tree(TreeData $search)
+//    {
+//        $data = [];
+//        if (!is_null($search->idDocument)) {
+//            $data = BrowseService::browseSentencesByDocument($search->idDocument);
+//        } elseif (!is_null($search->idCorpus)) {
+//            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus);
+//        }
+//
+//        return view('Annotation.AS.browse', [
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
 
-        return view('Annotation.AS.browse', [
-            'data' => $data,
-        ])->fragment('tree');
-    }
     #[Get(path: '/annotation/as/grid/{idDocument}/sentences')]
     public function documentSentences(int $idDocument)
     {
@@ -166,7 +164,7 @@ class AnnotationSetController extends Controller
     public function deleteAS(int $idAnnotationSet)
     {
         try {
-            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $idAnnotationSet);
+            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $idAnnotationSet);
             AnnotationSet::delete($idAnnotationSet);
             return $this->clientRedirect("/annotation/as/sentence/{$annotationSet->idDocumentSentence}");
         } catch (\Exception $e) {

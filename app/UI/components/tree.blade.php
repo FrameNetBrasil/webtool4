@@ -2,7 +2,6 @@
     'title' => '',
     'url' => '',
     'data' => [],
-    'idNode' => 0,
     'bordered' => false
 ])
 
@@ -19,7 +18,7 @@
         <div class="ui tree-header">{{$title}}</div>
     @endif
 
-    @if (($idNode == 0) && (count($data) == 0))
+    @if (count($data) == 0)
         <div class="empty-state" id="emptyState">
             <i class="search icon empty-icon"></i>
             <h3 class="empty-title">No results found.</h3>

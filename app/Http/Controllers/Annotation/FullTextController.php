@@ -56,32 +56,34 @@ class FullTextController extends Controller
     {
         $corpus = BrowseService::browseCorpusBySearch($search);
 
-        return view('Annotation.FullText.browse', [
+        return view('Annotation.browseSentences', [
+            'page' => "FullText Annotation",
+            'url' => "/annotation/fullText",
             'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/fullText/tree')]
-    public function tree(SearchData $search)
-    {
-        if (! is_null($search->idDocumentSentence)) {
-            $data = BrowseService::browseSentence($search->idDocumentSentence);
-        } else {
-            if (! is_null($search->idDocument)) {
-                $data = BrowseService::browseSentencesByDocument($search->idDocument);
-            } else {
-                if (! is_null($search->idCorpus) || ($search->document != '')) {
-                    $data = BrowseService::browseDocumentBySearch($search);
-                } else {
-                    $data = BrowseService::browseCorpusBySearch($search);
-                }
-            }
-        }
-
-        return view('Annotation.FullText.browse', [
-            'data' => $data,
-        ])->fragment('tree');
-    }
+//    #[Post(path: '/annotation/fullText/tree')]
+//    public function tree(SearchData $search)
+//    {
+//        if (! is_null($search->idDocumentSentence)) {
+//            $data = BrowseService::browseSentence($search->idDocumentSentence);
+//        } else {
+//            if (! is_null($search->idDocument)) {
+//                $data = BrowseService::browseSentencesByDocument($search->idDocument);
+//            } else {
+//                if (! is_null($search->idCorpus) || ($search->document != '')) {
+//                    $data = BrowseService::browseDocumentBySearch($search);
+//                } else {
+//                    $data = BrowseService::browseCorpusBySearch($search);
+//                }
+//            }
+//        }
+//
+//        return view('Annotation.FullText.browse', [
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
     #[Get(path: '/annotation/fullText/grid/{idDocument}/sentences')]
     public function documentSentences(int $idDocument)
     {

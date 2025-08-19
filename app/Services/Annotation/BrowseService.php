@@ -5,6 +5,7 @@ namespace App\Services\Annotation;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Project;
+use App\Services\AppService;
 
 class BrowseService
 {
@@ -24,11 +25,11 @@ class BrowseService
             // $style = 'background-color:#' . $label['rgbBg'] . ';color:#' . $label['rgbFg'] . ';';
             if ($span->startChar >= 0) {
                 $decorated .= mb_substr($text, $i, $span->startChar - $i);
-                $decorated .= "<span class='color_target'>".mb_substr($text, $span->startChar, $span->endChar - $span->startChar + 1).'</span>';
+                $decorated .= "<span class='color_target'>" . mb_substr($text, $span->startChar, $span->endChar - $span->startChar + 1) . '</span>';
                 $i = $span->endChar + 1;
             }
         }
-        $decorated = $decorated.mb_substr($text, $i);
+        $decorated = $decorated . mb_substr($text, $i);
 
         return $decorated;
     }
@@ -40,7 +41,7 @@ class BrowseService
             ->where('ds.idDocument', $idDocument)
             ->first();
 
-        return ! is_null($timespan);
+        return !is_null($timespan);
     }
 
     private static function getRowNumber(int $idDocument, int $idDocumentSentence): int
@@ -132,7 +133,7 @@ class BrowseService
                 ->min('idDocumentSentence') ?? null;
         }
 
-        return (object) [
+        return (object)[
             'previous' => $previous,
             'next' => $next,
         ];
@@ -150,12 +151,30 @@ class BrowseService
         foreach ($corpus as $c) {
             $data[] = [
                 'id' => $c->idCorpus,
-                'text' => $corpusIcon.$c->name,
+                'text' => $corpusIcon . $c->name,
                 'type' => 'corpus',
                 'leaf' => $leaf,
             ];
         }
 
+        return $data;
+    }
+
+    public static function browseDocumentsByCorpus(int $idCorpus, array $projects = [], string $taskGroupName = '', bool $leaf = false): array
+    {
+        $allowed = Project::getAllowedDocsForUser($projects, $taskGroupName, $idCorpus);
+        $allowedDocuments = collect($allowed)->pluck('idDocument')->all();
+        $documents = Criteria::table('view_document')
+            ->select('idDocument', 'name as document', 'corpusName')
+            ->where('idLanguage', AppService::getCurrentIdLanguage())
+            ->whereIn('idDocument', $allowedDocuments)
+            ->orderBy('corpusName')->orderBy('name')->all();
+        $data = array_map(fn($item) => [
+            'id' => $item->idDocument,
+            'text' => view('Annotation.partials.document', (array)$item)->render(),
+            'type' => 'document',
+            'leaf' => $leaf,
+        ], $documents);
         return $data;
     }
 
@@ -179,7 +198,7 @@ class BrowseService
                     if ((isset($allowedDocuments[$document->idDocument]))) {
                         $data[] = [
                             'id' => $document->idDocument,
-                            'text' => $documentIcon.$document->corpusName.' / '.$document->name,
+                            'text' => $documentIcon . $document->corpusName . ' / ' . $document->name,
                             'type' => 'document',
                             'leaf' => $leaf,
                         ];
@@ -193,9 +212,9 @@ class BrowseService
                 ->select('idDocument', 'name', 'corpusName')
                 ->whereIn('idDocument', $allowedDocuments)
                 ->orderBy('corpusName')->orderBy('name')->all();
-            $data = array_map(fn ($item) => [
+            $data = array_map(fn($item) => [
                 'id' => $item->idDocument,
-                'text' => $documentIcon.$item->name,
+                'text' => $documentIcon . $item->name,
                 'type' => 'document',
                 'leaf' => $leaf,
             ], $documents);
@@ -210,8 +229,8 @@ class BrowseService
         foreach ($sentences as $sentence) {
             $data[] = [
                 'id' => $sentence->idDocumentSentence,
-                'formatedId' => '[#'.$sentence->idDocumentSentence.']',
-                'extra' => (isset($sentence->startTime) ? '<span class="text-time"><i class="material icon">schedule</i>'.$sentence->startTime.'</span>' : ''),
+                'formatedId' => '[#' . $sentence->idDocumentSentence . ']',
+                'extra' => (isset($sentence->startTime) ? '<span class="text-time"><i class="material icon">schedule</i>' . $sentence->startTime . '</span>' : ''),
                 'text' => $sentence->text,
                 'type' => 'sentence',
                 'leaf' => true,
@@ -261,7 +280,7 @@ class BrowseService
                 ->limit(1000)
                 ->get()->keyBy('idDocumentSentence')->all();
         }
-        if (! empty($sentences)) {
+        if (!empty($sentences)) {
             $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
             foreach ($targets as $idDocumentSentence => $spans) {
                 $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);
@@ -295,7 +314,7 @@ class BrowseService
                 ->limit(1000)
                 ->get()->keyBy('idDocumentSentence')->all();
         }
-        if (! empty($sentences)) {
+        if (!empty($sentences)) {
             $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
             foreach ($targets as $idDocumentSentence => $spans) {
                 $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);

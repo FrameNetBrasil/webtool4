@@ -12,7 +12,7 @@ class Project
         return Criteria::byFilter("project", ["idProject", "=", $id])->first();
     }
 
-    public static function getAllowedDocsForUser(array $projects = [], string $taskGroup = ''): array
+    public static function getAllowedDocsForUser(array $projects = [], string $taskGroup = '', int $idCorpus = 0): array
     {
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
@@ -33,6 +33,10 @@ class Project
                 $criteria = $criteria
                     ->where('pt.taskGroupName', $taskGroup);
             }
+            if ($idCorpus != 0) {
+                $criteria = $criteria
+                    ->where('pd.idCorpus', $idCorpus);
+            }
             $criteria = $criteria
                 ->all();
         } else {
@@ -48,6 +52,10 @@ class Project
             if (!empty($projects)) {
                 $criteria = $criteria
                     ->whereIn('projectName', $projects);
+            }
+            if ($idCorpus != 0) {
+                $criteria = $criteria
+                    ->where('pd.idCorpus', $idCorpus);
             }
             $criteria = $criteria
                 ->all();
