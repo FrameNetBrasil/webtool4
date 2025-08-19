@@ -49,11 +49,23 @@
                                             }"
                                         >
                                             @if(count($data) > 0)
-                                                <x-ui::tree
-                                                    :title="$title ?? ''"
-                                                    url="/report/frame/data"
-                                                    :data="$data"
-                                                ></x-ui::tree>
+                                                <table class="ui striped compact table">
+                                                    <tbody>
+                                                    @foreach($data as $frame)
+                                                        <tr
+                                                            class="cursor-pointer"
+                                                            @click="window.location.assign('/report/frame/{{$frame['id']}}')"
+                                                        >
+                                                            <td>{!! $frame['text'] !!}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+{{--                                                <x-ui::tree--}}
+{{--                                                    :title="$title ?? ''"--}}
+{{--                                                    url="/report/frame/data"--}}
+{{--                                                    :data="$data"--}}
+{{--                                                ></x-ui::tree>--}}
                                             @else
                                                 <div class="empty-state" id="emptyState">
                                                     <i class="search icon empty-icon"></i>
