@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing Dataset '{{$dataset->name}}'.`, '/dataset/{{$dataset->idDataset}}')"
+            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Dataset '{{$dataset->name}}'.`, '/dataset/{{$dataset->idDataset}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

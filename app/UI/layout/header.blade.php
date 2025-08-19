@@ -51,7 +51,8 @@
         @endforeach
         <div class="right menu">
             <form
-                hx-post="/app/search"
+                hx-post="/report/frame_lu/search"
+                hx-target=".page-content"
             >
             <div class="item">
                     <div class="ui inverted left icon input">

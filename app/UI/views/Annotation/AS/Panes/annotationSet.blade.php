@@ -154,7 +154,7 @@
                     </button>
                     <button
                         class="ui button negative"
-                        onclick="manager.confirmDelete(`Removing AnnotationSet #{{$idAnnotationSet}}'.`, '/annotation/fe/annotationset/{{$idAnnotationSet}}', null, '#workArea')"
+                        x-data \n  @click.prevent="messenger.confirmDelete(`Removing AnnotationSet #{{$idAnnotationSet}}'.`, '/annotation/fe/annotationset/{{$idAnnotationSet}}', null, '#workArea')"
                         hx-indicator="#htmx-indicator"
                     >
                         Delete this AnnotationSet

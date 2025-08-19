@@ -17,7 +17,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete LU"
-                            onclick="manager.confirmDelete(`Removing LU '{{$lu->name}}'.`, '/lu/{{$lu->idLU}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing LU '{{$lu->name}}'.`, '/lu/{{$lu->idLU}}')"
                         ></x-delete>
                     </span>
                             <div

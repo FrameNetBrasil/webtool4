@@ -1,16 +1,21 @@
-<x-form>
-    <x-slot:fields>
-        <x-hidden-field
-            id="idFrame"
-            :value="$idFrame"
-        ></x-hidden-field>
+<form id="" name=""  class="ui form">
+    <div class="ui card h-full w-full mb-2">
+        
+        <div class="flex-grow-1 content bg-white" style="border-bottom: 1px solid rgba(34, 36, 38, 0.1);">
+            <input type="hidden" id="idFrame" name="idFrame" value="$idFrame">
         <div class="four fields">
             <div class="field">
-                <x-text-field
-                    id="nameEn"
-                    label="English Name"
-                    value=""
-                ></x-text-field>
+                <label for="nameEn">English Name</label>
+<div class="ui small input">
+    <input
+        type="text"
+        id="nameEn"
+        name="nameEn"
+        value=""
+        placeholder=""
+        
+    >
+</div>
             </div>
             <div class="field">
                 <x-combobox.fe-coreness
@@ -26,11 +31,12 @@
                 ></x-combobox.color>
             </div>
         </div>
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-button
+        </div>
+        <div class="flex-grow-0 pl-3 pt-2 pb-2">
+            <x-button
             label="Add FE"
             hx-post="/fe"
         ></x-button>
-    </x-slot:buttons>
-</x-form>
+        </div>
+    </div>
+</form>

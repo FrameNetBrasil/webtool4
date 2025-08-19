@@ -19,7 +19,7 @@
                         <x-button
                             label="Delete"
                             color="danger"
-                            onclick="manager.confirmDelete(`Removing Lemma '{{$lemma->fullNameUD}}'.`, '/lexicon3/lemma/{{$lemma->idLexicon}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Lemma '{{$lemma->fullNameUD}}'.`, '/lexicon3/lemma/{{$lemma->idLexicon}}')"
                         ></x-button>
                     </x-slot:detail>
                     <x-slot:description>

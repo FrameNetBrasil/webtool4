@@ -144,7 +144,7 @@ $router->get('report/frame', [
 	'domain' => NULL,
 ]);
 
-$router->post('report/frame/tree', [
+$router->post('report/frame/search', [
 	'uses' => 'App\Http\Controllers\Frame\ReportController@tree',
 	'as' => NULL,
 	'middleware' => ['web'],
@@ -152,8 +152,8 @@ $router->post('report/frame/tree', [
 	'domain' => NULL,
 ]);
 
-$router->post('report/frame/data', [
-	'uses' => 'App\Http\Controllers\Frame\ReportController@data',
+$router->post('report/frame_lu/search', [
+	'uses' => 'App\Http\Controllers\Frame\ReportController@browseFrameLU',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
@@ -656,22 +656,6 @@ $router->get('changeLanguage/{language}', [
 	'domain' => NULL,
 ]);
 
-$router->get('app/search', [
-	'uses' => 'App\Http\Controllers\AppController@appSearchGet',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('app/search', [
-	'uses' => 'App\Http\Controllers\AppController@appSearch',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('messages', [
 	'uses' => 'App\Http\Controllers\AppController@messages',
 	'as' => NULL,
@@ -1016,24 +1000,16 @@ $router->get('lu/list/forSelect', [
 	'domain' => NULL,
 ]);
 
-$router->post('report/lu/grid', [
-	'uses' => 'App\Http\Controllers\LU\ReportController@grid',
+$router->get('report/lu/script/{file}', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@scripts',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('report/lu/data', [
-	'uses' => 'App\Http\Controllers\LU\ReportController@data',
-	'as' => NULL,
-	'middleware' => ['web'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('report/lu/content/{idLU?}', [
-	'uses' => 'App\Http\Controllers\LU\ReportController@reportContent',
+$router->post('report/lu/search', [
+	'uses' => 'App\Http\Controllers\LU\ReportController@search',
 	'as' => NULL,
 	'middleware' => ['web'],
 	'where' => [],

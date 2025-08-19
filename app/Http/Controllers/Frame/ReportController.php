@@ -34,29 +34,51 @@ class ReportController extends Controller
         ]);
     }
 
-    #[Post(path: '/report/frame/tree')]
+    #[Post(path: '/report/frame/search')]
     public function tree(SearchData $search)
     {
         $data = BrowseService::browseFrameBySearch($search);
 
         return view('Frame.Report.browse', [
             'data' => $data,
-        ])->fragment('tree');
+        ])->fragment('search');
 
     }
 
-    #[Post(path: '/report/frame/data')]
-    public function data(SearchData $search)
+    #[Post(path: '/report/frame_lu/search')]
+    public function browseFrameLU(SearchData $search)
     {
-        $data = BrowseService::browseFrameBySearch($search);
+        $frames = BrowseService::browseFrameBySearch($search);
+        if ($search->frame != '') {
+            $search->lu = $search->frame;
+        }
+        $lus = BrowseService::browseLUBySearch($search, true, contains:true);
 
-        return response()->json([
-            'success' => true,
-            'data' => $data,
-            'query' => $search->frame ?? '',
-            'count' => count($data),
+        return view('Frame.Report.browseFrameLU', [
+            'frame' => $search->frame,
+            'lu' => $search->lu,
+            'frames' => $frames,
+            'lus' => $lus,
         ]);
     }
+
+
+
+
+
+
+//    #[Post(path: '/report/frame/data')]
+//    public function data(SearchData $search)
+//    {
+//        $data = BrowseService::browseFrameBySearch($search);
+//
+//        return response()->json([
+//            'success' => true,
+//            'data' => $data,
+//            'query' => $search->frame ?? '',
+//            'count' => count($data),
+//        ]);
+//    }
     //    #[Get(path: '/report/frame')]
     //    public function main()
     //    {

@@ -37,29 +37,29 @@ class AppController extends Controller
         return $this->redirect($currentURL);
     }
 
-    #[Get(path: '/app/search')]
-    public function appSearchGet()
-    {
-        return $this->main();
-    }
-    #[Post(path: '/app/search')]
-    public function appSearch(SearchData $search)
-    {
-        $lus =[];
-        $frames = [];
-        $searchString = '%' . $search->frame;
-        if ($searchString != '') {
-            $lus = self::listLUSearch($searchString);
-            $frames = self::listFrame($searchString);
-        }
-        return view("App.search", [
-            'search' => $search,
-            'frames' => $frames,
-            'currentFrame' => $search->frame . '*',
-            'fes' => [],
-            'lus' => $lus,
-        ]);
-    }
+//    #[Get(path: '/app/search')]
+//    public function appSearchGet()
+//    {
+//        return $this->main();
+//    }
+//    #[Post(path: '/app/search')]
+//    public function appSearch(SearchData $search)
+//    {
+//        $lus =[];
+//        $frames = [];
+//        $searchString = '%' . $search->frame;
+//        if ($searchString != '') {
+//            $lus = self::listLUSearch($searchString);
+//            $frames = self::listFrame($searchString);
+//        }
+//        return view("App.search", [
+//            'search' => $search,
+//            'frames' => $frames,
+//            'currentFrame' => $search->frame . '*',
+//            'fes' => [],
+//            'lus' => $lus,
+//        ]);
+//    }
 
     public static function listFrame(string $name)
     {

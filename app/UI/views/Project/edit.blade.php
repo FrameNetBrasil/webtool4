@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing Project '{{$project?->name}}'.`, '/project/{{$project->idProject}}')"
+            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Project '{{$project?->name}}'.`, '/project/{{$project->idProject}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

@@ -14,7 +14,7 @@
                         <x-button
                             label="Delete"
                             color="danger"
-                            onclick="manager.confirmDelete(`Removing UserTask '{{$usertask->idUserTask}}'.`, '/usertask/{{$usertask->idUserTask}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing UserTask '{{$usertask->idUserTask}}'.`, '/usertask/{{$usertask->idUserTask}}')"
                         ></x-button>
                     </x-slot:detail>
                     <x-slot:description>

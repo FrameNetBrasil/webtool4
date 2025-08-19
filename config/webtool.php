@@ -2,6 +2,7 @@
 
 return [
     'db' => env('DB_CONNECTION', 'fnbr'),
+    'logSQL' =>env('LOG_SQL', true),
     'lang' => 1,
     'language' => 'pt',
     'defaultIdLanguage' => 1,

@@ -20,7 +20,7 @@
                             <x-button
                                 label="Delete"
                                 color="danger"
-                                onclick="manager.confirmDelete(`Removing Construction '{{$cxn?->name}}'.`, '/cxn/{{$cxn->idConstruction}}')"
+                                x-data \n  @click.prevent="messenger.confirmDelete(`Removing Construction '{{$cxn?->name}}'.`, '/cxn/{{$cxn->idConstruction}}')"
                             ></x-button>
                         @endif
                     </x-slot:detail>

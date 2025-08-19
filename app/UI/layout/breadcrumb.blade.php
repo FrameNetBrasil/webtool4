@@ -1,4 +1,8 @@
+@php
+    $hrefLogin = (env('APP_AUTH') == 'auth0') ? '/auth0Login' : '/';
+@endphp
 <div class="app-breadcrumb">
+    <div class="d-flex justify-between">
     <div class="ui breadcrumb">
         @foreach($sections as $section)
             @if ($loop->last)
@@ -8,5 +12,9 @@
                 <span class="divider">/</span>
             @endif
         @endforeach
+    </div>
+        <div class="ui breadcrumb">
+            <a href="{{$hrefLogin}}" class="active section">Login</a>
+        </div>
     </div>
 </div>

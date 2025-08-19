@@ -16,7 +16,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete FE Relation"
-                            onclick="manager.confirmDelete(`Removing FE Relation '{{$relation->name}}'.`, '/relation/feinternal/{{$relation->idEntityRelation}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing FE Relation '{{$relation->name}}'.`, '/relation/feinternal/{{$relation->idEntityRelation}}')"
                         ></x-delete>
                     </span>
                             <div

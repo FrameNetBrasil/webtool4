@@ -23,7 +23,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete FE"
-                            onclick="manager.confirmDelete(`Removing FrameElement '{{$fe->name}}'.`, '/fe/{{$fe->idFrameElement}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing FrameElement '{{$fe->name}}'.`, '/fe/{{$fe->idFrameElement}}')"
                         ></x-delete>
                     </span>
                                 <div
