@@ -18,7 +18,7 @@
                             <x-button
                                 label="Delete"
                                 color="danger"
-                                onclick="manager.confirmDelete(`Removing LU candidate '{{$luCandidate->name}}'.`, '/luCandidate/{{$luCandidate->idLUCandidate}}')"
+                                x-data \n  @click.prevent="messenger.confirmDelete(`Removing LU candidate '{{$luCandidate->name}}'.`, '/luCandidate/{{$luCandidate->idLUCandidate}}')"
                             ></x-button>
                         @endif
                     </x-slot:detail>

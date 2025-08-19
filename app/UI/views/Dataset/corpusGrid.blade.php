@@ -13,7 +13,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Corpus from Dataset"
-                            onclick="manager.confirmDelete(`Removing association to Corpus '{{$c->name}}'.`, '/dataset/{{$idDataset}}/corpus/{{$c->idCorpus}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing association to Corpus '{{$c->name}}'.`, '/dataset/{{$idDataset}}/corpus/{{$c->idCorpus}}')"
                         ></x-delete>
                     </span>
                     <div

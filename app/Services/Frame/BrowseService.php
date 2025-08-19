@@ -35,11 +35,15 @@ class BrowseService
         return $result;
     }
 
-    public static function browseLUBySearch(object $search, bool $leaf = true): array
+    public static function browseLUBySearch(object $search, bool $leaf = true, bool $contains = false): array
     {
         $result = [];
-        $lus = Criteria::byFilterLanguage('view_lu', ['name', 'startswith', $search->lu], 'idLanguage')
-            ->orderBy('name')->all();
+        $op = $contains ? 'contains' : 'startswith';
+        debug("op",$op);
+        $lus = Criteria::byFilterLanguage('view_lu', ['name', $op, $search->lu], 'idLanguage')
+            ->limit(300)
+            ->orderBy('name')
+            ->all();
         foreach ($lus as $lu) {
             $result[$lu->idLU] = [
                 'id' => $lu->idLU,
@@ -52,7 +56,7 @@ class BrowseService
         return $result;
     }
 
-    public static function browseLUforReframingBySearch(object $search, bool $leaf = true): array
+    public static function browseLUForReframingBySearch(object $search, bool $leaf = true): array
     {
         $result = [];
         if ($search->lu != '') {

@@ -12,7 +12,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing LayerType '{{$layerType->name}}'.`, '/layers/layertype/{{$layerType->idLayerType}}')"
+            x-data \n  @click.prevent="messenger.confirmDelete(`Removing LayerType '{{$layerType->name}}'.`, '/layers/layertype/{{$layerType->idLayerType}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

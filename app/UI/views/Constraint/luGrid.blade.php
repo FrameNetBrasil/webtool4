@@ -16,7 +16,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete LU Constraint"
-                            onclick="manager.confirmDelete(`Removing Constraint '{{$constraint->constraintName}}'.`, '/constraint/lu/{{$constraint->idConstraintInstance}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Constraint '{{$constraint->constraintName}}'.`, '/constraint/lu/{{$constraint->idConstraintInstance}}')"
                         ></x-delete>
                     </span>
                             <div

@@ -19,7 +19,7 @@
                         <x-button
                             label="Delete"
                             color="danger"
-                            onclick="manager.confirmDelete(`Removing Form '{{$lexicon->form}}'.`, '/lexicon3/form/{{$lexicon->idLexicon}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Form '{{$lexicon->form}}'.`, '/lexicon3/form/{{$lexicon->idLexicon}}')"
                         ></x-button>
                     </x-slot:detail>
                     <x-slot:description>

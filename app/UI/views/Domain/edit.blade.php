@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing Domain '{{$domain?->name}}'.`, '/domain/{{$domain->idDomain}}')"
+            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Domain '{{$domain?->name}}'.`, '/domain/{{$domain->idDomain}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

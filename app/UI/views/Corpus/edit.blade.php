@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing Corpus '{{$corpus->name}}'.`, '/corpus/{{$corpus->idCorpus}}')"
+            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Corpus '{{$corpus->name}}'.`, '/corpus/{{$corpus->idCorpus}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

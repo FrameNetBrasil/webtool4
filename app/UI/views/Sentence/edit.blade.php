@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing Sentence '{{$sentence->idSentence}}'.`, '/sentence/{{$sentence->idSentence}}')"
+            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Sentence '{{$sentence->idSentence}}'.`, '/sentence/{{$sentence->idSentence}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

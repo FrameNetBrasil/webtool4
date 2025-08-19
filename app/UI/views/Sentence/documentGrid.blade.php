@@ -12,7 +12,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Document-Image"
-                            onclick="manager.confirmDelete(`Removing association to Document '{{$document->name}}'.`, '/sentence/{{$idSentence}}/document/{{$document->idDocument}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing association to Document '{{$document->name}}'.`, '/sentence/{{$idSentence}}/document/{{$document->idDocument}}')"
                         ></x-delete>
                     </span>
                     <div

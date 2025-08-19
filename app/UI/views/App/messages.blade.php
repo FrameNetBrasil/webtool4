@@ -15,7 +15,7 @@
             <div class="ui {{$message->class}} message">
                 <i
                     class="close icon"
-                    onclick="manager.confirmDelete(`Dismiss message from {{$message->fromName}}.`, '/message/{{$message->idMessage}}')"
+                    x-data \n  @click.prevent="messenger.confirmDelete(`Dismiss message from {{$message->fromName}}.`, '/message/{{$message->idMessage}}')"
                 ></i>
                 <div class="header">
                     From: {{$message->fromName}} [{{$message->fromEmail}}] at {{$message->createdAt}}

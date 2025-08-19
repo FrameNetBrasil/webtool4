@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,7 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if (config("webtool.logSQL") == 'debug') {
+            DB::enableQueryLog();
+            DB::listen(function ($query) {
+                debugQuery($query->sql, $query->bindings);
+            });
+        }
     }
 
     /**
@@ -24,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
         View::addExtension('js', 'php');
         Blade::anonymousComponentPath(app_path('UI/layout'), 'layout');
         Blade::anonymousComponentPath(app_path('UI/components'), 'ui');
+        Blade::anonymousComponentPath(app_path('UI/components/icon'), 'icon');
     }
 }

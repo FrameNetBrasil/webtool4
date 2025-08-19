@@ -13,7 +13,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Feature"
-                            onclick="manager.confirmDelete(`Removing Feature '{{$feature->name}}' from form.`, '/lexicon3/feature/{{$feature->idLexicon}}/{{$feature->idUDFeature}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Feature '{{$feature->name}}' from form.`, '/lexicon3/feature/{{$feature->idLexicon}}/{{$feature->idUDFeature}}')"
                         ></x-delete>
                     </span>
                     <div
