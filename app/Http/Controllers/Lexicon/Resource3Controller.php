@@ -7,6 +7,7 @@ use App\Data\Lexicon\CreateExpressionData;
 use App\Data\Lexicon\CreateFeatureData;
 use App\Data\Lexicon\CreateLexiconData;
 use App\Data\Lexicon\SearchData;
+use App\Data\Lexicon\TreeData;
 use App\Data\Lexicon\UpdateLexiconData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
@@ -36,7 +37,6 @@ class Resource3Controller extends Controller
     #[Post(path: '/lexicon3/search')]
     public function search(SearchData $search)
     {
-        $title = '';
         if ($search->form != '') {
             $data = BrowseService::browseFormBySearch($search);
             $title = 'Forms';
@@ -51,14 +51,11 @@ class Resource3Controller extends Controller
     }
 
     #[Post(path: '/lexicon3/tree')]
-    public function tree(SearchData $search)
+    public function tree(TreeData $search)
     {
+        $data = [];
         if ($search->idLemma != 0) {
             $data = BrowseService::browseFormByLemmaSearch($search);
-        } elseif ($search->form != '') {
-            $data = BrowseService::browseFormBySearch($search);
-        } else {
-            $data = BrowseService::browseLemmaBySearch($search);
         }
 
         return view('Lexicon3.browse', [
@@ -67,47 +64,6 @@ class Resource3Controller extends Controller
         ])->fragment('tree');
 
     }
-
-    #[Post(path: '/lexicon3/data')]
-    public function data(SearchData $search)
-    {
-        if ($search->idLemma != 0) {
-            $data = BrowseService::browseFormByLemmaSearch($search);
-        } elseif ($search->form != '') {
-            $data = BrowseService::browseFormBySearch($search);
-        } else {
-            $data = BrowseService::browseLemmaBySearch($search);
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => $data,
-            'query' => [
-                'lemma' => $search->lemma ?? '',
-                'form' => $search->form ?? '',
-            ],
-            'count' => count($data),
-        ]);
-    }
-
-    //    #[Get(path: '/lexicon3')]
-    //    public function browse()
-    //    {
-    //        $search = session('searchLexicon3') ?? SearchData::from();
-    //        return view("Lexicon3.resource", [
-    //            'search' => $search
-    //        ]);
-    //    }
-    //
-    //    #[Get(path: '/lexicon3/grid/{fragment?}')]
-    //    #[Post(path: '/lexicon3/grid/{fragment?}')]
-    //    public function grid(SearchData $search, ?string $fragment = null)
-    //    {
-    //        $view = view("Lexicon3.grid", [
-    //            'search' => $search
-    //        ]);
-    //        return (is_null($fragment) ? $view : $view->fragment('search'));
-    //    }
 
     /*------
       Lemma

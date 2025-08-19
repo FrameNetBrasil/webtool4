@@ -49,24 +49,27 @@ class StaticBBoxController extends Controller
     {
         $corpus = BrowseService::browseCorpusBySearch($search, [], 'StaticBBoxAnnotation');
 
-        return view('Annotation.StaticBBox.browse', [
+        return view('Annotation.browseDocuments', [
+            'page' => "Static BBox Annotation",
+            'url' => "/annotation/staticBBox",
+            'taskGroupName' => 'StaticBBoxAnnotation',
             'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/staticBBox/tree')]
-    public function tree(SearchData $search)
-    {
-        if (! is_null($search->idCorpus) || ($search->document != '')) {
-            $data = BrowseService::browseDocumentBySearch($search, [], 'StaticBBoxAnnotation', leaf: true);
-        } else {
-            $data = BrowseService::browseCorpusBySearch($search, [], 'StaticBBoxAnnotation');
-        }
-
-        return view('Annotation.StaticBBox.browse', [
-            'data' => $data,
-        ])->fragment('tree');
-    }
+//    #[Post(path: '/annotation/staticBBox/tree')]
+//    public function tree(SearchData $search)
+//    {
+//        if (! is_null($search->idCorpus) || ($search->document != '')) {
+//            $data = BrowseService::browseDocumentBySearch($search, [], 'StaticBBoxAnnotation', leaf: true);
+//        } else {
+//            $data = BrowseService::browseCorpusBySearch($search, [], 'StaticBBoxAnnotation');
+//        }
+//
+//        return view('Annotation.StaticBBox.browse', [
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
     private function getData(int $idDocument): DocumentData
     {
         $document = Document::byId($idDocument);

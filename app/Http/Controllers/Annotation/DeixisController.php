@@ -48,24 +48,27 @@ class DeixisController extends Controller
     {
         $corpus = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
 
-        return view('Annotation.Deixis.browse', [
+        return view('Annotation.browseDocuments', [
+            'page' => "Deixis Annotation",
+            'url' => "/annotation/deixis",
+            'taskGroupName' => 'DeixisAnnotation',
             'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/deixis/tree')]
-    public function tree(SearchData $search)
-    {
-        if (! is_null($search->idCorpus) || ($search->document != '')) {
-            $data = BrowseService::browseDocumentBySearch($search, [], 'DeixisAnnotation', leaf: true);
-        } else {
-            $data = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
-        }
-
-        return view('Annotation.Deixis.browse', [
-            'data' => $data,
-        ])->fragment('tree');
-    }
+//    #[Post(path: '/annotation/deixis/tree')]
+//    public function tree(SearchData $search)
+//    {
+//        if (! is_null($search->idCorpus) || ($search->document != '')) {
+//            $data = BrowseService::browseDocumentBySearch($search, [], 'DeixisAnnotation', leaf: true);
+//        } else {
+//            $data = BrowseService::browseCorpusBySearch($search, [], 'DeixisAnnotation');
+//        }
+//
+//        return view('Annotation.Deixis.browse', [
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
 
     #[Post(path: '/annotation/deixis/data')]
     public function data(SearchData $search)

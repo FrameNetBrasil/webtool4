@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Annotation;
 
 
+use App\Data\Annotation\Browse\SearchData;
 use App\Data\Annotation\FE\AnnotationData;
 use App\Data\Annotation\FE\CreateASData;
 use App\Data\Annotation\FE\DeleteFEData;
-use App\Data\Annotation\FE\SearchData;
 use App\Data\Annotation\FE\SelectionData;
 use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
-use App\Repositories\WordForm;
 use App\Services\Annotation\BrowseService;
 use App\Services\AnnotationFEService;
 use App\Services\CommentService;
@@ -48,32 +47,34 @@ class FEController extends Controller
     {
         $corpus = BrowseService::browseCorpusBySearch($search);
 
-        return view('Annotation.FE.browse', [
+        return view('Annotation.browseSentences', [
+            'page' => "FE Annotation",
+            'url' => "/annotation/fe",
             'data' => $corpus,
         ]);
     }
 
-    #[Post(path: '/annotation/fe/tree')]
-    public function tree(SearchData $search)
-    {
-        if (! is_null($search->idDocumentSentence)) {
-            $data = BrowseService::browseSentence($search->idDocumentSentence);
-        } else {
-            if (! is_null($search->idDocument)) {
-                $data = BrowseService::browseSentencesByDocument($search->idDocument);
-            } else {
-                if (! is_null($search->idCorpus) || ($search->document != '')) {
-                    $data = BrowseService::browseDocumentBySearch($search);
-                } else {
-                    $data = BrowseService::browseCorpusBySearch($search);
-                }
-            }
-        }
-
-        return view('Annotation.FE.browse', [
-            'data' => $data,
-        ])->fragment('tree');
-    }
+//    #[Post(path: '/annotation/fe/tree')]
+//    public function tree(SearchData $search)
+//    {
+//        if (! is_null($search->idDocumentSentence)) {
+//            $data = BrowseService::browseSentence($search->idDocumentSentence);
+//        } else {
+//            if (! is_null($search->idDocument)) {
+//                $data = BrowseService::browseSentencesByDocument($search->idDocument);
+//            } else {
+//                if (! is_null($search->idCorpus) || ($search->document != '')) {
+//                    $data = BrowseService::browseDocumentBySearch($search);
+//                } else {
+//                    $data = BrowseService::browseCorpusBySearch($search);
+//                }
+//            }
+//        }
+//
+//        return view('Annotation.FE.browse', [
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
     #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
     public function documentSentences(int $idDocument)
     {

@@ -2,26 +2,25 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/annotation','Annotation'],['','FE']]"
+            :sections="[['/','Home'],['',$page]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-content h-full">
-                <div class="ui container h-full">
+            <div class="page-content">
+                <div class="ui container browse-page">
                     <div class="app-search">
-                        <!-- Search Section -->
                         <div class="search-section"
-                             x-data="browseSearchComponent()"
+                             x-data="searchFormComponent()"
                              @htmx:before-request="onSearchStart"
                              @htmx:after-request="onSearchComplete"
                              @htmx:after-swap="onResultsUpdated"
                         >
                             <div class="search-input-group">
                                 <form class="ui form"
-                                      hx-post="/annotation/fe/tree"
-                                      hx-target=".search-results-tree"
+                                      hx-post="/annotation/browse/searchSentence"
+                                      hx-target="#gridArea"
                                       hx-swap="innerHTML"
-                                      hx-trigger="submit, input delay:500ms from:input[name='frame']">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                      hx-trigger="submit, input delay:500ms"
+                                >
                                     <div class="three fields">
                                         <div class="field">
                                             <div class="ui left icon input w-full">
@@ -30,7 +29,6 @@
                                                     type="search"
                                                     name="corpus"
                                                     placeholder="Search Corpus"
-                                                    {{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -42,7 +40,6 @@
                                                     type="search"
                                                     name="document"
                                                     placeholder="Search Document"
-                                                    {{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -54,57 +51,43 @@
                                                     type="search"
                                                     name="idDocumentSentence"
                                                     placeholder="Search #idSentence"
-                                                    {{--                                                    x-model="searchQuery"--}}
                                                     autocomplete="off"
                                                 >
                                             </div>
                                         </div>
-                                        <button type="submit" class="ui medium primary button">
-                                            Search
-                                        </button>
                                     </div>
                                 </form>
                             </div>
                         </div>
 
-                        <div id="gridArea" class="h-full">
-                                <div class="results-container view-cards"
-                                >
+                        <div id="gridArea">
+                            @fragment("search")
+                                <div class="results-container view-cards">
                                     <div class="results-wrapper">
-
-                                            <div class="tree-view" x-transition>
-                                                <div
-                                                    class="search-results-tree"
-                                                    x-data
-                                                    @tree-item-selected.document="(event) => {
+                                        <div class="tree-view" x-transition>
+                                            <div
+                                                class="search-results-tree"
+                                                x-data
+                                                @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
                                                     if ((type === 'corpus') || (type === 'document')) {
                                                         event.detail.tree.toggleNodeState(idNode);
                                                     } else if (type === 'sentence') {
-                                                        window.open(`/annotation/fe/sentence/${event.detail.id}`, '_blank');
+                                                        window.open(`{{$url}}/${event.detail.id}`, '_blank');
                                                     }
                                                 }"
-                                                >
-                                                    @if(count($data) > 0)
-                                                        <x-ui::tree
-                                                            :title="$title ?? ''"
-                                                            url="/annotation/fe/data"
-                                                            :data="$data"
-                                                        ></x-ui::tree>
-                                                    @else
-                                                        <div class="empty-state" id="emptyState">
-                                                            <i class="search icon empty-icon"></i>
-                                                            <h3 class="empty-title">No results found.</h3>
-                                                            <p class="empty-description">
-                                                                Enter your search term above to find frames.
-                                                            </p>
-                                                        </div>
-                                                    @endif
-                                                </div>
+                                            >
+                                                <x-ui::tree
+                                                    :title="$title ?? ''"
+                                                    url="/annotation/browse/treeSentence"
+                                                    :data="$data"
+                                                ></x-ui::tree>
                                             </div>
+                                        </div>
                                     </div>
                                 </div>
+                            @endfragment
                         </div>
                     </div>
                 </div>

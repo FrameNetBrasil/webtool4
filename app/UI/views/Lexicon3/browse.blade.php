@@ -20,7 +20,6 @@
                         </a>
                     </div>
                     <div class="app-search">
-                        <!-- Search Section -->
                         <div class="search-section"
                              x-data="searchFormComponent()"
                              @htmx:before-request="onSearchStart"
@@ -32,7 +31,7 @@
                                       hx-post="/lexicon3/search"
                                       hx-target="#gridArea"
                                       hx-swap="innerHTML"
-                                      hx-trigger="submit, input delay:500ms from:input"
+                                      hx-trigger="submit, input delay:500ms"
                                 >
                                     <div class="two fields">
                                         <div class="field">
@@ -57,9 +56,6 @@
                                                 >
                                             </div>
                                         </div>
-{{--                                        <button type="submit" class="ui medium primary button">--}}
-{{--                                            Search--}}
-{{--                                        </button>--}}
                                     </div>
                                 </form>
                             </div>
@@ -76,7 +72,6 @@
                                                 @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
-                                                    console.log(event.detail);
                                                     if (type === 'lemma') {
                                                         window.location.assign(`/lexicon3/lemma/${event.detail.id}`);
                                                     }
@@ -89,7 +84,6 @@
                                                     :title="$title ?? ''"
                                                     url="/lexicon3/tree"
                                                     :data="$data"
-                                                    :idNode="$idNode ?? 0"
                                                 ></x-ui::tree>
                                             </div>
                                         </div>
