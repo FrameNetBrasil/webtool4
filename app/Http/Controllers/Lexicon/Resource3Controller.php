@@ -33,6 +33,23 @@ class Resource3Controller extends Controller
         ]);
     }
 
+    #[Post(path: '/lexicon3/search')]
+    public function search(SearchData $search)
+    {
+        $title = '';
+        if ($search->form != '') {
+            $data = BrowseService::browseFormBySearch($search);
+            $title = 'Forms';
+        } else {
+            $data = BrowseService::browseLemmaBySearch($search);
+            $title = 'Lemmas';
+        }
+        return view('Lexicon3.browse', [
+            'data' => $data,
+            'title' => $title,
+        ])->fragment('search');
+    }
+
     #[Post(path: '/lexicon3/tree')]
     public function tree(SearchData $search)
     {
@@ -44,9 +61,10 @@ class Resource3Controller extends Controller
             $data = BrowseService::browseLemmaBySearch($search);
         }
 
-        return view('Lexicon3.partials.tree', [
+        return view('Lexicon3.browse', [
+            'idNode' => $search->idLemma,
             'data' => $data,
-        ]);
+        ])->fragment('tree');
 
     }
 

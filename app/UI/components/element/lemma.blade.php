@@ -1,4 +1,4 @@
-<div class="flex align-items-center">
+<div class="d-flex">
     <div><x-icon.lemma></x-icon.lemma></div>
-    <div  class="color_lemma">{{$name}}</div>
+    <div  class="color-lemma">{{$name}}</div>
 </div>

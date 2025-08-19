@@ -1,3 +1,3 @@
 <div>
-    {{$lemma}}
+    <x-element.lemma :name="$lemma"></x-element.lemma>
 </div>

@@ -1,3 +1,3 @@
 <div>
-    {{$form}}
+    <x-element.form :name="$form"></x-element.form>
 </div>
