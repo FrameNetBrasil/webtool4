@@ -1,21 +1,24 @@
 .app-tools {
     grid-area: tools;
-    background: @primaryBackground;                                      // (was var(--color-sidebar-bg))
-    border-left: 1px solid @borderColor;                               // (was var(--color-border-primary))
-    overflow-y: auto;
+    background: @background;
+    border-left: 1px solid @borderColor;
+    overflow-y: hidden;
 }
 
 .app-tools {
-    padding: @relativeTiny 0 0 @relativeTiny; // 8px (was @relative2px)
+    padding: @relativeTiny 0 0 @relativeTiny;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     .ui.accordion {
-        margin-bottom: @relativeTiny; // 8px (was @relative2px)
+        margin-bottom: @relativeTiny;
 
         .content {
             margin: 0 !important;
             //padding:0 !important;
             padding-top: 0 !important;
-            padding-left: @relativeHuge !important; // 32px (was @mini)
+            padding-left: @relativeHuge !important;
 
             a {
                 font-size: @relativeSmall;
