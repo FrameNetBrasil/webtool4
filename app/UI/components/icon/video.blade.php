@@ -1,1 +1,1 @@
-<i class="material">videocam</i>
+<i class="ui icon material">videocam</i>

@@ -2,7 +2,6 @@
 
 namespace App\View\Components\Combobox;
 
-use App\Repositories\TypeInstance;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -23,12 +22,7 @@ class FeCoreness extends Component
         $coreness = config('webtool.fe.coreness');
         $this->options = [];
         foreach ($coreness as $entry => $coreType) {
-//            $this->options[] = [
-//                'id' => $entry,
-//                'name' => $coreType
-//            ];
             $this->options[$entry] = $coreType;
-
         }
     }
 

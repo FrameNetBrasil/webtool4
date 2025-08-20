@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\Layout;
+namespace App\View\Components\_Layout;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Index extends Component
+class Annotation extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class Index extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layout.index');
+        return view('components.layout.annotation');
     }
 }

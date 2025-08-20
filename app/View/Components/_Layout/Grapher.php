@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\Layout;
+namespace App\View\Components\_Layout;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Main extends Component
+class Grapher extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class Main extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layout.main');
+        return view('components.layout.grapher');
     }
 }

@@ -8,7 +8,7 @@
 
  <x-ui::tabs
       :tabs="[
-          ['id' => 'textual', 'label' => 'Textual', 'icon' => 'file text', 'url' => '/report/lu/'.$lu->idLU.'/textual'],
+          ['id' => 'textual', 'label' => 'Textual', 'icon' => 'text', 'url' => '/report/lu/'.$lu->idLU.'/textual'],
           ['id' => 'static', 'label' => 'Static', 'icon' => 'image', 'url' => '/report/lu/'.$lu->idLU.'/static'],
 //          ['id' => 'dynamic', 'label' => 'Dynamic', 'icon' => 'video', 'url' => '/api/dynamic']
       ]"

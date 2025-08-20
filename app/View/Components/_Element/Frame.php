@@ -1,19 +1,20 @@
 <?php
 
-namespace App\View\Components\Layout;
+namespace App\View\Components\_Element;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Annotation extends Component
+class Frame extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(
+        public string $name = '',
+    )
     {
-        //
     }
 
     /**
@@ -21,6 +22,6 @@ class Annotation extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layout.annotation');
+        return view('components.element.frame');
     }
 }
