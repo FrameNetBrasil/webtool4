@@ -17,10 +17,10 @@
                      </x-text-field>
                 </div>
                 <div class="field">
-                    <x-combobox.cxn-language
+                    <x-combobox::cxn-language
                         id="idLanguage"
                         value=""
-                    ></x-combobox.cxn-language>
+                    ></x-combobox::cxn-language>
                 </div>
             </x-slot:fields>
             <x-slot:buttons>

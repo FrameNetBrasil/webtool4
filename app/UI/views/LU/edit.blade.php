@@ -5,9 +5,9 @@
     <x-slot:main>
         <x-layout.object>
             <x-slot:name>
-                <x-element.lu
+                <x-element::lu
                     name="{{$lu?->name}}"
-                ></x-element.lu>
+                ></x-element::lu>
             </x-slot:name>
             <x-slot:detail>
                 <div class="ui label wt-tag-id">
@@ -19,11 +19,11 @@
                     </div>
                 @endif
                 <div>
-                    <x-combobox.lu-frame
+                    <x-combobox::lu-frame
                         id="idLUFrame"
                         :idFrame="$lu->frame->idFrame"
                         :value="'Change LU'"
-                    ></x-combobox.lu-frame>
+                    ></x-combobox::lu-frame>
                     <script>
                         $(function() {
                             $('#idLUFrame_dropdown').dropdown({

@@ -39,11 +39,11 @@
                                             ></x-text-field>
                                         </div>
                                         <div class="field">
-                                            <x-combobox.pos
+                                            <x-combobox::pos
                                                 id="idPOS"
                                                 label="POS"
                                                 :value="$lemma->idPOS"
-                                            ></x-combobox.pos>
+                                            ></x-combobox::pos>
                                         </div>
                                     </div>
                                 </x-slot:fields>
@@ -65,11 +65,11 @@
                                             ></x-text-field>
                                         </div>
                                         <div class="field">
-                                            <x-combobox.pos
+                                            <x-combobox::pos
                                                 id="idPOSLexeme"
                                                 label="POS"
                                                 :value="$lemma->idPOS"
-                                            ></x-combobox.pos>
+                                            ></x-combobox::pos>
                                         </div>
                                     </div>
                                     <div class="fields">

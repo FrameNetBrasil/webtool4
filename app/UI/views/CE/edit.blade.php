@@ -5,21 +5,21 @@
     <x-slot:main>
         <x-layout.object>
             <x-slot:name>
-                <x-element.ce
+                <x-element::ce
                     name="{{$constructionElement->cxn->name}}.{{$constructionElement?->name}}"
                     idColor="{{$constructionElement->idColor}}"
-                ></x-element.ce>
+                ></x-element::ce>
             </x-slot:name>
             <x-slot:detail>
                 <div class="ui label wt-tag-id">
                     #{{$constructionElement->idConstructionElement}}
                 </div>
                 <div>
-                    <x-combobox.ce-cxn
+                    <x-combobox::ce-cxn
                         id="idConstructionlement"
                         :idConstruction="$constructionElement->cxn->idConstruction"
                         :defaultText="'Change CE'"
-                    ></x-combobox.ce-cxn>
+                    ></x-combobox::ce-cxn>
                     <script>
                         $(function() {
                             $('#idConstructionElement_dropdown').dropdown({

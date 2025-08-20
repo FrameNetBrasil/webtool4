@@ -15,13 +15,13 @@
                 class="flex align-items-center gap-1"
             >
                 <div class="col">
-                    <x-element.construction
+                    <x-element::construction
                         name="{{$cxn->name}}"
-                    ></x-element.construction>
-                    <x-element.ce
+                    ></x-element::construction>
+                    <x-element::ce
                         name="{{$relation->ceName}}"
                         idColor="{{$relation->ceIdColor}}"
-                    ></x-element.ce>
+                    ></x-element::ce>
 
                 </div>
                 <div class="col">
@@ -29,13 +29,13 @@
 
                 </div>
                 <div class="col">
-                    <x-element.construction
+                    <x-element::construction
                         name="{{$relatedCxn->name}}"
-                    ></x-element.construction>
-                    <x-element.ce
+                    ></x-element::construction>
+                    <x-element::ce
                         name="{{$relation->relatedCEName}}"
                         idColor="{{$relation->relatedCEIdColor}}"
-                    ></x-element.ce>
+                    ></x-element::ce>
 
                 </div>
                 <div class="right pl-2">

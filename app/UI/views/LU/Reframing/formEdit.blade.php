@@ -16,13 +16,13 @@
             ></x-multiline-field>
         </div>
         <div class="field">
-            <x-combobox.fe-frame
+            <x-combobox::fe-frame
                 id="incorporatedFE"
                 label="Incorporated FE"
                 value=""
                 :idFrame="$idNewFrame"
                 :hasNull="true"
-            ></x-combobox.fe-frame>
+            ></x-combobox::fe-frame>
         </div>
         <div
             class="field h-full"

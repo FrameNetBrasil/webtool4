@@ -13,11 +13,11 @@
         </div>
         <div class="fields">
             <div class="field">
-                <x-combobox.layer-group
+                <x-combobox::layer-group
                     label="LayerGroup"
                     id="idLayerGroup"
                     :value="0"
-                ></x-combobox.layer-group>
+                ></x-combobox::layer-group>
             </div>
             <div class="field">
                 <x-number-field

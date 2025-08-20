@@ -12,11 +12,11 @@
                 ></x-text-field>
             </div>
             <div class="field">
-                <x-combobox.lexicon-group
+                <x-combobox::lexicon-group
                     id="idLexiconGroup"
                     label="Group"
                     :value="0"
-                ></x-combobox.lexicon-group>
+                ></x-combobox::lexicon-group>
             </div>
         </div>
     </x-slot:fields>

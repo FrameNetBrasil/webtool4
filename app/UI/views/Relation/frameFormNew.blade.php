@@ -3,17 +3,17 @@
         <x-hidden-field id="idFrame" :value="$idFrame"></x-hidden-field>
             <div class="fields">
                 <div class="field">
-                    <x-combobox.relation
+                    <x-combobox::relation
                         id="relationType"
                         group="frame"
-                    ></x-combobox.relation>
+                    ></x-combobox::relation>
                 </div>
                 <div class="field">
-                    <x-combobox.frame
+                    <x-combobox::frame
                         id="idFrameRelated"
                         label="Related Frame [min: 3 chars]"
                         :hasDescription="false"
-                    ></x-combobox.frame>
+                    ></x-combobox::frame>
                 </div>
             </div>
 

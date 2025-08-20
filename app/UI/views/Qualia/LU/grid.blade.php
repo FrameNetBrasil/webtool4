@@ -22,9 +22,9 @@
                             <div
                                 class="header"
                             >
-                                <x-element.constraint
+                                <x-element::constraint
                                     name="{{$qualia->qlrInfo}}"
-                                ></x-element.constraint>
+                                ></x-element::constraint>
                             </div>
                             <div class="description">
                                 {{$qualia->lu2Name}}

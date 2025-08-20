@@ -6,19 +6,22 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class FeCoreness extends Component
+class FeCoreness extends Base
 {
-    public array $options;
-
-    /**
-     * Create a new component instance.
-     */
     public function __construct(
         public string $id,
-        public string $label,
+        public ?string $label = '',
         public string $value = '',
+        public string $defaultText = '',
     )
     {
+        parent::__construct($id, $label, $value, $defaultText);
+        if ($this->defaultText == '') {
+            $this->defaultText = "Select coreness";
+        }
+        if ($this->label === '') {
+            $this->label = "Coreness";
+        }
         $coreness = config('webtool.fe.coreness');
         $this->options = [];
         foreach ($coreness as $entry => $coreType) {
@@ -26,9 +29,6 @@ class FeCoreness extends Component
         }
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     */
     public function render(): View|Closure|string
     {
         return view('components.combobox.fe-coreness');

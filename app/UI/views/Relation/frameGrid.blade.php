@@ -33,7 +33,7 @@
                                         href="/frame/{{$idRelatedFrame}}"
                                         class="font-bold"
                                     >
-                                        <x-element.frame name="{{$relation['name']}}"></x-element.frame>
+                                        <x-element::frame name="{{$relation['name']}}"></x-element::frame>
                                     </a>
                                     <a
                                         hx-target="#gridFrameRelationsContent"

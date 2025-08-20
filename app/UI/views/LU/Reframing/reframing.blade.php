@@ -9,7 +9,7 @@
                     <div class="flex flex-row align-content-start">
                         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
                             <h1>
-                                <x-element.lu frame="{{$lu->frameName}}" name="{{$lu->name}}"></x-element.lu>
+                                <x-element::lu frame="{{$lu->frameName}}" name="{{$lu->name}}"></x-element::lu>
                             </h1>
                         </div>
                         <div

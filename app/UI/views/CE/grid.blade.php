@@ -25,10 +25,10 @@
                                 class="header"
                             >
                                 <a href="/ce/{{$ce->idConstructionElement}}/edit">
-                                    <x-element.ce
+                                    <x-element::ce
                                         name="{{$ce->name}}"
                                         idColor="{{$ce->idColor}}"
-                                    ></x-element.ce>
+                                    ></x-element::ce>
                                 </a>
                             </div>
                             <div class="description">

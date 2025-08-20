@@ -85,16 +85,16 @@
                                         >
                                         </i>
                                         @if ($layerType == 'lty_fe')
-                                            <x-element.fe
+                                            <x-element::fe
                                                 name="{{$label->name}}"
                                                 type="{{$label->coreType}}"
                                                 idColor="{{$label->idColor}}"
-                                            ></x-element.fe>
+                                            ></x-element::fe>
                                         @else
-                                            <x-element.gl
+                                            <x-element::gl
                                                 name="{{$label->name}}"
                                                 idColor="{{$label->idColor}}"
-                                            ></x-element.gl>
+                                            ></x-element::gl>
                                         @endif
                                     </button>
                                 </div>

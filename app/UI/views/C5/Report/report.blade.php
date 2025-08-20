@@ -2,8 +2,8 @@
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
-                <x-element.concept type="{{$concept->type}}"
-                                   name="{{$concept->name}} ({{$concept->type}})"></x-element.concept>
+                <x-element::concept type="{{$concept->type}}"
+                                   name="{{$concept->name}} ({{$concept->type}})"></x-element::concept>
             </h1>
         </div>
         <div
@@ -37,8 +37,8 @@
                                         hx-get="/report/c5/content/{{$idConcept}}"
                                         hx-target="#reportArea"
                                     >
-                                        <x-element.concept type="{{$relation['type']}}"
-                                                           name="{{$relation['name']}}"></x-element.concept>
+                                        <x-element::concept type="{{$relation['type']}}"
+                                                           name="{{$relation['name']}}"></x-element::concept>
                                     </a>
                                 </button>
                             @endforeach
@@ -69,8 +69,8 @@
                                         hx-get="/report/c5/content/{{$idConcept}}"
                                         hx-target="#reportArea"
                                     >
-                                        <x-element.concept type="{{$relation['type']}}"
-                                                           name="{{$relation['name']}}"></x-element.concept>
+                                        <x-element::concept type="{{$relation['type']}}"
+                                                           name="{{$relation['name']}}"></x-element::concept>
                                     </a>
                                 </button>
                             @endforeach
@@ -101,8 +101,8 @@
                                         hx-get="/report/c5/content/{{$idConcept}}"
                                         hx-target="#reportArea"
                                     >
-                                        <x-element.concept type="{{$relation['type']}}"
-                                                           name="{{$relation['name']}}"></x-element.concept>
+                                        <x-element::concept type="{{$relation['type']}}"
+                                                           name="{{$relation['name']}}"></x-element::concept>
                                     </a>
                                 </button>
                             @endforeach
@@ -133,8 +133,8 @@
                                         hx-get="/report/c5/content/{{$idConcept}}"
                                         hx-target="#reportArea"
                                     >
-                                        <x-element.concept type="{{$relation['type']}}"
-                                                           name="{{$relation['name']}}"></x-element.concept>
+                                        <x-element::concept type="{{$relation['type']}}"
+                                                           name="{{$relation['name']}}"></x-element::concept>
                                     </a>
                                 </button>
                             @endforeach
@@ -165,8 +165,8 @@
                                         hx-get="/report/c5/content/{{$idConcept}}"
                                         hx-target="#reportArea"
                                     >
-                                        <x-element.concept type="{{$relation['type']}}"
-                                                           name="{{$relation['name']}}"></x-element.concept>
+                                        <x-element::concept type="{{$relation['type']}}"
+                                                           name="{{$relation['name']}}"></x-element::concept>
                                     </a>
                                 </button>
                             @endforeach
@@ -197,8 +197,8 @@
                                         hx-get="/report/c5/content/{{$idConcept}}"
                                         hx-target="#reportArea"
                                     >
-                                        <x-element.concept type="{{$relation['type']}}"
-                                                           name="{{$relation['name']}}"></x-element.concept>
+                                        <x-element::concept type="{{$relation['type']}}"
+                                                           name="{{$relation['name']}}"></x-element::concept>
                                     </a>
                                 </button>
                             @endforeach
@@ -229,8 +229,8 @@
                                         hx-get="/report/c5/content/{{$idConcept}}"
                                         hx-target="#reportArea"
                                     >
-                                        <x-element.concept type="{{$relation['type']}}"
-                                                           name="{{$relation['name']}}"></x-element.concept>
+                                        <x-element::concept type="{{$relation['type']}}"
+                                                           name="{{$relation['name']}}"></x-element::concept>
                                     </a>
                                 </button>
                             @endforeach
@@ -261,8 +261,8 @@
                                         hx-get="/report/c5/content/{{$idConcept}}"
                                         hx-target="#reportArea"
                                     >
-                                        <x-element.concept type="{{$relation['type']}}"
-                                                           name="{{$relation['name']}}"></x-element.concept>
+                                        <x-element::concept type="{{$relation['type']}}"
+                                                           name="{{$relation['name']}}"></x-element::concept>
                                     </a>
                                 </button>
                             @endforeach
@@ -291,8 +291,8 @@
     {{--                                    <a--}}
     {{--                                        href="/report/c5/{{$idConcept}}"--}}
     {{--                                    >--}}
-    {{--                                        <x-element.concept type="{{$relation['type']}}"--}}
-    {{--                                                           name="{{$relation['name']}}"></x-element.concept>--}}
+    {{--                                        <x-element::concept type="{{$relation['type']}}"--}}
+    {{--                                                           name="{{$relation['name']}}"></x-element::concept>--}}
     {{--                                    </a>--}}
     {{--                                </button>--}}
     {{--                            @endforeach--}}

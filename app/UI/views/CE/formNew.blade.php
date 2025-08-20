@@ -13,11 +13,11 @@
                 ></x-text-field>
             </div>
             <div class="field">
-                <x-combobox.color
+                <x-combobox::color
                     id="idColor"
                     label="Color"
                     value=""
-                ></x-combobox.color>
+                ></x-combobox::color>
             </div>
         </div>
     </x-slot:fields>

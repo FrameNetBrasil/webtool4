@@ -4,12 +4,12 @@
     <x-slot:fields>
         <x-hidden-field id="idProject" value="{{$idProject}}"></x-hidden-field>
         <div class="field">
-            <x-combobox.user
+            <x-combobox::user
                 id="idUser"
                 label="User"
                 value="0"
             >
-            </x-combobox.user>
+            </x-combobox::user>
         </div>
     </x-slot:fields>
     <x-slot:buttons>

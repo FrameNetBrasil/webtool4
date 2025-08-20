@@ -27,11 +27,11 @@
             </div>
         </div>
         <div class="field">
-            <x-combobox.group
+            <x-combobox::group
                 id="idGroup"
                 label="Group"
                 value="0"
-            ></x-combobox.group>
+            ></x-combobox::group>
         </div>
     </x-slot:fields>
     <x-slot:buttons>

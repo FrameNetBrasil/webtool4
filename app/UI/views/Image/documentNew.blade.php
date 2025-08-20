@@ -6,12 +6,12 @@
         <x-hidden-field id="idImage" value="{{$idImage}}"></x-hidden-field>
         <div class="formgrid grid">
             <div class="field col">
-                <x-combobox.document
+                <x-combobox::document
                     id="idDocument"
                     label="Associated Document"
                     :value="null"
                 >
-                </x-combobox.document>
+                </x-combobox::document>
             </div>
         </div>
     </x-slot:fields>

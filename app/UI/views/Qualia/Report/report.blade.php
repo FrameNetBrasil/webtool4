@@ -2,7 +2,7 @@
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
-                <x-element.semantictype name="{{$qualia->info}}"></x-element.semantictype>
+                <x-element::semantictype name="{{$qualia->info}}"></x-element::semantictype>
             </h1>
 
             <h3>
@@ -22,7 +22,7 @@
             <div class=" card-header">
                 <div class="flex justify-content-between">
                     <h3 class="ui header mb-0">
-                        <x-element.frame name="{{$qualia->frameName}}"></x-element.frame>
+                        <x-element::frame name="{{$qualia->frameName}}"></x-element::frame>
                     </h3>
                 </div>
             </div>
@@ -30,13 +30,13 @@
                 <tbody>
                 <tr>
                     <td class="collapsing">
-                        FE1: <x-element.fe name="{{$fe1->name}}" idColor="{{$fe1->idColor}}" type="{{$fe1->coreType}}"></x-element.fe>
+                        FE1: <x-element::fe name="{{$fe1->name}}" idColor="{{$fe1->idColor}}" type="{{$fe1->coreType}}"></x-element::fe>
                     </td>
                     <td class="pl-2">{!! $fe1->description !!}</td>
                 </tr>
                 <tr>
                     <td class="collapsing">
-                        FE2: <x-element.fe name="{{$fe2->name}}" idColor="{{$fe2->idColor}}" type="{{$fe2->coreType}}"></x-element.fe>
+                        FE2: <x-element::fe name="{{$fe2->name}}" idColor="{{$fe2->idColor}}" type="{{$fe2->coreType}}"></x-element::fe>
                     </td>
                     <td class="pl-2">{!! $fe2->description !!}</td>
                 </tr>
@@ -64,7 +64,7 @@
     {{--                            <a--}}
     {{--                                href="/report/semanticType/{{$idSemanticType}}"--}}
     {{--                            >--}}
-    {{--                                <x-element.semantictype name="{{$relation['name']}}"></x-element.semantictype>--}}
+    {{--                                <x-element::semantictype name="{{$relation['name']}}"></x-element::semantictype>--}}
     {{--                            </a>--}}
     {{--                        </button>--}}
     {{--                    @endforeach--}}

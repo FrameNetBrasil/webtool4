@@ -32,10 +32,10 @@ use App\Services\AppService;
                                         </div>
                                     </div>
                                     <div class="field">
-                                        <x-combobox.cxn-language
+                                        <x-combobox::cxn-language
                                             id="cxIdLanguage"
                                             :value="AppService::getCurrentIdLanguage()"
-                                        ></x-combobox.cxn-language>
+                                        ></x-combobox::cxn-language>
                                     </div>
                                     <button type="submit" class="ui medium primary button">
                                         Search

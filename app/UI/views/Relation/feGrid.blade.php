@@ -15,14 +15,14 @@
                 class="flex align-items-center gap-1"
             >
                 <div class="col">
-                    <x-element.frame
+                    <x-element::frame
                         name="{{$frame->name}}"
-                    ></x-element.frame>
-                    <x-element.fe
+                    ></x-element::frame>
+                    <x-element::fe
                         name="{{$relation->feName}}"
                         type="{{$relation->feCoreType}}"
                         idColor="{{$relation->feIdColor}}"
-                    ></x-element.fe>
+                    ></x-element::fe>
 
                 </div>
                 <div class="col">
@@ -30,14 +30,14 @@
 
                 </div>
                 <div class="col">
-                    <x-element.frame
+                    <x-element::frame
                         name="{{$relatedFrame->name}}"
-                    ></x-element.frame>
-                    <x-element.fe
+                    ></x-element::frame>
+                    <x-element::fe
                         name="{{$relation->relatedFEName}}"
                         type="{{$relation->relatedFECoreType}}"
                         idColor="{{$relation->relatedFEIdColor}}"
-                    ></x-element.fe>
+                    ></x-element::fe>
 
                 </div>
                 <div class="right pl-2">

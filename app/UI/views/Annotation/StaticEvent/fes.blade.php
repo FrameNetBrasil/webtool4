@@ -20,9 +20,9 @@
                         <div
                             class="header"
                         >
-                            <x-element.frame
+                            <x-element::frame
                                 name="{{$frame['name']}}"
-                            ></x-element.frame>
+                            ></x-element::frame>
                         </div>
                         <hr>
                         <div class="description">
@@ -38,14 +38,14 @@
                                         <x-card class="m-2 font-bold"
                                                 title="Object #{{++$idObject}}: <span class='wt-anno-box-color-{{$idObject}}'>{{$phrase}}</span> ">
                                             @php($value = isset($frame['objects'][$i]) ? $frame['objects'][$i]->idFrameElement : -1)
-                                            <x-combobox.fe-frame
+                                            <x-combobox::fe-frame
                                                 id="objects_{{$idFrame}}_{{$object->idAnnotationObject}}"
                                                 name="objects[{{$idFrame}}][{{$object->idAnnotationObject}}]"
                                                 label=""
                                                 :value="$value"
                                                 :idFrame="$idFrame"
                                                 :hasNull="true"
-                                            ></x-combobox.fe-frame>
+                                            ></x-combobox::fe-frame>
                                         </x-card>
                                     @else
                                         @php(++$idObject)

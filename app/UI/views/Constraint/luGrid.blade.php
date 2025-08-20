@@ -22,9 +22,9 @@
                             <div
                                 class="header"
                             >
-                                <x-element.constraint
+                                <x-element::constraint
                                     name="{{$constraint->constraintName}}"
-                                ></x-element.constraint>
+                                ></x-element::constraint>
                             </div>
                             <div class="description">
                                 {{$constraint->idConstrainedByName}}

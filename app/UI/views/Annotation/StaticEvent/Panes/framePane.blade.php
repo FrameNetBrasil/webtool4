@@ -8,22 +8,22 @@
             ></x-hidden-field>
             <div class="two fields">
                 <div class="field">
-                    <x-combobox.frame
+                    <x-combobox::frame
                         id="idFrame"
                         label="Choose event frame"
                         placeholder="Frame (min: 2 chars)"
                         style="width:250px"
                         class="mb-2"
-                    ></x-combobox.frame>
+                    ></x-combobox::frame>
                 </div>
                 <div class="field">
-                    <x-combobox.lu-event
+                    <x-combobox::lu-event
                         id="idLU"
                         label="  or choose an event related LU:"
                         placeholder="LU (min: 2 chars)"
                         width="400px"
                         class="mb-2"
-                    ></x-combobox.lu-event>
+                    ></x-combobox::lu-event>
                 </div>
             </div>
         </x-slot:fields>

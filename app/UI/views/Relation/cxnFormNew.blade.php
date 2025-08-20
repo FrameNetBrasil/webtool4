@@ -3,17 +3,17 @@
         <x-hidden-field id="idConstruction" :value="$idConstruction"></x-hidden-field>
             <div class="fields">
                 <div class="field">
-                    <x-combobox.relation
+                    <x-combobox::relation
                         id="relationType"
                         group="cxn"
-                    ></x-combobox.relation>
+                    ></x-combobox::relation>
                 </div>
                 <div class="field">
-                    <x-combobox.construction
+                    <x-combobox::construction
                         id="idCxnRelated"
                         label="Related Construction [min: 3 chars]"
                         :hasDescription="false"
-                    ></x-combobox.construction>
+                    ></x-combobox::construction>
                 </div>
             </div>
 

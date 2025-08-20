@@ -27,7 +27,7 @@
             <x-hidden-field id="idDynamicObject" value="{{$object?->idDynamicObject}}"></x-hidden-field>
             <div class="formgroup-inline">
                 <div class="field mr-1">
-                    <x-combobox.frame
+                    <x-combobox::frame
                         id="idFrame"
                         label="Frame (Event/State)"
                         placeholder="Frame (min: 3 chars)"
@@ -37,29 +37,29 @@
                         :name="$object->frame ?? ''"
                         :hasDescription="false"
                         onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
-                    ></x-combobox.frame>
+                    ></x-combobox::frame>
                 </div>
                 <div id="fes" class="field w-17rem mr-1">
-                    <x-combobox.fe-frame
+                    <x-combobox::fe-frame
                         id="idFrameElement"
                         name="idFrameElement"
                         label="FE (Participant/Prop)"
                         :value="$object?->idFrameElement ?? 0"
                         :idFrame="$object?->idFrame ?? 0"
                         :hasNull="false"
-                    ></x-combobox.fe-frame>
+                    ></x-combobox::fe-frame>
                 </div>
             </div>
             <div class="formgroup-inline">
                 <div class="field mr-1">
-                    <x-combobox.lu
+                    <x-combobox::lu
                         id="idLU"
                         label="Framed Entity"
                         placeholder="LU (min: 2 chars)"
                         class="w-23rem mb-2"
                         :value="$object?->idLU"
                         :name="$object?->lu ?? ''"
-                    ></x-combobox.lu>
+                    ></x-combobox::lu>
                 </div>
             </div>
             <div class="formgroup-inline">

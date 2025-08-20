@@ -47,18 +47,18 @@
                         <div class="fields">
                             @if(!is_null($object->idGenericLabel) || ($object->layerGroup == 'Deixis'))
                                 <div class="field  w-20rem mr-2">
-                                    <x-combobox.gl
+                                    <x-combobox::gl
                                         id="idGenericLabel"
                                         name="idGenericLabel"
                                         label="Label"
                                         :value="$object?->idGenericLabel ?? 0"
                                         :idLayerType="$object?->idLayerType ?? 0"
                                         :hasNull="false"
-                                    ></x-combobox.gl>
+                                    ></x-combobox::gl>
                                 </div>
                             @endif
                             <div class="field mr-1">
-                                <x-combobox.frame
+                                <x-combobox::frame
                                     id="idFrame"
                                     label="Frame"
                                     placeholder="Frame (min: 3 chars)"
@@ -68,29 +68,29 @@
                                     :name="$object->frame ?? ''"
                                     :hasDescription="false"
                                     onSelect="htmx.ajax('GET','/annotation/dynamicMode/fes/' + result.idFrame,'#fes');"
-                                ></x-combobox.frame>
+                                ></x-combobox::frame>
                             </div>
                             <div id="fes" class="field w-15rem mr-1">
-                                <x-combobox.fe-frame
+                                <x-combobox::fe-frame
                                     id="idFrameElement"
                                     name="idFrameElement"
                                     label="FE"
                                     :value="$object?->idFrameElement ?? 0"
                                     :idFrame="$object?->idFrame ?? 0"
                                     :hasNull="false"
-                                ></x-combobox.fe-frame>
+                                ></x-combobox::fe-frame>
                             </div>
                         </div>
                         <div class="fields">
                             <div class="field mr-1">
-                                <x-combobox.lu
+                                <x-combobox::lu
                                     id="idLU"
                                     label="CV Name"
                                     placeholder="(min: 3 chars)"
                                     class="w-23rem mb-2"
                                     :value="$object?->idLU"
                                     :name="$object?->lu ?? ''"
-                                ></x-combobox.lu>
+                                ></x-combobox::lu>
                             </div>
                         </div>
                     @endif

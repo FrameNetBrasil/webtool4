@@ -5,11 +5,11 @@
     <x-slot:main>
         <x-layout.object>
             <x-slot:name>
-                <x-element.fe
+                <x-element::fe
                     name="{{$frameElement->frame->name}}.{{$frameElement?->name}}"
                     type="{{$frameElement->coreType}}"
                     idColor="{{$frameElement->idColor}}"
-                ></x-element.fe>
+                ></x-element::fe>
             </x-slot:name>
             <x-slot:detail>
                 <div class="ui label wt-tag-id">
@@ -19,11 +19,11 @@
                     {{$frameElement->nameEn}} [en]
                 </div>
                 <div>
-                    <x-combobox.fe-frame
+                    <x-combobox::fe-frame
                         id="idFrameElement"
                         :idFrame="$frameElement->frame->idFrame"
                         :defaultText="'Change FE'"
-                    ></x-combobox.fe-frame>
+                    ></x-combobox::fe-frame>
                     <script>
                         $(function() {
                             $('#idFrameElement_dropdown').dropdown({

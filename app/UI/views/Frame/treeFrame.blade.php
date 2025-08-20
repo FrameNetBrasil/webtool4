@@ -26,7 +26,7 @@
                     >
                         <div>
                             <a href="/frame/{{$idFrame}}">
-                                <x-element.frame :name="$frame['name'][0]"></x-element.frame>
+                                <x-element::frame :name="$frame['name'][0]"></x-element::frame>
 {{--                            <div class="flex justify-content-between">--}}
 {{--                                <div class='color_frame' style="height:1rem;line-height: 1rem;margin:2px 0 2px 0">--}}
 {{--                                    <span class="{{$frame['iconCls']}}"></span>--}}

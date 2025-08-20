@@ -8,36 +8,36 @@
     <div class="content">
         <div class="flex flex-column ui form">
             <div class="field">
-                <x-combobox.options
+                <x-combobox::options
                     id="ranker"
                     label="Ranker"
                     value="network-simplex"
                     :options="['network-simplex'=>'network-simplex','tight-tree' => 'tight-tree','longest-path'=>'longest-path']"
-                ></x-combobox.options>
+                ></x-combobox::options>
             </div>
             <div class="field">
-                <x-combobox.options
+                <x-combobox::options
                     id="rankdir"
                     label="RankDir"
                     value="BT"
                     :options="['TB'=>'Top-Bottom','BT' => 'Bottom-Top','RL'=>'Right-Left','LR' => 'Left-Right']"
-                ></x-combobox.options>
+                ></x-combobox::options>
             </div>
             <div class="field">
-                <x-combobox.options
+                <x-combobox::options
                     id="align"
                     label="Align"
                     value="DL"
                     :options="['DL'=>'Down-Left','DR' => 'Down-Right','UL'=>'Up-Left','UR' => 'Up-Right']"
-                ></x-combobox.options>
+                ></x-combobox::options>
             </div>
             <div class="field">
-                <x-combobox.options
+                <x-combobox::options
                     id="connector"
                     label="Connector"
                     value="normal"
                     :options="['normal'=>'Normal','smooth' => 'Smooth','jumpover'=>'Jumpover','curve' => 'Curve']"
-                ></x-combobox.options>
+                ></x-combobox::options>
             </div>
             <div class="field">
                 <div class="ui checkbox">

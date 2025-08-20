@@ -5,11 +5,11 @@
     <x-slot:fields>
         <div class="fields">
             <div class="field">
-                <x-combobox.relation-group
+                <x-combobox::relation-group
                     label="RelationGroup"
                     id="idRelationGroup"
                     :value="0"
-                ></x-combobox.relation-group>
+                ></x-combobox::relation-group>
             </div>
         </div>
         <div class="field">

@@ -43,11 +43,11 @@
                                             ></x-text-field>
                                         </div>
                                         <div class="field">
-                                            <x-combobox.lexicon-group
+                                            <x-combobox::lexicon-group
                                                 id="idLexiconGroup"
                                                 label="Group"
                                                 :value="$lexicon->idLexiconGroup"
-                                            ></x-combobox.lexicon-group>
+                                            ></x-combobox::lexicon-group>
                                         </div>
                                     </div>
                                 </x-slot:fields>
@@ -62,11 +62,11 @@
                                     <x-hidden-field id="idLexiconBase" :value="$lexicon->idLexicon"></x-hidden-field>
                                     <div class="fields">
                                         <div class="field">
-                                            <x-combobox.ud-feature
+                                            <x-combobox::ud-feature
                                                 id="idUDFeature"
                                                 label="UD Feature"
                                                 :value="0"
-                                            ></x-combobox.ud-feature>
+                                            ></x-combobox::ud-feature>
                                         </div>
                                     </div>
                                 </x-slot:fields>

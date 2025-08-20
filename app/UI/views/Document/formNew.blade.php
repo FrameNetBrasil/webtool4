@@ -11,11 +11,11 @@
             ></x-text-field>
         </div>
         <div class="field">
-            <x-combobox.corpus
+            <x-combobox::corpus
                 id="idCorpus"
                 label="Corpus [min 3 chars]"
             >
-            </x-combobox.corpus>
+            </x-combobox::corpus>
         </div>
     </x-slot:fields>
     <x-slot:buttons>

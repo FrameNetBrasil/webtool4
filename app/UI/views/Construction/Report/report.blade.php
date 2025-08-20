@@ -2,7 +2,7 @@
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
-                <x-element.construction name="{{$construction->name}}"></x-element.construction>
+                <x-element::construction name="{{$construction->name}}"></x-element::construction>
             </h1>
         </div>
         <div
@@ -52,7 +52,7 @@
                 {{--                                        <a--}}
                 {{--                                            href="/report/cxn/{{$idConstruction}}"--}}
                 {{--                                        >--}}
-                {{--                                            <x-element.construction name="{{$relation['name']}}"></x-element.construction>--}}
+                {{--                                            <x-element::construction name="{{$relation['name']}}"></x-element::construction>--}}
                 {{--                                        </a>--}}
                 {{--                                    </button>--}}
                 {{--                                @endforeach--}}
@@ -73,7 +73,7 @@
                             <a
                                 href="/report/c5/{{$concept->idConcept}}"
                             >
-                                <x-element.concept name="{{$concept->name}}" type="{{$concept->type}}"></x-element.concept>
+                                <x-element::concept name="{{$concept->name}}" type="{{$concept->type}}"></x-element::concept>
                             </a>
                         </button>
                     @endforeach
@@ -93,7 +93,7 @@
                             <a
                                 href="/report/frame/{{$fe->idFrame}}"
                             >
-                                <x-element.frame name="{{$fe->frameName}}.{{$fe->name}}"></x-element.frame>
+                                <x-element::frame name="{{$fe->frameName}}.{{$fe->name}}"></x-element::frame>
                             </a>
                         </button>
                     @endforeach
@@ -148,7 +148,7 @@
                             <a
                                 href="/report/cxn/{{$idConstruction}}"
                             >
-                                <x-element.construction name="{{$relation['name']}}"></x-element.construction>
+                                <x-element::construction name="{{$relation['name']}}"></x-element::construction>
                             </a>
                         </button>
                     @endforeach
@@ -170,7 +170,7 @@
                     <a
                         href="/report/c5/{{$concept->idConcept}}"
                     >
-                        <x-element.concept name="{{$concept->name}}" type="{{$concept->type}}"></x-element.concept>
+                        <x-element::concept name="{{$concept->name}}" type="{{$concept->type}}"></x-element::concept>
                     </a>
                 </button>
             @endforeach
@@ -190,7 +190,7 @@
                     <a
                         href="/report/frame/{{$frame->idFrame}}"
                     >
-                        <x-element.frame name="{{$frame->name}}"></x-element.frame>
+                        <x-element::frame name="{{$frame->name}}"></x-element::frame>
                     </a>
                 </button>
             @endforeach

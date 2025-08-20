@@ -22,12 +22,12 @@
             ></x-multiline-field>
         </div>
 {{--        <div class="field">--}}
-{{--            <x-combobox.project--}}
+{{--            <x-combobox::project--}}
 {{--                id="idProject"--}}
 {{--                label="Source project"--}}
 {{--                :value="$dataset->idProject"--}}
 {{--            >--}}
-{{--            </x-combobox.project>--}}
+{{--            </x-combobox::project>--}}
 {{--        </div>--}}
     </x-slot:fields>
     <x-slot:buttons>

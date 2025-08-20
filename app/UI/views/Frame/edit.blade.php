@@ -6,7 +6,7 @@
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content">
-                <div class="ui container">
+                <div class="ui container" >
                     <div class="page-header">
                         <div class="page-header-content">
                             <div class="page-header-main">
@@ -33,27 +33,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="page-content">
-                        <div class="content-container">
+                    <div class="page-content"  style="overflow:visible">
                             <div class="frame-metadata-section">
                                 @include('Frame.Report.partials.frame-metadata')
                             </div>
                             <x-ui::tabs
+                                id="editFrame"
                                 :tabs="[
-          ['id' => 'entries', 'label' => 'Translations', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/entries'],
-          ['id' => 'fes', 'label' => 'FrameElements', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/fes'],
-          ['id' => 'lus', 'label' => 'LUs', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/lus'],
-          ['id' => 'classification', 'label' => 'Classification', 'translate' => 'text', 'url' => '/frame/'.$frame->idFrame.'/classification'],
-          ['id' => 'relations', 'label' => 'Frame-Frame Relations', 'translate' => 'text', 'url' => '/frame/'.$frame->idFrame.'/relations'],
-          ['id' => 'feRelations', 'label' => 'FE-FE Relations', 'translate' => 'text', 'url' => '/frame/'.$frame->idFrame.'/feRelations'],
-          ['id' => 'semanticTypes', 'label' => 'SemanticTypes', 'translate' => 'text', 'url' => '/frame/'.$frame->idFrame.'/semanticTypes'],
+          'entries' => ['label' => 'Translations', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/entries'],
+          'fes' => ['label' => 'FrameElements', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/fes'],
+          'lus' => ['label' => 'LUs', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/lus'],
+          'classification' => ['label' => 'Classification', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/classification'],
+          'relations' => ['label' => 'Frame-Frame Relations', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/relations'],
+          'feRelations' => ['label' => 'FE-FE Relations', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/feRelations'],
+          'semanticTypes' => ['label' => 'SemanticTypes', 'icon' => 'translate', 'url' => '/frame/'.$frame->idFrame.'/semanticTypes'],
       ]"
                                 defaultTab="entries"
-                                context="frame"
-                                sectionTitle=""
-                                :sectionToggle="false"
+{{--                                context="frame"--}}
+{{--                                sectionTitle=""--}}
+{{--                                :sectionToggle="false"--}}
                             />
-                        </div>
                     </div>
                 </div>
             </div>

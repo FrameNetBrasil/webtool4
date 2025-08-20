@@ -5,13 +5,13 @@
     <x-slot:main>
         <form>
             <div class="flex flex-row gap-2 pl-2 pt-2">
-                <x-combobox.frame
+                <x-combobox::frame
                     id="idFrame"
                     label=""
                     placeholder="Frame (min: 3 chars)"
                     :hasDescription="false"
                     style="width:250px"
-                ></x-combobox.frame>
+                ></x-combobox::frame>
                 <x-checkbox.relation
                     id="frameRelation"
                     label="Relations to show"

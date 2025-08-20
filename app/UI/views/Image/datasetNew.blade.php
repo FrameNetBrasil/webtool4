@@ -6,12 +6,12 @@
         <x-hidden-field id="idImage" value="{{$idImage}}"></x-hidden-field>
         <div class="formgrid grid">
             <div class="field col">
-                <x-combobox.dataset
+                <x-combobox::dataset
                     id="idDataset"
                     label="Associated Dataset"
                     :value="0"
                 >
-                </x-combobox.dataset>
+                </x-combobox::dataset>
             </div>
         </div>
     </x-slot:fields>

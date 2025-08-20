@@ -30,7 +30,7 @@
                             href="/lu/{{$idLU}}/edit"
                             >
                         <div>
-                            <x-element.lu :name="$lu['name'][0]" :frame="$lu['frameName']"></x-element.lu>
+                            <x-element::lu :name="$lu['name'][0]" :frame="$lu['frameName']"></x-element::lu>
 {{--                            <div style="height:1rem;line-height: 1rem;margin:2px 0 2px 0">--}}
 {{--                                <span class="{{$lu['iconCls']}}"></span>--}}
 {{--                                <span>{{$lu['name'][0]}} {!! isset($lu['frameName']) ? '['.$lu['frameName'].']' : '' !!}</span>--}}
