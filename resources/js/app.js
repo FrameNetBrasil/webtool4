@@ -17,7 +17,6 @@ import searchComponent from './components/searchComponent.js';
 import treeComponent from './components/treeComponent.js';
 import searchFormComponent from './components/searchFormComponent.js';
 import dataGridComponent from './components/dataGridComponent.js';
-import tabsComponent from './components/tabsComponent.js';
 
 // Bulma components will be imported after Alpine is available
 
@@ -45,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     Alpine.data('treeComponent', treeComponent);
     Alpine.data('browseSearchComponent', browseSearchComponent);
     Alpine.data('dataGrid', dataGridComponent);
-    Alpine.data('tabsComponent', tabsComponent);
     Alpine.start();
 
 });
