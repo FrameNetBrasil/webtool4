@@ -197,25 +197,26 @@ class ComponentConversionService
     {
         $componentName = $component['name'];
         
-        if (!isset($this->componentMappings[$componentName])) {
-            throw new \Exception("No mapping found for component: {$componentName}");
+        // First try hardcoded mappings for complex components
+        if (isset($this->componentMappings[$componentName])) {
+            $mapping = $this->componentMappings[$componentName];
+            
+            // Handle special processing for different component types
+            switch ($componentName) {
+                case 'form':
+                    return $this->convertFormComponent($component, $mapping);
+                case 'hidden-field':
+                case 'text-field':
+                case 'multiline-field':
+                case 'submit':
+                    return $this->convertFieldComponent($component, $mapping);
+                default:
+                    return $this->convertGenericComponent($component, $mapping);
+            }
         }
-
-        $mapping = $this->componentMappings[$componentName];
-        $template = $mapping['template'];
-
-        // Handle special processing for different component types
-        switch ($componentName) {
-            case 'form':
-                return $this->convertFormComponent($component, $mapping);
-            case 'hidden-field':
-            case 'text-field':
-            case 'multiline-field':
-            case 'submit':
-                return $this->convertFieldComponent($component, $mapping);
-            default:
-                return $this->convertGenericComponent($component, $mapping);
-        }
+        
+        // Try to load component from components41 folder
+        return $this->convertComponents41Component($component);
     }
 
     private function convertFormComponent(array $component, array $mapping): string
@@ -312,6 +313,131 @@ class ComponentConversionService
     }
 
     /**
+     * Convert a component from components41 folder to HTML
+     */
+    private function convertComponents41Component(array $component): string
+    {
+        $componentName = $component['name'];
+        $componentPath = $this->getComponents41Path($componentName);
+        
+        if (!File::exists($componentPath)) {
+            throw new \Exception("Component file not found: {$componentPath}");
+        }
+        
+        $template = File::get($componentPath);
+        
+        // Process the Blade template to convert to static HTML
+        return $this->processBladeTemplate($template, $component);
+    }
+    
+    /**
+     * Get the path to a components41 file
+     */
+    private function getComponents41Path(string $componentName): string
+    {
+        // Handle dot notation (e.g., element.fe -> element/fe.blade.php)
+        $path = str_replace('.', '/', $componentName);
+        return app_path("UI/components41/{$path}.blade.php");
+    }
+    
+    /**
+     * Process a Blade template and convert it to static HTML
+     */
+    private function processBladeTemplate(string $template, array $component): string
+    {
+        // Replace {{$attributes}} with actual attributes
+        $attributesString = $this->buildAttributesString($component['attributes']);
+        $template = str_replace('{{$attributes}}', $attributesString, $template);
+        
+        // Replace $attributes->merge() calls
+        $template = preg_replace_callback(
+            '/\{\{\$attributes->merge\(\[(.*?)\]\)\}\}/',
+            function($matches) use ($component) {
+                // Parse the merge array and combine with component attributes
+                $mergeAttributes = $this->parseMergeAttributes($matches[1]);
+                $finalAttributes = array_merge($mergeAttributes, $component['attributes']);
+                return $this->buildAttributesString($finalAttributes);
+            },
+            $template
+        );
+        
+        // Replace component variables with their values
+        foreach ($component['attributes'] as $key => $value) {
+            // Handle different variable formats
+            $template = str_replace('{{$' . $key . '}}', $value, $template);
+            $template = str_replace('{!!$' . $key . '!!}', $value, $template);
+        }
+        
+        // Handle default values for missing attributes
+        $template = $this->handleDefaultAttributes($template, $component);
+        
+        return $template;
+    }
+    
+    /**
+     * Build HTML attributes string from array
+     */
+    private function buildAttributesString(array $attributes): string
+    {
+        $attributePairs = [];
+        foreach ($attributes as $key => $value) {
+            // Skip special attributes that aren't HTML attributes but are component props
+            if (in_array($key, ['name', 'type', 'idColor', 'icon'])) {
+                continue;
+            }
+            
+            // Handle special cases for attributes
+            if ($key === 'x-data' && $value === '') {
+                // Handle x-data without value
+                $attributePairs[] = 'x-data';
+            } elseif ($value === true || $value === 'true') {
+                $attributePairs[] = $key;
+            } elseif ($value !== false && $value !== 'false' && $value !== null && $value !== '') {
+                $attributePairs[] = $key . '="' . htmlspecialchars($value) . '"';
+            }
+        }
+        return implode(' ', $attributePairs);
+    }
+    
+    /**
+     * Parse merge attributes from Blade syntax
+     */
+    private function parseMergeAttributes(string $mergeString): array
+    {
+        $attributes = [];
+        
+        // Simple parser for class merging and other attributes
+        if (preg_match("/'class'\s*=>\s*'([^']+)'/", $mergeString, $matches)) {
+            $attributes['class'] = $matches[1];
+        }
+        
+        return $attributes;
+    }
+    
+    /**
+     * Handle default attributes for missing component attributes
+     */
+    private function handleDefaultAttributes(string $template, array $component): string
+    {
+        // Set defaults for common component attributes
+        $defaults = [
+            'icon' => 'circle', // Default icon if not specified
+        ];
+        
+        foreach ($defaults as $key => $defaultValue) {
+            if (!isset($component['attributes'][$key])) {
+                $template = str_replace('{{$' . $key . '}}', $defaultValue, $template);
+            }
+        }
+        
+        // Clean up any remaining Blade variables that weren't replaced
+        $template = preg_replace('/\{\{\$[^}]+\}\}/', '', $template);
+        $template = preg_replace('/\{!!\$[^}]+!!\}/', '', $template);
+        
+        return $template;
+    }
+
+    /**
      * Convert entire template from components41 to plain HTML
      */
     public function convertTemplate(string $templatePath): string
@@ -326,9 +452,10 @@ class ComponentConversionService
             $iteration++;
             $components = $this->parseContent($content);
             
-            // Filter only components41 components that we have mappings for
+            // Filter only components that we can convert (either hardcoded mappings or components41 files)
             $components = array_filter($components, function($component) {
-                return isset($this->componentMappings[$component['name']]);
+                return isset($this->componentMappings[$component['name']]) || 
+                       File::exists($this->getComponents41Path($component['name']));
             });
             
             if (empty($components)) {
@@ -384,9 +511,10 @@ class ComponentConversionService
                 if (preg_match('/<x-[a-z0-9\-\.]+/', $content)) {
                     $components = $this->parseTemplate($file->getPathname());
                     
-                    // Filter for components41 components only
+                    // Filter for components that can be converted (hardcoded mappings or components41 files)
                     $components41Used = array_filter($components, function($component) {
-                        return isset($this->componentMappings[$component['name']]);
+                        return isset($this->componentMappings[$component['name']]) || 
+                               File::exists($this->getComponents41Path($component['name']));
                     });
 
                     if (!empty($components41Used)) {

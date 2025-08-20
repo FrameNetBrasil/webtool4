@@ -1,1 +1,1 @@
-<i class="material">image</i>
+<i class="ui icon material">image</i>

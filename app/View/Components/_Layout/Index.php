@@ -1,20 +1,19 @@
 <?php
 
-namespace App\View\Components\Element;
+namespace App\View\Components\_Layout;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Frame extends Component
+class Index extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct(
-        public string $name = '',
-    )
+    public function __construct()
     {
+        //
     }
 
     /**
@@ -22,6 +21,6 @@ class Frame extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.element.frame');
+        return view('components.layout.index');
     }
 }

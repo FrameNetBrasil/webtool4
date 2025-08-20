@@ -1,19 +1,19 @@
 <?php
 
-namespace App\View\Components\Element;
+namespace App\View\Components\_Element;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class GenericLabel extends Component
+class Lu extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct(
         public string $name = '',
-        public string $idColor = '',
+        public ?string $frame = null,
     )
     {
     }
@@ -23,6 +23,6 @@ class GenericLabel extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.element.generic-label');
+        return view('components.element.lu');
     }
 }

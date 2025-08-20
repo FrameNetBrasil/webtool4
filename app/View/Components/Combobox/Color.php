@@ -6,7 +6,6 @@ use App\Database\Criteria;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use App\Repositories\Color as ColorRepository;
 
 class Color extends Component
 {
