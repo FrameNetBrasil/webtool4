@@ -2,45 +2,34 @@
 
 namespace App\Http\Controllers\Annotation;
 
-
 use App\Data\Annotation\Browse\SearchData;
+use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\FE\AnnotationData;
-use App\Data\Annotation\FE\CreateASData;
 use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\FE\SelectionData;
 use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
-use App\Repositories\Document;
 use App\Services\Annotation\BrowseService;
-use App\Services\AnnotationFEService;
+use App\Services\Annotation\CorpusService;
+use App\Services\Annotation\FEService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
-#[Middleware("auth")]
+#[Middleware('auth')]
 class FEController extends Controller
 {
-//    #[Get(path: '/annotation/fe')]
-//    public function browse()
-//    {
-//        $search = session('searchFEAnnotation') ?? SearchData::from();
-//        return view("Annotation.FE.browse", [
-//            'search' => $search
-//        ]);
-//    }
-//
-//    #[Post(path: '/annotation/fe/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        return view("Annotation.FE.grids", [
-//            'search' => $search,
-//            'sentences' => [],
-//        ]);
-//    }
+    #[Get(path: '/annotation/fe/script/{folder}')]
+    public function jsObjects(string $folder)
+    {
+        return response()
+            ->view("Annotation.FE.Scripts.{$folder}")
+            ->header('Content-type', 'text/javascript');
+    }
 
     #[Get(path: '/annotation/fe')]
     public function browse(SearchData $search)
@@ -49,99 +38,64 @@ class FEController extends Controller
 
         return view('Annotation.browseSentences', [
             'page' => "FE Annotation",
-            'url' => "/annotation/fe",
+            'url' => "/annotation/fe/sentence",
             'data' => $corpus,
         ]);
     }
 
-//    #[Post(path: '/annotation/fe/tree')]
-//    public function tree(SearchData $search)
-//    {
-//        if (! is_null($search->idDocumentSentence)) {
-//            $data = BrowseService::browseSentence($search->idDocumentSentence);
-//        } else {
-//            if (! is_null($search->idDocument)) {
-//                $data = BrowseService::browseSentencesByDocument($search->idDocument);
-//            } else {
-//                if (! is_null($search->idCorpus) || ($search->document != '')) {
-//                    $data = BrowseService::browseDocumentBySearch($search);
-//                } else {
-//                    $data = BrowseService::browseCorpusBySearch($search);
-//                }
-//            }
-//        }
-//
-//        return view('Annotation.FE.browse', [
-//            'data' => $data,
-//        ])->fragment('tree');
-//    }
-    #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
-    public function documentSentences(int $idDocument)
-    {
-        $document = Document::byId($idDocument);
-        $sentences = AnnotationFEService::listSentences($idDocument);
-        return view("Annotation.FE.sentences", [
-            'document' => $document,
-            'sentences' => $sentences
-        ]);
-    }
-
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
-    public function sentence(int $idDocumentSentence,int $idAnnotationSet = null)
+    public function sentence(int $idDocumentSentence, ?int $idAnnotationSet = null)
     {
-        $data = AnnotationFEService::getAnnotationData($idDocumentSentence);
-        if (!is_null($idAnnotationSet)) {
-            $data['idAnnotationSet'] = $idAnnotationSet;
-        }
-        return view("Annotation.FE.annotationSentence", $data);
-    }
+        $data = CorpusService::getAnnotationData($idDocumentSentence, $idAnnotationSet);
 
-    #[Get(path: '/annotation/fe/annotations/{idSentence}')]
-    public function annotations(int $idSentence)
-    {
-        $data = AnnotationFEService::getAnnotationData($idSentence);
-        return view("Annotation.FE.Panes.annotations", $data);
-    }
-
-    #[Get(path: '/annotation/fe/as/{idAS}/{token}')]
-    public function annotationSet(int $idAS, string $token)
-    {
-        $data = AnnotationFEService::getASData($idAS, $token);
-        debug($data);
-        return view("Annotation.FE.Panes.annotationSet", $data);
+        return view('Annotation.FE.annotation', $data);
     }
 
     #[Get(path: '/annotation/fe/lus/{idDocumentSentence}/{idWord}')]
     public function getLUs(int $idDocumentSentence, int $idWord)
     {
-        $data = AnnotationFEService::getLUs($idDocumentSentence, $idWord);
-        $data['idWord'] = $idWord;
-        $data['idDocumentSentence'] = $idDocumentSentence;
-        return view("Annotation.FE.Panes.lus", $data);
+        $data = CorpusService::getLUs($idDocumentSentence, $idWord);
+
+        return view('Annotation.FE.Panes.lus', $data);
+    }
+
+    #[Post(path: '/annotation/fe/createAS')]
+    public function createAS(CreateASData $input)
+    {
+        $idAnnotationSet = CorpusService::createAnnotationSet($input);
+        if (is_null($idAnnotationSet)) {
+            return $this->renderNotify('error', 'Error creating AnnotationSet.');
+        } else {
+            return $this->clientRedirect("/annotation/fe/sentence/{$input->idDocumentSentence}/{$idAnnotationSet}");
+        }
+    }
+
+    #[Get(path: '/annotation/fe/as/{idAS}/{token?}')]
+    public function annotationSet(int $idAS, string $token = '')
+    {
+        $data = FEService::getASData($idAS, $token);
+
+        return view('Annotation.FE.Panes.annotationSet', $data);
     }
 
     #[Post(path: '/annotation/fe/annotate')]
     public function annotate(AnnotationData $input)
     {
+        debug($input);
         try {
-            $input->range = SelectionData::from(request("selection"));
+            $input->range = SelectionData::from(request('selection'));
             if ($input->range->end < $input->range->start) {
-                throw new \Exception("Wrong selection.");
+                throw new \Exception('Selection failed. Make new selection.');
             }
             if ($input->range->type != '') {
-                $data = AnnotationFEService::annotateFE($input);
-                //$data['alternativeLU'] = [];
-                debug("#######################################################");
+                $data = FEService::annotateFE($input);
 
-//                $this->trigger('reload-annotationSet');
-//                $this->trigger('reload-annotationSet');
-                return view("Annotation.FE.Panes.annotationSet", $data);
-//                return $input->idAnnotationSet;
+                return view('Annotation.FE.Panes.asAnnotation', $data);
             } else {
-                return $this->renderNotify("error", "No selection.");
+                return $this->renderNotify('error', 'No selection.');
             }
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -149,28 +103,12 @@ class FEController extends Controller
     public function deleteFE(DeleteFEData $data)
     {
         try {
-            AnnotationFEService::deleteFE($data);
-            $data = AnnotationFEService::getASData($data->idAnnotationSet, $data->token);
-            debug("--------------------------------------------------------");
-            //$data['alternativeLU'] = [];
-            return view("Annotation.FE.Panes.annotationSet", $data);
+            FEService::deleteFE($data);
+            $data = FEService::getASData($data->idAnnotationSet, $data->token);
+
+            return view('Annotation.FE.Panes.asAnnotation', $data);
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Post(path: '/annotation/fe/create')]
-    public function createAS(CreateASData $input)
-    {
-        $idAnnotationSet = AnnotationFEService::createAnnotationSet($input);
-        if (is_null($idAnnotationSet)) {
-            return $this->renderNotify("error", "Error creating AnnotationSet.");
-        } else {
-            //$data = AnnotationFEService::getASData($idAnnotationSet);
-//            $this->trigger('reload-sentence');
-//            return view("Annotation.FE.Panes.annotationSet", $data);
-            return $this->clientRedirect("/annotation/fe/sentence/{$input->idDocumentSentence}/{$idAnnotationSet}");
-
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -178,11 +116,12 @@ class FEController extends Controller
     public function deleteAS(int $idAnnotationSet)
     {
         try {
-            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $idAnnotationSet);
+            $annotationSet = Criteria::byId('view_annotationset', 'idAnnotationSet', $idAnnotationSet);
             AnnotationSet::delete($idAnnotationSet);
+
             return $this->clientRedirect("/annotation/fe/sentence/{$annotationSet->idDocumentSentence}");
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -194,34 +133,35 @@ class FEController extends Controller
     public function getFormComment(int $idAnnotationSet)
     {
         $object = CommentService::getAnnotationSetComment($idAnnotationSet);
-        return view("Annotation.FE.Panes.formComment", [
-            'object' => $object
+
+        return view('Annotation.FE.Panes.formComment', [
+            'object' => $object,
         ]);
     }
+
     #[Post(path: '/annotation/fe/updateObjectComment')]
     public function updateObjectComment(CommentData $data)
     {
         try {
-            debug($data);
             CommentService::updateAnnotationSetComment($data);
             $this->trigger('reload-annotationSet');
-            return $this->renderNotify("success", "Comment registered.");
+
+            return $this->renderNotify('success', 'Comment registered.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
+
     #[Delete(path: '/annotation/fe/comment/{idAnnotationSet}')]
     public function deleteObjectComment(int $idAnnotationSet)
     {
         try {
             CommentService::deleteAnnotationSetComment($idAnnotationSet);
             $this->trigger('reload-annotationSet');
-            return $this->renderNotify("success", "Object comment removed.");
+
+            return $this->renderNotify('success', 'Object comment removed.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
-
-
 }
-

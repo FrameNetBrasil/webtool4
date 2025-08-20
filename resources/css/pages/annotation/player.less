@@ -2,17 +2,6 @@
     grid-area: player;
     height: 100%;
 
-    //.vjs-control-bar {
-    //    bottom: -30px;
-    //    opacity: 1 !important;
-    //    display: flex !important;
-    //}
-    //
-    //.vjs-playback-rate {
-    //    z-index: 10;
-    //}
-
-
     .progress-container {
         position: relative;
         height: 8px;
@@ -42,18 +31,26 @@
 
     .control-bar {
         position: relative;
-        background-color: @neutral300;
+        background-color: #e0e1e2;
         width: 853px;
         margin-top: 24px;
-        
+        height: 2.5rem;
+
+        .ui.label {
+            background-color: #e0e1e2;
+            line-height: 2.5rem;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
         .playback-rate-selector {
             min-width: 80px;
-            
+
             .text {
                 font-size: 0.9em;
                 font-weight: 500;
             }
-            
+
             &.ui.dropdown {
                 min-height: 2.5em;
                 line-height: 2.5em;

@@ -1,7 +1,7 @@
 @if(isset($label))
 <label for="{{$id}}">{{$label}}</label>
 @endif
-<x-ui::search
+<x-search::base
     name="{{$id}}"
     placeholder="{{$placeholder}}"
     search-url="/lu/list/forSelect"

@@ -55,6 +55,8 @@
 <script src="/scripts/jointjs/dist/joint.js"></script>
 <script src="/scripts/dagre/dist/dagre.js"></script>
 <script src="/scripts/utils/md5.min.js"></script>
+<script src="/scripts/utils/jsfeat.js"></script>
+<script src="/scripts/utils/nudged.js"></script>
 
 </body>
 </html>

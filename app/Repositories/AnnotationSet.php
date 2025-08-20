@@ -107,7 +107,7 @@ class AnnotationSet
             LEFT JOIN view_annotation_text_gl gl ON (ts.idTextSpan = gl.idTextSpan)
             LEFT JOIN view_annotation_text_fe fe ON (ts.idTextSpan = fe.idTextSpan)
             LEFT JOIN view_annotation_text_ce ce ON (ts.idTextSpan = ce.idTextSpan)
-            LEFT JOIN view_instantiationtype it ON (ts.idInstantiationType = it.idTypeInstance)
+            LEFT JOIN view_instantiationtype it ON (ts.idInstantiationType = it.idType)
         WHERE (l.idLanguage = {$idLanguage})
             AND (a.idAnnotationSet = {$idAnnotationSet})
 
@@ -178,14 +178,15 @@ HERE;
             $lu = LU::byId($idLU);
             $ti = Criteria::byId("type", "entry", 'ast_unann');
             $annotationSet = [
-                'idAnnotationObjectRelation' => $idDocumentSentence,
-                'idEntityRelated' => $lu->idEntity,
+                'idDocumentSentence' => $idDocumentSentence,
+//                'idEntityLU' => $lu->idEntity,
                 'idLU' => $lu->idLU,
-                'idAnnotationStatus' => $ti->idTypeInstance
+                'idAnnotationStatus' => $ti->idType
             ];
             $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
             $ti = Criteria::byId("type", "entry", 'int_normal');
             $layerTypes = LayerType::listToLU($lu);
+            debug($layerTypes);
             foreach ($layerTypes as $lt) {
                 $layer = [
                     'rank' => 1,
@@ -202,7 +203,7 @@ HERE;
                         'startChar' => $startChar,
                         'endChar' => $endChar,
                         'multi' => 0,
-                        'idInstantiationType' => $ti->idTypeInstance,
+                        'idInstantiationType' => $ti->idType,
                         'idLayer' => $idLayer,
                         'idSentence' => $documentSentence->idSentence,
                     ]);
@@ -216,7 +217,7 @@ HERE;
                         ->where("t.name", 'Default Task')
                         ->first();
                     $data = json_encode([
-                        'idAnnotationObject' => $ts->idAnnotationObject,
+                        'idTextSpan' => $ts->idTextSpan,
                         'idEntity' => $target->idEntity,
                         'relationType' => 'rel_annotation',
                         'idUserTask' => $userTask->idUserTask

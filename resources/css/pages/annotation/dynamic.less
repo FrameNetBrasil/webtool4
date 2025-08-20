@@ -1,10 +1,10 @@
 /* Full-screen layout for annotation */
-.app-layout.annotation-dynamic {
+.app-layout.annotation-dynamicMode {
     grid-template-areas:
-        "header"
+        "breadcrumb"
         "canvas";
     grid-template-columns: 1fr;
-    grid-template-rows: 3em 1fr;
+    grid-template-rows: @breadcrumbHeight 1fr !important;
 
     .annotation-header {
         grid-area: header;
