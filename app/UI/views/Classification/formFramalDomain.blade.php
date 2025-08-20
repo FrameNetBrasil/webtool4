@@ -1,21 +1,32 @@
-<x-form
-    title="Domain"
-    hx-post="/frame/classification/domain"
->
-    <x-slot:fields>
-        <x-hidden-field
-            id="idFrame"
-            :value="$idFrame"
-        ></x-hidden-field>
-        <div style="height:300px; overflow:auto">
-            <x-checkbox.framal-domain
-                id="framalDomain"
-                :idFrame="$idFrame"
-                label=""
-            ></x-checkbox.framal-domain>
+<div class="ui card form-card w-full p-1">
+    <div class="content">
+        <div class="header">
+            <x-icon::translate></x-icon::translate>
+            Domain
         </div>
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-submit label="Update Domain"></x-submit>
-    </x-slot:buttons>
-</x-form>
+        <div class="description">
+
+        </div>
+    </div>
+    <div class="content">
+        <form class="ui form">
+            <input type="hidden" name="idFrame" value="{{$idFrame}}">
+            <div class="field">
+                <x-checkbox::framal-domain
+                    id="framalDomain"
+                    :idFrame="$idFrame"
+                    label=""
+                ></x-checkbox::framal-domain>
+            </div>
+        </form>
+    </div>
+    <div class="extra content">
+        <button
+            type="submit"
+            class="ui primary button"
+            hx-post="/frame/classification/domain"
+        >
+            Update Domain
+        </button>
+    </div>
+</div>

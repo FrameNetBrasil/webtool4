@@ -9,7 +9,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Relation extends Component
+class Relation extends Base
 {
     public array $options;
     /**
@@ -18,9 +18,12 @@ class Relation extends Component
     public function __construct(
         public string $id,
         public string $group,
-        public ?string $value = ''
+        public ?string $label = '',
+        public string $value = '',
+        public string $defaultText = '',
     )
     {
+        parent::__construct($id, $label, $value, $defaultText);
         $idLanguage = AppService::getCurrentIdLanguage();
         $groupEntries = [
             'frame' => 'rgp_frame_relations',

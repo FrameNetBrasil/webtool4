@@ -37,7 +37,6 @@ class LUController extends Controller
             ->orderBy('UDPOS')
             ->orderBy('name')
             ->get()->groupBy("UDPOS")->toArray();
-        debug($lus);
         return view("LU.grid",[
             'idFrame' => $id,
             'lus' => $lus

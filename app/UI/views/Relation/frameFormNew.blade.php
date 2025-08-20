@@ -1,24 +1,39 @@
-<x-form>
-    <x-slot:fields>
-        <x-hidden-field id="idFrame" :value="$idFrame"></x-hidden-field>
-            <div class="fields">
-                <div class="field">
-                    <x-combobox::relation
-                        id="relationType"
-                        group="frame"
-                    ></x-combobox::relation>
-                </div>
-                <div class="field">
-                    <x-combobox::frame
-                        id="idFrameRelated"
-                        label="Related Frame [min: 3 chars]"
-                        :hasDescription="false"
-                    ></x-combobox::frame>
-                </div>
+<div class="ui card form-card w-full p-1">
+    <div class="content">
+        <div class="header">
+            <x-icon::translate></x-icon::translate>
+            Frame Relation
+        </div>
+        <div class="description">
+
+        </div>
+    </div>
+    <div class="content">
+        <form class="ui form">
+            <input type="hidden" name="idFrame" value="{{$idFrame}}">
+            <div class="field">
+                <x-combobox::relation
+                    id="relationType"
+                    group="frame"
+                    label="Relation"
+                ></x-combobox::relation>
+            </div>
+            <div class="field">
+                <x-search::frame
+                    id="idFrame"
+                    label="Related Frame"
+                ></x-search::frame>
             </div>
 
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-submit label="Add Relation" hx-post="/relation/frame"></x-submit>
-    </x-slot:buttons>
-</x-form>
+        </form>
+    </div>
+    <div class="extra content">
+        <button
+            type="submit"
+            class="ui primary button"
+            hx-post="/relation/frame"
+        >
+            Add Relation
+        </button>
+    </div>
+</div>

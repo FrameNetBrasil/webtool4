@@ -34,5 +34,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::anonymousComponentPath(app_path('UI/components/element'), 'element');
         Blade::anonymousComponentPath(app_path('UI/components/search'), 'search');
         Blade::componentNamespace('App\View\Components\Combobox', 'combobox');
+        Blade::componentNamespace('App\View\Components\Checkbox', 'checkbox');
     }
 }
