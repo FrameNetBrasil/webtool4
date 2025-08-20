@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\DynamicMode\CloneData;
 use App\Data\Annotation\DynamicMode\CreateBBoxData;
-use App\Data\Annotation\DynamicMode\DocumentData;
+use App\Data\Annotation\DynamicMode\CreateObjectData;
+use App\Data\Annotation\DynamicMode\GetBBoxData;
 use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
-use App\Data\Annotation\DynamicMode\ObjectData;
+use App\Data\Annotation\DynamicMode\ObjectFrameData;
+use App\Data\Annotation\DynamicMode\ObjectSearchData;
 use App\Data\Annotation\DynamicMode\SearchData;
-use App\Data\Annotation\DynamicMode\SentenceData;
 use App\Data\Annotation\DynamicMode\UpdateBBoxData;
-use App\Data\Annotation\DynamicMode\WordData;
 use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
@@ -18,33 +18,25 @@ use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Video;
 use App\Services\Annotation\BrowseService;
-use App\Services\AnnotationDynamicService;
+use App\Services\Annotation\DynamicModeService;
+use App\Services\AppService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
-
 #[Middleware(name: 'auth')]
 class DynamicModeController extends Controller
 {
-//    #[Get(path: '/annotation/dynamicMode')]
-//    public function browse()
-//    {
-//        $search = session('searchCorpus') ?? SearchData::from();
-//        return view("Annotation.DynamicMode.browse", [
-//            'search' => $search
-//        ]);
-//    }
-//
-//    #[Post(path: '/annotation/dynamicMode/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        return view("Annotation.DynamicMode.grid", [
-//            'search' => $search
-//        ]);
-//    }
+    #[Get(path: '/annotation/dynamicMode/script/{folder}')]
+    public function jsObjects(string $folder)
+    {
+        return response()
+            ->view("Annotation.DynamicMode.Scripts.{$folder}")
+            ->header('Content-type', 'text/javascript')
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
 
     #[Get(path: '/annotation/dynamicMode')]
     public function browse(SearchData $search)
@@ -59,134 +51,245 @@ class DynamicModeController extends Controller
         ]);
     }
 
-//    #[Post(path: '/annotation/dynamicMode/tree')]
-//    public function tree(SearchData $search)
-//    {
-//        if (! is_null($search->idCorpus) || ($search->document != '')) {
-//            $data = BrowseService::browseDocumentBySearch($search, [], 'DynamicAnnotation', leaf: true);
-//        } else {
-//            $data = BrowseService::browseCorpusBySearch($search, [], 'DynamicAnnotation');
-//        }
-//
-//        return view('Annotation.DynamicMode.browse', [
-//            'data' => $data,
-//        ])->fragment('tree');
-//    }
-    private function getData(int $idDocument): DocumentData
+    private function getData(int $idDocument, ?int $idDynamicObject = null): array
     {
         $document = Document::byId($idDocument);
+        if (! $document) {
+            throw new \Exception("Document with ID {$idDocument} not found.");
+        }
+
         $corpus = Corpus::byId($document->idCorpus);
-        $documentVideo = Criteria::table("view_document_video")
-            ->where("idDocument", $idDocument)
+        if (! $corpus) {
+            throw new \Exception("Corpus with ID {$document->idCorpus} not found.");
+        }
+
+        $documentVideo = Criteria::table('view_document_video')
+            ->where('idDocument', $idDocument)
             ->first();
+        if (! $documentVideo) {
+            throw new \Exception("Video not found for document ID {$idDocument}.");
+        }
+
         $video = Video::byId($documentVideo->idVideo);
-        return DocumentData::from([
+        if (! $video) {
+            throw new \Exception("Video with ID {$documentVideo->idVideo} not found.");
+        }
+        $timelineData = DynamicModeService::getLayersByDocument($idDocument);
+        $timelineConfig = $this->getTimelineConfig($timelineData);
+        $groupedLayers = $this->groupLayersByName($timelineData);
+
+        return [
             'idDocument' => $idDocument,
-            'idDocumentVideo' => $documentVideo->idDocumentVideo,
             'document' => $document,
             'corpus' => $corpus,
             'video' => $video,
             'fragment' => 'fe',
-        ]);
+            'searchResults' => [],
+            'timeline' => [
+                'data' => $timelineData,
+                'config' => $timelineConfig,
+            ],
+            'groupedLayers' => $groupedLayers,
+            'idDynamicObject' => is_null($idDynamicObject) ? 0 : $idDynamicObject,
+        ];
     }
 
-    #[Get(path: '/annotation/dynamicMode/object/{idDynamicObject}')]
-    public function getObject(int $idDynamicObject)
+    #[Get(path: '/annotation/dynamicMode/object')]
+    public function getObject(ObjectSearchData $data)
     {
-        return AnnotationDynamicService::getObject($idDynamicObject ?? 0);
+        if ($data->idDynamicObject == 0) {
+            return view('Annotation.DynamicMode.Forms.formNewObject');
+        }
+        $object = DynamicModeService::getObject($data->idDynamicObject ?? 0);
+        if (is_null($object)) {
+            return $this->renderNotify('error', 'Object not found.');
+        }
+
+        return response()
+            ->view('Annotation.DynamicMode.Panes.objectPane', [
+                'object' => $object,
+            ])->header('HX-Push-Url', "/annotation/dynamicMode/{$object->idDocument}/{$object->idDynamicObject}");
     }
 
-
-    #[Post(path: '/annotation/dynamicMode/formObject')]
-    public function formObject(ObjectData $data)
+    #[Post(path: '/annotation/dynamicMode/object/search')]
+    public function objectSearch(ObjectSearchData $data)
     {
-        debug($data);
-        $object = AnnotationDynamicService::getObject($data->idDynamicObject ?? 0);
-        return view("Annotation.DynamicMode.Panes.formPane", [
-            'order' => $data->order,
-            'object' => $object
-        ]);
+        $searchResults = [];
+
+        if (! empty($data->frame) || ! empty($data->lu) || ! empty($data->searchIdLayerType) || ($data->idDynamicObject > 0)) {
+            $idLanguage = AppService::getCurrentIdLanguage();
+
+            $query = Criteria::table('view_annotation_dynamic as ad')
+                ->where('ad.idLanguage', 'left', $idLanguage)
+                ->where('ad.idDocument', $data->idDocument);
+
+            if (! empty($data->frame)) {
+                $query->whereRaw('(ad.frame LIKE ? OR ad.fe LIKE ?)', [
+                    $data->frame.'%',
+                    $data->frame.'%',
+                ]);
+            }
+
+            if (! empty($data->lu)) {
+                $searchTerm = '%'.$data->lu.'%';
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('ad.lu', 'like', $searchTerm);
+                });
+            }
+
+            if ($data->idDynamicObject != 0) {
+                $query->where('ad.idDynamicObject', $data->idDynamicObject);
+            }
+
+            $searchResults = $query
+                ->select(
+                    'ad.idDynamicObject',
+                    'ad.name',
+                    'ad.startFrame',
+                    'ad.endFrame',
+                    'ad.startTime',
+                    'ad.endTime',
+                    'ad.lu',
+                    'ad.frame',
+                    'ad.fe'
+                )
+                ->orderBy('ad.idDynamicObject')
+                ->orderBy('ad.startFrame')
+                ->orderBy('ad.endFrame')
+                ->all();
+
+            // Format search results for display
+            foreach ($searchResults as $object) {
+                $object->displayName = '';
+                if (! empty($object->lu)) {
+                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->lu;
+                }
+                if (! empty($object->fe)) {
+                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->frame.'.'.$object->fe;
+                }
+                if (empty($object->displayName)) {
+                    $object->displayName = 'None';
+                }
+            }
+        }
+
+        return view('Annotation.DynamicMode.Panes.searchPane', [
+            'searchResults' => $searchResults,
+            'idDocument' => $data->idDocument,
+        ])->fragment('search');
     }
 
-
-    #[Get(path: '/annotation/dynamicMode/gridObjects/{idDocument}')]
-    public function objectsForGrid(int $idDocument)
+    #[Post(path: '/annotation/dynamicMode/createNewObjectAtLayer')]
+    public function createNewObjectAtLayer(CreateObjectData $data)
     {
-        return AnnotationDynamicService::getObjectsByDocument($idDocument);
-    }
-
-    #[Get(path: '/annotation/dynamicMode/formObject/{idDynamicObject}/{order}')]
-    public function getFormObject(int $idDynamicObject, int $order)
-    {
-        $object = AnnotationDynamicService::getObject($idDynamicObject ?? 0);
-        return view("Annotation.DynamicMode.Panes.formPane", [
-            'order' => $order,
-            'object' => $object
-        ]);
-    }
-    #[Post(path: '/annotation/dynamicMode/updateObject')]
-    public function updateObject(ObjectData $data)
-    {
-        debug($data);
         try {
-            $idDynamicObject = AnnotationDynamicService::updateObject($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            $object = DynamicModeService::createNewObjectAtLayer($data);
+
+            return $this->redirect("/annotation/dynamicMode/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/dynamicMode/updateObjectRange')]
+    public function updateObjectRange(ObjectFrameData $data)
+    {
+        try {
+            DynamicModeService::updateObjectFrame($data);
+
+            return $this->redirect("/annotation/dynamicMode/{$data->idDocument}/{$data->idDynamicObject}");
+        } catch (\Exception $e) {
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
     #[Post(path: '/annotation/dynamicMode/updateObjectAnnotation')]
     public function updateObjectAnnotation(ObjectAnnotationData $data)
     {
-        debug($data);
         try {
-            $idDynamicObject = AnnotationDynamicService::updateObjectAnnotation($data);
-            $this->trigger('updateObjectAnnotationEvent');
-            //return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
-            return $this->renderNotify("success", "Object updated.");
+            DynamicModeService::updateObjectAnnotation($data);
+            $object = DynamicModeService::getObject($data->idDynamicObject);
+            if (! $object) {
+                return $this->renderNotify('error', 'Object not found after update.');
+            }
+            $this->notify('success', 'Object updated.');
+
+            return $this->render('Annotation.DynamicMode.Panes.timeline.object', [
+                'duration' => $object->endFrame - $object->startFrame,
+                'objectData' => $object,
+            ], 'object');
         } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/annotation/dynamicMode/deleteAllBBoxes/{idDocument}/{idDynamicObject}')]
+    public function deleteAllBBoxes(int $idDocument, int $idDynamicObject)
+    {
+        try {
+            DynamicModeService::deleteBBoxesFromObject($idDynamicObject);
+
+            return $this->redirect("/annotation/dynamicMode/{$idDocument}/{$idDynamicObject}");
+        } catch (\Exception $e) {
+            return $this->renderNotify('error', $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject}')]
+    public function deleteObject(int $idDocument, int $idDynamicObject)
+    {
+        try {
+            DynamicModeService::deleteObject($idDynamicObject);
+
+            return $this->redirect("/annotation/dynamicMode/{$idDocument}");
+        } catch (\Exception $e) {
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
     #[Post(path: '/annotation/dynamicMode/cloneObject')]
     public function cloneObject(CloneData $data)
     {
-        debug($data);
         try {
-            $idDynamicObject = AnnotationDynamicService::cloneObject($data);
-            return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            $idDynamicObjectClone = DynamicModeService::cloneObject($data);
+
+            return $this->redirect("/annotation/dynamicMode/{$data->idDocument}/{$idDynamicObjectClone}");
         } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
-    #[Delete(path: '/annotation/dynamicMode/{idDynamicObject}')]
-    public function deleteObject(int $idDynamicObject)
+    /*
+     * BBox
+     */
+
+    #[Get(path: '/annotation/dynamicMode/getBBox')]
+    public function getBBox(GetBBoxData $data)
     {
         try {
-            AnnotationDynamicService::deleteObject($idDynamicObject);
-            return $this->renderNotify("success", "Object removed.");
+            return Criteria::table('view_dynamicobject_boundingbox')
+                ->where('idDynamicObject', $data->idDynamicObject)
+                ->where('frameNumber', $data->frameNumber)
+                ->first();
         } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
-    #[Post(path: '/annotation/dynamicMode/updateBBox')]
-    public function updateBBox(UpdateBBoxData $data)
+    #[Get(path: '/annotation/dynamicMode/getBoxesContainer/{idDynamicObject}')]
+    public function getBoxesContainer(int $idDynamicObject)
     {
         try {
-            debug($data);
-            $idBoundingBox = AnnotationDynamicService::updateBBox($data);
-            return Criteria::byId("boundingbox", "idBoundingBox", $idBoundingBox);
+            $dynamicObject = Criteria::byId('dynamicObject', 'idDynamicObject', $idDynamicObject);
+            if (! $dynamicObject) {
+                return $this->renderNotify('error', "Dynamic object with ID {$idDynamicObject} not found.");
+            }
+
+            return view('Annotation.DynamicMode.Forms.boxesContainer', [
+                'object' => $dynamicObject,
+            ]);
         } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -194,132 +297,25 @@ class DynamicModeController extends Controller
     public function createBBox(CreateBBoxData $data)
     {
         try {
-            debug($data);
-            return AnnotationDynamicService::createBBox($data);
+            return DynamicModeService::createBBox($data);
         } catch (\Exception $e) {
-            debug($e->getMessage());
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
-    #[Get(path: '/annotation/dynamicMode/fes/{idFrame}')]
-    public function feCombobox(int $idFrame)
-    {
-        return view("Annotation.DynamicMode.Panes.fes", [
-            'idFrame' => $idFrame
-        ]);
-    }
-
-    #[Get(path: '/annotation/dynamicMode/sentences/{idDocument}')]
-    public function gridSentences(int $idDocument)
-    {
-        $sentences = AnnotationDynamicService::listSentencesByDocument($idDocument);
-        return view("Annotation.DynamicMode.Panes.sentences", [
-            'sentences' => $sentences
-        ]);
-    }
-
-    /*
-     * Build sentence
-     */
-
-    #[Get(path: '/annotation/dynamicMode/buildSentences/{idDocument}')]
-    public function buildSentences(int $idDocument)
-    {
-        $data = $this->getData($idDocument);
-        return view("Annotation.DynamicMode.buildSentences", $data->toArray());
-    }
-
-    #[Get(path: '/annotation/dynamicMode/formSentence/{idDocument}/{idSentence}')]
-    public function formSentence(int $idDocument, int $idSentence)
-    {
-        $sentence = Criteria::byId("view_sentence", "idSentence", $idSentence);
-        if (is_null($sentence)) {
-            $sentence = (object)[
-                "idSentence" => 0,
-                "text" => ''
-            ];
-        } else {
-            $ts = Criteria::byId("view_sentence_timespan", "idSentence", $idSentence);
-            $sentence->startTime = $ts->startTime;
-            $sentence->endTime = $ts->endTime;
-        }
-        $documentVideo = Criteria::table("view_document_video")
-            ->where("idDocument", $idDocument)
-            ->first();
-        $video = Video::byId($documentVideo->idVideo);
-        return view("Annotation.DynamicMode.Panes.formSentencePane", [
-            'idDocument' => $idDocument,
-            "sentence" => $sentence,
-            'idLanguage' => $video->idLanguage
-        ]);
-    }
-
-    #[Post(path: '/annotation/dynamicMode/formSentence')]
-    public function sentence(SentenceData $data)
+    #[Post(path: '/annotation/dynamicMode/updateBBox')]
+    public function updateBBox(UpdateBBoxData $data)
     {
         try {
-            if ($data->text == "") {
-                return $this->renderNotify("error", "No data.");
+            $idBoundingBox = DynamicModeService::updateBBox($data);
+            $boundingBox = Criteria::byId('boundingbox', 'idBoundingBox', $idBoundingBox);
+            if (! $boundingBox) {
+                return $this->renderNotify('error', 'Updated bounding box not found.');
             }
-            debug($data);
-            if ($data->idSentence == 0) {
-                AnnotationDynamicService::createSentence($data);
-            } else {
-                AnnotationDynamicService::updateSentence($data);
-            }
-            $this->trigger('reload-gridSentence');
-            return $this->renderNotify("success", "Sentence updated.");
+
+            return $boundingBox;
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Get(path: '/annotation/dynamicMode/words/{idVideo}')]
-    public function words(int $idVideo)
-    {
-        $words = Criteria::table("view_video_wordmm")
-            ->where("idVideo", "=", $idVideo)
-            ->whereNull("idDocumentSentence")
-            ->all();
-        return $words;
-    }
-
-    #[Post(path: '/annotation/dynamicMode/joinWords')]
-    public function joinWords(WordData $data)
-    {
-        try {
-            debug($data);
-            $idSentence = AnnotationDynamicService::buildSentenceFromWords($data);
-            if ($idSentence == 0) {
-                throw new \Exception("Error joining words.");
-            }
-            return $idSentence;
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
-    }
-
-    #[Get(path: '/annotation/dynamicMode/buildSentences/sentences/{idDocument}')]
-    public function buildSentenceSentences(int $idDocument)
-    {
-
-        $sentences = AnnotationDynamicService::listSentencesByDocument($idDocument);
-        return view("Annotation.DynamicMode.Panes.buildSentences", [
-            'idDocument' => $idDocument,
-            'sentences' => $sentences
-        ]);
-    }
-
-    #[Post(path: '/annotation/dynamicMode/splitSentence')]
-    public function splitSentence(SentenceData $data)
-    {
-        try {
-            AnnotationDynamicService::splitSentence($data);
-            $this->trigger('reload-gridSentence');
-            return $this->renderNotify("success", "Sentence updated.");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
@@ -331,49 +327,103 @@ class DynamicModeController extends Controller
     public function getFormComment(CommentData $data)
     {
         $object = CommentService::getDynamicObjectComment($data->idDynamicObject);
-        return view("Annotation.DynamicMode.Panes.formComment", [
+        // Note: object can be null for new comments, which is handled by the view
+
+        return view('Annotation.DynamicMode.Panes.formComment', [
             'idDocument' => $data->idDocument,
             'order' => $data->order,
-            'object' => $object
+            'object' => $object,
         ]);
     }
+
     #[Post(path: '/annotation/dynamicMode/updateObjectComment')]
     public function updateObjectComment(CommentData $data)
     {
         try {
-            debug($data);
             CommentService::updateDynamicObjectComment($data);
             $this->trigger('updateObjectAnnotationEvent');
-            return $this->renderNotify("success", "Comment registered.");
+
+            return $this->renderNotify('success', 'Comment registered.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
+
     #[Delete(path: '/annotation/dynamicMode/comment/{idDocument}/{idDynamicObject}')]
-    public function deleteObjectComment(int $idDocument,int $idDynamicObject)
+    public function deleteObjectComment(int $idDocument, int $idDynamicObject)
     {
         try {
-            CommentService::deleteDynamicObjectComment($idDocument,$idDynamicObject);
-            return $this->renderNotify("success", "Object comment removed.");
+            CommentService::deleteDynamicObjectComment($idDocument, $idDynamicObject);
+
+            return $this->renderNotify('success', 'Object comment removed.');
         } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
+            return $this->renderNotify('error', $e->getMessage());
         }
     }
 
-    /*
-     * get Object
+    /**
+     * timeline
      */
-
-    #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
-    public function annotation(int|string $idDocument, int $idDynamicObject = null)
+    private function getTimelineConfig($timelineData): array
     {
-        $data = $this->getData($idDocument);
-        if (!is_null($idDynamicObject)) {
-            $data->idDynamicObject = $idDynamicObject;
+        $minFrame = PHP_INT_MAX;
+        $maxFrame = PHP_INT_MIN;
+
+        foreach ($timelineData as $layer) {
+            foreach ($layer['objects'] as $object) {
+                $minFrame = min($minFrame, $object->startFrame);
+                $maxFrame = max($maxFrame, $object->endFrame);
+            }
         }
-        return view("Annotation.DynamicMode.annotation", $data->toArray());
+
+        // Add padding
+        $minFrame = max(0, $minFrame - 100);
+        $maxFrame = $maxFrame + 100;
+
+        return [
+            'minFrame' => $minFrame,
+            'maxFrame' => $maxFrame,
+            'frameToPixel' => 1,
+            'minObjectWidth' => 16,
+            'objectHeight' => 24,
+            'labelWidth' => 150,
+            'timelineWidth' => ($maxFrame - $minFrame) * 1,
+            'timelineHeight' => (24 * count($timelineData)) + 10,
+        ];
     }
 
+    private function groupLayersByName($timelineData): array
+    {
+        $layerGroups = [];
 
+        foreach ($timelineData as $originalIndex => $layer) {
+            $layerName = $layer['layer'];
 
+            if (! isset($layerGroups[$layerName])) {
+                $layerGroups[$layerName] = [
+                    'name' => $layerName,
+                    'lines' => [],
+                ];
+            }
+
+            $layerGroups[$layerName]['lines'][] = array_merge($layer, [
+                'originalIndex' => $originalIndex,
+            ]);
+        }
+
+        return array_values($layerGroups);
+    }
+
+    /**
+     * Page
+     */
+    #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
+    public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
+    {
+        $data = $this->getData($idDocument, $idDynamicObject);
+
+        return response()
+            ->view('Annotation.DynamicMode.annotation', $data)
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
 }

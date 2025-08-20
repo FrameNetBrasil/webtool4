@@ -1,184 +1,127 @@
-<script type="text/javascript">
-    $(function () {
-        annotation.video.player = videojs(annotation.video.idVideoJs, {
-            height: annotation.video.originalDimensions.height,
-            width: annotation.video.originalDimensions.width,
-            controls: true,
-            autoplay: false,
-            preload: "auto",
-            playbackRates: [0.2, 0.5, 0.8, 1, 2],
-            bigPlayButton: false,
-            inactivityTimeout: 0,
-            children: {
-                controlBar: {
-                    playToggle: true,
-                    volumePanel: false,
-                    remainingTimeDisplay: false,
-                    fullscreenToggle: false,
-                    pictureInPictureToggle: false,
-                },
-                mediaLoader: true,
-                loadingSpinner: true,
-            },
-            userActions: {
-                doubleClick: false
-            }
-        });
-        let player = annotation.video.player;
-        player.crossOrigin('anonymous')
-
-        player.player_.handleTechClick_ = function (event) {
-            console.log('video clicking')
-            let state = Alpine.store('doStore').currentVideoState;
-            if (state === 'paused') {
-                player.play();
-            }
-            if (state === 'playing') {
-                player.pause();
-            }
-        };
-
-        //<span class="vjs-icon-placeholder" aria-hidden="true"></span>
-        //<span class="vjs-control-text" aria-live="polite">Play</span>
-
-        // button frame forward
-        let btnForward = player.controlBar.addChild('button', {}, 0);
-        let btnForwardDom = btnForward.el();
-        btnForwardDom.innerHTML = '<span class="vjs-icon-placeholder" id="btnForward" aria-hidden="true" title="Next frame"><i class="video-material">skip_next</i></span>';
-        btnForwardDom.onclick = function () {
-            console.log('click forward');
-            let state = Alpine.store('doStore').currentVideoState;
-            if (state === 'paused') {
-                let currentTime = player.currentTime();
-                let newTime = currentTime + annotation.video.timeInterval;
-                //console.log('newTime', newTime);
-                player.currentTime(newTime);
-            }
-        };
-        // button frame backward
-        let btnBackward = player.controlBar.addChild('button', {}, 0);
-        let btnBackwardDom = btnBackward.el();
-        btnBackwardDom.innerHTML = '<span class="vjs-icon-placeholder"  id="btnBackward" aria-hidden="true" title="Previous frame"><i class="video-material">skip_previous</i></span>';
-        btnBackwardDom.onclick = function () {
-            console.log('click backward');
-            let state = Alpine.store('doStore').currentVideoState;
-            if (state === 'paused') {
-                let currentTime = player.currentTime();
-                if (Alpine.store('doStore').frameCount > 1) {
-                    let newTime = currentTime - annotation.video.timeInterval;
-                    //console.log('newTime', newTime);
-                    player.currentTime(newTime);
-                }
-            }
-        };
-
-        player.ready(function () {
-            Alpine.store('doStore').config();
-            player.on('durationchange', () => {
-                let duration = player.duration();
-                Alpine.store('doStore').timeDuration = parseInt(duration);
-                let lastFrame = annotation.video.frameFromTime(duration);
-                Alpine.store('doStore').frameDuration = lastFrame;
-                annotation.video.framesRange.last = lastFrame;
-                Alpine.store('doStore').updateObjectList();
-            })
-            player.on('timeupdate', () => {
-                let currentTime = player.currentTime();
-                // console.log(" ** player current time - timeupdate", currentTime);
-                // console.log('timeupdate currentTime', currentTime);
-                let currentFrame = annotation.video.frameFromTime(currentTime);
-                // console.log("timeupdate currentFrame ", currentFrame);
-                //currentTime = annotation.video.timeFromFrame(currentFrame);
-                //console.log('time update', currentTime);
-                //Alpine.store('doStore').timeByFrame = Math.floor(currentTime * 1000) /1000;
-                Alpine.store('doStore').timeByFrame = annotation.video.timeFromFrame(currentFrame);
-                // console.log("timeupdate timeByFrame ", Alpine.store('doStore').timeByFrame);
-                Alpine.store('doStore').updateCurrentFrame(currentFrame);
-                if (annotation.video.playingRange) {
-                    if (currentFrame > annotation.video.playingRange.endFrame) {
-                        annotation.video.player.pause();
-                        annotation.video.playingRange = null;
-                    }
-                }
-            })
-            player.on('play', () => {
-                let state = Alpine.store('doStore').currentVideoState;
-                if (state === 'paused') {
-                    Alpine.store('doStore').currentVideoState = 'playing';
-                }
-                $btn = document.querySelector("#btnBackward");
-                if ($btn) {
-                    $btn.style.color = "grey";
-                    $btn.style.cursor = "default";
-                }
-                $btn = document.querySelector("#btnForward");
-                if ($btn) {
-                    $btn.style.color = "grey";
-                    $btn.style.cursor = "default";
-                }
-            })
-            player.on('pause', () => {
-                // let currentTime = player.currentTime();
-                // let currentFrame = annotation.video.frameFromTime(currentTime);
-                // Alpine.store('doStore').timeByFrame = annotation.video.timeFromFrame(currentFrame);
-                // Alpine.store('doStore').updateCurrentFrame(currentFrame);
-
-                // let currentTime = player.currentTime();
-                // console.log(" ** player current time - pause", currentTime);
-
-                Alpine.store('doStore').currentVideoState = 'paused';
-                $btn = document.querySelector("#btnBackward");
-                if ($btn) {
-                    $btn.style.color = "white";
-                    $btn.style.cursor = "pointer";
-                }
-                $btn = document.querySelector("#btnForward");
-                if ($btn) {
-                    $btn.style.color = "white";
-                    $btn.style.cursor = "pointer";
-                }
-            })
-        });
-
-
-    })
-</script>
-<div
-    style="position:relative; width:852px;height:480px"
->
-    <video-js
-        id="videoContainer"
-        class="video-js"
-        src="{!! config('webtool.mediaURL') . "/" . $video->currentURL !!}"
+<div x-data="videoComponent()" class="video-player-container">
+    <div class="video-wrapper"
+         style="position:relative; width:852px;height:480px"
     >
-    </video-js>
-    <canvas id="canvas" width=0 height=0></canvas>
-    <div id="boxesContainer">
+        <video :id="idVideo"
+               preload="metadata"
+               crossorigin="anonymous"
+               x-init="init()"
+               @loadstart="log('Load start')"
+               @loadedmetadata="onLoadedMetadata()"
+               @loadeddata="log('Data loaded')"
+{{--               @video-toggle-play.document="onVideoTogglePlay()"--}}
+               @video-seek-frame.document="onVideoSeekFrame"
+{{--               @video-update-state.document="onVideoUpdateState"--}}
+{{--               @video-update-duration.document="onVideoUpdateDuration"--}}
+               @tracking-start.document="onTrackingStart"
+               @tracking-stop.document="onTrackingStop"
+               @canplay="log('Can play')"
+               @canplaythrough="log('Can play through')"
+               @durationchange="onDurationChange()"
+               @timeupdate="onTimeUpdate()"
+               @play="onPlay()"
+               @pause="onPause()"
+               @seeking="onSeeking()"
+               @seeked="onSeeked()"
+               @progress="updateBuffer()"
+               @click="togglePlay()">
+            <source src="{!! config('webtool.mediaURL') . "/" . $video->currentURL !!}?t={!! time() !!}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <video id="fallbackVideo" style="display:none"></video>
+        <!-- Progress bar -->
+        <div class="progress-container" @click="seekToPosition($event)">
+            <div class="buffer-bar" :style="'width: ' + bufferProgress + '%'"></div>
+            <div class="progress-bar" :style="'width: ' + playProgress + '%'"></div>
+        </div>
+
+        <div x-show="isSeekingInProgress"
+             class="seeking-indicator spinning"
+             x-text="'Seeking to frame ' + seekingToFrame + '...'">
+        </div>
+
+        <canvas id="canvas" width=852 height=480 style="position: absolute; top: 0; left: 0; background-color: transparent; z-index: 1;"></canvas>
+
+        <div id="boxesContainer">
+
+        </div>
     </div>
-    <div x-data class="info flex flex-row justify-content-between">
-        <div style="width:200px; text-align:left">
+    <div
+        class="control-bar d-flex justify-between"
+    >
+        <div style="width:128px;text-align:left;">
             <div class="ui label">
-            <span x-text="$store.doStore.frameCount"></span> [<span x-text="$store.doStore.timeByFrame"></span>s]
+                <span x-text="frame.current"></span> [<span
+                    x-text="formatTime(time.current)"></span>]
             </div>
         </div>
-        <div>
-            <div class="ui label">
-                Video <div class="detail"><span x-text="$store.doStore.currentVideoState"></span></div>
+        <div id="videoNavigation" class="ui small icon buttons">
+            <button
+                class="ui button nav"
+                :class="(isPlaying || isTracking) && 'disabled'"
+                @click="gotoStart()"
+            ><i class="fast backward icon"></i>
+            </button>
+            <button
+                class="ui button nav"
+                :class="(isPlaying || isTracking) && 'disabled'"
+                @click="gotoPrevious10Second()"
+            ><i class="backward icon"></i>
+            </button>
+            <button
+                class="ui button nav"
+                :class="isPlaying && 'disabled'"
+                @click="gotoPreviousFrame()"
+            ><i class="step backward icon"></i>
+            </button>
+            <button
+                class="ui button toggle"
+                :class="isTracking && 'disabled'"
+                @click="togglePlay()"
+            ><i :class="isPlaying ? 'pause icon' : 'play icon'"></i>
+            </button>
+            <button
+                class="ui button nav"
+                :class="isPlaying && 'disabled'"
+                @click="gotoNextFrame()"
+            ><i class="step forward icon"></i>
+            </button>
+            <button
+                class="ui button nav"
+                :class="(isPlaying || isTracking) && 'disabled'"
+                @click="gotoNext10Second()"
+            ><i class="forward icon"></i>
+            </button>
+            <button
+                class="ui button nav"
+                :class="(isPlaying || isTracking) && 'disabled'"
+                @click="gotoEnd()"
+            ><i class="fast forward icon"></i>
+            </button>
+        </div>
+
+        <!-- Playback Rate Selector -->
+        <div
+            class="ui compact dropdown playback-rate-selector"
+            x-init="$($el).dropdown();"
+        >
+            <div class="text" x-text="currentPlaybackRate === 1 ? 'Normal' : currentPlaybackRate + 'x'"></div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <template x-for="rate in playbackRates" :key="rate">
+                    <div class="item"
+                         :class="rate === currentPlaybackRate && 'active'"
+                         @click="setPlaybackRate(rate)"
+                         x-text="rate === 1 ? 'Normal' : rate + 'x'">
+                    </div>
+                </template>
             </div>
         </div>
-        <div>
+
+        <div style="width:128px;text-align:right;">
             <div class="ui label">
-                Object <div class="detail">#<span x-text="$store.doStore.currentObject?.idObject || 'none'"></span></div>
-            </div>
-        </div>
-        <div>
-            <div class="ui label">
-                Status <div class="detail"><span x-text="$store.doStore.newObjectState"></span></div>
-            </div>
-        </div>
-        <div style="width:120px; text-align:right">
-            <div class="ui label">
-            <span x-text="$store.doStore.frameDuration"></span> [<span x-text="$store.doStore.timeDuration"></span>s]
+                <span x-text="frame.last"></span> [<span
+                    x-text="formatTime(duration)"></span>]
             </div>
         </div>
     </div>

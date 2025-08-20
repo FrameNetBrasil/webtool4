@@ -120,7 +120,7 @@ $router->get('frame', [
 	'domain' => NULL,
 ]);
 
-$router->post('frame/tree', [
+$router->post('frame/search', [
 	'uses' => 'App\Http\Controllers\Frame\BrowseController@tree',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -1460,6 +1460,14 @@ $router->delete('lexicon3/feature/{idLexicon}/{idUDFeature}', [
 	'uses' => 'App\Http\Controllers\Lexicon\Resource3Controller@deleteFeature',
 	'as' => NULL,
 	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('components/fesByFrame', [
+	'uses' => 'App\Http\Controllers\ComponentsController@feCombobox',
+	'as' => NULL,
+	'middleware' => ['web'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -3504,16 +3512,16 @@ $router->get('user/listForSelect', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fe', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@browse',
+$router->get('annotation/fe/script/{folder}', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@jsObjects',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fe/grid/{idDocument}/sentences', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@documentSentences',
+$router->get('annotation/fe', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@browse',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3528,24 +3536,24 @@ $router->get('annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fe/annotations/{idSentence}', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@annotations',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/fe/as/{idAS}/{token}', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@annotationSet',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('annotation/fe/lus/{idDocumentSentence}/{idWord}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@getLUs',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/fe/createAS', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@createAS',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/fe/as/{idAS}/{token?}', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@annotationSet',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3562,14 +3570,6 @@ $router->post('annotation/fe/annotate', [
 
 $router->delete('annotation/fe/frameElement', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@deleteFE',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/fe/create', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@createAS',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3832,6 +3832,14 @@ $router->post('annotation/browse/treeDocument', [
 	'domain' => NULL,
 ]);
 
+$router->get('annotation/dynamicMode/script/{folder}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@jsObjects',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/dynamicMode', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@browse',
 	'as' => NULL,
@@ -3840,7 +3848,7 @@ $router->get('annotation/dynamicMode', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/dynamicMode/object/{idDynamicObject}', [
+$router->get('annotation/dynamicMode/object', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getObject',
 	'as' => NULL,
 	'middleware' => ['auth'],
@@ -3848,32 +3856,24 @@ $router->get('annotation/dynamicMode/object/{idDynamicObject}', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/dynamicMode/formObject', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@formObject',
+$router->post('annotation/dynamicMode/object/search', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@objectSearch',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/dynamicMode/gridObjects/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@objectsForGrid',
+$router->post('annotation/dynamicMode/createNewObjectAtLayer', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@createNewObjectAtLayer',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/dynamicMode/formObject/{idDynamicObject}/{order}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getFormObject',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/dynamicMode/updateObject', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateObject',
+$router->post('annotation/dynamicMode/updateObjectRange', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateObjectRange',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3888,6 +3888,22 @@ $router->post('annotation/dynamicMode/updateObjectAnnotation', [
 	'domain' => NULL,
 ]);
 
+$router->delete('annotation/dynamicMode/deleteAllBBoxes/{idDocument}/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteAllBBoxes',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/dynamicMode/{idDocument}/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteObject',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->post('annotation/dynamicMode/cloneObject', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@cloneObject',
 	'as' => NULL,
@@ -3896,16 +3912,16 @@ $router->post('annotation/dynamicMode/cloneObject', [
 	'domain' => NULL,
 ]);
 
-$router->delete('annotation/dynamicMode/{idDynamicObject}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteObject',
+$router->get('annotation/dynamicMode/getBBox', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getBBox',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/dynamicMode/updateBBox', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateBBox',
+$router->get('annotation/dynamicMode/getBoxesContainer/{idDynamicObject}', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@getBoxesContainer',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3920,72 +3936,8 @@ $router->post('annotation/dynamicMode/createBBox', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/dynamicMode/fes/{idFrame}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@feCombobox',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/dynamicMode/sentences/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@gridSentences',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/dynamicMode/buildSentences/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@buildSentences',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/dynamicMode/formSentence/{idDocument}/{idSentence}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@formSentence',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/dynamicMode/formSentence', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@sentence',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/dynamicMode/words/{idVideo}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@words',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/dynamicMode/joinWords', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@joinWords',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/dynamicMode/buildSentences/sentences/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@buildSentenceSentences',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/dynamicMode/splitSentence', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@splitSentence',
+$router->post('annotation/dynamicMode/updateBBox', [
+	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateBBox',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -4216,16 +4168,16 @@ $router->delete('annotation/as/annotationset/{idAnnotationSet}', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fullText', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@browse',
+$router->get('annotation/fullText/script/{folder}', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@jsObjects',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fullText/grid/{idDocument}/sentences', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@documentSentences',
+$router->get('annotation/fullText', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@browse',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -4240,32 +4192,24 @@ $router->get('annotation/fullText/sentence/{idDocumentSentence}/{idAnnotationSet
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fullText/annotations/{idSentence}', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@annotations',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/fullText/spans/{idAS}', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@getSpans',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/fullText/as/{idAS}/{token}', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@annotationSet',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('annotation/fullText/lus/{idDocumentSentence}/{idWord}', [
 	'uses' => 'App\Http\Controllers\Annotation\FullTextController@getLUs',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/fullText/createAS', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@createAS',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/fullText/as/{idAS}/{token?}', [
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@annotationSet',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -4281,47 +4225,7 @@ $router->post('annotation/fullText/annotate', [
 ]);
 
 $router->delete('annotation/fullText/label', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteFE',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/fullText/create', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@createAS',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('annotation/fullText/annotationset/{idAnnotationSet}', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteAS',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/fullText/formComment/{idAnnotationSet}', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@getFormComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/fullText/updateObjectComment', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@updateObjectComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('annotation/fullText/comment/{idAnnotationSet}', [
-	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteObjectComment',
+	'uses' => 'App\Http\Controllers\Annotation\FullTextController@deleteLabel',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

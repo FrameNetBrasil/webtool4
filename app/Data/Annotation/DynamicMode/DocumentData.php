@@ -10,6 +10,7 @@ class DocumentData extends Data
         public ?int $idDocument = null,
         public ?int $idDocumentVideo = null,
         public ?int $idDynamicObject = null,
+        public ?int $startTime = null,
         public ?int $idPrevious = null,
         public ?int $idNext = null,
         public ?object $document = null,
@@ -19,8 +20,6 @@ class DocumentData extends Data
         public ?array $frames = null,
         public ?string $type = '',
         public ?string $comment = '',
-    )
-    {
-    }
+    ) {}
 
 }

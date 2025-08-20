@@ -1,22 +1,21 @@
-<div class="grids flex flex-column flex-grow-1" style="width:1024px;">
-    <div class="ui pointing secondary menu tabs">
-        <a class="item" data-tab="objects">Objects</a>
-        <a class="item" data-tab="sentences">Sentences</a>
-    </div>
-    <div class="gridBody">
-        @include("Annotation.DynamicMode.Panes.objectsPane")
-        <div
-            class="ui tab sentences"
-            data-tab="sentences"
-            hx-trigger="load"
-            hx-get="/annotation/dynamicMode/sentences/{{$idDocument}}"
-        >
-            sentences
-        </div>
-    </div>
-    <script type="text/javascript">
-        $(".tabs .item")
-            .tab()
-        ;
-    </script>
+<div class="ui pointing secondary menu tabs">
+    <a class="item" data-tab="timeline">Timeline</a>
+    <a class="item" data-tab="objects">Objects</a>
 </div>
+<div class="gridBody">
+    <div
+        id="timelinePane"
+        class="ui tab timeline h-full w-full active"
+        data-tab="timeline"
+    >
+        @include("Annotation.DynamicMode.Panes.timelinePane")
+    </div>
+    <div class="ui tab objects h-full w-full" data-tab="objects">
+        @include("Annotation.DynamicMode.Panes.searchPane", ['idDocument' => $idDocument])
+    </div>
+</div>
+<script type="text/javascript">
+    $(".tabs .item")
+        .tab()
+    ;
+</script>

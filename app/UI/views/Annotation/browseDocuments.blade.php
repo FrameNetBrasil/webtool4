@@ -61,9 +61,9 @@
                                                 @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
-                                                    if ((type === 'corpus') || (type === 'document')) {
+                                                    if (type === 'corpus') {
                                                         event.detail.tree.toggleNodeState(idNode);
-                                                    } else if (type === 'sentence') {
+                                                    } else if (type === 'document') {
                                                         window.open(`{{$url}}/${event.detail.id}`, '_blank');
                                                     }
                                                 }"
