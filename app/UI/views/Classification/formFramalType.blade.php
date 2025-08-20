@@ -1,23 +1,32 @@
-<x-form
-    title="Type"
-    hx-post="/frame/classification/type"
->
-    <x-slot:fields>
-        <x-hidden-field
-            id="idFrame"
-            :value="$idFrame"
-        ></x-hidden-field>
-        <div style="height:300px; overflow:auto">
+<div class="ui card form-card w-full p-1">
+    <div class="content">
+        <div class="header">
+            <x-icon::translate></x-icon::translate>
+            Type
+        </div>
+        <div class="description">
+
+        </div>
+    </div>
+    <div class="content">
+        <form class="ui form">
+            <input type="hidden" name="idFrame" value="{{$idFrame}}">
             <div class="field">
-                <x-checkbox.framal-type
+                <x-checkbox::framal-type
                     id="framalType"
                     :idFrame="$idFrame"
                     label=""
-                ></x-checkbox.framal-type>
+                ></x-checkbox::framal-type>
             </div>
-        </div>
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-submit label="Update Type"></x-submit>
-    </x-slot:buttons>
-</x-form>
+        </form>
+    </div>
+    <div class="extra content">
+        <button
+            type="submit"
+            class="ui primary button"
+            hx-post="/frame/classification/type"
+        >
+            Update Type
+        </button>
+    </div>
+</div>

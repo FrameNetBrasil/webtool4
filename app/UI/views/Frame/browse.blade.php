@@ -20,28 +20,15 @@
                                       hx-target="#gridArea"
                                       hx-swap="innerHTML"
                                       hx-trigger="submit, input delay:500ms">
-                                    <div class="two fields">
-                                        <div class="field">
-                                            <div class="ui left icon input w-full">
-                                                <i class="search icon"></i>
-                                                <input
-                                                    type="search"
-                                                    name="frame"
-                                                    placeholder="Search Frame"
-                                                    autocomplete="off"
-                                                >
-                                            </div>
-                                        </div>
-                                        <div class="field">
-                                            <div class="ui left icon input w-full">
-                                                <i class="search icon"></i>
-                                                <input
-                                                    type="search"
-                                                    name="lu"
-                                                    placeholder="Search LU"
-                                                    autocomplete="off"
-                                                >
-                                            </div>
+                                    <div class="field">
+                                        <div class="ui left icon input w-full">
+                                            <i class="search icon"></i>
+                                            <input
+                                                type="search"
+                                                name="frame"
+                                                placeholder="Search Frame"
+                                                autocomplete="off"
+                                            >
                                         </div>
                                     </div>
                                 </form>
