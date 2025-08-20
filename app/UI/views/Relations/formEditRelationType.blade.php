@@ -5,11 +5,11 @@
         <x-hidden-field id="idRelationType" value="{{$relationType->idRelationType}}"></x-hidden-field>
         <div class="fields">
             <div class="field">
-                <x-combobox.relation-group
+                <x-combobox::relation-group
                     label="RelationGroup"
                     id="idRelationGroup"
                     :value="$relationType->idRelationGroup"
-                ></x-combobox.relation-group>
+                ></x-combobox::relation-group>
             </div>
         </div>
         <div class="three fields">

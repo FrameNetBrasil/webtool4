@@ -20,26 +20,26 @@
         </div>
         <div class="three fields">
             <div class="field">
-                <x-combobox.language
+                <x-combobox::language
                     id="idLanguage"
                     label="Language"
                     value=""
-                ></x-combobox.language>
+                ></x-combobox::language>
             </div>
             <div class="field">
-                <x-combobox.color
+                <x-combobox::color
                     id="idColor"
                     label="Color"
                     value=""
                     placeholder="Color"
-                ></x-combobox.color>
+                ></x-combobox::color>
             </div>
             <div class="field">
-                <x-combobox.layer-type
+                <x-combobox::layer-type
                     label="LayerType"
                     id="idLayerType"
                     :value="0"
-                ></x-combobox.layer-type>
+                ></x-combobox::layer-type>
             </div>
         </div>
     </x-slot:fields>

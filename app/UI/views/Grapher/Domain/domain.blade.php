@@ -5,12 +5,12 @@
     <x-slot:main>
         <form>
             <div class="flex flex-row gap-2 pl-2 pt-2">
-                <x-combobox.frame-domain
+                <x-combobox::frame-domain
                     id="idSemanticType"
                     label=""
                     placeholder="Domain"
                     value=""
-                ></x-combobox.frame-domain>
+                ></x-combobox::frame-domain>
                 <x-checkbox.relation
                     id="frameRelation"
                     label="Relations to show"

@@ -12,12 +12,12 @@
             ></x-text-field>
         </div>
         <div class="field">
-            <x-combobox.options
+            <x-combobox::options
                 label="Type"
                 id="type"
                 :options="['Deixis' => 'Deixis','Text' => 'Text']"
                 value=""
-            ></x-combobox.options>
+            ></x-combobox::options>
         </div>
     </x-slot:fields>
     <x-slot:buttons>

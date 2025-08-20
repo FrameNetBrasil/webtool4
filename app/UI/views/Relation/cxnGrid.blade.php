@@ -32,7 +32,7 @@
                                         href="/cxn/{{$idRelatedCxn}}"
                                         class="font-bold"
                                     >
-                                        <x-element.construction name="{{$relation['name']}}"></x-element.construction>
+                                        <x-element::construction name="{{$relation['name']}}"></x-element::construction>
                                     </a>
                                     <a
                                         hx-target="#gridCxnRelationsContent"

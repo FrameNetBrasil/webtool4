@@ -3,11 +3,11 @@
 >
     <x-slot:fields>
         <div class="field">
-            <x-combobox.lexicon-lemma
+            <x-combobox::lexicon-lemma
                 id="idLexicon"
                 label="Lemma [min: 3 chars]"
                 value="0"
-            ></x-combobox.lexicon-lemma>
+            ></x-combobox::lexicon-lemma>
         </div>
         <div class="field">
             <x-multiline-field
@@ -18,7 +18,7 @@
         </div>
         <div class="formgroup-inline">
             <div class="field mr-1">
-                <x-combobox.frame
+                <x-combobox::frame
                     id="idFrame"
                     label="Suggested frame"
                     placeholder="Frame (min: 3 chars)"
@@ -28,11 +28,11 @@
                     :name="$object->frame ?? ''"
                     :hasDescription="false"
                     onSelect="htmx.ajax('GET','/luCandidate/fes/' + result.idFrame,'#fes');"
-                ></x-combobox.frame>
+                ></x-combobox::frame>
             </div>
             <div id="fes">
                 <div class="field w-20rem mr-1">
-                    <x-combobox.fe-frame
+                    <x-combobox::fe-frame
                         id="incorporatedFE"
                         name="incorporatedFE"
                         label="FE"
@@ -40,7 +40,7 @@
                         :value="$object?->idFrameElement ?? 0"
                         :idFrame="$object?->idFrame ?? 0"
                         :hasNull="false"
-                    ></x-combobox.fe-frame>
+                    ></x-combobox::fe-frame>
                 </div>
             </div>
         </div>

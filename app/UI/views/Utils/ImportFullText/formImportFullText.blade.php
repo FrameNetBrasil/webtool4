@@ -10,11 +10,11 @@
             :value="$document->idDocument"
         ></x-hidden-field>
         <div class="field">
-            <x-combobox.language
+            <x-combobox::language
                 label="Language"
                 id="idLanguage"
                 value=""
-            ></x-combobox.language>
+            ></x-combobox::language>
         </div>
         <div class="field">
             <x-file-field

@@ -47,13 +47,13 @@
                 ></x-text-field>
             </div>
             <div class="field">
-                <x-combobox.options
+                <x-combobox::options
                     label="Text source"
                     id="idOriginMM"
                     :value="$sentence?->idOriginMM ?? 0"
                     :options="$origins"
                     class="w-14rem"
-                ></x-combobox.options>
+                ></x-combobox::options>
             </div>
         </div>
         <div class="field">

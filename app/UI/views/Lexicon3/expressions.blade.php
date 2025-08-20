@@ -22,7 +22,7 @@
                         hx-swap="innerHTML"
                         class="header cursor-pointer name"
                     >
-                        <x-element.expression :name="$expression->form"></x-element.expression>
+                        <x-element::expression :name="$expression->form"></x-element::expression>
                     </div>
                     <div
                         class="meta"

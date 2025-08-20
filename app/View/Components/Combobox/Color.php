@@ -7,20 +7,22 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Color extends Component
+class Color extends Base
 {
-    public array $options;
-    /**
-     * Create a new component instance.
-     */
     public function __construct(
         public string $id,
-        public string $label,
+        public ?string $label = '',
         public string $value = '',
         public string $defaultText = '',
     )
     {
-        $this->defaultText = '';
+        parent::__construct($id, $label, $value, $defaultText);
+        if ($this->defaultText == '') {
+            $this->defaultText = "Select color";
+        }
+        if ($this->label === '') {
+            $this->label = "Color";
+        }
         $list = Criteria::table("color")->orderBy("rgbBg")->all();
         $this->options = [];
         foreach($list as $c) {
@@ -33,12 +35,7 @@ class Color extends Component
                 'color' => "color_{$c->idColor}"
             ];
         }
-
     }
-
-    /**
-     * Get the view / contents that represent the component.
-     */
     public function render(): View|Closure|string
     {
         return view('components.combobox.color');

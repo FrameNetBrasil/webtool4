@@ -15,12 +15,12 @@
                 ></x-multiline-field>
             </div>
             <div class="field">
-                <x-combobox.project
+                <x-combobox::project
                     id="idProject"
                     label="Project"
                     value="0"
                 >
-                </x-combobox.project>
+                </x-combobox::project>
             </div>
     </x-slot:fields>
     <x-slot:buttons>

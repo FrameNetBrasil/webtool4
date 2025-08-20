@@ -127,11 +127,11 @@
 {{--                                    hx-swap="innerHTML"--}}
 {{--                                >--}}
 {{--                                </i>--}}
-{{--                                <x-element.fe--}}
+{{--                                <x-element::fe--}}
 {{--                                    name="{{$fe->name}}"--}}
 {{--                                    type="{{$fe->coreType}}"--}}
 {{--                                    idColor="{{$fe->idColor}}"--}}
-{{--                                ></x-element.fe>--}}
+{{--                                ></x-element::fe>--}}
 {{--                            </button>--}}
 {{--                        </div>--}}
 {{--                    @endforeach--}}

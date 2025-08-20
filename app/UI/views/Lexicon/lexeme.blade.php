@@ -36,11 +36,11 @@
                                             ></x-text-field>
                                         </div>
                                         <div class="field">
-                                            <x-combobox.pos
+                                            <x-combobox::pos
                                                 id="idPOS"
                                                 label="POS"
                                                 :value="$lexeme->idPOS"
-                                            ></x-combobox.pos>
+                                            ></x-combobox::pos>
                                         </div>
                                     </div>
                                 </x-slot:fields>

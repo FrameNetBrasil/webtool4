@@ -69,8 +69,8 @@ class Resource3Controller extends Controller
       Lemma
       ------ */
 
-    #[Get(path: '/lexicon3/lemma/listForSelect')]
-    public function listForSelect(QData $data)
+    #[Get(path: '/lexicon3/lemma/listForSearch')]
+    public function listForSearch(QData $data)
     {
         $name = (strlen($data->q) > 0) ? $data->q : 'none';
 

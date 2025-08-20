@@ -5,11 +5,11 @@
         <x-hidden-field id="idLayerType" value="{{$layerType->idLayerType}}"></x-hidden-field>
         <div class="fields">
             <div class="field">
-                <x-combobox.layer-group
+                <x-combobox::layer-group
                     label="LayerGroup"
                     id="idLayerGroup"
                     :value="$layerType->idLayerGroup"
-                ></x-combobox.layer-group>
+                ></x-combobox::layer-group>
             </div>
             <div class="field">
                 <x-number-field

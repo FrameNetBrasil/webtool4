@@ -5,11 +5,11 @@
             :value="$constructionElement->idConstructionElement"
         ></x-hidden-field>
         <div class="field  max-w-15rem">
-            <x-combobox.color
+            <x-combobox::color
                 id="idColorEdit"
                 label="Color"
                 :value="$constructionElement->idColor"
-            ></x-combobox.color>
+            ></x-combobox::color>
         </div>
     </x-slot:fields>
     <x-slot:buttons>

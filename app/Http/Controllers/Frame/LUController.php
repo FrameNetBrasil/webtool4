@@ -31,8 +31,13 @@ class LUController extends Controller
     #[Get(path: '/frame/{id}/lus/grid')]
     public function gridLU(string $id)
     {
-        $lus = Criteria::byFilterLanguage("view_lu", ['idFrame', "=", $id])
-            ->orderBy('name')->all();
+        $lus = Criteria::table("view_lu")
+            ->where('idFrame', "=", $id)
+            ->where("idLanguage",AppService::getCurrentIdLanguage())
+            ->orderBy('UDPOS')
+            ->orderBy('name')
+            ->get()->groupBy("UDPOS")->toArray();
+        debug($lus);
         return view("LU.grid",[
             'idFrame' => $id,
             'lus' => $lus

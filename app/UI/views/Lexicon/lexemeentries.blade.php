@@ -22,7 +22,7 @@
                         hx-swap="innerHTML"
                         class="header cursor-pointer name"
                     >
-                        <x-element.lexeme :name="$lexemeentry->lexeme"></x-element.lexeme>
+                        <x-element::lexeme :name="$lexemeentry->lexeme"></x-element::lexeme>
                     </div>
                     <div
                         class="meta"

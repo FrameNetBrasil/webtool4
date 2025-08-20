@@ -17,11 +17,11 @@
                     ></x-checkbox.fe-frame>
                 </div>
                 <div class="field">
-                    <x-combobox.relation
+                    <x-combobox::relation
                         id="relationTypeFEInternal"
                         group="fe"
                         :value="$relationType ?? null"
-                    ></x-combobox.relation>
+                    ></x-combobox::relation>
                 </div>
             </x-slot:fields>
             <x-slot:buttons>

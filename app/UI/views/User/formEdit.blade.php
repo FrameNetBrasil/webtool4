@@ -22,11 +22,11 @@
                 ></x-text-field>
             </div>
             <div class="field">
-                <x-combobox.group
+                <x-combobox::group
                     id="idGroup"
                     label="Group"
                     :value="$user->groups[0]->idGroup"
-                ></x-combobox.group>
+                ></x-combobox::group>
             </div>
         </div>
     </x-slot:fields>

@@ -21,12 +21,12 @@
                     <div class="navigation">
                         @if($idPrevious)
                             <div class="previous">
-                                <x-element.previous url="/annotation/fullText/sentence/{{$idPrevious}}"></x-element.previous>
+                                <x-element::previous url="/annotation/fullText/sentence/{{$idPrevious}}"></x-element::previous>
                             </div>
                         @endif
                         @if($idNext)
                             <div class="next">
-                                <x-element.next url="/annotation/fullText/sentence/{{$idNext}}"></x-element.next>
+                                <x-element::next url="/annotation/fullText/sentence/{{$idNext}}"></x-element::next>
                             </div>
                         @endif
                     </div>

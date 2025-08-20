@@ -8,21 +8,21 @@
             <div class="col-6">
                 <h3 class="ui violet dividing header">Metonym-LU</h3>
                 <div class="field">
-                    <x-combobox.lu
+                    <x-combobox::lu
                         id="idLUMetonymConstraint"
                         label="Related LU"
                         class="w-25rem"
-                    ></x-combobox.lu>
+                    ></x-combobox::lu>
                 </div>
             </div>
             <div class="col-6">
                 <h3 class="ui violet dividing header">Equivalent-LU</h3>
                 <div class="field">
-                    <x-combobox.lu
+                    <x-combobox::lu
                         id="idLUEquivalenceConstraint"
                         label="Equivalent LU"
                         class="w-25rem"
-                    ></x-combobox.lu>
+                    ></x-combobox::lu>
                 </div>
             </div>
         </div>

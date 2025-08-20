@@ -21,10 +21,10 @@
         <div class="content">
             <div class="incorporated-fe-section">
                 <div class="incorporated-fe-element">
-                    <x-element.fe name="{{$incorporatedFE->name}}"
+                    <x-element::fe name="{{$incorporatedFE->name}}"
                                   type="{{$incorporatedFE->coreType}}"
                                   idColor="{{$incorporatedFE->idColor}}">
-                    </x-element.fe>
+                    </x-element::fe>
                     {{$incorporatedFE->description}}
                 </div>
             </div>

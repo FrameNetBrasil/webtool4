@@ -3,15 +3,11 @@
 namespace App\View\Components\Combobox;
 
 use App\Database\Criteria;
-use App\Repositories\Frame;
-use App\Repositories\FrameElement;
-use App\Services\FrameService;
 use Closure;
 use Illuminate\Contracts\View\View;
-use Illuminate\View\Component;
 
 
-class FeFrame extends Component
+class FeFrame extends Base
 {
     public array $options;
     public string $default = '';
@@ -22,16 +18,17 @@ class FeFrame extends Component
     public function __construct(
         public int     $idFrame,
         public string  $id = '',
-        public string  $label = '',
-        public ?string $value = null,
+        public ?string  $label = '',
+        public string $value = '',
         public ?string $name = null,
         public ?string $nullName = null,
         public ?array  $coreType = [],
         public bool    $hasNull = false,
-        public ?string  $defaultText = '',
+        public string  $defaultText = '',
         public ?string $onChange = null,
     )
     {
+        parent::__construct($id, $label, $value, $defaultText);
         if (is_null($this->name)) {
             $this->name = $this->id;
         }

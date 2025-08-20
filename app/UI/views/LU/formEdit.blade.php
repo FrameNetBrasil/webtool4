@@ -10,20 +10,20 @@
         </div>
         <div class="two fields">
             <div class="field">
-                <x-combobox.fe-frame
+                <x-combobox::fe-frame
                     id="incorporatedFE"
                     label="Incorporated FE"
                     :value="$lu->incorporatedFE"
                     :idFrame="$lu->idFrame"
                     :hasNull="true"
-                ></x-combobox.fe-frame>
+                ></x-combobox::fe-frame>
             </div>
             <div class="field">
-                <x-combobox.frame
+                <x-combobox::frame
                     id="idFrame"
                     label="Change Frame to (min 3 chars)"
                     :placeholder="$lu->frame->name"
-                ></x-combobox.frame>
+                ></x-combobox::frame>
             </div>
         </div>
     </x-slot:fields>

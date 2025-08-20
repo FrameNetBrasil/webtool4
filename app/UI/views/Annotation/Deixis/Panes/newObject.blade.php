@@ -1,12 +1,12 @@
 <div class="ui form">
     <div class="fields">
         <div class="field">
-            <x-combobox.layer-deixis
+            <x-combobox::layer-deixis
                 label=""
                 id="idLayerType"
                 :value="0"
                 class="w-15rem"
-            ></x-combobox.layer-deixis>
+            ></x-combobox::layer-deixis>
         </div>
         <div class="two fields" x-data>
             <button

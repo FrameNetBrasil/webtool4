@@ -1,3 +1,3 @@
 <div>
-    <x-element.form :name="$form"></x-element.form>
+    <x-element::form :name="$form"></x-element::form>
 </div>

@@ -8,12 +8,12 @@
             :value="$document->idDocument"
         ></x-hidden-field>
         <div class="field">
-            <x-combobox.corpus
+            <x-combobox::corpus
                 id="idCorpus"
                 label="Corpus [min 3 chars]"
                 :value="$document->idCorpus"
             >
-            </x-combobox.corpus>
+            </x-combobox::corpus>
         </div>
     </x-slot:fields>
     <x-slot:buttons>

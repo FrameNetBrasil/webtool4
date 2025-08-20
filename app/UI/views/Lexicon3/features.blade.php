@@ -22,7 +22,7 @@
                         hx-swap="innerHTML"
                         class="header cursor-pointer name"
                     >
-                        <x-element.udfeature :name="$feature->name"></x-element.udfeature>
+                        <x-element::udfeature :name="$feature->name"></x-element::udfeature>
                     </div>
                     <div
                         class="meta"

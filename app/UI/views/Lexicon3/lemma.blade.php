@@ -44,11 +44,11 @@
                                             ></x-text-field>
                                         </div>
                                         <div class="field">
-                                            <x-combobox.ud-pos
+                                            <x-combobox::ud-pos
                                                 id="idUDPOS"
                                                 label="UDPOS"
                                                 :value="$lemma->idUDPOS"
-                                            ></x-combobox.ud-pos>
+                                            ></x-combobox::ud-pos>
                                         </div>
                                     </div>
                                 </x-slot:fields>
@@ -69,12 +69,12 @@
                                     <x-hidden-field id="idLemmaBase" :value="$lemma->idLexicon"></x-hidden-field>
                                     <div class="fields">
                                         <div class="field w-8rem">
-                                            <x-combobox.options
+                                            <x-combobox::options
                                                 label="Type"
                                                 id="idLexiconGroup"
                                                 :options="[1 => 'word', 2 => 'lemma']"
                                                 value=""
-                                            ></x-combobox.options>
+                                            ></x-combobox::options>
                                         </div>
                                         <div class="field">
                                             <x-text-field
@@ -84,11 +84,11 @@
                                             ></x-text-field>
                                         </div>
                                         <div class="field">
-                                            <x-combobox.ud-pos
+                                            <x-combobox::ud-pos
                                                 id="idUDPOSExpression"
                                                 label="UDPOS"
                                                 :value="$lemma->idUDPOS"
-                                            ></x-combobox.ud-pos>
+                                            ></x-combobox::ud-pos>
                                         </div>
                                     </div>
                                     <div class="fields">

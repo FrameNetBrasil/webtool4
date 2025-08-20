@@ -42,24 +42,24 @@
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Evokes FE</h3>
                     <div class="field">
-                        <x-combobox.fe-frame
+                        <x-combobox::fe-frame
                             id="idFEConstraint"
                             label="FE"
                             style="width:250px"
                             :value="0"
                             :idFrame="$idEvokedFrame"
                             :hasNull="true"
-                        ></x-combobox.fe-frame>
+                        ></x-combobox::fe-frame>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Evokes Concept</h3>
                     <div class="field">
-                        <x-combobox.concept
+                        <x-combobox::concept
                             id="idConceptConstraint"
                             label="Concept"
                             class="w-25rem"
-                        ></x-combobox.concept>
+                        ></x-combobox::concept>
                     </div>
                 </div>
             </div>
@@ -69,33 +69,33 @@
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Construction</h3>
                     <div class="field">
-                        <x-combobox.construction
+                        <x-combobox::construction
                             id="idConstructionConstraint"
                             label="Construction [min 3 chars]"
                             :value="0"
                             :hasDescription="false"
                             class="w-25rem"
-                        ></x-combobox.construction>
+                        ></x-combobox::construction>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Frame</h3>
                     <div class="field">
-                        <x-combobox.frame
+                        <x-combobox::frame
                             id="idFrameConstraint"
                             label="Frame [min 3 chars]"
                             class="w-25rem"
-                        ></x-combobox.frame>
+                        ></x-combobox::frame>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Frame Family</h3>
                     <div class="field">
-                        <x-combobox.frame
+                        <x-combobox::frame
                             id="idFrameFamilyConstraint"
                             label="Frame [min 3 chars]"
                             class="w-25rem"
-                        ></x-combobox.frame>
+                        ></x-combobox::frame>
                     </div>
                 </div>
 
@@ -106,42 +106,42 @@
                 <div class="col-2">
                     <h3 class="ui violet dividing header">LU</h3>
                     <div class="field">
-                        <x-combobox.lu
+                        <x-combobox::lu
                             id="idLUConstraint"
                             label="LU"
                             class="w-25rem"
-                        ></x-combobox.lu>
+                        ></x-combobox::lu>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Lemma</h3>
                     <div class="field">
-                        <x-combobox.lexicon-lemma
+                        <x-combobox::lexicon-lemma
                             id="idLemmaConstraint"
                             label="Lemma"
                             class="w-25rem"
-                        ></x-combobox.lexicon-lemma>
+                        ></x-combobox::lexicon-lemma>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Wordform</h3>
                     <div class="field">
-                        <x-combobox.lexicon-expression
+                        <x-combobox::lexicon-expression
                             id="idWordFormConstraint"
                             label="Wordform"
                             class="w-25rem"
-                        ></x-combobox.lexicon-expression>
+                        ></x-combobox::lexicon-expression>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Morpheme</h3>
                     <div class="field">
-                        <x-combobox.lexicon-morpheme
+                        <x-combobox::lexicon-morpheme
                             id="idMorphemeConstraint"
                             :idLanguage="$constructionElement->cxn->cxIdLanguage"
                             label="Morpheme"
                             class="w-25rem"
-                        ></x-combobox.lexicon-morpheme>
+                        ></x-combobox::lexicon-morpheme>
                     </div>
                 </div>
 
@@ -152,34 +152,34 @@
                 <div class="col-2">
                     <h3 class="ui violet dividing header">UD Relation</h3>
                     <div class="field">
-                        <x-combobox.ud-relation
+                        <x-combobox::ud-relation
                             id="idUDRelationConstraint"
                             label="UD Relation"
                             :value="0"
                             class="w-25rem"
-                        ></x-combobox.ud-relation>
+                        ></x-combobox::ud-relation>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">UD Feature</h3>
                     <div class="field">
-                        <x-combobox.ud-feature
+                        <x-combobox::ud-feature
                             id="idUDFeatureConstraint"
                             label="UD Feature"
                             :value="0"
                             class="w-25rem"
-                        ></x-combobox.ud-feature>
+                        ></x-combobox::ud-feature>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">UD POS</h3>
                     <div class="field">
-                        <x-combobox.ud-pos
+                        <x-combobox::ud-pos
                             id="idUDPOSConstraint"
                             label="UD POS"
                             :value="0"
                             class="w-25rem"
-                        ></x-combobox.ud-pos>
+                        ></x-combobox::ud-pos>
                     </div>
                 </div>
             </div>
@@ -189,34 +189,34 @@
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Before</h3>
                     <div class="field">
-                        <x-combobox.ce-cxn
+                        <x-combobox::ce-cxn
                             id="idBeforeCEConstraint"
                             label="Before"
                             :idConstruction="$constructionElement->idConstruction"
                             class="w-25rem"
-                        ></x-combobox.ce-cxn>
+                        ></x-combobox::ce-cxn>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">After</h3>
                     <div class="field">
-                        <x-combobox.ce-cxn
+                        <x-combobox::ce-cxn
                             id="idAfterCEConstraint"
                             label="After"
                             :idConstruction="$constructionElement->idConstruction"
                             class="w-25rem"
-                        ></x-combobox.ce-cxn>
+                        ></x-combobox::ce-cxn>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Meets</h3>
                     <div class="field">
-                        <x-combobox.ce-cxn
+                        <x-combobox::ce-cxn
                             id="idMeetsCEConstraint"
                             label="Meets"
                             :idConstruction="$constructionElement->idConstruction"
                             class="w-25rem"
-                        ></x-combobox.ce-cxn>
+                        ></x-combobox::ce-cxn>
                     </div>
                 </div>
             </div>
@@ -226,34 +226,34 @@
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Index Gender CE</h3>
                     <div class="field">
-                        <x-combobox.ce-cxn
+                        <x-combobox::ce-cxn
                             id="idIndexGenderCEConstraint"
                             label="Index Gender"
                             :idConstruction="$constructionElement->idConstruction"
                             class="w-25rem"
-                        ></x-combobox.ce-cxn>
+                        ></x-combobox::ce-cxn>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Index Person CE</h3>
                     <div class="field">
-                        <x-combobox.ce-cxn
+                        <x-combobox::ce-cxn
                             id="idIndexPersonCEConstraint"
                             label="Index Person"
                             :idConstruction="$constructionElement->idConstruction"
                             class="w-25rem"
-                        ></x-combobox.ce-cxn>
+                        ></x-combobox::ce-cxn>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Index Number CE</h3>
                     <div class="field">
-                        <x-combobox.ce-cxn
+                        <x-combobox::ce-cxn
                             id="idIndexNumberCEConstraint"
                             label="Index Number"
                             :idConstruction="$constructionElement->idConstruction"
                             class="w-25rem"
-                        ></x-combobox.ce-cxn>
+                        ></x-combobox::ce-cxn>
                     </div>
                 </div>
             </div>

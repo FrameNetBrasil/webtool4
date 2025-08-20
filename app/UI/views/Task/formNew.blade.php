@@ -15,12 +15,12 @@
             ></x-multiline-field>
         </div>
         <div class="field">
-            <x-combobox.dataset
+            <x-combobox::dataset
                 id="idDataset"
                 label="Source Dataset"
                 value="0"
             >
-            </x-combobox.dataset>
+            </x-combobox::dataset>
         </div>
         <div class="three fields">
             <div class="field">

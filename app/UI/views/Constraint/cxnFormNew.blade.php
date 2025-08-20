@@ -16,22 +16,22 @@
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Evokes Frame</h3>
                     <div class="field">
-                        <x-combobox.frame
+                        <x-combobox::frame
                             id="idFrameConstraint"
                             label="Frame [min 3 chars]"
                             class="w-25rem"
                             :hasDescription="false"
-                        ></x-combobox.frame>
+                        ></x-combobox::frame>
                     </div>
                 </div>
                 <div class="col-2">
                     <h3 class="ui violet dividing header">Evokes Concept</h3>
                     <div class="field">
-                        <x-combobox.concept
+                        <x-combobox::concept
                             id="idConceptConstraint"
                             label="Concept"
                             class="w-25rem"
-                        ></x-combobox.concept>
+                        ></x-combobox::concept>
                     </div>
                 </div>
             </div>

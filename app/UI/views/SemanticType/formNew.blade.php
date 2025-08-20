@@ -10,10 +10,10 @@
             ></x-text-field>
         </div>
         <div class="field">
-            <x-combobox.domain
+            <x-combobox::domain
                 id="idDomain"
                 label="Domain"
-            ></x-combobox.domain>
+            ></x-combobox::domain>
         </div>
     </x-slot:fields>
     <x-slot:buttons>

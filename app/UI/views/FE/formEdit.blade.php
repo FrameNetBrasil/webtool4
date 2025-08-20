@@ -6,18 +6,18 @@
         ></x-hidden-field>
         <div class="two fields">
             <div class="field max-w-15rem">
-                <x-combobox.fe-coreness
+                <x-combobox::fe-coreness
                     id="coreTypeEdit"
                     label="Coreness"
                     :value="$frameElement->coreType"
-                ></x-combobox.fe-coreness>
+                ></x-combobox::fe-coreness>
             </div>
             <div class="field  max-w-15rem">
-                <x-combobox.color
+                <x-combobox::color
                     id="idColorEdit"
                     label="Color"
                     :value="$frameElement->idColor"
-                ></x-combobox.color>
+                ></x-combobox::color>
             </div>
         </div>
     </x-slot:fields>

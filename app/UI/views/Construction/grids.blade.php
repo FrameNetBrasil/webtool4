@@ -12,7 +12,7 @@
                             >
                                 <div>
                                     <a href="/cxn/{{$idConstruction}}">
-                                        <x-element.construction :name="$cxn['name'][0]"></x-element.construction>
+                                        <x-element::construction :name="$cxn['name'][0]"></x-element::construction>
                                         <div class='definition'>{{$cxn['name'][1]}}</div>
                                     </a>
                                 </div>

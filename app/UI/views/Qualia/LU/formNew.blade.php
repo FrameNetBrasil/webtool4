@@ -9,19 +9,19 @@
                 <h3 class="ui violet dividing header">Qualia</h3>
                 <div class="two fields">
                     <div class="field">
-                        <x-combobox.qualia-relations
+                        <x-combobox::qualia-relations
                             id="idQualiaRelation"
                             label="Qualia relation"
                             class="w-25rem"
-                        ></x-combobox.qualia-relations>
+                        ></x-combobox::qualia-relations>
                     </div>
                     <div class="field">
                         <div class="field">
-                            <x-combobox.lu
+                            <x-combobox::lu
                                 id="idLURelated"
                                 label="Related LU"
                                 class="w-25rem"
-                            ></x-combobox.lu>
+                            ></x-combobox::lu>
                         </div>
                     </div>
                 </div>

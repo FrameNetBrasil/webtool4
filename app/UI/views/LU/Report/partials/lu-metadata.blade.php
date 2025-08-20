@@ -21,7 +21,7 @@
         <div class="metadata-right">
             <button class="ui button basic">
                 <a href="/report/frame/{{$lu->idFrame}}">
-                    <x-element.frame name="{{$lu->frameName}}"></x-element.frame>
+                    <x-element::frame name="{{$lu->frameName}}"></x-element::frame>
                 </a>
             </button>
             @if($isMaster)

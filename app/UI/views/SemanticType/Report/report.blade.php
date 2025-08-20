@@ -2,7 +2,7 @@
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
-                <x-element.semantictype name="{{$semanticType->name}}"></x-element.semantictype>
+                <x-element::semantictype name="{{$semanticType->name}}"></x-element::semantictype>
             </h1>
         </div>
         <div class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
@@ -29,7 +29,7 @@
                             <a
                                 href="/report/semanticType/{{$idSemanticType}}"
                             >
-                                <x-element.semantictype name="{{$relation['name']}}"></x-element.semantictype>
+                                <x-element::semantictype name="{{$relation['name']}}"></x-element::semantictype>
                             </a>
                         </button>
                     @endforeach

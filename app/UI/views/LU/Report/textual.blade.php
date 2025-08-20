@@ -24,9 +24,9 @@
                                     style="display:table;table-layout: fixed;"
                                 >
                                     <td>
-                                        <x-element.fe name="{{$fes[$feIdEntity]['name']}}"
+                                        <x-element::fe name="{{$fes[$feIdEntity]['name']}}"
                                                       type="{{$fes[$feIdEntity]['type']}}"
-                                                      idColor="{{$fes[$feIdEntity]['idColor']}}"></x-element.fe>
+                                                      idColor="{{$fes[$feIdEntity]['idColor']}}"></x-element::fe>
                                     </td>
                                     <td style="width:8rem;text-align:center">
                                         <a href="#" onclick="reportLU.addFESentences('{{$feIdEntity}}')">
@@ -82,9 +82,9 @@
                                                         @foreach($ptas as $pt => $as)
                                                             @php($i = $i + 1)
                                                             <td>
-                                                                <x-element.fe name="{{$fes[$feIdEntity]['name']}}"
+                                                                <x-element::fe name="{{$fes[$feIdEntity]['name']}}"
                                                                               type="{{$fes[$feIdEntity]['type']}}"
-                                                                              idColor="{{$fes[$feIdEntity]['idColor']}}"></x-element.fe>
+                                                                              idColor="{{$fes[$feIdEntity]['idColor']}}"></x-element::fe>
                                                             </td>
                                                         @endforeach
                                                     @endforeach

@@ -13,11 +13,11 @@
                 ></x-text-field>
             </div>
             <div class="field">
-                <x-combobox.ud-pos
+                <x-combobox::ud-pos
                     id="idUDPOS"
                     label="POS"
                     value=""
-                ></x-combobox.ud-pos>
+                ></x-combobox::ud-pos>
             </div>
         </div>
     </x-slot:fields>

@@ -23,7 +23,7 @@
                             <div
                                 class="header"
                             >
-                                <x-element.semantictype name="{{$relation->name}}"></x-element.semantictype>
+                                <x-element::semantictype name="{{$relation->name}}"></x-element::semantictype>
                             </div>
                             <div class="description">
                             </div>

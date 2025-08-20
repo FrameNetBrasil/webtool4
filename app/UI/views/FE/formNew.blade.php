@@ -9,7 +9,8 @@
         </div>
     </div>
     <div class="content">
-        <div class="ui form">
+        <form class="ui form">
+            <input type="hidden" name="idFrame" value="{{$idFrame}}">
             <div class="field">
                 <label for="nameEn">English Name</label>
                 <div class="ui small input">
@@ -26,18 +27,15 @@
             <div class="field">
                 <x-combobox::fe-coreness
                     id="coreType"
-                    label="Coreness"
                 ></x-combobox::fe-coreness>
             </div>
             <div class="field">
                 <x-combobox::color
                     id="idColor"
-                    label="Color"
-                    value=""
                 ></x-combobox::color>
             </div>
 
-        </div>
+        </form>
     </div>
     <div class="extra content">
         <button

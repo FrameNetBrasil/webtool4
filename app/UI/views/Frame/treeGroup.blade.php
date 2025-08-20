@@ -20,7 +20,7 @@
                         class="cursor-pointer"
                     >
                         @if($groupName == 'Scenarios')
-                            <x-element.frame :name="$group['name']"></x-element.frame>
+                            <x-element::frame :name="$group['name']"></x-element::frame>
                         @else
                         {{$group['name']}}
                         @endif

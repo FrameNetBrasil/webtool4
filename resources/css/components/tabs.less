@@ -13,36 +13,6 @@
 /* Tabs Component Container */
 .tabs-component {
 
-    /* Section Header (when using section toggle) */
-    .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: @relative16px;
-
-        .section-title {
-            margin: 0;
-            flex: 1;
-
-            a {
-                color: @textColor;
-                text-decoration: none;
-
-                &:hover {
-                    color: @linkHoverColor;
-                }
-            }
-        }
-
-        .section-toggle {
-            margin-left: @relative16px;
-
-            &:hover {
-                background: @subtleTransparentBlack;
-            }
-        }
-    }
-
     /* Enhanced Tab Menu */
     .ui.tabs.menu {
         border-bottom: @relative2px solid @borderColor;
@@ -51,10 +21,11 @@
         .item {
             transition: all @tabTransitionDuration @tabTransitionEasing;
             border-bottom: @relative3px solid transparent;
+            cursor: pointer;
 
             &:hover {
                 background: @transparentBlack;
-                border-bottom-color: @primaryColorHover;
+                border-bottom-color: @secondaryColor;
             }
 
             &.active {
@@ -77,6 +48,7 @@
     .ui.tab {
         min-height: 4em;
         padding: @relative16px 0;
+        overflow:initial;
 
         /* Loading Indicator */
         .tab-loading-indicator {
@@ -101,6 +73,7 @@
         .tab-content {
             padding: 0 @relativeTiny @relativeTiny @relativeTiny;
             animation: fadeIn @tabTransitionDuration @tabTransitionEasing;
+            overflow:initial;
 
             /* Empty state styling */
             &:empty {
@@ -161,17 +134,6 @@
     }
 
     @media only screen and (max-width: @mobileBreakpoint) {
-        .section-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: @relative8px;
-
-            .section-toggle {
-                margin-left: 0;
-                align-self: flex-end;
-            }
-        }
-
         .ui.tabs.menu {
             overflow-x: auto;
             white-space: nowrap;
@@ -198,59 +160,6 @@
     }
 }
 
-/* Section Toggle Animation */
-.section-content {
-    transition: all @tabTransitionDuration @tabTransitionEasing;
-    overflow: hidden;
-
-    &[style*="display: none"] {
-        max-height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-}
-
-/* HTMX Loading Elements (hidden by default) */
-[id^="htmx-loader-"] {
-    display: none !important;
-}
-
-/* Enhanced Loading States */
-.ui.tab[data-tab] {
-    position: relative;
-
-    /* Loading overlay */
-    &.htmx-request {
-        &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        &::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: @relative32px;
-            height: @relative32px;
-            margin: -@relative16px 0 0 -@relative16px;
-            border: @relative3px solid @primaryColor;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            z-index: 101;
-        }
-    }
-}
 
 @keyframes spin {
     to {

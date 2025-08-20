@@ -2,7 +2,7 @@
     <div class="flex flex-row align-content-start">
         <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
             <h1>
-                <x-element.lu frame="{{$lu->frameName}}" name="{{$lu->name}}"></x-element.lu>
+                <x-element::lu frame="{{$lu->frameName}}" name="{{$lu->name}}"></x-element::lu>
             </h1>
         </div>
         <div class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
@@ -18,7 +18,7 @@
                 <a
                     href="/report/frame/{{$lu->idFrame}}"
                 >
-                    <x-element.frame name="{{$lu->frameName}}"></x-element.frame>
+                    <x-element::frame name="{{$lu->frameName}}"></x-element::frame>
                 </a>
             </button>
             @if($isMaster)
@@ -31,8 +31,8 @@
         @if(isset($incorporatedFE))
             <hr>
             Incorporated FE:
-            <x-element.fe name="{{$incorporatedFE->name}}" type="{{$incorporatedFE->coreType}}"
-                          idColor="{{$incorporatedFE->idColor}}"></x-element.fe>
+            <x-element::fe name="{{$incorporatedFE->name}}" type="{{$incorporatedFE->coreType}}"
+                          idColor="{{$incorporatedFE->idColor}}"></x-element::fe>
         @endif
     </x-card>
     @include("LU.Report.menu")

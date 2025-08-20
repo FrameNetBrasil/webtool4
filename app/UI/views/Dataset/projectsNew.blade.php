@@ -3,12 +3,12 @@
     <x-slot:fields>
         <x-hidden-field id="idDataset" value="{{$idDataset}}"></x-hidden-field>
         <div class="field">
-            <x-combobox.project
+            <x-combobox::project
                 id="idProject"
                 label="Associated project"
                 value="0"
             >
-            </x-combobox.project>
+            </x-combobox::project>
         </div>
         <div class="field">
             <div class="ui checkbox">

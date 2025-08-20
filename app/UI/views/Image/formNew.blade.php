@@ -13,11 +13,11 @@
         ></x-text-field>
         </div>
         <div class="field">
-        <x-combobox.language
+        <x-combobox::language
             label="Language"
             id="idLanguage"
             value=""
-        ></x-combobox.language>
+        ></x-combobox::language>
         </div>
         <div class="field">
         <x-file-field

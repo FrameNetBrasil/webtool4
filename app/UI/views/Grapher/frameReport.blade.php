@@ -1,5 +1,5 @@
 <h3>
-    <x-element.frame name="{{$frame->name}}"></x-element.frame>
+    <x-element::frame name="{{$frame->name}}"></x-element::frame>
 </h3>
 <x-card title="Definition" class="frameReport__card frameReport__card--main">
     {!! str_replace('ex>','code>',nl2br($frame->description)) !!}

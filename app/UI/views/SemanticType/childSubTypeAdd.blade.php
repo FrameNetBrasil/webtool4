@@ -5,11 +5,11 @@
             :value="$idEntity"
         ></x-hidden-field>
         <div class="field">
-            <x-combobox.semantic-type-list
+            <x-combobox::semantic-type-list
                 id="idSemanticType"
                 label="SubType"
                 value=""
-            ></x-combobox.semantic-type-list>
+            ></x-combobox::semantic-type-list>
         </div>
     </x-slot:fields>
     <x-slot:buttons>

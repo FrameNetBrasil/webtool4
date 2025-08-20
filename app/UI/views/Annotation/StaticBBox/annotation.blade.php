@@ -52,14 +52,14 @@
                             </div>
                         </div>
                         @if($idPrevious)
-                            <x-element.previous
+                            <x-element::previous
                                 url="/annotation/staticBBox/{{$idPrevious}}"
-                            ></x-element.previous>
+                            ></x-element::previous>
                             <div class="w-1rem">&nbsp;</div>
                         @endif
                         @if($idNext)
-                            <x-element.next url="/annotation/staticBBox/{{$idNext}}"
-                            ></x-element.next>
+                            <x-element::next url="/annotation/staticBBox/{{$idNext}}"
+                            ></x-element::next>
                         @endif
                     </div>
                 </div>

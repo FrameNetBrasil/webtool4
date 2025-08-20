@@ -22,10 +22,10 @@
                             ></x-search-field>
                             </div>
                             <div class="field">
-                                <x-combobox.cxn-language
+                                <x-combobox::cxn-language
                                     id="idLanguage"
                                     value="{{$search->idLanguage}}"
-                                ></x-combobox.cxn-language>
+                                ></x-combobox::cxn-language>
                             </div>
                             <x-submit
                                 label="Search"

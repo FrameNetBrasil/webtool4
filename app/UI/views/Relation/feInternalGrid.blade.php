@@ -25,16 +25,16 @@
 {{--                                <span class="color_{{$relation->relationType}}">{{$relation->name}}</span>--}}
                                 <span style="color:{{$relation->color}}">{{$relation->name}}</span>
                             </div>
-                            <x-element.fe
+                            <x-element::fe
                                 name="{{$relation->feName}}"
                                 type="{{$relation->feCoreType}}"
                                 idColor="{{$relation->feIdColor}}"
-                            ></x-element.fe>
-                            <x-element.fe
+                            ></x-element::fe>
+                            <x-element::fe
                                 name="{{$relation->relatedFEName}}"
                                 type="{{$relation->relatedFECoreType}}"
                                 idColor="{{$relation->relatedFEIdColor}}"
-                            ></x-element.fe>
+                            ></x-element::fe>
                         </div>
                     </div>
                 </div>
