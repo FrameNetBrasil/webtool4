@@ -2,25 +2,22 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Annotation\DynamicMode\CloneData;
-use App\Data\Annotation\DynamicMode\CreateBBoxData;
-use App\Data\Annotation\DynamicMode\CreateObjectData;
-use App\Data\Annotation\DynamicMode\GetBBoxData;
-use App\Data\Annotation\DynamicMode\ObjectAnnotationData;
-use App\Data\Annotation\DynamicMode\ObjectFrameData;
-use App\Data\Annotation\DynamicMode\ObjectSearchData;
-use App\Data\Annotation\DynamicMode\SearchData;
-use App\Data\Annotation\DynamicMode\UpdateBBoxData;
-use App\Data\Comment\CommentData;
+use App\Data\Resource\Video\CloneData;
+use App\Data\Resource\Video\CreateBBoxData;
+use App\Data\Resource\Video\CreateObjectData;
+use App\Data\Resource\Video\GetBBoxData;
+use App\Data\Resource\Video\ObjectAnnotationData;
+use App\Data\Resource\Video\ObjectFrameData;
+use App\Data\Resource\Video\ObjectSearchData;
+use App\Data\Resource\Video\SearchData;
+use App\Data\Resource\Video\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\Corpus;
-use App\Repositories\Document;
-use App\Repositories\Video;
 use App\Services\Annotation\BrowseService;
 use App\Services\Annotation\DynamicModeService;
 use App\Services\AppService;
 use App\Services\CommentService;
+use App\Services\Resource\VideoService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -53,54 +50,16 @@ class DynamicModeController extends Controller
 
     private function getData(int $idDocument, ?int $idDynamicObject = null): array
     {
-        $document = Document::byId($idDocument);
-        if (! $document) {
-            throw new \Exception("Document with ID {$idDocument} not found.");
-        }
-
-        $corpus = Corpus::byId($document->idCorpus);
-        if (! $corpus) {
-            throw new \Exception("Corpus with ID {$document->idCorpus} not found.");
-        }
-
-        $documentVideo = Criteria::table('view_document_video')
-            ->where('idDocument', $idDocument)
-            ->first();
-        if (! $documentVideo) {
-            throw new \Exception("Video not found for document ID {$idDocument}.");
-        }
-
-        $video = Video::byId($documentVideo->idVideo);
-        if (! $video) {
-            throw new \Exception("Video with ID {$documentVideo->idVideo} not found.");
-        }
-        $timelineData = DynamicModeService::getLayersByDocument($idDocument);
-        $timelineConfig = $this->getTimelineConfig($timelineData);
-        $groupedLayers = $this->groupLayersByName($timelineData);
-
-        return [
-            'idDocument' => $idDocument,
-            'document' => $document,
-            'corpus' => $corpus,
-            'video' => $video,
-            'fragment' => 'fe',
-            'searchResults' => [],
-            'timeline' => [
-                'data' => $timelineData,
-                'config' => $timelineConfig,
-            ],
-            'groupedLayers' => $groupedLayers,
-            'idDynamicObject' => is_null($idDynamicObject) ? 0 : $idDynamicObject,
-        ];
+        return VideoService::getResourceData($idDocument, $idDynamicObject);
     }
 
     #[Get(path: '/annotation/dynamicMode/object')]
     public function getObject(ObjectSearchData $data)
     {
-        if ($data->idDynamicObject == 0) {
+        if ($data->idObject == 0) {
             return view('Annotation.DynamicMode.Forms.formNewObject');
         }
-        $object = DynamicModeService::getObject($data->idDynamicObject ?? 0);
+        $object = VideoService::getObject($data->idObject ?? 0);
         if (is_null($object)) {
             return $this->renderNotify('error', 'Object not found.');
         }
@@ -114,65 +73,7 @@ class DynamicModeController extends Controller
     #[Post(path: '/annotation/dynamicMode/object/search')]
     public function objectSearch(ObjectSearchData $data)
     {
-        $searchResults = [];
-
-        if (! empty($data->frame) || ! empty($data->lu) || ! empty($data->searchIdLayerType) || ($data->idDynamicObject > 0)) {
-            $idLanguage = AppService::getCurrentIdLanguage();
-
-            $query = Criteria::table('view_annotation_dynamic as ad')
-                ->where('ad.idLanguage', 'left', $idLanguage)
-                ->where('ad.idDocument', $data->idDocument);
-
-            if (! empty($data->frame)) {
-                $query->whereRaw('(ad.frame LIKE ? OR ad.fe LIKE ?)', [
-                    $data->frame.'%',
-                    $data->frame.'%',
-                ]);
-            }
-
-            if (! empty($data->lu)) {
-                $searchTerm = '%'.$data->lu.'%';
-                $query->where(function ($q) use ($searchTerm) {
-                    $q->where('ad.lu', 'like', $searchTerm);
-                });
-            }
-
-            if ($data->idDynamicObject != 0) {
-                $query->where('ad.idDynamicObject', $data->idDynamicObject);
-            }
-
-            $searchResults = $query
-                ->select(
-                    'ad.idDynamicObject',
-                    'ad.name',
-                    'ad.startFrame',
-                    'ad.endFrame',
-                    'ad.startTime',
-                    'ad.endTime',
-                    'ad.lu',
-                    'ad.frame',
-                    'ad.fe'
-                )
-                ->orderBy('ad.idDynamicObject')
-                ->orderBy('ad.startFrame')
-                ->orderBy('ad.endFrame')
-                ->all();
-
-            // Format search results for display
-            foreach ($searchResults as $object) {
-                $object->displayName = '';
-                if (! empty($object->lu)) {
-                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->lu;
-                }
-                if (! empty($object->fe)) {
-                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->frame.'.'.$object->fe;
-                }
-                if (empty($object->displayName)) {
-                    $object->displayName = 'None';
-                }
-            }
-        }
-
+        $searchResults = VideoService::objectSearch($data);
         return view('Annotation.DynamicMode.Panes.searchPane', [
             'searchResults' => $searchResults,
             'idDocument' => $data->idDocument,
@@ -183,7 +84,7 @@ class DynamicModeController extends Controller
     public function createNewObjectAtLayer(CreateObjectData $data)
     {
         try {
-            $object = DynamicModeService::createNewObjectAtLayer($data);
+            $object = VideoService::createNewObjectAtLayer($data);
 
             return $this->redirect("/annotation/dynamicMode/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
@@ -195,7 +96,7 @@ class DynamicModeController extends Controller
     public function updateObjectRange(ObjectFrameData $data)
     {
         try {
-            DynamicModeService::updateObjectFrame($data);
+            VideoService::updateObjectFrame($data);
 
             return $this->redirect("/annotation/dynamicMode/{$data->idDocument}/{$data->idDynamicObject}");
         } catch (\Exception $e) {
@@ -207,8 +108,8 @@ class DynamicModeController extends Controller
     public function updateObjectAnnotation(ObjectAnnotationData $data)
     {
         try {
-            DynamicModeService::updateObjectAnnotation($data);
-            $object = DynamicModeService::getObject($data->idDynamicObject);
+            VideoService::updateObjectAnnotation($data);
+            $object = VideoService::getObject($data->idObject);
             if (! $object) {
                 return $this->renderNotify('error', 'Object not found after update.');
             }
@@ -227,7 +128,7 @@ class DynamicModeController extends Controller
     public function deleteAllBBoxes(int $idDocument, int $idDynamicObject)
     {
         try {
-            DynamicModeService::deleteBBoxesFromObject($idDynamicObject);
+            VideoService::deleteBBoxesFromObject($idDynamicObject);
 
             return $this->redirect("/annotation/dynamicMode/{$idDocument}/{$idDynamicObject}");
         } catch (\Exception $e) {
@@ -239,7 +140,7 @@ class DynamicModeController extends Controller
     public function deleteObject(int $idDocument, int $idDynamicObject)
     {
         try {
-            DynamicModeService::deleteObject($idDynamicObject);
+            VideoService::deleteObject($idDynamicObject);
 
             return $this->redirect("/annotation/dynamicMode/{$idDocument}");
         } catch (\Exception $e) {
@@ -251,7 +152,7 @@ class DynamicModeController extends Controller
     public function cloneObject(CloneData $data)
     {
         try {
-            $idDynamicObjectClone = DynamicModeService::cloneObject($data);
+            $idDynamicObjectClone = VideoService::cloneObject($data);
 
             return $this->redirect("/annotation/dynamicMode/{$data->idDocument}/{$idDynamicObjectClone}");
         } catch (\Exception $e) {
@@ -268,7 +169,7 @@ class DynamicModeController extends Controller
     {
         try {
             return Criteria::table('view_dynamicobject_boundingbox')
-                ->where('idDynamicObject', $data->idDynamicObject)
+                ->where('idDynamicObject', $data->idObject)
                 ->where('frameNumber', $data->frameNumber)
                 ->first();
         } catch (\Exception $e) {
@@ -276,28 +177,28 @@ class DynamicModeController extends Controller
         }
     }
 
-    #[Get(path: '/annotation/dynamicMode/getBoxesContainer/{idDynamicObject}')]
-    public function getBoxesContainer(int $idDynamicObject)
-    {
-        try {
-            $dynamicObject = Criteria::byId('dynamicObject', 'idDynamicObject', $idDynamicObject);
-            if (! $dynamicObject) {
-                return $this->renderNotify('error', "Dynamic object with ID {$idDynamicObject} not found.");
-            }
-
-            return view('Annotation.DynamicMode.Forms.boxesContainer', [
-                'object' => $dynamicObject,
-            ]);
-        } catch (\Exception $e) {
-            return $this->renderNotify('error', $e->getMessage());
-        }
-    }
+//    #[Get(path: '/annotation/dynamicMode/getBoxesContainer/{idDynamicObject}')]
+//    public function getBoxesContainer(int $idDynamicObject)
+//    {
+//        try {
+//            $dynamicObject = Criteria::byId('dynamicObject', 'idDynamicObject', $idDynamicObject);
+//            if (! $dynamicObject) {
+//                return $this->renderNotify('error', "Dynamic object with ID {$idDynamicObject} not found.");
+//            }
+//
+//            return view('Annotation.DynamicMode.Forms.boxesContainer', [
+//                'object' => $dynamicObject,
+//            ]);
+//        } catch (\Exception $e) {
+//            return $this->renderNotify('error', $e->getMessage());
+//        }
+//    }
 
     #[Post(path: '/annotation/dynamicMode/createBBox')]
     public function createBBox(CreateBBoxData $data)
     {
         try {
-            return DynamicModeService::createBBox($data);
+            return VideoService::createBBox($data);
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
@@ -307,7 +208,7 @@ class DynamicModeController extends Controller
     public function updateBBox(UpdateBBoxData $data)
     {
         try {
-            $idBoundingBox = DynamicModeService::updateBBox($data);
+            $idBoundingBox = VideoService::updateBBox($data);
             $boundingBox = Criteria::byId('boundingbox', 'idBoundingBox', $idBoundingBox);
             if (! $boundingBox) {
                 return $this->renderNotify('error', 'Updated bounding box not found.');
@@ -364,55 +265,55 @@ class DynamicModeController extends Controller
     /**
      * timeline
      */
-    private function getTimelineConfig($timelineData): array
-    {
-        $minFrame = PHP_INT_MAX;
-        $maxFrame = PHP_INT_MIN;
-
-        foreach ($timelineData as $layer) {
-            foreach ($layer['objects'] as $object) {
-                $minFrame = min($minFrame, $object->startFrame);
-                $maxFrame = max($maxFrame, $object->endFrame);
-            }
-        }
-
-        // Add padding
-        $minFrame = max(0, $minFrame - 100);
-        $maxFrame = $maxFrame + 100;
-
-        return [
-            'minFrame' => $minFrame,
-            'maxFrame' => $maxFrame,
-            'frameToPixel' => 1,
-            'minObjectWidth' => 16,
-            'objectHeight' => 24,
-            'labelWidth' => 150,
-            'timelineWidth' => ($maxFrame - $minFrame) * 1,
-            'timelineHeight' => (24 * count($timelineData)) + 10,
-        ];
-    }
-
-    private function groupLayersByName($timelineData): array
-    {
-        $layerGroups = [];
-
-        foreach ($timelineData as $originalIndex => $layer) {
-            $layerName = $layer['layer'];
-
-            if (! isset($layerGroups[$layerName])) {
-                $layerGroups[$layerName] = [
-                    'name' => $layerName,
-                    'lines' => [],
-                ];
-            }
-
-            $layerGroups[$layerName]['lines'][] = array_merge($layer, [
-                'originalIndex' => $originalIndex,
-            ]);
-        }
-
-        return array_values($layerGroups);
-    }
+//    private function getTimelineConfig($timelineData): array
+//    {
+//        $minFrame = PHP_INT_MAX;
+//        $maxFrame = PHP_INT_MIN;
+//
+//        foreach ($timelineData as $layer) {
+//            foreach ($layer['objects'] as $object) {
+//                $minFrame = min($minFrame, $object->startFrame);
+//                $maxFrame = max($maxFrame, $object->endFrame);
+//            }
+//        }
+//
+//        // Add padding
+//        $minFrame = max(0, $minFrame - 100);
+//        $maxFrame = $maxFrame + 100;
+//
+//        return [
+//            'minFrame' => $minFrame,
+//            'maxFrame' => $maxFrame,
+//            'frameToPixel' => 1,
+//            'minObjectWidth' => 16,
+//            'objectHeight' => 24,
+//            'labelWidth' => 150,
+//            'timelineWidth' => ($maxFrame - $minFrame) * 1,
+//            'timelineHeight' => (24 * count($timelineData)) + 10,
+//        ];
+//    }
+//
+//    private function groupLayersByName($timelineData): array
+//    {
+//        $layerGroups = [];
+//
+//        foreach ($timelineData as $originalIndex => $layer) {
+//            $layerName = $layer['layer'];
+//
+//            if (! isset($layerGroups[$layerName])) {
+//                $layerGroups[$layerName] = [
+//                    'name' => $layerName,
+//                    'lines' => [],
+//                ];
+//            }
+//
+//            $layerGroups[$layerName]['lines'][] = array_merge($layer, [
+//                'originalIndex' => $originalIndex,
+//            ]);
+//        }
+//
+//        return array_values($layerGroups);
+//    }
 
     /**
      * Page
