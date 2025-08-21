@@ -13,14 +13,7 @@
                   hx-swap="innerHTML">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                 <input type="hidden" name="idDocument" value="{{ $idDocument ?? 0 }}" />
-                <input type="hidden" name="annotationType" value="{{ $annotationType }}" />
                 <div class="three fields">
-{{--                    <div class="field">--}}
-{{--                        <x-form::combobox.layer-deixis--}}
-{{--                            name="searchIdLayerType"--}}
-{{--                            :value="0"--}}
-{{--                        ></x-form::combobox.layer-deixis>--}}
-{{--                    </div>--}}
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="search icon"></i>
@@ -50,7 +43,7 @@
                             <i class="search icon"></i>
                             <input
                                 type="search"
-                                name="idDynamicObject"
+                                name="idObject"
                                 placeholder="Search #idObject"
                                 x-model="searchQueryIdDynamicObject"
                                 autocomplete="off"
@@ -111,18 +104,18 @@
                                          role="button">
                                         <div
                                             class="content"
-                                            data-id="{{$object->idDynamicObject}}"
+                                            data-id="{{$object->idObject}}"
                                         >
                                             <div
                                                 class="header"
-                                                data-id="{{$object->idDynamicObject}}"
+                                                data-id="{{$object->idObject}}"
                                             >
-                                                Object: #{{$object->idDynamicObject}}
+                                                Object: #{{$object->idObject}}
 {{--                                                {{$object->layerGroup}}/{{$object->nameLayerType}}--}}
                                             </div>
                                             <div
                                                 class="meta"
-                                                data-id="{{$object->idDynamicObject}}"
+                                                data-id="{{$object->idObject}}"
                                             >
                                                 {{$object->displayName}}<br />
                                                 Frames: {{$object->startFrame}}-{{$object->endFrame}}<br />

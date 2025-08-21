@@ -59,7 +59,7 @@ window.messenger = {
 };
 
 document.body.addEventListener("notify", function(evt) {
-    console.log("notify");
+    console.log(evt.detail.message);
     $.toast({
         class: evt.detail.type,
         message: evt.detail.message,

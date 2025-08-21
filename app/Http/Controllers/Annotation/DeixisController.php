@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Annotation;
 
+use App\Data\Annotation\Comment\CommentData;
 use App\Data\Annotation\Deixis\CreateObjectData;
 use App\Data\Annotation\Deixis\DeleteBBoxData;
 use App\Data\Annotation\Deixis\DocumentData;
@@ -9,7 +10,6 @@ use App\Data\Annotation\Deixis\ObjectAnnotationData;
 use App\Data\Annotation\Deixis\ObjectData;
 use App\Data\Annotation\Deixis\ObjectFrameData;
 use App\Data\Annotation\Deixis\SearchData;
-use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;

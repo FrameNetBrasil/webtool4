@@ -11,6 +11,7 @@ class CreateObjectData extends Data
         public ?int $idDocument = null,
         public ?int $startFrame = null,
         public ?int $endFrame = null,
+        public string $annotationType = '',
         public string $_token = '',
     ) {
         $this->_token = csrf_token();

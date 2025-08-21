@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Annotation;
 
+use App\Data\Annotation\Comment\CommentData;
 use App\Data\Annotation\DynamicMode\CloneData;
 use App\Data\Annotation\DynamicMode\CreateBBoxData;
 use App\Data\Annotation\DynamicMode\CreateObjectData;
@@ -11,7 +12,6 @@ use App\Data\Annotation\DynamicMode\ObjectFrameData;
 use App\Data\Annotation\DynamicMode\ObjectSearchData;
 use App\Data\Annotation\DynamicMode\SearchData;
 use App\Data\Annotation\DynamicMode\UpdateBBoxData;
-use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;

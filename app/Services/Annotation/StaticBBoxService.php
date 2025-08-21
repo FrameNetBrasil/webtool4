@@ -2,11 +2,11 @@
 
 namespace App\Services\Annotation;
 
+use App\Data\Annotation\Comment\CommentData;
 use App\Data\Annotation\StaticBBox\CloneData;
 use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
 use App\Data\Annotation\StaticBBox\ObjectData;
 use App\Data\Annotation\StaticBBox\UpdateBBoxData;
-use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Image;

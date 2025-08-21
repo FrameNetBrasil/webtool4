@@ -12,6 +12,7 @@ class ObjectSearchData extends Data
         public ?int $searchIdLayerType = 0,
         public ?string $frame = '',
         public ?string $lu = '',
+        public ?string $annotationType = '',
         public string $_token = '',
     ) {
         $this->_token = csrf_token();
