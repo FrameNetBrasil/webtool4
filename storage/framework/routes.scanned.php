@@ -3640,128 +3640,8 @@ $router->get('annotation/deixis', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/deixis/data', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@data',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/createNewObjectAtLayer', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@createNewObjectAtLayer',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/formAnnotation', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@formAnnotation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/deixis/formAnnotation/{idDynamicObject}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@getFormAnnotation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/deixis/loadLayerList/{idDocument}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@loadLayerList',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/updateObject', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObject',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/updateObjectRange', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObjectRange',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/updateObjectFrame', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObjectFrame',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/updateObjectAnnotation', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObjectAnnotation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('annotation/deixis/{idDynamicObject}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteObject',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/deixis/fes/{idFrame}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@feCombobox',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/deixis/formComment', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@getFormComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/updateObjectComment', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@updateObjectComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('annotation/deixis/comment/{idDocument}/{idDynamicObject}', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@deleteObjectComment',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('annotation/deixis/{idDocument}/{idDynamicObject?}', [
 	'uses' => 'App\Http\Controllers\Annotation\DeixisController@annotation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/deixis/deleteBBox', [
-	'uses' => 'App\Http\Controllers\Annotation\DeixisController@createBBox',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -4072,40 +3952,8 @@ $router->post('annotation/video/updateBBox', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/dynamicMode/script/{folder}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@jsObjects',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('annotation/dynamicMode', [
 	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@browse',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/dynamicMode/updateObjectAnnotation', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@updateObjectAnnotation',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('annotation/dynamicMode/deleteAllBBoxes/{idDocument}/{idDynamicObject}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteAllBBoxes',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->delete('annotation/dynamicMode/{idDocument}/{idDynamicObject}', [
-	'uses' => 'App\Http\Controllers\Annotation\DynamicModeController@deleteObject',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

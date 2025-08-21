@@ -5,7 +5,6 @@
         <video :id="idVideo"
                preload="metadata"
                crossorigin="anonymous"
-               x-init="init()"
                @loadstart="log('Load start')"
                @loadedmetadata="onLoadedMetadata()"
                @loadeddata="log('Data loaded')"
@@ -21,8 +20,11 @@
                @seeking="onSeeking()"
                @seeked="onSeeked()"
                @progress="updateBuffer()"
-               @click="togglePlay()">
-            <source src="{!! config('webtool.mediaURL') . "/" . $video->currentURL !!}?t={!! time() !!}" type="video/mp4">
+               @click="togglePlay()"
+               @tracking-mode-toggle.document="onToggleTrackingMode()"
+        >
+            <source src="{!! config('webtool.mediaURL') . "/" . $video->currentURL !!}?t={!! time() !!}"
+                    type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <video id="fallbackVideo" style="display:none"></video>
@@ -57,16 +59,24 @@
                     x-text="formatTime(time.current)"></span>]
             </div>
         </div>
+
+        <div
+            class="playback-tracking-mode"
+        >
+{{--            <div class="ui label">--}}
+{{--                <span x-text="'Tracking ' + (trackingMode ? 'on' : 'off')"></span>--}}
+{{--            </div>--}}
+        </div>
         <div id="videoNavigation" class="ui small icon buttons">
             <button
                 class="ui button nav"
-                :class="(isPlaying || isTracking) && 'disabled'"
+                :class="(isPlaying || trackingMode) && 'disabled'"
                 @click="gotoStart()"
             ><i class="fast backward icon"></i>
             </button>
             <button
                 class="ui button nav"
-                :class="(isPlaying || isTracking) && 'disabled'"
+                :class="(isPlaying || trackingMode) && 'disabled'"
                 @click="gotoPrevious10Second()"
             ><i class="backward icon"></i>
             </button>
@@ -78,7 +88,7 @@
             </button>
             <button
                 class="ui button toggle"
-                :class="isTracking && 'disabled'"
+                :class="trackingMode && 'disabled'"
                 @click="togglePlay()"
             ><i :class="isPlaying ? 'pause icon' : 'play icon'"></i>
             </button>
@@ -90,13 +100,13 @@
             </button>
             <button
                 class="ui button nav"
-                :class="(isPlaying || isTracking) && 'disabled'"
+                :class="(isPlaying || trackingMode) && 'disabled'"
                 @click="gotoNext10Second()"
             ><i class="forward icon"></i>
             </button>
             <button
                 class="ui button nav"
-                :class="(isPlaying || isTracking) && 'disabled'"
+                :class="(isPlaying || trackingMode) && 'disabled'"
                 @click="gotoEnd()"
             ><i class="fast forward icon"></i>
             </button>

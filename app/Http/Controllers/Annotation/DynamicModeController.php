@@ -24,15 +24,6 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware(name: 'auth')]
 class DynamicModeController extends Controller
 {
-    #[Get(path: '/annotation/dynamicMode/script/{folder}')]
-    public function jsObjects(string $folder)
-    {
-        return response()
-            ->view("Annotation.DynamicMode.Scripts.{$folder}")
-            ->header('Content-type', 'text/javascript')
-            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
-
     #[Get(path: '/annotation/dynamicMode')]
     public function browse(SearchData $search)
     {
@@ -51,51 +42,63 @@ class DynamicModeController extends Controller
         return VideoService::getResourceData($idDocument, $idDynamicObject, 'dynamicMode');
     }
 
-
-
-    #[Post(path: '/annotation/dynamicMode/updateObjectAnnotation')]
-    public function updateObjectAnnotation(ObjectAnnotationData $data)
+    /**
+     * Page
+     */
+    #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
+    public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
     {
-        try {
-            VideoService::updateObjectAnnotation($data);
-            $object = VideoService::getObject($data->idObject);
-            if (! $object) {
-                return $this->renderNotify('error', 'Object not found after update.');
-            }
-            $this->notify('success', 'Object updated.');
+        $data = $this->getData($idDocument, $idDynamicObject);
 
-            return $this->render('Annotation.DynamicMode.Panes.timeline.object', [
-                'duration' => $object->endFrame - $object->startFrame,
-                'objectData' => $object,
-            ], 'object');
-        } catch (\Exception $e) {
-            return $this->renderNotify('error', $e->getMessage());
-        }
+        return response()
+            ->view('Annotation.Video.annotation', $data)
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
 
-    #[Delete(path: '/annotation/dynamicMode/deleteAllBBoxes/{idDocument}/{idDynamicObject}')]
-    public function deleteAllBBoxes(int $idDocument, int $idDynamicObject)
-    {
-        try {
-            VideoService::deleteBBoxesFromObject($idDynamicObject);
 
-            return $this->redirect("/annotation/dynamicMode/{$idDocument}/{$idDynamicObject}");
-        } catch (\Exception $e) {
-            return $this->renderNotify('error', $e->getMessage());
-        }
-    }
+//    #[Post(path: '/annotation/dynamicMode/updateObjectAnnotation')]
+//    public function updateObjectAnnotation(ObjectAnnotationData $data)
+//    {
+//        try {
+//            VideoService::updateObjectAnnotation($data);
+//            $object = VideoService::getObject($data->idObject);
+//            if (! $object) {
+//                return $this->renderNotify('error', 'Object not found after update.');
+//            }
+//            $this->notify('success', 'Object updated.');
+//
+//            return $this->render('Annotation.DynamicMode.Panes.timeline.object', [
+//                'duration' => $object->endFrame - $object->startFrame,
+//                'objectData' => $object,
+//            ], 'object');
+//        } catch (\Exception $e) {
+//            return $this->renderNotify('error', $e->getMessage());
+//        }
+//    }
 
-    #[Delete(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject}')]
-    public function deleteObject(int $idDocument, int $idDynamicObject)
-    {
-        try {
-            VideoService::deleteObject($idDynamicObject);
+//    #[Delete(path: '/annotation/dynamicMode/deleteAllBBoxes/{idDocument}/{idDynamicObject}')]
+//    public function deleteAllBBoxes(int $idDocument, int $idDynamicObject)
+//    {
+//        try {
+//            VideoService::deleteBBoxesFromObject($idDynamicObject);
+//
+//            return $this->redirect("/annotation/dynamicMode/{$idDocument}/{$idDynamicObject}");
+//        } catch (\Exception $e) {
+//            return $this->renderNotify('error', $e->getMessage());
+//        }
+//    }
 
-            return $this->redirect("/annotation/dynamicMode/{$idDocument}");
-        } catch (\Exception $e) {
-            return $this->renderNotify('error', $e->getMessage());
-        }
-    }
+//    #[Delete(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject}')]
+//    public function deleteObject(int $idDocument, int $idDynamicObject)
+//    {
+//        try {
+//            VideoService::deleteObject($idDynamicObject);
+//
+//            return $this->redirect("/annotation/dynamicMode/{$idDocument}");
+//        } catch (\Exception $e) {
+//            return $this->renderNotify('error', $e->getMessage());
+//        }
+//    }
 
 
 
@@ -158,16 +161,4 @@ class DynamicModeController extends Controller
 //        return array_values($layerGroups);
 //    }
 
-    /**
-     * Page
-     */
-    #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
-    public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
-    {
-        $data = $this->getData($idDocument, $idDynamicObject);
-
-        return response()
-            ->view('Annotation.Video.annotation', $data)
-            ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
 }
