@@ -516,6 +516,7 @@ class VideoService
 
     public static function createBBox(CreateBBoxData $data): int
     {
+        debug($data);
         $boundingBox = Criteria::table('dynamicobject_boundingbox as dbb')
             ->join('boundingbox as bb', 'dbb.idBoundingBox', '=', 'bb.idBoundingBox')
             ->where('dbb.idDynamicObject', $data->idObject)
@@ -538,6 +539,7 @@ class VideoService
             'width' => (int) $data->bbox['width'],
             'height' => (int) $data->bbox['height'],
             'blocked' => (int) $data->bbox['blocked'],
+            'isGroundTruth' => $data->bbox['isGroundTruth'] ? 1 : 0,
             'idDynamicObject' => (int) $data->idObject,
         ]);
         $idBoundingBox = Criteria::function('boundingbox_dynamic_create(?)', [$json]);

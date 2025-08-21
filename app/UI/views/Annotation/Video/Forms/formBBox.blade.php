@@ -2,52 +2,49 @@
     <div class="content">
         <div class="d-flex justify-between">
             <div class="d-flex">
-                <div x-show="!bboxDrawn">
-                    <div x-show="currentFrame === {!! $object->startFrame !!}">
-                        <button
-                            id="btnCreateObject"
-                            class="ui button primary {!! $object->hasBBoxes ? 'disabled' : '' !!}"
-                            @click="$dispatch('bbox-create')"
-                        >
-                            <i class="plus square outline icon"></i>
-                            Create BBox
-                        </button>
-                    </div>
+{{--                <div x-show="!bboxDrawn">--}}
+{{--                    <div x-show="currentFrame === {!! $object->startFrame !!}">--}}
+{{--                        <button--}}
+{{--                            id="btnCreateObject"--}}
+{{--                            class="ui button primary {!! $object->hasBBoxes ? 'disabled' : '' !!}"--}}
+{{--                            @click="$dispatch('bbox-create')"--}}
+{{--                        >--}}
+{{--                            <i class="plus square outline icon"></i>--}}
+{{--                            Create BBox--}}
+{{--                        </button>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+                <div
+                    x-show="bboxDrawn"
+                >
+                    <button
+                        class="ui button primary toggle"
+                        @click="$dispatch('bbox-toggle-tracking')"
+                    >
+                        <i :class="autoTracking ? 'stop icon' : 'play icon'"></i>
+                        <span x-text="autoTracking ? 'Stop' : 'Auto Track'"></span>
+                    </button>
                 </div>
-                <div x-show="bboxDrawn">
-                    <div class="d-flex">
-                        <div>
-                            <button
-{{--                                class="ui button primary toggle {!! $object->hasBBoxes ? '' : 'disabled' !!}"--}}
-                                class="ui button primary toggle"
-                                @click="$dispatch('bbox-toggle-tracking')"
-                            >
-                                <i :class="isTracking ? 'stop icon' : 'play icon'"></i>
-                                <span x-text="isTracking ? 'Stop' : 'Track'"></span>
-                            </button>
-                        </div>
-                        <div>
-                            <div
-                                class="ui checkbox"
-                                x-init="$($el).checkbox()"
-                                @click="$dispatch('bbox-change-blocked')"
-                            >
-                                <input
-                                    type="checkbox"
-                                    tabindex="0"
-                                    :checked="bboxDrawn && (bboxDrawn.blocked === 1)"
-                                >
-                                <label class="pl-6">is blocked?</label>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            <div x-show="bboxDrawn">
+                <div
+                    class="ui checkbox"
+                    x-init="$($el).checkbox()"
+                    @click="$dispatch('bbox-change-blocked')"
+                >
+                    <input
+                        type="checkbox"
+                        tabindex="0"
+                        :checked="bboxDrawn && (bboxDrawn.blocked === 1)"
+                    >
+                    <label class="pl-6">is blocked?</label>
                 </div>
             </div>
             <div x-show="bboxDrawn">
                 <button
                     id="btnDeleteBBox"
                     class="ui medium icon button negative"
-                    :class="isTracking && 'disabled'"
+                    :class="autoTracking && 'disabled'"
                     title="Delete BBoxes from Object"
                     @click.prevent="messenger.confirmDelete('Removing all BBoxes of object #{{$object->idObject}}.', '/annotation/dynamicMode/deleteAllBBoxes/{{$object->idDocument}}/{{$object->idObject}}')"
                 >

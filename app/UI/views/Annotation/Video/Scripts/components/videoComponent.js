@@ -5,7 +5,7 @@ function videoComponent() {
         // =============================================
         // CONFIGURATION & STATE
         // =============================================
-        
+
         // Configuration (matching original structure)
         idVideoJs: "videoContainer",
         idVideo: "videoContainer_html5_api",
@@ -15,7 +15,8 @@ function videoComponent() {
             width: 852,
             height: 480
         },
-        isTracking: false,
+        trackingMode: false,
+        autoTracking: false,
 
         // State variables
         player: null,
@@ -54,7 +55,7 @@ function videoComponent() {
         // =============================================
         // LIFECYCLE & INITIALIZATION
         // =============================================
-        
+
         init() {
             // Use $nextTick to ensure DOM is ready
             this.$nextTick(() => {
@@ -130,7 +131,7 @@ function videoComponent() {
         // =============================================
         // EVENT HANDLERS
         // =============================================
-        
+
         async onVideoSeekFrame(e) {
             await this.waitForPlayerReady();
             this.seekToFrame(e.detail.frameNumber);
@@ -201,20 +202,20 @@ function videoComponent() {
             this.log(`Seeked to frame: ${this.frame.current} (${this.time.current.toFixed(3)}s)`);
         },
 
-        onTrackingStart() {
-            console.log("onTrackingStart");
-            this.isTracking = true;
-        },
-
-        onTrackingStop() {
-            console.log("onTrackingStop");
-            this.isTracking = false;
-        },
+        // onTrackingStart() {
+        //     console.log("onTrackingStart");
+        //     this.isTracking = true;
+        // },
+        //
+        // onTrackingStop() {
+        //     console.log("onTrackingStop");
+        //     this.isTracking = false;
+        // },
 
         updateReadyState() {
             const readyStates = {
                 0: 'HAVE_NOTHING',
-                1: 'HAVE_METADATA', 
+                1: 'HAVE_METADATA',
                 2: 'HAVE_CURRENT_DATA',
                 3: 'HAVE_FUTURE_DATA',
                 4: 'HAVE_ENOUGH_DATA'
@@ -224,10 +225,14 @@ function videoComponent() {
             this.log(`Ready state: ${this.readyState} (${this.player.readyState})`);
         },
 
+        onToggleTrackingMode() {
+            this.trackingMode = !this.trackingMode;
+        },
+
         // =============================================
         // CORE VIDEO OPERATIONS
         // =============================================
-        
+
         broadcastState() {
             document.dispatchEvent(new CustomEvent('video-update-state', {
                 detail: {
@@ -383,7 +388,7 @@ function videoComponent() {
         // =============================================
         // NAVIGATION & CONTROLS
         // =============================================
-        
+
         gotoStart() {
             this.gotoFrame(1);
         },
@@ -485,7 +490,7 @@ function videoComponent() {
         // =============================================
         // DURATION & TIMING
         // =============================================
-        
+
         startDurationCheck() {
             this.log('Starting duration check interval');
 
@@ -633,7 +638,7 @@ function videoComponent() {
         // =============================================
         // PLAYBACK RATE CONTROL
         // =============================================
-        
+
         setPlaybackRate(rate) {
             if (!this.player) {
                 console.warn('Player not initialized yet');
@@ -675,7 +680,7 @@ function videoComponent() {
         // =============================================
         // DEBUG & TESTING
         // =============================================
-        
+
         async testRandomSeeks() {
             this.log('=== STARTING RANDOM SEEK TEST ===');
             const testFrames = [];

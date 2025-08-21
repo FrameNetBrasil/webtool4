@@ -4,7 +4,8 @@ function formsComponent(idDocument) {
         formsPane: null,
         currentFrame: 0,
         isPlaying: false,
-        isTracking: false,
+        trackingMode: false,
+        autoTracking: false,
         bboxDrawn: null,
 
         init() {
@@ -18,27 +19,27 @@ function formsComponent(idDocument) {
         },
 
         onBBoxToggleTracking() {
-            console.log("toggle tracking");
-            this.isTracking = !this.isTracking;
-            // if (this.isTracking) {
-            //     document.dispatchEvent(new CustomEvent("tracking-start"));
-            // } else {
-            //     document.dispatchEvent(new CustomEvent("tracking-stop"));
-            // }
+            this.autoTracking = !this.autoTracking;
+            console.log("formsComponent toggle tracking - now is " + (this.autoTracking ? 'true':'false') );
+            if (this.autoTracking) {
+                document.dispatchEvent(new CustomEvent("auto-tracking-start"));
+            } else {
+                document.dispatchEvent(new CustomEvent("auto-tracking-stop"));
+            }
         },
 
         onBBoxDrawn(e) {
-            console.log("onBBoxDrawn", e.detail.bbox);
+            console.log("formsComponent onBBoxDrawn", e.detail.bbox);
             this.bboxDrawn = e.detail.bbox;
         },
 
         onBBoxUpdate(e) {
-            console.log("onBBoxUpdate on forms", e.detail.bbox);
+            console.log("formsComponent onBBoxUpdate", e.detail.bbox);
             this.bboxDrawn = e.detail.bbox;
         },
 
         onCloseObjectPane() {
-            window.location.assign(`/annotation/dynamicMode/${this.idDocument}`);
+            window.location.assign(`/annotation/{{$annotationType}}/${this.idDocument}`);
         },
 
         copyFrameFor(name) {
