@@ -13,6 +13,7 @@ class ObjectFrameData extends Data
         public ?int $endFrame = null,
         public ?float $startTime = null,
         public ?float $endTime = null,
+        public ?string $annotationType = '',
     ) {
         $timeIntervalSeconds = 0.04;
         $this->startTime = ($this->startFrame - 1) * $timeIntervalSeconds;

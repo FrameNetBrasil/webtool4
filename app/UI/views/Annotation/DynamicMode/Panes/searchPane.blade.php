@@ -8,11 +8,12 @@
     >
         <div class="search-input-group">
             <form class="ui form"
-                  hx-post="/annotation/dynamicMode/object/search"
+                  hx-post="/annotation/video/object/search"
                   hx-target="#gridArea"
                   hx-swap="innerHTML">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                 <input type="hidden" name="idDocument" value="{{ $idDocument ?? 0 }}" />
+                <input type="hidden" name="annotationType" value="{{ $annotationType }}" />
                 <div class="three fields">
 {{--                    <div class="field">--}}
 {{--                        <x-form::combobox.layer-deixis--}}
@@ -98,7 +99,7 @@
                         <div class="card-container">
                             <div
                                 class="search-results-grid "
-                                hx-get="/annotation/dynamicMode/object"
+                                hx-get="/annotation/video/object"
                                 hx-target="#formsPane"
                                 hx-swap="innerHTML"
                                 hx-on::config-request="event.detail.parameters.append('idDynamicObject', event.detail.triggeringEvent.target.dataset.id)"

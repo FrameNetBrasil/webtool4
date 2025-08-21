@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 
 class VideoService
 {
-    public static function getResourceData(int $idDocument, ?int $idObject = null): array
+    public static function getResourceData(int $idDocument, ?int $idObject = null, string $annotationType = ''): array
     {
         $document = Document::byId($idDocument);
         if (! $document) {
@@ -54,6 +54,7 @@ class VideoService
             'document' => $document,
             'corpus' => $corpus,
             'video' => $video,
+            'annotationType' => $annotationType,
             'fragment' => 'fe',
             'searchResults' => [],
             'timeline' => [
@@ -78,13 +79,13 @@ class VideoService
             ->where('ad.idLanguage', 'left', $idLanguage)
             ->where('ad.idDocument', $idDocument)
             ->where('view_frame.idLanguage', 'left', $idLanguage)
-            ->select('ad.idDynamicObject', 'ad.name', 'ad.startFrame', 'ad.endFrame', 'ad.startTime', 'ad.endTime', 'ad.status', 'ad.origin',
+            ->select('ad.idDynamicObject as idObject', 'ad.name', 'ad.startFrame', 'ad.endFrame', 'ad.startTime', 'ad.endTime', 'ad.status', 'ad.origin',
                 'ad.idAnnotationLU', 'ad.idLU', 'lu', 'view_lu.name as luName', 'view_frame.name as luFrameName', 'idAnnotationFE', 'ad.idFrameElement', 'ad.idFrame', 'ad.frame', 'ad.fe',
                 'color.rgbFg', 'color.rgbBg', 'ac.comment as textComment')
             ->orderBy('ad.startFrame')
             ->orderBy('ad.endFrame')
             ->orderBy('ad.idDynamicObject')
-            ->keyBy('idDynamicObject')
+            ->keyBy('idObject')
             ->all();
         $bboxes = [];
         $idDynamicObjectList = array_keys($objects);
@@ -101,7 +102,7 @@ class VideoService
             $object->order = ++$order;
             $object->startTime = (int) ($object->startTime * 1000);
             $object->endTime = (int) ($object->endTime * 1000);
-            $object->bboxes = $bboxes[$object->idDynamicObject] ?? [];
+            $object->bboxes = $bboxes[$object->idObject] ?? [];
             $object->name = '';
             $object->bgColor = 'white';
             $object->fgColor = 'black';
@@ -217,7 +218,7 @@ class VideoService
             ->leftJoin('color', 'fe.idColor', '=', 'color.idColor')
             ->where('ad.idLanguage', 'left', $idLanguage)
             ->where('ad.idDynamicObject', $idObject)
-            ->select('ad.idDynamicObject', 'ad.name', 'ad.startFrame', 'ad.endFrame', 'ad.startTime', 'ad.endTime', 'ad.status', 'ad.origin',
+            ->select('ad.idDynamicObject as idObject', 'ad.name', 'ad.startFrame', 'ad.endFrame', 'ad.startTime', 'ad.endTime', 'ad.status', 'ad.origin',
                 'ad.idAnnotationLU', 'ad.idLU', 'ad.lu', 'ad.idAnnotationFE', 'ad.idFrameElement', 'ad.idFrame', 'ad.frame', 'ad.fe', 'color.rgbBg', 'color.rgbFg', 'ad.idLanguage',
                 'ad.idDocument')
             ->selectRaw("'Single_layer' as nameLayerType")
@@ -245,7 +246,7 @@ class VideoService
         return $object;
     }
 
-    public function objectSearch(ObjectSearchData $data)
+    public static function objectSearch(ObjectSearchData $data)
     {
         $searchResults = [];
 
@@ -276,7 +277,7 @@ class VideoService
 
             $searchResults = $query
                 ->select(
-                    'ad.idDynamicObject',
+                    'ad.idDynamicObject as idObject',
                     'ad.name',
                     'ad.startFrame',
                     'ad.endFrame',
@@ -318,6 +319,7 @@ class VideoService
             'endFrame' => $data->endFrame,
             'startTime' => ($data->startFrame - 1) * 0.040,
             'endTime' => ($data->endFrame) * 0.040,
+            'idLayerType' => $data->idLayerType,
             'status' => 0,
             'origin' => 2,
             'idUser' => $idUser,
@@ -443,27 +445,25 @@ class VideoService
 
     public static function deleteObject(int $idObject): void
     {
-        // se pode remover o objeto se for Manager da task ou se for o criador do objeto
-        $dynamicObjectAnnotation = Criteria::byId('view_annotation_dynamic', 'idDynamicObject', $idObject);
-        $taskManager = Task::getTaskManager($dynamicObjectAnnotation->idDocument);
+        // se pode remover o objeto se for Manager ou se for o criador do objeto
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
-        if (! User::isManager($user)) {
-            if ($taskManager->idUser != $idUser) {
-                $tl = Criteria::table('timeline')
-                    ->where('tablename', 'dynamicobject')
-                    ->where('id', $idObject)
-                    ->select('idUser')
-                    ->first();
-                if ($tl->idUser != $idUser) {
-                    throw new \Exception('Object can not be removed.');
-                }
+        if (!User::isManager($user)) {
+            $tl = Criteria::table("timeline")
+                ->where("tablename", "dynamicobject")
+                ->where("id", $idObject)
+                ->select("idUser")
+                ->first();
+            if ($tl->idUser != $idUser) {
+                throw new \Exception("Object can not be removed.");
             }
         }
         DB::transaction(function () use ($idObject) {
+            // remove boundingbox
             self::deleteBBoxesByObject($idObject);
+            // remove dynamicobject
             $idUser = AppService::getCurrentIdUser();
-            Criteria::function('dynamicobject_delete(?,?)', [$idObject, $idUser]);
+            Criteria::function("dynamicobject_delete(?,?)", [$idObject, $idUser]);
         });
     }
 

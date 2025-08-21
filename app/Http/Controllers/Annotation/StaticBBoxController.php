@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Annotation\StaticBBox\AnnotationCommentData;
+use App\Data\Annotation\Comment\CommentData;
 use App\Data\Annotation\StaticBBox\CloneData;
 use App\Data\Annotation\StaticBBox\DocumentData;
 use App\Data\Annotation\StaticBBox\ObjectAnnotationData;
 use App\Data\Annotation\StaticBBox\ObjectData;
 use App\Data\Annotation\StaticBBox\SearchData;
 use App\Data\Annotation\StaticBBox\UpdateBBoxData;
-use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Corpus;

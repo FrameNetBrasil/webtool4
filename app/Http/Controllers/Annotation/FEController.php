@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\Browse\SearchData;
+use App\Data\Annotation\Comment\CommentData;
 use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\FE\AnnotationData;
 use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\FE\SelectionData;
-use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
