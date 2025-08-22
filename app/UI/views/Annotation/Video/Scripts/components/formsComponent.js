@@ -2,7 +2,7 @@ function formsComponent(idDocument) {
     return {
         idDocument: 0,
         formsPane: null,
-        currentFrame: 0,
+        currentFrame: 1,
         isPlaying: false,
         trackingMode: false,
         autoTracking: false,

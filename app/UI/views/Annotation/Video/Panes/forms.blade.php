@@ -19,8 +19,8 @@
     @endif
 </div>
 <div
-{{--    x-data="boxesComponent('videoContainer_html5_api', {!! Js::from($object) !!})"--}}
-    x-data="boxesComponent('videoContainer_html5_api')"
+{{--    x-data="boxComponent('videoContainer_html5_api', {!! Js::from($object) !!})"--}}
+    x-data="boxComponent('videoContainer_html5_api')"
     @disable-drawing.document="onDisableDrawing"
     @enable-drawing.document="onEnableDrawing"
     @bbox-create.document="onBBoxCreate"

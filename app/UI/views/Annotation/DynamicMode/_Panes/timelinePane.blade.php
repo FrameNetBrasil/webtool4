@@ -7,21 +7,21 @@
             frameToPixel: {{$timeline['config']['frameToPixel']}},
             labelWidth: {{$timeline['config']['labelWidth']}}
     })" class="timeline"
-    @timeline-seek-frame.document="onSeekObject"
+     @timeline-seek-frame.document="onSeekObject"
 >
     <div class="container">
         <!-- Controls -->
         <div class="controls ui form">
-                <label>Go to frame:</label>
+            <label>Go to frame:</label>
             <div class="ui small input">
                 <input
-                    type="number"
-                    id="frame-input"
-                    value="0"
-                    min="0"
-                    max="{{$timeline['config']['maxFrame']}}"
-                    x-model="frameInput"
-                    @keydown.enter="scrollToFrame()"
+                        type="number"
+                        id="frame-input"
+                        value="0"
+                        min="0"
+                        max="{{$timeline['config']['maxFrame']}}"
+                        x-model="frameInput"
+                        @keydown.enter="scrollToFrame()"
                 >
             </div>
             <button class="ui small button" @click="scrollToFrame()">Go</button>
@@ -64,12 +64,12 @@
                         <div class="layer-row" style="height: {{ $layerHeight }}px;">
                             <!-- Layer Objects -->
                             <div
-                                class="objects"
-                                style="height: {{ $layerHeight }}px;"
-                                hx-get="/annotation/dynamicMode/object"
-                                hx-target="#formsPane"
-                                hx-swap="innerHTML"
-                                hx-on::config-request="event.detail.parameters.append('idDynamicObject', event.detail.triggeringEvent.target.dataset.id)"
+                                    class="objects"
+                                    style="height: {{ $layerHeight }}px;"
+                                    hx-get="/annotation/dynamicMode/object"
+                                    hx-target="#formsPane"
+                                    hx-swap="innerHTML"
+                                    hx-on::config-request="event.detail.parameters.append('idDynamicObject', event.detail.triggeringEvent.target.dataset.id)"
                             >
                                 @foreach ($visualLayer['lines'] as $lineIndex => $line)
                                     @foreach ($line['objects'] as $objIndex => $objectData)
@@ -83,15 +83,15 @@
                                             }
                                         @endphp
                                         <div
-                                            class="object"
-                                            style="left: {{ $startPos }}px; top: {{ $top }}px; width: {{ $width }}px;"
-                                            data-layer-index="{{ $line['originalIndex'] }}"
-                                            data-object-index="{{ $objIndex }}"
-                                            data-line-index="{{ $lineIndex }}"
-                                            data-start-frame="{{ $objectData->startFrame }}"
-                                            data-end-frame="{{ $objectData->endFrame }}"
+                                                class="object"
+                                                style="left: {{ $startPos }}px; top: {{ $top }}px; width: {{ $width }}px;"
+                                                data-layer-index="{{ $line['originalIndex'] }}"
+                                                data-object-index="{{ $objIndex }}"
+                                                data-line-index="{{ $lineIndex }}"
+                                                data-start-frame="{{ $objectData->startFrame }}"
+                                                data-end-frame="{{ $objectData->endFrame }}"
                                         >
-                                            @include("Annotation.DynamicMode.Panes.timeline.object")
+                                            @include("Annotation.DynamicMode._Panes.timeline.object")
                                         </div>
                                     @endforeach
                                 @endforeach
@@ -114,9 +114,9 @@
 <div id="object-click-info"></div>
 
 @if($currentObject)
-<script type="text/javascript">
-    $(function() {
-        document.dispatchEvent(new CustomEvent("timeline-seek-frame", { detail: { frameNumber: {{$currentObject->startFrame}} } }));
-    });
-</script>
+    <script type="text/javascript">
+        $(function() {
+            document.dispatchEvent(new CustomEvent("timeline-seek-frame", { detail: { frameNumber: {{$currentObject->startFrame}} } }));
+        });
+    </script>
 @endif
