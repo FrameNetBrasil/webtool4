@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Database\Criteria;
 use App\Services\LOME\LOMEService;
+use App\Services\Trankit\TrankitService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -45,13 +46,16 @@ class LomeProcessCommand extends Command
                 ->chunkResult("idFrameElement", "name");
             $idSpan = 0;
             $lome = new LOMEService();
+            $trankit = new TrankitService();
+            $trankit->init("http://localhost:8405");
+            // corpus copini
             $sentences = DB::connection('webtool')
                 ->select("
                 select s.idSentence, s.text,s.idOriginMM
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where d.idCorpus between 170 and 179
+where d.idCorpus = 218
                 ");
             debug(count($sentences));
             $s = 0;
@@ -67,6 +71,8 @@ where d.idCorpus between 170 and 179
                     //print_r($tokens);
                     Criteria::deleteById("lome_resultfe", "idSentence", $sentence->idSentence);
                     //$result = $lome->process($text);
+                    $ud = $trankit->parseSentenceRawTokens($text, 1);
+                    print_r($ud);
                     $result = $lome->parse($text);
                     if (is_array($result)) {
                         $result = $result[0];
@@ -123,7 +129,7 @@ where d.idCorpus between 170 and 179
                     print_r($sentence->idSentence . ":" . $e->getMessage());
                     die;
                 }
-                //break;
+                break;
             }
         } catch (\Exception $e) {
             print_r($e->getMessage());
