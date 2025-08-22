@@ -5,7 +5,7 @@ $items = [
 ];
 @endphp
 <x-objectmenu
-    id="taskMenu__{{$task->idTask}}"
+    id="taskMenu"
     :items="$items"
     :path="'task/' . $task->idTask"
 ></x-objectmenu>

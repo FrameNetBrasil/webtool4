@@ -4,10 +4,9 @@ $items = [
     ['datasets','Datasets'],
     ['users','Managers'],
 ];
-$id = uniqid("projectMenu")
 @endphp
 <x-objectmenu
-    id="{{$id}}"
+    id="projectMenu"
     :items="$items"
     :path="'project/' . $project->idProject"
 ></x-objectmenu>

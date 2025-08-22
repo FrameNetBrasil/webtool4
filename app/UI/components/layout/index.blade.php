@@ -28,7 +28,7 @@
     <script type="text/javascript" src="/scripts/pdf/jspdf.debug.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2canvas.min.js"></script>
     <script type="text/javascript" src="/scripts/pdf/html2pdf.min.js"></script>
-    <script defer src="/scripts/alpinejs/cdn.min.js"></script>
+{{--    <script defer src="/scripts/alpinejs/cdn.min.js"></script>--}}
 
     <script type="text/javascript" src="/scripts/jquery-easyui-1.10.17/jquery.easyui.min.js"></script>
 
