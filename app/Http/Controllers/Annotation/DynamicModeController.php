@@ -86,6 +86,7 @@ class DynamicModeController extends Controller
     #[Get(path: '/annotation/dynamicMode/gridObjects/{idDocument}')]
     public function objectsForGrid(int $idDocument)
     {
+        ini_set("memory_limit", "8192M");
         return AnnotationDynamicService::getObjectsByDocument($idDocument);
     }
 
