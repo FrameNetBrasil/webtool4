@@ -82,7 +82,7 @@ class VideoController extends Controller
         }
     }
 
-    #[Post(path: '/annotation/video/updateObjectRange')]
+    #[Post(path: '/annotation/video/updateObject')]
     public function updateObjectRange(ObjectFrameData $data)
     {
         try {

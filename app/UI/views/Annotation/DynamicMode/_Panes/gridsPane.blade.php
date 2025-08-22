@@ -4,14 +4,14 @@
 </div>
 <div class="gridBody">
     <div
-        id="timelinePane"
-        class="ui tab timeline h-full w-full active"
-        data-tab="timeline"
+            id="timelinePane"
+            class="ui tab timeline h-full w-full active"
+            data-tab="timeline"
     >
-        @include("Annotation.DynamicMode.Panes.timelinePane")
+        @include("Annotation.DynamicMode._Panes.timelinePane")
     </div>
     <div class="ui tab objects h-full w-full" data-tab="objects">
-        @include("Annotation.DynamicMode.Panes.searchPane", ['idDocument' => $idDocument])
+        @include("Annotation.DynamicMode._Panes.searchPane", ['idDocument' => $idDocument])
     </div>
 </div>
 <script type="text/javascript">

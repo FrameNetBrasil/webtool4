@@ -243,7 +243,7 @@ function videoComponent() {
             }));
         },
 
-        seekToFrame(frame) {
+        async seekToFrame(frame) {
             if (!this.player) {
                 console.warn('Player not initialized yet');
                 return;
@@ -285,7 +285,7 @@ function videoComponent() {
 
                         this.log(`  Actual frame: ${actualFrame}, diff: ${frameDiff}`);
 
-                        if (frameDiff <= 1) {
+                        if (frameDiff < 1) {
                             // Success - force visual update
                             this.forceFrameUpdate();
                             resolve();
@@ -341,7 +341,7 @@ function videoComponent() {
         },
 
         timeFromFrame(frame) {
-            return (frame - 1) * this.timeInterval;
+            return (frame - 1) * this.timeInterval + (2/1000);
         },
 
         waitForDuration() {

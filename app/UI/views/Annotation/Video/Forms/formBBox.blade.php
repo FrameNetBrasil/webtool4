@@ -2,18 +2,19 @@
     <div class="content">
         <div class="d-flex justify-between">
             <div class="d-flex">
-{{--                <div x-show="!bboxDrawn">--}}
+                <div x-show="!bboxDrawn">
 {{--                    <div x-show="currentFrame === {!! $object->startFrame !!}">--}}
-{{--                        <button--}}
-{{--                            id="btnCreateObject"--}}
+                        <button
+                            id="btnCreateObject"
 {{--                            class="ui button primary {!! $object->hasBBoxes ? 'disabled' : '' !!}"--}}
-{{--                            @click="$dispatch('bbox-create')"--}}
-{{--                        >--}}
-{{--                            <i class="plus square outline icon"></i>--}}
-{{--                            Create BBox--}}
-{{--                        </button>--}}
+                            class="ui button primary"
+                            @click="$dispatch('bbox-create')"
+                        >
+                            <i class="plus square outline icon"></i>
+                            Create BBox
+                        </button>
 {{--                    </div>--}}
-{{--                </div>--}}
+                </div>
                 <div
                     x-show="bboxDrawn"
                 >

@@ -1,4 +1,4 @@
-function boxesComponent(idVideoDOMElement, object) {
+function boxComponent(idVideoDOMElement) {
     return {
 
         idVideoDOMElement: "",
@@ -37,17 +37,19 @@ function boxesComponent(idVideoDOMElement, object) {
         interactionInitialized: false,
         annotationType: '',
         baseURL: '',
+        idObject: '',
 
 
         async init() {
-            console.log("Boxes component init");
+            console.log("Box component init");
             this._token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
             this.idVideoDOMElement = idVideoDOMElement;
-            this.object = object;
-            this.annotationType = object.annotationType;
             this.baseURL = "/annotation/video";
-            console.log(this.object);
+
+
+            // this.object = object;
+            // this.annotationType = object.annotationType;
+            // console.log(this.object);
 
             this.canvas = document.getElementById("canvas");
             if (!this.canvas) {
@@ -70,9 +72,9 @@ function boxesComponent(idVideoDOMElement, object) {
                 this.offsetY = canvasRect.top;
             }
 
-            this.startFrame = this.object.startFrame;
-            this.endFrame = this.object.endFrame;
-            this.currentFrame = this.object.startFrame;
+            // this.startFrame = this.object.startFrame;
+            // this.endFrame = this.object.endFrame;
+            // this.currentFrame = this.object.startFrame;
 
             this.tracker = new ObjectTrackerObject();
             this.tracker.config({
@@ -81,11 +83,11 @@ function boxesComponent(idVideoDOMElement, object) {
                 video: this.video
             });
             this.isTracking = false;
-            document.dispatchEvent(new CustomEvent("video-seek-frame", {
-                detail: {
-                    frameNumber: this.object.startFrame
-                }
-            }));
+            // document.dispatchEvent(new CustomEvent("video-seek-frame", {
+            //     detail: {
+            //         frameNumber: this.object.startFrame
+            //     }
+            // }));
         },
 
         async onVideoUpdateState(e) {
@@ -102,6 +104,13 @@ function boxesComponent(idVideoDOMElement, object) {
                     }
                 }));
             }
+        },
+
+        onObjectLoaded(e) {
+            console.log("onObjectLoaded", e.detail.object);
+            this.object = e.detail.object;
+            this.annotationType = this.object.annotationType;
+            this.currentFrame = this.object.startFrame;
         },
 
         // async onBBoxToggleTracking() {
@@ -124,7 +133,7 @@ function boxesComponent(idVideoDOMElement, object) {
 
         async onBBoxCreated(e) {
             this.bbox = e.detail.bbox;
-            console.log("bbox created object", this.object);
+            console.log("bbox created for object", this.object);
             let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, false);
             this.disableDrawing();
             bbox.idBoundingBox = await ky.post(`${this.baseURL}/createBBox`, {
@@ -137,7 +146,7 @@ function boxesComponent(idVideoDOMElement, object) {
             }).json();
             console.log("bbox created id ", bbox.idBoundingBox);
             this.tracker.getFrameImage(this.currentFrame);
-            this.showBBox();
+            await this.showBBox();
             messenger.notify("success", "New bbox created.");
         },
 

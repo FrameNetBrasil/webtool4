@@ -2,24 +2,14 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Resource\Video\CloneData;
-use App\Data\Resource\Video\CreateBBoxData;
-use App\Data\Resource\Video\CreateObjectData;
-use App\Data\Resource\Video\GetBBoxData;
-use App\Data\Resource\Video\ObjectAnnotationData;
-use App\Data\Resource\Video\ObjectFrameData;
 use App\Data\Resource\Video\ObjectSearchData;
 use App\Data\Resource\Video\SearchData;
-use App\Data\Resource\Video\UpdateBBoxData;
-use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Services\Annotation\BrowseService;
-use App\Services\CommentService;
 use App\Services\Resource\VideoService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
-use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
 #[Middleware(name: 'auth')]
 class DynamicModeController extends Controller
@@ -51,8 +41,39 @@ class DynamicModeController extends Controller
         $data = $this->getData($idDocument, $idDynamicObject);
 
         return response()
-            ->view('Annotation.Video.annotation', $data)
+            ->view('Annotation.DynamicMode.annotation', $data)
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+
+    #[Get(path: '/annotation/dynamicMode/object')]
+    public function getObject(ObjectSearchData $data)
+    {
+        if ($data->idObject == 0) {
+            return view('Annotation.DynamicMode.Forms.formNewObject');
+        }
+        $object = VideoService::getObject($data->idObject ?? 0);
+        $object->annotationType = $data->annotationType;
+        if (is_null($object)) {
+            return $this->renderNotify('error', 'Object not found.');
+        }
+
+        return response()
+            ->view('Annotation.DynamicMode.Panes.object', [
+                'object' => $object,
+                'annotationType' => $data->annotationType
+            ])->header('HX-Push-Url', "/annotation/dynamicMode/{$object->idDocument}/{$object->idObject}");
+    }
+
+    #[Delete(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject}')]
+    public function deleteObject(int $idDocument, int $idDynamicObject)
+    {
+        try {
+            VideoService::deleteObject($idDynamicObject);
+
+            return $this->redirect("/annotation/dynamicMode/{$idDocument}");
+        } catch (\Exception $e) {
+            return $this->renderNotify('error', $e->getMessage());
+        }
     }
 
 

@@ -6,14 +6,14 @@
     @bbox-drawn.document="onBBoxDrawn"
     @bbox-update.document="onBBoxUpdate"
 >
-    @if ($idDynamicObject == 0)
+    @if ($idObject == 0)
         @include("Annotation.DynamicMode.Forms.formNewObject")
     @else
         <div
             hx-trigger="load"
             hx-target="#formsPane"
             hx-get="/annotation/dynamicMode/object"
-            hx-vals='{"idDynamicObject": {{$idDynamicObject}} }'
+            hx-vals='{"idObject": {{$idObject}}, "annotationType":"{{$annotationType}}" }'
             hx-swap="innerHTML"
         ></div>
     @endif

@@ -3,7 +3,7 @@
         <div class="header">
             <div class="d-flex items-center justify-between">
                 <div>
-                    <h3 class="ui header">Object #{{$object->idDynamicObject}} - {{$object->nameLayerType}}</h3>
+                    <h3 class="ui header">Object #{{$object->idObject}} - {{$object->nameLayerType}}</h3>
                 </div>
                 <div>
                     <button
@@ -20,14 +20,14 @@
                     </button>
                     <button
                         class="ui tiny icon button"
-                        hx-post="/annotation/dynamicMode/cloneObject"
-                        hx-vals='js:{"idDocument":{{$object->idDocument}},"idDynamicObject":{{$object->idDynamicObject}}}'
+                        hx-post="/annotation/video/cloneObject"
+                        hx-vals='js:{"idDocument":{{$object->idDocument}},"idObject":{{$object->idObject}},"annotationType":"{{$annotationType}}"}'
                     >
                         Clone object
                     </button>
                     <button
                         class="ui tiny icon button danger"
-                        @click.prevent="messenger.confirmDelete('Removing object #{{$object->idDynamicObject}}.', '/annotation/dynamicMode/{{$object->idDocument}}/{{$object->idDynamicObject}}')"
+                        @click.prevent="messenger.confirmDelete('Removing object #{{$object->idObject}}.', '/annotation/dynamicMode/{{$object->idDocument}}/{{$object->idObject}}')"
                     >
                         Delete Object
                     </button>
@@ -44,12 +44,12 @@
         </div>
     </div>
     <div class="content pt-0">
-        <input type="hidden" id="idDynamicObject" value="{{$object->idDynamicObject}}" />
+        <input type="hidden" id="idObject" value="{{$object->idObject}}" />
         <div
             class="objectPane ui pointing secondary menu tabs mt-0"
         >
             <a
-                class="item active"
+                class="item"
                 data-tab="edit-object"
                 :class="isPlaying && 'disabled'"
             >Annotate object</a>
@@ -62,19 +62,20 @@
                 class="item"
                 data-tab="modify-range"
                 :class="isPlaying && 'disabled'"
-            >Modify range</a>
+            >Modify object</a>
             <a
                 class="item"
                 data-tab="comment"
                 :class="isPlaying && 'disabled'"
             ><i class="comment dots outline icon"></i>Comment</a>
         </div>
+        @php( $tabBBox = ($object->hasBBoxes ? '' : "'change tab','create-bbox'"))
         <div
             class="gridBody"
-            x-init="$('.menu .item').tab()"
+            x-init="$('.menu .item').tab({!! $tabBBox !!})"
         >
             <div
-                class="ui tab h-full w-full active"
+                class="ui tab h-full w-full"
                 data-tab="edit-object"
             >
                 @include("Annotation.DynamicMode.Forms.formAnnotation")
@@ -83,42 +84,42 @@
                 class="ui tab h-full w-full"
                 data-tab="create-bbox"
             >
-                @include("Annotation.DynamicMode.Forms.formBBox")
+                @include("Annotation.Video.Forms.formBBox")
             </div>
             <div
                 class="ui tab h-full w-full"
                 data-tab="modify-range"
             >
-                @include("Annotation.DynamicMode.Forms.formModifyRange")
+                @include("Annotation.DynamicMode.Forms.formModifyObject")
             </div>
             <div
                 class="ui tab h-full w-full"
                 data-tab="comment"
             >
-                @include("Annotation.DynamicMode.Forms.formComment")
+                @include("Annotation.Comment.formComment")
             </div>
         </div>
     </div>
 
-    <div
-        x-data="boxesComponent('videoContainer_html5_api', {!! Js::from($object) !!})"
-        @disable-drawing.document="onDisableDrawing"
-        @enable-drawing.document="onEnableDrawing"
-        @bbox-create.document="onBBoxCreate"
-        @bbox-created.document="onBBoxCreated"
-        @bbox-change-blocked.document="onBBoxChangeBlocked"
-        @video-update-state.document="onVideoUpdateState"
-        @tracking-start.document="onStartTracking"
-        @tracking-stop.document="onStopTracking"
-        @bbox-toggle-tracking.document="onBBoxToggleTracking"
-        id="boxesContainer"
-        style="position: absolute; top: 0; left: 0; width:852px; height:480px; background-color: transparent"
-        hx-swap-oob="true"
-    >
-        <div
-            class="bbox" style="display:none"
-        >
-            <div class="objectId">{{$object->idDynamicObject}}</div>
-        </div>
-    </div>
+
 </div>
+@if($object)
+    <script type="text/javascript">
+        $(function() {
+            document.dispatchEvent(new CustomEvent("object-loaded", {
+                detail: {
+                    object: {
+                        idObject: {{$object->idObject}},
+                        annotationType: '{{$object->annotationType}}',
+                        startFrame: {{$object->startFrame}}
+                    }
+                }
+            }));
+            document.dispatchEvent(new CustomEvent("video-seek-frame", {
+                detail: {
+                    frameNumber: {{$object->startFrame}}
+                }
+            }));
+        });
+    </script>
+@endif
