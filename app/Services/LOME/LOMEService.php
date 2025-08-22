@@ -51,7 +51,7 @@ class LOMEService extends AppService
 
         try {
             //$response = $client->post('http://server5.frame.net.br:7749/parse', [
-            $response = $client->post('host.docker.internal:7749/parse', [
+            $response = $client->post('localhost:7749/parse', [
                 'headers' => [
                     'Accept' => 'application/json',
                 ],
