@@ -2336,6 +2336,14 @@ $router->post('project/{id}/datasets/new', [
 	'domain' => NULL,
 ]);
 
+$router->delete('project/{idProject}/datasets/{idDataset}', [
+	'uses' => 'App\Http\Controllers\Project\DatasetController@datasetsDelete',
+	'as' => NULL,
+	'middleware' => ['master'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('sandbox/page1', [
 	'uses' => 'App\Http\Controllers\SandboxController@page1',
 	'as' => NULL,
@@ -3472,14 +3480,6 @@ $router->get('annotation/fe', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/fe/grid', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@grid',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('annotation/fe/grid/{idDocument}/sentences', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@documentSentences',
 	'as' => NULL,
@@ -3770,6 +3770,38 @@ $router->delete('annotation/staticEvent/fes/{idDocumentSentence}/{idFrame}', [
 
 $router->post('annotation/staticEvent/comment', [
 	'uses' => 'App\Http\Controllers\Annotation\StaticEventController@annotationComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/browse/searchSentence', [
+	'uses' => 'App\Http\Controllers\Annotation\BrowseController@search',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/browse/treeSentence', [
+	'uses' => 'App\Http\Controllers\Annotation\BrowseController@tree',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/browse/searchDocument', [
+	'uses' => 'App\Http\Controllers\Annotation\BrowseController@searchDocument',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/browse/treeDocument', [
+	'uses' => 'App\Http\Controllers\Annotation\BrowseController@treeDocument',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

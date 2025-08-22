@@ -2,6 +2,11 @@
      User Global Variables
 *******************************/
 
+@codeFont: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+@headerFont: @fontName, @fallbackFonts;
+@pageFont: @fontName, @fallbackFonts;
+@textFont: @fontName, @fallbackFonts;
+
 //@textColor:#545B64;
 @textColor:#333;
 @selectedTextColor: @blue;
@@ -15,6 +20,8 @@
 @relativeSmall: @fontSize;
 @relativeBorderRadius: 2px;
 @absoluteBorderRadius: 2px;
+
+@background: #fff;
 
 /* -------------------
       Site Colors
@@ -49,3 +56,172 @@
 @lightBrown: #d7ccc8;
 @lightGrey: #f5f5f5;
 @lightBlack: #545454;
+
+// Tertiary color
+@tertiaryColor: #9CA3AF;
+
+// Font weights
+@thin: 300;
+@normal: 400;
+@semibold: 600;
+@bold: 700;
+
+@background: @white;
+
+/*-------------------
+    Transition System
+-------------------*/
+
+@transitionDuration: 200ms;
+@transitionEasing: ease-out;
+
+@transitionFast: 150ms @transitionEasing;
+@transitionNormal: @transitionDuration @transitionEasing;
+@transitionSlow: 300ms @transitionEasing;
+
+@defaultDuration: 200ms;
+
+/*-------------------
+    Overlay System
+-------------------*/
+
+// Dark overlays
+@overlayDark5: rgba(0, 0, 0, 0.05);
+@overlayDark10: rgba(0, 0, 0, 0.10);
+@overlayDark15: rgba(0, 0, 0, 0.15);
+@overlayDark20: rgba(0, 0, 0, 0.20);
+@overlayDark30: rgba(0, 0, 0, 0.30);
+@overlayDark50: rgba(0, 0, 0, 0.50);
+@overlayDark80: rgba(0, 0, 0, 0.80);
+
+// Light overlays
+@overlayLight5: rgba(255, 255, 255, 0.05);
+@overlayLight10: rgba(255, 255, 255, 0.10);
+@overlayLight20: rgba(255, 255, 255, 0.20);
+@overlayLight50: rgba(255, 255, 255, 0.50);
+@overlayLight80: rgba(255, 255, 255, 0.80);
+
+// Primary overlays
+@overlayPrimary5: fade(@primaryColor, 5%);
+@overlayPrimary10: fade(@primaryColor, 10%);
+@overlayPrimary15: fade(@primaryColor, 15%);
+@overlayPrimary20: fade(@primaryColor, 20%);
+
+// Line heights
+// Line heights matched to content types
+@lineHeightMicro: 1.2;      // For small text, labels
+@lineHeightBody: 1.5;       // For body text (14-18px)
+@lineHeightHeading: 1.25;   // For headings
+@lineHeightDisplay: 1.1;    // For large display text
+@lineHeightCode: 1.4;       // For code blocks
+
+// Apply systematically
+@bodyLineHeight: @lineHeightBody;
+@headerLineHeight: @lineHeightHeading;
+
+@lineHeightNone: 1;
+@lineHeightTight: 1.25;
+@lineHeightSnug: 1.375;
+@lineHeightNormal: 1.5;
+@lineHeightRelaxed: 1.625;
+@lineHeightLoose: 2;
+
+// Letter spacing
+@letterSpacingTighter: -0.05em;
+@letterSpacingTight: -0.025em;
+@letterSpacingNormal: 0;
+@letterSpacingWide: 0.025em;
+@letterSpacingWider: 0.05em;
+@letterSpacingWidest: 0.1em;
+
+/*-------------------
+    Shadow System
+-------------------*/
+
+@shadowXS: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+@shadowSM: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+@shadowMD: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+@shadowLG: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+@shadowXL: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+@shadow2XL: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+@shadowInner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+// Map to Fomantic shadows
+@subtleShadow: @shadowXS;
+@defaultShadow: @shadowMD;
+@floatingShadow: @shadowLG;
+@boxShadow: @defaultShadow;
+
+/*-------------------
+    Loading Variables
+-------------------*/
+
+@loadingSpinnerColor: @primaryColor;
+@loadingBackground: @primaryBackground;
+@loadingOverlay: fade(@white, 80%);
+@loadingOverlayDark: fade(@black, 50%);
+
+/*-------------------
+    Z-Index Scale
+-------------------*/
+
+@zIndexDropdown: 1000;
+@zIndexSticky: 1010;
+@zIndexFixed: 1020;
+@zIndexModal: 1030;
+@zIndexPopup: 1040;
+@zIndexTooltip: 1050;
+@zIndexNotification: 1060;
+
+
+/*-------------------
+    Content Sizing
+-------------------*/
+
+@contentMaxWidth: 1200px;
+@contentSidePadding: @relativeLarge;
+@sectionVerticalGap: @relativeHuge;
+@paragraphGap: @relativeMedium;
+@headingGap: @relativeLarge @relativeMedium;
+
+
+///*-------------------
+//    Layout Variables (WebTool Specific)
+//-------------------*/
+//
+// Sidebar dimensions
+@sidebarWidth: 280px;
+@sidebarWidthNarrow: 250px;
+@sidebarWidthWide: 400px;
+
+// Header, footer and toolbar
+@headerHeight: @relative46px;
+@headerFontSize: @large;
+@headerFontSize: @textFont;
+@headerFontWeight: @semibold;
+@breadcrumbHeight: @relative32px;
+@toolbarHeight: @relative64px;
+@footerHeight: @relative32px;
+@footerFontSize: @medium;
+@footerFontWeight: @normal;
+
+// Tools panel
+@toolsPanelWidth: 320px;
+@toolsPanelWidthNarrow: 280px;
+
+/*-------------------
+    Responsive Breakpoints
+-------------------*/
+
+//@mobileBreakpoint: 320px;
+//@tabletBreakpoint: 768px;
+//@computerBreakpoint: 992px;
+//@largeMonitorBreakpoint: 1200px;
+//@widescreenMonitorBreakpoint: 1920px;
+
+@mobileBreakpoint: 320px;
+@tabletBreakpoint: 768px;
+@computerBreakpoint: 1024px;
+@largeMonitorBreakpoint: 1200px;
+@widescreenMonitorBreakpoint: 1440px;
+//@widescreenMonitorBreakpoint: 2560px;

@@ -7,19 +7,15 @@
 >
     @foreach($datasets as $dataset)
         <div class="col-4">
-            <div
-                class="ui card w-full cursor-pointer"
-                hx-target="#editArea"
-                hx-get="/dataset/{{$dataset->idDataset}}/edit"
-                hx-swap="innerHTML"
-            >
+            <div class="ui card w-full">
                 <div class="content">
-{{--                    <span class="right floated">--}}
-{{--                        <x-delete--}}
-{{--                            title="delete Project"--}}
-{{--                            onclick="manager.confirmDelete(`Removing manager '{{$manager->name}}' from project.`, '/project/{{$idProject}}/users/{{$manager->idUser}}')"--}}
-{{--                        ></x-delete>--}}
-{{--                    </span>--}}
+                    <span class="right floated">
+                        <x-delete
+                            title="remove Dataset"
+                            onclick="manager.confirmDelete(`Removing datase '{{$dataset->name}}' from project.`, '/project/{{$idProject}}/datasets/{{$dataset->idDataset}}')"
+                        ></x-delete>
+                    </span>
+
                     <div
                         class="header"
                     >

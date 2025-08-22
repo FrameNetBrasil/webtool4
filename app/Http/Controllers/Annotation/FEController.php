@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Annotation;
 use App\Data\Annotation\FE\AnnotationData;
 use App\Data\Annotation\FE\CreateASData;
 use App\Data\Annotation\FE\DeleteFEData;
-use App\Data\Annotation\FE\SearchData;
+use App\Data\Annotation\Browse\SearchData;
 use App\Data\Annotation\FE\SelectionData;
 use App\Data\Comment\CommentData;
 use App\Database\Criteria;
@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
 use App\Repositories\WordForm;
+use App\Services\Annotation\BrowseService;
 use App\Services\AnnotationFEService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -25,22 +26,29 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 class FEController extends Controller
 {
     #[Get(path: '/annotation/fe')]
-    public function browse()
+    public function browse(SearchData $search)
     {
-        $search = session('searchFEAnnotation') ?? SearchData::from();
-        return view("Annotation.FE.browse", [
-            'search' => $search
+        $corpus = BrowseService::browseCorpusBySearch($search);
+
+        return view('Annotation.browseSentences', [
+            'page' => "FE Annotation",
+            'url' => "/annotation/fe/sentence",
+            'data' => $corpus,
         ]);
+//        $search = session('searchFEAnnotation') ?? SearchData::from();
+//        return view("Annotation.FE.browse", [
+//            'search' => $search
+//        ]);
     }
 
-    #[Post(path: '/annotation/fe/grid')]
-    public function grid(SearchData $search)
-    {
-        return view("Annotation.FE.grids", [
-            'search' => $search,
-            'sentences' => [],
-        ]);
-    }
+//    #[Post(path: '/annotation/fe/grid')]
+//    public function grid(SearchData $search)
+//    {
+//        return view("Annotation.FE.grids", [
+//            'search' => $search,
+//            'sentences' => [],
+//        ]);
+//    }
 
     #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
     public function documentSentences(int $idDocument)

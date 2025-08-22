@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Data\Project\DatasetData;
 use App\Data\Project\ManagerData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
@@ -32,9 +33,10 @@ class DatasetController extends Controller
     #[Get(path: '/project/{id}/datasets/grid')]
     public function datasetsGrid(int $id)
     {
-        $datasets = Criteria::table("dataset")
-            ->select("*")
-            ->where("idProject", $id)
+        $datasets = Criteria::table("project_dataset")
+            ->join("dataset", "project_dataset.idDataset", "=", "dataset.idDataset")
+            ->select("dataset.*", "project_dataset.idProject")
+            ->where("project_dataset.idProject", $id)
             ->all();
         return view("Project.datasetsGrid", [
             'idProject' => $id,
@@ -43,11 +45,32 @@ class DatasetController extends Controller
     }
 
     #[Post(path: '/project/{id}/datasets/new')]
-    public function datasetsNew(ManagerData $data)
+    public function datasetsNew(DatasetData $data)
     {
-        Criteria::table("project_manager")->insert($data->toArray());
-        $this->trigger('reload-gridManagers');
-        return $this->renderNotify("success", "Manager added to project.");
+        $idDataset = $data->idDataset;
+        if (is_null($idDataset)) {
+            $idDataset = Criteria::create("dataset", [
+                "name" => $data->name,
+                "description" => $data->description,
+            ]);
+        }
+        Criteria::create("project_dataset", [
+            "idDataset" => $idDataset,
+            "idProject" => $data->idProject
+        ]);
+        $this->trigger('reload-gridDatasets');
+        return $this->renderNotify("success", "Dataset added to project.");
+    }
+
+    #[Delete(path: '/project/{idProject}/datasets/{idDataset}')]
+    public function datasetsDelete(int $idProject, int $idDataset)
+    {
+        Criteria::table("project_dataset")
+            ->where("idProject", $idProject)
+            ->where("idDataset", $idDataset)
+            ->delete();
+        $this->trigger('reload-gridDatasets');
+        return $this->renderNotify("success", "Dataset removed from project.");
     }
 
 }
