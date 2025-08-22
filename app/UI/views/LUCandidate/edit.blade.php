@@ -5,13 +5,13 @@
     </x-slot:name>
     <x-slot:detail>
         <div class="ui label tag wt-tag-id">
-            #{{$luCandidate->idLUCandidate}}
+            #{{$luCandidate->idLU}}
         </div>
         @if($isManager)
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing LU candidate '{{$luCandidate->name}}'.`, '/luCandidate/{{$luCandidate->idLUCandidate}}')"
+            onclick="manager.confirmDelete(`Removing LU candidate '{{$luCandidate->name}}'.`, '/luCandidate/{{$luCandidate->idLU}}')"
         ></x-button>
         @endif
     </x-slot:detail>

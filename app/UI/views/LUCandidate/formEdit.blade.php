@@ -6,7 +6,7 @@
     id="{{$id}}"
 >
     <x-slot:fields>
-        <x-hidden-field id="idLUCandidate" :value="$luCandidate->idLUCandidate"></x-hidden-field>
+        <x-hidden-field id="idLU" :value="$luCandidate->idLU"></x-hidden-field>
         @if($isManager)
         <div class="field">
             <x-combobox.lexicon-lemma
@@ -44,7 +44,7 @@
                     <x-combobox.fe-frame
                         id="incorporatedFE"
                         name="incorporatedFE"
-                        label="FE"
+                        label="Incorporated FE"
                         style="width:250px"
                         :value="$luCandidate?->incorporatedFE ?? 0"
                         :idFrame="$luCandidate?->idFrame ?? 0"
@@ -53,13 +53,13 @@
                 </div>
             </div>
         </div>
-        <div class="field">
-            <x-text-field
-                label="OR suggest new frame"
-                id="frameCandidate"
-                :value="$luCandidate->frameCandidate ?? ''"
-            ></x-text-field>
-        </div>
+{{--        <div class="field">--}}
+{{--            <x-text-field--}}
+{{--                label="OR suggest new frame"--}}
+{{--                id="frameCandidate"--}}
+{{--                :value="$luCandidate->frameCandidate ?? ''"--}}
+{{--            ></x-text-field>--}}
+{{--        </div>--}}
         <div class="field">
             <x-multiline-field
                 label="Discussion"
@@ -81,16 +81,16 @@
             </div>
             <div class="field mr-1">
                 <x-number-field
-                    label="#idDocument"
-                    id="idDocument"
-                    :value="$luCandidate->idDocument"
+                    label="#idStaticObject"
+                    id="idStaticObject"
+                    :value="$luCandidate->idStaticObject"
                 ></x-number-field>
             </div>
             <div class="field mr-1">
                 <x-number-field
-                    label="#idBoundingBox"
-                    id="idBoundingBox"
-                    :value="$luCandidate->idBoundingBox"
+                    label="#idDynamicObject"
+                    id="idDynamicObject"
+                    :value="$luCandidate->idDynamicObject"
                 ></x-number-field>
             </div>
         </div>
