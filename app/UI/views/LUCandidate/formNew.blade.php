@@ -44,13 +44,13 @@
                 </div>
             </div>
         </div>
-        <div class="field">
-            <x-text-field
-                label="OR suggest new frame"
-                id="frameCandidate"
-                value=""
-            ></x-text-field>
-        </div>
+{{--        <div class="field">--}}
+{{--            <x-text-field--}}
+{{--                label="OR suggest new frame"--}}
+{{--                id="frameCandidate"--}}
+{{--                value=""--}}
+{{--            ></x-text-field>--}}
+{{--        </div>--}}
 {{--        <div class="field">--}}
 {{--            <x-multiline-field--}}
 {{--                label="Discussion"--}}
@@ -72,15 +72,15 @@
             </div>
             <div class="field mr-1">
                 <x-number-field
-                    label="#idDocument"
-                    id="idDocument"
+                    label="#idStaticObject"
+                    id="idStaticObject"
                     value=""
                 ></x-number-field>
             </div>
             <div class="field mr-1">
                 <x-number-field
-                    label="#idBoundingBox"
-                    id="idBoundingBox"
+                    label="#idDynamicObject"
+                    id="idDynamicObject"
                     value=""
                 ></x-number-field>
             </div>
