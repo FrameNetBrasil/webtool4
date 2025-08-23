@@ -175,7 +175,8 @@ HERE;
         DB::beginTransaction();
         try {
             $documentSentence = Criteria::byId("view_document_sentence","idDocumentSentence",$idDocumentSentence);
-            $lu = LU::byId($idLU);
+            $lu = Criteria::byFilter("view_lu_full", ['idLU', '=', $idLU])->first();
+            $lu->frame = Frame::byId($lu->idFrame);
             $ti = Criteria::byId("typeinstance", "entry", 'ast_unann');
             $annotationSet = [
                 'idAnnotationObjectRelation' => $idDocumentSentence,

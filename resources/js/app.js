@@ -10,7 +10,7 @@ import ky from 'ky';
 import Split from 'split.js'
 
 // Component imports
-import './components/messengerComponent.js';
+// import './components/messengerComponent.js';
 import browseSearchComponent from './components/browseSearchComponent.js';
 import searchComponent from './components/searchComponent.js';
 import treeComponent from './components/treeComponent.js';

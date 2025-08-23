@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Project;
 
 use App\Data\Project\DatasetData;
-use App\Data\Project\ManagerData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -44,11 +43,12 @@ class DatasetController extends Controller
         ]);
     }
 
-    #[Post(path: '/project/{id}/datasets/new')]
+    #[Post(path: '/project/datasets/new')]
     public function datasetsNew(DatasetData $data)
     {
+        debug($data);
         $idDataset = $data->idDataset;
-        if (is_null($idDataset)) {
+        if ($idDataset == 0) {
             $idDataset = Criteria::create("dataset", [
                 "name" => $data->name,
                 "description" => $data->description,

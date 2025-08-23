@@ -6,5 +6,5 @@ $items = [
 <x-objectmenu
     id="corpusMenu"
     :items="$items"
-    :path="'corpus/' . $corpus->idCorpus"
+    :path="'/corpus/' . $corpus->idCorpus"
 ></x-objectmenu>
