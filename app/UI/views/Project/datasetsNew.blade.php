@@ -1,4 +1,9 @@
-<x-form id="formNewDataset" title="New Dataset" :center="false" hx-post="/project/{{$idProject}}/datasets/new">
+<x-form
+    id="formNewDataset"
+    title="New Dataset"
+    :center="false"
+    hx-post="/project/datasets/new"
+>
     <x-slot:fields>
         <x-hidden-field
             id="idProject"

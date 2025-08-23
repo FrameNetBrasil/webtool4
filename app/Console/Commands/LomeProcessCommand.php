@@ -2,11 +2,19 @@
 
 namespace App\Console\Commands;
 
+use App\Data\Annotation\FE\AnnotationData;
+use App\Data\Annotation\FE\SelectionData;
 use App\Database\Criteria;
+use App\Repositories\AnnotationSet;
+use App\Repositories\Lexicon;
+use App\Services\AnnotationFEService;
+use App\Services\AppService;
 use App\Services\LOME\LOMEService;
 use App\Services\Trankit\TrankitService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\isNull;
 
 class LomeProcessCommand extends Command
 {
@@ -52,13 +60,14 @@ class LomeProcessCommand extends Command
             // corpus copini
             $sentences = DB::connection('webtool')
                 ->select("
-                select s.idSentence, s.text,s.idOriginMM
+                select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where d.idCorpus = 217
-                and s.idSentence=1459948
+where d.idCorpus = 218
+                and s.idSentence=1466877
                 ");
+            AppService::setCurrentLanguage(1);
             debug(count($sentences));
             $s = 0;
             foreach ($sentences as $sentence) {
@@ -79,9 +88,9 @@ where d.idCorpus = 217
                     if (is_array($result)) {
                         $result = $result[0];
                         $tokens = $result->tokens;
-                        print_r($tokens);
+//                        print_r($tokens);
                         $ud = $trankit->processTrankitTokens($tokens, 1);
-                        debug($ud);
+//                        debug($ud);
                         $annotations = $result->annotations;
 //                        print_r($annotations);
 //                        print_r($tokens);
@@ -106,6 +115,58 @@ where d.idCorpus = 217
                                 "idFrameElement" => null,
                                 "idSentence" => $sentence->idSentence,
                             ]);
+                            $idAnnotationSet = null;
+                            $luToken = $annotation->span[0];
+                            $lemma = DB::connection('webtool')->select("
+                                select e.idLemma
+from view_lexicon_expression e
+join view_lexicon_lemma l on (e.idLemma =l.idLexicon)
+where e.form='{$tokens[$luToken]}'
+and l.udPOS='{$ud->tokens[$luToken]->upos}'
+group by e.idLemma
+having count(*) = 1
+limit 1
+                            ");
+                            if (!empty($lemma)) {
+                                debug($lemma);
+                                $idLemma = $lemma[0]->idLemma;
+                                $lu = DB::connection('webtool')->select("
+                                select lu.idLU
+from LU
+where (lu.idLexicon = {$idLemma}) and (lu.idFrame = {$idFrame})
+limit 1
+                            ");
+                                if (empty($lu)) {
+                                    // cria LU Candidate
+                                    $lm = Lexicon::lemmabyId($idLemma);
+                                    $data = (object)[
+                                        'name' => strtolower($lm->shortName),
+                                        'senseDescription' => '',
+                                        'discussion' => "Created by LOME",
+                                        'idLexicon' => (int)$idLemma,
+                                        'idFrame' => (int)$idFrame,
+                                        'idDocumentSentence'=> $sentence->idDocumentSentence,
+                                        'createdAt' => Carbon::now(),
+                                        'status' => 'PENDING',
+                                        'origin' => 'LOME'
+                                    ];
+                                    debug($data);
+                                    $idLU = Criteria::function('lu_create(?)', [json_encode($data)]);
+                                } else {
+                                    $idLU = $lu[0]->idLU;
+                                }
+                                debug("idLU=",$idLU);
+                                // verifica annotationset
+                                $as = Criteria::table("view_annotationset")
+                                    ->where("idDocumentSentence", $sentence->idDocumentSentence)
+                                    ->where("idLU", $idLU)
+                                    ->first();
+                                if(!is_null($as)) {
+                                    Criteria::function('annotationset_delete(?,?)', [$as->idAnnotationSet, 6]);
+                                }
+                                $idAnnotationSet = AnnotationSet::createForLU($sentence->idDocumentSentence, $idLU, $startChar, $endChar);
+                            }
+
                             foreach ($annotation->children as $fe) {
                                 $x = explode('_', strtolower($fe->label));
                                 $idFrameElement = $x[1];
@@ -126,12 +187,28 @@ where d.idCorpus = 217
                                     "idFrameElement" => $idFrameElement,
                                     "idSentence" => $sentence->idSentence,
                                 ]);
+
+                                if (!isnull($idAnnotationSet)) {
+                                    $range= SelectionData::from([
+                                        'type'=> 'word',
+                                        'id' => '',
+                                        'start' => $startChar,
+                                        'end' => $endChar,
+                                    ]);
+                                    $annotationData = AnnotationData::from([
+                                        'idAnnotationSet' => $idAnnotationSet,
+                                        'range' => $range,
+                                        'idFrameElement' => $idFrameElement,
+                                    ]);
+                                    debug($annotationData);
+                                    AnnotationFEService::annotateFE($annotationData);
+                                }
                             }
                         }
                     }
                     //if ($s > 5) die;
                 } catch (\Exception $e) {
-                    print_r($sentence->idSentence . ":" . $e->getMessage());
+                    print_r("\n".$sentence->idSentence . ":" . $e->getMessage());
                     die;
                 }
                 break;

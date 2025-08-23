@@ -352,7 +352,7 @@ $router->get('project/{id}/datasets/grid', [
 	'domain' => NULL,
 ]);
 
-$router->post('project/{id}/datasets/new', [
+$router->post('project/datasets/new', [
 	'uses' => 'App\Http\Controllers\Project\DatasetController@datasetsNew',
 	'as' => NULL,
 	'middleware' => ['master'],
@@ -1505,25 +1505,17 @@ $router->put('entry', [
 ]);
 
 $router->get('corpus', [
-	'uses' => 'App\Http\Controllers\Corpus\ResourceController@resource',
+	'uses' => 'App\Http\Controllers\Corpus\BrowseController@browse',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('corpus/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\Corpus\ResourceController@grid',
+$router->post('corpus/browse/search', [
+	'uses' => 'App\Http\Controllers\Corpus\BrowseController@search',
 	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('corpus/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\Corpus\ResourceController@grid',
-	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
@@ -3113,30 +3105,22 @@ $router->get('report/multimodal/{idDocument?}/{view?}', [
 ]);
 
 $router->get('utils/importFullText', [
-	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@resource',
+	'uses' => 'App\Http\Controllers\Utils\BrowseController@browse',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->get('utils/importFullText/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@grid',
+$router->post('utils/importFullText/search', [
+	'uses' => 'App\Http\Controllers\Utils\BrowseController@search',
 	'as' => NULL,
-	'middleware' => ['master'],
+	'middleware' => ['auth'],
 	'where' => [],
 	'domain' => NULL,
 ]);
 
-$router->post('utils/importFullText/grid/{fragment?}', [
-	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@grid',
-	'as' => NULL,
-	'middleware' => ['master'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('utils/importFullText/{id}/formImportFullText', [
+$router->get('utils/importFullText/{id}', [
 	'uses' => 'App\Http\Controllers\Utils\ImportFullTextController@formEdit',
 	'as' => NULL,
 	'middleware' => ['master'],

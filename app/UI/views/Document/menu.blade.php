@@ -7,5 +7,5 @@ $items = [
 <x-objectmenu
     id="documentMenu"
     :items="$items"
-    :path="'document/' . $document->idDocument"
+    :path="'/document/' . $document->idDocument"
 ></x-objectmenu>

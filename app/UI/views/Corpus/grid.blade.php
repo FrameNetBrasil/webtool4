@@ -38,7 +38,8 @@
            'type' => 'document'
         ], $documents);
     }
-    $id = uniqid("corpusTree");
+    $id = "corpusTree";
+    debug($data);
 @endphp
 <div
     class="h-full"
@@ -50,11 +51,11 @@
     <div class="relative h-full overflow-auto">
         <div id="corpusTreeWrapper" class="ui striped small compact table absolute top-0 left-0 bottom-0 right-0">
             @fragment('search')
-                <ul id="{{$id}}">
+                <ul class=".corpusTree">
                 </ul>
                 <script>
                     $(function() {
-                        $("#{{$id}}").treegrid({
+                        $(".corpusTree").treegrid({
                             data: {{Js::from($data)}},
                             fit: true,
                             showHeader: false,

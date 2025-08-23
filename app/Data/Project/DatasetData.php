@@ -9,11 +9,12 @@ class DatasetData extends Data
 {
     public function __construct(
         public ?int $idProject = null,
-        public ?int $idDataset = null,
-        public ?int $name = null,
+        public ?int $idDataset = 0,
+        public ?string $name = null,
         public ?string $description=''
     )
     {
+
     }
 
 }

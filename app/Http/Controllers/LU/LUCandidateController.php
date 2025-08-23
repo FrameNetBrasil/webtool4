@@ -34,7 +34,7 @@ class LUCandidateController extends Controller
     {
         $luIcon = view('components.icon.lu')->render();
         $lus = Criteria::byFilterLanguage("view_lucandidate", ["name", "startswith", $search->lu])
-            ->select('idLU', 'name', 'createdAt','frameName')
+            ->select('idLU', 'name', 'createdAt','frameName','origin')
 //            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
             ->orderBy($search->sort, $search->order)->all();
         $data = array_map(fn($item) => [
@@ -43,6 +43,7 @@ class LUCandidateController extends Controller
             'frameName' => $item->frameName,
             'createdAt' => $item->createdAt ? Carbon::parse($item->createdAt)->format("d/m/Y") : '-',
             'state' => 'open',
+            'origin' => $item->origin,
             'type' => 'lu'
         ], $lus);
         return $data;

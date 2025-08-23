@@ -1,21 +1,30 @@
-<x-layout.object>
-    <x-slot:name>
-        <span>{{$document->name}}</span>
-    </x-slot:name>
-    <x-slot:detail>
-        <div class="ui label tag wt-tag-id">
-            #{{$document->idDocument}}
-        </div>
-        <x-button
-            label="Delete"
-            color="danger"
-            onclick="manager.confirmDelete(`Removing Document '{{$document->name}}'.`, '/document/{{$document->idDocument}}')"
-        ></x-button>
-    </x-slot:detail>
-    <x-slot:description>
-        {{$document->description}}
-    </x-slot:description>
+<x-layout.page>
+    <x-slot:head>
+        <x-breadcrumb :sections="[['/','Home'],['/corpus','Corpus/Document'],['',$document->name]]"></x-breadcrumb>
+    </x-slot:head>
     <x-slot:main>
-        @include("Document.menu")
+        <div class="ui container h-full">
+            <x-layout.object>
+                <x-slot:name>
+                    <span>{{$document->name}}</span>
+                </x-slot:name>
+                <x-slot:detail>
+                    <div class="ui label tag wt-tag-id">
+                        #{{$document->idDocument}}
+                    </div>
+                    <x-button
+                        label="Delete"
+                        color="danger"
+                        onclick="manager.confirmDelete(`Removing Document '{{$document->name}}'.`, '/document/{{$document->idDocument}}')"
+                    ></x-button>
+                </x-slot:detail>
+                <x-slot:description>
+                    {{$document->description}}
+                </x-slot:description>
+                <x-slot:main>
+                    @include("Document.menu")
+                </x-slot:main>
+            </x-layout.object>
+        </div>
     </x-slot:main>
-</x-layout.object>
+</x-layout.page>

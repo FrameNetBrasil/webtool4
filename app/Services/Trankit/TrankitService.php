@@ -264,7 +264,7 @@ class TrankitService
 //            mdump('called trankit ' . time());
 
             $body = json_decode($response->getBody());
-            debug($body);
+//            debug($body);
             return $body->result;
         } catch (\Exception $e) {
 //            mdump($e->getMessage());

@@ -11,6 +11,7 @@ use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
+use App\Repositories\Frame;
 use App\Repositories\FrameElement;
 use App\Repositories\LU;
 use App\Repositories\Timeline;
@@ -302,7 +303,8 @@ class AnnotationFEService
         foreach ($wordsChars->words as $i => $word) {
             $wordsChars->words[$i]['hasFE'] = false;
         }
-        $lu = LU::byId($as->idLU);
+        $lu = Criteria::byFilter("view_lu_full", ['idLU', '=', $as->idLU])->first();
+        $lu->frame = Frame::byId($lu->idFrame);
         $alternativeLU = Criteria::table("view_lu as lu1")
             ->join("view_lu as lu2", "lu1.idLemma", "=", "lu2.idLemma")
             ->where("lu2.idLU", $lu->idLU)

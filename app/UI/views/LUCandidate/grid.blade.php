@@ -1,18 +1,4 @@
 @php
-//    use App\Database\Criteria;use Carbon\Carbon;
-//    $luIcon = view('components.icon.lu')->render();
-//    $lus = Criteria::byFilterLanguage("view_lucandidate",["name","startswith", $search->lu])
-//            ->select('idLUCandidate','name','createdAt')
-//            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
-//            ->orderBy("name")->orderBy("name")->all();
-//    $data = array_map(fn($item) => [
-//           'id'=> $item->idLUCandidate,
-//           'text' => $luIcon . $item->name,
-//           'frame' => $item->frameName,
-//           'createdAt' => $item->createdAt ? Carbon::parse($item->createdAt)->format("d/m/Y") : '-',
-//           'state'=> 'open',
-//           'type' => 'lu'
-//    ], $lus);
 @endphp
 <div
     class="h-full"
@@ -51,7 +37,7 @@
                                 },
                                 {
                                     field: "frameName",
-                                    width: "40%",
+                                    width: "35%",
                                     title:"Suggested frame",
                                     sortable: true,
                                     hstyler: () => {
@@ -59,8 +45,17 @@
                                     },
                                 },
                                 {
+                                    field: "origin",
+                                    width: "15%",
+                                    title: "Origin",
+                                    sortable: true,
+                                    hstyler: () => {
+                                        return "font-weight:bold;";
+                                    },
+                                },
+                                {
                                     field: "createdAt",
-                                    width: "30%",
+                                    width: "20%",
                                     title: "Created At",
                                     sortable: true,
                                     hstyler: () => {
