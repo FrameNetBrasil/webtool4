@@ -3,8 +3,6 @@
 namespace App\Services\Trankit;
 
 use GuzzleHttp\Client;
-use Orkester\Manager;
-use function App\Services\UD\mdump;
 
 class TrankitService
 {
