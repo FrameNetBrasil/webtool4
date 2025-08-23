@@ -46,6 +46,7 @@ class LomeProcessCommand extends Command
                 ->chunkResult("idFrameElement", "name");
             $idSpan = 0;
             $lome = new LOMEService();
+            $lome->init("https://lome.frame.net.br");
             $trankit = new TrankitService();
             $trankit->init("http://localhost:8405");
             // corpus copini
@@ -55,7 +56,8 @@ class LomeProcessCommand extends Command
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where d.idCorpus = 218
+where d.idCorpus = 217
+                and s.idSentence=1459948
                 ");
             debug(count($sentences));
             $s = 0;
@@ -72,11 +74,14 @@ where d.idCorpus = 218
                     Criteria::deleteById("lome_resultfe", "idSentence", $sentence->idSentence);
                     //$result = $lome->process($text);
                     $ud = $trankit->parseSentenceRawTokens($text, 1);
-                    print_r($ud);
+                    //print_r($ud);
                     $result = $lome->parse($text);
                     if (is_array($result)) {
                         $result = $result[0];
                         $tokens = $result->tokens;
+                        print_r($tokens);
+                        $ud = $trankit->processTrankitTokens($tokens, 1);
+                        debug($ud);
                         $annotations = $result->annotations;
 //                        print_r($annotations);
 //                        print_r($tokens);
