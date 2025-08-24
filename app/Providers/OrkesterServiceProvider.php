@@ -28,10 +28,16 @@ class OrkesterServiceProvider extends ServiceProvider
 //            Mapping::class
 //        );
 
-        DB::enableQueryLog();
-        DB::listen(function ($query) {
-            debugQuery($query->sql, $query->bindings);
-        });
+        if (config("webtool.logSQL") == 'debug') {
+            DB::enableQueryLog();
+            DB::listen(function ($query) {
+                debugQuery($query->sql, $query->bindings);
+            });
+        }
+//        DB::enableQueryLog();
+//        DB::listen(function ($query) {
+//            debugQuery($query->sql, $query->bindings);
+//        });
     }
 
     /**

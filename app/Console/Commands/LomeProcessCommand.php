@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Data\Annotation\FE\AnnotationData;
+use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\FE\SelectionData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
@@ -65,7 +66,7 @@ from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
 where d.idCorpus = 218
-                and s.idSentence=1466877
+                and ds.idDocumentSentence = 5216382
                 ");
             AppService::setCurrentLanguage(1);
             debug(count($sentences));
@@ -95,6 +96,9 @@ where d.idCorpus = 218
 //                        print_r($annotations);
 //                        print_r($tokens);
                         foreach ($annotations as $annotation) {
+                    debug("====================");
+                    debug("annotation");
+                            debug("====================");
 //                        print_r($annotation);
                             $x = explode('_', strtolower($annotation->label));
                             $idFrame = $x[1];
@@ -128,7 +132,7 @@ having count(*) = 1
 limit 1
                             ");
                             if (!empty($lemma)) {
-                                debug($lemma);
+//                                debug($lemma);
                                 $idLemma = $lemma[0]->idLemma;
                                 $lu = DB::connection('webtool')->select("
                                 select lu.idLU
@@ -150,12 +154,12 @@ limit 1
                                         'status' => 'PENDING',
                                         'origin' => 'LOME'
                                     ];
-                                    debug($data);
+//                                    debug($data);
                                     $idLU = Criteria::function('lu_create(?)', [json_encode($data)]);
                                 } else {
                                     $idLU = $lu[0]->idLU;
                                 }
-                                debug("idLU=",$idLU);
+                                debug("idLU=",$idLU,$tokens[$luToken]);
                                 // verifica annotationset
                                 $as = Criteria::table("view_annotationset")
                                     ->where("idDocumentSentence", $sentence->idDocumentSentence)
@@ -188,20 +192,28 @@ limit 1
                                     "idSentence" => $sentence->idSentence,
                                 ]);
 
-                                if (!isnull($idAnnotationSet)) {
-                                    $range= SelectionData::from([
+                                debug("idAnnotationset ======================",$idAnnotationSet,$startChar,$endChar);
+                                if (!is_null($idAnnotationSet)) {
+                                    $range= SelectionData::from(json_encode([
                                         'type'=> 'word',
                                         'id' => '',
-                                        'start' => $startChar,
-                                        'end' => $endChar,
-                                    ]);
+                                        'start' => (string)$startChar,
+                                        'end' => (string)$endChar,
+                                    ]));
+                                    debug($range);
                                     $annotationData = AnnotationData::from([
                                         'idAnnotationSet' => $idAnnotationSet,
                                         'range' => $range,
                                         'idFrameElement' => $idFrameElement,
                                     ]);
                                     debug($annotationData);
-                                    AnnotationFEService::annotateFE($annotationData);
+                                    $deleteData = DeleteFEData::from([
+                                        'idAnnotationSet' => $idAnnotationSet,
+                                        'idFrameElement' => $idFrameElement,
+                                    ]);
+                                    AnnotationFEService::deleteFE($deleteData);
+                                    debug($annotationData);
+//                                    AnnotationFEService::annotateFE($annotationData);
                                 }
                             }
                         }

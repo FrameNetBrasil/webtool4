@@ -392,6 +392,10 @@ class AnnotationFEService
     public static function annotateFE(AnnotationData $data): array
     {
         DB::transaction(function () use ($data) {
+            debug("====#############==================");
+            debug("annotation create");
+            debug($data);
+            debug("====#############==================");
             $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $data->idAnnotationSet);
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
@@ -458,6 +462,10 @@ class AnnotationFEService
                     'relationType' => 'rel_annotation',
                     'idUserTask' => $userTask->idUserTask
                 ]);
+                debug("======================");
+                debug("annotation create");
+                debug($data);
+                debug("======================");
                 $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
             } else if ($data->range->type == 'ni') {
                 $data = json_encode([
