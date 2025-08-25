@@ -5,17 +5,19 @@ namespace App\Console\Commands;
 use App\Data\Annotation\FE\AnnotationData;
 use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\FE\SelectionData;
+use App\Data\LoginData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Lexicon;
 use App\Services\AnnotationFEService;
 use App\Services\AppService;
+use App\Services\AuthUserService;
 use App\Services\LOME\LOMEService;
 use App\Services\Trankit\TrankitService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\isNull;
 
 class LomeProcessCommand extends Command
 {
@@ -45,6 +47,12 @@ class LomeProcessCommand extends Command
     {
         try {
             $this->init();
+            $user = Criteria::one("user", ['login', '=', 'lome']);
+            $loginData = LoginData::from([
+                'login' => 'lome',
+                'password' => $user->passMD5
+            ]);
+            AuthUserService::offlineLogin($loginData);
             $frameNames = Criteria::table("view_frame as f")
                 ->select("f.idFrame", "f.name")
                 ->where("f.idLanguage", 1)
@@ -70,6 +78,7 @@ where d.idCorpus = 218
                 ");
             AppService::setCurrentLanguage(1);
             debug(count($sentences));
+            mb_internal_encoding("UTF-8"); // this IS A MUST!! PHP has trouble with multibyte when no internal encoding is set!
             $s = 0;
             foreach ($sentences as $sentence) {
                 ++$s;
@@ -102,16 +111,27 @@ where d.idCorpus = 218
 //                        print_r($annotation);
                             $x = explode('_', strtolower($annotation->label));
                             $idFrame = $x[1];
-                            $startChar = $annotation->char_span[0];
-                            $endChar = $annotation->char_span[1];
-                            $word = '';
-                            for ($t = $annotation->span[0]; $t <= $annotation->span[1]; $t++) {
-                                $word .= $tokens[$t] . ' ';
+                            $startCharLOME = $annotation->char_span[0];
+                            $endCharLOME = $annotation->char_span[1];
+                            $punctuation = " .,;:?/'][\{\}\"!@#$%&*\(\)-_+=“”";
+                            $currentChar = $startChar = $endChar = $startCharLOME;
+                            while($currentChar <= $endCharLOME) {
+                                $char = mb_substr($text, $currentChar, 1);
+                                if (mb_strpos($punctuation, $char) !== false) {
+                                    break;
+                                }
+                                $endChar = $currentChar;
+                                $currentChar++;
                             }
+                            $word = trim(strtolower(mb_substr($text, $startChar, $endChar - $startChar + 1)));
+//                            for ($t = $annotation->span[0]; $t <= $annotation->span[1]; $t++) {
+//                                $word .= $tokens[$t] . ' ';
+//                            }
+                            debug("%%%% word = " . $word, $startChar, $endChar);
                             Criteria::create("lome_resultfe", [
                                 "start" => $startChar,
                                 "end" => $endChar,
-                                "word" => trim(strtolower($word)),
+                                "word" => $word,
                                 "type" => "lu",
                                 "idSpan" => 0,
                                 "idLU" => null,
@@ -125,7 +145,7 @@ where d.idCorpus = 218
                                 select e.idLemma
 from view_lexicon_expression e
 join view_lexicon_lemma l on (e.idLemma =l.idLexicon)
-where e.form='{$tokens[$luToken]}'
+where e.form='{$word}'
 and l.udPOS='{$ud->tokens[$luToken]->upos}'
 group by e.idLemma
 having count(*) = 1
@@ -139,7 +159,7 @@ limit 1
 from LU
 where (lu.idLexicon = {$idLemma}) and (lu.idFrame = {$idFrame})
 limit 1
-                            ");
+                                ");
                                 if (empty($lu)) {
                                     // cria LU Candidate
                                     $lm = Lexicon::lemmabyId($idLemma);
@@ -200,20 +220,18 @@ limit 1
                                         'start' => (string)$startChar,
                                         'end' => (string)$endChar,
                                     ]));
-                                    debug($range);
                                     $annotationData = AnnotationData::from([
                                         'idAnnotationSet' => $idAnnotationSet,
                                         'range' => $range,
                                         'idFrameElement' => $idFrameElement,
                                     ]);
-                                    debug($annotationData);
                                     $deleteData = DeleteFEData::from([
                                         'idAnnotationSet' => $idAnnotationSet,
                                         'idFrameElement' => $idFrameElement,
                                     ]);
                                     AnnotationFEService::deleteFE($deleteData);
                                     debug($annotationData);
-//                                    AnnotationFEService::annotateFE($annotationData);
+                                    AnnotationFEService::annotateFE($annotationData);
                                 }
                             }
                         }

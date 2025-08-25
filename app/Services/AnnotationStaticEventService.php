@@ -17,9 +17,6 @@ use App\Repositories\User;
 use App\Repositories\UserAnnotation;
 use App\Repositories\Timeline;
 use Illuminate\Support\Facades\DB;
-use Orkester\Persistence\Model;
-use Orkester\Manager;
-use Orkester\Persistence\Repository;
 
 
 class AnnotationStaticEventService
@@ -165,6 +162,7 @@ class AnnotationStaticEventService
                 ->where("idDocumentSentence", $idDocumentSentence)
                 ->select("idDocument")
                 ->first();
+            $idUser = AppService::getCurrentIdUser();
             $usertask = self::getCurrentUserTask($relation->idDocument);
             if (is_null($usertask)) {
                 throw new \Exception("UserTask not found!");
@@ -190,7 +188,8 @@ class AnnotationStaticEventService
                         'idEntity' => $fe->idEntity,
                         'idAnnotationObject' => $idStaticObject,
                         'relationType' => 'rel_annotation',
-                        'idUserTask' => $usertask->idUserTask
+                        'idUserTask' => $usertask->idUserTask,
+                        'idUser' => $idUser
                     ]);
                     $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
                     Timeline::addTimeline("annotation", $idAnnotation, "C");

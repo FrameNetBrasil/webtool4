@@ -1,18 +1,18 @@
 @php
-    use Orkester\Security\MAuth;
+    use Illuminate\Support\Facades\Auth;
     use App\Data\MenuData;
+    use App\Services\AppService;
 
     $actions = config('webtool.actions');
-    $isLogged = MAuth::isLogged();
+    $isLogged = Auth::check();
     if ($isLogged) {
-        $user = MAuth::getLogin();
+        $user = Auth::user();
         $userLevel = session('userLevel');
     }
     $currentLanguage = session('currentLanguage');
     $languages = config('webtool.user')[3]['language'][3];
     $profile = config('webtool.user')[3]['profile'][3];
-    $hrefLogin = (env('AUTH0_CLIENT_ID') == 'auth0') ? '/auth0Login' : '/';
-
+    $hrefLogin = (env('APP_AUTH') == 'auth0') ? '/auth0Login' : '/';
 @endphp
 <div class="full height">
         @foreach($actions as $id => $action)
@@ -25,7 +25,7 @@
                     'items' => $action[3]
                 ]);
             @endphp
-            @if (MAuth::checkAccess($menuData->group))
+            @if (AppService::checkAccess($menuData->group))
                 <div class="item">
                     <div class="header">{!! $menuData->label !!}</div>
                     <div class="menu">

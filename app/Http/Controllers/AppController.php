@@ -9,7 +9,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 use Illuminate\Http\Request;
-use Orkester\Security\MAuth;
+use Illuminate\Support\Facades\Auth;
 
 #[Middleware(name: 'web')]
 class AppController extends Controller
@@ -17,7 +17,7 @@ class AppController extends Controller
     #[Get(path: '/')]
     public function main()
     {
-        if (MAuth::isLogged()) {
+        if (Auth::check()) {
             return view('App.main');
         } else {
             if (config('webtool.login.handler') == 'auth0') {

@@ -19,7 +19,6 @@ use App\Repositories\Type;
 use App\Repositories\UserAnnotation;
 use App\Repositories\ViewAnnotationSet;
 use App\Repositories\WordForm;
-use Orkester\Manager;
 
 
 class CorpusService

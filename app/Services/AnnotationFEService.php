@@ -396,6 +396,7 @@ class AnnotationFEService
             debug("annotation create");
             debug($data);
             debug("====#############==================");
+            $idUser = AppService::getCurrentIdUser();
             $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $data->idAnnotationSet);
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
@@ -460,7 +461,8 @@ class AnnotationFEService
                     'idAnnotationObject' => $ts->idAnnotationObject,
                     'idEntity' => $fe->idEntity,
                     'relationType' => 'rel_annotation',
-                    'idUserTask' => $userTask->idUserTask
+//                    'idUserTask' => $userTask->idUserTask,
+                    'idUser' => $idUser
                 ]);
                 debug("======================");
                 debug("annotation create");
@@ -484,7 +486,8 @@ class AnnotationFEService
                     'idAnnotationObject' => $ts->idAnnotationObject,
                     'idEntity' => $fe->idEntity,
                     'relationType' => 'rel_annotation',
-                    'idUserTask' => $userTask->idUserTask
+//                    'idUserTask' => $userTask->idUserTask,
+                    'idUser' => $idUser
                 ]);
                 $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
             }

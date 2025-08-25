@@ -103,6 +103,7 @@ class AnnotationDynamicService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
+        $idUser = AppService::getCurrentIdUser();
         $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
         Criteria::deleteById("annotation", "idAnnotationObject", $do->idAnnotationObject);
@@ -112,7 +113,8 @@ class AnnotationDynamicService
                 'idEntity' => $fe->idEntity,
                 'idAnnotationObject' => $do->idAnnotationObject,
                 'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask
+                'idUserTask' => $usertask->idUserTask,
+                'idUser' => $idUser
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
@@ -123,7 +125,8 @@ class AnnotationDynamicService
                 'idEntity' => $lu->idEntity,
                 'idAnnotationObject' => $do->idAnnotationObject,
                 'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask
+                'idUserTask' => $usertask->idUserTask,
+                'idUser' => $idUser
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
