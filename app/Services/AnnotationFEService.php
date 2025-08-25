@@ -329,7 +329,6 @@ class AnnotationFEService
         $firstWord = array_key_first($wordsChars->words);
         $lastWord = array_key_last($wordsChars->words);
         $spansByLayer = collect($feSpans)->groupBy('idLayer')->all();
-        debug($fes);
         foreach ($spansByLayer as $idLayer => $existingSpans) {
             $idLayers[] = $idLayer;
             for ($i = $firstWord; $i <= $lastWord; $i++) {
@@ -392,12 +391,8 @@ class AnnotationFEService
     public static function annotateFE(AnnotationData $data): array
     {
         DB::transaction(function () use ($data) {
-            debug("====#############==================");
-            debug("annotation create");
-            debug($data);
-            debug("====#############==================");
             $idUser = AppService::getCurrentIdUser();
-            $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $data->idAnnotationSet);
+            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $data->idAnnotationSet);
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
                 ->where("ut.idUser", -2)
@@ -437,7 +432,6 @@ class AnnotationFEService
                     'rank' => 0,
                     'idLayerType' => $layerType->idLayerType,
                     'idAnnotationSet' => $data->idAnnotationSet
-
                 ]);
             }
             //
@@ -459,15 +453,12 @@ class AnnotationFEService
                     ->first();
                 $data = json_encode([
                     'idAnnotationObject' => $ts->idAnnotationObject,
+                    'idTextSpan' => $ts->idTextSpan,
                     'idEntity' => $fe->idEntity,
                     'relationType' => 'rel_annotation',
 //                    'idUserTask' => $userTask->idUserTask,
                     'idUser' => $idUser
                 ]);
-                debug("======================");
-                debug("annotation create");
-                debug($data);
-                debug("======================");
                 $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
             } else if ($data->range->type == 'ni') {
                 $data = json_encode([
@@ -484,6 +475,7 @@ class AnnotationFEService
                     ->first();
                 $data = json_encode([
                     'idAnnotationObject' => $ts->idAnnotationObject,
+                    'idTextSpan' => $ts->idTextSpan,
                     'idEntity' => $fe->idEntity,
                     'relationType' => 'rel_annotation',
 //                    'idUserTask' => $userTask->idUserTask,
@@ -507,18 +499,24 @@ class AnnotationFEService
                 ->where("idLanguage", AppService::getCurrentIdLanguage())
                 ->select("idAnnotation", "idTextSpan", "idLayer")
                 ->all();
+            // Ao invés de remover fisicamente a anotaçao, apenas marca como "DELETED' e mantem o textSpan
             foreach ($annotations as $annotation) {
-                Criteria::deleteById("annotation", "idAnnotation", $annotation->idAnnotation);
+                Criteria::table("annotation")
+                    ->where("idAnnotation", $annotation->idAnnotation)
+                    ->update(["status" => 'DELETED']);
+                Timeline::addTimeline('annotation',$annotation->idAnnotation,'D');
             }
-            foreach ($annotations as $annotation) {
-                Criteria::deleteById("textspan", "idTextSpan", $annotation->idTextSpan);
-            }
+//            foreach ($annotations as $annotation) {
+//                Criteria::deleteById("annotation", "idAnnotation", $annotation->idAnnotation);
+//            }
+//            foreach ($annotations as $annotation) {
+//                Criteria::deleteById("textspan", "idTextSpan", $annotation->idTextSpan);
+//            }
             // if FE layer was empty, remove it
             foreach ($annotations as $annotation) {
                 $annotationsByLayer = Criteria::table("view_annotation_text_fe")
                     ->where("idLayer", $annotation->idLayer)
                     ->count();
-                debug("count = " . $annotationsByLayer);
                 if ($annotationsByLayer == 0) {
                     Criteria::deleteById("layer", "idLayer", $annotation->idLayer);
                 }
