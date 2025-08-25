@@ -146,7 +146,6 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AnnotationsServiceProvider::class,
-        App\Providers\OrkesterServiceProvider::class,
     ])->toArray(),
 
 

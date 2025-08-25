@@ -137,6 +137,7 @@ class AnnotationStaticBBoxService
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
         $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
+        $idUser = AppService::getCurrentIdUser();
         $sob = Criteria::byId("staticobject", "idStaticObject", $data->idStaticObject);
         Criteria::deleteById("annotation", "idAnnotationObject", $sob->idAnnotationObject);
         if ($data->idFrameElement) {
@@ -145,7 +146,8 @@ class AnnotationStaticBBoxService
                 'idEntity' => $fe->idEntity,
                 'idAnnotationObject' => $sob->idAnnotationObject,
                 'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask
+                'idUserTask' => $usertask->idUserTask,
+                'idUser' => $idUser
             ]);
             debug($json);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
@@ -157,7 +159,8 @@ class AnnotationStaticBBoxService
                 'idEntity' => $lu->idEntity,
                 'idAnnotationObject' => $sob->idAnnotationObject,
                 'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask
+                'idUserTask' => $usertask->idUserTask,
+                'idUser' => $idUser
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");

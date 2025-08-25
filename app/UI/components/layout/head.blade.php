@@ -1,18 +1,20 @@
 @php
-    use Orkester\Security\MAuth;
+    use Illuminate\Support\Facades\Auth;
+    use App\Data\MenuData;
+    use App\Services\AppService;
 
     $actions = config('webtool.actions');
-    $isLogged = MAuth::isLogged();
+    $isLogged = Auth::check();
     if ($isLogged) {
-        $user = MAuth::getLogin();
+        $user = Auth::user();
         $userLevel = session('userLevel');
     }
     $currentLanguage = session('currentLanguage');
     $languages = config('webtool.user')[3]['language'][3];
     $profile = config('webtool.user')[3]['profile'][3];
     $hrefLogin = (env('APP_AUTH') == 'auth0') ? '/auth0Login' : '/';
-
 @endphp
+
 <header id="head" class="flex justify-content-between">
     <div class="flex align-items-center ">
         <div style="width:40px;text-align:center">

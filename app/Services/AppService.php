@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use App\Database\Criteria;
+use App\Repositories\User;
 use Illuminate\Support\Facades\App;
-use Orkester\Security\MAuth;
+use Illuminate\Support\Facades\Auth;
 
 class AppService
 {
@@ -59,15 +60,37 @@ class AppService
         return Criteria::table("group")->chunkResult('idGroup', 'name');
     }
 
-    static public function getCurrentUser(): ?object
+    public static function getCurrentUser(): ?object
     {
-        return MAuth::getLogin();
+        return Auth::user();
     }
 
-    static public function getCurrentIdUser(): ?int
+    public static function getCurrentIdUser(): ?int
     {
-        $user = MAuth::getLogin();
+        $user = Auth::user();
+
         return $user ? $user->idUser : 0;
+    }
+
+    public static function checkAccess(string $group): bool
+    {
+        if ($group == '') {
+            return true;
+        }
+
+        if (! Auth::check()) {
+            return false;
+        }
+
+        $user = Auth::user();
+        if (! $user) {
+            return false;
+        }
+
+        // Get full user with groups
+        $userWithGroups = User::byId($user->idUser);
+
+        return User::isMemberOf($userWithGroups, $group) || User::isManager($userWithGroups);
     }
 
 }

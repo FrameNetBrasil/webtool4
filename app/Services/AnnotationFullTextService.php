@@ -426,6 +426,7 @@ class AnnotationFullTextService
     {
         DB::transaction(function () use ($data) {
             $annotationSet = Criteria::byId("view_annotationset","idAnnotationSet", $data->idAnnotationSet);
+            $idUser = AppService::getCurrentIdUser();
             $userTask = Criteria::table("usertask as ut")
                 ->join("task as t", "ut.idTask", "=", "t.idTask")
                 ->where("ut.idUser", -2)
@@ -500,7 +501,8 @@ class AnnotationFullTextService
                     'idAnnotationObject' => $ts->idAnnotationObject,
                     'idEntity' => $data->idEntity,
                     'relationType' => 'rel_annotation',
-                    'idUserTask' => $userTask->idUserTask
+                    'idUserTask' => $userTask->idUserTask,
+                    'idUser' => $idUser
                 ]);
                 $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             } else if ($data->range->type == 'ni') {
@@ -520,7 +522,8 @@ class AnnotationFullTextService
                     'idAnnotationObject' => $ts->idAnnotationObject,
                     'idEntity' => $data->idEntity,
                     'relationType' => 'rel_annotation',
-                    'idUserTask' => $userTask->idUserTask
+                    'idUserTask' => $userTask->idUserTask,
+                    'idUser' => $idUser
                 ]);
                 $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             }

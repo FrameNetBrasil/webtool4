@@ -187,6 +187,7 @@ class AnnotationDeixisService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): object
     {
+        $idUser = AppService::getCurrentIdUser();
         $usertask = self::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId("dynamicobject", "idDynamicObject", $data->idDynamicObject);
         Criteria::deleteById("annotation", "idAnnotationObject", $do->idAnnotationObject);
@@ -196,7 +197,8 @@ class AnnotationDeixisService
                 'idEntity' => $fe->idEntity,
                 'idAnnotationObject' => $do->idAnnotationObject,
                 'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask
+                'idUserTask' => $usertask->idUserTask,
+                'idUser' => $idUser
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
@@ -207,7 +209,8 @@ class AnnotationDeixisService
                 'idEntity' => $lu->idEntity,
                 'idAnnotationObject' => $do->idAnnotationObject,
                 'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask
+                'idUserTask' => $usertask->idUserTask,
+                'idUser' => $idUser
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
@@ -218,7 +221,8 @@ class AnnotationDeixisService
                 'idEntity' => $gl->idEntity,
                 'idAnnotationObject' => $do->idAnnotationObject,
                 'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask
+                'idUserTask' => $usertask->idUserTask,
+                'idUser' => $idUser
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");

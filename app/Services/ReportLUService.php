@@ -13,8 +13,6 @@ use App\Repositories\ViewAnnotationSet;
 use App\Repositories\ViewFrame;
 use App\Repositories\ViewLU;
 use Illuminate\Support\Facades\DB;
-use Orkester\Manager;
-use Orkester\Persistence\Repository;
 
 
 class ReportLUService

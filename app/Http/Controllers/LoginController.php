@@ -8,11 +8,8 @@ use App\Data\TwoFactorData;
 use App\Exceptions\LoginException;
 use App\Exceptions\UserNewException;
 use App\Exceptions\UserPendingException;
-use App\Http\Controllers\Controller;
 use App\Mail\WebToolMail;
-use App\Repositories\Base;
-use App\Repositories\User;
-use App\Services\AppService;
+use App\Models\User;
 use App\Services\AuthUserService;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Exception\StateException;
@@ -20,7 +17,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 use Illuminate\Support\Facades\Mail;
-use Orkester\Security\MAuth;
+use Illuminate\Support\Facades\Auth;
 
 #[Middleware(name: 'web')]
 class LoginController extends Controller
@@ -117,13 +114,13 @@ class LoginController extends Controller
     #[Get(path: '/logout')]
     public function logout()
     {
-        MAuth::logout();
+        Auth::logout();
         session()->flush();
         if (config('webtool.login.handler') == 'auth0') {
             $auth0 = $this->getAuth0();
             $auth0->logout('/');
         }
-        return $this->redirect("/");
+        return redirect("/");
     }
 
     #[Get(path: '/impersonating')]
