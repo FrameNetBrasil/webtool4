@@ -13,11 +13,10 @@ class AnnotationSet
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         return Criteria::table("view_annotationset as a")
-            ->join("view_annotation_text_gl as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
+            ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
             ->join("lu","a.idLU","=", "lu.idLU")
             ->join("view_frame as f","lu.idFrame","=","f.idFrame")
             ->select('a.idDocumentSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet','f.name as frameName')
-            ->where("gl.layerTypeEntry", 'lty_target')
             ->whereIn("a.idDocumentSentence", $idDocumentSentences)
             ->where("f.idLanguage", $idLanguage)
             ->orderby("gl.startChar")
@@ -27,9 +26,8 @@ class AnnotationSet
     public static function getTargets(int $idDocumentSentence): array
     {
         return Criteria::table("view_annotationset as a")
-            ->join("view_annotation_text_gl as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
+            ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
             ->select('a.idDocumentSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet')
-            ->where("gl.layerTypeEntry", 'lty_target')
             ->where("a.idDocumentSentence", $idDocumentSentence)
             ->orderby("gl.startChar")
             ->all();
@@ -174,17 +172,20 @@ HERE;
     {
         DB::beginTransaction();
         try {
+            $idUser = AppService::getCurrentIdUser();
             $documentSentence = Criteria::byId("view_document_sentence","idDocumentSentence",$idDocumentSentence);
             $lu = Criteria::byFilter("view_lu_full", ['idLU', '=', $idLU])->first();
             $lu->frame = Frame::byId($lu->idFrame);
             $ti = Criteria::byId("typeinstance", "entry", 'ast_unann');
             $annotationSet = [
-                'idAnnotationObjectRelation' => $idDocumentSentence,
+                //'idAnnotationObjectRelation' => $idDocumentSentence,
+                'idDocumentSentence' => $idDocumentSentence,
                 'idEntityRelated' => $lu->idEntity,
                 'idLU' => $lu->idLU,
                 'idAnnotationStatus' => $ti->idTypeInstance
             ];
             $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
+            Timeline::addTimeline('annotationset',$idAnnotationSet,'C');
             $ti = Criteria::byId("typeinstance", "entry", 'int_normal');
             $layerTypes = LayerType::listToLU($lu);
             foreach ($layerTypes as $lt) {
@@ -220,7 +221,8 @@ HERE;
                         'idAnnotationObject' => $ts->idAnnotationObject,
                         'idEntity' => $target->idEntity,
                         'relationType' => 'rel_annotation',
-                        'idUserTask' => $userTask->idUserTask
+//                        'idUserTask' => $userTask->idUserTask,
+                        'idUser' => $idUser
                     ]);
                     Criteria::function("annotation_create(?)", [$data]);
                 }

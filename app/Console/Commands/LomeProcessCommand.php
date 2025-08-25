@@ -61,7 +61,7 @@ class LomeProcessCommand extends Command
                 ->select("fe.idFrameElement", "fe.name")
                 ->where("fe.idLanguage", 1)
                 ->chunkResult("idFrameElement", "name");
-            $idSpan = 0;
+            $punctuation = " .,;:?/'][\{\}\"!@#$%&*\(\)-_+=“”";
             $lome = new LOMEService();
             $lome->init("https://lome.frame.net.br");
             $trankit = new TrankitService();
@@ -113,7 +113,7 @@ where d.idCorpus = 218
                             $idFrame = $x[1];
                             $startCharLOME = $annotation->char_span[0];
                             $endCharLOME = $annotation->char_span[1];
-                            $punctuation = " .,;:?/'][\{\}\"!@#$%&*\(\)-_+=“”";
+
                             $currentChar = $startChar = $endChar = $startCharLOME;
                             while($currentChar <= $endCharLOME) {
                                 $char = mb_substr($text, $currentChar, 1);
@@ -172,7 +172,8 @@ limit 1
                                         'idDocumentSentence'=> $sentence->idDocumentSentence,
                                         'createdAt' => Carbon::now(),
                                         'status' => 'PENDING',
-                                        'origin' => 'LOME'
+                                        'origin' => 'LOME',
+                                        'idUser' => $user->idUser
                                     ];
 //                                    debug($data);
                                     $idLU = Criteria::function('lu_create(?)', [json_encode($data)]);
@@ -180,13 +181,15 @@ limit 1
                                     $idLU = $lu[0]->idLU;
                                 }
                                 debug("idLU=",$idLU,$tokens[$luToken]);
-                                // verifica annotationset
-                                $as = Criteria::table("view_annotationset")
-                                    ->where("idDocumentSentence", $sentence->idDocumentSentence)
-                                    ->where("idLU", $idLU)
+                                // verifica annotationset para LU neste startChar (pode ter a mesma LU mais de uma vez na sentence)
+                                $as = Criteria::table("view_annotationset as a")
+                                    ->join("view_annotation_text_gl as t", "a.idAnnotationSet","=","t.idAnnotationSet")
+                                    ->where("a.idDocumentSentence", $sentence->idDocumentSentence)
+                                    ->where("a.idLU", $idLU)
+                                    ->where("t.startChar", $startChar)
                                     ->first();
                                 if(!is_null($as)) {
-                                    Criteria::function('annotationset_delete(?,?)', [$as->idAnnotationSet, 6]);
+                                    Criteria::function('annotationset_delete(?,?)', [$as->idAnnotationSet, $user->idUser]);
                                 }
                                 $idAnnotationSet = AnnotationSet::createForLU($sentence->idDocumentSentence, $idLU, $startChar, $endChar);
                             }
@@ -194,12 +197,15 @@ limit 1
                             foreach ($annotation->children as $fe) {
                                 $x = explode('_', strtolower($fe->label));
                                 $idFrameElement = $x[1];
+                                debug("=== FE ====");
                                 $startChar = $fe->char_span[0];
                                 $endChar = $fe->char_span[1];
-                                $word = '';
-                                for ($t = $fe->span[0]; $t <= $fe->span[1]; $t++) {
-                                    $word .= $tokens[$t] . ' ';
+                                debug(" original start end", $startChar, $endChar);
+                                // tem remover os espaços em banco (e pontuação do final do span criado pelo LOME)
+                                while(mb_strpos($punctuation, mb_substr($text, $endChar, 1))  !== false) {
+                                    $endChar--;
                                 }
+                                $word = trim(strtolower(mb_substr($text, $startChar, $endChar - $startChar + 1)));
                                 Criteria::create("lome_resultfe", [
                                     "start" => $startChar,
                                     "end" => $endChar,
@@ -212,7 +218,7 @@ limit 1
                                     "idSentence" => $sentence->idSentence,
                                 ]);
 
-                                debug("idAnnotationset ======================",$idAnnotationSet,$startChar,$endChar);
+                                debug($idAnnotationSet,"[".$word."]",$startChar,$endChar);
                                 if (!is_null($idAnnotationSet)) {
                                     $range= SelectionData::from(json_encode([
                                         'type'=> 'word',
@@ -229,8 +235,7 @@ limit 1
                                         'idAnnotationSet' => $idAnnotationSet,
                                         'idFrameElement' => $idFrameElement,
                                     ]);
-                                    AnnotationFEService::deleteFE($deleteData);
-                                    debug($annotationData);
+//                                    AnnotationFEService::deleteFE($deleteData);
                                     AnnotationFEService::annotateFE($annotationData);
                                 }
                             }
