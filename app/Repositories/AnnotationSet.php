@@ -85,34 +85,30 @@ class AnnotationSet
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $cmd = <<<HERE
-
-        SELECT a.idAnnotationSet,
-            l.idLayerType,
-            l.idLayer,
-            l.name AS layer,
-            ifnull(ts.startChar,-1) AS startChar,
-            ifnull(ts.endChar,-1) AS endChar,
-            ifnull(gl.idEntity, ifnull(fe.idEntity, ce.idEntity)) AS idEntity,
-            ifnull(gl.name, ifnull(fe.name, ce.name)) AS name,
-            ifnull(gl.idColor, ifnull(fe.idColor, ce.idColor)) AS idColor,
-            ts.idTextSpan,
-            l.entry as layerTypeEntry,
-            ts.idInstantiationType,
-            it.name instantiationType
-        FROM view_annotationset a
-            INNER JOIN view_layer l ON (a.idAnnotationSet = l.idAnnotationSet)
-            LEFT JOIN textspan ts ON (l.idLayer = ts.idLayer)
-            LEFT JOIN view_annotation_text_gl gl ON (ts.idTextSpan = gl.idTextSpan)
-            LEFT JOIN view_annotation_text_fe fe ON (ts.idTextSpan = fe.idTextSpan)
-            LEFT JOIN view_annotation_text_ce ce ON (ts.idTextSpan = ce.idTextSpan)
-            LEFT JOIN view_instantiationtype it ON (ts.idInstantiationType = it.idTypeInstance)
-        WHERE (l.idLanguage = {$idLanguage})
-            AND (a.idAnnotationSet = {$idAnnotationSet})
-
+select ts.idAnnotationSet,
+       lt.layerOrder,
+       lt.entry as layerTypeEntry,
+       lt.name as layerTypeName,
+       coalesce(ts.startChar,-1) AS startChar,
+       coalesce(ts.endChar,-1) AS endChar,
+       coalesce(gl.idEntity, fe.idEntity, ce.idEntity) AS idEntity,
+       coalesce(gl.name, fe.name, ce.name) AS name,
+       coalesce(gl.idColor, fe.idColor, ce.idColor) AS idColor,
+       ts.idTextSpan,
+       ts.idInstantiationType,
+       it.name instantiationType
+from annotation a
+join textspan ts on (a.idTextSpan = ts.idTextSpan)
+join view_layertype lt on (ts.idLayerType = lt.idLayerType)
+left join view_frameelement fe on (a.idEntity = fe.idEntity)
+left join genericlabel gl on (a.idEntity = gl.idEntity)
+left join view_constructionelement ce on (a.idEntity = ce.idEntity)
+left join view_instantiationtype it ON (ts.idInstantiationType = it.idTypeInstance)
+        WHERE (ts.idAnnotationSet = {$idAnnotationSet})
+          and (lt.idLanguage = {$idLanguage})
             AND ((fe.idLanguage = {$idLanguage}) or (fe.idLanguage is null))
             AND ((ce.idLanguage = {$idLanguage}) or (ce.idLanguage is null))
             AND ((it.idLanguage = {$idLanguage}) or (it.idLanguage is null))
-        ORDER BY a.idAnnotationSet, l.layerOrder, ts.startChar
 
 HERE;
 

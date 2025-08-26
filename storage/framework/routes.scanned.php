@@ -3464,14 +3464,6 @@ $router->get('annotation/fe', [
 	'domain' => NULL,
 ]);
 
-$router->get('annotation/fe/grid/{idDocument}/sentences', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@documentSentences',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->get('annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@sentence',
 	'as' => NULL,
@@ -3768,24 +3760,8 @@ $router->post('annotation/browse/searchSentence', [
 	'domain' => NULL,
 ]);
 
-$router->post('annotation/browse/treeSentence', [
-	'uses' => 'App\Http\Controllers\Annotation\BrowseController@tree',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
 $router->post('annotation/browse/searchDocument', [
 	'uses' => 'App\Http\Controllers\Annotation\BrowseController@searchDocument',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->post('annotation/browse/treeDocument', [
-	'uses' => 'App\Http\Controllers\Annotation\BrowseController@treeDocument',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

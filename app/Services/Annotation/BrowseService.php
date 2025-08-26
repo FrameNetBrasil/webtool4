@@ -9,8 +9,30 @@ use App\Services\AppService;
 
 class BrowseService
 {
+    public static function hasTimespan(int $idDocument): bool
+    {
+        $timespan = Criteria::table('document_sentence as ds')
+            ->join('view_sentence_timespan as ts', 'ds.idSentence', '=', 'ts.idSentence')
+            ->where('ds.idDocument', $idDocument)
+            ->first();
+
+        return !is_null($timespan);
+    }
+
+    public static function getRowNumber(int $idDocument, int $idDocumentSentence): int
+    {
+        $sentences = Criteria::table('sentence')
+            ->join('document_sentence as ds', 'sentence.idSentence', '=', 'ds.idSentence')
+            ->join('view_sentence_timespan as ts', 'ds.idSentence', '=', 'ts.idSentence')
+            ->where('ds.idDocument', $idDocument)
+            ->selectRaw('ROW_NUMBER() OVER (order by `ts`.`startTime` asc, `ds`.`idDocumentSentence` asc) AS `rowNumber`, ds.idDocumentSentence')
+            ->keyBy('idDocumentSentence')
+            ->all();
+
+        return $sentences[$idDocumentSentence]->rowNumber;
+    }
     /**
-     * Versão 4.1
+     * Versão 4.2
      */
 
     public static function browseCorpusDocumentBySearch(object $search, array $projects = [], string $taskGroup = '')
@@ -89,30 +111,6 @@ class BrowseService
 
         return $decorated;
     }
-
-    private static function hasTimespan(int $idDocument): bool
-    {
-        $timespan = Criteria::table('document_sentence as ds')
-            ->join('view_sentence_timespan as ts', 'ds.idSentence', '=', 'ts.idSentence')
-            ->where('ds.idDocument', $idDocument)
-            ->first();
-
-        return !is_null($timespan);
-    }
-
-    private static function getRowNumber(int $idDocument, int $idDocumentSentence): int
-    {
-        $sentences = Criteria::table('sentence')
-            ->join('document_sentence as ds', 'sentence.idSentence', '=', 'ds.idSentence')
-            ->join('view_sentence_timespan as ts', 'ds.idSentence', '=', 'ts.idSentence')
-            ->where('ds.idDocument', $idDocument)
-            ->selectRaw('ROW_NUMBER() OVER (order by `ts`.`startTime` asc, `ds`.`idDocumentSentence` asc) AS `rowNumber`, ds.idDocumentSentence')
-            ->keyBy('idDocumentSentence')
-            ->all();
-
-        return $sentences[$idDocumentSentence]->rowNumber;
-    }
-
     public static function getPrevious(int $idDocumentSentence): ?int
     {
         $idDocument = self::getIdDocument($idDocumentSentence);

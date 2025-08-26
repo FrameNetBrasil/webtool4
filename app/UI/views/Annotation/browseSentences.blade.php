@@ -1,13 +1,13 @@
 <x-layout.browser>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','FE Annotation']]"></x-breadcrumb>
+        <x-breadcrumb :sections="[['/','Home'],['',$page]]"></x-breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <div class="ui container h-full">
-            <div class="ui card h-full w-full">
-                <div class="flex-grow-0 content h-4rem bg-gray-100">
+            <div class="ui card h-full w-full p-2">
+                <div class="flex-grow-0 content h-4rem">
                     <div class="flex flex align-items-center justify-content-between">
-                        <div><h2 class="ui header">FE Annotation</h2></div>
+                        <div><h2 class="ui header">{{$page}}</h2></div>
                     </div>
                 </div>
                 <div class="app-search">
@@ -64,14 +64,13 @@
                     </div>
 
                     <div id="gridArea">
-                        @fragment("search")
-                            <div class="results-container view-cards">
-                                <div class="results-wrapper">
-                                    <div class="tree-view" x-transition>
-                                        <div
-                                            class="search-results-tree"
-                                            x-data
-                                            @tree-item-selected.document="(event) => {
+                        <div class="results-container view-cards">
+                            <div class="results-wrapper">
+                                <div class="tree-view" x-transition>
+                                    <div
+                                        class="search-results-tree"
+                                        x-data
+                                        @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
                                                     if ((type === 'corpus') || (type === 'document')) {
@@ -80,17 +79,14 @@
                                                         window.open(`{{$url}}/${event.detail.id}`, '_blank');
                                                     }
                                                 }"
-                                        >
-                                            <x-tree
-                                                :title="$title ?? ''"
-                                                url="/annotation/browse/treeSentence"
-                                                :data="$data"
-                                            ></x-tree>
+                                    >
+                                        <div id="treeArea">
+                                            @include("Annotation.treeSentences")
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endfragment
+                        </div>
                     </div>
                 </div>
             </div>
