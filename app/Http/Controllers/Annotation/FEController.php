@@ -28,12 +28,12 @@ class FEController extends Controller
     #[Get(path: '/annotation/fe')]
     public function browse(SearchData $search)
     {
-        $corpus = BrowseService::browseCorpusBySearch($search);
+        $data = BrowseService::browseCorpusBySearch($search);
 
         return view('Annotation.browseSentences', [
             'page' => "FE Annotation",
             'url' => "/annotation/fe/sentence",
-            'data' => $corpus,
+            'data' => $data,
         ]);
 //        $search = session('searchFEAnnotation') ?? SearchData::from();
 //        return view("Annotation.FE.browse", [
@@ -50,16 +50,16 @@ class FEController extends Controller
 //        ]);
 //    }
 
-    #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
-    public function documentSentences(int $idDocument)
-    {
-        $document = Document::byId($idDocument);
-        $sentences = AnnotationFEService::listSentences($idDocument);
-        return view("Annotation.FE.sentences", [
-            'document' => $document,
-            'sentences' => $sentences
-        ]);
-    }
+//    #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
+//    public function documentSentences(int $idDocument)
+//    {
+//        $document = Document::byId($idDocument);
+//        $sentences = BrowseService::listSentences($idDocument);
+//        return view("Annotation.FE.sentences", [
+//            'document' => $document,
+//            'sentences' => $sentences
+//        ]);
+//    }
 
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
     public function sentence(int $idDocumentSentence,int $idAnnotationSet = null)

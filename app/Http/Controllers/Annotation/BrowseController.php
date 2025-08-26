@@ -15,39 +15,43 @@ class BrowseController extends Controller
     #[Post(path: '/annotation/browse/searchSentence')]
     public function search(SearchData $search)
     {
-        if ($search->idDocumentSentence != '') {
-            $data = BrowseService::browseSentence($search->idDocumentSentence);
-            $title = "Sentence";
-        } elseif ($search->document != '') {
-            $data = BrowseService::browseDocumentBySearch($search);
-            $title = "Documents";
-        } else {
-            $data = BrowseService::browseCorpusBySearch($search);
-            $title = "Corpora";
-        }
-
-        return view('Annotation.browseSentences', [
-            'data' => $data,
-            'title' => $title,
-        ])->fragment('search');
-    }
-
-    #[Post(path: '/annotation/browse/treeSentence')]
-    public function tree(TreeData $search)
-    {
-        $data = [];
-        if (!is_null($search->idDocument)) {
+        debug($search);
+        if (!is_null($search->idCorpus)) {
+            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus, [], "CorpusAnnotation");
+        } else if (!is_null($search->idDocument)) {
             $data = BrowseService::browseSentencesByDocument($search->idDocument);
-        } elseif (!is_null($search->idCorpus)) {
-            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus);
+        } else if ($search->idDocumentSentence != '') {
+            $data = BrowseService::browseSentence($search->idDocumentSentence);
+//            $title = "Sentence";
+        } elseif ($search->document != '') {
+            $data = BrowseService::browseDocumentBySearch($search, [], "CorpusAnnotation");
+//            $title = "Documents";
+        } else {
+            $data = BrowseService::browseCorpusBySearch($search, [], "CorpusAnnotation");
+//            $title = "Corpora";
         }
 
-        return view('Annotation.browseSentences', [
-            'page' => '',
-            'url' => '',
+        return view('Annotation.treeSentences', [
             'data' => $data,
-        ])->fragment('tree');
+        ]);
     }
+
+//    #[Post(path: '/annotation/browse/treeSentence')]
+//    public function tree(TreeData $search)
+//    {
+//        $data = [];
+//        if (!is_null($search->idDocument)) {
+//            $data = BrowseService::browseSentencesByDocument($search->idDocument);
+//        } elseif (!is_null($search->idCorpus)) {
+//            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus);
+//        }
+//
+//        return view('Annotation.browseSentences', [
+//            'page' => '',
+//            'url' => '',
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
 
     #[Post(path: '/annotation/browse/searchDocument')]
     public function searchDocument(SearchData $search)
@@ -66,21 +70,21 @@ class BrowseController extends Controller
         ])->fragment('search');
     }
 
-    #[Post(path: '/annotation/browse/treeDocument')]
-    public function treeDocument(TreeData $search)
-    {
-        $data = [];
-        if (!is_null($search->idCorpus)) {
-            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus, [], '', true);
-        }
-
-        return view('Annotation.browseDocuments', [
-            'page' => '',
-            'url' => '',
-            'taskGroupName' => $search->taskGroupName,
-            'data' => $data,
-        ])->fragment('tree');
-    }
+//    #[Post(path: '/annotation/browse/treeDocument')]
+//    public function treeDocument(TreeData $search)
+//    {
+//        $data = [];
+//        if (!is_null($search->idCorpus)) {
+//            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus, [], '', true);
+//        }
+//
+//        return view('Annotation.browseDocuments', [
+//            'page' => '',
+//            'url' => '',
+//            'taskGroupName' => $search->taskGroupName,
+//            'data' => $data,
+//        ])->fragment('tree');
+//    }
 
 }
 
