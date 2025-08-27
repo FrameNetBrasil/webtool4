@@ -12,7 +12,8 @@
                 @if (count($fesData) > 0)
                     <div>{{$type}}</div>
                     <div class="rowFE">
-                        @foreach($fesData as $fe)
+                        @foreach($fesData as $idEntity)
+                            @php($fe = $fes[$idEntity])
                             <div class="colFE">
                                 <button
                                     class="ui right labeled icon button mb-2 color_{{$fe->idColor}}"

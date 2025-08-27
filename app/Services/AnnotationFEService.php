@@ -18,6 +18,7 @@ use App\Repositories\LU;
 use App\Repositories\Timeline;
 use App\Repositories\WordForm;
 use App\Services\Annotation\BrowseService;
+use App\Services\Annotation\CorpusService;
 use Illuminate\Support\Facades\DB;
 
 
@@ -384,12 +385,9 @@ class AnnotationFEService
         }
         */
         $objects = $spansByLayer['lty_fe'] ?? [];
-        foreach ($objects as $object) {
+        foreach ($objects as $layerEntry => $object) {
             $object->startWord = ($object->startChar != -1) ? $wordsChars->chars[$object->startChar]['order'] : -1;
             $object->endWord = ($object->endChar != -1) ? $wordsChars->chars[$object->endChar]['order'] : -1;
-            if ($object->startWord == -1) {
-                $nis[$object->idInstantiationType][$object->idEntity] = $object;
-            }
         }
         $objectsRows = [];
         $objectsRowsEnd = [];
@@ -400,51 +398,26 @@ class AnnotationFEService
                 if ($object->idLayerType != $idLayerTypeCurrent) {
                     $idLayerTypeCurrent = $object->idLayerType;
                     $objectsRows[$idLayerType][0][] = $object;
-                    $objectsRowsEnd[$idLayerType][0] = $object->endFrame;
-                }
-                $allocated = false;
-                foreach ($objectsRows as $objectRow) {
-                    if ($object->startWord > $objectsRowsEnd) {
-                        $objectsRows[] = $object;
-                        $objectsRowsEnd = $object->endFrame;
-                        $allocated = true;
-                        break;
+                    $objectsRowsEnd[$idLayerType][0] = $object->endWord;
+                } else {
+                    $allocated = false;
+                    foreach ($objectsRows[$idLayerType] as $idLayer => $objectRow) {
+                        if ($object->startWord > $objectsRowsEnd[$idLayerType][$idLayer]) {
+                            $objectsRows[$idLayerType][$idLayer][] = $object;
+                            $objectsRowsEnd[$idLayerType][$idLayer] = $object->endWord;
+                            $allocated = true;
+                            break;
+                        }
                     }
-                }
-                if (! $allocated) {
-                    $idLayer = count($objectsRows[$idLayerType]);
-                    $objectsRows[$idLayerType][$idLayer][] = $object;
-                    $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
-                }
-            }
-        }
-
-
-
-        foreach ($spans as $i => $object) {
-            if ($idLayerType != $idLayerTypeCurrent) {
-                $idLayerTypeCurrent = $idLayerType;
-                $objectsRows[$idLayerType][0][] = $object;
-                $objectsRowsEnd[$idLayerType][0] = $object->endFrame;
-            } else {
-                $allocated = false;
-                foreach ($objectsRows[$idLayerType] as $idLayer => $objectRow) {
-                    if ($object->startFrame > $objectsRowsEnd[$idLayerType][$idLayer]) {
+                    if (!$allocated) {
+                        $idLayer = count($objectsRows[$idLayerType]);
                         $objectsRows[$idLayerType][$idLayer][] = $object;
-                        $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
-                        $allocated = true;
-                        break;
+                        $objectsRowsEnd[$idLayerType][$idLayer] = $object->endWord;
                     }
-                }
-                if (! $allocated) {
-                    $idLayer = count($objectsRows[$idLayerType]);
-                    $objectsRows[$idLayerType][$idLayer][] = $object;
-                    $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
                 }
             }
         }
-
-
+        debug($objectsRows);
 
 
 //        $target = array_filter($layers, fn($x) => ($x->layerTypeEntry == 'lty_target'));
@@ -556,7 +529,7 @@ class AnnotationFEService
             $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         });
-        return self::getASData($data->idAnnotationSet, $data->token);
+        return CorpusService::getAnnotationSetData($data->idAnnotationSet, $data->token);
     }
 
     public static function deleteFE(DeleteFEData $data): void
@@ -584,14 +557,14 @@ class AnnotationFEService
 //                Criteria::deleteById("textspan", "idTextSpan", $annotation->idTextSpan);
 //            }
             // if FE layer was empty, remove it
-            foreach ($annotations as $annotation) {
-                $annotationsByLayer = Criteria::table("view_annotation_text_fe")
-                    ->where("idLayer", $annotation->idLayer)
-                    ->count();
-                if ($annotationsByLayer == 0) {
-                    Criteria::deleteById("layer", "idLayer", $annotation->idLayer);
-                }
-            }
+//            foreach ($annotations as $annotation) {
+//                $annotationsByLayer = Criteria::table("view_annotation_text_fe")
+//                    ->where("idLayer", $annotation->idLayer)
+//                    ->count();
+//                if ($annotationsByLayer == 0) {
+//                    Criteria::deleteById("layer", "idLayer", $annotation->idLayer);
+//                }
+//            }
         });
     }
 

@@ -3473,15 +3473,7 @@ $router->get('annotation/fe', [
 ]);
 
 $router->get('annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@sentence',
-	'as' => NULL,
-	'middleware' => ['auth'],
-	'where' => [],
-	'domain' => NULL,
-]);
-
-$router->get('annotation/fe/annotations/{idSentence}', [
-	'uses' => 'App\Http\Controllers\Annotation\FEController@annotations',
+	'uses' => 'App\Http\Controllers\Annotation\FEController@annotation',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
