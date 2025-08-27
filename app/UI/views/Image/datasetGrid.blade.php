@@ -12,7 +12,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Dataset-Image"
-                            onclick="manager.confirmDelete(`Removing association to Dataset '{{$dataset->name}}'.`, '/image/{{$idImage}}/dataset/{{$dataset->idDataset}}')"
+                            onclick="messenger.confirmDelete(`Removing association to Dataset '{{$dataset->name}}'.`, '/image/{{$idImage}}/dataset/{{$dataset->idDataset}}')"
                         ></x-delete>
                     </span>
                     <div

@@ -446,13 +446,13 @@ annotation.objects = {
         // Alpine.store("doStore").replaceByIdDynamicObject(idDynamicObject, object);
     },
     deleteObject: async (idDynamicObject) => {
-        await manager.confirmDelete("Removing object #" + idDynamicObject + ".", "/annotation/dynamicMode/" + idDynamicObject, async () => {
+        await messenger.confirmDelete("Removing object #" + idDynamicObject + ".", "/annotation/dynamicMode/" + idDynamicObject, async () => {
             await Alpine.store("doStore").updateObjectList();
             Alpine.store("doStore").selectObject(null);
         });
     },
     deleteObjectComment: async (idDynamicObject) => {
-        await manager.confirmDelete("Removing comment for object #" + idDynamicObject + ".",
+        await messenger.confirmDelete("Removing comment for object #" + idDynamicObject + ".",
             "/annotation/dynamicMode/comment/" + annotation.document.idDocument + "/" + idDynamicObject,
             async () => {
             await Alpine.store("doStore").updateObjectList();

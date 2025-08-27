@@ -1,8 +1,6 @@
 <div class="d-flex">
     <div style="width:150px">
         <div class="rowNI">
-            @php(debug($it))
-            @php(debug($nis))
             @foreach($it as $i => $type)
                 @if(($type->entry != 'int_normal') && ($type->entry != 'int_apos'))
                     <div class="colNI">
@@ -17,7 +15,7 @@
                         </span>
                     </div>
                     @foreach($nis as $idInstantiationType => $niFEs)
-                        @if($type->idType == $idInstantiationType)
+                        @if($type->idInstantiationType == $idInstantiationType)
                             @foreach($niFEs as $niFE)
                                 @php($idEntityFE = $niFE['idEntityFE'])
                                 <div
@@ -38,6 +36,7 @@
     </div>
     <div class="annotationSentenceFE">
         <div class="rowWord">
+            @php(debug($spans))
             @foreach($words as $i => $w)
                 <div class="{!! ($w['word'] != ' ') ? 'colWord' : 'colSpace' !!}">
                     @php($isTarget = ($i >= $target->startWord) && ($i <= $target->endWord))

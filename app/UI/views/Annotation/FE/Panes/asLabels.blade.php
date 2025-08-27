@@ -24,7 +24,7 @@
                                     >
                                     </i>
                                     <div class="d-flex">
-                                        <i class="{!! config("webtool.fe.icon")[$fe->coreType] !!} icon text-small"></i>{{$fe->name}}
+                                        <i class="{!! config("webtool.fe.icon")[$fe->coreType] !!} icon feIcon"></i>{{$fe->name}}
                                     </div>
                                 </button>
                             </div>

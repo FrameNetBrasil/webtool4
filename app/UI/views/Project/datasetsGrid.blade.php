@@ -12,7 +12,7 @@
                     <span class="right floated">
                         <x-delete
                             title="remove Dataset"
-                            onclick="manager.confirmDelete(`Removing datase '{{$dataset->name}}' from project.`, '/project/{{$idProject}}/datasets/{{$dataset->idDataset}}')"
+                            onclick="messenger.confirmDelete(`Removing datase '{{$dataset->name}}' from project.`, '/project/{{$idProject}}/datasets/{{$dataset->idDataset}}')"
                         ></x-delete>
                     </span>
 

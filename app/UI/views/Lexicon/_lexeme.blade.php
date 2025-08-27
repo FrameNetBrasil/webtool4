@@ -16,7 +16,7 @@
                         <x-button
                             label="Delete"
                             color="danger"
-                            onclick="manager.confirmDelete(`Removing Lexeme '{{$lexeme->name}}'.`, '/lexicon/lexeme/{{$lexeme->idLexeme}}')"
+                            onclick="messenger.confirmDelete(`Removing Lexeme '{{$lexeme->name}}'.`, '/lexicon/lexeme/{{$lexeme->idLexeme}}')"
                         ></x-button>
                     </x-slot:detail>
                     <x-slot:description>

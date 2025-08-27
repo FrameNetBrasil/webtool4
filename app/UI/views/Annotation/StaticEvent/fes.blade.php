@@ -14,7 +14,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete FE Constraint"
-                            onclick="manager.confirmDelete(`Removing Frame '{{$frame['name']}}'.`, '/annotation/staticEvent/fes/{{$idDocumentSentence}}/{{$idFrame}}')"
+                            onclick="messenger.confirmDelete(`Removing Frame '{{$frame['name']}}'.`, '/annotation/staticEvent/fes/{{$idDocumentSentence}}/{{$idFrame}}')"
                         ></x-delete>
                     </span>
                         <div

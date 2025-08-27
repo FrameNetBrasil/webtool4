@@ -13,7 +13,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Project"
-                            onclick="manager.confirmDelete(`Removing user '{{$usertask->name}}' from task.`, '/task/{{$idTask}}/users/{{$usertask->idUserTask}}')"
+                            onclick="messenger.confirmDelete(`Removing user '{{$usertask->name}}' from task.`, '/task/{{$idTask}}/users/{{$usertask->idUserTask}}')"
                         ></x-delete>
                     </span>
                     <div

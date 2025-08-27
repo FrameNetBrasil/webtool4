@@ -12,7 +12,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing LayerGroup '{{$layerGroup->name}}'.`, '/layers/layergroup/{{$layerGroup->idLayerGroup}}')"
+            onclick="messenger.confirmDelete(`Removing LayerGroup '{{$layerGroup->name}}'.`, '/layers/layergroup/{{$layerGroup->idLayerGroup}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

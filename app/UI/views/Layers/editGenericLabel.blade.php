@@ -12,7 +12,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing GenericLabel '{{$genericLabel->name}}'.`, '/layers/genericlabel/{{$genericLabel->idGenericLabel}}')"
+            onclick="messenger.confirmDelete(`Removing GenericLabel '{{$genericLabel->name}}'.`, '/layers/genericlabel/{{$genericLabel->idGenericLabel}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

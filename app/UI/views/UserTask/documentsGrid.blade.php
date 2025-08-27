@@ -14,7 +14,7 @@
                         <span class="right floated">
                         <x-delete
                             title="delete Document"
-                            onclick="manager.confirmDelete(`Removing document '{{$document->documentName}}' from user.`, '/usertask/{{$idUserTask}}/documents/{{$document->idUserTaskDocument}}')"
+                            onclick="messenger.confirmDelete(`Removing document '{{$document->documentName}}' from user.`, '/usertask/{{$idUserTask}}/documents/{{$document->idUserTaskDocument}}')"
                         ></x-delete>
                     </span>
                         <div
@@ -29,7 +29,7 @@
                         <span class="right floated">
                             <x-delete
                                 title="delete Corpus"
-                                onclick="manager.confirmDelete(`Removing corpus '{{$document->corpusName}}' from user.`, '/usertask/{{$idUserTask}}/documents/{{$document->idUserTaskDocument}}')"
+                                onclick="messenger.confirmDelete(`Removing corpus '{{$document->corpusName}}' from user.`, '/usertask/{{$idUserTask}}/documents/{{$document->idUserTaskDocument}}')"
                             ></x-delete>
                     </span>
                         <div

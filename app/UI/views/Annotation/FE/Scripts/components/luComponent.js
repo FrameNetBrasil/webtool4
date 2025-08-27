@@ -29,7 +29,7 @@ function luComponent(idDocumentSentence) {
                 idLU,
                 wordList: this.getWordData()
             };
-            htmx.ajax('POST', '/annotation/fullText/createAS', {target:'.annotation-workarea', swap:'innerHTML',values: values });
+            htmx.ajax('POST', '/annotation/fe/createAS', {target:'.annotation-workarea', swap:'innerHTML',values: values });
         }
     };
 }
