@@ -15,6 +15,7 @@ use App\Repositories\AnnotationSet;
 use App\Repositories\Document;
 use App\Repositories\WordForm;
 use App\Services\Annotation\BrowseService;
+use App\Services\Annotation\CorpusService;
 use App\Services\AnnotationFEService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -25,6 +26,13 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware("auth")]
 class FEController extends Controller
 {
+    #[Get(path: '/annotation/fe/script/{folder}')]
+    public function jsObjects(string $folder)
+    {
+        return response()
+            ->view("Annotation.FE.Scripts.{$folder}")
+            ->header('Content-type', 'text/javascript');
+    }
     #[Get(path: '/annotation/fe')]
     public function browse(SearchData $search)
     {
@@ -64,11 +72,11 @@ class FEController extends Controller
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
     public function sentence(int $idDocumentSentence,int $idAnnotationSet = null)
     {
-        $data = AnnotationFEService::getAnnotationData($idDocumentSentence);
-        if (!is_null($idAnnotationSet)) {
-            $data['idAnnotationSet'] = $idAnnotationSet;
-        }
-        return view("Annotation.FE.annotationSentence", $data);
+        $data = CorpusService::getAnnotationData($idDocumentSentence);
+//        if (!is_null($idAnnotationSet)) {
+//            $data['idAnnotationSet'] = $idAnnotationSet;
+//        }
+        return view("Annotation.FE.annotation", $data);
     }
 
     #[Get(path: '/annotation/fe/annotations/{idSentence}')]
@@ -78,13 +86,14 @@ class FEController extends Controller
         return view("Annotation.FE.Panes.annotations", $data);
     }
 
-    #[Get(path: '/annotation/fe/as/{idAS}/{token}')]
-    public function annotationSet(int $idAS, string $token)
+    #[Get(path: '/annotation/fe/as/{idAS}/{token?}')]
+    public function annotationSet(int $idAS, string $token = '')
     {
         $data = AnnotationFEService::getASData($idAS, $token);
-        debug($data);
-        return view("Annotation.FE.Panes.annotationSet", $data);
+
+        return view('Annotation.FE.Panes.annotationSet', $data);
     }
+
 
     #[Get(path: '/annotation/fe/lus/{idDocumentSentence}/{idWord}')]
     public function getLUs(int $idDocumentSentence, int $idWord)

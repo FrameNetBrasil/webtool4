@@ -319,21 +319,66 @@ class AnnotationFEService
             ->keyBy("idEntity")
             ->all();
 
+        $fesByType = [
+            'Core' => [],
+            'Peripheral' => [],
+            'Extra-thematic' => [],
+        ];
+        foreach ($fes as $fe) {
+            if (($fe->coreType == 'cty_core') || ($fe->coreType == 'cty_core-unexpressed')) {
+                $fesByType['Core'][] = $fe;
+            } elseif ($fe->coreType == 'cty_peripheral') {
+                $fesByType['Peripheral'][] = $fe;
+            } else {
+                $fesByType['Extra-thematic'][] = $fe;
+            }
+        }
+
         $firstWord = array_key_first($wordsChars->words);
         $lastWord = array_key_last($wordsChars->words);
 
+        $spans = [];
+        $idLayers = [];
         $layersForLU = LayerType::listToLU($lu);
+        foreach($layersForLU as $layer) {
+            if ($layer->entry == 'lty_fe') {
+                $idLayers[] = $layer->idLayerType;
+                for ($i = $firstWord; $i <= $lastWord; $i++) {
+                    $spans[$i][$layer->idLayerType] = null;
+                }
+            }
+        }
+
         $layers = AnnotationSet::getLayers($idAS);
         $spansByLayer = collect($layers)->groupBy('layerTypeEntry')->all();
-        $target = $spansByLayer['lty_target'][0];
+        debug($spansByLayer);
+        $nis = [];
+        $target = $spansByLayer['lty_target'];
         foreach ($target as $tg) {
               $tg->startWord = $wordsChars->chars[$tg->startChar]['order'];
               $tg->endWord = $wordsChars->chars[$tg->endChar]['order'];
         }
-        foreach($spansByLayer['lty_fe'] as $feSpan) {
-
-
-
+        foreach($spansByLayer['lty_fe'] as $span) {
+            $span->startWord = ($span->startChar != -1) ? $wordsChars->chars[$span->startChar]['order'] : -1;
+            $span->endWord = ($span->endChar != -1) ? $wordsChars->chars[$span->endChar]['order'] : -1;
+            if ($span->startWord != -1) {
+                $hasLabel = false;
+                for ($i = $span->startWord; $i <= $span->endWord; $i++) {
+                    $name = (!$hasLabel) ? $span->name : null;
+                    $spans[$i][$span->idLayerType] = [
+                        'idEntityFE' => $span->idEntity,
+                        'label' => $name
+                    ];
+                    $wordsChars->words[$i]['hasFE'] = true;
+                    $hasLabel = true;
+                }
+            } else {
+                $name = $span->name;
+                $nis[$span->idInstantiationType][$span->idEntity] = [
+                    'idEntityFE' => $span->idEntity,
+                    'label' => $name
+                ];
+            }
         }
 
 
@@ -345,42 +390,42 @@ class AnnotationFEService
 //
 //
 //        $feSpans = array_filter($layers, fn($x) => $x->layerTypeEntry == 'lty_fe');
-        $spans = [];
-        $nis = [];
-        $idLayers = [];
-        $spansByLayer = collect($feSpans)->groupBy('idLayer')->all();
-        foreach ($spansByLayer as $idLayer => $existingSpans) {
-            $idLayers[] = $idLayer;
-            for ($i = $firstWord; $i <= $lastWord; $i++) {
-                $spans[$i][$idLayer] = null;
-            }
-            foreach ($existingSpans as $span) {
-                if ($span->idTextSpan != '') {
-                    $span->startWord = ($span->startChar != -1) ? $wordsChars->chars[$span->startChar]['order'] : -1;
-                    $span->endWord = ($span->endChar != -1) ? $wordsChars->chars[$span->endChar]['order'] : -1;
-                    if ($span->layerTypeEntry == 'lty_fe') {
-                        if ($span->startWord != -1) {
-                            $hasLabel = false;
-                            for ($i = $span->startWord; $i <= $span->endWord; $i++) {
-                                $name = (!$hasLabel) ? $fes[$span->idEntity]->name : null;
-                                $spans[$i][$idLayer] = [
-                                    'idEntityFE' => $span->idEntity,
-                                    'label' => $name
-                                ];
-                                $wordsChars->words[$i]['hasFE'] = true;
-                                $hasLabel = true;
-                            }
-                        } else {
-                            $name = $fes[$span->idEntity]->name;
-                            $nis[$span->idInstantiationType][$span->idEntity] = [
-                                'idEntityFE' => $span->idEntity,
-                                'label' => $name
-                            ];
-                        }
-                    }
-                }
-            }
-        }
+
+//        $nis = [];
+//        $idLayers = [];
+//        $spansByLayer = collect($feSpans)->groupBy('idLayer')->all();
+//        foreach ($spansByLayer as $idLayer => $existingSpans) {
+//            $idLayers[] = $idLayer;
+//            for ($i = $firstWord; $i <= $lastWord; $i++) {
+//                $spans[$i][$idLayer] = null;
+//            }
+//            foreach ($existingSpans as $span) {
+//                if ($span->idTextSpan != '') {
+//                    $span->startWord = ($span->startChar != -1) ? $wordsChars->chars[$span->startChar]['order'] : -1;
+//                    $span->endWord = ($span->endChar != -1) ? $wordsChars->chars[$span->endChar]['order'] : -1;
+//                    if ($span->layerTypeEntry == 'lty_fe') {
+//                        if ($span->startWord != -1) {
+//                            $hasLabel = false;
+//                            for ($i = $span->startWord; $i <= $span->endWord; $i++) {
+//                                $name = (!$hasLabel) ? $fes[$span->idEntity]->name : null;
+//                                $spans[$i][$idLayer] = [
+//                                    'idEntityFE' => $span->idEntity,
+//                                    'label' => $name
+//                                ];
+//                                $wordsChars->words[$i]['hasFE'] = true;
+//                                $hasLabel = true;
+//                            }
+//                        } else {
+//                            $name = $fes[$span->idEntity]->name;
+//                            $nis[$span->idInstantiationType][$span->idEntity] = [
+//                                'idEntityFE' => $span->idEntity,
+//                                'label' => $name
+//                            ];
+//                        }
+//                    }
+//                }
+//            }
+//        }
         //debug($baseLabels, $labels);
 //        ksort($spans);
 //        debug($labels);
@@ -398,8 +443,10 @@ class AnnotationFEService
             'target' => $target[0],
             'spans' => $spans,
             'fes' => $fes,
+            'fesByType' => $fesByType,
             'nis' => $nis,
-            'word' => $token
+            'word' => $token,
+            'comment' => CommentService::getAnnotationSetComment($idAS),
         ];
 
     }

@@ -87,6 +87,7 @@ class AnnotationSet
         $cmd = <<<HERE
 select ts.idAnnotationSet,
        lt.layerOrder,
+       lt.idLayerType,
        lt.entry as layerTypeEntry,
        lt.name as layerTypeName,
        coalesce(ts.startChar,-1) AS startChar,

@@ -1,0 +1,74 @@
+/*******************************
+    Card Components
+*******************************/
+
+/* Base card enhancements */
+.ui.card {
+    // Interactive states
+    &.selectable {
+        cursor: pointer;
+        transition: all @transitionNormal;
+
+        &:hover {
+            box-shadow: @shadowLG;
+            transform: translateY(-@relative2px);
+        }
+
+        &.selected {
+            border-color: @primaryColor;
+            box-shadow: 0 0 0 2px @primaryColor;
+        }
+    }
+
+    &.hoverable:hover {
+        box-shadow: @shadowXL;
+        transform: translateY(-@relativeMini);
+    }
+
+    // Loading state
+    &.loading {
+        pointer-events: none;
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: @loadingOverlay;
+            z-index: 10;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: @relative20px;
+            height: @relative20px;
+            margin: -@relative12px 0 0 -@relative12px; // -10px equivalent
+            border: 2px solid @primaryColor;
+            border-top-color: transparent;
+            border-radius: @defaultBorderRadius;
+            animation: card-loading 1s linear infinite;
+            z-index: 11;
+        }
+    }
+
+    @keyframes card-loading {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+@import "option.less";
+@import "data.less";
+@import "summary.less";
+@import "action.less";
+@import "content.less";
+@import "form.less";
+@import "status.less";
+
