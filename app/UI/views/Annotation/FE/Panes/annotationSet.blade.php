@@ -38,7 +38,7 @@
             <div
                 x-data="annotationSetComponent({{$idAnnotationSet}},'{{$word}}')"
                 @selectionchange.document="selectionRaw =  document.getSelection()"
-                class="h-full"
+                class="h-full w-full"
             >
                 <div class="annotationSet">
                     @include("Annotation.FE.Panes.asAnnotation")

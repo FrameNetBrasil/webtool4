@@ -68,27 +68,23 @@ class FEController extends Controller
 //    }
 
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
-    public function sentence(int $idDocumentSentence,int $idAnnotationSet = null)
+    public function annotation(int $idDocumentSentence,int $idAnnotationSet = null)
     {
-        $data = CorpusService::getAnnotationData($idDocumentSentence, $idAnnotationSet);
-//        if (!is_null($idAnnotationSet)) {
-//            $data['idAnnotationSet'] = $idAnnotationSet;
-//        }
+        $data = CorpusService::getResourceData($idDocumentSentence, $idAnnotationSet);
         return view("Annotation.FE.annotation", $data);
     }
 
-    #[Get(path: '/annotation/fe/annotations/{idSentence}')]
-    public function annotations(int $idSentence)
-    {
-        $data = AnnotationFEService::getAnnotationData($idSentence);
-        return view("Annotation.FE.Panes.annotations", $data);
-    }
+//    #[Get(path: '/annotation/fe/annotations/{idSentence}')]
+//    public function annotations(int $idSentence)
+//    {
+//        $data = AnnotationFEService::getAnnotationData($idSentence);
+//        return view("Annotation.FE.Panes.annotations", $data);
+//    }
 
     #[Get(path: '/annotation/fe/as/{idAS}/{token?}')]
     public function annotationSet(int $idAS, string $token = '')
     {
-        $data = AnnotationFEService::getASData($idAS, $token);
-
+        $data = CorpusService::getAnnotationSetData($idAS, $token);
         return view('Annotation.FE.Panes.annotationSet', $data);
     }
 
@@ -125,12 +121,11 @@ class FEController extends Controller
     #[Delete(path: '/annotation/fe/frameElement')]
     public function deleteFE(DeleteFEData $data)
     {
+        debug("delete fe", $data);
         try {
             AnnotationFEService::deleteFE($data);
-            $data = AnnotationFEService::getASData($data->idAnnotationSet, $data->token);
-            debug("--------------------------------------------------------");
-            //$data['alternativeLU'] = [];
-            return view("Annotation.FE.Panes.annotationSet", $data);
+            $data = CorpusService::getAnnotationSetData($data->idAnnotationSet, $data->token);
+            return view("Annotation.FE.Panes.asAnnotation", $data);
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

@@ -9,22 +9,21 @@
                             id="ni_{{$i}}"
                             data-type="ni"
                             data-name="{{$type->name}}"
-                            data-id="{{$type->idType}}"
+                            data-id="{{$type->idInstantiationType}}"
                             @click="onSelectNI($el)"
                         >{{$type->name}}
                         </span>
                     </div>
-                    @foreach($nis as $idInstantiationType => $niFEs)
+                    @foreach(($groupedLayers['nis'] ?? []) as $idInstantiationType => $niFEs)
                         @if($type->idInstantiationType == $idInstantiationType)
                             @foreach($niFEs as $niFE)
-                                @php($idEntityFE = $niFE['idEntityFE'])
                                 <div
                                     class="colNILabel"
                                 >
-                                            <span
-                                                class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
-                                            >{{$niFE['label']}}
-                                            </span>
+                                    <span
+                                        class="feLabel color_{{$fes[$niFE->idEntity]->idColor}}"
+                                    >{{$niFE->name}}
+                                    </span>
                                 </div>
                             @endforeach
                         @endif
@@ -36,13 +35,15 @@
     </div>
     <div class="annotationSentenceFE">
         <div class="rowWord">
-            @php(debug($spans))
             @foreach($words as $i => $w)
                 <div class="{!! ($w['word'] != ' ') ? 'colWord' : 'colSpace' !!}">
-                    @php($isTarget = ($i >= $target->startWord) && ($i <= $target->endWord))
-                    @php($topLine = 30)
-                    @php($labelsAtWord = ($spans[$i] ?? []))
-                    @php($height = 24 + ($isTarget ? 0 : (count($labelsAtWord) * 30)))
+                    @php
+                        $target = $groupedLayers['lty_target'][0][0];
+                        $isTarget = ($i >= $target->startWord) && ($i <= $target->endWord);
+                        // height = número de linhas para lty_fe
+                        $lines = count($groupedLayers['lty_target']);
+                        $height = 24;// + ($isTarget ? 0 : ($lines * 30))
+                    @endphp
                     <span
                         class="word {{$isTarget ? 'target' : ''}} {{$w['hasFE'] ? 'hasFE' : ''}}"
                         id="word_{{$i}}"
@@ -52,26 +53,31 @@
                         data-endchar="{{$w['endChar']}}"
                         style="height:{{$height}}px"
                     >{{$w['word']}}
-                        @foreach($idLayers as $l => $idLayer)
-                            @php($label = $spans[$i][$idLayer])
-                            @if(!is_null($label))
-                                @php($idEntityFE = $label['idEntityFE'])
-                                <span class="line color_{{$fes[$idEntityFE]->idColor}}"
-                                      style="top:{{$topLine}}px">
-                                                @if($label['label'])
-                                        <span class="feLabel color_{{$fes[$idEntityFE]->idColor}}"
-                                              style="top:0px">{{$label['label']}}</span>
-                                    @endif
-                                                </span>
-                            @else
-                                <span></span>
-                            @endif
-                            @php($topLine += 24)
-                        @endforeach
                     </span>
                 </div>
             @endforeach
         </div>
+        @foreach(($groupedLayers['lty_fe'] ?? []) as $line => $objects)
+            @php
+             $topLine = $line * 24;
+            @endphp
+            <div
+                class="rowObject"
+                style="top:{{$topLine}}px;position:relative;"
+            >
+                @foreach($objects as $object)
+                    @php
+                        $left = 10.5 * $object->startChar;
+                        $width = 10.5 * ($object->endChar - $object->startChar + 1);
+                    @endphp
+                    <span
+                        class="color_{{$object->idColor}} feLabel"
+                        style="left:{{$left}}px;width:{{$width}}px;"
+                    >{{$object->name}}</span>
+                @endforeach
+            </div>
+        @endforeach
+
     </div>
 </div>
-<hr />
+<hr/>
