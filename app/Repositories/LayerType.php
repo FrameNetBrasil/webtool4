@@ -19,7 +19,7 @@ class LayerType
         if (isset($lPOS[$pos->POS])) {
             $array[] = $lPOS[$pos->POS];
         }
-        $criteria = Criteria::table("layertype")
+        $criteria = Criteria::table("view_layertype")
             ->select('idLayerType','entry','name')
             ->where('entry', 'IN', $array)
             ->where('idLanguage',AppService::getCurrentIdLanguage())

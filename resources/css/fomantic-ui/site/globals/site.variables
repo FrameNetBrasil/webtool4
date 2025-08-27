@@ -23,6 +23,132 @@
 
 @background: #fff;
 
+// -----------------------------------------------------------------------------
+// Color Palette (based on existing Tailwind-inspired palette)
+// -----------------------------------------------------------------------------
+
+// Base colors
+@white: #ffffff;
+@black: #000000;
+
+// Grays - UI Foundation
+@gray50: #f9fafb;
+@gray100: #f3f4f6;
+@gray200: #e5e7eb;
+@gray300: #d1d5db;
+@gray400: #9ca3af;
+@gray500: #6b7280;
+@gray600: #4b5563;
+@gray700: #374151;
+@gray800: #1f2937;
+@gray900: #111827;
+@gray950: #030712;
+
+// Blues - Primary/Reports
+@blue50: #eff6ff;
+@blue100: #dbeafe;
+@blue200: #bfdbfe;
+@blue300: #93c5fd;
+@blue400: #60a5fa;
+@blue500: #3b82f6;
+@blue600: #2563eb;
+@blue700: #1d4ed8;
+@blue800: #1e40af;
+@blue900: #1e3a8a;
+@blue950: #172554;
+
+// Greens - Success/Data
+@green50: #f0fdf4;
+@green100: #dcfce7;
+@green200: #bbf7d0;
+@green300: #86efac;
+@green400: #4ade80;
+@green500: #22c55e;
+@green600: #16a34a;
+@green700: #15803d;
+@green800: #166534;
+@green900: #14532d;
+@green950: #052e16;
+
+// Reds - Errors/Critical
+@red50: #fef2f2;
+@red100: #fee2e2;
+@red200: #fecaca;
+@red300: #fca5a5;
+@red400: #f87171;
+@red500: #ef4444;
+@red600: #dc2626;
+@red700: #b91c1c;
+@red800: #991b1b;
+@red900: #7f1d1d;
+@red950: #450a0a;
+
+// Yellows - Warnings
+@yellow50: #fefce8;
+@yellow100: #fef3c7;
+@yellow200: #fde68a;
+@yellow300: #fcd34d;
+@yellow400: #fbbf24;
+@yellow500: #f59e0b;
+@yellow600: #d97706;
+@yellow700: #b45309;
+@yellow800: #92400e;
+@yellow900: #78350f;
+@yellow950: #451a03;
+
+// Purples - Annotations
+@purple50: #faf5ff;
+@purple100: #f3e8ff;
+@purple200: #e9d5ff;
+@purple300: #d8b4fe;
+@purple400: #c084fc;
+@purple500: #a855f7;
+@purple600: #9333ea;
+@purple700: #7c3aed;
+@purple800: #6b21a8;
+@purple900: #581c87;
+@purple950: #3b0764;
+
+// Indigos - Secondary Actions
+@indigo50: #eef2ff;
+@indigo100: #e0e7ff;
+@indigo200: #c7d2fe;
+@indigo300: #a5b4fc;
+@indigo400: #818cf8;
+@indigo500: #6366f1;
+@indigo600: #4f46e5;
+@indigo700: #4338ca;
+@indigo800: #3730a3;
+@indigo900: #312e81;
+@indigo950: #1e1b4b;
+
+// Teals - Data Relations
+@teal50: #f0fdfa;
+@teal100: #ccfbf1;
+@teal200: #99f6e4;
+@teal300: #5eead4;
+@teal400: #2dd4bf;
+@teal500: #14b8a6;
+@teal600: #0d9488;
+@teal700: #0f766e;
+@teal800: #115e59;
+@teal900: #134e4a;
+@teal950: #042f2e;
+
+// Neutral colors (grayscale)
+@neutral25: #FCFCFD;
+@neutral50: #F9FAFB;
+@neutral100: #F3F4F6;
+@neutral200: #E5E7EB;
+@neutral300: #D1D5DB;
+@neutral400: #9CA3AF;
+@neutral500: #6B7280;
+@neutral600: #4B5563;
+@neutral700: #374151;
+@neutral800: #1F2937;
+@neutral900: #111827;
+@neutral950: #030712;
+
 /* -------------------
       Site Colors
 -------------------- */

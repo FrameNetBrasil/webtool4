@@ -1,3 +1,4 @@
+
 <div class="ui breadcrumb">
     @foreach($sections as $section)
         @if ($loop->last)
