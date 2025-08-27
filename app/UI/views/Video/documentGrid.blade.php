@@ -13,7 +13,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Document-Video"
-                            onclick="manager.confirmDelete(`Removing association to Document '{{$document->name}}'.`, '/video/{{$idVideo}}/document/{{$document->idDocument}}')"
+                            onclick="messenger.confirmDelete(`Removing association to Document '{{$document->name}}'.`, '/video/{{$idVideo}}/document/{{$document->idDocument}}')"
                         ></x-delete>
                     </span>
                     <div

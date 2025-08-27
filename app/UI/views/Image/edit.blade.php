@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing Image '{{$image->name}}'.`, '/image/{{$image->idImage}}')"
+            onclick="messenger.confirmDelete(`Removing Image '{{$image->name}}'.`, '/image/{{$image->idImage}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

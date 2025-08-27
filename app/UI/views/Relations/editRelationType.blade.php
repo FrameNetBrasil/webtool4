@@ -12,7 +12,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing RelationType '{{$relationType->nameCanonical}}'.`, '/relations/relationtype/{{$relationType->idRelationType}}')"
+            onclick="messenger.confirmDelete(`Removing RelationType '{{$relationType->nameCanonical}}'.`, '/relations/relationtype/{{$relationType->idRelationType}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

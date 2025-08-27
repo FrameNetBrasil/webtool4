@@ -27,7 +27,7 @@
                 type="button"
                 label="Delete"
                 color="danger"
-                onclick="manager.confirmDelete(`Removing Comment for #{{$object->idAnnotationSet}}'.`, '/annotation/fullText/comment/{{$object->idAnnotationSet}}', null, '')"
+                onclick="messenger.confirmDelete(`Removing Comment for #{{$object->idAnnotationSet}}'.`, '/annotation/fullText/comment/{{$object->idAnnotationSet}}', null, '')"
             ></x-button>
         </x-slot:buttons>
     </x-form>

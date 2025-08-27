@@ -13,7 +13,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Wordform"
-                            onclick="manager.confirmDelete(`Removing Wordform '{{$wordform->form}}'.`, '/lexicon/wordform/{{$wordform->idWordForm}}')"
+                            onclick="messenger.confirmDelete(`Removing Wordform '{{$wordform->form}}'.`, '/lexicon/wordform/{{$wordform->idWordForm}}')"
                         ></x-delete>
                     </span>
                             <div

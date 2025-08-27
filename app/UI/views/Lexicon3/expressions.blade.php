@@ -13,7 +13,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Expression"
-                            onclick="manager.confirmDelete(`Removing Expression '{{$expression->form}}' from lemma.`, '/lexicon3/expression/{{$expression->idLexiconExpression}}')"
+                            onclick="messenger.confirmDelete(`Removing Expression '{{$expression->form}}' from lemma.`, '/lexicon3/expression/{{$expression->idLexiconExpression}}')"
                         ></x-delete>
                     </span>
                     <div

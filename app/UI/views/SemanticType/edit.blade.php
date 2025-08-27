@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing SemanticType '{{$semanticType?->name}}'.`, '/semanticType/{{$semanticType->idSemanticType}}')"
+            onclick="messenger.confirmDelete(`Removing SemanticType '{{$semanticType?->name}}'.`, '/semanticType/{{$semanticType->idSemanticType}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

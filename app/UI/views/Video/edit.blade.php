@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing Video '{{$video->title}}'.`, '/video/{{$video->idVideo}}')"
+            onclick="messenger.confirmDelete(`Removing Video '{{$video->title}}'.`, '/video/{{$video->idVideo}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

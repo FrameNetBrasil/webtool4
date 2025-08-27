@@ -12,7 +12,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing RelationGroup '{{$relationGroup->name}}'.`, '/relations/relationgroup/{{$relationGroup->idRelationGroup}}')"
+            onclick="messenger.confirmDelete(`Removing RelationGroup '{{$relationGroup->name}}'.`, '/relations/relationgroup/{{$relationGroup->idRelationGroup}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>

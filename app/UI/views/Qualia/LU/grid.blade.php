@@ -16,7 +16,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Qualia"
-                            onclick="manager.confirmDelete(`Removing Qualia '{{$qualia->qlrInfo}}:{{$qualia->lu2Name}}'.`, '/lu/qualia/{{$qualia->idEntityRelation}}')"
+                            onclick="messenger.confirmDelete(`Removing Qualia '{{$qualia->qlrInfo}}:{{$qualia->lu2Name}}'.`, '/lu/qualia/{{$qualia->idEntityRelation}}')"
                         ></x-delete>
                     </span>
                             <div

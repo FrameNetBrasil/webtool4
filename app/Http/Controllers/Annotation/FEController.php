@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Annotation;
 
 
 use App\Data\Annotation\FE\AnnotationData;
-use App\Data\Annotation\FE\CreateASData;
+use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\FE\DeleteFEData;
 use App\Data\Annotation\Browse\SearchData;
 use App\Data\Annotation\FE\SelectionData;
@@ -12,8 +12,6 @@ use App\Data\Comment\CommentData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
-use App\Repositories\Document;
-use App\Repositories\WordForm;
 use App\Services\Annotation\BrowseService;
 use App\Services\Annotation\CorpusService;
 use App\Services\AnnotationFEService;
@@ -72,7 +70,7 @@ class FEController extends Controller
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
     public function sentence(int $idDocumentSentence,int $idAnnotationSet = null)
     {
-        $data = CorpusService::getAnnotationData($idDocumentSentence);
+        $data = CorpusService::getAnnotationData($idDocumentSentence, $idAnnotationSet);
 //        if (!is_null($idAnnotationSet)) {
 //            $data['idAnnotationSet'] = $idAnnotationSet;
 //        }
@@ -108,19 +106,14 @@ class FEController extends Controller
     public function annotate(AnnotationData $input)
     {
         try {
-            $input->range = SelectionData::from(request("selection"));
+            $input->range = SelectionData::from($input->selection);
+            debug($input);
             if ($input->range->end < $input->range->start) {
                 throw new \Exception("Wrong selection.");
             }
             if ($input->range->type != '') {
                 $data = AnnotationFEService::annotateFE($input);
-                //$data['alternativeLU'] = [];
-                debug("#######################################################");
-
-//                $this->trigger('reload-annotationSet');
-//                $this->trigger('reload-annotationSet');
-                return view("Annotation.FE.Panes.annotationSet", $data);
-//                return $input->idAnnotationSet;
+                return view("Annotation.FE.Panes.asAnnotation", $data);
             } else {
                 return $this->renderNotify("error", "No selection.");
             }
@@ -143,18 +136,14 @@ class FEController extends Controller
         }
     }
 
-    #[Post(path: '/annotation/fe/create')]
+    #[Post(path: '/annotation/fe/createAS')]
     public function createAS(CreateASData $input)
     {
-        $idAnnotationSet = AnnotationFEService::createAnnotationSet($input);
+        $idAnnotationSet = CorpusService::createAnnotationSet($input);
         if (is_null($idAnnotationSet)) {
-            return $this->renderNotify("error", "Error creating AnnotationSet.");
+            return $this->renderNotify('error', 'Error creating AnnotationSet.');
         } else {
-            //$data = AnnotationFEService::getASData($idAnnotationSet);
-//            $this->trigger('reload-sentence');
-//            return view("Annotation.FE.Panes.annotationSet", $data);
             return $this->clientRedirect("/annotation/fe/sentence/{$input->idDocumentSentence}/{$idAnnotationSet}");
-
         }
     }
 

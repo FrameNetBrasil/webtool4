@@ -26,7 +26,7 @@
                     <x-button
                         label="Delete"
                         color="danger"
-                        onclick="manager.confirmDelete(`Removing Frame '{{$frame?->name}}'.`, '/frame/{{$frame->idFrame}}')"
+                        onclick="messenger.confirmDelete(`Removing Frame '{{$frame?->name}}'.`, '/frame/{{$frame->idFrame}}')"
                     ></x-button>
                 @endif
             </x-slot:detail>

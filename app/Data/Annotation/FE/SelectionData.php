@@ -14,8 +14,8 @@ class SelectionData extends Data
         public ?string $end = '',
     )
     {
-    }
 
+    }
     public static function normalizers(): array
     {
         return [

@@ -304,14 +304,14 @@ annotation.objects = {
     },
     deleteObject: async (idStaticObject) => {
         console.log("deleting", idStaticObject);
-        await manager.confirmDelete(
+        await messenger.confirmDelete(
             "Removing object #" + idStaticObject + ".",
             "/annotation/staticBBox/" + idStaticObject,
             async () => await Alpine.store("doStore").updateObjectList()
         );
     },
     deleteObjectComment: async (idStaticObject) => {
-        await manager.confirmDelete("Removing comment for object #" + idStaticObject + ".",
+        await messenger.confirmDelete("Removing comment for object #" + idStaticObject + ".",
             "/annotation/staticBBox/comment/" + annotation.document.idDocument + "/" + idStaticObject,
             async () => {
                 await Alpine.store("doStore").updateObjectList();

@@ -41,7 +41,7 @@
                 <div class="right pl-2">
                     <x-delete
                         title="delete CE Relation"
-                        onclick="manager.confirmDelete(`Removing CE Relation.`, '/relation/ce/{{$relation->idEntityRelation}}')"
+                        onclick="messenger.confirmDelete(`Removing CE Relation.`, '/relation/ce/{{$relation->idEntityRelation}}')"
                     ></x-delete>
                 </div>
             </div>

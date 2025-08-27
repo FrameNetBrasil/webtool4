@@ -110,7 +110,7 @@ left join view_instantiationtype it ON (ts.idInstantiationType = it.idTypeInstan
             AND ((fe.idLanguage = {$idLanguage}) or (fe.idLanguage is null))
             AND ((ce.idLanguage = {$idLanguage}) or (ce.idLanguage is null))
             AND ((it.idLanguage = {$idLanguage}) or (it.idLanguage is null))
-
+        ORDER BY ts.idAnnotationSet, ts.idLayerType, ts.startChar
 HERE;
 
         return DB::select($cmd);
@@ -183,7 +183,38 @@ HERE;
             ];
             $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
             Timeline::addTimeline('annotationset',$idAnnotationSet,'C');
+
+            // versão 4.2: bypassing layer - using layerType
             $ti = Criteria::byId("typeinstance", "entry", 'int_normal');
+            $idLayerType = Criteria::byId("layertype","entry", 'lty_target')->idLayerType;
+            $target = Criteria::table("genericlabel")
+                ->where("name", "Target")
+                ->where("idLanguage", AppService::getCurrentIdLanguage())
+                ->first();
+            $textspan = json_encode([
+                'startChar' => $startChar,
+                'endChar' => $endChar,
+                'multi' => 0,
+                'idInstantiationType' => $ti->idTypeInstance,
+                'idLayerType' => $idLayerType,
+                'idAnnotationSet' => $idAnnotationSet,
+                'idSentence' => $documentSentence->idSentence,
+            ]);
+            debug($textspan);
+            $idTextSpan = Criteria::function("textspan_char_create(?)", [$textspan]);
+            $data = json_encode([
+                'idTextSpan' => $idTextSpan,
+                'idEntity' => $target->idEntity,
+                'relationType' => 'rel_annotation',
+                'idUser' => $idUser
+            ]);
+            Criteria::function("annotation_create(?)", [$data]);
+
+
+
+
+
+            /*
             $layerTypes = LayerType::listToLU($lu);
             foreach ($layerTypes as $lt) {
                 $layer = [
@@ -224,6 +255,7 @@ HERE;
                     Criteria::function("annotation_create(?)", [$data]);
                 }
             }
+            */
             DB::commit();
             return $idAnnotationSet;
         } catch (\Exception $e) {

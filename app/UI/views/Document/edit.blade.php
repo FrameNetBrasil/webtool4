@@ -15,7 +15,7 @@
                     <x-button
                         label="Delete"
                         color="danger"
-                        onclick="manager.confirmDelete(`Removing Document '{{$document->name}}'.`, '/document/{{$document->idDocument}}')"
+                        onclick="messenger.confirmDelete(`Removing Document '{{$document->name}}'.`, '/document/{{$document->idDocument}}')"
                     ></x-button>
                 </x-slot:detail>
                 <x-slot:description>

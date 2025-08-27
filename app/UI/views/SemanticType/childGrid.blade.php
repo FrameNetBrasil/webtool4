@@ -17,7 +17,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete SemanticType"
-                            onclick="manager.confirmDelete(`Removing SemanticType '{{$relation->name}}'.`, '/semanticType/{{$relation->idEntityRelation}}')"
+                            onclick="messenger.confirmDelete(`Removing SemanticType '{{$relation->name}}'.`, '/semanticType/{{$relation->idEntityRelation}}')"
                         ></x-delete>
                     </span>
                             <div

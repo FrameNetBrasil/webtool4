@@ -40,7 +40,7 @@
                             </button>
                             <button
                                 class="ui button negative"
-                                onclick="manager.confirmDelete(`Removing AnnotationSet #{{$idAnnotationSet}}'.`, '/annotation/fullText/annotationset/{{$idAnnotationSet}}', null, '#workArea')"
+                                onclick="messenger.confirmDelete(`Removing AnnotationSet #{{$idAnnotationSet}}'.`, '/annotation/fullText/annotationset/{{$idAnnotationSet}}', null, '#workArea')"
                             >
                                 Delete this AnnotationSet
                             </button>

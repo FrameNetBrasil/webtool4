@@ -340,25 +340,27 @@ class AnnotationFEService
         $spans = [];
         $idLayers = [];
         $layersForLU = LayerType::listToLU($lu);
-        foreach($layersForLU as $layer) {
+        foreach ($layersForLU as $layer) {
             if ($layer->entry == 'lty_fe') {
                 $idLayers[] = $layer->idLayerType;
                 for ($i = $firstWord; $i <= $lastWord; $i++) {
-                    $spans[$i][$layer->idLayerType] = null;
+                    $spans[$i][$layer->idLayerType] = [];
                 }
             }
         }
 
         $layers = AnnotationSet::getLayers($idAS);
         $spansByLayer = collect($layers)->groupBy('layerTypeEntry')->all();
-        debug($spansByLayer);
+//        debug($spansByLayer);
         $nis = [];
         $target = $spansByLayer['lty_target'];
         foreach ($target as $tg) {
-              $tg->startWord = $wordsChars->chars[$tg->startChar]['order'];
-              $tg->endWord = $wordsChars->chars[$tg->endChar]['order'];
+            $tg->startWord = $wordsChars->chars[$tg->startChar]['order'];
+            $tg->endWord = $wordsChars->chars[$tg->endChar]['order'];
         }
-        foreach($spansByLayer['lty_fe'] as $span) {
+        /*
+        $feSpans = $spansByLayer['lty_fe'] ?? [];
+        foreach ($feSpans as $span) {
             $span->startWord = ($span->startChar != -1) ? $wordsChars->chars[$span->startChar]['order'] : -1;
             $span->endWord = ($span->endChar != -1) ? $wordsChars->chars[$span->endChar]['order'] : -1;
             if ($span->startWord != -1) {
@@ -380,6 +382,69 @@ class AnnotationFEService
                 ];
             }
         }
+        */
+        $objects = $spansByLayer['lty_fe'] ?? [];
+        foreach ($objects as $object) {
+            $object->startWord = ($object->startChar != -1) ? $wordsChars->chars[$object->startChar]['order'] : -1;
+            $object->endWord = ($object->endChar != -1) ? $wordsChars->chars[$object->endChar]['order'] : -1;
+            if ($object->startWord == -1) {
+                $nis[$object->idInstantiationType][$object->idEntity] = $object;
+            }
+        }
+        $objectsRows = [];
+        $objectsRowsEnd = [];
+        $idLayerTypeCurrent = -1;
+        $idLayerType = 0;
+        foreach ($objects as $object) {
+            if ($object->startWord != -1) {
+                if ($object->idLayerType != $idLayerTypeCurrent) {
+                    $idLayerTypeCurrent = $object->idLayerType;
+                    $objectsRows[$idLayerType][0][] = $object;
+                    $objectsRowsEnd[$idLayerType][0] = $object->endFrame;
+                }
+                $allocated = false;
+                foreach ($objectsRows as $objectRow) {
+                    if ($object->startWord > $objectsRowsEnd) {
+                        $objectsRows[] = $object;
+                        $objectsRowsEnd = $object->endFrame;
+                        $allocated = true;
+                        break;
+                    }
+                }
+                if (! $allocated) {
+                    $idLayer = count($objectsRows[$idLayerType]);
+                    $objectsRows[$idLayerType][$idLayer][] = $object;
+                    $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
+                }
+            }
+        }
+
+
+
+        foreach ($spans as $i => $object) {
+            if ($idLayerType != $idLayerTypeCurrent) {
+                $idLayerTypeCurrent = $idLayerType;
+                $objectsRows[$idLayerType][0][] = $object;
+                $objectsRowsEnd[$idLayerType][0] = $object->endFrame;
+            } else {
+                $allocated = false;
+                foreach ($objectsRows[$idLayerType] as $idLayer => $objectRow) {
+                    if ($object->startFrame > $objectsRowsEnd[$idLayerType][$idLayer]) {
+                        $objectsRows[$idLayerType][$idLayer][] = $object;
+                        $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
+                        $allocated = true;
+                        break;
+                    }
+                }
+                if (! $allocated) {
+                    $idLayer = count($objectsRows[$idLayerType]);
+                    $objectsRows[$idLayerType][$idLayer][] = $object;
+                    $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
+                }
+            }
+        }
+
+
 
 
 //        $target = array_filter($layers, fn($x) => ($x->layerTypeEntry == 'lty_target'));
@@ -457,89 +522,38 @@ class AnnotationFEService
     public static function annotateFE(AnnotationData $data): array
     {
         DB::transaction(function () use ($data) {
-            $idUser = AppService::getCurrentIdUser();
             $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $data->idAnnotationSet);
             $fe = FrameElement::byId($data->idFrameElement);
-            $spans = Criteria::table("view_annotation_text_fe")
-                ->where('idAnnotationSet', $data->idAnnotationSet)
-                ->where("layerTypeEntry", "lty_fe")
-                ->where("idLanguage", AppService::getCurrentIdLanguage())
-                ->select('idAnnotationSet', 'idLayerType', 'idLayer', 'startChar', 'endChar', 'idEntity', 'idTextSpan', 'layerTypeEntry', 'idInstantiationType')
-                ->all();
-            $layers = Criteria::table("view_layer")
-                ->where('idAnnotationSet', $data->idAnnotationSet)
-                ->where("entry", "lty_fe")
-                ->where("idLanguage", AppService::getCurrentIdLanguage())
-                ->all();
-            // verify if exists a layer with no overlap, else create one
-            $idLayer = 0;
-            foreach ($layers as $layer) {
-                $overlap = false;
-                foreach ($spans as $span) {
-                    if ($span->idLayer == $layer->idLayer) {
-                        if (!(($data->range->end < $span->startChar) || ($data->range->start > $span->endChar))) {
-                            $overlap |= true;
-                        }
-                    }
-                }
-                if (!$overlap) {
-                    $idLayer = $layer->idLayer;
-                    break;
-                }
-            }
-            if ($idLayer == 0) {
-                $layerType = Criteria::byId("layertype", "entry", "lty_fe");
-                $idLayer = Criteria::create("layer", [
-                    'rank' => 0,
-                    'idLayerType' => $layerType->idLayerType,
-                    'idAnnotationSet' => $data->idAnnotationSet
-                ]);
-            }
-            //
+            $idLayerTypeFE = Criteria::byId("layertype", "entry", "lty_fe")->idLayerType;
             if ($data->range->type == 'word') {
                 $it = Criteria::table("view_instantiationtype")
                     ->where('entry', 'int_normal')
                     ->first();
-                $data = json_encode([
-                    'startChar' => (int)$data->range->start,
-                    'endChar' => (int)$data->range->end,
-                    'multi' => 0,
-                    'idLayer' => $idLayer,
-                    'idInstantiationType' => $it->idInstantiationType,
-                    'idSentence' => $annotationSet->idSentence,
-                ]);
-                $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
-                $ts = Criteria::table("textspan")
-                    ->where("idTextSpan", $idTextSpan)
-                    ->first();
-                $data = json_encode([
-                    'idTextSpan' => $ts->idTextSpan,
-                    'idEntity' => $fe->idEntity,
-                    'relationType' => 'rel_annotation',
-                    'idUser' => $idUser
-                ]);
-                $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
+                $idInstantiationType = $it->idInstantiationType;
+                $startChar = (int)$data->range->start;
+                $endChar = (int)$data->range->end;
             } else if ($data->range->type == 'ni') {
-                $data = json_encode([
-                    'startChar' => -1,
-                    'endChar' => -1,
-                    'multi' => 0,
-                    'idLayer' => $idLayer,
-                    'idInstantiationType' => (int)$data->range->id,
-                    'idSentence' => $annotationSet->idSentence,
-                ]);
-                $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
-                $ts = Criteria::table("textspan")
-                    ->where("idTextSpan", $idTextSpan)
-                    ->first();
-                $data = json_encode([
-                    'idTextSpan' => $ts->idTextSpan,
-                    'idEntity' => $fe->idEntity,
-                    'relationType' => 'rel_annotation',
-                    'idUser' => $idUser
-                ]);
-                $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
+                $idInstantiationType = (int)$data->range->id;
+                $startChar = -1;
+                $endChar = -1;
             }
+            $data = json_encode([
+                'startChar' => $startChar,
+                'endChar' => $endChar,
+                'multi' => 0,
+                'idLayerType' => $idLayerTypeFE,
+                'idAnnotationSet' => $data->idAnnotationSet,
+                'idInstantiationType' => $idInstantiationType,
+                'idSentence' => $annotationSet->idSentence,
+            ]);
+            $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
+            $data = json_encode([
+                'idTextSpan' => $idTextSpan,
+                'idEntity' => $fe->idEntity,
+                'relationType' => 'rel_annotation',
+                'idUser' => AppService::getCurrentIdUser()
+            ]);
+            $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         });
         return self::getASData($data->idAnnotationSet, $data->token);
@@ -561,7 +575,7 @@ class AnnotationFEService
                 Criteria::table("annotation")
                     ->where("idAnnotation", $annotation->idAnnotation)
                     ->update(["status" => 'DELETED']);
-                Timeline::addTimeline('annotation',$annotation->idAnnotation,'D');
+                Timeline::addTimeline('annotation', $annotation->idAnnotation, 'D');
             }
 //            foreach ($annotations as $annotation) {
 //                Criteria::deleteById("annotation", "idAnnotation", $annotation->idAnnotation);

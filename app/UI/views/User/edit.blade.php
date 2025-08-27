@@ -9,7 +9,7 @@
         <x-button
             label="Delete"
             color="danger"
-            onclick="manager.confirmDelete(`Removing User '{{$user?->login}}'.`, '/user/{{$user->idUser}}')"
+            onclick="messenger.confirmDelete(`Removing User '{{$user?->login}}'.`, '/user/{{$user->idUser}}')"
         ></x-button>
     </x-slot:detail>
     <x-slot:description>
