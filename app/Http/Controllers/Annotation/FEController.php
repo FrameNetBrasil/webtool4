@@ -41,31 +41,7 @@ class FEController extends Controller
             'url' => "/annotation/fe/sentence",
             'data' => $data,
         ]);
-//        $search = session('searchFEAnnotation') ?? SearchData::from();
-//        return view("Annotation.FE.browse", [
-//            'search' => $search
-//        ]);
     }
-
-//    #[Post(path: '/annotation/fe/grid')]
-//    public function grid(SearchData $search)
-//    {
-//        return view("Annotation.FE.grids", [
-//            'search' => $search,
-//            'sentences' => [],
-//        ]);
-//    }
-
-//    #[Get(path: '/annotation/fe/grid/{idDocument}/sentences')]
-//    public function documentSentences(int $idDocument)
-//    {
-//        $document = Document::byId($idDocument);
-//        $sentences = BrowseService::listSentences($idDocument);
-//        return view("Annotation.FE.sentences", [
-//            'document' => $document,
-//            'sentences' => $sentences
-//        ]);
-//    }
 
     #[Get(path: '/annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
     public function annotation(int $idDocumentSentence,int $idAnnotationSet = null)
@@ -73,13 +49,6 @@ class FEController extends Controller
         $data = CorpusService::getResourceData($idDocumentSentence, $idAnnotationSet);
         return view("Annotation.FE.annotation", $data);
     }
-
-//    #[Get(path: '/annotation/fe/annotations/{idSentence}')]
-//    public function annotations(int $idSentence)
-//    {
-//        $data = AnnotationFEService::getAnnotationData($idSentence);
-//        return view("Annotation.FE.Panes.annotations", $data);
-//    }
 
     #[Get(path: '/annotation/fe/as/{idAS}/{token?}')]
     public function annotationSet(int $idAS, string $token = '')
@@ -103,7 +72,6 @@ class FEController extends Controller
     {
         try {
             $input->range = SelectionData::from($input->selection);
-            debug($input);
             if ($input->range->end < $input->range->start) {
                 throw new \Exception("Wrong selection.");
             }
@@ -121,7 +89,6 @@ class FEController extends Controller
     #[Delete(path: '/annotation/fe/frameElement')]
     public function deleteFE(DeleteFEData $data)
     {
-        debug("delete fe", $data);
         try {
             AnnotationFEService::deleteFE($data);
             $data = CorpusService::getAnnotationSetData($data->idAnnotationSet, $data->token);
