@@ -239,7 +239,7 @@ HERE;
         }
     }
 
-    public static function getStatus(object $annotationSet, array $annotations, array $feCore): object {
+    public static function updateStatus(object $annotationSet, array $annotations, array $feCore): object {
 
         $feAnnotated = [];
         foreach($annotations['nis'] ?? [] as $niFEs) {
@@ -258,9 +258,6 @@ HERE;
                 ++$match;
             }
         }
-        debug($feAnnotated);
-        debug($feCore);
-        debug($match);
         $result = AnnotationSetStatus::UNANNOTATED;
         if ($match >= count($feCore)) {
             $result = AnnotationSetStatus::COMPLETE;
@@ -271,6 +268,9 @@ HERE;
             ->where('entry', $result)
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->first();
+        Criteria::table("annotationset")
+            ->where('idAnnotationSet', $annotationSet->idAnnotationSet)
+            ->update(['idAnnotationStatus' => $ast->idTypeInstance]);
         return $ast ?? (object)[];
     }
 
