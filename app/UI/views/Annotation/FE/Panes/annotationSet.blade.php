@@ -50,12 +50,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="ui card w-full">
+                <div class="ui card w-full alternativeLU mt-0">
                     <div class="content">
                         <div class="header">
                             Alternative LUs
                         </div>
-                        <div class="description">
+                        <div class="description lus">
                             @foreach($alternativeLU as $lu)
                                 <div class="mb-2">
                                     <button

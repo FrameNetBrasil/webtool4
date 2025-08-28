@@ -3456,6 +3456,22 @@ $router->get('user/listForSelect', [
 	'domain' => NULL,
 ]);
 
+$router->post('annotation/comment/update', [
+	'uses' => 'App\Http\Controllers\Annotation\CommentController@updateComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/comment/{idAnnotationComment}', [
+	'uses' => 'App\Http\Controllers\Annotation\CommentController@deleteComment',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('annotation/fe/script/{folder}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@jsObjects',
 	'as' => NULL,

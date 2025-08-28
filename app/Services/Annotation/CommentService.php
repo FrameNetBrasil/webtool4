@@ -1,88 +1,67 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Annotation;
 
 use App\Data\Annotation\Comment\CommentData;
 use App\Database\Criteria;
 use App\Repositories\Document;
-use Carbon\Carbon;
+use App\Services\AppService;
+use App\Services\MessageService;
 
 class CommentService
 {
-    public static function updateComment(CommentData $data): object
+
+    public static function getComment(CommentData $data): object|null
     {
-        $idAnnotationSet = $idDynamicObject = $idStaticObject = null;
-        if (($data->annotationType == 'dynamicMode') || ($data->annotationType == 'deixis')) {
-            $idDynamicObject = $data->idObject;
-        } elseif ($data->annotationType == 'staticBBox') {
-            $idStaticObject = $data->idObject;
-        } else if ($data->annotationType == 'annotationSet') {
-            $idAnnotationSet = $data->idObject;
+        if ($data->type == 'video') {
+            return self::getDynamicObjectComment($data->idDynamicObject);
+        } else if ($data->type == 'image') {
+            return self::getStaticObjectComment($data->idStaticObject);
+        } else if ($data->type == 'text') {
+            return self::getAnnotationSetComment($data->idAnnotationSet);
         }
-        if ($data->idAnnotationComment == 0) {
-            $data->idAnnotationComment = Criteria::create("annotationComment", [
-                'comment' => $data->comment,
-                'idDocument' => $data->idDocument,
-                'createdAt' => $data->createdAt,
-                'updatedAt' => $data->updatedAt,
-                'idDynamicObject' => $idDynamicObject,
-                'idStaticObject' => $idStaticObject,
-                'idAnnotationSet' => $idAnnotationSet,
-                'idUser' => $data->idUser
-            ]);
-        } else {
-            Criteria::table("annotationComment")
-                ->where("idAnnotationComment", $data->idAnnotationComment)
-                ->update([
-                    'comment' => $data->comment,
-                    'idDocument' => $data->idDocument,
-                    'updatedAt' => $data->updatedAt,
-                    'idDynamicObject' => $idDynamicObject,
-                    'idStaticObject' => $idStaticObject,
-                    'idAnnotationSet' => $idAnnotationSet,
-                    'idUser' => $data->idUser
-                ]);
+        return null;
+    }
+
+    public static function updateComment(CommentData $data): int|null
+    {
+        if ($data->type == 'video') {
+            return self::updateDynamicObjectComment($data);
+        } else if ($data->type == 'image') {
+            return self::updateStaticObjectComment($data);
+        } else if ($data->type == 'text') {
+            return self::updateAnnotationSetComment($data);
         }
-        $comment = Criteria::byId("annotationcomment", "idAnnotationComment", $data->idAnnotationComment);
-        $comment->annotationType = $data->annotationType;
-        $comment->idObject = $data->idObject;
-        return $comment;
+        return null;
     }
 
     public static function deleteComment(int $idAnnotationComment): void
     {
         $comment = Criteria::byId("annotationcomment", "idAnnotationComment", $idAnnotationComment);
         if (!is_null($comment)) {
-            // get managers
-            $managers = Criteria::table("usertask as ut")
-                ->join("usertask_document as ud", "ut.idUser", "=", "ud.idUser")
-                ->join("task_manager as tm", "ud.idTask", "=", "tm.idTask")
-                ->where("ut.idUser", $comment->idUser)
-                ->where("td.idDocument", $comment->idDocument)
-                ->all();
-            $document = Document::byId($comment->idDocument);
-            Criteria::deleteById("annotationcomment", "idAnnotationComment", $idAnnotationComment);
             $idUserCurrent = AppService::getCurrentIdUser();
-            $link = '';
-            if ($comment->idAnnotationSet) {
-                $link = "<a href=\"/annotation/fe/{$comment->idDocument}/{$comment->idAnnotationSet}\">[#{$comment->idAnnotationSet}]</a>.";
+            $idUserComment = $comment->idUser;
+            if ($comment->idDynamicObject) {
+                $idDocument = Criteria::byId("view_annotation_dynamic","idDynamicObject", $comment->idDynamicObject)->idDocument;
+                $idObject = $comment->idDynamicObject;
             } else if ($comment->idStaticObject) {
-                $link = "<a href=\"/annotation/staticBBox/{$comment->idDocument}/{$comment->idStaticBBox}\">[#{$comment->idStaticBBox}]</a>.";
-            } else if ($comment->idDynamicObject) {
-                $link = "<a href=\"/annotation/dynamicMode/{$comment->idDocument}/{$comment->idDynamicMode}\">[#{$comment->idDynamicMode}]</a>.";
+                $idDocument = Criteria::byId("view_annotation_static","idStaticObject", $comment->idStaticObject)->idDocument;
+                $idObject = $comment->idStaticObject;
+            } else if ($comment->idAnnotationSetObject) {
+                $idDocument = Criteria::byId("view_annotationset","idAnnotationSet", $comment->idAnnotationSet)->idDocument;
+                $idObject = $comment->idAnnotationSet;
             }
-            foreach ($managers as $manager) {
-                if (($manager->idUser != $idUserCurrent) && ($comment->idUser != $idUserCurrent)) {
-                    MessageService::sendMessage((object)[
-                        'idUserFrom' => $idUserCurrent,
-                        'idUserTo' => $manager->idUser,
-                        'class' => 'error',
-                        'text' => "Comment deleted at document [{$document->name}] object {$link}.",
-                    ]);
-                }
+            $document = Document::byId($idDocument);
+            Criteria::deleteById("annotationcomment", "idAnnotationComment", $idAnnotationComment);
+            if ($idUserComment != $idUserCurrent) {
+                MessageService::sendMessage((object)[
+                    'idUserFrom' => $idUserCurrent,
+                    'idUserTo' => $idUserComment,
+                    'class' => 'error',
+                    'text' => "Comment deleted at document [{$document->name}] object #{$idObject}.",
+                ]);
             }
         }
-
     }
 
     /*
@@ -95,7 +74,7 @@ class CommentService
             ->leftJoin("annotationcomment as ac", "do.idDynamicObject", "=", "ac.idDynamicObject")
             ->leftJoin("user as u", "ac.idUser", "=", "u.idUser")
             ->where("do.idDynamicObject", $idDynamicObject)
-            ->select("do.idDynamicObject", "do.startFrame", "do.endFrame", "ac.comment", "ac.createdAt", "ac.updatedAt", "u.email")
+            ->select("do.idDynamicObject", "do.startFrame", "do.endFrame", "ac.idAnnotationComment","ac.comment", "ac.createdAt", "ac.updatedAt", "u.email")
             ->first();
         return $do;
     }
@@ -273,15 +252,13 @@ class CommentService
 
     public static function getAnnotationSetComment(int $idAnnotationSet): object|null
     {
-        $comment = Criteria::table("annotationset as aset")
-            ->join("document_sentence as ds","aset.idDocumentSentence","=","ds.idDocumentSentence")
+        $do = Criteria::table("annotationset as aset")
             ->leftJoin("annotationcomment as ac", "aset.idAnnotationSet", "=", "ac.idAnnotationSet")
             ->leftJoin("user as u", "ac.idUser", "=", "u.idUser")
             ->where("aset.idAnnotationSet", $idAnnotationSet)
-            ->select("ac.idAnnotationComment", "aset.idAnnotationSet as idObject", "ac.comment", "ac.createdAt", "ac.updatedAt", "u.email","ds.idDocument")
+            ->select("aset.idAnnotationSet", "ac.comment", "ac.createdAt", "ac.updatedAt", "u.email")
             ->first();
-        $comment->annotationType = 'annotationSet';
-        return $comment;
+        return $do;
     }
 
     public static function deleteAnnotationSetComment(int $idAnnotationSet): void

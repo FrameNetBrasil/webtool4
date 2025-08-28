@@ -94,11 +94,15 @@
                 <span
                     class="color_{{$object->idColor}} feLabel"
                     style="left:{{$left}}px;width:{{$width}}px;"
+                    title="{{$object->name}}"
                 >{{$object->name}}</span>
             @endforeach
         </div>
     @endforeach
     </div>
 
+</div>
+<div hx-swap-oob="innerHTML:#annotationSetStatus">
+    @include("Annotation.FE.Panes.asStatus")
 </div>
 
