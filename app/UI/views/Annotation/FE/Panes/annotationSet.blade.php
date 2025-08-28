@@ -40,25 +40,36 @@
             </div>
         </div>
         <div class="four wide column">
-            <div class="ui card w-full">
-                <div class="content">
-                    <div class="ui secondary menu">
-                        <div class="item">
-                            Alternative LUs
+            <div class="d-flex flex-col">
+                @include("Annotation.FE.Panes.asStatus")
+                <div class="ui card w-full">
+                    <div class="content">
+                        <div class="header">Created by</div>
+                        <div
+                            class="description">{!! ($annotationSet->email != '') ? $annotationSet->email : 'Not available' !!}
                         </div>
                     </div>
-                    @foreach($alternativeLU as $lu)
-                        <div class="mb-2">
-                            <button
-                                class="ui button basic"
-                                onclick="messenger.confirmPost(`Change AnnotationSet to LU '{{$lu->frameName}}.{{$lu->lu}}' ?`, '/annotation/fe/annotationset/{{$idAnnotationSet}}/change')"
-                            ><span class="color_frame">{{$lu->frameName}}</span>.<span
-                                    class="color_lu">{{$lu->lu}}</span>
-                            </button>
-                        </div>
-                    @endforeach
                 </div>
+                <div class="ui card w-full">
+                    <div class="content">
+                        <div class="header">
+                            Alternative LUs
+                        </div>
+                        <div class="description">
+                            @foreach($alternativeLU as $lu)
+                                <div class="mb-2">
+                                    <button
+                                        class="ui button basic"
+                                        onclick="messenger.confirmPost(`Change AnnotationSet to LU '{{$lu->frameName}}.{{$lu->lu}}' ?`, '/annotation/fe/annotationset/{{$idAnnotationSet}}/change')"
+                                    ><span class="color_frame">{{$lu->frameName}}</span>.<span
+                                            class="color_lu">{{$lu->lu}}</span>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
-</div>
