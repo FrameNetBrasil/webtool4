@@ -125,12 +125,15 @@ class CorpusService
 //                }
 //            }
 //        }
-debug($wordsChars);
+        $asStatus = AnnotationSet::getStatus($as, $matrixData, $fesByType['Core']);
+
         return [
             'it' => $it,
             'layers' => $layersForLU,
             'words' => $wordsChars->words,
             'idAnnotationSet' => $idAnnotationSet,
+            'annotationSetStatus' => $asStatus,
+            'annotationSet' => $as,
             'lu' => $lu,
             'alternativeLU' => $alternativeLU,
 //            'target' => $target[0],
