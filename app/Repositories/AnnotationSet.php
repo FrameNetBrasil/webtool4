@@ -63,14 +63,17 @@ class AnnotationSet
                 'order' => $order,
                 'word' => $lWordForm,
                 'startChar' => $startChar,
-                'endChar' => $endChar
+                'endChar' => $endChar,
+                'isPunct' => (mb_strpos($punctuation, $lWordForm) !== false)
             ];
             for ($pos = (int)$startChar; $pos <= $endChar; $pos++) {
                 $o = $pos - $startChar;
+                $char = mb_substr($wordForm, $o, 1);
                 $chars[$pos] = [
                     'offset' => (string)$o,
-                    'char' => mb_substr($wordForm, $o, 1), // tf8_encode($wordForm{$o}), //str_replace("'", "\\'", $wordForm{$o}),
-                    'order' => $order
+                    'char' => $char, // tf8_encode($wordForm{$o}), //str_replace("'", "\\'", $wordForm{$o}),
+                    'order' => $order,
+                    'isPunct' => (mb_strpos($punctuation, $char) !== false)
                 ];
             }
             ++$order;

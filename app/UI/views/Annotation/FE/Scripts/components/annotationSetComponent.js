@@ -59,7 +59,7 @@ function annotationSetComponent(idAnnotationSet, token) {
                 selection: this.selection
             };
             htmx.ajax("POST", "/annotation/fe/annotate", {
-                target: ".annotationSet",
+                target: ".annotationSetColumns",
                 swap: "innerHTML",
                 values: values
             });
@@ -72,7 +72,7 @@ function annotationSetComponent(idAnnotationSet, token) {
                 idFrameElement
             };
             htmx.ajax("DELETE", "/annotation/fe/frameElement", {
-                target: ".annotationSet",
+                target: ".annotationSetColumns",
                 swap: "innerHTML",
                 values: values
             });

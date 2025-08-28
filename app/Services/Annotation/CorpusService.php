@@ -114,21 +114,21 @@ class CorpusService
         $firstWord = array_key_first($wordsChars->words);
         $lastWord = array_key_last($wordsChars->words);
 
-        $spans = [];
-        $idLayers = [];
-        $layersForLU = LayerType::listToLU($lu);
-        foreach ($layersForLU as $layer) {
-            if ($layer->entry == 'lty_fe') {
-                $idLayers[] = $layer->idLayerType;
-                for ($i = $firstWord; $i <= $lastWord; $i++) {
-                    $spans[$i][$layer->idLayerType] = [];
-                }
-            }
-        }
-
+//        $spans = [];
+//        $idLayers = [];
+        $layersForLU = collect(LayerType::listToLU($lu))->keyBy("entry")->toArray();
+//        foreach ($layersForLU as $layer) {
+//            if ($layer->entry == 'lty_fe') {
+//                $idLayers[] = $layer->idLayerType;
+//                for ($i = $firstWord; $i <= $lastWord; $i++) {
+//                    $spans[$i][$layer->idLayerType] = [];
+//                }
+//            }
+//        }
+debug($wordsChars);
         return [
             'it' => $it,
-            'idLayers' => $idLayers,
+            'layers' => $layersForLU,
             'words' => $wordsChars->words,
             'idAnnotationSet' => $idAnnotationSet,
             'lu' => $lu,
