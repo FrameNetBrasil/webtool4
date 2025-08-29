@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Annotation;
 use App\Data\Annotation\Corpus\AnnotationData;
 use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\Corpus\DeleteObjectData;
+use App\Data\Annotation\Corpus\LOMEAcceptedData;
 use App\Data\Annotation\Corpus\SelectionData;
 use App\Database\Criteria;
+use App\Enum\AnnotationSetStatus;
+use App\Enum\Status;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
 use App\Services\Annotation\CorpusService;
@@ -110,6 +113,7 @@ class CorpusController extends Controller
             ->first();
         $wordList = json_encode([$target]);
         $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $idAnnotationSet);
+        AnnotationSet::updateAST($annotationSet->idAnnotationSet, AnnotationSetStatus::ALTERNATIVE->value);
         AnnotationSet::delete($idAnnotationSet);
         $input = CreateASData::from([
             'idDocumentSentence' => $annotationSet->idDocumentSentence,
@@ -121,5 +125,13 @@ class CorpusController extends Controller
         return $this->clientRedirect("/annotation/{$input->corpusAnnotationType}/sentence/{$input->idDocumentSentence}/{$idAnnotationSet}");
     }
 
+    #[Post(path: '/annotation/corpus/lome/accepted')]
+    public function lomeAccepted(LOMEAcceptedData $data) {
+        AnnotationSet::updateStatusField($data->idAnnotationSet, Status::ACCEPTED->value);
+        $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $data->idAnnotationSet);
+        return view("Annotation.Corpus.Panes.asStatusField", [
+            "annotationSet" => $annotationSet
+        ]);
+    }
 
 }

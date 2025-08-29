@@ -239,6 +239,22 @@ HERE;
         }
     }
 
+    public static function updateStatusField(int $idAnnotationSet, string $status): void {
+        Criteria::table("annotationset")
+            ->where('idAnnotationSet', $idAnnotationSet)
+            ->update(['status' => $status]);
+    }
+
+    public static function updateAST(int $idAnnotationSet, string $astEntry): object {
+        $ast = Criteria::table("view_annotationset_status")
+            ->where('entry', $astEntry)
+            ->where('idLanguage', AppService::getCurrentIdLanguage())
+            ->first();
+        Criteria::table("annotationset")
+            ->where('idAnnotationSet', $idAnnotationSet)
+            ->update(['idAnnotationStatus' => $ast->idTypeInstance]);
+        return $ast;
+    }
     public static function updateStatus(object $annotationSet, array $annotations, array $feCore): object {
 
         $feAnnotated = [];
@@ -264,13 +280,7 @@ HERE;
         } else if ($match > 0) {
             $result = AnnotationSetStatus::PARTIAL;
         }
-        $ast = Criteria::table("view_annotationset_status")
-            ->where('entry', $result)
-            ->where('idLanguage', AppService::getCurrentIdLanguage())
-            ->first();
-        Criteria::table("annotationset")
-            ->where('idAnnotationSet', $annotationSet->idAnnotationSet)
-            ->update(['idAnnotationStatus' => $ast->idTypeInstance]);
+        $ast = self::updateAST($annotationSet->idAnnotationSet, $result->value);
         return $ast ?? (object)[];
     }
 

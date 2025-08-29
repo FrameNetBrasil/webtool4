@@ -13,10 +13,37 @@ body.wt-index {
         top: 0;
         z-index: 3;
 
+        .ui.menu {
+            min-height:24px;
+            background-color: @colorTheme1;
+            font-weight: normal;
+            border:0;
+
+            .brand {
+                padding-right: 2em;
+            }
+
+            .item {
+                padding: 0.5em 1em;
+                color: @white;
+
+                &::before {
+                    background: @colorTheme1;
+                }
+
+                .title {
+                    padding-left: 0.5em;
+                    a {
+                        color: @red600;
+                    }
+                }
+            }
+        }
+
 
         .headApp {
-            font-size: 1.1rem;
-            font-weight: 500;
+            //font-size: 1.1rem;
+            //font-weight: 500;
             color: @colorTheme6;
             height: 40px;
             //align-items: center;

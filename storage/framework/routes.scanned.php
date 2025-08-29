@@ -680,6 +680,54 @@ $router->get('error', [
 	'domain' => NULL,
 ]);
 
+$router->get('report', [
+	'uses' => 'App\Http\Controllers\AppController@report',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('grapher', [
+	'uses' => 'App\Http\Controllers\AppController@grapher',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation', [
+	'uses' => 'App\Http\Controllers\AppController@annotation',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('structure', [
+	'uses' => 'App\Http\Controllers\AppController@structure',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('manager', [
+	'uses' => 'App\Http\Controllers\AppController@manager',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('utils', [
+	'uses' => 'App\Http\Controllers\AppController@utils',
+	'as' => NULL,
+	'middleware' => ['web'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
 $router->get('lu/{id}/qualia', [
 	'uses' => 'App\Http\Controllers\LU\QualiaController@qualia',
 	'as' => NULL,
@@ -4186,6 +4234,14 @@ $router->delete('annotation/corpus/object', [
 
 $router->post('annotation/corpus/annotationset/{idAnnotationSet}/change/{idLU}/{corpusAnnotationType}', [
 	'uses' => 'App\Http\Controllers\Annotation\CorpusController@changeAnnotationSet',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->post('annotation/corpus/lome/accepted', [
+	'uses' => 'App\Http\Controllers\Annotation\CorpusController@lomeAccepted',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],

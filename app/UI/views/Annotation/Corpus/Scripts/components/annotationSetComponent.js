@@ -80,6 +80,20 @@ function annotationSetComponent(idAnnotationSet, token, corpusAnnotationType) {
                 swap: "innerHTML",
                 values: values
             });
+        },
+
+        onLOMEAccepted(idAnnotationSet) {
+            let values = {
+                idAnnotationSet,
+                corpusAnnotationType: this.corpusAnnotationType,
+                token: this.token
+            };
+            htmx.ajax("POST", `/annotation/corpus/lome/accepted`, {
+                target: "#statusField",
+                swap: "innerHTML",
+                values: values
+            });
         }
+
     };
 }
