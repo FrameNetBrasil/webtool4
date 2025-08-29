@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Annotation;
 
 use App\Data\Annotation\Comment\CommentData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -31,9 +32,7 @@ class CommentController extends Controller
     {
         try {
             $comment = CommentService::updateComment($data);
-//            $this->trigger('updateObjectAnnotationEvent');
             $this->notify('success', 'Comment registered.');
-            debug($comment);
             return view("Annotation.Comment.formComment", [
                 'comment' => $comment
             ]);
@@ -46,9 +45,13 @@ class CommentController extends Controller
     public function deleteComment(int $idAnnotationComment)
     {
         try {
+            $comment = Criteria::byId("view_annotation_comment","idAnnotationComment", $idAnnotationComment);
             CommentService::deleteComment($idAnnotationComment);
-
-            return $this->renderNotify('success', 'Comment removed.');
+            $emptyComment = CommentService::getComment($comment->idObject, $comment->idDocument, $comment->annotationType);
+            $this->notify('success', 'Comment removed.');
+            return view("Annotation.Comment.formComment", [
+                'comment' => $emptyComment
+            ]);
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
