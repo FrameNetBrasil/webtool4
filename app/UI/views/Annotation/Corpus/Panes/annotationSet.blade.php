@@ -7,9 +7,13 @@
         <div class="content">
             <div class="header">
                 <div class="d-flex justify-between">
-                    <div>
-                        LU: <span class="color_frame">{{$lu->frame->name}}</span>.<span
+                    <div class="d-flex">
+                        <div>LU: <span class="color_frame">{{$lu->frame->name}}</span>.<span
                             class="color_lu">{{$lu->name}}</span>
+                        </div>
+                        <div id="statusField" class="d-flex">
+                            @include("Annotation.Corpus.Panes.asStatusField")
+                        </div>
                     </div>
                     <div class="text-right">
                         <div class="ui label wt-tag-id">

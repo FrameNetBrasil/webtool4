@@ -7,6 +7,7 @@ use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\Corpus\DeleteObjectData;
 use App\Database\Criteria;
 use App\Enum\AnnotationType;
+use App\Enum\Status;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
@@ -404,6 +405,7 @@ class CorpusService
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
+            AnnotationSet::updateStatusField($object->idAnnotationSet, Status::UPDATED->value);
         });
         return CorpusService::getAnnotationSetData($object->idAnnotationSet, $object->token);
     }
@@ -434,6 +436,7 @@ class CorpusService
                     ->update(["status" => 'DELETED']);
                 Timeline::addTimeline('annotation', $annotation->idAnnotation, 'D');
             }
+            AnnotationSet::updateStatusField($object->idAnnotationSet, Status::UPDATED->value);
         });
     }
 

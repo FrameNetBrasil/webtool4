@@ -44,10 +44,9 @@
 </head>
 
 <body
-    class="wt-index"
     hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}'
 >
-@include('components.confirm')
+{{--@include('components.confirm')--}}
 
 {{$slot}}
 

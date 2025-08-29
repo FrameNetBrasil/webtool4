@@ -2,21 +2,21 @@
 
 namespace App\Console\Commands;
 
-use App\Data\Annotation\_FE\AnnotationData;
-use App\Data\Annotation\_FE\DeleteFEData;
-use App\Data\Annotation\_FE\SelectionData;
+use App\Data\Annotation\Corpus\AnnotationData;
+use App\Data\Annotation\Corpus\DeleteFEData;
+use App\Data\Annotation\Corpus\DeleteObjectData;
+use App\Data\Annotation\Corpus\SelectionData;
 use App\Data\LoginData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Lexicon;
-use App\Services\AnnotationFEService;
+use App\Services\Annotation\CorpusService;
 use App\Services\AppService;
 use App\Services\AuthUserService;
 use App\Services\LOME\LOMEService;
 use App\Services\Trankit\TrankitService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LomeProcessCommand extends Command
@@ -73,8 +73,7 @@ class LomeProcessCommand extends Command
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where d.idCorpus = 218
-                and ds.idDocumentSentence = 5216382
+where ds.idDocumentSentence = 5216474 limit 1
                 ");
             AppService::setCurrentLanguage(1);
             debug(count($sentences));
@@ -105,9 +104,6 @@ where d.idCorpus = 218
 //                        print_r($annotations);
 //                        print_r($tokens);
                         foreach ($annotations as $annotation) {
-                    debug("====================");
-                    debug("annotation");
-                            debug("====================");
 //                        print_r($annotation);
                             $x = explode('_', strtolower($annotation->label));
                             $idFrame = $x[1];
@@ -127,7 +123,7 @@ where d.idCorpus = 218
 //                            for ($t = $annotation->span[0]; $t <= $annotation->span[1]; $t++) {
 //                                $word .= $tokens[$t] . ' ';
 //                            }
-                            debug("%%%% word = " . $word, $startChar, $endChar);
+//                            debug("%%%% word = " . $word, $startChar, $endChar);
                             Criteria::create("lome_resultfe", [
                                 "start" => $startChar,
                                 "end" => $endChar,
@@ -183,7 +179,7 @@ limit 1
                                 debug("idLU=",$idLU,$tokens[$luToken]);
                                 // verifica annotationset para LU neste startChar (pode ter a mesma LU mais de uma vez na sentence)
                                 $as = Criteria::table("view_annotationset as a")
-                                    ->join("view_annotation_text_gl as t", "a.idAnnotationSet","=","t.idAnnotationSet")
+                                    ->join("view_annotation_text_target as t", "a.idAnnotationSet","=","t.idAnnotationSet")
                                     ->where("a.idDocumentSentence", $sentence->idDocumentSentence)
                                     ->where("a.idLU", $idLU)
                                     ->where("t.startChar", $startChar)
@@ -197,6 +193,7 @@ limit 1
                             foreach ($annotation->children as $fe) {
                                 $x = explode('_', strtolower($fe->label));
                                 $idFrameElement = $x[1];
+                                $object = Criteria::byId("frameelement","idFrameElement",$idFrameElement);
                                 debug("=== FE ====");
                                 $startChar = $fe->char_span[0];
                                 $endChar = $fe->char_span[1];
@@ -229,14 +226,16 @@ limit 1
                                     $annotationData = AnnotationData::from([
                                         'idAnnotationSet' => $idAnnotationSet,
                                         'range' => $range,
-                                        'idFrameElement' => $idFrameElement,
+                                        'idEntity' => $object->idEntity,
+                                        'corpusAnnotationType' => 'fe'
                                     ]);
-                                    $deleteData = DeleteFEData::from([
+                                    $deleteData = DeleteObjectData::from([
                                         'idAnnotationSet' => $idAnnotationSet,
-                                        'idFrameElement' => $idFrameElement,
+                                        'idEntity' => $object->idEntity,
+                                        'corpusAnnotationType' => 'fe'
                                     ]);
 //                                    AnnotationFEService::deleteFE($deleteData);
-                                    AnnotationFEService::annotateFE($annotationData);
+                                    CorpusService::annotateObject($annotationData);
                                 }
                             }
                         }

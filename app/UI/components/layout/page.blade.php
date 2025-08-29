@@ -1,7 +1,7 @@
 <x-layout.index>
     @include('components.layout.head')
     <header id="header">
-        <i id="headMenuIcon" class="sidebar icon menuIcon cursor-pointer"></i>
+{{--        <i id="headMenuIcon" class="sidebar icon menuIcon cursor-pointer"></i>--}}
         {{$head}}
     </header>
     <div id="content">
