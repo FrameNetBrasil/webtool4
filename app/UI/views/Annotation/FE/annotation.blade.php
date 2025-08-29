@@ -5,7 +5,7 @@
         ></x-breadcrumb>
     </x-slot:head>
     <x-slot:main>
-        <script type="text/javascript" src="/annotation/fe/script/components"></script>
+        <script type="text/javascript" src="/annotation/corpus/script/components"></script>
         <div class="app-layout annotation-corpus">
             <div class="annotation-canvas">
                 <div class="annotation-navigation">

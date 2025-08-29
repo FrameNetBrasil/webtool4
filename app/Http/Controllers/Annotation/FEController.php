@@ -24,13 +24,13 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware("auth")]
 class FEController extends Controller
 {
-    #[Get(path: '/annotation/fe/script/{folder}')]
-    public function jsObjects(string $folder)
-    {
-        return response()
-            ->view("Annotation.FE.Scripts.{$folder}")
-            ->header('Content-type', 'text/javascript');
-    }
+//    #[Get(path: '/annotation/fe/script/{folder}')]
+//    public function jsObjects(string $folder)
+//    {
+//        return response()
+//            ->view("Annotation.FE.Scripts.{$folder}")
+//            ->header('Content-type', 'text/javascript');
+//    }
     #[Get(path: '/annotation/fe')]
     public function browse(SearchData $search)
     {

@@ -4,6 +4,7 @@ namespace App\Services\Annotation;
 
 use App\Data\Annotation\Corpus\CreateASData;
 use App\Database\Criteria;
+use App\Enum\AnnotationType;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
@@ -128,7 +129,6 @@ class CorpusService
         $asStatus = AnnotationSet::updateStatus($as, $matrixData, $fesByType['Core']);
 
         return [
-            'idDocument' => $sentence->idDocument,
             'it' => $it,
             'layers' => $layersForLU,
             'words' => $wordsChars->words,
@@ -148,7 +148,7 @@ class CorpusService
                 'config' => $matrixConfig,
             ],
             'groupedLayers' => $matrixData,
-            'comment' => CommentService::getAnnotationSetComment($idAnnotationSet),
+            'comment' => CommentService::getComment($idAnnotationSet, $sentence->idDocument, AnnotationType::ANNOTATIONSET->value),
         ];
 
     }

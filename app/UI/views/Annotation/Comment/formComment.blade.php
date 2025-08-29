@@ -28,12 +28,16 @@
             >
                 Save
             </button>
-            <button
-                class="ui medium button danger"
-                type="reset"
-                hx-delete="/annotation/comment/{{$comment->idAnnotationComment}}"
-            >Delete
-            </button>
+            @if($comment?->idAnnotationComment != '')
+                <button
+                    class="ui medium button danger"
+                    type="reset"
+                    hx-delete="/annotation/comment/{{$comment->idAnnotationComment}}"
+                    hx-target="#formComment"
+                    hx-swap="outerHTML"
+                >Delete
+                </button>
+            @endif
         </div>
     </div>
 </form>
