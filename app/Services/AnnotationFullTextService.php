@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Data\Annotation\FullText\AnnotationData;
-use App\Data\Annotation\FullText\CreateASData;
-use App\Data\Annotation\FullText\DeleteLabelData;
+use App\Data\Annotation\_FullText\AnnotationData;
+use App\Data\Annotation\_FullText\CreateASData;
+use App\Data\Annotation\_FullText\DeleteLabelData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Corpus;

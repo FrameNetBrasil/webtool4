@@ -197,6 +197,7 @@ class BrowseService
     {
         $corpusIcon = view('components.icon.corpus')->render();
         $data = [];
+        debug("browseCorpusBySearch", $taskGroupName);
         $allowed = Project::getAllowedDocsForUser($projects, $taskGroupName);
         $allowedCorpus = array_keys(collect($allowed)->groupBy('idCorpus')->toArray());
         $corpus = Criteria::byFilterLanguage('view_corpus', ['name', 'startswith', $search->corpus])

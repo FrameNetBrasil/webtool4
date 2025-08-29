@@ -1,4 +1,4 @@
-<div x-data="luComponent({{$idDocumentSentence}})" class="ui container">
+<div x-data="luComponent({{$idDocumentSentence}},'{{$corpusAnnotationType}}')" class="ui container">
     <div class="ui card w-full">
         <div class="content">
             <div class="description">

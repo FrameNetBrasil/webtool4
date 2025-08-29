@@ -1,13 +1,15 @@
-function annotationSetComponent(idAnnotationSet, token) {
+function annotationSetComponent(idAnnotationSet, token, corpusAnnotationType) {
     return {
         idAnnotationSet: null,
         selectionRaw: null,
         selectionNI: null,
+        corpusAnnotationType: "fe",
         token: "",
 
         init() {
             this.idAnnotationSet = idAnnotationSet;
             this.token = token;
+            this.corpusAnnotationType = corpusAnnotationType;
         },
 
         get selection() {
@@ -50,28 +52,30 @@ function annotationSetComponent(idAnnotationSet, token) {
             document.getSelection().addRange(range);
         },
 
-        onLabelAnnotate(idFrameElement) {
+        onLabelAnnotate(idEntity) {
             console.log(this.selection);
             let values = {
                 idAnnotationSet: this.idAnnotationSet,
+                corpusAnnotationType: this.corpusAnnotationType,
                 token: this.token,
-                idFrameElement,
+                idEntity,
                 selection: this.selection
             };
-            htmx.ajax("POST", "/annotation/fe/annotate", {
+            htmx.ajax("POST", `/annotation/corpus/object`, {
                 target: ".annotationSetColumns",
                 swap: "innerHTML",
                 values: values
             });
         },
 
-        onLabelDelete(idFrameElement) {
+        onLabelDelete(idEntity) {
             let values = {
                 idAnnotationSet: this.idAnnotationSet,
+                corpusAnnotationType: this.corpusAnnotationType,
                 token: this.token,
-                idFrameElement
+                idEntity
             };
-            htmx.ajax("DELETE", "/annotation/fe/frameElement", {
+            htmx.ajax("DELETE", `/annotation/corpus/object`, {
                 target: ".annotationSetColumns",
                 swap: "innerHTML",
                 values: values

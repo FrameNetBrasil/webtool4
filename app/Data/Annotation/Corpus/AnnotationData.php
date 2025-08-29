@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\FullText;
+namespace App\Data\Annotation\Corpus;
 
 use Spatie\LaravelData\Data;
 class AnnotationData extends Data
@@ -9,7 +9,9 @@ class AnnotationData extends Data
         public int          $idAnnotationSet,
         public int          $idEntity,
         public ?SelectionData $range = null,
-        public ?string        $layerType = '',
+        public ?string        $selection = '',
+        public ?string        $token = '',
+        public ?string        $corpusAnnotationType = '',
         public ?string        $_token = '',
     )
     {

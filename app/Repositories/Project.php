@@ -16,7 +16,7 @@ class Project
     {
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
-        //debug($projects);
+        debug("getAllowedDocsForUser", $taskGroup, $idCorpus);
         if (User::isManager($user)) {
             $criteria = Criteria::table("view_project_docs as pd")
                 ->join("view_project_tasks as pt", "pt.idProject", "=", "pd.idProject")

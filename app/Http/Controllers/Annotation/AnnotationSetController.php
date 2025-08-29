@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Annotation\FE\SearchData;
+use App\Data\Annotation\_FE\SearchData;
 use App\Http\Controllers\Controller;
 use App\Repositories\Document;
 use App\Services\AnnotationASService;

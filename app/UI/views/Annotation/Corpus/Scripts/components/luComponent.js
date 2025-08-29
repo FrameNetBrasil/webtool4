@@ -1,9 +1,11 @@
-function luComponent(idDocumentSentence) {
+function luComponent(idDocumentSentence, corpusAnnotationType) {
     return {
         idDocumentSentence: null,
+        corpusAnnotationType: "fe",
 
         init() {
             this.idDocumentSentence = idDocumentSentence;
+            this.corpusAnnotationType = corpusAnnotationType;
         },
 
         getWordData() {
@@ -26,10 +28,11 @@ function luComponent(idDocumentSentence) {
         onCreateAS(idLU) {
             let values = {
                 idDocumentSentence: this.idDocumentSentence,
+                corpusAnnotationType: this.corpusAnnotationType,
                 idLU,
                 wordList: this.getWordData()
             };
-            htmx.ajax('POST', '/annotation/fe/createAS', {target:'.annotation-workarea', swap:'innerHTML',values: values });
+            htmx.ajax('POST', '/annotation/corpus/createAS', {target:'.annotation-workarea', swap:'innerHTML',values: values });
         }
     };
 }

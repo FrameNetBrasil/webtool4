@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Data\Annotation\FE\AnnotationData;
-use App\Data\Annotation\FE\DeleteFEData;
-use App\Data\Annotation\FE\SelectionData;
+use App\Data\Annotation\_FE\AnnotationData;
+use App\Data\Annotation\_FE\DeleteFEData;
+use App\Data\Annotation\_FE\SelectionData;
 use App\Data\LoginData;
 use App\Database\Criteria;
 use App\Repositories\AnnotationSet;

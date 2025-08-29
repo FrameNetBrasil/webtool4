@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\FullText;
+namespace App\Data\Annotation\_FullText;
 
 use Spatie\LaravelData\Data;
 

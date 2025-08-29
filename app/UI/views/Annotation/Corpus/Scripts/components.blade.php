@@ -1,2 +1,2 @@
-@include("Annotation.FE._Scripts.components.luComponent")
-@include("Annotation.FE._Scripts.components.annotationSetComponent")
+@include("Annotation.Corpus.Scripts.components.luComponent")
+@include("Annotation.Corpus.Scripts.components.annotationSetComponent")

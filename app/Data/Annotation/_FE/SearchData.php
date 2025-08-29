@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\FE;
+namespace App\Data\Annotation\_FE;
 
 use Spatie\LaravelData\Data;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\FE;
+namespace App\Data\Annotation\_FullText;
 
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Normalizers\JsonNormalizer;
@@ -10,17 +10,10 @@ class SelectionData extends Data
     public function __construct(
         public ?string $type = '',
         public ?string $id = '',
-        public ?string $start = '',
-        public ?string $end = '',
+        public ?int $start = -1,
+        public ?int $end = -1,
     )
     {
-
-    }
-    public static function normalizers(): array
-    {
-        return [
-            JsonNormalizer::class,
-        ];
     }
 
 }

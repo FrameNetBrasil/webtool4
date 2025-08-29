@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Data\Annotation\FE;
+namespace App\Data\Annotation\_FullText;
 
 use Spatie\LaravelData\Data;
-class DeleteFEData extends Data
+class DeleteLabelData extends Data
 {
     public function __construct(
         public int          $idAnnotationSet,
-        public int          $idFrameElement,
-        public ?string        $token = '',
+        public int          $idEntity,
         public ?string        $_token = '',
     )
     {
