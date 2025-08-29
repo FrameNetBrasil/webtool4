@@ -23,11 +23,11 @@
                         <div class="colFE">
                             <button
                                 class="ui right labeled icon button mb-2 color_{{$fe->idColor}}"
-                                @click.stop="onLabelAnnotate({{$fe->idFrameElement}})"
+                                @click.stop="onLabelAnnotate({{$fe->idEntity}})"
                             >
                                 <i
                                     class="delete icon"
-                                    @click.stop="onLabelDelete({{$fe->idFrameElement}})"
+                                    @click.stop="onLabelDelete({{$fe->idEntity}})"
                                 >
                                 </i>
                                 <div class="d-flex">

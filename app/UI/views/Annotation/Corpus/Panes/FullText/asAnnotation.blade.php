@@ -37,14 +37,15 @@
     @php
         $countLines = 0;
     @endphp
-    @foreach(($groupedLayers ?? []) as $layerEntry => $lines)
-        @if($layerEntry == 'lty_fe')
+    @foreach(($layers ?? []) as $layerEntry => $layer)
+        @if($layerEntry != 'lty_target')
             @php
-                $countLines += count($lines);
+                $count = empty($groupedLayers[$layerEntry] ?? []) ? 1 : count($groupedLayers[$layerEntry]);
+                $countLines += $count;
             @endphp
-            @foreach($lines as $line)
-                <div>{!! $layers[$layerEntry]->name !!}</div>
-            @endforeach
+            @for($i = 0; $i < $count; $i++)
+                <div>{!! $layer->name !!}</div>
+            @endfor
         @endif
     @endforeach
 </div>
@@ -78,31 +79,44 @@
                 <span class="wordHidden">{{$w['word']}}</span>
             </div>
         @endforeach
-        @foreach(($groupedLayers['lty_fe'] ?? []) as $line => $objects)
-            @php
-                $topLine = $line * 24;
-            @endphp
-            <div
-                    class="rowObject"
-                    style="top:{{$topLine}}px;position:absolute;"
-            >
-                @foreach($objects as $object)
+        @php
+            $topLine = 0;
+        @endphp
+        @foreach(($layers ?? []) as $layerEntry => $layer)
+            @if($layerEntry != 'lty_target')
+                @if(empty($groupedLayers[$layerEntry] ?? []))
                     @php
-                        $left = 10.5 * $object->startChar;
-                        $width = 10.5 * ($object->endChar - $object->startChar + 1);
+                        $topLine += 24;
                     @endphp
-                    <span
-                            class="color_{{$object->idColor}} feLabel"
-                            style="left:{{$left}}px;width:{{$width}}px;"
-                            title="{{$object->name}}"
-                    >{{$object->name}}</span>
-                @endforeach
-            </div>
+                @else
+                    @foreach($groupedLayers[$layerEntry] as $line => $objects)
+                        <div
+                                class="rowObject"
+                                style="top:{{$topLine}}px;position:absolute;"
+                        >
+                            @foreach($objects as $object)
+                                @php
+                                    $left = 10.5 * $object->startChar;
+                                    $width = 10.5 * ($object->endChar - $object->startChar + 1);
+                                @endphp
+                                <span
+                                        class="color_{{$object->idColor}} feLabel"
+                                        style="left:{{$left}}px;width:{{$width}}px;"
+                                        title="{{$object->name}}"
+                                >{{$object->name}}</span>
+                            @endforeach
+                        </div>
+                        @php
+                            $topLine += 24;
+                        @endphp
+                    @endforeach
+                @endif
+            @endif
         @endforeach
     </div>
 
 </div>
 <div hx-swap-oob="innerHTML:#annotationSetStatus">
-    @include("Annotation.FE._Panes.asStatus")
+    @include("Annotation.Corpus.Panes.asStatus")
 </div>
 

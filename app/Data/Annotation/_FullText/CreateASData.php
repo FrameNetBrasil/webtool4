@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\FE;
+namespace App\Data\Annotation\_FullText;
 
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Normalizers\FormRequestNormalizer;

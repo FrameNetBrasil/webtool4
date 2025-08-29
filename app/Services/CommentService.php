@@ -27,7 +27,6 @@ class CommentService
             "idDocument" => $idDocument,
             "annotationType" => $annotationType,
         ];
-        debug($comment);
         return $comment;
     }
 
