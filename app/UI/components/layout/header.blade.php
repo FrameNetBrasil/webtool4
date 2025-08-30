@@ -25,12 +25,12 @@
     <div class="ui inverted menu">
         <div class="header item brand">
             <div class="logo">
-                <a href="/">
+                <a href="/"  hx-boost="true">
                     <img src="/images/fnbr_logo_header_alpha_white.png" height="24" />
                 </a>
             </div>
             <div class="title">
-                <a href="/">
+                <a href="/"  hx-boost="true">
                     <span>{!! config('webtool.headerTitle') !!}</span>
                 </a>
             </div>
@@ -46,12 +46,11 @@
                 ]);
             @endphp
             @if (AppService::checkAccess($menuData->group))
-                <span
-                    class="item cursor-pointer"
-                    hx-get="{{$menuData->href}}"
-                    hx-target=".page-content"
-                >{!! $menuData->label !!}
-                </span>
+                <div class="item">
+                    <a href="{{$menuData->href}}" hx-boost="true">
+                        {!! $menuData->label !!}
+                    </a>
+                </div>
             @endif
         @endforeach
         <div class="right menu">
@@ -59,7 +58,7 @@
                 hx-post="/report/frame_lu/search"
                 hx-target=".page-content"
             >
-            <div class="item">
+                <div class="item">
                     <div class="ui inverted left icon input">
                         <i class="search icon"></i>
                         <input
@@ -68,7 +67,7 @@
                             placeholder="Search Frame/LU"
                         >
                     </div>
-            </div>
+                </div>
             </form>
 
             <div

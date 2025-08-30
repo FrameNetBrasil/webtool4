@@ -10,15 +10,21 @@
     ];
 @endphp
 
-{{--<x-layout::index>--}}
-{{--    <div class="app-layout minimal">--}}
-{{--        <x-layout::header></x-layout::header>--}}
-{{--        <x-layout::breadcrumb--}}
-{{--            :sections="[['/','Home'],['','Reports']]"--}}
-{{--        ></x-layout::breadcrumb>--}}
-{{--        <main class="app-main">--}}
-{{--            <div class="page-content">--}}
-
+<x-layout::index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['','Reports']]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <div class="page-title">
+                        Reports
+                    </div>
+                </div>
+            </div>
+            <div class="page-content">
                 <div class="ui container">
                     <div class="card-grid dense">
                         @foreach($reports as $category => $report)
@@ -42,12 +48,9 @@
                     </div>
                 </div>
 
-{{--            </div>--}}
-{{--        </main>--}}
-{{--        <x-layout::footer></x-layout::footer>--}}
-{{--    </div>--}}
-{{--</x-layout::index>--}}
-    <x-layout::breadcrumb
-        :sections="[['/','Home'],['','Reports']]"
-    ></x-layout::breadcrumb>
+            </div>
+        </main>
+        <x-layout::footer></x-layout::footer>
+    </div>
+</x-layout::index>
 

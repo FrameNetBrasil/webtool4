@@ -1,34 +1,35 @@
-<div class="wt-tabs flex flex-column h-full w-full" id="{{$id}}">
-<div class="wt-tabs-tabs flex-none flex flex-row">
-    @foreach ($tabs as $idTab => $tabName)
-        <div class="wt-tabs-tabs-title {{ $idTab == $active ? 'activeTab' : '' }}" data-tab-value="#{{$idTab}}">{{$tabName}}</div>
-    @endforeach
+<div class="tabs-component">
+    <div id="{{$id}}" class="ui stackable tabs menu">
+        @foreach($tabs as $idItem => $item)
+            <div
+                class="item"
+                data-tab="{{$idItem}}"
+            >
+                @if(isset($item['icon']))
+                    <x-dynamic-component :component="'icon::' . $item['icon']" />
+                @endif
+                {{$item['label']}}
+            </div>
+        @endforeach
+    </div>
 </div>
-@foreach ($slots as $idSlot => $slot)
-    <div class="flex-grow-1 wt-tabs-content {{$idSlot == $active ? 'active' : ''}}" id="{{$idSlot}}" data-tab-info>
-        {{ $$slot }}
+@foreach($tabs as $idItem => $item)
+    <div id="{{$id}}_{{$idItem}}_tab" class="ui tab" data-tab="{{$idItem}}">
+        <div class="ui segment" style="height:80px">
+            <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+        </div>
     </div>
 @endforeach
-</div>
-
-<script type="text/javascript">
-    // function to get each tab details
-    const tabs = document.querySelectorAll('[data-tab-value]')
-    const tabInfos = document.querySelectorAll('[data-tab-info]')
-    tabs.forEach(tab => {
-        tab.addEventListener('click', (x) => {
-            @if($onSelect != '')
-                {!! $onSelect !!}(tab.dataset.tabValue.substring(1))
-            @endif
-            const target = document.querySelector(tab.dataset.tabValue);
-            tabInfos.forEach(tabInfo => {
-                tabInfo.classList.remove('active')
-            })
-            tabs.forEach(tab => {
-                tab.classList.remove('activeTab')
-            })
-            target.classList.add('active');
-            x.target.classList.add('activeTab');
-        })
-    })
+<script>
+    $(function() {
+        let {{$id}}_tabs = {!! Js::from($tabs) !!};
+        $('#{{$id}} .item').tab({
+            onLoad: (tabPath, parameterArray, historyEvent) => {
+                let tab = "#{{$id}}_" + tabPath + "_tab";
+                htmx.ajax("GET", {{$id}}_tabs[tabPath].url, tab);
+            }
+        });
+    });
 </script>
