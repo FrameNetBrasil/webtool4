@@ -2,7 +2,7 @@
     $isLogged = Auth::check();
     $hrefLogin = (env('APP_AUTH') == 'auth0') ? '/auth0Login' : '/';
 @endphp
-<div  hx-swap-oob="outerHTML:.app-breadcrumb" class="app-breadcrumb">
+<div class="app-breadcrumb">
     <div class="d-flex justify-between">
         <div class="ui breadcrumb">
             @foreach($sections as $section)

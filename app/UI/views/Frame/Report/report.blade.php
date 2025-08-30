@@ -1,223 +1,169 @@
-<div id="frameReport" class="flex flex-column h-full">
-    <div class="flex flex-row align-content-start flex-wrap">
-        <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">
-            <h1>
-                <x-element.frame name="{{$frame->name}}"></x-element.frame>
-            </h1>
-        </div>
-        <div
-            class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">
-            @foreach ($classification as $name => $values)
-                @foreach ($values as $value)
-                    <div
-                        class="sm:pb-1"
-                    >
-                        <div class="ui label wt-tag-{{$name}}">
-                            {{$value}}
+<x-layout::index>
+    <div class="app-layout">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['/report','Report'],['','Frames']]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="page-content">
+                <div class="ui container">
+                    <div class="page-header">
+                        <div class="page-header-content">
+                            <div class="page-header-main">
+                                <div class="page-title-section">
+                                    <div class="page-title">
+                                        <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
+                                    </div>
+                                    <div
+                                        class="page-subtitle">{!! str_replace('ex>','code>',nl2br($frame->description)) !!}</div>
+                                </div>
+                                <div class="page-actions">
+                                    <a href="/report/frame">
+                                        <button class="ui basic left labeled icon button">
+                                            <i class="left arrow icon"></i>
+                                            Back to Frames
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                @endforeach
-            @endforeach
-            {{--            <i id="btnDownload" class="icon material text-2xl cursor-pointer" title="Save as PDF">picture_as_pdf</i>--}}
-            <button
-                id="btnDownload"
-                class="ui button mini basic secondary"
-            ><i class="icon material">download</i>PDF
-            </button>
-        </div>
+                    <div class="page-content">
+                        <div class="content-container">
+                            {{-- Frame Metadata Section --}}
+                            <div class="frame-metadata-section">
+                                @include('Frame.Report.partials.frame-metadata')
+                            </div>
+
+                            {{-- Stats Section --}}
+                            <div class="stats-section mb-8">
+                                @include('Frame.Report.partials.stats-card')
+                            </div>
+
+                            {{-- Frame Elements Section --}}
+                            <div class="frame-elements-section mb-8">
+                                @include('Frame.Report.partials.frame-elements-cards')
+                            </div>
+
+                            {{-- Frame Relations Section --}}
+                            <div class="frame-relations-section mb-8">
+                                <div class="section-header">
+                                    <h1 class="ui header section-title" id="frame-relations">
+                                        <a href="#frame-relations">Frame-Frame Relations</a>
+                                    </h1>
+                                    <button class="ui button basic icon section-toggle"
+                                            onclick="toggleSection('relations-content')"
+                                            aria-expanded="true">
+                                        <i class="chevron up icon"></i>
+                                    </button>
+                                </div>
+                                <div class="section-content" id="relations-content">
+                                    @include('Frame.Report.partials.relations-card')
+                                </div>
+                            </div>
+
+                            {{-- Lexical Units Section --}}
+                            <div class="lexical-units-section mb-8">
+                                <div class="section-header">
+                                    <h1 class="ui header section-title" id="lexical-units">
+                                        <a href="#lexical-units">Lexical Units</a>
+                                    </h1>
+                                    <button class="ui button basic icon section-toggle"
+                                            onclick="toggleSection('lexical-units-content')"
+                                            aria-expanded="true">
+                                        <i class="chevron up icon"></i>
+                                    </button>
+                                </div>
+                                <div class="section-content" id="lexical-units-content">
+                                    @include('Frame.Report.partials.lexical-units-card')
+                                </div>
+                            </div>
+
+                            {{-- Visual Units Section --}}
+                            @include('Frame.Report.partials.visual-units-section')
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <aside class="app-tools">
+            <div>
+                <h3 class="ui header">{{$frame->name}}</h3>
+            </div>
+            <div class="ui accordion flex-1">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <b>FrameElements</b></div>
+                <div class="content">
+                    <a class="item d-block" href="#core">Core</a>
+                    <a class="item d-block" href="#core-unexpressed">Core Unexpressed</a>
+                    <a class="item d-block" href="#peripheral">Peripheral</a>
+                    <a class="item d-block" href="#extra-thematic">Extra Thematic</a>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <b>Relations</b></div>
+                <div class="content">
+                    <a class="item d-block" href="#frame-relations">Frame-Frame Relations</a>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <b>Lexical Units</b></div>
+                <div class="content">
+                    <a class="item d-block" href="#lexical-units">Lexical Units</a>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <b>Visual Units</b></div>
+                <div class="content">
+                    <a class="item d-block" href="#visual-units-vu">Visual Units</a>
+                </div>
+            </div>
+        </aside>
+        <x-layout::footer></x-layout::footer>
     </div>
-    <x-card title="Definition" class="frameReport__card frameReport__card--main">
-        {!! str_replace('ex>','code>',nl2br($frame->description)) !!}
-    </x-card>
-    <x-card title="Frame Elements" class="frameReport__card frameReport__card--main">
-        <table class="ui celled striped table">
-            <thead>
-            <tr>
-                <th colspan="4">Core</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($fe['core'] as $feObj)
-                <tr>
-                    <td class="collapsing">
-                        <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>
-                    </td>
-                    <td class="pl-2">{!! $feObj->description !!}</td>
-                    <td>
-                        @foreach ($feObj->relations as $relation)
-                            <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
-                        @endforeach
-                    </td>
-                    <td class="right aligned collapsing">
-                        {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+</x-layout::index>
 
-        @if ($fe['core_unexpressed'])
-            <table class="ui celled striped table">
-                <thead>
-                <tr>
-                    <th colspan="4">Core-Unexpressed</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($fe['core_unexpressed'] as $feObj)
-                    <tr>
-                        <td class="collapsing">
-                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>
-                        </td>
-                        <td class="pl-2">{!! $feObj->description !!}</td>
-                        <td>
-                            @foreach ($feObj->relations as $relation)
-                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
-                            @endforeach
-                        </td>
-                        <td class="right aligned collapsing">
-                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        @endif
-        @if ($fecoreset)
-            <x-card title="FE Core set(s)" class="frameReport__card frameReport__card--internal">
-                <table id="feCoreSet" class="frameReport__table">
-                    <tbody>
-                    <tr>
-                        <td class="pl-2">{{$fecoreset}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </x-card>
-        @endif
-        @if ($fe['peripheral'])
-            <table class="ui celled striped table">
-                <thead>
-                <tr>
-                    <th colspan="4">Peripheral</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($fe['peripheral'] as $feObj)
-                    <tr>
-                        <td class="collapsing">
-                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>
-                        </td>
-                        <td class="pl-2">{!! $feObj->description !!}</td>
-                        <td>
-                            @foreach ($feObj->relations as $relation)
-                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
-                            @endforeach
-                        </td>
-                        <td class="right aligned collapsing">
-                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        @endif
-        @if ($fe['extra_thematic'])
-            <table class="ui celled striped table">
-                <thead>
-                <tr>
-                    <th colspan="4">Extra-thematic</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($fe['extra_thematic'] as $feObj)
-                    <tr>
-                        <td class="collapsing">
-                            <span class="color_{{$feObj->idColor}}">{{$feObj->name}}</span>
-                        </td>
-                        <td class="pl-2">{!! $feObj->description !!}</td>
-                        <td>
-                            @foreach ($feObj->relations as $relation)
-                                <b>{{$relation['name']}}:&nbsp;</b>{{$relation['relatedFEName']}}
-                            @endforeach
-                        </td>
-                        <td class="right aligned collapsing">
-                            {{$fe['semanticTypes'][$feObj->idFrameElement]->name ?? ''}}
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        @endif
-    </x-card>
-    <x-card title="Frame-Frame Relations" class="frameReport__card frameReport__card--main" open="true">
-        @php($i = 0)
-        @foreach ($relations as $nameEntry => $relations1)
-            @php([$entry, $name] = explode('|', $nameEntry))
-            @php($relId = str_replace(' ', '_', $name))
-            <x-card-plain
-                title="<span class='color_{{$entry}}'>{{$name}}</span>"
-                @class(["frameReport__card" => (++$i < count($report['relations']))])
-                class="frameReport__card--internal">
-                <div class="flex flex-wrap gap-1">
-                    @foreach ($relations1 as $idFrame => $relation)
-                        <button
-                            id="btnRelation_{{$relId}}_{{$idFrame}}"
-                            class="ui button basic"
-                        >
-                            <a
-                                href="/report/frame/{{$idFrame}}"
-                            >
-                                <x-element.frame name="{{$relation['name']}}"></x-element.frame>
-                            </a>
-                        </button>
-                    @endforeach
-                </div>
-            </x-card-plain>
-        @endforeach
-    </x-card>
-    <x-card title="Lexical Units" class="frameReport__card frameReport__card--main" open="true">
-        @foreach ($lus as $POS => $posLU)
-            <x-card-plain
-                title="POS: {{$POS}}"
-                class="frameReport__card--internal"
-            >
-                <div class="flex flex-wrap gap-1">
-                    @foreach ($posLU as $lu)
-                        <button
-                            id="btnLU{{$lu->idLU}}"
-
-                            class="ui button basic"
-                        ><a href="/report/lu/{{$lu->idLU}}">{{$lu->name}}</a></button>
-                    @endforeach
-                </div>
-            </x-card-plain>
-        @endforeach
-    </x-card>
-    <x-card title="Visual Units" class="frameReport__card frameReport__card--main" open="true">
-        @include("Frame.Report.vu")
-    </x-card>
-</div>
 <script>
-    $("#btnDownload").click(function(e) {
-        const options = {
-            margin: 0.5,
-            filename: '{{$frame->name}}.pdf',
-            image: {
-                type: "jpeg",
-                quality: 500
-            },
-            html2canvas: {
-                scale: 1
-            },
-            jsPDF: {
-                unit: "in",
-                format: "a4",
-                orientation: "portrait"
-            }
-        };
-
-        e.preventDefault();
-        const element = document.getElementById("frameReport");
-        html2pdf().from(element).set(options).save();
+    $(function() {
+        $(".ui.accordion").accordion();
     });
+
+    function toggleSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        let button;
+
+        // Check if button is in the same parent container (new structure)
+        const parent = section.parentElement;
+        const headerButton = parent.querySelector(".section-header .section-toggle i");
+
+        if (headerButton) {
+            button = headerButton;
+        } else {
+            // Fallback for Frame Elements structure (button in previous sibling)
+            button = section.previousElementSibling.querySelector(".section-toggle i");
+        }
+
+        if (section.style.display === "none") {
+            section.style.display = "block";
+            button.className = "chevron up icon";
+        } else {
+            section.style.display = "none";
+            button.className = "chevron down icon";
+        }
+    }
+
+    function toggleFeDetails(button) {
+        const targetId = button.getAttribute("data-target");
+        const target = document.querySelector(targetId);
+        const icon = button.querySelector("i");
+
+        if (target.style.display === "none") {
+            target.style.display = "block";
+            icon.className = "chevron up icon";
+        } else {
+            target.style.display = "none";
+            icon.className = "chevron down icon";
+        }
+    }
 </script>
