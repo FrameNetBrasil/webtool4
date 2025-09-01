@@ -4,8 +4,8 @@
 @endphp
 <x-layout.edit>
     <x-slot:head>
-        <x-breadcrumb
-            :sections="[['/','Home'],['/annotation/staticEvent','StaticEvent Annotation'],['',$document->name]]"></x-breadcrumb>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['/annotation/staticEvent','StaticEvent Annotation'],['',$document->name]]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         @include('Annotation.StaticEvent.Panes.annotation')

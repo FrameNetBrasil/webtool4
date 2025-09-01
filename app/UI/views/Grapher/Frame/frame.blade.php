@@ -1,6 +1,6 @@
 <x-layout.grapher>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','Frame Grapher']]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['/','Home'],['','Frame Grapher']]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <form>

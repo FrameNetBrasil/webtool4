@@ -1,6 +1,6 @@
 <x-layout.edit>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['/cxn','Constructions'],['/cxn/' . $constructionElement->cxn->idConstruction,$constructionElement->cxn->name],['',$constructionElement->cxn->name.'.'.$constructionElement?->name]]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['/','Home'],['/cxn','Constructions'],['/cxn/' . $constructionElement->cxn->idConstruction,$constructionElement->cxn->name],['',$constructionElement->cxn->name.'.'.$constructionElement?->name]]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <x-layout.object>

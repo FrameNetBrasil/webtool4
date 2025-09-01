@@ -1,6 +1,6 @@
 <x-layout.resource>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','Corpus/Document']]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['/','Home'],['','Corpus/Document']]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:title>
         Corpus/Document

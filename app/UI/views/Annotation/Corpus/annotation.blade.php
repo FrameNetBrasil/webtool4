@@ -1,8 +1,8 @@
 <x-layout.page>
     <x-slot:head>
-        <x-breadcrumb
+        <x-layout::breadcrumb
             :sections="[['/','Home'],['/annotation','Annotation'],[$url,$page],['','#' . $idDocumentSentence]]"
-        ></x-breadcrumb>
+        ></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <script type="text/javascript" src="/annotation/corpus/script/components"></script>

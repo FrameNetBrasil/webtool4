@@ -1,6 +1,6 @@
 <x-layout.page>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['/corpus','Corpus/Document'],['',$document->name]]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['/','Home'],['/corpus','Corpus/Document'],['',$document->name]]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <div class="ui container h-full">
