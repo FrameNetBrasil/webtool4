@@ -1,7 +1,7 @@
 <x-layout.edit>
     <x-slot:head>
-        <x-breadcrumb
-            :sections="[['/','Home'],['/annotation/dynamicMode','Dynamic Annotation'],['/annotation/dynamicMode/'.$document->idDocument,$document->name],['','Build sentences']]"></x-breadcrumb>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['/annotation/dynamicMode','Dynamic Annotation'],['/annotation/dynamicMode/'.$document->idDocument,$document->name],['','Build sentences']]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <div id="dynamicAnnotationBuildSentencesPane" class="dynamicAnnotationBuildSentencesPane">

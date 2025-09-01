@@ -1,7 +1,20 @@
 <x-layout.browser>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['',$page]]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['/','Home'],['',$page]]"></x-layout::breadcrumb>
     </x-slot:head>
+    <x-slot:title>
+        <div class="page-title-section">
+            <div class="page-title">
+                xxx
+            </div>
+            <div
+                class="page-subtitle">
+                subtitle
+            </div>
+        </div>
+        <div class="page-actions">
+        </div>
+    </x-slot:title>
     <x-slot:main>
         <div class="ui container h-full">
             <div class="ui card h-full w-full p-2">

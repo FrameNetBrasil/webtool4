@@ -1,6 +1,6 @@
 <x-layout.report>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','SemanticType Report']]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['/','Home'],['','SemanticType Report']]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:search>
         <x-form-search

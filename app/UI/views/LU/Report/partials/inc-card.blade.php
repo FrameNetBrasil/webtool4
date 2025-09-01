@@ -21,11 +21,15 @@
         <div class="content">
             <div class="incorporated-fe-section">
                 <div class="incorporated-fe-element">
-                    <x-element::fe name="{{$incorporatedFE->name}}"
-                                  type="{{$incorporatedFE->coreType}}"
-                                  idColor="{{$incorporatedFE->idColor}}">
-                    </x-element::fe>
-                    {{$incorporatedFE->description}}
+                    <div class="flex-grow-1">
+                        <x-element::fe name="{{$incorporatedFE->name}}"
+                                       type="{{$incorporatedFE->coreType}}"
+                                       idColor="{{$incorporatedFE->idColor}}">
+                        </x-element::fe>
+                    </div>
+                    <div>
+                        {{$incorporatedFE->description}}
+                    </div>
                 </div>
             </div>
         </div>

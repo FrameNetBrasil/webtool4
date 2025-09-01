@@ -1,7 +1,7 @@
 <x-layout.edit>
     <x-slot:head>
-        <x-breadcrumb
-            :sections="[['/','Home'],['/annotation/fullText','FullText Annotation'],['',$document->name]]"></x-breadcrumb>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['/annotation/fullText','FullText Annotation'],['',$document->name]]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         @include('Annotation.FullText.Panes.annotation')

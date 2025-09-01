@@ -3,7 +3,7 @@
 @endphp
 <x-layout.page>
     <x-slot:head>
-        <x-breadcrumb :sections="[['','Reinventa']]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['','Reinventa']]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <div

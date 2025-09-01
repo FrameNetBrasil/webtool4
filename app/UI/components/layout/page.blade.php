@@ -5,6 +5,15 @@
         <main class="app-main">
             <div class="page-content h-full">
                 <div class="ui container h-full">
+                    @if($title)
+                        <div class="page-header">
+                            <div class="page-header-content">
+                                <div class="page-header-main">
+                                    {{$title}}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     {{$main}}
                 </div>
             </div>

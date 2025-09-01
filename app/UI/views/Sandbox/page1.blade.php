@@ -1,6 +1,6 @@
 <x-layout.page>
     <x-slot:head>
-        <x-breadcrumb :sections="[['','Sandbox']]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['','Sandbox']]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <div id="outerForm" class="fade-me-out" style="height:300px;width:800px;padding:8px;">

@@ -1,6 +1,6 @@
 <x-layout.resource>
     <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['','Domain/SemanticType']]"></x-breadcrumb>
+        <x-layout::breadcrumb :sections="[['/','Home'],['','Domain/SemanticType']]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:title>
         Domain/SemanticType
