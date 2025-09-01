@@ -16,37 +16,38 @@
             :sections="[['/','Home'],['','Report']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-header">
-                <div class="page-header-content">
-                    <div class="page-title">
-                        Report
+            <div class="ui container">
+                <div class="page-header">
+                    <div class="page-header-content">
+                        <div class="page-title">
+                            Report
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="page-content">
-                <div class="ui container">
-                    <div class="card-grid dense">
-                        @foreach($reports as $category => $report)
-                            <a
-                                class="ui card option-card"
-                                data-category="{{$category}}"
-                                href="{{$report[1]}}"
-                                hx-boost="true"
-                            >
-                                <div class="content">
-                                    <div class="header">
-                                        <x-dynamic-component :component="$report[3]" />
-                                        {{$report[0]}}
+                <div class="page-content">
+                    <div class="ui container">
+                        <div class="card-grid dense">
+                            @foreach($reports as $category => $report)
+                                <a
+                                    class="ui card option-card"
+                                    data-category="{{$category}}"
+                                    href="{{$report[1]}}"
+                                    hx-boost="true"
+                                >
+                                    <div class="content">
+                                        <div class="header">
+                                            <x-dynamic-component :component="$report[3]"/>
+                                            {{$report[0]}}
+                                        </div>
+                                        <div class="description">
+                                            {{$report[2]}}
+                                        </div>
                                     </div>
-                                    <div class="description">
-                                        {{$report[2]}}
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
-
             </div>
         </main>
         <x-layout::footer></x-layout::footer>

@@ -13,34 +13,36 @@
             :sections="[['/','Home'],['','Grapher']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-header">
-                <div class="page-header-content">
-                    <div class="page-title">
-                        Grapher
+            <div class="ui container">
+                <div class="page-header">
+                    <div class="page-header-content">
+                        <div class="page-title">
+                            Grapher
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="page-content">
-                <div class="ui container">
-                    <div class="card-grid dense">
-                        @foreach($options as $category => $option)
-                            <a
-                                class="ui card option-card"
-                                data-category="{{$category}}"
-                                href="{{$option[1]}}"
-                                hx-boost="true"
-                            >
-                                <div class="content">
-                                    <div class="header">
-                                        <x-dynamic-component :component="$option[3]" />
-                                        {{$option[0]}}
+                <div class="page-content">
+                    <div class="ui container">
+                        <div class="card-grid dense">
+                            @foreach($options as $category => $option)
+                                <a
+                                    class="ui card option-card"
+                                    data-category="{{$category}}"
+                                    href="{{$option[1]}}"
+                                    hx-boost="true"
+                                >
+                                    <div class="content">
+                                        <div class="header">
+                                            <x-dynamic-component :component="$option[3]"/>
+                                            {{$option[0]}}
+                                        </div>
+                                        <div class="description">
+                                            {{$option[2]}}
+                                        </div>
                                     </div>
-                                    <div class="description">
-                                        {{$option[2]}}
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>

@@ -21,47 +21,51 @@
             :sections="[['/','Home'],['','Structure']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-header">
-                <div class="page-header-content">
-                    <div class="page-title">
-                        Structure
+            <div class="ui container">
+                <div class="page-header">
+                    <div class="page-header-content">
+                        <div class="page-title">
+                            Structure
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="page-content grid-page">
-                <div class="ui container">
-                    @foreach($groups as $group)
-                        <div class="grid-section">
-                            <div class="section-header">
-                                <h2 class="ui header">{{$group['title']}}</h2>
-                            </div>
-                            <div class="section-grid">
-                                <div class="card-grid dense">
-                                    @foreach($group['pages'] as $group)
-                                        @php
-                                            $item = $options[$group];
-                                        @endphp
-                                        <a
-                                            class="ui card option-card"
-                                            data-category="{{$group}}"
-                                            href="{{$item[1]}}"
-                                            hx-boost="true"
-                                        >
-                                            <div class="content">
-                                                <div class="header">
-                                                    <x-dynamic-component :component="$item[3]"/>
-                                                    {{$item[0]}}
+                <div class="page-content grid-page">
+                    <div class="ui container">
+                        @foreach($groups as $group)
+                            <div class="ui fluid card">
+                                <div class="content  bg-gray-200">
+                                    <div class="header">
+                                        {{$group['title']}}
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <div class="card-grid dense">
+                                        @foreach($group['pages'] as $group)
+                                            @php
+                                                $item = $options[$group];
+                                            @endphp
+                                            <a
+                                                class="ui card option-card"
+                                                data-category="{{$group}}"
+                                                href="{{$item[1]}}"
+                                                hx-boost="true"
+                                            >
+                                                <div class="content">
+                                                    <div class="header">
+                                                        <x-dynamic-component :component="$item[3]"/>
+                                                        {{$item[0]}}
+                                                    </div>
+                                                    <div class="description">
+                                                        {{$item[2]}}
+                                                    </div>
                                                 </div>
-                                                <div class="description">
-                                                    {{$item[2]}}
-                                                </div>
-                                            </div>
-                                        </a>
-                                    @endforeach
+                                            </a>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </main>

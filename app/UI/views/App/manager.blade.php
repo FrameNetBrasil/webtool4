@@ -31,21 +31,23 @@
             :sections="[['/','Home'],['','Manager']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-header">
-                <div class="page-header-content">
-                    <div class="page-title">
-                        Manager
+            <div class="ui container">
+                <div class="page-header">
+                    <div class="page-header-content">
+                        <div class="page-title">
+                            Manager
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="page-content grid-page">
-                <div class="ui container">
+                <div class="page-content grid-page">
                     @foreach($groups as $group)
-                        <div class="grid-section">
-                            <div class="section-header">
-                                <h2 class="ui header">{{$group['title']}}</h2>
+                        <div class="ui fluid card">
+                            <div class="content  bg-gray-200">
+                                <div class="header">
+                                    {{$group['title']}}
+                                </div>
                             </div>
-                            <div class="section-grid">
+                            <div class="content">
                                 <div class="card-grid dense">
                                     @foreach($group['pages'] as $group)
                                         @php

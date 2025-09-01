@@ -23,21 +23,23 @@
             :sections="[['/','Home'],['','Annotation']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-header">
-                <div class="page-header-content">
-                    <div class="page-title">
-                        Annotation
+            <div class="ui container">
+                <div class="page-header">
+                    <div class="page-header-content">
+                        <div class="page-title">
+                            Annotation
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="page-content grid-page">
-                <div class="ui container">
+                <div class="page-content">
                     @foreach($annotationType as $type)
-                        <div class="grid-section">
-                            <div class="section-header">
-                                <h2 class="ui header">{{$type['title']}}</h2>
+                        <div class="ui fluid card">
+                            <div class="content bg-gray-200">
+                                <div class="header">
+                                    {{$type['title']}}
+                                </div>
                             </div>
-                            <div class="section-grid">
+                            <div class="content">
                                 <div class="card-grid dense">
                                     @foreach($type['pages'] as $category)
                                         @php
@@ -61,9 +63,12 @@
                                         </a>
                                     @endforeach
                                 </div>
+
                             </div>
+
                         </div>
                     @endforeach
+
                 </div>
             </div>
         </main>

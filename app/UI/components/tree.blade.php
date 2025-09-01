@@ -5,7 +5,6 @@
     'bordered' => false
 ])
 
-<!-- Fomantic UI Tree Component with Alpine.js -->
 <div class="ui tree-container"
      x-data="treeComponent()"
      x-init="init()"
@@ -19,7 +18,7 @@
     @endif
 
     @if (count($data) == 0)
-        <div class="empty-state" id="emptyState">
+        <div class="search-result-empty" id="emptyState">
             <i class="search icon empty-icon"></i>
             <h3 class="empty-title">No results found.</h3>
             <p class="empty-description">
