@@ -1,79 +1,85 @@
-<x-layout.browser>
-    <x-slot:head>
-        <x-layout::breadcrumb :sections="[['/','Home'],['','Frames']]"></x-layout::breadcrumb>
-    </x-slot:head>
-    <x-slot:main>
-        <div class="ui card h-full w-full">
-            <div class="flex-grow-0 content h-4rem bg-gray-100">
-                <div class="flex justify-content-between">
-                    <div>
-                        <x-form-search
-                            id="frameSearch"
-                            hx-post="/frame/grid"
-                            hx-target="#gridArea"
+<x-layout::index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['/structure','Structure'],['','Frame']]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="page-content">
+                <div class="ui container browse-page">
+                    <div class="app-search">
+                        <div class="search-section"
+                             x-data="searchFormComponent()"
+                             @htmx:before-request="onSearchStart"
+                             @htmx:after-request="onSearchComplete"
+                             @htmx:after-swap="onResultsUpdated"
                         >
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                            <div class="field">
-                            <x-search-field
-                                id="frame"
-                                value="{{$search->frame}}"
-                                placeholder="Search Frame"
-                                class="w-20rem"
-                            ></x-search-field>
+                            <div class="search-input-group">
+                                <form class="ui form"
+                                      hx-post="/frame/search"
+                                      hx-target="#gridArea"
+                                      hx-swap="innerHTML"
+                                      hx-trigger="submit, input delay:500ms"
+                                >
+                                    <div class="field">
+                                        <div class="ui left icon input w-full">
+                                            <i class="search icon"></i>
+                                            <input
+                                                type="search"
+                                                name="frame"
+                                                placeholder="Search Frame"
+                                                autocomplete="off"
+                                            >
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="field">
-                            <x-search-field
-                                id="lu"
-                                value="{{$search->lu}}"
-                                placeholder="Search LU"
-                                class="w-20rem"
-                            ></x-search-field>
-                            </div>
-                            <x-submit
-                                label="Search"
-                                class="mb-2"
-                            ></x-submit>
-                            <x-button
-                                label="Domains"
-                                hx-post="/frame/grid"
-                                hx-vals="js:{frame:'',lu:'',byGroup:'domain'}"
-                                hx-target="#gridArea"
-                                hx-on:htmx:before-request="$('#frame').val('');$('#lu').val('');"
-                            ></x-button>
-                            <x-button
-                                label="Types"
-                                hx-post="/frame/grid"
-                                hx-vals="js:{frame:'',lu:'',byGroup:'type'}"
-                                hx-target="#gridArea"
-                                hx-on:htmx:before-request="$('#frame').val('');$('#lu').val('');"
-                            ></x-button>
-                            <x-button
-                                label="Scenarios"
-                                hx-post="/frame/grid"
-                                hx-vals="js:{frame:'',lu:'',byGroup:'scenario'}"
-                                hx-target="#gridArea"
-                                hx-on:htmx:before-request="$('#frame').val('');$('#lu').val('');"
-                            ></x-button>
-                        </x-form-search>
-                    </div>
-                    <div>
-                        <x-link-button
-                            label="Create frame"
-                            color="secondary"
-                            href="/frame/new"
-                        ></x-link-button>
+                        </div>
+
+                        <div id="gridArea">
+                            @fragment("search")
+                                <div class="results-container view-cards">
+                                    <div class="results-wrapper">
+                                        <div class="tree-view" x-transition>
+                                            <div
+                                                class="search-results-tree"
+                                            >
+                                                @if(count($data) > 0)
+                                                    <table x-data class="ui selectable striped compact table">
+                                                        <tbody>
+                                                        @foreach($data as $frame)
+                                                            <tr>
+                                                                <td>
+                                                                    <a
+                                                                        href="/frame/{{$frame['id']}}"
+                                                                        hx-boost="true"
+                                                                    >
+                                                                        {!! $frame['text'] !!}
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                @else
+                                                    <div class="empty-state" id="emptyState">
+                                                        <i class="search icon empty-icon"></i>
+                                                        <h3 class="empty-title">No results found.</h3>
+                                                        <p class="empty-description">
+                                                            Enter your search term above to find frames.
+                                                        </p>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endfragment
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="flex-grow-1 content h-full">
-                <div
-                    id="gridArea"
-                    class="h-full"
-                    hx-trigger="load"
-                    hx-post="/frame/grid"
-                >
-                </div>
-            </div>
-        </div>
-    </x-slot:main>
-</x-layout.browser>
+        </main>
+        <x-layout::footer></x-layout::footer>
+    </div>
+</x-layout::index>

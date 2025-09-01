@@ -13,7 +13,7 @@
                     <span class="right floated">
                         <x-delete
                             title="delete Expression"
-                            onclick="messenger.confirmDelete(`Removing Expression '{{$expression->form}}' from lemma.`, '/lexicon3/expression/{{$expression->idLexiconExpression}}')"
+                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Expression '{{$expression->form}}' from lemma.`, '/lexicon3/expression/{{$expression->idLexiconExpression}}')"
                         ></x-delete>
                     </span>
                     <div
@@ -22,7 +22,7 @@
                         hx-swap="innerHTML"
                         class="header cursor-pointer name"
                     >
-                        <x-element.expression :name="$expression->form"></x-element.expression>
+                        <x-element::expression :name="$expression->form"></x-element::expression>
                     </div>
                     <div
                         class="meta"

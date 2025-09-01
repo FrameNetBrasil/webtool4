@@ -6,6 +6,12 @@
         'constructicon' => ['Constructicon', '/constructicon', '','ui::icon.construction'],
         'reframing' => ['Reframing', '/reframing', '','ui::icon.lu'],
     ];
+
+    $groups = [
+        'frame' => ['title' => "Frame", "pages" => ['frame','reframing']],
+        'lexicon' => ['title' => "Lexicon", "pages" => ['lexicon','lucandidate']],
+        'construction' => ['title' => "Construction", "pages" => ['constructicon']],
+    ];
 @endphp
 
 <x-layout::index>
@@ -15,28 +21,47 @@
             :sections="[['/','Home'],['','Structure']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-content">
-                <div class="ui container">
-                    <div class="card-grid dense">
-                        @foreach($options as $category => $option)
-                            <a
-                                class="ui card option-card"
-                                data-category="{{$category}}"
-                                href="{{$option[1]}}"
-                                hx-boost="true"
-                            >
-                                <div class="content">
-                                    <div class="header">
-                                        <x-dynamic-component :component="$option[3]" />
-                                        {{$option[0]}}
-                                    </div>
-                                    <div class="description">
-                                        {{$option[2]}}
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
+            <div class="page-header">
+                <div class="page-header-content">
+                    <div class="page-title">
+                        Structure
                     </div>
+                </div>
+            </div>
+            <div class="page-content grid-page">
+                <div class="ui container">
+                    @foreach($groups as $group)
+                        <div class="grid-section">
+                            <div class="section-header">
+                                <h2 class="ui header">{{$group['title']}}</h2>
+                            </div>
+                            <div class="section-grid">
+                                <div class="card-grid dense">
+                                    @foreach($group['pages'] as $group)
+                                        @php
+                                            $item = $options[$group];
+                                        @endphp
+                                        <a
+                                            class="ui card option-card"
+                                            data-category="{{$group}}"
+                                            href="{{$item[1]}}"
+                                            hx-boost="true"
+                                        >
+                                            <div class="content">
+                                                <div class="header">
+                                                    <x-dynamic-component :component="$item[3]"/>
+                                                    {{$item[0]}}
+                                                </div>
+                                                <div class="description">
+                                                    {{$item[2]}}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </main>
