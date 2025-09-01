@@ -19,7 +19,7 @@
             @endif
         </div>
         <div class="page-actions">
-            <a href="/report/lu">
+            <a href="/report/lu" hx-boost="true">
                 <button class="ui basic left labeled icon button">
                     <i class="left arrow icon"></i>
                     Back to LUs

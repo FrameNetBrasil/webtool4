@@ -330,7 +330,7 @@
 @sidebarWidthWide: 400px;
 
 // Header, footer and toolbar
-@headerHeight: @relative52px;
+@headerHeight: 42px;
 @headerFontSize: @large;
 @headerFontSize: @textFont;
 @headerFontWeight: @semibold;

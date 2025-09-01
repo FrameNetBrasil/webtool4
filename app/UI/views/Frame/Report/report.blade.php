@@ -2,7 +2,7 @@
     <div class="app-layout">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/report','Report'],['','Frames']]"
+            :sections="[['/','Home'],['/report','Report'],['/report/frame','Frame'],['',$frame->name]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content">
@@ -18,7 +18,7 @@
                                         class="page-subtitle">{!! str_replace('ex>','code>',nl2br($frame->description)) !!}</div>
                                 </div>
                                 <div class="page-actions">
-                                    <a href="/report/frame">
+                                    <a href="/report/frame" hx-boost="true">
                                         <button class="ui basic left labeled icon button">
                                             <i class="left arrow icon"></i>
                                             Back to Frames

@@ -22,92 +22,96 @@
 @endphp
 
 <div class="app-header">
-    <div class="ui inverted menu">
-        <div class="header item brand">
+    <div class="header-left">
+        <div class="brand">
             <div class="logo">
-                <a href="/"  hx-boost="true">
-                    <img src="/images/fnbr_logo_header_alpha_white.png" height="24" />
+                <a href="/" hx-boost="true">
+                    <img src="/images/fnbr_logo_header_alpha_white.png" height="24"/>
                 </a>
             </div>
             <div class="title">
-                <a href="/"  hx-boost="true">
+                <a href="/" hx-boost="true">
                     <span>{!! config('webtool.headerTitle') !!}</span>
                 </a>
             </div>
         </div>
-        @foreach($actions as $id => $action)
-            @php
-                $menuData = MenuData::from([
-                    'id' => $id . '_small',
-                    'label' => $action[0],
-                    'href' => $action[1],
-                    'group' => $action[2],
-                    'items' => $action[3]
-                ]);
-            @endphp
-            @if (AppService::checkAccess($menuData->group))
-                <div class="item">
-                    <a href="{{$menuData->href}}" hx-boost="true">
-                        {!! $menuData->label !!}
-                    </a>
-                </div>
-            @endif
-        @endforeach
-        <div class="right menu">
-            <form
+        <div class="menu">
+            @foreach($actions as $id => $action)
+                @php
+                    $menuData = MenuData::from([
+                        'id' => $id . '_small',
+                        'label' => $action[0],
+                        'href' => $action[1],
+                        'group' => $action[2],
+                        'items' => $action[3]
+                    ]);
+                @endphp
+                @if (AppService::checkAccess($menuData->group))
+                    <div class="item">
+                        <a href="{{$menuData->href}}" hx-boost="true">
+                            {!! $menuData->label !!}
+                        </a>
+                    </div>
+                @endif
+            @endforeach
+        </div>
+    </div>
+    <div class="header-center">
+        <form
                 hx-post="/report/frame_lu/search"
                 hx-target=".page-content"
-            >
-                <div class="item">
-                    <div class="ui inverted left icon input">
-                        <i class="search icon"></i>
-                        <input
+        >
+            <div class="item">
+                <div class="ui inverted left icon input">
+                    <i class="search icon"></i>
+                    <input
                             type="search"
                             name="frame"
                             placeholder="Search Frame/LU"
-                        >
-                    </div>
+                    >
                 </div>
-            </form>
+            </div>
+        </form>
+    </div>
 
-            <div
+    <div class="header-right">
+
+        <div
                 x-init="$($el).dropdown()"
                 class="ui dropdown item "
                 tabindex="0"
-                style="width:128px"
+        >
+            {!! $currentLanguage->description !!}<i class="dropdown icon"></i>
+            <div class="menu" tabindex="-1">
+                @foreach($languages as $language)
+                    <a class="item" href="{{$language[1]}}">{{$language[0]}}</a>
+                @endforeach
+            </div>
+        </div>
+
+        @if($isLogged)
+            <div x-init="$($el).dropdown()"
+                 class="ui dropdown item"
             >
-                {!! $currentLanguage->description !!}<i class="dropdown icon"></i>
-                <div class="menu" tabindex="-1">
-                    @foreach($languages as $language)
-                        <a class="item" href="{{$language[1]}}">{{$language[0]}}</a>
-                    @endforeach
+                <div class="ui teal circular label">{!! strtoupper($user->email[0]) !!}</div>
+                <div class="menu">
+                    <div class="item">
+                        {{$user->email}}
+                    </div>
+                    <div class="item">
+                        Level: {{$userLevel}}
+                    </div>
+                    <div class="item">
+                        ID: #{{$user->idUser}}
+                    </div>
+                    <div class="divider"></div>
+                    <a class="item" href="/user/profile">My profile</a>
+                    <div class="divider"></div>
+                    <a class="item" href="/logout">
+                        Logout
+                    </a>
                 </div>
             </div>
-
-            @if($isLogged)
-                <div x-init="$($el).dropdown()"
-                     class="ui dropdown item"
-                >
-                    <div class="ui teal circular label">{!! strtoupper($user->email[0]) !!}</div>
-                    <div class="menu">
-                        <div class="item">
-                            {{$user->email}}
-                        </div>
-                        <div class="item">
-                            Level: {{$userLevel}}
-                        </div>
-                        <div class="item">
-                            ID: #{{$user->idUser}}
-                        </div>
-                        <div class="divider"></div>
-                        <a class="item" href="/user/profile">My profile</a>
-                        <div class="divider"></div>
-                        <a class="item" href="/logout">
-                            Logout
-                        </a>
-                    </div>
-                </div>
-            @endif
-        </div>
+        @endif
     </div>
 </div>

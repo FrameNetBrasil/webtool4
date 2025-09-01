@@ -29,6 +29,14 @@
     }
 }
 
+.page-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: @relativeMedium 0 0 @relativeMedium;
+}
+
 .page-content {
     flex: 1;
     overflow-y: auto;
@@ -49,4 +57,10 @@
 
 .page-breadcrumb {
     padding: @relativeMedium 0 0 @relativeMedium;
+}
+
+.page-browse {
+    display: flex !important;
+    flex-direction: column;
+    height:100%;
 }

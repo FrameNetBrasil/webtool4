@@ -1,5 +1,5 @@
-<x-tree
+<x-ui::tree
     :title="$title"
     url="/lexicon3/search"
     :data="$data"
-></x-tree>
+></x-ui::tree>

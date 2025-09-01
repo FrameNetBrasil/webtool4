@@ -36,7 +36,7 @@ class Resource3Controller extends Controller
     #[Post(path: '/lexicon3/search')]
     public function search(SearchData $search)
     {
-        $title="";
+        $title = "";
         if ($search->idLemma != 0) {
             $data = BrowseService::browseFormByLemmaSearch($search);
         } else if ($search->form != '') {
@@ -97,7 +97,7 @@ class Resource3Controller extends Controller
                 ->where('idUDPOS', $data->idUDPOS)
                 ->where('idLanguage', $data->idLanguage)
                 ->first();
-            if (! is_null($exists)) {
+            if (!is_null($exists)) {
                 throw new \Exception('Lemma already exists.');
             }
             $newLemma = json_encode([
@@ -269,7 +269,7 @@ class Resource3Controller extends Controller
                 ->where('idLexiconGroup', $data->idLexiconGroup)
                 ->where('idLanguage', $data->idLanguage)
                 ->first();
-            if (! is_null($exists)) {
+            if (!is_null($exists)) {
                 throw new \Exception('Form already exists.');
             }
             $newForm = json_encode([
