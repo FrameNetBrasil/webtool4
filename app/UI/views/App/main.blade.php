@@ -27,8 +27,8 @@
             :sections="[['','Home']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-content">
-                <div class="ui container">
+            <div class="ui container">
+                <div class="page-content">
                     @include("App.messages")
                     @if(count($tasksForManager) > 0)
                         <div class="segment">

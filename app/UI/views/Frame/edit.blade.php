@@ -1,6 +1,6 @@
 <x-layout.edit>
     <x-slot:head>
-        <x-layout::breadcrumb :sections="[['/','Home'],['/frame','Frames'],['',$frame?->name]]"></x-layout::breadcrumb>
+        <x-layout::breadcrumb :sections="[['/','Home'],['/structure','Structure'],['/frame','Frame'],['',$frame?->name]]"></x-layout::breadcrumb>
     </x-slot:head>
     <x-slot:main>
         <x-layout.object>

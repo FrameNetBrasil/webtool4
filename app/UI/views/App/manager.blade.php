@@ -11,7 +11,17 @@
         'semantictype' => ['Domain/SemanticType','/semanticType','', 'ADMIN','ui::icon.frame'],
         'layer' => ['Layer/GenericLabel', '/layers','', 'ADMIN','ui::icon.frame'],
         'relations' => ['Relations', '/relations','', 'ADMIN','ui::icon.frame'],
+        'importfulltext' => ['Import FullText', '/utils/importfulltext', '','MANAGER','ui::icon.frame'],
     ];
+
+    $groups = [
+        'manager' => ['title' => "Project/User", "pages" => ['project','task','user']],
+        'document' => ['title' => "Document", "pages" => ['document','video','image']],
+        'table' => ['title' => "Tables", "pages" => ['semantictype','layer','relations']],
+        'utils' => ['title' => "Utils", "pages" => ['importfulltext']],
+    ];
+
+
 @endphp
 
 <x-layout::index>
@@ -21,30 +31,49 @@
             :sections="[['/','Home'],['','Manager']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-content">
-                <div class="ui container">
-                    <div class="card-grid dense">
-                        @foreach($options as $category => $option)
-                            @if (AppService::checkAccess($option[3]))
-                                <a
-                                    class="ui card option-card"
-                                    data-category="{{$category}}"
-                                    href="{{$option[1]}}"
-                                    hx-boost="true"
-                                >
-                                    <div class="content">
-                                        <div class="header">
-                                            <x-dynamic-component :component="$option[4]" />
-                                            {{$option[0]}}
-                                        </div>
-                                        <div class="description">
-                                            {{$option[2]}}
-                                        </div>
-                                    </div>
-                                </a>
-                            @endif
-                        @endforeach
+            <div class="page-header">
+                <div class="page-header-content">
+                    <div class="page-title">
+                        Manager
                     </div>
+                </div>
+            </div>
+            <div class="page-content grid-page">
+                <div class="ui container">
+                    @foreach($groups as $group)
+                        <div class="grid-section">
+                            <div class="section-header">
+                                <h2 class="ui header">{{$group['title']}}</h2>
+                            </div>
+                            <div class="section-grid">
+                                <div class="card-grid dense">
+                                    @foreach($group['pages'] as $group)
+                                        @php
+                                            $item = $options[$group];
+                                        @endphp
+                                        @if (AppService::checkAccess($item[3]))
+                                            <a
+                                                class="ui card option-card"
+                                                data-category="{{$group}}"
+                                                href="{{$item[1]}}"
+                                                hx-boost="true"
+                                            >
+                                                <div class="content">
+                                                    <div class="header">
+                                                        <x-dynamic-component :component="$item[4]"/>
+                                                        {{$item[0]}}
+                                                    </div>
+                                                    <div class="description">
+                                                        {{$item[2]}}
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </main>

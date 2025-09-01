@@ -2,7 +2,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/structure','Structure'],['','Frame']]"
+            :sections="[['/','Home'],['/structure','Structure'],['','Reframing']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content">
@@ -16,7 +16,7 @@
                         >
                             <div class="search-input-group">
                                 <form class="ui form"
-                                      hx-post="/frame/search"
+                                      hx-post="/reframing/search"
                                       hx-target="#gridArea"
                                       hx-swap="innerHTML"
                                       hx-trigger="submit, input delay:500ms"
@@ -26,8 +26,8 @@
                                             <i class="search icon"></i>
                                             <input
                                                 type="search"
-                                                name="frame"
-                                                placeholder="Search Frame"
+                                                name="lu"
+                                                placeholder="Search LU"
                                                 autocomplete="off"
                                             >
                                         </div>
@@ -45,16 +45,16 @@
                                                 class="search-results-tree"
                                             >
                                                 @if(count($data) > 0)
-                                                    <table x-data class="ui selectable striped compact table">
+                                                    <table class="ui selectable striped compact table">
                                                         <tbody>
-                                                        @foreach($data as $frame)
+                                                        @foreach($data as $lu)
                                                             <tr>
                                                                 <td>
                                                                     <a
-                                                                        href="/frame/{{$frame['id']}}"
+                                                                        href="/reframing/lu/{{$lu['id']}}"
                                                                         hx-boost="true"
                                                                     >
-                                                                        {!! $frame['text'] !!}
+                                                                        {!! $lu['text'] !!}
                                                                     </a>
                                                                 </td>
                                                             </tr>
@@ -66,7 +66,7 @@
                                                         <i class="search icon empty-icon"></i>
                                                         <h3 class="empty-title">No results found.</h3>
                                                         <p class="empty-description">
-                                                            Enter your search term above to find frames.
+                                                            Enter your search term above to find LU.
                                                         </p>
                                                     </div>
                                                 @endif

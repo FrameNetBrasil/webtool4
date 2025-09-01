@@ -13,6 +13,13 @@
             :sections="[['/','Home'],['','Grapher']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <div class="page-title">
+                        Grapher
+                    </div>
+                </div>
+            </div>
             <div class="page-content">
                 <div class="ui container">
                     <div class="card-grid dense">

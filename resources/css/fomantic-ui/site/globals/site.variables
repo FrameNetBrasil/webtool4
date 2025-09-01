@@ -23,6 +23,15 @@
 
 @background: #fff;
 
+/* -------------------
+       Links
+-------------------- */
+
+@linkColor: @textColor;
+@linkUnderline: none;
+@linkHoverColor: if(iscolor(@linkColor), darken(saturate(@linkColor, 20), 15, relative), @linkColor);
+@linkHoverUnderline: @linkUnderline;
+
 // -----------------------------------------------------------------------------
 // Color Palette (based on existing Tailwind-inspired palette)
 // -----------------------------------------------------------------------------
