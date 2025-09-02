@@ -5,19 +5,13 @@
             :sections="[['/','Home'],['/structure','Structure'],['/lexicon3','Lexicon'],['', 'Lemma #' . $lemma->idLexicon]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-header">
-                <div class="page-header-content">
-                    <div class="page-header-main">
-                        <div class="page-title-section">
-                            <div class="page-title">
-                                <span>{{$lemma->fullNameUD}}</span>
-                            </div>
-                            <div
-                                class="page-subtitle">
-                                Lemma
-                            </div>
+            <div class="ui container h-full">
+                <div class="page-header-object">
+                    <div class="page-object">
+                        <div class="page-object-name">
+                            <span>{{$lemma->fullNameUD}}</span>
                         </div>
-                        <div class="page-actions">
+                        <div class="page-object-data">
                             <div class="ui label wt-tag-id">
                                 #{{$lemma->idLexicon}}
                             </div>
@@ -28,36 +22,12 @@
                             >Delete</button>
                         </div>
                     </div>
+                    <dic class="page-subtitle">
+                        Lemma
+                    </dic>
                 </div>
-            </div>
-            <div class="page-content object-page">
-                <div class="ui container h-full">
+                <div class="page-content">
 
-{{--                    <div class="d-flex flex-col items-start h-full">--}}
-{{--                        <div class="object-header d-flex">--}}
-{{--                            <div class="col-12 sm:col-12 md:col-12 lg:col-7 xl:col-6">--}}
-{{--                                <h2 class="ui header">--}}
-{{--                                    <span>{{$lemma->fullNameUD}}</span>--}}
-{{--                                    <div class="ui label">--}}
-{{--                                        Lemma--}}
-{{--                                    </div>--}}
-{{--                                </h2>--}}
-{{--                            </div>--}}
-{{--                            <div--}}
-{{--                                class="col-12 sm:col-12 md:col-12 lg:col-5 xl:col-6 flex gap-1 flex-wrap align-items-center justify-content-end">--}}
-{{--                                <div class="ui label wt-tag-id">--}}
-{{--                                    #{{$lemma->idLexicon}}--}}
-{{--                                </div>--}}
-{{--                                <x-button--}}
-{{--                                    label="Delete"--}}
-{{--                                    color="danger"--}}
-{{--                                    x-data \n--}}
-{{--                                    @click.prevent="messenger.confirmDelete(`Removing Lemma '{{$lemma->fullNameUD}}'.`, '/lexicon3/lemma/{{$lemma->idLexicon}}')"--}}
-{{--                                ></x-button>--}}
-{{--                            </div>--}}
-                    {{--                        </div>--}}
-                    {{--                        <div class="object-description pl-2">--}}
-                    {{--                        </div>--}}
                         <div class="flex flex-grow-1 mt-3">
                             <div
                                 id="objectMainArea"
