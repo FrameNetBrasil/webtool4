@@ -23,13 +23,14 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 class LUCandidateController extends Controller
 {
 
-    private function getData(SearchData $search): array {
+    private function getData(SearchData $search): array
+    {
         $luIcon = view('components.icon.lu')->render();
         $lus = Criteria::table("view_lucandidate")
             ->where("idLanguage", AppService::getCurrentIdLanguage())
             ->where("name", "startswith", $search->lu)
             ->where("email", "startswith", $search->email)
-            ->select('idLU', 'name', 'createdAt','frameName','origin','email')
+            ->select('idLU', 'name', 'createdAt', 'frameName', 'origin', 'email')
 //            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
             ->orderBy($search->sort, $search->order)->all();
         $data = array_map(fn($item) => [
@@ -44,6 +45,7 @@ class LUCandidateController extends Controller
         ], $lus);
         return $data;
     }
+
     #[Get(path: '/luCandidate')]
     public function resource(SearchData $search)
     {
@@ -53,7 +55,7 @@ class LUCandidateController extends Controller
             ->select("email")
             ->orderby("email")
             ->all();
-        return view("LUCandidate.browse",[
+        return view("LUCandidate.browse", [
             "data" => $data,
             "creators" => $creators,
         ]);
@@ -131,26 +133,55 @@ class LUCandidateController extends Controller
     #[Get(path: '/luCandidate/{id}')]
     public function edit(string $id)
     {
+        $luCandidate = LUCandidate::byId($id);
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
         $isManager = User::isManager($user);
+        $asLOME = [];
+        if ($luCandidate->email == 'lome@frame.net.br') {
+            $asLOME = Criteria::table("view_annotationset")
+                ->where("idUser", $luCandidate->idUser)
+                ->where("idLU", $id)
+                ->all();
+        }
+        debug($asLOME);
         return view("LUCandidate.edit", [
-            'luCandidate' => LUCandidate::byId($id),
+            'luCandidate' => $luCandidate,
             'isManager' => $isManager,
+            'asLOME' => $asLOME,
         ]);
     }
 
-    #[Get(path: '/luCandidate/{id}/formEdit')]
-    public function formEdit(string $id)
+    #[Get(path: '/luCandidate/{id}/asLOME')]
+    public function asLOME(string $id)
     {
-        $idUser = AppService::getCurrentIdUser();
-        $user = User::byId($idUser);
-        $isManager = User::isManager($user);
-        return view("LUCandidate.formEdit", [
-            'luCandidate' => LUCandidate::byId($id),
-            'isManager' => $isManager,
+        $luCandidate = LUCandidate::byId($id);
+        $asLOME = [];
+        if ($luCandidate->email == 'lome@frame.net.br') {
+            $asLOME = Criteria::table("view_annotationset")
+                ->where("idUser", $luCandidate->idUser)
+                ->where("idLU", $id)
+                ->all();
+        }
+        return view("LUCandidate.modalASLOME", [
+            'luCandidate' => $luCandidate,
+            'asLOME' => $asLOME,
         ]);
     }
+
+
+
+//    #[Get(path: '/luCandidate/{id}/formEdit')]
+//    public function formEdit(string $id)
+//    {
+//        $idUser = AppService::getCurrentIdUser();
+//        $user = User::byId($idUser);
+//        $isManager = User::isManager($user);
+//        return view("LUCandidate.formEdit", [
+//            'luCandidate' => LUCandidate::byId($id),
+//            'isManager' => $isManager,
+//        ]);
+//    }
 
     #[Get(path: '/luCandidate/fes/{idFrame}')]
     public function feCombobox(int $idFrame)

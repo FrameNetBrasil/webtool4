@@ -124,7 +124,14 @@
                                                 :value="$luCandidate->idDynamicObject"
                                             ></x-number-field>
                                         </div>
-
+                                        <div class="field mr-1">
+                                            <div
+                                                hx-trigger="load, annotationset_deleted from:body"
+                                                hx-get="/luCandidate/{{$luCandidate->idLU}}/asLOME"
+                                                hx-target="this"
+                                                hx-swap="innerHTML"
+                                            ></div>
+                                        </div>
                                     </div>
                                     <div class="extra content">
                                         <div class="ui buttons">

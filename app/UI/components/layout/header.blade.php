@@ -57,29 +57,32 @@
         </div>
     </div>
     <div class="header-center">
-        <form
-                hx-post="/report/frame_lu/search"
-                hx-target=".page-content"
-        >
-            <div class="item">
-                <div class="ui inverted left icon input">
-                    <i class="search icon"></i>
-                    <input
-                            type="search"
-                            name="frame"
-                            placeholder="Search Frame/LU"
-                    >
-                </div>
-            </div>
-        </form>
     </div>
 
     <div class="header-right">
-
         <div
-                x-init="$($el).dropdown()"
-                class="ui dropdown item "
-                tabindex="0"
+            class="pr-3"
+        >
+            <form
+                hx-post="/report/frame_lu/search"
+                hx-target=".page-content"
+            >
+                <div class="item">
+                    <div class="ui inverted left icon input">
+                        <i class="search icon"></i>
+                        <input
+                            type="search"
+                            name="frame"
+                            placeholder="Search Frame/LU"
+                        >
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div
+            x-init="$($el).dropdown()"
+            class="ui dropdown item "
+            tabindex="0"
         >
             {!! $currentLanguage->description !!}<i class="dropdown icon"></i>
             <div class="menu" tabindex="-1">
