@@ -1,35 +1,33 @@
 <div
-    id="gridFeatures"
-    class="grid"
     hx-trigger="reload-gridFeatures from:body"
     hx-target="this"
     hx-swap="outerHTML"
     hx-get="/lexicon3/feature/{{$lexicon->idLexicon}}"
 >
-    @foreach($features as $feature)
-        <div class="col-3">
-            <div class="ui card w-full">
-                <div class="content">
-                    <span class="right floated">
-                        <x-delete
-                            title="delete Feature"
-                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Feature '{{$feature->name}}' from form.`, '/lexicon3/feature/{{$feature->idLexicon}}/{{$feature->idUDFeature}}')"
-                        ></x-delete>
-                    </span>
+    <div class="card-grid dense w-full">
+        @foreach($features as $feature)
+            <div
+                class="ui card option-card"
+            >
+                <div class="content overflow-hidden">
                     <div
-                        hx-get="/lexicon3/feature/{{$feature->idUDFeature}}"
-                        hx-target="#editArea"
-                        hx-swap="innerHTML"
-                        class="header cursor-pointer name"
+                        class="header d-flex justify-between"
                     >
                         <x-element::udfeature :name="$feature->name"></x-element::udfeature>
+                        <div>
+                            <x-delete
+                                title="delete Feature"
+                                x-data
+                                @click.prevent="messenger.confirmDelete(`Removing Feature '{{$feature->name}}' from form.`, '/lexicon3/feature/{{$feature->idLexicon}}/{{$feature->idUDFeature}}')"
+                            ></x-delete>
+                        </div>
                     </div>
                     <div
-                        class="meta"
+                        class="description"
                     >
                     </div>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    </div>
 </div>

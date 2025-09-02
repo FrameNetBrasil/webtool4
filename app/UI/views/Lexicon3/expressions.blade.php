@@ -1,38 +1,38 @@
 <div
-    id="gridExpressions"
-    class="grid"
     hx-trigger="reload-gridExpressions from:body"
     hx-target="this"
     hx-swap="outerHTML"
     hx-get="/lexicon3/lemma/{{$lemma->idLexicon}}/expressions"
 >
-    @foreach($expressions as $expression)
-        <div class="col-3">
-            <div class="ui card w-full">
-                <div class="content">
-                    <span class="right floated">
-                        <x-delete
-                            title="delete Expression"
-                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Expression '{{$expression->form}}' from lemma.`, '/lexicon3/expression/{{$expression->idLexiconExpression}}')"
-                        ></x-delete>
-                    </span>
+    <div class="card-grid dense w-full">
+        @foreach($expressions as $expression)
+            <div
+                class="ui card option-card"
+            >
+                <div class="content overflow-hidden">
                     <div
+                        class="header d-flex justify-between"
                         hx-get="/lexicon3/expression/{{$expression->idForm}}"
                         hx-target="#editArea"
                         hx-swap="innerHTML"
-                        class="header cursor-pointer name"
                     >
-                        <x-element::expression :name="$expression->form"></x-element::expression>
+                        <x-ui::element.expression :name="$expression->form"></x-ui::element.expression>
+                        <div>
+                            <x-delete
+                                title="delete Expression"
+                                x-data
+                                @click.prevent="messenger.confirmDelete(`Removing Expression '{{$expression->form}}' from lemma.`, '/lexicon3/expression/{{$expression->idLexiconExpression}}')"
+                            ></x-delete>
+                        </div>
                     </div>
                     <div
-                        class="meta"
+                        class="description"
                     >
-                        <span>{{$expression->form}}</span>
                         <span>Position: {{$expression->position}}</span>
                         <span>{{$expression->head ? ' head ': ''}}</span>
                     </div>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    </div>
 </div>

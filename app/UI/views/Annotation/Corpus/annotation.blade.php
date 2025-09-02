@@ -1,12 +1,11 @@
-<x-layout.page>
-    <x-slot:head>
+<x-layout.index>
+    <div class="app-layout annotation">
+        <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
             :sections="[['/','Home'],['/annotation','Annotation'],[$url,$page],['','#' . $idDocumentSentence]]"
         ></x-layout::breadcrumb>
-    </x-slot:head>
-    <x-slot:main>
-        <script type="text/javascript" src="/annotation/corpus/script/components"></script>
-        <div class="app-layout annotation-corpus">
+        <div class="annotation-corpus">
+            <script type="text/javascript" src="/annotation/corpus/script/components"></script>
             <div class="annotation-canvas">
                 <div class="annotation-navigation">
                     <div class="tag">
@@ -70,5 +69,5 @@
                 </div>
             </div>
         </div>
-    </x-slot:main>
-</x-layout.page>
+    </div>
+</x-layout.index>
