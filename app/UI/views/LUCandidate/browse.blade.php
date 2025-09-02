@@ -66,7 +66,7 @@
                                 <div class="menu">
                                     <div class="item" data-value="">all users</div>
                                     @foreach($creators as $creator)
-                                    <div class="item" data-value="{{$creator->email}}">{{$creator->email}}</div>
+                                        <div class="item" data-value="{{$creator->email}}">{{$creator->email}}</div>
                                     @endforeach
                                 </div>
                             </div>
@@ -106,11 +106,8 @@
                         </thead>
                         <tbody>
                         @foreach($data as $lu)
-                            <a
-                                href="/luCandidate/{{$lu['id']}}"
-                            >
                             <tr
-{{--                                @click.prevent="window.location.assign('/luCandidate/{{$lu['id']}}')"--}}
+                                @click.prevent="window.location.assign('/luCandidate/{{$lu['id']}}')"
                             >
                                 <td>
                                     {!! $lu['name'] !!}
@@ -125,7 +122,6 @@
                                     {!! $lu['createdBy'] !!}
                                 </td>
                             </tr>
-                            </a>
                         @endforeach
                         </tbody>
                     </table>

@@ -140,13 +140,11 @@ where ds.idDocumentSentence = 5216474 limit 1
                             $parts = explode(" ", $luToken);
                             if (count($parts) == 1) {
                                 $lemma = DB::connection('webtool')->select("
-                                select e.idLemma
-from view_lexicon_expression e
-join view_lexicon_lemma l on (e.idLemma =l.idLexicon)
-where e.form='{$word}'
+                                select l.idLexicon idLemma
+from view_lexicon_lemma l
+where l.name='{$word}'
 and l.udPOS='{$ud->tokens[$luToken]->upos}'
-group by e.idLemma
-having count(*) = 1
+and l.idlanguage = 1
 limit 1
                             ");
                                 if (!empty($lemma)) {

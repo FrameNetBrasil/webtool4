@@ -81,4 +81,12 @@ class Controller extends BaseController
         return $response;
     }
 
+    public function renderTrigger(string $trigger, array $params = [])
+    {
+        $this->trigger($trigger,$params);
+        $trigger = json_encode($this->hx_trigger);
+        $response = response('', 204)->header('HX-Trigger', $trigger);
+        return $response;
+    }
+
 }

@@ -944,8 +944,8 @@ $router->get('luCandidate/{id}', [
 	'domain' => NULL,
 ]);
 
-$router->get('luCandidate/{id}/formEdit', [
-	'uses' => 'App\Http\Controllers\LU\LUCandidateController@formEdit',
+$router->get('luCandidate/{id}/asLOME', [
+	'uses' => 'App\Http\Controllers\LU\LUCandidateController@asLOME',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
@@ -3498,6 +3498,22 @@ $router->get('annotation/fe', [
 
 $router->get('annotation/fe/sentence/{idDocumentSentence}/{idAnnotationSet?}', [
 	'uses' => 'App\Http\Controllers\Annotation\FEController@annotation',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->get('annotation/fe/asExternal/{idAS}', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@annotationSet',
+	'as' => NULL,
+	'middleware' => ['auth'],
+	'where' => [],
+	'domain' => NULL,
+]);
+
+$router->delete('annotation/fe/asExternal/{idAnnotationSet}', [
+	'uses' => 'App\Http\Controllers\Annotation\FEController@deleteAS',
 	'as' => NULL,
 	'middleware' => ['auth'],
 	'where' => [],
