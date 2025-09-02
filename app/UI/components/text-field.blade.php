@@ -1,4 +1,12 @@
-<label for="{{$id}}">{{$label}}</label>
+@props([
+    'id' => '',
+    'label' => '',
+    'value' => '',
+    'placeholder' => ''
+])
+@if($label != '')
+    <label for="{{$id}}">{{$label}}</label>
+@endif
 <div class="ui small input">
     <input
         type="text"

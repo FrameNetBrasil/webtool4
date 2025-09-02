@@ -25,9 +25,43 @@
         .page-subtitle {
 
         }
-
     }
 }
+
+.page-header-object {
+    flex-shrink: 0;
+    padding: @relativeBig;
+    background: @background;
+    display: flex;
+    flex-direction: column;
+
+    .page-object {
+        display:flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .page-object-name {
+            font-size: 2rem;
+            font-weight: @headerFontWeight;
+            line-height: @headerLineHeight;
+            color: @textColor;
+        }
+
+        .page-object-data {
+            display:flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+        }
+    }
+
+    .page-subtitle {
+
+    }
+
+
+}
+
 
 .page-actions {
     flex-shrink: 0;
