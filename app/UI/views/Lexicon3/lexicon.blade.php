@@ -1,46 +1,53 @@
-<x-layout.edit>
-    <x-slot:head>
-        <x-breadcrumb :sections="[['/','Home'],['/lexicon3','Lexicon'],['',$lexicon?->form]]"></x-breadcrumb>
-    </x-slot:head>
-    <x-slot:main>
-        <div class="page-content h-full">
-            <div class="content-container h-full">
-                <x-layout.object>
-                    <x-slot:name>
-                        <span>{{$lexicon->form}}</span>
-                        <div class="ui label">
-                            {{$lexicon->group->name}}
+<x-layout.index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['/structure','Structure'],['/lexicon3','Lexicon'],['', 'Lexicon #' . $lexicon->idLexicon]]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="ui container h-full d-flex flex-col">
+                <div class="page-header-object">
+                    <div class="page-object">
+                        <div class="page-object-name">
+                            <span>{{$lexicon->form}}</span>
                         </div>
-                    </x-slot:name>
-                    <x-slot:detail>
-                        <div class="ui label wt-tag-id">
-                            #{{$lexicon->idLexicon}}
+                        <div class="page-object-data">
+                            <div class="ui label wt-tag-id">
+                                #{{$lexicon->idLexicon}}
+                            </div>
+                            <button
+                                class="ui danger button"
+                                x-data
+                                @click.prevent="messenger.confirmDelete(`Removing Form '{{$lexicon->form}}'.`, '/lexicon3/form/{{$lexicon->idLexicon}}')"
+                            >Delete</button>
                         </div>
-                        <x-button
-                            label="Delete"
-                            color="danger"
-                            x-data \n  @click.prevent="messenger.confirmDelete(`Removing Form '{{$lexicon->form}}'.`, '/lexicon3/form/{{$lexicon->idLexicon}}')"
-                        ></x-button>
-                    </x-slot:detail>
-                    <x-slot:description>
+                    </div>
+                    <dic class="page-subtitle">
+                        {{$lexicon->group->name}}
+                    </dic>
+                </div>
+                <div class="page-content">
+                    <form>
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="idLexicon" value="{{$lexicon->idLexicon}}">
+                        <div class="ui fluid card form-card">
+                            <div class="content">
+                                <div class="header">
+                                    Edit Form
+                                </div>
+                                <div class="description">
 
-                    </x-slot:description>
-                    <x-slot:main>
-                        <div id="lexiconEditWrapper">
-                            <x-form
-                                title="Edit"
-                                onsubmit="return false;"
-                            >
-                                <x-slot:fields>
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                                    <x-hidden-field id="idLexicon" :value="$lexicon->idLexicon"></x-hidden-field>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="ui form">
                                     <div class="two fields">
                                         <div class="field">
-                                            <x-text-field
+                                            <x-ui::text-field
                                                 label="Form"
                                                 id="form"
                                                 :value="$lexicon->form"
-                                            ></x-text-field>
+                                            ></x-ui::text-field>
                                         </div>
                                         <div class="field">
                                             <x-combobox::lexicon-group
@@ -50,16 +57,32 @@
                                             ></x-combobox::lexicon-group>
                                         </div>
                                     </div>
-                                </x-slot:fields>
-                                <x-slot:buttons>
-                                    <x-submit label="Update" hx-put="/lexicon3/lexicon"></x-submit>
-                                </x-slot:buttons>
-                            </x-form>
-                            <x-form
-                                title="Add Feature"
-                            >
-                                <x-slot:fields>
-                                    <x-hidden-field id="idLexiconBase" :value="$lexicon->idLexicon"></x-hidden-field>
+                                </div>
+                            </div>
+                            <div class="extra content">
+                                <div class="ui buttons">
+                                    <button
+                                        class="ui button primary"
+                                        hx-put="/lexicon3/lexicon"
+                                    >Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <input type="hidden" name="idLexiconBase" value="{{$lexicon->idLexicon}}">
+
+                        <div class="ui fluid card form-card">
+                            <div class="content">
+                                <div class="header">
+                                    Add Feature
+                                </div>
+                                <div class="description">
+
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="ui form">
                                     <div class="fields">
                                         <div class="field">
                                             <x-combobox::ud-feature
@@ -69,18 +92,23 @@
                                             ></x-combobox::ud-feature>
                                         </div>
                                     </div>
-                                </x-slot:fields>
-                                <x-slot:buttons>
-                                    <x-submit label="Add" hx-post="/lexicon3/feature/new"></x-submit>
-                                </x-slot:buttons>
-                            </x-form>
-                            <h3 class="ui header">Features</h3>
-                            @include("Lexicon3.features")
-
+                                </div>
+                            </div>
+                            <div class="extra content">
+                                <div class="ui buttons">
+                                    <button
+                                        class="ui button primary"
+                                        hx-post="/lexicon3/feature/new"
+                                    >Add Feature</button>
+                                </div>
+                            </div>
                         </div>
-                    </x-slot:main>
-                </x-layout.object>
+                    </form>
+                    <h3 class="ui header">Features</h3>
+                    @include("Lexicon3.features")
+                </div>
             </div>
-        </div>
-    </x-slot:main>
-</x-layout.edit>
+        </main>
+        <x-layout::footer></x-layout::footer>
+    </div>
+</x-layout.index>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\LU;
 
-use App\Data\Frame\SearchData;
+use App\Data\LU\SearchData;
 use App\Data\LU\ReportData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
@@ -28,7 +28,7 @@ class ReportController extends Controller
     }
 
     #[Post(path: '/report/lu/search')]
-    public function search(\App\Data\LU\SearchData $search)
+    public function search(SearchData $search)
     {
         $data = BrowseService::browseLUBySearch($search);
 

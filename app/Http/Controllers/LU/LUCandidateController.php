@@ -23,18 +23,13 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 class LUCandidateController extends Controller
 {
 
-    #[Get(path: '/luCandidate')]
-    public function resource()
-    {
-        return view("LUCandidate.resource");
-    }
-
-    #[Get(path: '/luCandidate/data')]
-    public function data(SearchData $search)
-    {
+    private function getData(SearchData $search): array {
         $luIcon = view('components.icon.lu')->render();
-        $lus = Criteria::byFilterLanguage("view_lucandidate", ["name", "startswith", $search->lu])
-            ->select('idLU', 'name', 'createdAt','frameName','origin')
+        $lus = Criteria::table("view_lucandidate")
+            ->where("idLanguage", AppService::getCurrentIdLanguage())
+            ->where("name", "startswith", $search->lu)
+            ->where("email", "startswith", $search->email)
+            ->select('idLU', 'name', 'createdAt','frameName','origin','email')
 //            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
             ->orderBy($search->sort, $search->order)->all();
         $data = array_map(fn($item) => [
@@ -42,22 +37,68 @@ class LUCandidateController extends Controller
             'name' => $luIcon . $item->name,
             'frameName' => $item->frameName,
             'createdAt' => $item->createdAt ? Carbon::parse($item->createdAt)->format("d/m/Y") : '-',
+            'createdBy' => $item->email,
             'state' => 'open',
             'origin' => $item->origin,
             'type' => 'lu'
         ], $lus);
         return $data;
     }
-
-    #[Get(path: '/luCandidate/grid/{fragment?}')]
-    #[Post(path: '/luCandidate/grid/{fragment?}')]
-    public function grid(SearchData $search, ?string $fragment = null)
+    #[Get(path: '/luCandidate')]
+    public function resource(SearchData $search)
     {
-        $view = view("LUCandidate.grid", [
-            'search' => $search,
+        $data = $this->getData($search);
+        $creators = Criteria::table("view_lucandidate")
+            ->distinct()
+            ->select("email")
+            ->orderby("email")
+            ->all();
+        return view("LUCandidate.browse",[
+            "data" => $data,
+            "creators" => $creators,
         ]);
-        return (is_null($fragment) ? $view : $view->fragment('search'));
     }
+
+    #[Post(path: '/lucandidate/search')]
+    public function tree(SearchData $search)
+    {
+        debug($search);
+        $data = $this->getData($search);
+        return view('LUCandidate.browse', [
+            'data' => $data,
+            "creators" => [],
+        ])->fragment('search');
+    }
+
+//    #[Get(path: '/luCandidate/data')]
+//    public function data(SearchData $search)
+//    {
+//        $luIcon = view('components.icon.lu')->render();
+//        $lus = Criteria::byFilterLanguage("view_lucandidate", ["name", "startswith", $search->lu])
+//            ->select('idLU', 'name', 'createdAt','frameName','origin')
+////            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
+//            ->orderBy($search->sort, $search->order)->all();
+//        $data = array_map(fn($item) => [
+//            'id' => $item->idLU,
+//            'name' => $luIcon . $item->name,
+//            'frameName' => $item->frameName,
+//            'createdAt' => $item->createdAt ? Carbon::parse($item->createdAt)->format("d/m/Y") : '-',
+//            'state' => 'open',
+//            'origin' => $item->origin,
+//            'type' => 'lu'
+//        ], $lus);
+//        return $data;
+//    }
+//
+//    #[Get(path: '/luCandidate/grid/{fragment?}')]
+//    #[Post(path: '/luCandidate/grid/{fragment?}')]
+//    public function grid(SearchData $search, ?string $fragment = null)
+//    {
+//        $view = view("LUCandidate.grid", [
+//            'search' => $search,
+//        ]);
+//        return (is_null($fragment) ? $view : $view->fragment('search'));
+//    }
 
     #[Get(path: '/luCandidate/new')]
     public function new()
@@ -87,7 +128,7 @@ class LUCandidateController extends Controller
         }
     }
 
-    #[Get(path: '/luCandidate/{id}/edit')]
+    #[Get(path: '/luCandidate/{id}')]
     public function edit(string $id)
     {
         $idUser = AppService::getCurrentIdUser();

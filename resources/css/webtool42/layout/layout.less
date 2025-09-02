@@ -50,3 +50,12 @@
     grid-template-columns: 1fr;
     grid-template-rows: 3em @toolbarHeight 1fr;                             // (was var(--toolbar-height))
 }
+
+.app-layout.annotation {
+    grid-template-areas:
+        "header"
+        "breadcrumb"
+        "annotation";
+    grid-template-columns: 1fr;
+    grid-template-rows: @headerHeight @breadcrumbHeight 1fr;
+}
