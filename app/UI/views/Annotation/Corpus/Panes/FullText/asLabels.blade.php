@@ -38,9 +38,7 @@
                                         @click.stop="onLabelDelete({{$fe->idEntity}})"
                                 >
                                 </i>
-                                <div class="d-flex">
-                                    <i class="{!! config("webtool.fe.icon")[$fe->coreType] !!} icon feIcon"></i>{{$fe->name}}
-                                </div>
+                                <x-element::fe :type="$fe->coreType" name="{{$fe->name}}" idColor="{{$fe->idColor}}"></x-element::fe>
                             </button>
                         </div>
                     @endforeach

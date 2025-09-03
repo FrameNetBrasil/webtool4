@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="page-content">
-                        <div class="content-container">
+{{--                        <div class="content-container">--}}
                             {{-- Frame Metadata Section --}}
                             <div class="frame-metadata-section">
                                 @include('Frame.Report.partials.frame-metadata')
@@ -81,7 +81,7 @@
 
                             {{-- Visual Units Section --}}
                             @include('Frame.Report.partials.visual-units-section')
-                        </div>
+{{--                        </div>--}}
                     </div>
                 </div>
             </div>

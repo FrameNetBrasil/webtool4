@@ -27,7 +27,7 @@
                                 class="ui button basic grey"
                             >
                                 <div
-                                    class="flex align-items-center "
+                                    class="d-flex justify-left items-center gap-1"
                                 >
                                     <a
                                         href="/frame/{{$idRelatedFrame}}"

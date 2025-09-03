@@ -26,10 +26,10 @@
                             @endif
                         </div>
                     </div>
-                    <dic class="page-subtitle">
+                    <div class="page-subtitle">
                         Created by {{$luCandidate->userName}} [{{$luCandidate->email}}]
                         at {!! $luCandidate->createdAt ? Carbon::parse($luCandidate->createdAt)->format("d/m/Y") : '-' !!}
-                    </dic>
+                    </div>
                 </div>
                 <div class="page-content">
                     <form>

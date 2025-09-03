@@ -207,7 +207,6 @@ class AnnotationASService
 
         //
         $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
-        debug($targets);
 
         return [
             'idDocumentSentence' => $idDocumentSentence,

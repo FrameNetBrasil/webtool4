@@ -8,10 +8,10 @@
     <div class="flex-grow-1 content bg-white">
         <div
             id="gridLU"
-            class="grid"
+            class="ui grid"
         >
             @foreach($lus as $lu)
-                <div class="col-3">
+                <div class="four wide column">
                     <div class="ui card w-full">
                         <div class="content">
                     <span class="right floated">

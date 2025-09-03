@@ -1,7 +1,7 @@
-<div class="w-20rem">
-    <div class="form-field field" style="overflow:initial">
+{{--<div class="w-20rem">--}}
+{{--    <div class="field" style="overflow:initial">--}}
         <label for="{{$id}}">Relation</label>
-        <div id="{{$id}}_dropdown" class="ui tiny selection dropdown" style="overflow:initial">
+        <div id="{{$id}}_dropdown" class="ui tiny selection dropdown w-15em" style="overflow:initial">
             <input type="hidden" name="{{$id}}" value="-1">
             <i class="dropdown icon"></i>
             <div class="default text"></div>
@@ -23,8 +23,8 @@
                 @endforeach
             </div>
         </div>
-    </div>
-</div>
+{{--    </div>--}}
+{{--</div>--}}
 <script>
     $(function() {
         $('#{{$id}}_dropdown').dropdown({

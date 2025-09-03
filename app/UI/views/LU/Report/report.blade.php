@@ -11,7 +11,7 @@
                         @include('LU.Report.partials.lu-header')
                     </div>
                     <div class="page-content">
-                        <div class="content-container">
+{{--                        <div class="content-container">--}}
                             {{-- LU Metadata Section --}}
                             <div class="lu-metadata-section">
                                 @include('LU.Report.partials.lu-metadata')
@@ -28,7 +28,7 @@
                             <div class="annotation-types-section mb-8">
                                 @include('LU.Report.partials.annotation-types-nav')
                             </div>
-                        </div>
+{{--                        </div>--}}
                     </div>
                 </div>
             </div>

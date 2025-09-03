@@ -6,6 +6,11 @@
     - $lu: LU object with idLU
 --}}
 
+<div class="section-header">
+    <h1 class="ui header section-title">
+        <a>Realizations</a>
+    </h1>
+</div>
  <x-ui::tabs
       id="luReportTabs"
       :tabs="[

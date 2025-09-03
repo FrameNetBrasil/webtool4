@@ -1,6 +1,6 @@
 @use(\App\Enum\Status)
 <div class="status">
-Status: {{$annotationSet->status}}
+    <a class="ui blue horizontal label">{{$annotationSet->status}}</a>
 </div>
 <div class="lome">
     @if(($annotationSet->status == Status::CREATED->value) && ($annotationSet->login == 'lome'))
