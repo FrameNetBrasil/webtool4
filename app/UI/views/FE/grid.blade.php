@@ -14,10 +14,10 @@
             <h3 class="ui header">{!! config("webtool.fe.coreness.{$ct}") !!}</h3>
             <div
                 id="gridFE"
-                class="grid"
+                class="ui grid"
             >
                 @foreach($array as $fe)
-                    <div class="col-3">
+                    <div class="four wide column">
                         <div class="ui card w-full">
                             <div class="content">
                     <span class="right floated">

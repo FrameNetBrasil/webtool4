@@ -1,5 +1,5 @@
-<div class="grid  h-full">
-    <div class="col h-full" style="overflow:auto">
+<div class="ui equal width grid h-full">
+    <div class="column h-full" style="overflow:auto">
         <div
             hx-trigger="load"
             hx-target="this"
@@ -7,7 +7,7 @@
             hx-get="/frame/{{$idFrame}}/classification/formFramalDomain"
         ></div>
     </div>
-    <div class="col">
+    <div class="column">
         <div
             hx-trigger="load"
             hx-target="this"

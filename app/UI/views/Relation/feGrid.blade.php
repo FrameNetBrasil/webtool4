@@ -12,7 +12,7 @@
             class="ui button basic grey mb-1"
         >
             <div
-                class="flex align-items-center gap-1"
+                class="d-flex justify-left items-center gap-1"
             >
                 <div class="col">
                     <x-element.frame
