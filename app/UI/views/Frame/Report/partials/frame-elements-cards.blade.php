@@ -6,7 +6,7 @@
 --}}
 <div class="frame-elements-section">
     <h1 class="ui header section-title">Frame Elements</h1>
-    
+
     <div class="fe-sections">
         {{-- Core FEs Section --}}
         @if(isset($fe['core']) && count($fe['core']) > 0)
@@ -19,8 +19,8 @@
                                     <a href="#core">Core Frame Elements</a>
                                 </h2>
                             </div>
-                            <button class="ui button basic icon section-toggle" 
-                                    onclick="toggleSection('core-fes')" 
+                            <button class="ui icon basic button section-toggle"
+                                    onclick="toggleSection('core-fes')"
                                     aria-expanded="true">
                                 <i class="chevron up icon"></i>
                             </button>
@@ -52,8 +52,8 @@
                                     <a href="#core-unexpressed">Core Unexpressed</a>
                                 </h2>
                             </div>
-                            <button class="ui button basic icon section-toggle" 
-                                    onclick="toggleSection('core-unexpressed-fes')" 
+                            <button class="ui button basic icon section-toggle"
+                                    onclick="toggleSection('core-unexpressed-fes')"
                                     aria-expanded="false">
                                 <i class="chevron down icon"></i>
                             </button>
@@ -97,8 +97,8 @@
                                     <a href="#peripheral">Peripheral Frame Elements</a>
                                 </h2>
                             </div>
-                            <button class="ui button basic icon section-toggle" 
-                                    onclick="toggleSection('peripheral-fes')" 
+                            <button class="ui button basic icon section-toggle"
+                                    onclick="toggleSection('peripheral-fes')"
                                     aria-expanded="false">
                                 <i class="chevron down icon"></i>
                             </button>
@@ -130,8 +130,8 @@
                                     <a href="#extra-thematic">Extra-thematic Frame Elements</a>
                                 </h2>
                             </div>
-                            <button class="ui button basic icon section-toggle" 
-                                    onclick="toggleSection('extra-thematic-fes')" 
+                            <button class="ui button basic icon section-toggle"
+                                    onclick="toggleSection('extra-thematic-fes')"
                                     aria-expanded="false">
                                 <i class="chevron down icon"></i>
                             </button>

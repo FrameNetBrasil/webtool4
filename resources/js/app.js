@@ -1,5 +1,5 @@
 import './bootstrap';
-import './webcomponents';
+// import './webcomponents';
 import Alpine from 'alpinejs';
 
 
@@ -17,10 +17,10 @@ import treeComponent from './components/treeComponent.js';
 import searchFormComponent from './components/searchFormComponent.js';
 import dataGridComponent from './components/dataGridComponent.js';
 
-// import '../css/fomantic-ui/semantic.less';
-import 'primeflex/primeflex.css';
+import '../css/fomantic-ui/semantic.less';
+// import 'primeflex/primeflex.css';
 import '../css/app.less';
-import '../css/webcomponents.scss';
+// import '../css/webcomponents.scss';
 
 window.Chart = Chart;
 window.svgPanZoom = svgPanZoom;

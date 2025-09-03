@@ -1,4 +1,11 @@
 /*******************************
+    WebTool Site Variables
+*******************************/
+
+@imagePath: "/scripts/fomantic-ui/assets/images";
+@fontPath: "/scripts/fomantic-ui/assets/fonts";
+
+/*******************************
      User Global Variables
 *******************************/
 
@@ -7,13 +14,16 @@
 @pageFont: @fontName, @fallbackFonts;
 @textFont: @fontName, @fallbackFonts;
 
+//@blue-10 : #0d47a1;
+//@blue-11 : #82b1ff;
+
 //@textColor:#545B64;
 @textColor:#333;
 @selectedTextColor: @blue;
 @successColor: #008b38;
-@primaryColor: @blue-10;
+@primaryColor: @blue900;
 @secondaryColor: @teal;
-@lightPrimaryColor: @blue-11;
+@lightPrimaryColor: @blue400;
 @lightSecondaryColor: @lightTeal;
 @inputPlaceholderColor: @grey;
 @fontSize: 14px;
