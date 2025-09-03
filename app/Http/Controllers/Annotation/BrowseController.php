@@ -36,6 +36,28 @@ class BrowseController extends Controller
         ]);
     }
 
+    #[Post(path: '/annotation/browse/searchDocument/{taskGroupName}')]
+    public function searchDocument(SearchData $search, string $taskGroupName = null)
+    {
+        $search->taskGroupName ??= $taskGroupName;
+        debug($search);
+        if (!is_null($search->idCorpus)) {
+            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus, [], $search->taskGroupName, leaf: true);
+        } else if ($search->document != '') {
+            $data = BrowseService::browseDocumentBySearch($search, [], $search->taskGroupName, leaf: true);
+            $title = "Documents";
+        } else {
+            $data = BrowseService::browseCorpusBySearch($search, [], $search->taskGroupName);
+            $title = "Corpora";
+        }
+
+        return view('Annotation.treeDocuments', [
+            'data' => $data,
+            'taskGroupName' => $search->taskGroupName,
+        ]);
+    }
+
+
 //    #[Post(path: '/annotation/browse/treeSentence')]
 //    public function tree(TreeData $search)
 //    {
@@ -53,22 +75,6 @@ class BrowseController extends Controller
 //        ])->fragment('tree');
 //    }
 
-    #[Post(path: '/annotation/browse/searchDocument')]
-    public function searchDocument(SearchData $search)
-    {
-        if ($search->document != '') {
-            $data = BrowseService::browseDocumentBySearch($search, [], $search->taskGroupName, leaf: true);
-            $title = "Documents";
-        } else {
-            $data = BrowseService::browseCorpusBySearch($search, [], $search->taskGroupName);
-            $title = "Corpora";
-        }
-
-        return view('Annotation.browseDocuments', [
-            'data' => $data,
-            'title' => $title,
-        ])->fragment('search');
-    }
 
 //    #[Post(path: '/annotation/browse/treeDocument')]
 //    public function treeDocument(TreeData $search)
