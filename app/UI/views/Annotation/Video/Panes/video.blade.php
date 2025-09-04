@@ -22,6 +22,7 @@
                @progress="updateBuffer()"
                @click="togglePlay()"
                @tracking-mode-toggle.document="onToggleTrackingMode()"
+               @object-loaded.document="onObjectLoaded"
         >
             <source src="{!! config('webtool.mediaURL') . "/" . $video->currentURL !!}?t={!! time() !!}"
                     type="video/mp4">
@@ -46,9 +47,7 @@
             style="position: absolute; top: 0; left: 0; background-color: transparent; z-index: 1;"
         ></canvas>
 
-        <div id="boxesContainer">
-
-        </div>
+        @include("Annotation.Video.Panes.bbox")
     </div>
     <div
         class="control-bar d-flex justify-between"

@@ -229,6 +229,10 @@ function videoComponent() {
             this.trackingMode = !this.trackingMode;
         },
 
+        onObjectLoaded(e) {
+            this.gotoFrame(e.detail.object.startFrame);
+        },
+
         // =============================================
         // CORE VIDEO OPERATIONS
         // =============================================
