@@ -129,12 +129,12 @@ class VideoService
         }
         $objectsRows = [];
         $objectsRowsEnd = [];
-        // Para manter o paralelismo com a Deixis annotation,
-        // estou considerando que todos os objetos estão num "layer fictício", com idLayerType = 0 e idLabel (idLayer) = 0
+        // estou considerando que todos os objetos estão num "layertype"
         $idLayerTypeCurrent = -1;
         $idLayerType = 0;
         foreach ($objects as $i => $object) {
             if ($idLayerType != $idLayerTypeCurrent) {
+
                 $idLayerTypeCurrent = $idLayerType;
                 $objectsRows[$idLayerType][0][] = $object;
                 $objectsRowsEnd[$idLayerType][0] = $object->endFrame;
@@ -154,8 +154,8 @@ class VideoService
                     $objectsRowsEnd[$idLayerType][$idLayer] = $object->endFrame;
                 }
             }
+            $idLayerType = $object->idLayerType;
         }
-
         $result = [];
         if ($annotationType == 'deixis') {
             foreach ($objectsRows as $layers) {
