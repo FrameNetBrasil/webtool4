@@ -14,7 +14,7 @@
             <div class="field mr-1">
                 <textarea
                     name="comment"
-                    rows="3"
+                    rows="2"
                 >{!! $comment->comment ?? '' !!}</textarea>
             </div>
         </div>

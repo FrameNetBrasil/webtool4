@@ -2,6 +2,8 @@
     $currentObject = null;
 @endphp
 <div x-data="timelineComponent({
+            idDocument: {{$idDocument}},
+            annotationType: '{{$annotationType}}',
             minFrame: {{$timeline['config']['minFrame']}},
             maxFrame: {{$timeline['config']['maxFrame']}},
             frameToPixel: {{$timeline['config']['frameToPixel']}},
@@ -66,10 +68,10 @@
                             <div
                                 class="objects"
                                 style="height: {{ $layerHeight }}px;"
-                                hx-get="/annotation/video/object"
-                                hx-target="#formsPane"
-                                hx-swap="innerHTML"
-                                hx-on::config-request="event.detail.parameters.append('idObject', event.detail.triggeringEvent.target.dataset.id);event.detail.parameters.append('annotationType', '{{$annotationType}}')"
+{{--                                hx-get="/annotation/video/object"--}}
+{{--                                hx-target="#formsPane"--}}
+{{--                                hx-swap="innerHTML"--}}
+{{--                                hx-on::config-request="event.detail.parameters.append('idObject', event.detail.triggeringEvent.target.dataset.id);event.detail.parameters.append('annotationType', '{{$annotationType}}')"--}}
                             >
                                 @foreach ($visualLayer['lines'] as $lineIndex => $line)
                                     @foreach ($line['objects'] as $objIndex => $objectData)

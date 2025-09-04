@@ -17,7 +17,10 @@
         @include("Annotation.Video.Panes.timeline")
     </div>
     <div class="ui tab objects h-full w-full" data-tab="objects">
-        @include("Annotation.Video.Panes.search", ['idDocument' => $idDocument])
+        @include("Annotation.Video.Panes.search", [
+            'idDocument' => $idDocument,
+            'annotationType' => $annotationType
+        ])
     </div>
 </div>
 <script type="text/javascript">

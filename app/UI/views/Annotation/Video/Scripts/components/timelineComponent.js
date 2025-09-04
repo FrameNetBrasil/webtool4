@@ -6,7 +6,7 @@ function timelineComponent(config) {
 
         init() {
             this.config = config;
-            // console.log("Timeline config:", config); // Debug config
+            console.log("Timeline config:", config); // Debug config
             this.generateRuler();
             this.setupScrollSync();
 
@@ -203,6 +203,19 @@ function timelineComponent(config) {
             this.frameInput = this.videoFrame;
             this.scrollToFrame();
         },
+
+        onClickObject: async function(idObject) {
+            htmx.ajax("GET","/annotation/video/object",{
+                target:"#formsPane",
+                swap:'innerHTML',
+                values:{
+                    idObject,
+                    annotationType: this.config.annotationType,
+                    idDocument: this.config.idDocument
+                }
+            });
+        }
+
 
         // selectObject: async function(idDynamicObject) {
         //     let dynamicModeObject = await __api.getObject(idDynamicObject);

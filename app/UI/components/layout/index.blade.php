@@ -8,6 +8,7 @@
     <title>{!! config('webtool.pageTitle') !!}</title>
     <meta name="description" content="{!! config('webtool.mainTitle') !!}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -56,6 +57,8 @@
 <script src="/scripts/jointjs/dist/joint.js"></script>
 <script src="/scripts/dagre/dist/dagre.js"></script>
 <script src="/scripts/utils/md5.min.js"></script>
+<script src="/scripts/utils/jsfeat.js"></script>
+<script src="/scripts/utils/nudged.js"></script>
 
 </body>
 </html>

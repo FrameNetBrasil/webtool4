@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Resource\Video\CloneData;
-use App\Data\Resource\Video\CreateBBoxData;
-use App\Data\Resource\Video\CreateObjectData;
-use App\Data\Resource\Video\GetBBoxData;
-use App\Data\Resource\Video\ObjectFrameData;
-use App\Data\Resource\Video\ObjectSearchData;
-use App\Data\Resource\Video\UpdateBBoxData;
+use App\Data\Annotation\Video\CloneData;
+use App\Data\Annotation\Video\CreateBBoxData;
+use App\Data\Annotation\Video\CreateObjectData;
+use App\Data\Annotation\Video\GetBBoxData;
+use App\Data\Annotation\Video\ObjectAnnotationData;
+use App\Data\Annotation\Video\ObjectFrameData;
+use App\Data\Annotation\Video\ObjectSearchData;
+use App\Data\Annotation\Video\UpdateBBoxData;
 use App\Database\Criteria;
+use App\Enum\AnnotationType;
 use App\Http\Controllers\Controller;
-use App\Services\Resource\VideoService;
+use App\Services\Annotation\VideoService;
+use App\Services\CommentService;
+use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
@@ -31,19 +35,23 @@ class VideoController extends Controller
     #[Get(path: '/annotation/video/object')]
     public function getObject(ObjectSearchData $data)
     {
+        debug($data);
         if ($data->idObject == 0) {
             return view('Annotation.Video.Forms.formNewObject');
         }
-        $object = VideoService::getObject($data->idObject ?? 0);
+        $object = VideoService::getObject($data);
         $object->annotationType = $data->annotationType;
         if (is_null($object)) {
             return $this->renderNotify('error', 'Object not found.');
         }
 
+        $comment = CommentService::getComment($data->idObject, $data->idDocument, $data->annotationType);
+
         return response()
             ->view('Annotation.Video.Panes.object', [
                 'object' => $object,
-                'annotationType' => $data->annotationType
+                'annotationType' => $data->annotationType,
+                'comment' => $comment,
             ])->header('HX-Push-Url', "/annotation/{$data->annotationType}/{$object->idDocument}/{$object->idObject}");
     }
 
@@ -54,6 +62,7 @@ class VideoController extends Controller
         return view('Annotation.Video.Panes.search', [
             'searchResults' => $searchResults,
             'idDocument' => $data->idDocument,
+            'annotationType' => $data->annotationType
         ])->fragment('search');
     }
 
@@ -82,10 +91,26 @@ class VideoController extends Controller
         }
     }
 
-    #[Post(path: '/annotation/video/updateObject')]
+    #[Post(path: '/annotation/video/updateObjectAnnotation')]
+    public function updateObjectAnnotation(ObjectAnnotationData $data)
+    {
+        debug($data);
+        try {
+            $idDynamicObject = VideoService::updateObjectAnnotation($data);
+            $this->trigger('updateObjectAnnotationEvent');
+            //return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
+            return $this->renderNotify("success", "Object updated.");
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/annotation/video/updateObjectRange')]
     public function updateObjectRange(ObjectFrameData $data)
     {
         try {
+            debug($data);
             VideoService::updateObjectFrame($data);
 
             return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$data->idObject}");
@@ -110,6 +135,7 @@ class VideoController extends Controller
     #[Post(path: '/annotation/video/createBBox')]
     public function createBBox(CreateBBoxData $data)
     {
+        debug($data);
         try {
             return VideoService::createBBox($data);
         } catch (\Exception $e) {
@@ -132,6 +158,7 @@ class VideoController extends Controller
             return $this->renderNotify('error', $e->getMessage());
         }
     }
+
 
 
 }
