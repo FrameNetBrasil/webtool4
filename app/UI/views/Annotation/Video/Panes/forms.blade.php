@@ -13,7 +13,7 @@
             hx-trigger="load"
             hx-target="#formsPane"
             hx-get="/annotation/video/object"
-            hx-vals='{"idObject": {{$idObject}}, "annotationType":"{{$annotationType}}" }'
+            hx-vals='{"idObject": {{$idObject}},"idDocument": {{$idDocument}}, "annotationType":"{{$annotationType}}" }'
             hx-swap="innerHTML"
         ></div>
     @endif
@@ -28,6 +28,7 @@
     @video-update-state.document="onVideoUpdateState"
     @auto-tracking-start.document="onStartTracking"
     @auto-tracking-stop.document="onStopTracking"
+    @object-loaded.document="onObjectLoaded"
     id="boxesContainer"
     style="position: absolute; top: 0; left: 0; width:852px; height:480px; background-color: transparent"
     hx-swap-oob="true"

@@ -47,7 +47,7 @@
                     class="ui medium icon button negative"
                     :class="autoTracking && 'disabled'"
                     title="Delete BBoxes from Object"
-                    @click.prevent="messenger.confirmDelete('Removing all BBoxes of object #{{$object->idObject}}.', '/annotation/dynamicMode/deleteAllBBoxes/{{$object->idDocument}}/{{$object->idObject}}')"
+                    @click.prevent="messenger.confirmDelete('Removing all BBoxes of object #{{$object->idObject}}.', '/annotation/{{$object->annotationType}}/deleteAllBBoxes/{{$object->idDocument}}/{{$object->idObject}}')"
                 >
                     <i class="trash alternate outline icon"></i>
                     Delete All BBoxes

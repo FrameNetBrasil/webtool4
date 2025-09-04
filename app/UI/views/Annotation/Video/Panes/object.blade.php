@@ -37,14 +37,14 @@
                         title="Close Object"
                         @click="window.location.assign('/annotation/{{$annotationType}}/{{$object->idDocument}}')"
                     >
-                        <i class="close tiny icon"></i>
+                        <i class="close small icon"></i>
                     </button>
                 </div>
             </div>
         </div>
     </div>
     <div class="content pt-0">
-        <input type="hidden" id="idDynamicObject" value="{{$object->idObject}}" />
+        <input type="hidden" id="idObject" value="{{$object->idObject}}" />
         <div
             class="objectPane ui pointing secondary menu tabs mt-0"
         >
@@ -102,3 +102,8 @@
 
 
 </div>
+<script type="text/javascript">
+    $(function() {
+        document.dispatchEvent(new CustomEvent("object-loaded", { detail: { object: {!! Js::from($object) !!} } }));
+    });
+</script>

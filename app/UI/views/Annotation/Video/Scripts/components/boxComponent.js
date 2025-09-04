@@ -135,7 +135,7 @@ function boxComponent(idVideoDOMElement) {
             this.bbox = e.detail.bbox;
             console.log("bbox created for object", this.object);
             let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, false);
-            this.disableDrawing();
+            this.onDisableDrawing();
             bbox.idBoundingBox = await ky.post(`${this.baseURL}/createBBox`, {
                 json: {
                     _token: this._token,
@@ -181,7 +181,7 @@ function boxComponent(idVideoDOMElement) {
             this.showBBox();
         },
 
-        enableDrawing() {
+        onEnableDrawing() {
             this.isDown = false;
             // Bind 'this' context for all event listeners
             this.boundHandleMouseDown = this.handleMouseDown.bind(this);
@@ -196,7 +196,7 @@ function boxComponent(idVideoDOMElement) {
             console.log("Drawing event listeners enabled.");
         },
 
-        disableDrawing() {
+        onDisableDrawing() {
             this.isDown = false;
             // Use the same bound functions to remove listeners
             if (this.boundHandleMouseDown) {
@@ -331,7 +331,7 @@ function boxComponent(idVideoDOMElement) {
         onBBoxCreate() {
             console.log('====');
             this.clearBBox();
-            this.enableDrawing();
+            this.onEnableDrawing();
             console.log("Drawing mode activated!");
         },
 

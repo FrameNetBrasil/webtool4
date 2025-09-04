@@ -155,7 +155,7 @@ class CorpusService
             ],
             'groupedLayers' => $matrixData,
             'corpusAnnotationType' => $corpusAnnotationType,
-            'comment' => CommentService::getComment($idAnnotationSet, $sentence->idDocument, AnnotationType::ANNOTATIONSET->value),
+            'comment' => CommentService::getComment($idAnnotationSet, $sentence->idDocument,AnnotationType::ANNOTATIONSET->value),
         ];
 
     }
@@ -400,7 +400,6 @@ class CorpusService
             $data = json_encode([
                 'idTextSpan' => $idTextSpan,
                 'idEntity' => $object->idEntity,
-                'relationType' => 'rel_annotation',
                 'idUser' => AppService::getCurrentIdUser()
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$data]);

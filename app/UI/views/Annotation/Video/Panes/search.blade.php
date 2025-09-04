@@ -1,18 +1,19 @@
 <div class="app-search p-1">
     <!-- Search Section -->
-    <div class="search-section"
+    <div class="search-container"
          x-data="searchObjectComponent()"
          @htmx:before-request="onSearchStart"
          @htmx:after-request="onSearchComplete"
          @htmx:after-swap="onResultsUpdated"
     >
-        <div class="search-input-group">
+        <div class="search-input-section">
             <form class="ui form"
                   hx-post="/annotation/video/object/search"
-                  hx-target="#gridArea"
+                  hx-target=".search-result-section"
                   hx-swap="innerHTML">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                <input type="hidden" name="idDocument" value="{{ $idDocument ?? 0 }}" />
+                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="idDocument" value="{{ $idDocument ?? 0 }}"/>
+                <input type="hidden" name="annotationType" value="{{ $annotationType }}"/>
                 <div class="three fields">
                     <div class="field">
                         <div class="ui left icon input">
@@ -58,40 +59,21 @@
                 </div>
             </form>
         </div>
-    </div>
 
-    <div id="gridArea" class="h-full pb-1">
-        @fragment("search")
-            <div class="results-container"
-                 class="results-container view-cards"
-            >
-
-                <div class="results-header">
-                    <div class="results-info">
-                        <div class="results-count" id="resultsCount">{!! count($searchResults ?? []) !!}
-                            results
+        <div class="search-result-section flex-col">
+            @fragment("search")
+                @if(count($searchResults) > 0)
+                    <div class="search-result-data pl-1 pr-1">
+                        <div class="search-result-header">
+                            <div class="result-info">
+                                <div class="result-count" id="resultsCount">{!! count($searchResults ?? []) !!}
+                                    results
+                                </div>
+                            </div>
                         </div>
-                        <div class="search-query-display" id="queryDisplay"></div>
-                    </div>
-                </div>
-
-                <!-- Empty State -->
-                @if(count($searchResults ?? []) == 0)
-                    <div class="empty-state" id="emptyState">
-                        <i class="search icon empty-icon"></i>
-                        <h3 class="empty-title">Ready to search</h3>
-                        <p class="empty-description">
-                            Enter your search above to find objects.
-                        </p>
-                    </div>
-                @endif
-
-                @if(count($searchResults ?? []) > 0)
-                    <!-- Card View -->
-                    <div class="card-view" x-transition>
                         <div class="card-container">
                             <div
-                                class="search-results-grid "
+                                class="search-results-grid card-grid dense"
                                 hx-get="/annotation/video/object"
                                 hx-target="#formsPane"
                                 hx-swap="innerHTML"
@@ -111,14 +93,14 @@
                                                 data-id="{{$object->idObject}}"
                                             >
                                                 Object: #{{$object->idObject}}
-{{--                                                {{$object->layerGroup}}/{{$object->nameLayerType}}--}}
+                                                {{--                                                {{$object->layerGroup}}/{{$object->nameLayerType}}--}}
                                             </div>
                                             <div
                                                 class="meta"
                                                 data-id="{{$object->idObject}}"
                                             >
-                                                {{$object->displayName}}<br />
-                                                Frames: {{$object->startFrame}}-{{$object->endFrame}}<br />
+                                                {{$object->displayName}}<br/>
+                                                Frames: {{$object->startFrame}}-{{$object->endFrame}}<br/>
                                             </div>
                                         </div>
                                     </div>
@@ -126,8 +108,16 @@
                             </div>
                         </div>
                     </div>
+                @else
+                    <div class="search-result-empty" id="emptyState">
+                        <i class="search icon empty-icon"></i>
+                        <h3 class="empty-title">No results found.</h3>
+                        <p class="empty-description">
+                            Enter your search above to find objects.
+                        </p>
+                    </div>
                 @endif
-            </div>
-        @endfragment
+            @endfragment
+        </div>
     </div>
 </div>

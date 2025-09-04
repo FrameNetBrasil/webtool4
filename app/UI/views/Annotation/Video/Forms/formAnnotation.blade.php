@@ -2,7 +2,7 @@
     <div class="ui card form-card w-full p-1">
         <div class="content">
             <input type="hidden" name="idDocument" value="{{$object->idDocument}}">
-            <input type="hidden" name="idDynamicObject" value="{{$object?->idObject}}">
+            <input type="hidden" name="idObject" value="{{$object?->idObject}}">
             <div class="ui two column stackable grid relative">
                 <div class="column pr-8">
                     <x-ui::frame-fe
@@ -22,16 +22,16 @@
                         ></x-search::lu>
                     </div>
                 </div>
-                <div class="ui vertical divider">
-                    and
-                </div>
+{{--                <div class="ui vertical divider">--}}
+{{--                    and--}}
+{{--                </div>--}}
             </div>
         </div>
         <div class="extra content">
             <button
                 type="submit"
                 class="ui primary button"
-                hx-post="/annotation/dynamicMode/updateObjectAnnotation"
+                hx-post="/annotation/video/updateObjectAnnotation"
                 hx-target="#o{{$object?->idObject}}"
                 hx-swap="innerHTML"
             >
