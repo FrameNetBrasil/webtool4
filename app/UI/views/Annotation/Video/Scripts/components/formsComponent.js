@@ -7,6 +7,7 @@ function formsComponent(idDocument) {
         trackingMode: false,
         autoTracking: false,
         bboxDrawn: null,
+        bboxBlocked: false,
 
         init() {
             this.idDocument = idDocument;
@@ -30,12 +31,18 @@ function formsComponent(idDocument) {
 
         onBBoxDrawn(e) {
             console.log("formsComponent onBBoxDrawn", e.detail.bbox);
-            this.bboxDrawn = e.detail.bbox;
+            if (e.detail.bbox) {
+                this.bboxDrawn = e.detail.bbox;
+                this.bboxBlocked = this.bboxDrawn.blocked;
+            }
         },
 
         onBBoxUpdate(e) {
             console.log("formsComponent onBBoxUpdate", e.detail.bbox);
-            this.bboxDrawn = e.detail.bbox;
+            if (e.detail.bbox) {
+                this.bboxDrawn = e.detail.bbox;
+                this.bboxBlocked = this.bboxDrawn.blocked;
+            }
         },
 
         onCloseObjectPane() {

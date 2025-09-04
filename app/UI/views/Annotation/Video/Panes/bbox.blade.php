@@ -1,7 +1,7 @@
 <div
     x-data="boxComponent('videoContainer_html5_api')"
-    @drawing-disable.document="onDisableDrawing"
-    @drawing-enable.document="onEnableDrawing"
+    @disable-drawing.document="onDisableDrawing"
+    @enable-drawing.document="onEnableDrawing"
     @bbox-create.document="onBBoxCreate"
     @bbox-created.document="onBBoxCreated"
     @bbox-change-blocked.document="onBBoxChangeBlocked"
@@ -16,6 +16,6 @@
     <div
         class="bbox" style="display:none"
     >
-        <div class="objectId" x-text="idObject"></div>
+        <div class="objectId"></div>
     </div>
 </div>

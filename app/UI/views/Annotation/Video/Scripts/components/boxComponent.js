@@ -93,8 +93,8 @@ function boxComponent(idVideoDOMElement) {
         async onVideoUpdateState(e) {
             this.clearBBox();
             this.currentFrame = e.detail.frame.current;
-            console.log("onVideoUpdateState current frame", this.currentFrame, this.startFrame, this.endFrame);
-            if ((this.currentFrame >= this.startFrame) && (this.currentFrame <= this.endFrame)) {
+            console.log("onVideoUpdateState current frame", this.currentFrame, this.object.startFrame, this.object.endFrame);
+            if ((this.currentFrame >= this.object.startFrame) && (this.currentFrame <= this.object.endFrame)) {
                 await this.showBBox();
                 await this.tracking();
             } else {
@@ -106,11 +106,12 @@ function boxComponent(idVideoDOMElement) {
             }
         },
 
-        onObjectLoaded(e) {
+        async onObjectLoaded(e) {
             console.log("onObjectLoaded", e.detail.object);
             this.object = e.detail.object;
             this.annotationType = this.object.annotationType;
             this.currentFrame = this.object.startFrame;
+            await this.showBBox();
         },
 
         // async onBBoxToggleTracking() {
@@ -230,6 +231,7 @@ function boxComponent(idVideoDOMElement) {
 
             this.drawBBox(bbox);
             this.bboxes[this.currentFrame] = bbox;
+            console.log("displayBBOx", bbox);
             document.dispatchEvent(new CustomEvent("bbox-drawn", {
                 detail: {
                     bbox,
@@ -340,7 +342,7 @@ function boxComponent(idVideoDOMElement) {
                 await new Promise(r => setTimeout(r, 800));
                 const nextFrame = this.currentFrame + 1;
                 console.log("tracking....", (this.isTracking ? 'tracking' : 'not tracking'), nextFrame, this.object.startFrame, this.object.endFrame);
-                if ((nextFrame >= this.startFrame) && (nextFrame <= this.endFrame)) {
+                if ((nextFrame >= this.object.startFrame) && (nextFrame <= this.object.endFrame)) {
                     // console.log("goto Frame ", nextFrame);
                     //this.previousBBox = JSON.parse(JSON.stringify(this.bbox));
                     console.log('going to next frame ', nextFrame);
@@ -362,6 +364,7 @@ function boxComponent(idVideoDOMElement) {
 
             let containerHeight = $("#boxesContainer").height();
             let containerWidth = $("#boxesContainer").width();
+            console.log("container", containerHeight,containerWidth);
 
             // Ensure the bbox has required child elements
             if (bbox.find('.handle.center-drag').length === 0) {
@@ -380,56 +383,33 @@ function boxComponent(idVideoDOMElement) {
             bbox.resizable({
                 handles: "n, e, s, w, ne, nw, se, sw",
                 onResize: (e) => {
-                    let d = e.data;
-                    if (d.left < 0) {
-                        d.width += d.left;
-                        d.left = 0;
-                        return false;
-                    }
-                    if (d.top < 0) {
-                        d.height += d.top;
-                        d.top = 0;
-                        return false;
-                    }
-                    if (d.left + $(d.target).outerWidth() > containerWidth) {
-                        d.width = containerWidth - d.left;
-                    }
-                    if (d.top + $(d.target).outerHeight() > containerHeight) {
-                        d.height = containerHeight - d.top;
-                    }
                 },
                 onStopResize: (e) => {
-                    bbox.css("display", "none");
+                    // bbox.css("display", "none");
                     let d = e.data;
                     if (d.left < 0) {
-                        d.width += d.left;
+                        $(d.target).outerWidth($(d.target).outerWidth() + d.left);
                         d.left = 0;
+                        $(d.target).css("left", 0);
                     }
                     if (d.top < 0) {
-                        d.height += d.top;
+                        $(d.target).outerHeight($(d.target).outerHeight() + d.top);
                         d.top = 0;
+                        $(d.target).css("top", 0);
                     }
                     if (d.left + $(d.target).outerWidth() > containerWidth) {
-                        d.width = containerWidth - d.left;
+                        $(d.target).outerWidth(containerWidth - d.left);
                     }
                     if (d.top + $(d.target).outerHeight() > containerHeight) {
-                        d.height = containerHeight - d.top;
+                        $(d.target).outerHeight(containerHeight - d.top);
                     }
-                    bbox.css({
-                        "top": d.top + "px",
-                        "left": d.left + "px",
-                        "width": d.width + "px",
-                        "height": d.height + "px"
-                    });
-                    bbox.css("display", "block");
-
                     let bboxChanged = new BoundingBox(
                         this.currentFrame,
                         Math.round(d.left),
                         Math.round(d.top),
-                        Math.round(d.width),
-                        Math.round(d.height),
-                        true, // User-modified bbox is ground truth
+                        Math.round($(d.target).outerWidth()),
+                        Math.round($(d.target).outerHeight()),
+                        true, // User-dragged bbox is ground truth
                         this.currentBBox?.blocked || false
                     );
                     bboxChanged.idBoundingBox = this.currentBBox?.idBoundingBox;
@@ -441,7 +421,7 @@ function boxComponent(idVideoDOMElement) {
             bbox.draggable({
                 handle: '.handle.center-drag',
                 onDrag: (e) => {
-                    var d = e.data;
+                    let d = e.data;
                     if (d.left < 0) {
                         d.left = 0;
                     }
@@ -449,20 +429,20 @@ function boxComponent(idVideoDOMElement) {
                         d.top = 0;
                     }
                     if (d.left + $(d.target).outerWidth() > containerWidth) {
-                        d.left = containerWidth - $(d.target).outerWidth();
+                         d.left = containerWidth - $(d.target).outerWidth();
                     }
                     if (d.top + $(d.target).outerHeight() > containerHeight) {
                         d.top = containerHeight - $(d.target).outerHeight();
                     }
                 },
                 onStopDrag: (e) => {
-                    let position = bbox.position();
+                    let d = e.data;
                     let bboxChanged = new BoundingBox(
                         this.currentFrame,
-                        Math.round(position.left),
-                        Math.round(position.top),
-                        Math.round(bbox.outerWidth()),
-                        Math.round(bbox.outerHeight()),
+                        Math.round(d.left),
+                        Math.round(d.top),
+                        Math.round($(d.target).outerWidth()),
+                        Math.round($(d.target).outerHeight()),
                         true, // User-dragged bbox is ground truth
                         this.currentBBox?.blocked || false
                     );
@@ -510,6 +490,7 @@ function boxComponent(idVideoDOMElement) {
                         backgroundColor: this.bgColor,
                         color: this.fgColor
                     });
+                    $dom.find(".objectId").text(this.object.idObject);
 
                     if (this.isTracking) {
                         $dom.css({

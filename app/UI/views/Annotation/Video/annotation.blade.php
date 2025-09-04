@@ -8,9 +8,9 @@ if ($annotationType == 'dynamicMode') {
 $sections[] = ['',$document->name];
 @endphp
 <x-layout::index>
-    <script src="/scripts/utils/jquery.parser.js"></script>
-    <script src="/scripts/utils/jquery.draggable.js"></script>
-    <script src="/scripts/utils/jquery.resizable.js"></script>
+{{--    <script src="/scripts/utils/jquery.parser.js"></script>--}}
+{{--    <script src="/scripts/utils/jquery.draggable.js"></script>--}}
+{{--    <script src="/scripts/utils/jquery.resizable.js"></script>--}}
     <script type="text/javascript" src="/annotation/video/script/objects"></script>
     <script type="text/javascript" src="/annotation/video/script/components"></script>
     <div class="app-layout annotation-video">
