@@ -72,7 +72,9 @@ class VideoController extends Controller
         debug($data);
         try {
             $object = VideoService::createNewObjectAtLayer($data);
-
+            if ($data->annotationType == 'dynamicAnnotation') {
+                $this->trigger("goto-bbox");
+            }
             return $this->redirect("/annotation/{$data->annotationType}/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
@@ -152,7 +154,6 @@ class VideoController extends Controller
             if (! $boundingBox) {
                 return $this->renderNotify('error', 'Updated bounding box not found.');
             }
-
             return $boundingBox;
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());

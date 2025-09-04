@@ -22,7 +22,6 @@
                @progress="updateBuffer()"
                @click="togglePlay()"
                @tracking-mode-toggle.document="onToggleTrackingMode()"
-               @object-loaded.document="onObjectLoaded"
         >
             <source src="{!! config('webtool.mediaURL') . "/" . $video->currentURL !!}?t={!! time() !!}"
                     type="video/mp4">

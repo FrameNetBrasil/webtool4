@@ -33,7 +33,7 @@ function boxComponent(idVideoDOMElement) {
         dom: null,
         _token: "",
         currentBBox: null,
-        bboxes:{},
+        bboxes: {},
         interactionInitialized: false,
         annotationType: '',
         baseURL: '',
@@ -93,16 +93,11 @@ function boxComponent(idVideoDOMElement) {
         async onVideoUpdateState(e) {
             this.clearBBox();
             this.currentFrame = e.detail.frame.current;
-            console.log("onVideoUpdateState current frame", this.currentFrame, this.object.startFrame, this.object.endFrame);
-            if ((this.currentFrame >= this.object.startFrame) && (this.currentFrame <= this.object.endFrame)) {
+            //if ((this.object) && ((this.currentFrame >= this.object.startFrame) && (this.currentFrame <= this.object.endFrame))) {
+            if ((this.object) && ((this.currentFrame >= this.object.startFrame))) {
+                console.log("onVideoUpdateState current frame", this.currentFrame, this.object.startFrame, this.object.endFrame);
                 await this.showBBox();
                 await this.tracking();
-            } else {
-                document.dispatchEvent(new CustomEvent("bbox-drawn", {
-                    detail: {
-                        bbox: null
-                    }
-                }));
             }
         },
 
@@ -111,7 +106,14 @@ function boxComponent(idVideoDOMElement) {
             this.object = e.detail.object;
             this.annotationType = this.object.annotationType;
             this.currentFrame = this.object.startFrame;
-            await this.showBBox();
+            this.bboxes = this.object.bboxes;
+            document.dispatchEvent(new CustomEvent("video-seek-frame", {
+                detail: {
+                    frameNumber: this.object.startFrame
+                }
+            }));
+            // console.log(this.bboxes);
+            // await this.showBBox();
         },
 
         // async onBBoxToggleTracking() {
@@ -134,8 +136,8 @@ function boxComponent(idVideoDOMElement) {
 
         async onBBoxCreated(e) {
             this.bbox = e.detail.bbox;
-            console.log("bbox created for object", this.object);
             let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, false);
+            console.log("bbox created for object", this.object);
             this.onDisableDrawing();
             bbox.idBoundingBox = await ky.post(`${this.baseURL}/createBBox`, {
                 json: {
@@ -169,9 +171,9 @@ function boxComponent(idVideoDOMElement) {
         },
 
         async onBBoxChangeBlocked(e) {
-            let bbox = this.currentBBox;
+            let bbox = await this.getCurrentBBox();
             bbox.blocked = e.target.classList.contains('checked') ? 1 : 0;
-            console.log("on bbox change blocked ", this.currentBBox,bbox.blocked);
+            console.log("on bbox change blocked ", this.currentBBox, bbox.blocked);
             await ky.post(`${this.baseURL}/updateBBox`, {
                 json: {
                     _token: this._token,
@@ -218,8 +220,8 @@ function boxComponent(idVideoDOMElement) {
                     isTracking: this.isTracking ? 1 : 0
                 }
             }).json();
-            const { idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked, isGroundTruth} = bbox;
-            this.currentBBox = { idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked, isGroundTruth };
+            const {idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked, isGroundTruth} = bbox;
+            this.currentBBox = {idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked, isGroundTruth};
             return bbox;
         },
 
@@ -308,13 +310,22 @@ function boxComponent(idVideoDOMElement) {
                 let newBBox = this.createTrackedBBox(trackedBBox, previousBBox.blocked, false);
 
                 await this.createNewBBox(newBBox);
-                this.showBBox(); // Refresh to show new bbox
+                return newBBox;
+                //this.showBBox(); // Refresh to show new bbox
+            } else {
+                if (this.currentFrame !== this.object.startFrame) {
+                    messenger.notify("warning", "There is no previous BBox to tracking");
+                }
+                return null;
             }
         },
 
         async showBBox() {
             let bbox = await this.getCurrentBBox();
-            console.log("showBBox",bbox);
+            if (!bbox) {
+                bbox = await this.handleMissingBBox();
+            }
+            console.log("showBBox", bbox);
             if (bbox) {
                 if (bbox.isGroundTruth) {
                     // Ground truth bbox - use as is
@@ -324,10 +335,12 @@ function boxComponent(idVideoDOMElement) {
                     // Non-ground truth bbox - recreate via tracking
                     await this.handleNonGroundTruthBBox(bbox);
                 }
-            } else {
-                // No bbox exists - create new one via tracking
-                await this.handleMissingBBox();
             }
+            document.dispatchEvent(new CustomEvent("bbox-drawn", {
+                detail: {
+                    bbox
+                }
+            }));
         },
 
         onBBoxCreate() {
@@ -342,7 +355,8 @@ function boxComponent(idVideoDOMElement) {
                 await new Promise(r => setTimeout(r, 800));
                 const nextFrame = this.currentFrame + 1;
                 console.log("tracking....", (this.isTracking ? 'tracking' : 'not tracking'), nextFrame, this.object.startFrame, this.object.endFrame);
-                if ((nextFrame >= this.object.startFrame) && (nextFrame <= this.object.endFrame)) {
+                //if ((nextFrame >= this.object.startFrame) && (nextFrame <= this.object.endFrame)) {
+                if ((nextFrame >= this.object.startFrame)) {
                     // console.log("goto Frame ", nextFrame);
                     //this.previousBBox = JSON.parse(JSON.stringify(this.bbox));
                     console.log('going to next frame ', nextFrame);
@@ -364,7 +378,7 @@ function boxComponent(idVideoDOMElement) {
 
             let containerHeight = $("#boxesContainer").height();
             let containerWidth = $("#boxesContainer").width();
-            console.log("container", containerHeight,containerWidth);
+            console.log("container", containerHeight, containerWidth);
 
             // Ensure the bbox has required child elements
             if (bbox.find('.handle.center-drag').length === 0) {
@@ -429,7 +443,7 @@ function boxComponent(idVideoDOMElement) {
                         d.top = 0;
                     }
                     if (d.left + $(d.target).outerWidth() > containerWidth) {
-                         d.left = containerWidth - $(d.target).outerWidth();
+                        d.left = containerWidth - $(d.target).outerWidth();
                     }
                     if (d.top + $(d.target).outerHeight() > containerHeight) {
                         d.top = containerHeight - $(d.target).outerHeight();
@@ -456,7 +470,7 @@ function boxComponent(idVideoDOMElement) {
             return true;
         },
 
-        clearBBox: function() {
+        clearBBox: function () {
             $(".bbox").css("display", "none");
         },
 

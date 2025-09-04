@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Annotation;
 use App\Data\Annotation\Browse\SearchData;
 use App\Http\Controllers\Controller;
 use App\Services\Annotation\BrowseService;
-use App\Services\Annotation\CorpusService;
 use App\Services\Annotation\VideoService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -41,6 +40,18 @@ class DeixisController extends Controller
         return response()
             ->view('Annotation.Video.annotation', $data)
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+
+    #[Delete(path: '/annotation/deixis/{idDocument}/{idDynamicObject}')]
+    public function deleteObject(int $idDocument, int $idDynamicObject)
+    {
+        try {
+            VideoService::deleteObject($idDynamicObject);
+
+            return $this->redirect("/annotation/deixis/{$idDocument}");
+        } catch (\Exception $e) {
+            return $this->renderNotify('error', $e->getMessage());
+        }
     }
 
     #[Delete(path: '/annotation/deixis/deleteAllBBoxes/{idDocument}/{idDynamicObject}')]

@@ -13,7 +13,6 @@ use App\Database\Criteria;
 use App\Enum\AnnotationType;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
-use App\Repositories\Task;
 use App\Repositories\Timeline;
 use App\Repositories\User;
 use App\Repositories\Video;
@@ -291,10 +290,11 @@ class VideoService
                 $object->bgColor = "#{$object->bgColorGL}";
                 $object->fgColor = "#{$object->fgColorGL}";
             }
-            $countBBoxes = Criteria::table('view_dynamicobject_boundingbox')
+            $object->bboxes = Criteria::table('view_dynamicobject_boundingbox')
                 ->where('idDynamicObject', $idObject)
-                ->count();
-            $object->hasBBoxes = ($countBBoxes > 0);
+                ->keyBy("frameNumber")
+                ->all();
+            $object->hasBBoxes = (count($object->bboxes) > 0);
         }
         return $object;
     }
@@ -367,6 +367,14 @@ class VideoService
 
     public static function createNewObjectAtLayer(CreateObjectData $data): object
     {
+        if ($data->annotationType == 'dynamicMode') {
+            $layerType = Criteria::table("view_layertype")
+                ->where("idLanguage", AppService::getCurrentIdLanguage())
+                ->where("layerGroup","DynamicAnnotation")
+                ->first();
+            $data->idLayerType = $layerType->idLayerType;
+            $data->endFrame = $data->startFrame;
+        }
         $origin = ($data->annotationType == 'deixis') ? 5 : 1;
         $idUser = AppService::getCurrentIdUser();
         $do = json_encode([
@@ -609,7 +617,6 @@ class VideoService
         Criteria::table('boundingbox')
             ->where('idBoundingBox', $data->idBoundingBox)
             ->update($data->bbox);
-
         return $data->idBoundingBox;
     }
 

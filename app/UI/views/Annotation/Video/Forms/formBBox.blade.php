@@ -36,7 +36,7 @@
                     <input
                         type="checkbox"
                         tabindex="0"
-                        :checked="bboxDrawn && (bboxBlocked === 1)"
+                        :checked="bboxDrawn && (bboxDrawn.blocked === 1)"
                     >
                     <label class="pl-6">is blocked?</label>
                 </div>
