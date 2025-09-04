@@ -9,21 +9,33 @@
         </div>
     </div>
     <div class="content">
-        @if($annotationType == "dynamicMode")
-            <button
-                class="ui button primary"
-                @click="$dispatch('bbox-create')"
-            >
-                <i class="plus square outline icon"></i>
-                Create BBox
-            </button>
-        @endif
-        @if($annotationType == "deixis")
-            <form class="ui form">
-                <input type="hidden" name="idDocument" value="{{$idDocument}}">
-                <input type="hidden" name="idDynamicObject" value="0">
-                <input type="hidden" name="annotationType" value="{{$annotationType}}">
-
+        {{--        @if($annotationType == "dynamicMode")--}}
+        {{--            <button--}}
+        {{--                class="ui button primary"--}}
+        {{--                @click="$dispatch('bbox-create')"--}}
+        {{--            >--}}
+        {{--                <i class="plus square outline icon"></i>--}}
+        {{--                Create BBox--}}
+        {{--            </button>--}}
+        {{--        @endif--}}
+        {{--        @if($annotationType == "deixis")--}}
+        <form class="ui form">
+            <input type="hidden" name="idDocument" value="{{$idDocument}}">
+            <input type="hidden" name="idDynamicObject" value="0">
+            <input type="hidden" name="annotationType" value="{{$annotationType}}">
+            @if($annotationType == "dynamicMode")
+                <input type="hidden" name="idLayerType" value="0">
+                <div class="fields">
+                    <div class="field">
+                        <label>Start frame <span class="text-primary cursor-pointer"
+                                                 @click="copyFrameFor('startFrame')">[Copy from video]</span></label>
+                        <div class="ui medium input">
+                            <input type="text" name="startFrame" placeholder="1" value="1">
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @if($annotationType == "deixis")
                 <div class="three fields">
                     <div class="field">
                         <x-combobox::layer-deixis
@@ -46,15 +58,15 @@
                         </div>
                     </div>
                 </div>
-                <button
-                    type="submit"
-                    class="ui primary button"
-                    hx-post="/annotation/video/createNewObjectAtLayer"
-                >
-                    Save
-                </button>
-            </form>
-        @endif
+            @endif
+            <button
+                type="submit"
+                class="ui primary button"
+                hx-post="/annotation/video/createNewObjectAtLayer"
+            >
+                Save
+            </button>
+        </form>
     </div>
 </div>
 

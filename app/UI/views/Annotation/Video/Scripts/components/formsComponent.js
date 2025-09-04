@@ -7,7 +7,6 @@ function formsComponent(idDocument) {
         trackingMode: false,
         autoTracking: false,
         bboxDrawn: null,
-        bboxBlocked: false,
 
         init() {
             this.idDocument = idDocument;
@@ -21,7 +20,7 @@ function formsComponent(idDocument) {
 
         onBBoxToggleTracking() {
             this.autoTracking = !this.autoTracking;
-            console.log("formsComponent toggle tracking - now is " + (this.autoTracking ? 'true':'false') );
+            console.log("formsComponent toggle tracking - now is " + (this.autoTracking ? 'true' : 'false'));
             if (this.autoTracking) {
                 document.dispatchEvent(new CustomEvent("auto-tracking-start"));
             } else {
@@ -31,18 +30,12 @@ function formsComponent(idDocument) {
 
         onBBoxDrawn(e) {
             console.log("formsComponent onBBoxDrawn", e.detail.bbox);
-            if (e.detail.bbox) {
-                this.bboxDrawn = e.detail.bbox;
-                this.bboxBlocked = this.bboxDrawn.blocked;
-            }
+            this.bboxDrawn = e.detail.bbox;
         },
 
         onBBoxUpdate(e) {
             console.log("formsComponent onBBoxUpdate", e.detail.bbox);
-            if (e.detail.bbox) {
-                this.bboxDrawn = e.detail.bbox;
-                this.bboxBlocked = this.bboxDrawn.blocked;
-            }
+            this.bboxDrawn = e.detail.bbox;
         },
 
         onCloseObjectPane() {
