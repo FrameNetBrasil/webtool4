@@ -11,7 +11,7 @@
 <div class="gridBody">
     <div
         id="timelinePane"
-        class="ui tab timeline h-full w-full active"
+        class="ui tab timelinePane h-full w-full active"
         data-tab="timeline"
     >
         @include("Annotation.Video.Panes.timeline")
