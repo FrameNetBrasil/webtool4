@@ -7,7 +7,7 @@ use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\Corpus\DeleteObjectData;
 use App\Data\Annotation\Corpus\LOMEAcceptedData;
 use App\Data\Annotation\Corpus\SelectionData;
-use App\Data\Annotation\Corpus\SessionData;
+use App\Data\Annotation\Session\SessionData;
 use App\Database\Criteria;
 use App\Enum\AnnotationSetStatus;
 use App\Enum\Status;
@@ -134,15 +134,5 @@ class CorpusController extends Controller
             "annotationSet" => $annotationSet
         ]);
     }
-
-    /*
-     * Annotation session
-     */
-    #[Post(path: '/annotation/corpus/session/start')]
-    public function sessionStart(SessionData $data) {
-        debug($data);
-        return $this->renderNotify("success", "Session started");
-    }
-
 
 }

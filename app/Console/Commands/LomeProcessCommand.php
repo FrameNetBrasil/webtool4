@@ -8,6 +8,7 @@ use App\Data\Annotation\Corpus\DeleteObjectData;
 use App\Data\Annotation\Corpus\SelectionData;
 use App\Data\LoginData;
 use App\Database\Criteria;
+use App\Enum\Status;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Lexicon;
 use App\Services\Annotation\CorpusService;
@@ -73,10 +74,10 @@ class LomeProcessCommand extends Command
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where ds.idDocumentSentence = 5216474 limit 1
+where ds.idDocument = 15781
                 ");
             AppService::setCurrentLanguage(1);
-            debug(count($sentences));
+            debug("count sentence = " . count($sentences));
             mb_internal_encoding("UTF-8"); // this IS A MUST!! PHP has trouble with multibyte when no internal encoding is set!
             $s = 0;
             foreach ($sentences as $sentence) {
@@ -139,6 +140,9 @@ where ds.idDocumentSentence = 5216474 limit 1
                             $luToken = $annotation->span[0];
                             $parts = explode(" ", $luToken);
                             if (count($parts) == 1) {
+                                if ($word == "'") {
+                                    $word="\'";
+                                }
                                 $lemma = DB::connection('webtool')->select("
                                 select l.idLexicon idLemma
 from view_lexicon_lemma l
@@ -183,9 +187,10 @@ limit 1
                                         ->where("a.idDocumentSentence", $sentence->idDocumentSentence)
                                         ->where("a.idLU", $idLU)
                                         ->where("t.startChar", $startChar)
+                                        ->where("a.idUser", 611)
                                         ->first();
                                     if (!is_null($as)) {
-                                        Criteria::function('annotationset_delete(?,?)', [$as->idAnnotationSet, $user->idUser]);
+                                        Criteria::function('annotationset_hard_delete(?,?)', [$as->idAnnotationSet, $user->idUser]);
                                     }
                                     $idAnnotationSet = AnnotationSet::createForLU($sentence->idDocumentSentence, $idLU, $startChar, $endChar);
                                 }
@@ -235,8 +240,9 @@ limit 1
                                         'idEntity' => $object->idEntity,
                                         'corpusAnnotationType' => 'fe'
                                     ]);
-//                                    AnnotationFEService::deleteFE($deleteData);
+                                    CorpusService::deleteObject($deleteData);
                                     CorpusService::annotateObject($annotationData);
+                                    AnnotationSet::updateStatusField($idAnnotationSet, Status::CREATED->value);
                                 }
                             }
                         }
@@ -246,7 +252,7 @@ limit 1
                     print_r("\n" . $sentence->idSentence . ":" . $e->getMessage());
                     die;
                 }
-                break;
+//                break;
             }
         } catch (\Exception $e) {
             print_r($e->getMessage());
