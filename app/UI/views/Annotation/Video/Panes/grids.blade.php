@@ -7,6 +7,10 @@
         class="item"
         data-tab="objects"
     >Objects</a>
+    <a
+        class="item"
+        data-tab="sentences"
+    >Sentences</a>
 </div>
 <div class="gridBody">
     <div
@@ -22,9 +26,23 @@
             'annotationType' => $annotationType
         ])
     </div>
+    <div class="ui tab h-full w-full sentences" data-tab="sentences">
+
+    </div>
 </div>
 <script type="text/javascript">
-    $(".tabs .item")
-        .tab()
-    ;
+    // $(".tabs .item")
+    //     .tab()
+    // ;
+    $(function() {
+        $(".tabs .item").tab({
+            onLoad: (tabPath, parameterArray, historyEvent) => {
+                if(tabPath === 'sentences') {
+                    htmx.ajax("GET", "/annotation/dynamicMode/sentences/{{$idDocument}}", ".sentences");
+                }
+                {{--let tab = "#{{$id}}_" + tabPath + "_tab";--}}
+                {{--htmx.ajax("GET", {{$id}}_tabs[tabPath].url, tab);--}}
+            }
+        });
+    });
 </script>

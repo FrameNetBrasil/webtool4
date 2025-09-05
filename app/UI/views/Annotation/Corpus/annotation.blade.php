@@ -4,6 +4,18 @@
         <x-layout::breadcrumb
             :sections="[['/','Home'],['/annotation','Annotation'],[$url,$page],['','#' . $idDocumentSentence]]"
         ></x-layout::breadcrumb>
+        <div class="annotation-action">
+            <div class="text-right">
+            <button
+                type=button
+                class="ui tiny secondary button"
+                hx-post="/annotation/corpus/session/start"
+                hx-vals='{"idDocumentSentence": {{$idDocumentSentence}}}'
+            >
+                Start session
+            </button>
+            </div>
+        </div>
         <div class="annotation-corpus">
             <script type="text/javascript" src="/annotation/corpus/script/components"></script>
             <div class="annotation-canvas">

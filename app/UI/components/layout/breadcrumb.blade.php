@@ -1,3 +1,6 @@
+@props([
+    'sections' => []
+])
 @php
     $isLogged = Auth::check();
     $hrefLogin = (env('APP_AUTH') == 'auth0') ? '/auth0Login' : '/';

@@ -137,6 +137,12 @@ function videoComponent() {
             this.seekToFrame(e.detail.frameNumber);
         },
 
+        async onVideoSeekTime(e) {
+            await this.waitForPlayerReady();
+            let frame = this.frameFromTime(e.detail.time);
+            this.seekToFrame(frame);
+        },
+
         onLoadedMetadata() {
             this.log('Video metadata loaded, seeking should work better');
             this.dimensions.width = this.player.videoWidth || this.dimensions.width;
@@ -227,6 +233,19 @@ function videoComponent() {
 
         onToggleTrackingMode() {
             this.trackingMode = !this.trackingMode;
+        },
+
+        async onPlayAtTime(e) {
+            console.log("onPlayAtTime", e.detail);
+            await this.waitForPlayerReady();
+            let frame = this.frameFromTime(e.detail.time);
+            this.seekToFrame(frame);
+            // this.player.pause();
+            this.player.play();
+        },
+
+        onPlayRange(e) {
+            console.log("onPlayRange", e.detail);
         },
 
         // =============================================

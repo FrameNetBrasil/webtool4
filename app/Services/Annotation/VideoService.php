@@ -11,6 +11,7 @@ use App\Data\Annotation\Video\ObjectSearchData;
 use App\Data\Annotation\Video\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Enum\AnnotationType;
+use App\Repositories\AnnotationSet;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Timeline;
