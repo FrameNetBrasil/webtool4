@@ -251,6 +251,25 @@
             display:flex;
             flex: 1;
             padding-bottom: @relativeSmall;
+
+            .sentences {
+                overflow-y: auto;
+                min-height: 0;
+                position: relative;
+                height: 100%;
+                padding-bottom: @relativeSmall;
+                width: 100%;
+
+                .sentences-container {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                }
+
+            }
+
         }
 
         // Annotation-specific search styles

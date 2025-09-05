@@ -32,6 +32,16 @@ class DynamicModeController extends Controller
         return VideoService::getResourceData($idDocument, $idDynamicObject, 'dynamicMode');
     }
 
+    #[Get(path: '/annotation/dynamicMode/sentences/{idDocument}')]
+    public function gridSentences(int $idDocument)
+    {
+        $sentences = BrowseService::listSentences($idDocument);
+        return view("Annotation.Video.Panes.sentences", [
+            'sentences' => $sentences
+        ]);
+    }
+
+
     #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
     public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
     {
@@ -64,6 +74,8 @@ class DynamicModeController extends Controller
             return $this->renderNotify('error', $e->getMessage());
         }
     }
+
+
 
 
 //    #[Get(path: '/annotation/dynamicMode')]

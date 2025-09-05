@@ -1,4 +1,17 @@
 /* Full-screen layout for annotation */
+.annotation-action {
+    grid-area: annotation-action;
+    height: @relative32px;
+    border-bottom: 1px solid @borderColor;
+    padding-left: @relativeMedium;
+    padding-right: @relativeMedium;
+    line-height: @relative32px;
+
+    .ui.button {
+        padding: 6px 14px 6px 14px;
+    }
+}
+
 .annotation-corpus {
     grid-area: annotation;
     display: grid;
