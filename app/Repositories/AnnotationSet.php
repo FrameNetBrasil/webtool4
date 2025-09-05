@@ -213,7 +213,6 @@ HERE;
             $data = json_encode([
                 'idTextSpan' => $idTextSpan,
                 'idEntity' => $target->idEntity,
-                'relationType' => 'rel_annotation',
                 'idUser' => $idUser
             ]);
             Criteria::function("annotation_create(?)", [$data]);

@@ -365,8 +365,12 @@ class CorpusService
 
     public static function annotateObject(AnnotationData $object): array
     {
-        DB::transaction(function () use ($object) {
-            $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $object->idAnnotationSet);
+        $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $object->idAnnotationSet);
+        $idUser = AppService::getCurrentIdUser();
+        if (!SessionService::isActive($annotationSet->idDocumentSentence, $idUser)) {
+            throw new \Exception("The annotation session is not active.");
+        }
+        DB::transaction(function () use ($object, $annotationSet) {
             // no caso do corpus annotation, o objeto pode ser um FE ou um GL
             $fe = Criteria::byId("frameelement", "idEntity", $object->idEntity);
             $idLayerType = Criteria::byId("layertype", "entry", "lty_fe")->idLayerType;
@@ -411,6 +415,11 @@ class CorpusService
 
     public static function deleteObject(DeleteObjectData $object): void
     {
+        $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $object->idAnnotationSet);
+        $idUser = AppService::getCurrentIdUser();
+        if (!SessionService::isActive($annotationSet->idDocumentSentence, $idUser)) {
+            throw new \Exception("The annotation session is not active.");
+        }
         DB::transaction(function () use ($object) {
             $fe = Criteria::byId("frameelement", "idEntity", $object->idEntity);
             $table = "view_annotation_text_fe";

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Annotation\Corpus;
+namespace App\Data\Annotation\Session;
 
 use App\Services\AppService;
 use Carbon\Carbon;
@@ -10,13 +10,13 @@ class SessionData extends Data
 {
     public function __construct(
         public ?int $idDocumentSentence = null,
-        public ?string $timeStamp = '',
         public ?int $idUser = null,
+        public ?Carbon $timestamp = null,
         public string  $_token = '',
     )
     {
         $this->idUser = AppService::getCurrentIdUser();
-        $this->timeStamp = Carbon::now();
+        $this->timestamp = Carbon::now();
         $this->_token = csrf_token();
     }
 

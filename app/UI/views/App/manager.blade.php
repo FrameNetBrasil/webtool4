@@ -11,7 +11,7 @@
         'semantictype' => ['Domain/SemanticType','/semanticType','', 'ADMIN','ui::icon.frame'],
         'layer' => ['Layer/GenericLabel', '/layers','', 'ADMIN','ui::icon.frame'],
         'relations' => ['Relations', '/relations','', 'ADMIN','ui::icon.frame'],
-        'importfulltext' => ['Import FullText', '/utils/importfulltext', '','MANAGER','ui::icon.frame'],
+        'importfulltext' => ['Import FullText', '/utils/importFullText', '','MANAGER','ui::icon.frame'],
     ];
 
     $groups = [
