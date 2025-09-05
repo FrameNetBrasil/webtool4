@@ -63,7 +63,7 @@
                                             :value="$luCandidate->senseDescription ?? ''"
                                         ></x-multiline-field>
                                     </div>
-                                    <div class="formgroup-inline">
+                                    <div class="fields">
                                         <div class="field mr-1">
                                             <x-combobox.frame
                                                 id="idFrame"
@@ -102,7 +102,7 @@
                                         <label>Reference</label>
                                         <hr/>
                                     </div>
-                                    <div class="formgroup-inline">
+                                    <div class="fields">
                                         <div class="field mr-1">
                                             <x-number-field
                                                 label="#idSentence"
@@ -125,6 +125,7 @@
                                             ></x-number-field>
                                         </div>
                                         <div class="field mr-1">
+                                            <label></label>
                                             <div
                                                 hx-trigger="load, annotationset_deleted from:body"
                                                 hx-get="/luCandidate/{{$luCandidate->idLU}}/asLOME"
