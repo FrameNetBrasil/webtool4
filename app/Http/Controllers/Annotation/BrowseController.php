@@ -57,40 +57,5 @@ class BrowseController extends Controller
         ]);
     }
 
-
-//    #[Post(path: '/annotation/browse/treeSentence')]
-//    public function tree(TreeData $search)
-//    {
-//        $data = [];
-//        if (!is_null($search->idDocument)) {
-//            $data = BrowseService::browseSentencesByDocument($search->idDocument);
-//        } elseif (!is_null($search->idCorpus)) {
-//            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus);
-//        }
-//
-//        return view('Annotation.browseSentences', [
-//            'page' => '',
-//            'url' => '',
-//            'data' => $data,
-//        ])->fragment('tree');
-//    }
-
-
-//    #[Post(path: '/annotation/browse/treeDocument')]
-//    public function treeDocument(TreeData $search)
-//    {
-//        $data = [];
-//        if (!is_null($search->idCorpus)) {
-//            $data = BrowseService::browseDocumentsByCorpus($search->idCorpus, [], '', true);
-//        }
-//
-//        return view('Annotation.browseDocuments', [
-//            'page' => '',
-//            'url' => '',
-//            'taskGroupName' => $search->taskGroupName,
-//            'data' => $data,
-//        ])->fragment('tree');
-//    }
-
 }
 

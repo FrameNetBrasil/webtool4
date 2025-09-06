@@ -122,7 +122,7 @@
                         </div>
                         <div class="eleven wide column" style="padding-left: 0.5rem;">
                             <div class="dynamic-video-container" style="min-height: 600px; border: 1px solid rgba(34, 36, 38, 0.15); border-radius: 4px; background-color: #fafafa; padding: 1rem;">
-                                <div x-data="videoComponent()" class="video-player-container">
+                                <div x-data="imageComponent()" class="video-player-container">
                                     <div class="video-wrapper" style="position: relative; width: 415px; height: 245px;">
                                         <video :id="idVideo"
                                                preload="metadata"
@@ -134,11 +134,11 @@
                                                @pause="onPause()"
                                                style="width: 100%; height: 100%;">
                                         </video>
-                                        
+
                                         <div id="boxesContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Control bar -->
                                     <div class="video-controls" style="margin-top: 0.5rem;">
                                         <div class="ui grid" style="margin: 0;">
@@ -182,5 +182,5 @@
 @endif
 
 <script>
-@include("Annotation.Dynamic.Scripts.components.videoComponent")
+@include("Annotation.Dynamic.Scripts.components.imageComponent")
 </script>

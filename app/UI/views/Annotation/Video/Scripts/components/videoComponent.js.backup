@@ -1,4 +1,4 @@
-function videoComponent() {
+function imageComponent() {
     return {
         // Configuration (matching your original structure)
         idVideoJs: "videoContainer",
@@ -51,7 +51,7 @@ function videoComponent() {
         init() {
             // Use $nextTick to ensure DOM is ready
             this.$nextTick(() => {
-                console.log("videoComponent init");
+                console.log("imageComponent init");
                 this.time.current = "0:00";
                 this.player = document.getElementById(this.idVideo);
 
