@@ -5,7 +5,7 @@
 .page-header {
     flex-shrink: 0;
     padding: @relativeBig;
-    border-bottom: 1px solid @borderColor;
+    //border-bottom: 1px solid @borderColor;
     background: @background;
 
     .page-header-content {
@@ -79,6 +79,21 @@
     scroll-behavior: smooth;
     scroll-padding-top: 1rem;
     height:100%;
+
+    &.slide {
+        .ui.container {
+            height: 100%;
+
+            .ui.secondary.menu {
+                visibility: hidden;
+                margin: 0;
+                font-size: 0;
+                min-height: 0;
+            }
+
+        }
+    }
+
 }
 
 .page-center {
