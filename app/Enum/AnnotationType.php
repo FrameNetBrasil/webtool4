@@ -8,4 +8,5 @@ enum AnnotationType: string
     case DYNAMICMODE = 'dynamicMode';
     case DEIXIS = 'deixis';
     case STATICBBOX = 'staticBBox';
+    case STATICEVENT = 'staticEvent';
 }

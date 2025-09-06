@@ -1,6 +1,12 @@
+// Video component with modular architecture
+// Organized into logical sections for better maintainability
 function imageComponent() {
     return {
-        // Configuration (matching your original structure)
+        // =============================================
+        // CONFIGURATION & STATE
+        // =============================================
+
+        // Configuration (matching original structure)
         idVideoJs: "videoContainer",
         idVideo: "videoContainer_html5_api",
         fps: 25, // frames per second
@@ -9,11 +15,9 @@ function imageComponent() {
             width: 852,
             height: 480
         },
-        // framesRange: {
-        //     first: 1,
-        //     last: 1
-        // },
-        isTracking: false,
+        trackingMode: false,
+        autoTracking: false,
+
         // State variables
         player: null,
         frame: {
@@ -48,10 +52,14 @@ function imageComponent() {
         logs: [],
         logCounter: 0,
 
+        // =============================================
+        // LIFECYCLE & INITIALIZATION
+        // =============================================
+
         init() {
             // Use $nextTick to ensure DOM is ready
             this.$nextTick(() => {
-                console.log("imageComponent init");
+                console.log("videoComponent init");
                 this.time.current = "0:00";
                 this.player = document.getElementById(this.idVideo);
 
@@ -113,57 +121,27 @@ function imageComponent() {
             }));
         },
 
-        waitForDuration() {
-            return new Promise((resolve) => {
-                if (this.duration && this.duration > 0) {
-                    resolve(this.duration);
-                } else {
-                    const checkDuration = () => {
-                        if (this.duration && this.duration > 0) {
-                            resolve(this.duration);
-                        } else {
-                            setTimeout(checkDuration, 50);
-                        }
-                    };
-                    checkDuration();
-                }
-            });
+        destroy() {
+            if (this.durationCheckInterval) {
+                clearInterval(this.durationCheckInterval);
+                this.durationCheckInterval = null;
+            }
         },
 
-        waitForPlayerReady() {
-            return new Promise((resolve) => {
-                const isReady = () => {
-                    return this.player &&
-                        this.player.readyState >= 1 &&
-                        this.duration &&
-                        this.duration > 0;
-                };
+        // =============================================
+        // EVENT HANDLERS
+        // =============================================
 
-                if (isReady()) {
-                    resolve(this.player);
-                } else {
-                    const checkReady = () => {
-                        if (isReady()) {
-                            resolve(this.player);
-                        } else {
-                            setTimeout(checkReady, 50);
-                        }
-                    };
-                    checkReady();
-                }
-            });
-        },
-        // Event handlers (matching your original structure)
         async onVideoSeekFrame(e) {
-            // console.log(e.detail.frameNumber, this.player);
             await this.waitForPlayerReady();
             this.seekToFrame(e.detail.frameNumber);
         },
 
-        // onObjectSelected(e) {
-        //     this.reloadVideo();
-        //     this.preciseSeekToFrame(e.detail.dynamicModeObject.startFrame);
-        // },
+        async onVideoSeekTime(e) {
+            await this.waitForPlayerReady();
+            let frame = this.frameFromTime(e.detail.time);
+            this.seekToFrame(frame);
+        },
 
         onLoadedMetadata() {
             this.log('Video metadata loaded, seeking should work better');
@@ -230,7 +208,50 @@ function imageComponent() {
             this.log(`Seeked to frame: ${this.frame.current} (${this.time.current.toFixed(3)}s)`);
         },
 
-        // Core methods (matching your original structure)
+        // onTrackingStart() {
+        //     console.log("onTrackingStart");
+        //     this.isTracking = true;
+        // },
+        //
+        // onTrackingStop() {
+        //     console.log("onTrackingStop");
+        //     this.isTracking = false;
+        // },
+
+        updateReadyState() {
+            const readyStates = {
+                0: 'HAVE_NOTHING',
+                1: 'HAVE_METADATA',
+                2: 'HAVE_CURRENT_DATA',
+                3: 'HAVE_FUTURE_DATA',
+                4: 'HAVE_ENOUGH_DATA'
+            };
+
+            this.readyState = readyStates[this.player.readyState] || 'UNKNOWN';
+            this.log(`Ready state: ${this.readyState} (${this.player.readyState})`);
+        },
+
+        onToggleTrackingMode() {
+            this.trackingMode = !this.trackingMode;
+        },
+
+        async onPlayAtTime(e) {
+            console.log("onPlayAtTime", e.detail);
+            await this.waitForPlayerReady();
+            let frame = this.frameFromTime(e.detail.time);
+            this.seekToFrame(frame);
+            // this.player.pause();
+            this.player.play();
+        },
+
+        onPlayRange(e) {
+            console.log("onPlayRange", e.detail);
+        },
+
+        // =============================================
+        // CORE VIDEO OPERATIONS
+        // =============================================
+
         broadcastState() {
             document.dispatchEvent(new CustomEvent('video-update-state', {
                 detail: {
@@ -241,7 +262,7 @@ function imageComponent() {
             }));
         },
 
-        seekToFrame(frame) {
+        async seekToFrame(frame) {
             if (!this.player) {
                 console.warn('Player not initialized yet');
                 return;
@@ -283,7 +304,7 @@ function imageComponent() {
 
                         this.log(`  Actual frame: ${actualFrame}, diff: ${frameDiff}`);
 
-                        if (frameDiff <= 1) {
+                        if (frameDiff < 1) {
                             // Success - force visual update
                             this.forceFrameUpdate();
                             resolve();
@@ -299,103 +320,14 @@ function imageComponent() {
 
                     this.player.addEventListener('seeked', onSeeked, { once: true });
                     this.player.currentTime = targetTime;
-
-                    // Timeout fallback
-                    setTimeout(() => {
-                        this.player.removeEventListener('seeked', onSeeked);
-                        if (attempt < maxAttempts) {
-                            attemptSeek();
-                        } else {
-                            reject(new Error('Seek timeout'));
-                        }
-                    }, 1000);
                 };
 
                 attemptSeek();
             });
         },
 
-        togglePlay() {
-            if (!this.player) {
-                console.warn('Player not initialized yet');
-                return;
-            }
-
-            if (this.isPlaying) {
-                this.player.pause();
-            } else {
-                this.player.play().catch(e => this.log(`Play error: ${e.message}`));
-            }
-        },
-
-        // Frame/time conversion (matching your original methods)
-        frameFromTime(timeSeconds) {
-            return Math.floor((timeSeconds * 1000 * this.fps) / 1000) + 1;
-        },
-
-        timeFromFrame(frameNumber) {
-            return Math.floor(((frameNumber - 1) * this.timeInterval) * 1000) / 1000;
-        },
-
-        // Range playback methods (matching your original structure)
-        playByRange(startTime, endTime, offset) {
-            const playRange = {
-                startFrame: this.frameFromTime(startTime - offset),
-                endFrame: this.frameFromTime(endTime + offset)
-            };
-            this.playRange(playRange);
-        },
-
-        playByFrameRange(startFrame, endFrame) {
-            const playRange = {
-                startFrame: parseInt(startFrame),
-                endFrame: parseInt(endFrame)
-            };
-            this.playRange(playRange);
-        },
-
-        playRange(range) {
-            this.playingRange = range;
-            this.seekToFrame(range.startFrame);
-            this.log(`Playing range: frames ${range.startFrame} to ${range.endFrame}`);
-            setTimeout(() => {
-                this.player.play();
-            }, 100);
-        },
-
-        // UI helper methods
-        formatTime(seconds) {
-            if (isNaN(seconds)) return '00:00';
-            const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        },
-
-        updateProgress() {
-            if (this.duration && this.duration > 0) {
-                this.playProgress = (this.time.current / this.duration) * 100;
-            } else {
-                this.playProgress = 0;
-            }
-        },
-
-        updateBuffer() {
-            if (this.player) {
-                if (this.player.buffered.length > 0 && this.duration) {
-                    const buffered = this.player.buffered.end(this.player.buffered.length - 1);
-                    this.bufferProgress = (buffered / this.duration) * 100;
-                }
-            }
-        },
-
-        updateReadyState() {
-            const states = ['HAVE_NOTHING', 'HAVE_METADATA', 'HAVE_CURRENT_DATA', 'HAVE_FUTURE_DATA', 'HAVE_ENOUGH_DATA'];
-            this.readyState = states[this.player.readyState] || this.player.readyState;
-        },
-
-        seekToPosition(e) {
-            if (!this.duration || this.duration <= 0) {
-                this.log('Cannot seek - duration not available yet');
+        onProgressClick(e) {
+            if (!this.player || !this.duration) {
                 return;
             }
 
@@ -423,99 +355,61 @@ function imageComponent() {
             });
         },
 
-        // Range UI helpers
-        setCurrentAsRangeStart() {
-            this.rangeStart = this.frame.current;
-            this.log(`Set range start to frame ${this.rangeStart}`);
+        frameFromTime(time) {
+            return Math.floor(time / this.timeInterval) + 1;
         },
 
-        setCurrentAsRangeEnd() {
-            this.rangeEnd = this.frame.current;
-            this.log(`Set range end to frame ${this.rangeEnd}`);
+        timeFromFrame(frame) {
+            return (frame - 1) * this.timeInterval + (2/1000);
         },
 
-        // Testing methods
-        async testRandomSeeks() {
-            this.log('=== STARTING RANDOM SEEK TEST ===');
-            const testFrames = [];
-
-            // Generate random frames
-            for (let i = 0; i < 5; i++) {
-                testFrames.push(Math.floor(Math.random() * this.frame.last) + 1);
-            }
-
-            for (const frame of testFrames) {
-                try {
-                    await this.performPreciseSeek(frame);
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                } catch (error) {
-                    this.log(`Random seek to frame ${frame} failed: ${error.message}`);
+        waitForDuration() {
+            return new Promise((resolve) => {
+                if (this.duration && this.duration > 0) {
+                    resolve(this.duration);
+                } else {
+                    const checkDuration = () => {
+                        if (this.duration && this.duration > 0) {
+                            resolve(this.duration);
+                        } else {
+                            setTimeout(checkDuration, 50);
+                        }
+                    };
+                    checkDuration();
                 }
-            }
-
-            this.log('=== RANDOM SEEK TEST COMPLETED ===');
+            });
         },
 
-        // Debug methods
-        log(message) {
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = {
-                id: ++this.logCounter,
-                message: `${timestamp}: ${message}`
-            };
+        waitForPlayerReady() {
+            return new Promise((resolve) => {
+                const isReady = () => {
+                    return this.player &&
+                        this.player.readyState >= 1 &&
+                        this.duration &&
+                        this.duration > 0;
+                };
 
-            this.logs.push(logEntry);
-
-            // Keep only last 100 logs
-            if (this.logs.length > 100) {
-                this.logs.shift();
-            }
-
-            console.log(logEntry.message);
+                if (isReady()) {
+                    resolve(this.player);
+                } else {
+                    const checkReady = () => {
+                        if (isReady()) {
+                            resolve(this.player);
+                        } else {
+                            setTimeout(checkReady, 50);
+                        }
+                    };
+                    checkReady();
+                }
+            });
         },
 
-        clearLogs() {
-            this.logs = [];
-            this.log('Logs cleared');
-        },
-
-        // Cleanup method
-        destroy() {
-            if (this.durationCheckInterval) {
-                clearInterval(this.durationCheckInterval);
-                this.durationCheckInterval = null;
-            }
-        },
-
-        // onVideoUpdateState(e) {
-        //     this.frame.current = e.detail.frame.current;
-        //     this.time.current = this.timeFormated(e.detail.time.current);
-        //     this.isPlaying = e.detail.isPlaying;
-        // },
-        //
-        // onVideoUpdateDuration(e) {
-        //     this.time.duration = this.timeFormated(e.detail.duration);
-        //     this.frame.last = e.detail.lastFrame;
-        // },
-
-        onTrackingStart() {
-            console.log("onTrackingStart");
-            this.isTracking = true;
-        },
-
-        onTrackingStop() {
-            console.log("onTrackingStop");
-            this.isTracking = false;
-        },
-
-        timeFormated: (timeSeconds) => {
-            let minute = Math.trunc(timeSeconds / 60);
-            let seconds = Math.trunc(timeSeconds - (minute * 60));
-            return minute + ":" + (seconds < 10 ? '0' : '') + seconds;
-        },
+        // =============================================
+        // NAVIGATION & CONTROLS
+        // =============================================
 
         gotoStart() {
-            this.gotoFrame(0);
+            this.gotoFrame(1);
         },
 
         gotoPrevious10Second() {
@@ -549,7 +443,73 @@ function imageComponent() {
             this.seekToFrame(frameNumber);
         },
 
-        // Robust duration detection methods
+        togglePlay() {
+            if (!this.player) {
+                console.warn('Player not initialized yet');
+                return;
+            }
+
+            if (this.isPlaying) {
+                this.player.pause();
+            } else {
+                this.player.play().catch(e => this.log(`Play error: ${e.message}`));
+            }
+        },
+
+        setCurrentAsRangeStart() {
+            this.rangeStart = this.frame.current;
+            this.log(`Set range start to frame ${this.rangeStart}`);
+        },
+
+        setCurrentAsRangeEnd() {
+            this.rangeEnd = this.frame.current;
+            this.log(`Set range end to frame ${this.rangeEnd}`);
+        },
+
+        // Range playback methods (matching original structure)
+        playByRange(startTime, endTime, offset) {
+            const playRange = {
+                startFrame: this.frameFromTime(startTime - offset),
+                endFrame: this.frameFromTime(endTime + offset)
+            };
+            this.playRange(playRange);
+        },
+
+        playByFrameRange(startFrame, endFrame) {
+            const playRange = {
+                startFrame: parseInt(startFrame),
+                endFrame: parseInt(endFrame)
+            };
+            this.playRange(playRange);
+        },
+
+        playRange(range) {
+            this.playingRange = range;
+            this.seekToFrame(range.startFrame);
+            this.log(`Playing range: frames ${range.startFrame} to ${range.endFrame}`);
+            setTimeout(() => {
+                this.player.play();
+            }, 100);
+        },
+
+        seekToPosition(e) {
+            if (!this.duration || this.duration <= 0) {
+                this.log('Cannot seek - duration not available yet');
+                return;
+            }
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            const targetFrame = Math.floor(pos * this.frame.last) + 1;
+
+            this.log(`Click seek to frame ${targetFrame}`);
+            this.seekToFrame(targetFrame);
+        },
+
+        // =============================================
+        // DURATION & TIMING
+        // =============================================
+
         startDurationCheck() {
             this.log('Starting duration check interval');
 
@@ -623,7 +583,6 @@ function imageComponent() {
             }
         },
 
-        // Duration display methods
         showDuration() {
             if (this.duration && !isNaN(this.duration)) {
                 const durationFormatted = this.formatDuration(this.duration);
@@ -665,17 +624,40 @@ function imageComponent() {
             }
         },
 
-        getDurationInfo() {
-            return {
-                seconds: this.duration,
-                formatted: this.formatDuration(this.duration),
-                totalFrames: this.frame.last,
-                fps: this.fps,
-                timePerFrame: this.timeInterval
-            };
+        updateProgress() {
+            if (this.duration && this.duration > 0) {
+                this.playProgress = (this.time.current / this.duration) * 100;
+            } else {
+                this.playProgress = 0;
+            }
         },
 
-        // Playback rate control methods
+        timeFormated: (timeSeconds) => {
+            let minute = Math.trunc(timeSeconds / 60);
+            let seconds = Math.trunc(timeSeconds - (minute * 60));
+            return minute + ":" + (seconds < 10 ? '0' : '') + seconds;
+        },
+
+        formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        },
+
+        updateBuffer() {
+            if (this.player) {
+                if (this.player.buffered.length > 0 && this.duration) {
+                    const buffered = this.player.buffered.end(this.player.buffered.length - 1);
+                    this.bufferProgress = (buffered / this.duration) * 100;
+                }
+            }
+        },
+
+        // =============================================
+        // PLAYBACK RATE CONTROL
+        // =============================================
+
         setPlaybackRate(rate) {
             if (!this.player) {
                 console.warn('Player not initialized yet');
@@ -714,6 +696,51 @@ function imageComponent() {
             }
         },
 
+        // =============================================
+        // DEBUG & TESTING
+        // =============================================
 
+        async testRandomSeeks() {
+            this.log('=== STARTING RANDOM SEEK TEST ===');
+            const testFrames = [];
+
+            // Generate random frames
+            for (let i = 0; i < 5; i++) {
+                testFrames.push(Math.floor(Math.random() * this.frame.last) + 1);
+            }
+
+            for (const frame of testFrames) {
+                try {
+                    await this.performPreciseSeek(frame);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                } catch (error) {
+                    this.log(`Random seek to frame ${frame} failed: ${error.message}`);
+                }
+            }
+
+            this.log('=== RANDOM SEEK TEST COMPLETED ===');
+        },
+
+        log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = {
+                id: ++this.logCounter,
+                message: `${timestamp}: ${message}`
+            };
+
+            this.logs.push(logEntry);
+
+            // Keep only last 100 logs
+            if (this.logs.length > 100) {
+                this.logs.shift();
+            }
+
+            console.log(logEntry.message);
+        },
+
+        clearLogs() {
+            this.logs = [];
+            this.log('Logs cleared');
+        }
     };
 }

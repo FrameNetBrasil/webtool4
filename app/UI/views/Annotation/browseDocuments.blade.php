@@ -2,7 +2,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['',$page]]"
+            :sections="[['/','Home'],['/annotation','Annotation'],['',$page]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <x-ui::browse-tree
