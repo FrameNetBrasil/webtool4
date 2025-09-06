@@ -83,14 +83,6 @@
     &.slide {
         .ui.container {
             height: 100%;
-
-            .ui.secondary.menu {
-                visibility: hidden;
-                margin: 0;
-                font-size: 0;
-                min-height: 0;
-            }
-
         }
     }
 
@@ -110,6 +102,12 @@
 }
 
 .page-browse {
+    display: flex !important;
+    flex-direction: column;
+    height:100%;
+}
+
+.page-report {
     display: flex !important;
     flex-direction: column;
     height:100%;

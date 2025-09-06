@@ -5,7 +5,6 @@
     Parameters:
     - $lu: LU object with name, frame info
 --}}
-
 <div class="page-header-content">
     <div class="page-header-main">
         <div class="page-title-section">
@@ -18,13 +17,16 @@
                 </div>
             @endif
         </div>
-        <div class="page-actions">
-            <a href="/report/lu" hx-boost="true">
-                <button class="ui basic left labeled icon button">
+        @if($isHtmx)
+            <div class="page-actions">
+                <button
+                    class="ui basic left labeled icon button"
+                    @click="$.tab('change tab','browse')"
+                >
                     <i class="left arrow icon"></i>
                     Back to LUs
                 </button>
-            </a>
-        </div>
+            </div>
+        @endif
     </div>
 </div>

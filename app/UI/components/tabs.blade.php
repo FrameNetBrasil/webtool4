@@ -1,7 +1,18 @@
-<div class="tabs-component">
-    <div id="{{$id}}" class="ui stackable tabs menu">
+<div class="tabs-component {{$id}}-context">
+    <div
+        class="ui {{$style}} menu"
+        x-init="
+            let {{$id}}_tabs = {!! Js::from($tabs) !!};
+            $('.{{$id}}-context .menu .item').tab({
+                onLoad: (tabPath, parameterArray, historyEvent) => {
+                    let tab = '.' + tabPath;
+                    htmx.ajax('GET', {{$id}}_tabs[tabPath].url, tab);
+                }
+            });
+        "
+    >
         @foreach($tabs as $idItem => $item)
-            <div
+            <a
                 class="item"
                 data-tab="{{$idItem}}"
             >
@@ -9,27 +20,19 @@
                     <x-dynamic-component :component="'icon::' . $item['icon']" />
                 @endif
                 {{$item['label']}}
-            </div>
+            </a>
         @endforeach
     </div>
-</div>
-@foreach($tabs as $idItem => $item)
-    <div id="{{$id}}_{{$idItem}}_tab" class="ui tab" data-tab="{{$idItem}}">
-        <div class="ui segment" style="height:80px">
-            <div class="ui active inverted dimmer">
-                <div class="ui text loader">Loading</div>
+    @foreach($tabs as $idItem => $item)
+        <div
+            class="ui tab {{$idItem}}"
+            data-tab="{{$idItem}}"
+        >
+            <div class="ui segment" style="height:80px">
+                <div class="ui active inverted dimmer">
+                    <div class="ui text loader">Loading</div>
+                </div>
             </div>
         </div>
-    </div>
-@endforeach
-<script>
-    $(function() {
-        let {{$id}}_tabs = {!! Js::from($tabs) !!};
-        $('#{{$id}} .item').tab({
-            onLoad: (tabPath, parameterArray, historyEvent) => {
-                let tab = "#{{$id}}_" + tabPath + "_tab";
-                htmx.ajax("GET", {{$id}}_tabs[tabPath].url, tab);
-            }
-        });
-    });
-</script>
+    @endforeach
+</div>

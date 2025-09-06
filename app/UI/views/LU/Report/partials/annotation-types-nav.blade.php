@@ -7,15 +7,16 @@
 --}}
 
 <div class="section-header">
-    <h1 class="ui header section-title">
+    <h2 class="ui header section-title">
         <a>Realizations</a>
-    </h1>
+    </h2>
 </div>
  <x-ui::tabs
       id="luReportTabs"
+      style="secondary"
       :tabs="[
-          ['id' => 'textual', 'label' => 'Textual', 'icon' => 'text', 'url' => '/report/lu/'.$lu->idLU.'/textual'],
-          ['id' => 'static', 'label' => 'Static', 'icon' => 'image', 'url' => '/report/lu/'.$lu->idLU.'/static'],
+          'textual' => ['id' => 'textual', 'label' => 'Textual', 'icon' => 'text', 'url' => '/report/lu/'.$lu->idLU.'/textual'],
+          'static' => ['id' => 'static', 'label' => 'Static', 'icon' => 'image', 'url' => '/report/lu/'.$lu->idLU.'/static'],
 //          ['id' => 'dynamic', 'label' => 'Dynamic', 'icon' => 'video', 'url' => '/api/dynamic']
       ]"
       defaultTab="textual"

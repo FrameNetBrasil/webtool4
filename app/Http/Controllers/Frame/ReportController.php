@@ -29,9 +29,6 @@ class ReportController extends Controller
     {
         $frames = BrowseService::browseFrameBySearch($search);
 
-//        return view('Frame.Report.browse', [
-//            'data' => $frames,
-//        ]);
         return view('Frame.Report.main', [
             'data' => $frames,
         ]);
@@ -69,7 +66,8 @@ class ReportController extends Controller
     public function report(int|string $idFrame = '', string $lang = '')
     {
         $data = ReportService::report($idFrame, $lang);
-        if ($this->isHtmx()) {
+        $data['isHtmx'] = $this->isHtmx();
+        if ($data['isHtmx']) {
             return view('Frame.Report.reportPartial', $data);
         }
         return view('Frame.Report.report', $data);

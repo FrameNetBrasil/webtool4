@@ -2,19 +2,23 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/report','Report'],['','Frame']]"
+            :sections="[['/','Home'],['/report','Report'],['','LU']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="page-content slide">
+            <div class="page-content">
                 <div
-                    class="ui container"
-                    x-init="$('.item').tab()"
+                    class="ui container h-full lus-tabs-context"
+                    x-init="$.tab({
+                        evaluateScripts:true,
+                        context: '.lus-tabs-context',
+                        childrenOnly: true,
+                    })"
                 >
                     <div class="ui tab h-full" data-tab="browse">
                         <x-ui::browse-table
-                            title="Frame Report"
-                            url="/report/frame/search"
-                            emptyMsg="Enter your search term above to find frames."
+                            title="LU Report"
+                            url="/report/lu/search"
+                            emptyMsg="Enter your search term above to find LUs."
                             :data="$data"
                         >
                             <x-slot:fields>
@@ -23,8 +27,8 @@
                                         <i class="search icon"></i>
                                         <input
                                             type="search"
-                                            name="frame"
-                                            placeholder="Search Frame"
+                                            name="lu"
+                                            placeholder="Search LU"
                                             autocomplete="off"
                                         >
                                     </div>
@@ -37,15 +41,15 @@
                                     class="ui selectable striped compact table"
                                 >
                                     <tbody>
-                                    @foreach($data as $frame)
+                                    @foreach($data as $lu)
                                         <tr>
                                             <td>
                                                 <div
-                                                    hx-get="/report/frame/{{$frame['id']}}"
+                                                    hx-get="/report/lu/{{$lu['id']}}"
                                                     hx-target=".report"
                                                     hx-on::before-request="$.tab('change tab','report')"
                                                 >
-                                                    {!! $frame['text'] !!}
+                                                    {!! $lu['text'] !!}
                                                 </div>
                                             </td>
                                         </tr>
@@ -56,7 +60,7 @@
                         </x-ui::browse-table>
 
                     </div>
-                    <div class="ui tab report h-full" data-tab="report">
+                    <div class="ui tab report" data-tab="report">
                     </div>
                 </div>
             </div>

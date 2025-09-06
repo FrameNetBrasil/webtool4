@@ -7,14 +7,9 @@
 --}}
 
 <div class="section-header">
-    <h1 class="ui header section-title" id="incfe">
+    <h2 class="ui header section-title" id="incfe">
         <a href="#incfe">Incorporated FE</a>
-    </h1>
-{{--    <button class="ui button basic icon section-toggle"--}}
-{{--            onclick="toggleSection('incfe-content')"--}}
-{{--            aria-expanded="true">--}}
-{{--        <i class="chevron up icon"></i>--}}
-{{--    </button>--}}
+    </h2>
 </div>
 <div class="section-content" id="definition-content">
     <div class="ui card fluid data-card definition-card">

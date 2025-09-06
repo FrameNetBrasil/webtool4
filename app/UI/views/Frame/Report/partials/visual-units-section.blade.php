@@ -1,7 +1,7 @@
 {{--
     Visual Units Section - Frame Report Partial
     Shows documents and images related to the frame for visual annotation
-    
+
     Parameters:
     - $frame: Frame object
     - $vus: Visual units data (array of documents with images)
@@ -9,7 +9,7 @@
 
 @php
     $gridId = uniqid("visualUnitsGrid");
-    
+
     // Define columns for the visual units datagrid
     $vuColumns = [
         [
@@ -24,7 +24,7 @@
             'align' => 'left'
         ],
         [
-            'field' => 'documentName', 
+            'field' => 'documentName',
             'title' => 'Document',
             'width' => '35%',
             'align' => 'left'
@@ -36,7 +36,7 @@
             'align' => 'center'
         ]
     ];
-    
+
     // Visual Units datagrid configuration
     $vuConfig = [
         'showHeader' => false,
@@ -53,11 +53,11 @@
 @if(isset($vus) && count($vus) > 0)
     <div class="visual-units-section mb-8">
         <div class="section-header">
-            <h1 class="ui header section-title" id="visual-units-vu">
+            <h2 class="ui header section-title" id="visual-units-vu">
                 <a href="#visual-units-vu">Visual Units</a>
-            </h1>
-            <button class="ui button basic icon section-toggle" 
-                    onclick="toggleSection('visual-units-content')" 
+            </h2>
+            <button class="ui button basic icon section-toggle"
+                    onclick="toggleSection('visual-units-content')"
                     aria-expanded="true">
                 <i class="chevron up icon"></i>
             </button>
@@ -68,7 +68,7 @@
                     <div class="ui grid" style="margin: 0;">
                         <div class="five wide column" style="padding-right: 0.5rem;">
                             <div class="datagrid-wrapper" style="border: 1px solid rgba(34, 36, 38, 0.15); border-radius: 4px; max-height: 600px; min-height: 300px;">
-                                <div 
+                                <div
                                     x-data="dataGrid({
                                         data: @js($vus),
                                         columns: @js($vuColumns),
@@ -81,7 +81,7 @@
                                         striped: true,
                                         fit: true,
                                         onRowClick: 'htmx.ajax(\'GET\', `/report/frame/static/object/$\{row.idDocument}/$\{row.idImage}/{{ $frame->idFrame }}`, \'#visualUnitsImageArea\');'
-                                    })" 
+                                    })"
                                     x-init="init()"
                                     class="datagrid-container"
                                     style="overflow: auto; max-height: 598px;"
@@ -90,7 +90,7 @@
                                         <table :class="tableClasses">
                                             <tbody>
                                                 <template x-for="(row, index) in data" :key="index">
-                                                    <tr 
+                                                    <tr
                                                         :class="getRowClasses(index)"
                                                         @click="handleRowClick(index, row, $event)"
                                                         @mouseenter="handleRowHover(index)"
@@ -98,7 +98,7 @@
                                                         style="cursor: pointer;"
                                                     >
                                                         <template x-for="column in visibleColumns" :key="column.field">
-                                                            <td 
+                                                            <td
                                                                 :class="column.align ? column.align + ' aligned' : ''"
                                                                 :style="'width: ' + getColumnWidth(column)"
                                                                 x-html="getCellValue(row, column)"
@@ -106,7 +106,7 @@
                                                         </template>
                                                     </tr>
                                                 </template>
-                                                
+
                                                 <tr x-show="!hasData">
                                                     <td :colspan="visibleColumns.length" class="center aligned">
                                                         <div class="ui message">
