@@ -22,6 +22,10 @@ class Controller extends BaseController
         $this->hx_trigger = [];
     }
 
+    public function isHtmx(): bool {
+        return $this->request->header('HX-Request') === 'true';
+    }
+
     #[Get(path: '/empty')]
     public function empty()
     {
