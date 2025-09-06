@@ -32,7 +32,7 @@ class ReportController extends Controller
     {
         $data = BrowseService::browseLUBySearch($search);
 
-        return view('LU.Report.browse', [
+        return view('LU.Report.main', [
             'data' => $data,
         ])->fragment('search');
 
@@ -222,7 +222,7 @@ class ReportController extends Controller
     {
         $search = session('searchLU') ?? SearchData::from();
         if (($idLU == 'list') || ($idLU == '')) {
-            return view('LU.Report.browse', [
+            return view('LU.Report.main', [
                 'search' => $search,
                 'data' => [],
             ]);
@@ -244,6 +244,10 @@ class ReportController extends Controller
                 $data['incorporatedFE'] = FrameElement::byId($lu->incorporatedFE);
             }
 
+            $data['isHtmx'] = $this->isHtmx();
+            if ($data['isHtmx']) {
+                return view('LU.Report.reportPartial', $data);
+            }
             return view('LU.Report.report', $data);
         }
     }

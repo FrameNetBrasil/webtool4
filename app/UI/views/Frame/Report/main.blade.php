@@ -6,12 +6,11 @@
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content slide">
-                <div x-data class="ui container">
-                    <div class="ui secondary menu">
-                        <a class="item" data-tab="browse"></a>
-                        <a class="item" data-tab="report"></a>
-                    </div>
-                    <div class="ui tab  h-full" data-tab="browse">
+                <div
+                    class="ui container"
+                    x-init="$('.item').tab()"
+                >
+                    <div class="ui tab h-full" data-tab="browse">
                         <x-ui::browse-table
                             title="Frame Report"
                             url="/report/frame/search"
@@ -42,7 +41,9 @@
                                         <tr>
                                             <td>
                                                 <div
-                                                    @click.prevent=" htmx.ajax('GET', '/report/frame/{{$frame['id']}}', '.report');$('.menu .item').tab('change tab','report')"
+                                                    hx-get="/report/frame/{{$frame['id']}}"
+                                                    hx-target=".report"
+                                                    hx-on::before-request="$.tab('change tab','report')"
                                                 >
                                                     {!! $frame['text'] !!}
                                                 </div>
@@ -63,9 +64,4 @@
         </main>
         <x-layout::footer></x-layout::footer>
     </div>
-    <script>
-        $(function() {
-            $('.menu .item').tab();
-        });
-    </script>
 </x-layout::index>

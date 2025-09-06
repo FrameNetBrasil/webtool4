@@ -5,7 +5,7 @@
     - $fecoreset: FE core set information (optional)
 --}}
 <div class="frame-elements-section">
-    <h1 class="ui header section-title">Frame Elements</h1>
+    <h2 class="ui header section-title">Frame Elements</h2>
 
     <div class="fe-sections">
         {{-- Core FEs Section --}}
@@ -15,9 +15,9 @@
                     <div class="content">
                         <div class="data-card-header">
                             <div class="data-card-title">
-                                <h2 class="ui header" id="core">
+                                <h3 class="ui header" id="core">
                                     <a href="#core">Core Frame Elements</a>
-                                </h2>
+                                </h3>
                             </div>
                             <button class="ui icon basic button section-toggle"
                                     onclick="toggleSection('core-fes')"
@@ -48,9 +48,9 @@
                     <div class="content">
                         <div class="data-card-header">
                             <div class="data-card-title">
-                                <h2 class="ui header" id="core-unexpressed">
+                                <h3 class="ui header" id="core-unexpressed">
                                     <a href="#core-unexpressed">Core Unexpressed</a>
-                                </h2>
+                                </h3>
                             </div>
                             <button class="ui button basic icon section-toggle"
                                     onclick="toggleSection('core-unexpressed-fes')"
@@ -93,9 +93,9 @@
                     <div class="content">
                         <div class="data-card-header">
                             <div class="data-card-title">
-                                <h2 class="ui header" id="peripheral">
+                                <h3 class="ui header" id="peripheral">
                                     <a href="#peripheral">Peripheral Frame Elements</a>
-                                </h2>
+                                </h3>
                             </div>
                             <button class="ui button basic icon section-toggle"
                                     onclick="toggleSection('peripheral-fes')"
@@ -126,9 +126,9 @@
                     <div class="content">
                         <div class="data-card-header">
                             <div class="data-card-title">
-                                <h2 class="ui header" id="extra-thematic">
+                                <h3 class="ui header" id="extra-thematic">
                                     <a href="#extra-thematic">Extra-thematic Frame Elements</a>
-                                </h2>
+                                </h3>
                             </div>
                             <button class="ui button basic icon section-toggle"
                                     onclick="toggleSection('extra-thematic-fes')"
