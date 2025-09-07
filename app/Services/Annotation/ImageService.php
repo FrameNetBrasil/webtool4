@@ -2,6 +2,7 @@
 
 namespace App\Services\Annotation;
 
+use App\Data\Annotation\Image\ObjectSearchData;
 use App\Database\Criteria;
 use App\Enum\AnnotationType;
 use App\Repositories\AnnotationSet;
@@ -21,37 +22,37 @@ class ImageService
     public static function getResourceData(int $idDocument, ?int $idObject = null, string $annotationType = ''): array
     {
         $document = Document::byId($idDocument);
-        if (! $document) {
+        if (!$document) {
             throw new \Exception("Document with ID {$idDocument} not found.");
         }
 
         $corpus = Corpus::byId($document->idCorpus);
-        if (! $corpus) {
+        if (!$corpus) {
             throw new \Exception("Corpus with ID {$document->idCorpus} not found.");
         }
 
         $documentImage = Criteria::table('view_document_image')
             ->where('idDocument', $idDocument)
             ->first();
-        if (! $documentImage) {
+        if (!$documentImage) {
             throw new \Exception("Image not found for document ID {$idDocument}.");
         }
 
         $image = Image::byId($documentImage->idImage);
-        if (! $image) {
+        if (!$image) {
             throw new \Exception("Image with ID {$documentImage->idImage} not found.");
         }
 
         $at = ($annotationType == 'staticBBox') ? AnnotationType::STATICBBOX->value : AnnotationType::STATICEVENT->value;
         $comment = $idObject ? CommentService::getComment($idObject, $idDocument, $at) : null;
-        $searchResults = self::getObjectsByDocument($idDocument);
+        $objects = self::getObjectsByDocument($idDocument);
         return [
             'idDocument' => $idDocument,
             'document' => $document,
             'corpus' => $corpus,
             'image' => $image,
             'annotationType' => $annotationType,
-            'searchResults' => $searchResults,
+            'objects' => $objects,
             'idObject' => is_null($idObject) ? 0 : $idObject,
             'comment' => $comment
         ];
@@ -99,7 +100,7 @@ class ImageService
         $do = Criteria::table("view_annotation_static")
             ->where("idLanguage", "left", $idLanguage)
             ->where("idStaticObject", $idStaticObject)
-            ->select("idStaticObject", "name", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color","idDocument")
+            ->select("idStaticObject", "name", "idAnnotationLU", "idLU", "lu", "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "color", "idDocument")
             ->orderBy("idStaticObject")
             ->first();
         return $do;
@@ -129,7 +130,7 @@ class ImageService
 
         $result = Criteria::table("view_staticobject")
             ->where("idDocument", $idDocument)
-            ->select("idStaticObject","origin","idImage","idDocument")
+            ->select("idStaticObject", "origin", "idImage", "idDocument")
             ->orderBy("idStaticObject")
             ->keyBy("idStaticObject")
             ->all();
@@ -138,7 +139,7 @@ class ImageService
             ->join("view_annotation_static_fe as fe", "sob.idStaticObject", "=", "fe.idStaticObject")
             ->where("sob.idDocument", $idDocument)
             ->where("fe.idLanguage", $idLanguage)
-            ->select("fe.idAnnotation","fe.idStaticObject","fe.idFrameElement","fe.idFrame","fe.frameName","fe.name","fe.idEntity","fe.idLanguage","fe.bgColor","fe.fgColor")
+            ->select("fe.idAnnotation", "fe.idStaticObject", "fe.idFrameElement", "fe.idFrame", "fe.frameName", "fe.name", "fe.idEntity", "fe.idLanguage", "fe.bgColor", "fe.fgColor")
             ->keyBy("idStaticObject")
             ->all();
 
@@ -146,7 +147,7 @@ class ImageService
             ->join("view_annotation_static_lu as lu", "sob.idStaticObject", "=", "lu.idStaticObject")
             ->where("sob.idDocument", $idDocument)
             ->where("lu.idLanguage", $idLanguage)
-            ->select("lu.idAnnotation","lu.idStaticObject","lu.idLU","lu.idEntity","lu.name","lu.frameName","lu.idLanguage")
+            ->select("lu.idAnnotation", "lu.idStaticObject", "lu.idLU", "lu.idEntity", "lu.name", "lu.frameName", "lu.idLanguage")
             ->keyBy("idStaticObject")
             ->all();
 
@@ -171,7 +172,7 @@ class ImageService
 //            }
 //            if ($valid) {
 //                $valids[$i] = $i;
-                $oMM[$row->idStaticObject] = $row->idStaticObject;
+            $oMM[$row->idStaticObject] = $row->idStaticObject;
 //            }
         }
         if (count($result) > 0) {
@@ -186,12 +187,12 @@ class ImageService
         $j = 1;
         foreach ($result as $i => $row) {
 //            if (isset($valids[$i])) {
-                $row->order = $j++;
-                $row->idObject = $row->idStaticObject;
-                $row->bbox = $bbox[$row->idObject] ?? null;
-                $row->fe = $fes[$row->idObject] ?? null;
-                $row->lu = $lus[$row->idObject] ?? null;
-                $objects[] = $row;
+            $row->order = $j++;
+            $row->idObject = $row->idStaticObject;
+            $row->bbox = $bbox[$row->idObject] ?? null;
+            $row->fe = $fes[$row->idObject] ?? null;
+            $row->lu = $lus[$row->idObject] ?? null;
+            $objects[] = $row;
 //            }
         }
         return $objects;
@@ -314,6 +315,7 @@ class ImageService
         }
         return $idStaticObject;
     }
+
     public static function cloneObject(CloneData $data): int
     {
         $idUser = AppService::getCurrentIdUser();
@@ -384,6 +386,7 @@ class ImageService
     {
         Criteria::deleteById("annotationcomment", "idStaticObject", $idStaticObject);
     }
+
     public static function updateBBox(UpdateBBoxData $data): int
     {
         $bbox = Criteria::table("view_staticobject_boundingbox")
@@ -430,4 +433,92 @@ class ImageService
         $decorated = $decorated . mb_substr($text, $i);
         return $decorated;
     }
+
+    public static function objectSearch(ObjectSearchData $data)
+    {
+
+
+        $objects = [];
+
+        if (!empty($data->frame) || !empty($data->lu) || !empty($data->searchIdLayerType) || ($data->idObject > 0)) {
+            $idLanguage = AppService::getCurrentIdLanguage();
+
+            $result = Criteria::table("view_staticobject")
+                ->where("idDocument", $data->idDocument)
+                ->select("idStaticObject", "origin", "idImage", "idDocument")
+                ->orderBy("idStaticObject")
+                ->keyBy("idStaticObject")
+                ->all();
+
+            $fes = Criteria::table("view_staticobject as sob")
+                ->join("view_annotation_static_fe as fe", "sob.idStaticObject", "=", "fe.idStaticObject")
+                ->where("sob.idDocument", $data->idDocument)
+                ->where("fe.idLanguage", $idLanguage)
+                ->select("fe.idAnnotation", "fe.idStaticObject", "fe.idFrameElement", "fe.idFrame", "fe.frameName", "fe.name", "fe.idEntity", "fe.idLanguage", "fe.bgColor", "fe.fgColor")
+                ->keyBy("idStaticObject")
+                ->all();
+
+            $lus = Criteria::table("view_staticobject as sob")
+                ->join("view_annotation_static_lu as lu", "sob.idStaticObject", "=", "lu.idStaticObject")
+                ->where("sob.idDocument", $data->idDocument)
+                ->where("lu.idLanguage", $idLanguage)
+                ->select("lu.idAnnotation", "lu.idStaticObject", "lu.idLU", "lu.idEntity", "lu.name", "lu.frameName", "lu.idLanguage")
+                ->keyBy("idStaticObject")
+                ->all();
+
+            $query = Criteria::table("view_staticobject as sob")
+                ->leftJoin("view_annotation_static_fe as fe", "sob.idStaticObject", "=", "fe.idStaticObject")
+                ->leftJoin("view_annotation_static_lu as lu", "sob.idStaticObject", "=", "lu.idStaticObject")
+                ->where('fe.idLanguage', 'left', $idLanguage)
+                ->where('lu.idLanguage', 'left', $idLanguage)
+                ->where('ad.idDocument', $data->idDocument);
+
+            if (!empty($data->frame)) {
+                $query->whereRaw('(fe.frameName LIKE ? OR fe.name LIKE ?)', [
+                    $data->frame . '%',
+                    $data->frame . '%',
+                ]);
+            }
+
+            if (!empty($data->lu)) {
+                $searchTerm = '%' . $data->lu . '%';
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('lu.name', 'like', $searchTerm);
+                });
+            }
+
+            if ($data->idObject != 0) {
+                $query->where('ad.idStaticObject', $data->idObject);
+            }
+
+            $objects = $query
+                ->select(
+                    'sob.idStaticObject as idObject',
+                    'sob.name',
+                    'lu.name as luName',
+                    'lu.frameName as luFrameName',
+                    'fe.frameName as feFrameName',
+                    'fe.name as feName'
+                )
+                ->orderBy('sob.idStaticObject')
+                ->all();
+
+            // Format search results for display
+            foreach ($objects as $object) {
+                $object->fe = (object)[];
+                $object->lu = (object)[];
+                if (!is_null($object->luName)) {
+                    $object->lu->name = $object->luName;
+                    $object->lu->frameName = $object->luFrameName;
+                }
+                if (!is_null($object->fe)) {
+                    $object->fe->name = $object->feName;
+                    $object->fe->frameName = $object->feFrameName;
+                }
+            }
+        }
+
+        return $objects;
+    }
+
 }

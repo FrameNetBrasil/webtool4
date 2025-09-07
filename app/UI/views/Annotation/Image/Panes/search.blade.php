@@ -8,7 +8,7 @@
     >
         <div class="search-input-section">
             <form class="ui form"
-                  hx-post="/annotation/video/object/search"
+                  hx-post="/annotation/image/object/search"
                   hx-target=".search-result-section"
                   hx-swap="innerHTML">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -62,11 +62,11 @@
 
         <div class="search-result-section flex-col">
             @fragment("search")
-                @if(count($searchResults) > 0)
+                @if(count($objects) > 0)
                     <div class="search-result-data pl-1 pr-1">
                         <div class="search-result-header">
                             <div class="result-info">
-                                <div class="result-count" id="resultsCount">{!! count($searchResults ?? []) !!}
+                                <div class="result-count" id="resultsCount">{!! count($objects ?? []) !!}
                                     results
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                                 hx-swap="innerHTML"
                                 hx-on::config-request="event.detail.parameters.append('idStaticObject', event.detail.triggeringEvent.target.dataset.id)"
                             >
-                                @foreach($searchResults as $object)
+                                @foreach($objects as $object)
                                     <div class="ui card fluid result-card"
 
                                          tabindex="0"

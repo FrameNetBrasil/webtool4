@@ -13,6 +13,7 @@ use App\Data\Annotation\Video\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Enum\AnnotationType;
 use App\Http\Controllers\Controller;
+use App\Services\Annotation\ImageService;
 use App\Services\Annotation\VideoService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
@@ -58,9 +59,9 @@ class ImageController extends Controller
     #[Post(path: '/annotation/image/object/search')]
     public function objectSearch(ObjectSearchData $data)
     {
-        $searchResults = VideoService::objectSearch($data);
+        $objects = ImageService::objectSearch($data);
         return view('Annotation.Video.Panes.search', [
-            'searchResults' => $searchResults,
+            'objects' => $objects,
             'idDocument' => $data->idDocument,
             'annotationType' => $data->annotationType
         ])->fragment('search');
