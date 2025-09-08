@@ -72,9 +72,9 @@ window.messenger = {
         $.toast({
             class: type,
             message: message,
-            className: {
-                content: "content  wt-notify-" + type
-            }
+            // className: {
+            //     content: "content  wt-notify-" + type
+            // }
         });
     }
 };

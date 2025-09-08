@@ -1,4 +1,4 @@
-function sessionTrackerComponent() {
+function sessionTrackerComponent(idDocumentSentence) {
     return {
         isActive: false,
         sessionToken: null,
@@ -10,11 +10,12 @@ function sessionTrackerComponent() {
         durationInterval: null,
         idDocumentSentence: null,
 
-        init() {
+        async init() {
             // Check for existing session on load
             //this.checkSessionStatus();
 
-            console.log('init');
+            console.log('init',idDocumentSentence);
+
             // Handle page unload/reload
             window.addEventListener('beforeunload', () => {
                 console.log('beforeonload');
@@ -42,6 +43,8 @@ function sessionTrackerComponent() {
                     this.addLog('Page visible again');
                 }
             });
+
+            await this.startSession(idDocumentSentence);
         },
 
         async checkSessionStatus() {
@@ -92,6 +95,7 @@ function sessionTrackerComponent() {
                     this.duration = 0;
                     // this.startHeartbeat();
                     // this.startDurationCounter();
+                    messenger.notify('warning','Session started successfully');
                     this.addLog('Session started successfully');
                 } else {
                     this.addLog('Failed to start session');

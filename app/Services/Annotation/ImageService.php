@@ -4,6 +4,7 @@ namespace App\Services\Annotation;
 
 use App\Data\Annotation\Comment\CommentData;
 use App\Data\Annotation\Image\CloneData;
+use App\Data\Annotation\Image\CreateObjectData;
 use App\Data\Annotation\Image\ObjectAnnotationData;
 use App\Data\Annotation\Image\ObjectSearchData;
 use App\Data\Annotation\Image\UpdateBBoxData;
@@ -555,6 +556,45 @@ class ImageService
 //        }
 
         return $objects;
+    }
+
+
+    public static function createNewObjectAtLayer(CreateObjectData $data): object
+    {
+        if ($data->annotationType == 'staticBBox') {
+            $layerType = Criteria::table("view_layertype")
+                ->where("idLanguage", AppService::getCurrentIdLanguage())
+                ->where("layerGroup","StaticAnnotation")
+                ->first();
+            $data->idLayerType = $layerType->idLayerType;
+            $data->endFrame = $data->startFrame;
+        }
+        $origin = ($data->annotationType == 'staticBBox') ? 2 : 1;
+        $idUser = AppService::getCurrentIdUser();
+        $so = json_encode([
+            'name' => '',
+            'idLayerType' => $data->idLayerType,
+            'status' => 0,
+            'origin' => $origin,
+            'idUser' => $idUser,
+        ]);
+        $idStaticObject = Criteria::function('staticobject_create(?)', [$so]);
+        $staticObject = Criteria::byId('staticobject', 'idStaticObject', $idStaticObject);
+        $staticObject->idDocument = $data->idDocument;
+//        Criteria::table('staticobject')
+//            ->where('idStaticObject', $idStaticObject)
+//            ->update(['idLayerType' => $data->idLayerType]);
+        $documentImage = Criteria::table('view_document_image')
+            ->where('idDocument', $data->idDocument)
+            ->first();
+        $image = Image::byId($documentImage->idImage);
+        // create relation image_staticobject
+        Criteria::create('image_staticobject', [
+            'idImage' => $image->idImage,
+            'idStaticObject' => $idStaticObject,
+        ]);
+
+        return $staticObject;
     }
 
 }

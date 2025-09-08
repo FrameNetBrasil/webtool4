@@ -1,4 +1,4 @@
-<div x-data="imageComponent()" class="video-player-container">
+<div x-data="videoComponent()" class="video-player-container">
     <div class="video-wrapper"
          style="position:relative; width:852px;height:480px"
     >
