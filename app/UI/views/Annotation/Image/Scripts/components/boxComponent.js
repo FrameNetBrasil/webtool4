@@ -1,11 +1,9 @@
-function boxComponent(idVideoDOMElement) {
+function boxComponent(scale,bboxes) {
     return {
 
-        idVideoDOMElement: "",
         boxesContainer: null,
         canvas: null,
         ctx: null,
-        video: null,
         bgColor: "#ffff00",
         fgColor: "#000",
         offsetX: 0,
@@ -24,11 +22,6 @@ function boxComponent(idVideoDOMElement) {
         previousBBox: null,
         bbox: null,
         object: null,
-        currentFrame: 0,
-        startFrame: 0,
-        endFrame: 0,
-        tracker: null,
-        isTracking: false,
         hasBBox: false,
         dom: null,
         _token: "",
@@ -38,18 +31,48 @@ function boxComponent(idVideoDOMElement) {
         annotationType: '',
         baseURL: '',
         idObject: '',
+        currentFrame: 1,
+        scale: 1,
+        bgcolors: [
+            "#ffff00",
+            "#f21f26",
+            "#91c879",
+            "#5780d4",
+            "#cdeb2d",
+            "#4a3c44",
+            "#69e2da",
+            "#012aaf",
+            "#f88006",
+            "#53e052",
+            "#199601",
+            "#ff31d5",
+            "#bf5e70",
+            "#84059a",
+            "#999867",
+            "#f8b90d"],
+        fgcolors: [
+            "#000",
+            "#FFF",
+            "#000",
+            "#000",
+            "#000",
+            "#FFF",
+            "#000",
+            "#FFF",
+            "#000",
+            "#000",
+            "#000",
+            "#000",
+            "#000",
+            "#FFF",
+            "#000",
+            "#000"],
 
 
         async init() {
             console.log("Box component init");
             this._token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            this.idVideoDOMElement = idVideoDOMElement;
-            this.baseURL = "/annotation/video";
-
-
-            // this.object = object;
-            // this.annotationType = object.annotationType;
-            // console.log(this.object);
+            this.baseURL = "/annotation/image";
 
             this.canvas = document.getElementById("canvas");
             if (!this.canvas) {
@@ -59,46 +82,13 @@ function boxComponent(idVideoDOMElement) {
             this.ctx = this.canvas.getContext("2d", {
                 willReadFrequently: true
             });
-
-            this.video = document.getElementById(this.idVideoDOMElement);
-            if (this.video) {
-                const rect = this.video.getBoundingClientRect();
-                this.offsetX = rect.x;
-                this.offsetY = rect.y;
-            } else {
-                console.warn(`Video element with ID '${this.idVideoDOMElement}' not found. Offset will be based on canvas position.`);
-                const canvasRect = this.canvas.getBoundingClientRect();
-                this.offsetX = canvasRect.left;
-                this.offsetY = canvasRect.top;
-            }
-
-            // this.startFrame = this.object.startFrame;
-            // this.endFrame = this.object.endFrame;
-            // this.currentFrame = this.object.startFrame;
-
-            this.tracker = new ObjectTrackerObject();
-            this.tracker.config({
-                canvas: this.canvas,
-                ctx: this.ctx,
-                video: this.video
+            this.scale = scale;
+            this.bboxes = bboxes;
+            _.forEach(bboxes, (bbox) => {
+                this.displayBBox(bbox);
             });
-            this.isTracking = false;
-            // document.dispatchEvent(new CustomEvent("video-seek-frame", {
-            //     detail: {
-            //         frameNumber: this.object.startFrame
-            //     }
-            // }));
-        },
 
-        async onVideoUpdateState(e) {
-            this.clearBBox();
-            this.currentFrame = e.detail.frame.current;
-            //if ((this.object) && ((this.currentFrame >= this.object.startFrame) && (this.currentFrame <= this.object.endFrame))) {
-            if ((this.object) && ((this.currentFrame >= this.object.startFrame))) {
-                console.log("onVideoUpdateState current frame", this.currentFrame, this.object.startFrame, this.object.endFrame);
-                await this.showBBox();
-                await this.tracking();
-            }
+
         },
 
         async onObjectLoaded(e) {
@@ -112,26 +102,6 @@ function boxComponent(idVideoDOMElement) {
                     frameNumber: this.object.startFrame
                 }
             }));
-            // console.log(this.bboxes);
-            // await this.showBBox();
-        },
-
-        // async onBBoxToggleTracking() {
-        //
-        //     this.isTracking = !this.isTracking;
-        //     console.log("boxesComponent onBBoxToggleTracking  - now is " + (this.isTracking ? 'true':'false') );
-        //     await this.tracking();
-        // },
-
-        async onStartTracking() {
-            console.log("bbox onStartTracking");
-            this.isTracking = true;
-            await this.tracking();
-        },
-
-        onStopTracking() {
-            console.log("bbox onStopTracking");
-            this.isTracking = false;
         },
 
         async onBBoxCreated(e) {
@@ -232,32 +202,13 @@ function boxComponent(idVideoDOMElement) {
             }
 
             this.drawBBox(bbox);
-            this.bboxes[this.currentFrame] = bbox;
-            console.log("displayBBOx", bbox);
+            this.bboxes[bbox.order] = bbox;
+            // console.log("displayBBOx", bbox);
             document.dispatchEvent(new CustomEvent("bbox-drawn", {
                 detail: {
                     bbox,
                 }
             }));
-        },
-
-        createTrackedBBox(trackedBBox, blocked, isGroundTruth = false) {
-            return new BoundingBox(
-                this.currentFrame,
-                trackedBBox.x,
-                trackedBBox.y,
-                trackedBBox.width,
-                trackedBBox.height,
-                isGroundTruth,
-                blocked
-            );
-        },
-
-        async performTracking(previousBBox) {
-            console.log("Performing tracking for frame", this.currentFrame);
-            let trackedBBox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
-            console.log("Generated tracked bbox", trackedBBox);
-            return trackedBBox;
         },
 
         async updateExistingBBox(bboxId, newBBox) {
@@ -349,28 +300,6 @@ function boxComponent(idVideoDOMElement) {
             this.onEnableDrawing();
             console.log("Drawing mode activated!");
         },
-
-        async tracking() {
-            if (this.isTracking) {
-                await new Promise(r => setTimeout(r, 800));
-                const nextFrame = this.currentFrame + 1;
-                console.log("tracking....", (this.isTracking ? 'tracking' : 'not tracking'), nextFrame, this.object.startFrame, this.object.endFrame);
-                //if ((nextFrame >= this.object.startFrame) && (nextFrame <= this.object.endFrame)) {
-                if ((nextFrame >= this.object.startFrame)) {
-                    // console.log("goto Frame ", nextFrame);
-                    //this.previousBBox = JSON.parse(JSON.stringify(this.bbox));
-                    console.log('going to next frame ', nextFrame);
-                    this.gotoFrame(nextFrame);
-                }
-            } else {
-                console.log("tracking...: ", (this.isTracking ? 'tracking' : 'not tracking'));
-            }
-            // else {
-            //     console.log('stoping tracking ');
-            //     this.onStopTracking();
-            // }
-        },
-
 
         initializeBBoxInteraction() {
             let bbox = $('.bbox');
@@ -474,37 +403,30 @@ function boxComponent(idVideoDOMElement) {
             $(".bbox").css("display", "none");
         },
 
-        gotoFrame(frameNumber) {
-            document.dispatchEvent(new CustomEvent("video-seek-frame", {
-                detail: {
-                    frameNumber
-                }
-            }));
-        },
-
         drawBBox(bbox) {
-            let $dom = $(".bbox");
+            //let $dom = $(".bbox");
+            let $dom = $("#bbox_" + bbox.idObject);
             // console.log("drawBBox", bbox, $dom, this.bgColor);
-            $dom.css("display", "none");
+            //$dom.css("display", "none");
             if (bbox) {
                 if (!this.hidden) {
                     $dom.css({
                         position: "absolute",
                         display: "block",
-                        width: bbox.width + "px",
-                        height: bbox.height + "px",
-                        left: bbox.x + "px",
-                        top: bbox.y + "px",
-                        borderColor: this.bgColor,
+                        width: parseInt(bbox.width * this.scale) + "px",
+                        height: parseInt(bbox.height * this.scale) + "px",
+                        left: parseInt(bbox.x * this.scale) + "px",
+                        top: parseInt(bbox.y * this.scale) + "px",
+                        borderColor: this.bgcolors[bbox.order - 1],
                         backgroundColor: "transparent",
                         opacity: 1
                     });
 
                     $dom.find(".objectId").css({
-                        backgroundColor: this.bgColor,
-                        color: this.fgColor
+                        backgroundColor: this.bgcolors[bbox.order - 1],
+                        color: this.fgcolors[bbox.order - 1],
                     });
-                    $dom.find(".objectId").text(this.object.idObject);
+                    $dom.find(".objectId").text(bbox.order);
 
                     if (this.isTracking) {
                         $dom.css({

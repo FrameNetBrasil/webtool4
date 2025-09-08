@@ -8,18 +8,6 @@
                 <div>
                     <button
                         class="ui tiny icon button"
-                        @click="$dispatch('video-seek-frame', {frameNumber: {{$object->startFrame}} })"
-                    >
-                        Go to StartFrame: {{$object->startFrame}}
-                    </button>
-                    <button
-                        class="ui tiny icon button"
-                        @click="$dispatch('video-seek-frame', {frameNumber: {{$object->endFrame}} })"
-                    >
-                        Go to EndFrame: {{$object->endFrame}}
-                    </button>
-                    <button
-                        class="ui tiny icon button"
                         hx-post="/annotation/video/cloneObject"
                         hx-vals='js:{"idDocument":{{$object->idDocument}},"idObject":{{$object->idObject}},"annotationType":"{{$annotationType}}"}'
                     >
@@ -60,11 +48,6 @@
             >BBox</a>
             <a
                 class="item"
-                data-tab="modify-range"
-                :class="isPlaying && 'disabled'"
-            >Modify range</a>
-            <a
-                class="item"
                 data-tab="comment"
                 :class="isPlaying && 'disabled'"
             ><i class="comment dots outline icon"></i>Comment</a>
@@ -77,19 +60,13 @@
                 class="ui tab h-full w-full active"
                 data-tab="edit-object"
             >
-                @include("Annotation.Video.Forms.formAnnotation")
+                @include("Annotation.Image.Forms.formAnnotation")
             </div>
             <div
                 class="ui tab h-full w-full"
                 data-tab="create-bbox"
             >
-                @include("Annotation.Video.Forms.formBBox")
-            </div>
-            <div
-                class="ui tab h-full w-full"
-                data-tab="modify-range"
-            >
-                @include("Annotation.Video.Forms.formModifyRange")
+                @include("Annotation.Image.Forms.formBBox")
             </div>
             <div
                 class="ui tab h-full w-full"

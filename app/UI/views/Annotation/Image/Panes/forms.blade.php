@@ -1,8 +1,6 @@
 <div
     id="formsPane"
     x-data="formsComponent({{$idDocument}})"
-    @video-update-state.document="onVideoUpdateState"
-    @bbox-toggle-tracking.document="onBBoxToggleTracking"
     @bbox-drawn.document="onBBoxDrawn"
     @bbox-update.document="onBBoxUpdate"
 >

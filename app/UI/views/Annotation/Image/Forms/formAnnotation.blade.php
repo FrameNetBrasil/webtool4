@@ -1,3 +1,6 @@
+@php
+    $object->fe->frame = $object->fe->frameName;
+@endphp
 <form class="ui form">
     <div class="ui card form-card w-full p-1">
         <div class="content">
@@ -6,25 +9,22 @@
             <div class="ui two column stackable grid relative">
                 <div class="column pr-8">
                     <x-ui::frame-fe
-                        :object="$object"
+                        :object="$object->fe"
                     ></x-ui::frame-fe>
                 </div>
                 <div class="column pl-8">
                     <div class="field w-full">
                         <x-search::lu
                             id="idLU"
-                            label="CV Name"
-                            placeholder="Select a CV name"
+                            label="Framed Entity"
+                            placeholder="Select a Framed Entity"
                             search-url="/lu/list/forSelect"
-                            value="{{ old('idFrame', $object?->idLU ?? '') }}"
-                            display-value="{{ old('frame', $object->lu ?? '') }}"
+                            value="{{ old('idFrame', $object->lu->idLU ?? '') }}"
+                            display-value="{{ old('frame', $object->lu->name ?? '') }}"
                             modal-title="Search CV Name"
                         ></x-search::lu>
                     </div>
                 </div>
-{{--                <div class="ui vertical divider">--}}
-{{--                    and--}}
-{{--                </div>--}}
             </div>
         </div>
         <div class="extra content">
@@ -40,43 +40,3 @@
         </div>
     </div>
 </form>
-
-
-{{--<form--}}
-{{--    class="ui form p-4 border"--}}
-{{-->--}}
-{{--    <input type="hidden" name="idDocument" value="{{$object->idDocument}}">--}}
-{{--    <input type="hidden" name="idDynamicObject" value="{{$object?->idDynamicObject}}">--}}
-{{--    <div class="ui two column stackable grid relative">--}}
-{{--        <div class="column pr-8">--}}
-{{--            <x-form::frame-fe--}}
-{{--                :object="$object"--}}
-{{--            ></x-form::frame-fe>--}}
-{{--        </div>--}}
-{{--        <div class="column pl-8">--}}
-{{--            <div class="field w-full">--}}
-{{--                <x-form::search.lu--}}
-{{--                    id="idLU"--}}
-{{--                    label="CV Name"--}}
-{{--                    placeholder="Select a CV name"--}}
-{{--                    search-url="/lu/list/forSelect"--}}
-{{--                    value="{{ old('idFrame', $object?->idLU ?? '') }}"--}}
-{{--                    display-value="{{ old('frame', $object->lu ?? '') }}"--}}
-{{--                    modal-title="Search CV Name"--}}
-{{--                ></x-form::search.lu>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--        <div class="ui vertical divider">--}}
-{{--            and--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--    <button--}}
-{{--        type="submit"--}}
-{{--        class="ui medium button"--}}
-{{--        hx-post="/annotation/dynamicMode/updateObjectAnnotation"--}}
-{{--        hx-target="#o{{$object?->idDynamicObject}}"--}}
-{{--        hx-swap="innerHTML"--}}
-{{--    >--}}
-{{--        Save--}}
-{{--    </button>--}}
-{{--</form>--}}

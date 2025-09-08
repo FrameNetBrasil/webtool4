@@ -1,16 +1,9 @@
 // Search form component for handling input and HTMX events
 function searchObjectComponent() {
     return {
-        searchQueryFrame: "",
-        searchQueryLU: "",
-        searchQueryIdDynamicObject: "",
         currentToast: null,
 
         onSearchStart(event) {
-            // Store the current query for later use
-            window.currentSearchQueryFrame = this.searchQueryFrame;
-            window.currentSearchQueryLU = this.searchQueryLU;
-
             // Show Fomantic UI toast
             this.showSearchToast();
         },
