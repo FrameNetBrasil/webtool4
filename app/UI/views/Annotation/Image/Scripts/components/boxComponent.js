@@ -27,7 +27,7 @@ function boxComponent(scale,bboxes) {
         _token: "",
         currentBBox: null,
         bboxes: {},
-        interactionInitialized: false,
+        interactionInitialized: {},
         annotationType: '',
         baseURL: '',
         idObject: '',
@@ -125,13 +125,7 @@ function boxComponent(scale,bboxes) {
 
         async onBBoxChange(bbox) {
             console.log("on bbox change ", bbox);
-            await ky.post(`${this.baseURL}/updateBBox`, {
-                json: {
-                    _token: this._token,
-                    idBoundingBox: bbox.idBoundingBox,
-                    bbox
-                }
-            }).json();
+            await this.onBBoxUpdate(bbox);
             this.currentBBox = bbox;
             document.dispatchEvent(new CustomEvent("bbox-update", {
                 detail: {
@@ -140,10 +134,12 @@ function boxComponent(scale,bboxes) {
             }));
         },
 
-        async onBBoxChangeBlocked(e) {
-            let bbox = await this.getCurrentBBox();
-            bbox.blocked = e.target.classList.contains('checked') ? 1 : 0;
-            console.log("on bbox change blocked ", this.currentBBox, bbox.blocked);
+        async onBBoxUpdate(bbox) {
+            // rescale bbox to consider original dimensions
+            bbox.x = bbox.x / this.scale;
+            bbox.y = bbox.y / this.scale;
+            bbox.width = bbox.width / this.scale;
+            bbox.height = bbox.height / this.scale;
             await ky.post(`${this.baseURL}/updateBBox`, {
                 json: {
                     _token: this._token,
@@ -151,6 +147,14 @@ function boxComponent(scale,bboxes) {
                     bbox
                 }
             }).json();
+        },
+
+
+        async onBBoxChangeBlocked(e) {
+            let bbox = await this.getCurrentBBox();
+            bbox.blocked = e.target.classList.contains('checked') ? 1 : 0;
+            console.log("on bbox change blocked ", this.currentBBox, bbox.blocked);
+            await this.onBBoxUpdate(bbox);
             this.showBBox();
         },
 
@@ -197,8 +201,8 @@ function boxComponent(scale,bboxes) {
 
         displayBBox(bbox) {
             // Initialize interaction handlers only once
-            if (!this.interactionInitialized) {
-                this.initializeBBoxInteraction();
+            if (!this.interactionInitialized[bbox.idBoundingBox]) {
+                this.initializeBBoxInteraction(bbox.idBoundingBox);
             }
 
             this.drawBBox(bbox);
@@ -213,13 +217,8 @@ function boxComponent(scale,bboxes) {
 
         async updateExistingBBox(bboxId, newBBox) {
             this.bbox = newBBox;
-            await ky.post(`${this.baseURL}/updateBBox`, {
-                json: {
-                    _token: this._token,
-                    idBoundingBox: bboxId,
-                    bbox: newBBox
-                }
-            }).json();
+            newBBox.idBoundingBox = bboxId;
+            await this.onBBoxUpdate(newBBox);
         },
 
         async createNewBBox(newBBox) {
@@ -295,19 +294,19 @@ function boxComponent(scale,bboxes) {
         },
 
         onBBoxCreate() {
-            console.log('====');
             this.clearBBox();
             this.onEnableDrawing();
             console.log("Drawing mode activated!");
         },
 
-        initializeBBoxInteraction() {
-            let bbox = $('.bbox');
+        initializeBBoxInteraction(idBoundingBox) {
+            let bbox = $('#bbox_' + idBoundingBox);
+
             if (bbox.length === 0) return false; // No bbox element found
 
             let containerHeight = $("#boxesContainer").height();
             let containerWidth = $("#boxesContainer").width();
-            console.log("container", containerHeight, containerWidth);
+            // console.log("container", containerHeight, containerWidth);
 
             // Ensure the bbox has required child elements
             if (bbox.find('.handle.center-drag').length === 0) {
@@ -353,9 +352,9 @@ function boxComponent(scale,bboxes) {
                         Math.round($(d.target).outerWidth()),
                         Math.round($(d.target).outerHeight()),
                         true, // User-dragged bbox is ground truth
-                        this.currentBBox?.blocked || false
+                        this.currentBBox?.blocked || false,
+                        idBoundingBox
                     );
-                    bboxChanged.idBoundingBox = this.currentBBox?.idBoundingBox;
                     this.onBBoxChange(bboxChanged);
                 }
             });
@@ -387,14 +386,14 @@ function boxComponent(scale,bboxes) {
                         Math.round($(d.target).outerWidth()),
                         Math.round($(d.target).outerHeight()),
                         true, // User-dragged bbox is ground truth
-                        this.currentBBox?.blocked || false
+                        this.currentBBox?.blocked || false,
+                        idBoundingBox
                     );
-                    bboxChanged.idBoundingBox = this.currentBBox?.idBoundingBox;
                     this.onBBoxChange(bboxChanged);
                 }
             });
 
-            this.interactionInitialized = true;
+            this.interactionInitialized[idBoundingBox] = true;
             console.log("BBox interaction initialized once");
             return true;
         },
@@ -405,7 +404,7 @@ function boxComponent(scale,bboxes) {
 
         drawBBox(bbox) {
             //let $dom = $(".bbox");
-            let $dom = $("#bbox_" + bbox.idObject);
+            let $dom = $("#bbox_" + bbox.idBoundingBox);
             // console.log("drawBBox", bbox, $dom, this.bgColor);
             //$dom.css("display", "none");
             if (bbox) {

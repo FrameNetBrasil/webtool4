@@ -12,7 +12,7 @@
 >
     @foreach($bboxes as $bbox)
     <div
-        id="bbox_{{$bbox->idObject}}" class="bbox" style="display:none"
+        id="bbox_{{$bbox->idBoundingBox}}" class="bbox" style="display:none"
     >
 
         <div class="objectId"></div>

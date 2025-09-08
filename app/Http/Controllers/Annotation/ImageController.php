@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers\Annotation;
 
+use App\Data\Annotation\Image\CloneData;
+use App\Data\Annotation\Image\CreateBBoxData;
+use App\Data\Annotation\Image\CreateObjectData;
+use App\Data\Annotation\Image\GetBBoxData;
+use App\Data\Annotation\Image\ObjectAnnotationData;
+use App\Data\Annotation\Image\ObjectFrameData;
 use App\Data\Annotation\Image\ObjectSearchData;
+use App\Data\Annotation\Image\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Services\Annotation\ImageService;
@@ -141,6 +148,7 @@ class ImageController extends Controller
     public function updateBBox(UpdateBBoxData $data)
     {
         try {
+            debug($data);
             $idBoundingBox = ImageService::updateBBox($data);
             $boundingBox = Criteria::byId('boundingbox', 'idBoundingBox', $idBoundingBox);
             if (! $boundingBox) {
