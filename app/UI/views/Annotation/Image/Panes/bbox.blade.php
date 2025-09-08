@@ -1,21 +1,21 @@
 <div
-    x-data="boxComponent('videoContainer_html5_api')"
+    x-data="boxComponent({{$scale}}, {!! Js::from($bboxes) !!})"
     @disable-drawing.document="onDisableDrawing"
     @enable-drawing.document="onEnableDrawing"
     @bbox-create.document="onBBoxCreate"
     @bbox-created.document="onBBoxCreated"
     @bbox-change-blocked.document="onBBoxChangeBlocked"
-    @video-update-state.document="onVideoUpdateState"
-    @auto-tracking-start.document="onStartTracking"
-    @auto-tracking-stop.document="onStopTracking"
     @object-loaded.document="onObjectLoaded"
     id="boxesContainer"
-    style="position: absolute; top: 0; left: 0; width:852px; height:480px; background-color: transparent"
+    style="position: absolute; top: 0; left: 0; width:{{$imageWidth}}px; height:{{$imageHeight}}px; background-color: transparent"
     hx-swap-oob="true"
 >
+    @foreach($bboxes as $bbox)
     <div
-        class="bbox" style="display:none"
+        id="bbox_{{$bbox->idObject}}" class="bbox" style="display:none"
     >
+
         <div class="objectId"></div>
     </div>
+        @endforeach
 </div>

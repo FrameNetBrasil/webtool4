@@ -2,21 +2,11 @@
 
 namespace App\Http\Controllers\Annotation;
 
-use App\Data\Annotation\Video\CloneData;
-use App\Data\Annotation\Video\CreateBBoxData;
-use App\Data\Annotation\Video\CreateObjectData;
-use App\Data\Annotation\Video\GetBBoxData;
-use App\Data\Annotation\Video\ObjectAnnotationData;
-use App\Data\Annotation\Video\ObjectFrameData;
-use App\Data\Annotation\Video\ObjectSearchData;
-use App\Data\Annotation\Video\UpdateBBoxData;
+use App\Data\Annotation\Image\ObjectSearchData;
 use App\Database\Criteria;
-use App\Enum\AnnotationType;
 use App\Http\Controllers\Controller;
 use App\Services\Annotation\ImageService;
-use App\Services\Annotation\VideoService;
 use App\Services\CommentService;
-use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
@@ -38,9 +28,10 @@ class ImageController extends Controller
     {
         debug($data);
         if ($data->idObject == 0) {
-            return view('Annotation.Video.Forms.formNewObject');
+            return view('Annotation.Image.Forms.formNewObject');
         }
-        $object = VideoService::getObject($data);
+        $object = ImageService::getObject($data);
+        debug($object);
         $object->annotationType = $data->annotationType;
         if (is_null($object)) {
             return $this->renderNotify('error', 'Object not found.');
@@ -49,7 +40,7 @@ class ImageController extends Controller
         $comment = CommentService::getComment($data->idObject, $data->idDocument, $data->annotationType);
 
         return response()
-            ->view('Annotation.Video.Panes.object', [
+            ->view('Annotation.Image.Panes.object', [
                 'object' => $object,
                 'annotationType' => $data->annotationType,
                 'comment' => $comment,
@@ -60,7 +51,7 @@ class ImageController extends Controller
     public function objectSearch(ObjectSearchData $data)
     {
         $objects = ImageService::objectSearch($data);
-        return view('Annotation.Video.Panes.search', [
+        return view('Annotation.Image.Panes.search', [
             'objects' => $objects,
             'idDocument' => $data->idDocument,
             'annotationType' => $data->annotationType
@@ -72,7 +63,7 @@ class ImageController extends Controller
     {
         debug($data);
         try {
-            $object = VideoService::createNewObjectAtLayer($data);
+            $object = ImageService::createNewObjectAtLayer($data);
             if ($data->annotationType == 'dynamicAnnotation') {
                 $this->trigger("goto-bbox");
             }
@@ -86,7 +77,7 @@ class ImageController extends Controller
     public function cloneObject(CloneData $data)
     {
         try {
-            $idDynamicObjectClone = VideoService::cloneObject($data);
+            $idDynamicObjectClone = ImageService::cloneObject($data);
 
             return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$idDynamicObjectClone}");
         } catch (\Exception $e) {
@@ -99,7 +90,7 @@ class ImageController extends Controller
     {
         debug($data);
         try {
-            $idDynamicObject = VideoService::updateObjectAnnotation($data);
+            $idDynamicObject = ImageService::updateObjectAnnotation($data);
             $this->trigger('updateObjectAnnotationEvent');
             //return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
             return $this->renderNotify("success", "Object updated.");
@@ -114,7 +105,7 @@ class ImageController extends Controller
     {
         try {
             debug($data);
-            VideoService::updateObjectFrame($data);
+            ImageService::updateObjectFrame($data);
 
             return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$data->idObject}");
         } catch (\Exception $e) {
@@ -140,7 +131,7 @@ class ImageController extends Controller
     {
         debug($data);
         try {
-            return VideoService::createBBox($data);
+            return ImageService::createBBox($data);
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
@@ -150,7 +141,7 @@ class ImageController extends Controller
     public function updateBBox(UpdateBBoxData $data)
     {
         try {
-            $idBoundingBox = VideoService::updateBBox($data);
+            $idBoundingBox = ImageService::updateBBox($data);
             $boundingBox = Criteria::byId('boundingbox', 'idBoundingBox', $idBoundingBox);
             if (! $boundingBox) {
                 return $this->renderNotify('error', 'Updated bounding box not found.');

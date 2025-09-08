@@ -51,18 +51,18 @@ class StaticBBoxController extends Controller
             ->view('Annotation.Image.annotation', $data)
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
-//
-//    #[Delete(path: '/annotation/staticBBox/{idDocument}/{idDynamicObject}')]
-//    public function deleteObject(int $idDocument, int $idDynamicObject)
-//    {
-//        try {
-//            VideoService::deleteObject($idDynamicObject);
-//
-//            return $this->redirect("/annotation/staticBBox/{$idDocument}");
-//        } catch (\Exception $e) {
-//            return $this->renderNotify('error', $e->getMessage());
-//        }
-//    }
+
+    #[Delete(path: '/annotation/staticBBox/{idDocument}/{idStaticObject}')]
+    public function deleteObject(int $idDocument, int $idStaticObject)
+    {
+        try {
+            ImageService::deleteObject($idStaticObject);
+
+            return $this->redirect("/annotation/staticBBox/{$idDocument}");
+        } catch (\Exception $e) {
+            return $this->renderNotify('error', $e->getMessage());
+        }
+    }
 //    #[Delete(path: '/annotation/staticBBox/deleteAllBBoxes/{idDocument}/{idDynamicObject}')]
 //    public function deleteAllBBoxes(int $idDocument, int $idDynamicObject)
 //    {
