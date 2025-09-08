@@ -2,7 +2,11 @@
 
 namespace App\Services\Annotation;
 
+use App\Data\Annotation\Comment\CommentData;
+use App\Data\Annotation\Image\CloneData;
+use App\Data\Annotation\Image\ObjectAnnotationData;
 use App\Data\Annotation\Image\ObjectSearchData;
+use App\Data\Annotation\Image\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Enum\AnnotationType;
 use App\Repositories\AnnotationSet;
@@ -424,13 +428,10 @@ class ImageService
 
     public static function updateBBox(UpdateBBoxData $data): int
     {
-        $bbox = Criteria::table("view_staticobject_boundingbox")
-            ->where("idStaticObject", $data->idStaticObject)
-            ->first();
         Criteria::table("boundingbox")
-            ->where("idBoundingBox", $bbox->idBoundingBox)
+            ->where("idBoundingBox", $data->idBoundingBox)
             ->update($data->bbox);
-        return $data->idStaticObject;
+        return $data->idBoundingBox;
     }
 
     public static function listSentencesByDocument($idDocument): array
