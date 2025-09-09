@@ -65,7 +65,8 @@
         >
             <form
                 hx-post="/report/frame_lu/search"
-                hx-target=".page-content"
+                hx-push-url="true"
+                hx-target="body"
             >
                 <div class="item">
                     <div class="ui inverted left icon input">
