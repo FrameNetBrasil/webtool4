@@ -71,9 +71,6 @@ class ImageController extends Controller
         debug($data);
         try {
             $object = ImageService::createNewObjectAtLayer($data);
-            if ($data->annotationType == 'dynamicAnnotation') {
-                $this->trigger("goto-bbox");
-            }
             return $this->redirect("/annotation/{$data->annotationType}/{$object->idDocument}/{$object->idDynamicObject}");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
@@ -138,7 +135,10 @@ class ImageController extends Controller
     {
         debug($data);
         try {
-            return ImageService::createBBox($data);
+            $object = ImageService::createObjectBBox($data);
+            $object->annotationType = "staticBBox";
+            return $object;
+            //return $this->redirect("/annotation/staticBBox/{$data->idDocument}/{$staticObject->idStaticObject}");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }

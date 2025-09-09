@@ -90,16 +90,20 @@
                                             class="header"
                                             data-id="{{$object->idObject}}"
                                         >
-                                            #{{$object->order}}  [#{{$object->idObject}}]
+                                            #{{$object->order}} [#{{$object->idObject}}]
                                         </div>
                                         <div
                                             class="meta"
                                             data-id="{{$object->idObject}}"
                                         >
-                                            <x-element::frame
-                                                name="{{$object->fe->frameName}}.{{$object->fe->name}}"></x-element::frame>
-                                            <x-element::lu
-                                                name="{{$object->lu->frameName}}.{{$object->lu->name}}"></x-element::lu>
+                                            @if($object->fe)
+                                                <x-element::frame
+                                                    name="{{$object->fe->frameName}}.{{$object->fe->name}}"></x-element::frame>
+                                            @endif
+                                            @if($object->lu)
+                                                <x-element::lu
+                                                    name="{{$object->lu->frameName}}.{{$object->lu->name}}"></x-element::lu>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

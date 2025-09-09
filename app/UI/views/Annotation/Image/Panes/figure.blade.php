@@ -18,11 +18,24 @@
     debug("image width: ". $imageWidth);
     debug("image height: ". $imageHeight);
 @endphp
-<div class="annotation-contols">
-
+<div class="annotation-controls">
+    <div class="d-flex justify-between items-center">
+        <div>
+            Scale: {!! number_format($scale,6) !!}
+        </div>
+        <div class="mt-1">
+            <button
+                id="btnShowHideObjects"
+                class="ui toggle small button secondary"
+                x-data @click="$dispatch('bbox-toggle-show')"
+            >
+                Show/Hide All
+            </button>
+        </div>
+    </div>
 </div>
 <div
-    style="position:relative;width:{{$canvasWidth}}px;height:{{$canvasHeight}}px;"
+    style="width:{{$imageWidth}}px;height:{{$imageHeight}}px;"
 >
     <img
         alt="{{$image->name}}"
@@ -31,11 +44,11 @@
         id="imageContainer"
         src="{!! config('webtool.mediaURL') . "/" . $image->currentURL !!}"
     >
-    </img>
     <canvas
         id="canvas"
-        width=0
-        height=0
+        width="{{$imageWidth}}"
+        height="{{$imageHeight}}"
+        style="position: absolute; top: 0; left: 0; background-color: transparent; z-index: 1;"
     ></canvas>
     @include("Annotation.Image.Panes.bbox")
 </div>

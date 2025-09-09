@@ -30,7 +30,13 @@
         "controls"
         "image";
         grid-template-columns: 1fr;
-        grid-template-rows: 32px 1fr;
+        grid-template-rows: 40px 1fr;
+    }
+
+    .annotation-controls {
+        position: relative;
+        background-color: #e0e1e2;
+        height: 40px;
     }
 
     .annotation-data {
@@ -46,6 +52,10 @@
 
     .annotation-info {
         grid-area: info;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         //background: @neutral200;
         //height: 100%;
     }
