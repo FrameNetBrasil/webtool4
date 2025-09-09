@@ -45,21 +45,30 @@ class ReportController extends Controller
 
     }
 
-    #[Post(path: '/report/frame_lu/search')]
+    #[Get(path: '/report/frame_lu/search')]
     public function browseFrameLU(SearchData $search)
     {
-        $frames = BrowseService::browseFrameBySearch($search);
-        if ($search->frame != '') {
-            $search->lu = $search->frame;
-        }
-        $lus = BrowseService::browseLUBySearch($search, true, contains:true);
+        return view('Frame.Report.mainFrameLU', [
+            'frame' => '',
+            'lu' => '',
+            'frames' => [],
+            'lus' => [],
+        ]);
+    }
 
-        return view('Frame.Report.browseFrameLU', [
+    #[Post(path: '/report/frame_lu/search')]
+    public function postFrameLU(SearchData $search)
+    {
+        $search->lu = $search->frame;
+        $frames = BrowseService::browseFrameBySearch($search);
+        $lus = BrowseService::browseLUBySearch($search, true, contains:false);
+
+        return view('Frame.Report.mainFrameLU', [
             'frame' => $search->frame,
             'lu' => $search->lu,
             'frames' => $frames,
             'lus' => $lus,
-        ]);
+        ])->fragment("post");
     }
 
     #[Get(path: '/report/frame/{idFrame}/{lang?}')]
