@@ -1,5 +1,5 @@
-<div class="ui card form-card w-full p-1">
-    <div class="content">
+<div class="ui card form-card w-full h-full">
+    <div class="content flex-none">
         <div class="header">
             {{--            <x-icon::add></x-icon::add>--}}
             Create new Object

@@ -54,9 +54,8 @@ class ImageService
         $objects = self::getObjectsByDocument($idDocument);
         $bboxes = [];
         foreach ($objects as $object) {
-            $object->bbox->idObject = $object->idStaticObject;
             $object->bbox->order = $object->order;
-            $bboxes[$object->idObject] = $object->bbox;
+            $bboxes[$object->bbox->idBoundingBox] = $object->bbox;
         }
         return [
             'idDocument' => $idDocument,
@@ -202,58 +201,55 @@ class ImageService
 //                "idAnnotationFE", "idFrameElement", "idFrame", "frame", "fe", "bgColorFE", "fgColorFE")
 //            ->orderBy("idStaticObject")
 //            ->all();
-        $oMM = [];
-        $bbox = [];
-        $valids = [];
-        foreach ($result as $i => $row) {
-            $valid = true;
-//            if ($row->idUserTaskFE) {
-//                $valid = ($valid && ($row->idUserTaskFE == $usertask->idUserTask)) || ($usertask->idUserTask == 1);
+//        $oMM = [];
+//        $bbox = [];
+//        $valids = [];
+//        foreach ($result as $i => $row) {
+//            $valid = true;
+////            if ($row->idUserTaskFE) {
+////                $valid = ($valid && ($row->idUserTaskFE == $usertask->idUserTask)) || ($usertask->idUserTask == 1);
+////            }
+////            if ($row->idUserTaskLU) {
+////                $valid = ($valid && ($row->idUserTaskLU == $usertask->idUserTask)) || ($usertask->idUserTask == 1);
+////            }
+////            if ($valid) {
+////                $valids[$i] = $i;
+//            $oMM[$row->idStaticObject] = $row->idStaticObject;
+////            }
+//        }
+//        if (count($result) > 0) {
+//            $bboxObject = Criteria::table("view_staticobject_boundingbox")
+//                ->whereIN("idStaticObject", $oMM)
+//                ->first();
+//            foreach ($bboxObjects as $bboxObject) {
+//                $bbox[$bboxObject->idBoundingBox] = $bboxObject;
 //            }
-//            if ($row->idUserTaskLU) {
-//                $valid = ($valid && ($row->idUserTaskLU == $usertask->idUserTask)) || ($usertask->idUserTask == 1);
-//            }
-//            if ($valid) {
-//                $valids[$i] = $i;
-            $oMM[$row->idStaticObject] = $row->idStaticObject;
-//            }
-        }
-        if (count($result) > 0) {
-            $bboxObjects = Criteria::table("view_staticobject_boundingbox")
-                ->whereIN("idStaticObject", $oMM)
-                ->all();
-            foreach ($bboxObjects as $bboxObject) {
-                $bbox[$bboxObject->idStaticObject] = $bboxObject;
-            }
-        }
+//        }
         $objects = [];
         $j = 1;
-        foreach ($result as $i => $row) {
-//            if (isset($valids[$i])) {
-            $row->order = $j++;
-            $row->idObject = $row->idStaticObject;
-            $row->bbox = $bbox[$row->idObject] ?? null;
-            $row->fe = $fes[$row->idObject] ?? null;
-            $row->lu = $lus[$row->idObject] ?? null;
-            $objects[] = $row;
-//            }
+        foreach ($result as $object) {
+            $object->order = $j++;
+            $object->idObject = $object->idStaticObject;
+            $object->bbox = Criteria::byId("view_staticobject_boundingbox","idStaticObject", $object->idObject);
+            $object->fe = $fes[$object->idObject] ?? null;
+            $object->lu = $lus[$object->idObject] ?? null;
+            $objects[] = $object;
         }
         return $objects;
     }
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
-        $usertask = AnnotationService::getCurrentUserTask($data->idDocument);
         $idUser = AppService::getCurrentIdUser();
-        $sob = Criteria::byId("staticobject", "idStaticObject", $data->idStaticObject);
-        Criteria::deleteById("annotation", "idAnnotationObject", $sob->idAnnotationObject);
+        $sob = Criteria::byId("staticobject", "idStaticObject", $data->idObject);
+        Criteria::table("annotation")
+            ->where("idStaticObject", $data->idObject)
+            ->update(['status'=>'DELETED']);
         if ($data->idFrameElement) {
             $fe = Criteria::byId("frameelement", "idFrameElement", $data->idFrameElement);
             $json = json_encode([
                 'idEntity' => $fe->idEntity,
-                'idAnnotationObject' => $sob->idAnnotationObject,
-                'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask,
+                'idStaticObject' => $data->idObject,
                 'idUser' => $idUser
             ]);
             debug($json);
@@ -264,15 +260,13 @@ class ImageService
             $lu = Criteria::byId("lu", "idLU", $data->idLU);
             $json = json_encode([
                 'idEntity' => $lu->idEntity,
-                'idAnnotationObject' => $sob->idAnnotationObject,
-                'relationType' => 'rel_annotation',
-                'idUserTask' => $usertask->idUserTask,
+                'idStaticObject' => $data->idObject,
                 'idUser' => $idUser
             ]);
             $idAnnotation = Criteria::function("annotation_create(?)", [$json]);
             Timeline::addTimeline("annotation", $idAnnotation, "C");
         }
-        return $data->idStaticObject;
+        return $data->idObject;
     }
 
     public static function updateObject(ObjectData $data): int
@@ -432,6 +426,7 @@ class ImageService
 
     public static function updateBBox(UpdateBBoxData $data): int
     {
+        debug($data);
         Criteria::table("boundingbox")
             ->where("idBoundingBox", $data->idBoundingBox)
             ->update($data->bbox);

@@ -21,7 +21,9 @@
 <div class="annotation-controls">
     <div class="d-flex justify-between items-center">
         <div>
+            <div class="ui label">
             Scale: {!! number_format($scale,6) !!}
+            </div>
         </div>
         <div class="mt-1">
             <button
@@ -35,7 +37,7 @@
     </div>
 </div>
 <div
-    style="width:{{$imageWidth}}px;height:{{$imageHeight}}px;"
+    style="position:relative;width:{{$imageWidth}}px;height:{{$imageHeight}}px;"
 >
     <img
         alt="{{$image->name}}"

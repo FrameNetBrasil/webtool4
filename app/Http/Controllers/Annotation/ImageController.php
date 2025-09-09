@@ -94,10 +94,11 @@ class ImageController extends Controller
     {
         debug($data);
         try {
-            $idDynamicObject = ImageService::updateObjectAnnotation($data);
-            $this->trigger('updateObjectAnnotationEvent');
+            $idStaticObject = ImageService::updateObjectAnnotation($data);
+            return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$data->idObject}");
+//            $this->trigger('updateObjectAnnotationEvent');
             //return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
-            return $this->renderNotify("success", "Object updated.");
+//            return $this->renderNotify("success", "Object updated.");
         } catch (\Exception $e) {
             debug($e->getMessage());
             return $this->renderNotify("error", $e->getMessage());
@@ -121,9 +122,8 @@ class ImageController extends Controller
     public function getBBox(GetBBoxData $data)
     {
         try {
-            return Criteria::table('view_dynamicobject_boundingbox')
-                ->where('idDynamicObject', $data->idObject)
-                ->where('frameNumber', $data->frameNumber)
+            return Criteria::table('view_staticobject_boundingbox')
+                ->where('idStaticObject', $data->idObject)
                 ->first();
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
@@ -148,7 +148,7 @@ class ImageController extends Controller
     public function updateBBox(UpdateBBoxData $data)
     {
         try {
-            debug($data);
+            debug("updateBBox",$data);
             $idBoundingBox = ImageService::updateBBox($data);
             $boundingBox = Criteria::byId('boundingbox', 'idBoundingBox', $idBoundingBox);
             if (! $boundingBox) {

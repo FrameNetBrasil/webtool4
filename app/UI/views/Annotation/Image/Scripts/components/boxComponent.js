@@ -1,4 +1,4 @@
-function boxComponent(idDocument,scale,bboxes) {
+function boxComponent(idDocument, scale, bboxes) {
     return {
 
         boxesContainer: null,
@@ -20,14 +20,14 @@ function boxComponent(idDocument,scale,bboxes) {
             height: 0
         },
         previousBBox: null,
-        bbox: null,
+        currentBBox: null,
         object: null,
         hasBBox: false,
         dom: null,
         _token: "",
-        currentBBox: null,
         toggleShow: true,
-        bboxes: {},
+        realBBoxes: {},
+        scaledBBoxes: {},
         interactionInitialized: {},
         annotationType: '',
         baseURL: '',
@@ -86,12 +86,12 @@ function boxComponent(idDocument,scale,bboxes) {
             });
             this.idDocument = idDocument;
             this.scale = scale;
-            this.bboxes = bboxes;
-            _.forEach(bboxes, (bbox) => {
-                this.displayBBox(bbox);
+            this.currentBBox = null;
+            this.realBBoxes = bboxes;
+            _.forEach(bboxes, (realBBox) => {
+                this.scaledBBoxes[realBBox.idObject] = this.scaleBBox(realBBox);
+                this.displayBBox(this.scaledBBoxes[realBBox.idObject]);
             });
-
-
         },
 
         async onObjectLoaded(e) {
@@ -99,69 +99,62 @@ function boxComponent(idDocument,scale,bboxes) {
             this.object = e.detail.object;
             this.annotationType = this.object.annotationType;
             this.currentFrame = this.object.startFrame;
-            this.bbox = this.object.bbox;
+            let idBoundingBox = this.object.bbox.idBoundingBox;
+            if (!this.scaledBBoxes[idBoundingBox]) {
+                this.realBBoxes[idBoundingBox] = this.object.bbox;
+                this.scaledBBoxes[idBoundingBox] = this.scaleBBox(this.object.bbox);
+            }
             this.clearBBox();
-            this.displayBBox(this.bbox);
+            let scaledBBox = this.scaledBBoxes[this.object.bbox.idBoundingBox];
+            this.displayBBox(scaledBBox);
         },
 
         async onBBoxCreated(e) {
             this.bbox = e.detail.bbox;
             let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, false);
-            // rescale bbox to consider original dimensions
-            bbox.x = bbox.x / this.scale;
-            bbox.y = bbox.y / this.scale;
-            bbox.width = bbox.width / this.scale;
-            bbox.height = bbox.height / this.scale;
-            //
+            // bbox create with screen dimensions
+            let realBBox = this.unscaleBBox(bbox);
             console.log("bbox created for document", this.idDocument);
             this.onDisableDrawing();
             let object = await ky.post(`${this.baseURL}/createBBox`, {
                 json: {
                     _token: this._token,
                     idDocument: this.idDocument,
-                    bbox//     bbox: bbox
+                    bbox: realBBox
                 }
             }).json();
-            console.log(object);
             window.location.assign(`/annotation/${object.annotationType}/${this.idDocument}/${object.idStaticObject}`);
-            // console.log("bbox created id ", bbox.idBoundingBox);
-            // await this.showBBox();
-            // messenger.notify("success", "New bbox created.");
         },
 
-        async onBBoxChange(bbox) {
-            console.log("on bbox change ", bbox);
-            await this.onBBoxUpdate(bbox);
-            this.currentBBox = bbox;
+        async onBBoxChange(scaledBBox) {
+            console.log("on bbox change ", scaledBBox);
+            // box with screen dimensions
+            let realBBox = this.unscaleBBox(scaledBBox);
+            await this.onBBoxUpdate(realBBox);
             document.dispatchEvent(new CustomEvent("bbox-update", {
                 detail: {
-                    bbox
+                    scaledBBox
                 }
             }));
         },
 
-        async onBBoxUpdate(bbox) {
-            // rescale bbox to consider original dimensions
-            bbox.x = bbox.x / this.scale;
-            bbox.y = bbox.y / this.scale;
-            bbox.width = bbox.width / this.scale;
-            bbox.height = bbox.height / this.scale;
+        async onBBoxUpdate(realBBox) {
+            // receive bbox with screen dimensions
+            console.log("onBBoxUpdate", realBBox);
             await ky.post(`${this.baseURL}/updateBBox`, {
                 json: {
                     _token: this._token,
-                    idBoundingBox: bbox.idBoundingBox,
-                    bbox
+                    idBoundingBox: realBBox.idBoundingBox,
+                    bbox: realBBox
                 }
             }).json();
         },
 
-
         async onBBoxChangeBlocked(e) {
-            let bbox = await this.getCurrentBBox();
-            bbox.blocked = e.target.classList.contains('checked') ? 1 : 0;
-            console.log("on bbox change blocked ", this.currentBBox, bbox.blocked);
-            await this.onBBoxUpdate(bbox);
-            this.showBBox();
+            let realBBox = await this.getCurrentBBox();
+            realBBox.blocked = e.target.classList.contains('checked') ? 1 : 0;
+            await this.onBBoxUpdate(realBBox);
+            this.displayBBox(this.scaledBBoxes[realBBox.idBoundingBox]);
         },
 
         onBBoxToggleShow() {
@@ -202,112 +195,126 @@ function boxComponent(idDocument,scale,bboxes) {
             console.log("Drawing event listeners disabled and canvas cleared.");
         },
 
+        scaleBBox(bbox) {
+            // Create a new object with spread operator
+            return {
+                ...bbox,
+                x: parseInt(bbox.x * this.scale),
+                y: parseInt(bbox.y * this.scale),
+                width: parseInt(bbox.width * this.scale),
+                height: parseInt(bbox.height * this.scale)
+            };
+        },
+
+        unscaleBBox(bbox) {
+            return {
+                ...bbox,
+                x: parseInt(bbox.x / this.scale),
+                y: parseInt(bbox.y / this.scale),
+                width: parseInt(bbox.width / this.scale),
+                height: parseInt(bbox.height / this.scale)
+            };
+        },
+
         async getCurrentBBox() {
-            let bbox = await ky.get(`${this.baseURL}/getBBox`, {
+            return await ky.get(`${this.baseURL}/getBBox`, {
                 searchParams: {
                     idObject: this.object.idObject,
-                    frameNumber: this.currentFrame,
-                    isTracking: this.isTracking ? 1 : 0
                 }
             }).json();
-            const {idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked, isGroundTruth} = bbox;
-            this.currentBBox = {idBoundingBox, frameNumber, frameTime, x, y, width, height, blocked, isGroundTruth};
-            return bbox;
         },
 
-        displayBBox(bbox) {
+        displayBBox(scaledBBox) {
             // Initialize interaction handlers only once
-            if (!this.interactionInitialized[bbox.idBoundingBox]) {
-                this.initializeBBoxInteraction(bbox.idBoundingBox);
+            if (!this.interactionInitialized[scaledBBox.idBoundingBox]) {
+                this.initializeBBoxInteraction(scaledBBox.idBoundingBox);
             }
-
-            this.drawBBox(bbox);
-            this.bboxes[bbox.order] = bbox;
-            // console.log("displayBBOx", bbox);
+            // bbox with screen dimensions
+            this.drawBBox(scaledBBox);
             document.dispatchEvent(new CustomEvent("bbox-drawn", {
                 detail: {
-                    bbox,
+                    scaledBBox,
                 }
             }));
         },
 
-        async updateExistingBBox(bboxId, newBBox) {
-            this.bbox = newBBox;
-            newBBox.idBoundingBox = bboxId;
-            await this.onBBoxUpdate(newBBox);
-        },
+        // async updateExistingBBox(bboxId, newBBox) {
+        //     this.bbox = newBBox;
+        //     newBBox.idBoundingBox = bboxId;
+        //     await this.onBBoxUpdate(newBBox);
+        // },
 
-        async createNewBBox(newBBox) {
-            newBBox.idBoundingBox = await ky.post(`${this.baseURL}/createBBox`, {
-                json: {
-                    _token: this._token,
-                    idObject: this.object.idObject,
-                    frameNumber: this.currentFrame,
-                    bbox: newBBox
-                }
-            }).json();
-            return newBBox;
-        },
+        // async createNewBBox(newBBox) {
+        //     newBBox.idBoundingBox = await ky.post(`${this.baseURL}/createBBox`, {
+        //         json: {
+        //             _token: this._token,
+        //             idObject: this.object.idObject,
+        //             frameNumber: this.currentFrame,
+        //             bbox: newBBox
+        //         }
+        //     }).json();
+        //     return newBBox;
+        // },
 
-        async handleNonGroundTruthBBox(bbox) {
-            console.log("Recreating non-ground truth bbox via tracking for frame", this.currentFrame);
-            let previousBBox = this.bboxes[this.currentFrame - 1];
+        // async handleNonGroundTruthBBox(bbox) {
+        //     console.log("Recreating non-ground truth bbox via tracking for frame", this.currentFrame);
+        //     let previousBBox = this.bboxes[this.currentFrame - 1];
+        //
+        //     if (previousBBox) {
+        //         let trackedBBox = await this.performTracking(previousBBox);
+        //         let newBBox = this.createTrackedBBox(trackedBBox, bbox.blocked, false);
+        //         newBBox.idBoundingBox = bbox.idBoundingBox; // Keep same ID, update position
+        //
+        //         await this.updateExistingBBox(bbox.idBoundingBox, newBBox);
+        //         //this.showBBox(); // Refresh to show updated bbox
+        //         this.displayBBox(bbox);
+        //     } else {
+        //         // No previous bbox to track from - use existing bbox as is
+        //         console.log("No previous bbox for tracking, using existing bbox");
+        //         this.displayBBox(bbox);
+        //     }
+        // },
 
-            if (previousBBox) {
-                let trackedBBox = await this.performTracking(previousBBox);
-                let newBBox = this.createTrackedBBox(trackedBBox, bbox.blocked, false);
-                newBBox.idBoundingBox = bbox.idBoundingBox; // Keep same ID, update position
+        // async handleMissingBBox() {
+        //     let previousBBox = this.bboxes[this.currentFrame - 1];
+        //     if (previousBBox) {
+        //         console.log("create new bbox via tracking on frame", this.currentFrame, previousBBox);
+        //         let trackedBBox = await this.performTracking(previousBBox);
+        //         let newBBox = this.createTrackedBBox(trackedBBox, previousBBox.blocked, false);
+        //
+        //         await this.createNewBBox(newBBox);
+        //         return newBBox;
+        //         //this.showBBox(); // Refresh to show new bbox
+        //     } else {
+        //         if (this.currentFrame !== this.object.startFrame) {
+        //             messenger.notify("warning", "There is no previous BBox to tracking");
+        //         }
+        //         return null;
+        //     }
+        // },
 
-                await this.updateExistingBBox(bbox.idBoundingBox, newBBox);
-                //this.showBBox(); // Refresh to show updated bbox
-                this.displayBBox(bbox);
-            } else {
-                // No previous bbox to track from - use existing bbox as is
-                console.log("No previous bbox for tracking, using existing bbox");
-                this.displayBBox(bbox);
-            }
-        },
-
-        async handleMissingBBox() {
-            let previousBBox = this.bboxes[this.currentFrame - 1];
-            if (previousBBox) {
-                console.log("create new bbox via tracking on frame", this.currentFrame, previousBBox);
-                let trackedBBox = await this.performTracking(previousBBox);
-                let newBBox = this.createTrackedBBox(trackedBBox, previousBBox.blocked, false);
-
-                await this.createNewBBox(newBBox);
-                return newBBox;
-                //this.showBBox(); // Refresh to show new bbox
-            } else {
-                if (this.currentFrame !== this.object.startFrame) {
-                    messenger.notify("warning", "There is no previous BBox to tracking");
-                }
-                return null;
-            }
-        },
-
-        async showBBox() {
-            let bbox = await this.getCurrentBBox();
-            if (!bbox) {
-                bbox = await this.handleMissingBBox();
-            }
-            console.log("showBBox", bbox);
-            if (bbox) {
-                if (bbox.isGroundTruth) {
-                    // Ground truth bbox - use as is
-                    console.log("Using ground truth bbox for frame", this.currentFrame);
-                    this.displayBBox(bbox);
-                } else {
-                    // Non-ground truth bbox - recreate via tracking
-                    await this.handleNonGroundTruthBBox(bbox);
-                }
-            }
-            document.dispatchEvent(new CustomEvent("bbox-drawn", {
-                detail: {
-                    bbox
-                }
-            }));
-        },
+        // async showBBox() {
+        //     let bbox = await this.getCurrentBBox();
+        //     if (!bbox) {
+        //         bbox = await this.handleMissingBBox();
+        //     }
+        //     console.log("showBBox", bbox);
+        //     if (bbox) {
+        //         if (bbox.isGroundTruth) {
+        //             // Ground truth bbox - use as is
+        //             console.log("Using ground truth bbox for frame", this.currentFrame);
+        //             this.displayBBox(bbox);
+        //         } else {
+        //             // Non-ground truth bbox - recreate via tracking
+        //             await this.handleNonGroundTruthBBox(bbox);
+        //         }
+        //     }
+        //     document.dispatchEvent(new CustomEvent("bbox-drawn", {
+        //         detail: {
+        //             bbox
+        //         }
+        //     }));
+        // },
 
         onBBoxCreate() {
             this.clearBBox();
@@ -418,47 +425,43 @@ function boxComponent(idDocument,scale,bboxes) {
             $(".bbox").css("display", "none");
         },
 
-        drawBBox(bbox) {
+        drawBBox(scaledBBox) {
+            // bbox with screen dimensions
             //let $dom = $(".bbox");
-            let $dom = $("#bbox_" + bbox.idBoundingBox);
+            let $dom = $("#bbox_" + scaledBBox.idBoundingBox);
             // console.log("drawBBox", bbox, $dom, this.bgColor);
             //$dom.css("display", "none");
-            if (bbox) {
+            if (scaledBBox) {
                 if (!this.hidden) {
                     $dom.css({
                         position: "absolute",
                         display: "block",
-                        width: parseInt(bbox.width * this.scale) + "px",
-                        height: parseInt(bbox.height * this.scale) + "px",
-                        left: parseInt(bbox.x * this.scale) + "px",
-                        top: parseInt(bbox.y * this.scale) + "px",
-                        borderColor: this.bgcolors[bbox.order - 1],
+                        width: scaledBBox.width + "px",
+                        height: scaledBBox.height + "px",
+                        left: scaledBBox.x + "px",
+                        top: scaledBBox.y + "px",
+                        borderColor: this.bgcolors[scaledBBox.order - 1],
                         backgroundColor: "transparent",
                         opacity: 1
                     });
 
                     $dom.find(".objectId").css({
-                        backgroundColor: this.bgcolors[bbox.order - 1],
-                        color: this.fgcolors[bbox.order - 1],
+                        backgroundColor: this.bgcolors[scaledBBox.order - 1],
+                        color: this.fgcolors[scaledBBox.order - 1],
                     });
-                    $dom.find(".objectId").text(bbox.order);
+                    $dom.find(".objectId").text(scaledBBox.order);
 
-                    if (this.isTracking) {
-                        $dom.css({
-                            borderStyle: "dotted",
-                            borderWidth: "2px"
-                        });
-                    } else {
-                        $dom.css({
-                            borderStyle: "solid",
-                            borderWidth: "4px"
-                        });
-                    }
-                    this.visible = true;
-                    if (bbox.blocked) {
+                    $dom.css({
+                        borderColor: this.bgcolors[scaledBBox.order - 1],
+                        borderStyle: "solid",
+                        borderWidth: "4px"
+                    });
+
+                    // this.visible = true;
+                    if (scaledBBox.blocked) {
                         $dom.css({
                             borderStyle: "dashed",
-                            backgroundColor: "white",
+                            backgroundColor: this.bgcolors[scaledBBox.order - 1],
                             opacity: 0.4
                         });
                     }
@@ -472,8 +475,12 @@ function boxComponent(idDocument,scale,bboxes) {
             e.preventDefault();
             e.stopPropagation();
 
-            this.startX = parseInt(e.clientX - this.offsetX);
-            this.startY = parseInt(e.clientY - this.offsetY);
+            let parent = document.getElementById("boxesContainer").parentElement;
+
+            // this.startX = parseInt(e.clientX - this.offsetX);
+            // this.startY = parseInt(e.clientY - this.offsetY);
+            this.startX = parseInt(e.clientX - parent.offsetLeft);
+            this.startY = parseInt(e.clientY - parent.offsetTop);
             this.isDown = true;
         },
 
@@ -531,8 +538,13 @@ function boxComponent(idDocument,scale,bboxes) {
             e.preventDefault();
             e.stopPropagation();
 
-            this.mouseX = parseInt(e.clientX - this.offsetX);
-            this.mouseY = parseInt(e.clientY - this.offsetY);
+            let parent = document.getElementById("boxesContainer").parentElement;
+
+            // this.mouseX = parseInt(e.clientX - this.offsetX);
+            // this.mouseY = parseInt(e.clientY - this.offsetY);
+
+            this.mouseX = parseInt(e.clientX - parent.offsetLeft);
+            this.mouseY = parseInt(e.clientY - parent.offsetTop);
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
