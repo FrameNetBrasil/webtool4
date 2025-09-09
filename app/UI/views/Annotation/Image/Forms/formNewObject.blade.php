@@ -28,7 +28,7 @@
             <button
                 type="submit"
                 class="ui primary button"
-                hx-post="/annotation/image/createNewObjectAtLayer"
+                @click.prevent="$dispatch('bbox-create')"
             >
                 Create
             </button>

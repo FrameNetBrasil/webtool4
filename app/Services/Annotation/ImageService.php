@@ -4,6 +4,7 @@ namespace App\Services\Annotation;
 
 use App\Data\Annotation\Comment\CommentData;
 use App\Data\Annotation\Image\CloneData;
+use App\Data\Annotation\Image\CreateBBoxData;
 use App\Data\Annotation\Image\CreateObjectData;
 use App\Data\Annotation\Image\ObjectAnnotationData;
 use App\Data\Annotation\Image\ObjectSearchData;
@@ -66,26 +67,28 @@ class ImageService
             'objects' => $objects,
             'bboxes' => $bboxes,
             'idObject' => is_null($idObject) ? 0 : $idObject,
-            'comment' => $comment
+            'comment' => $comment,
+            'idPrevious' => self::getPrevious($document),
+            'idNext' => self::getNext($document),
         ];
     }
 
     private static function deleteBBoxesByStaticBBoxObject(int $idStaticObject)
     {
-        $bboxes = Criteria::table("view_staticobject_boundingbox as sb")
-            ->join("boundingbox as bb", "sb.idBoundingBox", "=", "bb.idBoundingBox")
-            ->where("sb.idStaticObject", $idStaticObject)
-            ->select("bb.idAnnotationObject")
-            ->chunkResult("idAnnotationObject", "idAnnotationObject");
-        Criteria::table("annotationobjectrelation")
-            ->whereIn("idAnnotationObject2", $bboxes)
-            ->delete();
-        Criteria::table("boundingbox")
-            ->whereIn("idAnnotationObject", $bboxes)
-            ->delete();
-        Criteria::table("annotationobject")
-            ->whereIn("idAnnotationObject", $bboxes)
-            ->delete();
+//        $bboxes = Criteria::table("view_staticobject_boundingbox as sb")
+//            ->join("boundingbox as bb", "sb.idBoundingBox", "=", "bb.idBoundingBox")
+//            ->where("sb.idStaticObject", $idStaticObject)
+//            ->select("bb.idAnnotationObject")
+//            ->chunkResult("idAnnotationObject", "idAnnotationObject");
+//        Criteria::table("annotationobjectrelation")
+//            ->whereIn("idAnnotationObject2", $bboxes)
+//            ->delete();
+//        Criteria::table("boundingbox")
+//            ->whereIn("idAnnotationObject", $bboxes)
+//            ->delete();
+//        Criteria::table("annotationobject")
+//            ->whereIn("idAnnotationObject", $bboxes)
+//            ->delete();
     }
 
     public static function getPrevious(object $document)
@@ -435,6 +438,34 @@ class ImageService
         return $data->idBoundingBox;
     }
 
+    public static function createObjectBBox(CreateBBoxData $data): object
+    {
+        // Para annotation image, a criação da BBox indica a criação de um novo Object
+        $newObject = CreateObjectData::from([
+            'annotationType' => 'staticBBox',
+            'idDocument' => $data->idDocument,
+            'idLayerType' => null
+        ]);
+        $object = self::createNewObjectAtLayer($newObject);
+        debug($object);
+        $json = json_encode([
+            'frameNumber' => 1,
+            'frameTime' => 1,
+            'x' => (int) $data->bbox['x'],
+            'y' => (int) $data->bbox['y'],
+            'width' => (int) $data->bbox['width'],
+            'height' => (int) $data->bbox['height'],
+            'blocked' => (int) $data->bbox['blocked'],
+            'isGroundTruth' => $data->bbox['isGroundTruth'] ? 1 : 0,
+            'idStaticObject' => (int) $object->idStaticObject,
+        ]);
+        debug($json);
+        $idBoundingBox = Criteria::function('boundingbox_static_create(?)', [$json]);
+        debug($idBoundingBox);
+        return $object;
+    }
+
+
     public static function listSentencesByDocument($idDocument): array
     {
         $sentences = Criteria::table("sentence")
@@ -561,13 +592,13 @@ class ImageService
 
     public static function createNewObjectAtLayer(CreateObjectData $data): object
     {
+        debug($data);
         if ($data->annotationType == 'staticBBox') {
             $layerType = Criteria::table("view_layertype")
                 ->where("idLanguage", AppService::getCurrentIdLanguage())
                 ->where("layerGroup","StaticAnnotation")
                 ->first();
             $data->idLayerType = $layerType->idLayerType;
-            $data->endFrame = $data->startFrame;
         }
         $origin = ($data->annotationType == 'staticBBox') ? 2 : 1;
         $idUser = AppService::getCurrentIdUser();

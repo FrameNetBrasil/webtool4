@@ -1,10 +1,10 @@
-function boxComponent(scale,bboxes) {
+function boxComponent(idDocument,scale,bboxes) {
     return {
 
         boxesContainer: null,
         canvas: null,
         ctx: null,
-        bgColor: "#ffff00",
+        bgColor: "#f21f26",
         fgColor: "#000",
         offsetX: 0,
         offsetY: 0,
@@ -26,10 +26,12 @@ function boxComponent(scale,bboxes) {
         dom: null,
         _token: "",
         currentBBox: null,
+        toggleShow: true,
         bboxes: {},
         interactionInitialized: {},
         annotationType: '',
         baseURL: '',
+        idDocument: 0,
         idObject: '',
         currentFrame: 1,
         scale: 1,
@@ -82,6 +84,7 @@ function boxComponent(scale,bboxes) {
             this.ctx = this.canvas.getContext("2d", {
                 willReadFrequently: true
             });
+            this.idDocument = idDocument;
             this.scale = scale;
             this.bboxes = bboxes;
             _.forEach(bboxes, (bbox) => {
@@ -96,31 +99,34 @@ function boxComponent(scale,bboxes) {
             this.object = e.detail.object;
             this.annotationType = this.object.annotationType;
             this.currentFrame = this.object.startFrame;
-            this.bboxes = this.object.bboxes;
-            document.dispatchEvent(new CustomEvent("video-seek-frame", {
-                detail: {
-                    frameNumber: this.object.startFrame
-                }
-            }));
+            this.bbox = this.object.bbox;
+            this.clearBBox();
+            this.displayBBox(this.bbox);
         },
 
         async onBBoxCreated(e) {
             this.bbox = e.detail.bbox;
             let bbox = new BoundingBox(this.currentFrame, this.bbox.x, this.bbox.y, this.bbox.width, this.bbox.height, true, false);
-            console.log("bbox created for object", this.object);
+            // rescale bbox to consider original dimensions
+            bbox.x = bbox.x / this.scale;
+            bbox.y = bbox.y / this.scale;
+            bbox.width = bbox.width / this.scale;
+            bbox.height = bbox.height / this.scale;
+            //
+            console.log("bbox created for document", this.idDocument);
             this.onDisableDrawing();
-            bbox.idBoundingBox = await ky.post(`${this.baseURL}/createBBox`, {
+            let object = await ky.post(`${this.baseURL}/createBBox`, {
                 json: {
                     _token: this._token,
-                    idObject: this.object.idObject,
-                    frameNumber: this.currentFrame,
+                    idDocument: this.idDocument,
                     bbox//     bbox: bbox
                 }
             }).json();
-            console.log("bbox created id ", bbox.idBoundingBox);
-            this.tracker.getFrameImage(this.currentFrame);
-            await this.showBBox();
-            messenger.notify("success", "New bbox created.");
+            console.log(object);
+            window.location.assign(`/annotation/${object.annotationType}/${this.idDocument}/${object.idStaticObject}`);
+            // console.log("bbox created id ", bbox.idBoundingBox);
+            // await this.showBBox();
+            // messenger.notify("success", "New bbox created.");
         },
 
         async onBBoxChange(bbox) {
@@ -156,6 +162,16 @@ function boxComponent(scale,bboxes) {
             console.log("on bbox change blocked ", this.currentBBox, bbox.blocked);
             await this.onBBoxUpdate(bbox);
             this.showBBox();
+        },
+
+        onBBoxToggleShow() {
+            this.toggleShow = !this.toggleShow;
+            console.log(this.toggleShow);
+            if (this.toggleShow) {
+                $(".bbox").css("display", "block");
+            } else {
+                $(".bbox").css("display", "none");
+            }
         },
 
         onEnableDrawing() {
@@ -394,7 +410,7 @@ function boxComponent(scale,bboxes) {
             });
 
             this.interactionInitialized[idBoundingBox] = true;
-            console.log("BBox interaction initialized once");
+            // console.log("BBox interaction initialized once");
             return true;
         },
 
