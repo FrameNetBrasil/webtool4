@@ -10,8 +10,8 @@ class ObjectAnnotationData extends Data
         public ?int $idObject = null,
         public ?int $idFrameElement = null,
         public ?int $idLU = null,
-        public ?int $idGenericLabel = null,
         public ?int $idDocument = null,
+        public string $annotationType = '',
         public string $_token = '',
     ) {
         $this->_token = csrf_token();

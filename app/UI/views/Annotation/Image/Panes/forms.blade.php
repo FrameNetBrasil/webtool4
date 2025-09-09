@@ -1,5 +1,6 @@
 <div
     id="formsPane"
+    class="h-full"
     x-data="formsComponent({{$idDocument}})"
     @bbox-drawn.document="onBBoxDrawn"
     @bbox-update.document="onBBoxUpdate"

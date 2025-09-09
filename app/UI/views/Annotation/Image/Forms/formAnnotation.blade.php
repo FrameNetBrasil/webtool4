@@ -3,11 +3,14 @@
         $object->fe->frame = $object->fe->frameName;
     }
 @endphp
-<form class="ui form">
+<form
+    class="ui form"
+>
     <div class="ui card form-card w-full p-1">
         <div class="content">
             <input type="hidden" name="idDocument" value="{{$object->idDocument}}">
             <input type="hidden" name="idObject" value="{{$object?->idObject}}">
+            <input type="hidden" name="annotationType" value="{{$annotationType}}">
             <div class="ui two column stackable grid relative">
                 <div class="column pr-8">
                     <x-ui::frame-fe
@@ -33,9 +36,9 @@
             <button
                     type="submit"
                     class="ui primary button"
-                    hx-post="/annotation/video/updateObjectAnnotation"
-                    hx-target="#o{{$object?->idObject}}"
-                hx-swap="innerHTML"
+                    hx-post="/annotation/image/updateObjectAnnotation"
+{{--                    hx-target="#o{{$object?->idObject}}"--}}
+{{--                    hx-swap="innerHTML"--}}
             >
                 Save
             </button>

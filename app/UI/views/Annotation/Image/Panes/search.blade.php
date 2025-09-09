@@ -68,7 +68,15 @@
                             class="search-results-grid card-grid dense"
                         >
                             @foreach($objects as $object)
-                                <div class="ui card fluid result-card cursor-pointer"
+                                @php
+                                    $status = "none";
+                                    if (!is_null($object->fe)) {
+                                        $status = !is_null($object->lu) ? "complete" : "partial";
+                                    } else {
+                                        $status = !is_null($object->lu) ? "partial" : "none";
+                                    }
+                                @endphp
+                                <div class="ui card fluid result-card cursor-pointer {{$status}}"
                                      hx-get="/annotation/image/object"
                                      hx-target="#formsPane"
                                      hx-swap="innerHTML"
