@@ -7,6 +7,7 @@ use App\Repositories\Frame;
 use App\Services\AppService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use OpenAI\Laravel\Facades\OpenAI;
 
@@ -319,6 +320,160 @@ class AISuggestionService extends AppService
         Storage::disk('local')->put($filename, json_encode($exportData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
 //        $this->info("💾 Results exported to: storage/app/{$filename}");
+    }
+
+    // ========================================================================
+    // OpenAI Usage and Billing Monitoring Methods
+    // ========================================================================
+    // These methods provide functionality to monitor OpenAI API usage and 
+    // spending, similar to the Python examples in openai_credit.md
+    // 
+    // Note: OpenAI billing limits are not accessible via API keys - they 
+    // require browser session authentication. These methods focus on usage 
+    // tracking with optional custom limits for budget management.
+    // ========================================================================
+
+    /**
+     * Get OpenAI API usage for a specific date range
+     * 
+     * @param string $startDate Date in Y-m-d format
+     * @param string $endDate Date in Y-m-d format
+     * @return array Usage data including total usage in USD
+     * @throws Exception
+     */
+    public static function getUsage(string $startDate, string $endDate): array
+    {
+        try {
+            $apiKey = config('openai.api_key');
+            if (empty($apiKey)) {
+                throw new Exception('OpenAI API key not configured');
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json',
+            ])->get('https://api.openai.com/v1/usage', [
+                'date' => $startDate
+            ]);
+
+            if (!$response->successful()) {
+                throw new Exception('OpenAI API request failed: ' . $response->body());
+            }
+
+            $data = $response->json();
+            $totalUsage = $data['total_usage'] ?? 0;
+
+            return [
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'total_usage_cents' => $totalUsage,
+                'total_usage_usd' => $totalUsage / 100,
+                'raw_response' => $data
+            ];
+
+        } catch (Exception $e) {
+            throw new Exception("Failed to retrieve OpenAI usage data: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get OpenAI API billing information including limits
+     * Note: OpenAI billing limits are not directly accessible via API keys.
+     * This method provides usage information and guidance for monitoring.
+     * 
+     * @return array Information about monitoring billing and usage
+     * @throws Exception
+     */
+    public static function getBilling(): array
+    {
+        try {
+            // Since billing limits are not accessible via API, we provide usage-based information
+            $apiKey = config('openai.api_key');
+            if (empty($apiKey)) {
+                throw new Exception('OpenAI API key not configured');
+            }
+
+            return [
+                'note' => 'OpenAI billing limits are not accessible via API keys. Use the web dashboard at https://platform.openai.com/account/billing/overview',
+                'suggestion' => 'Monitor usage regularly and set internal limits based on your budget',
+                'dashboard_url' => 'https://platform.openai.com/account/billing/overview',
+                'usage_url' => 'https://platform.openai.com/account/usage',
+                'warning' => 'Always monitor your usage to avoid unexpected charges',
+                'accessible_data' => [
+                    'usage_by_date_range' => 'Available via getUsage() method',
+                    'token_counts' => 'Available in API responses',
+                    'model_specific_usage' => 'Available via Usage API endpoints'
+                ]
+            ];
+
+        } catch (Exception $e) {
+            throw new Exception("Failed to provide billing information: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Check current usage status with available information
+     * Note: Since billing limits are not accessible via API, this provides usage data only
+     * 
+     * @param float|null $customLimit Optional custom spending limit in USD
+     * @return array Usage status information
+     * @throws Exception
+     */
+    public static function checkCredits(?float $customLimit = null): array
+    {
+        try {
+            // Get current month date range
+            $now = Carbon::now();
+            $startOfMonth = $now->copy()->startOfMonth()->format('Y-m-d');
+            $endDate = $now->format('Y-m-d');
+
+            // Get usage data
+            $usage = self::getUsage($startOfMonth, $endDate);
+            $currentUsage = $usage['total_usage_usd'];
+
+            $result = [
+                'current_usage_usd' => round($currentUsage, 2),
+                'period_start' => $startOfMonth,
+                'period_end' => $endDate,
+                'checked_at' => $now->toISOString(),
+                'usage_data' => $usage,
+                'billing_note' => 'Billing limits not accessible via API. Monitor usage at https://platform.openai.com/account/billing/overview'
+            ];
+
+            // If custom limit is provided, calculate remaining credits and percentage
+            if ($customLimit !== null && $customLimit > 0) {
+                $remainingCredits = $customLimit - $currentUsage;
+                $result['custom_limit_usd'] = round($customLimit, 2);
+                $result['remaining_credits_usd'] = round($remainingCredits, 2);
+                $result['has_available_credits'] = $remainingCredits > 0;
+                $result['usage_percentage'] = round(($currentUsage / $customLimit) * 100, 2);
+            } else {
+                $result['has_available_credits'] = true; // Conservative assumption
+                $result['note'] = 'No custom limit set. Cannot determine remaining credits.';
+            }
+
+            return $result;
+
+        } catch (Exception $e) {
+            throw new Exception("Failed to check OpenAI usage: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Simple check if sufficient credits are available
+     * 
+     * @param float|null $customLimit Optional custom spending limit in USD
+     * @return bool True if credits are available, false otherwise
+     */
+    public static function hasAvailableCredits(?float $customLimit = null): bool
+    {
+        try {
+            $credits = self::checkCredits($customLimit);
+            return $credits['has_available_credits'];
+        } catch (Exception $e) {
+            // Conservative approach: return false if unable to check
+            return false;
+        }
     }
 
 }
