@@ -12,6 +12,7 @@
         'layer' => ['Layer/GenericLabel', '/layers','', 'ADMIN','ui::icon.frame'],
         'relations' => ['Relations', '/relations','', 'ADMIN','ui::icon.frame'],
         'importfulltext' => ['Import FullText', '/utils/importFullText', '','MANAGER','ui::icon.frame'],
+        'aisuggestions' => ['LU AI Suggestions', '/lu/aiSuggestion','', 'ADMIN','ui::icon.lu'],
     ];
 
     $groups = [
@@ -19,6 +20,7 @@
         'document' => ['title' => "Document", "pages" => ['document','video','image']],
         'table' => ['title' => "Tables", "pages" => ['semantictype','layer','relations']],
         'utils' => ['title' => "Utils", "pages" => ['importfulltext']],
+        'data' => ['title' => "Data", "pages" => ['aisuggestions']],
     ];
 
 
