@@ -34,8 +34,15 @@
     }
 
     .annotation-controls {
+        grid-area: controls;
         background-color: #e0e1e2;
         height: 40px;
+    }
+
+    .annotation-image {
+        grid-area: image;
+        margin-top: 8px;
+        position: relative;
     }
 
     .annotation-data {
@@ -61,9 +68,9 @@
 
     .annotation-forms {
         grid-area: forms;
-        //background: @neutral200;
+        background: @neutral200;
         height: 100%;
-        padding: 0 @relativeSmall;
+        padding: @relative8px;
     }
 
     .annotation-objects {

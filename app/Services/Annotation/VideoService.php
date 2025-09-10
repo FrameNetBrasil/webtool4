@@ -306,7 +306,7 @@ class VideoService
 
         $searchResults = [];
 
-        if (! empty($data->frame) || ! empty($data->lu) || ! empty($data->searchIdLayerType) || ($data->idObject > 0)) {
+//        if (! empty($data->frame) || ! empty($data->lu) || ! empty($data->searchIdLayerType) || ($data->idObject > 0)) {
             $idLanguage = AppService::getCurrentIdLanguage();
 
             $query = Criteria::table($view)
@@ -343,9 +343,9 @@ class VideoService
                     'ad.frame',
                     'ad.fe'
                 )
-                ->orderBy('ad.idDynamicObject')
                 ->orderBy('ad.startFrame')
                 ->orderBy('ad.endFrame')
+                ->orderBy('ad.idDynamicObject')
                 ->all();
 
             // Format search results for display
@@ -361,7 +361,7 @@ class VideoService
                     $object->displayName = 'None';
                 }
             }
-        }
+//        }
 
         return $searchResults;
     }

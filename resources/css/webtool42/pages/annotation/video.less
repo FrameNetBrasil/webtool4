@@ -49,6 +49,18 @@
         display: flex;
         flex-direction: column;
 
+        .ui.card {
+            &.none {
+                border: 1px dashed @negativeColor;
+            }
+            &.partial {
+                border: 1px dashed @warningColor;
+            }
+            &.complete {
+                border: 1px solid @positiveColor;
+            }
+        }
+
         .timelinePane {
 
             display:flex;
@@ -268,63 +280,6 @@
                     right: 0;
                 }
 
-            }
-
-        }
-
-        // Annotation-specific search styles
-        .app-search {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-
-            .search-section {
-                flex-shrink: 0; // Fixed height for search inputs
-            }
-
-            #gridArea {
-
-                .results-container {
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-
-                    .results-header {
-                        flex-shrink: 0;
-                    }
-
-                    .card-view {
-                        flex: 1;
-                        overflow-y: auto;
-                        min-height: 0;
-                        position: relative;
-                        height: 100%;
-                        padding-bottom: @relativeSmall;
-
-                        .card-container {
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            bottom: 0;
-                            right: 0;
-
-                            .search-results-grid {
-                                max-height: none; // Remove any height restrictions
-
-                                .result-card {
-                                    min-height: auto;
-                                }
-                            }
-                        }
-                    }
-
-                    .empty-state {
-                        flex: 1;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                }
             }
         }
     }

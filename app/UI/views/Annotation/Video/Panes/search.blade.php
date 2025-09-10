@@ -1,12 +1,11 @@
-<div class="app-search p-1">
-    <!-- Search Section -->
-    <div class="search-container"
+<div class="search-container">
+    <div class="search-input-section"
          x-data="searchObjectComponent()"
          @htmx:before-request="onSearchStart"
          @htmx:after-request="onSearchComplete"
          @htmx:after-swap="onResultsUpdated"
     >
-        <div class="search-input-section">
+        <div class="search-input-group">
             <form class="ui form"
                   hx-post="/annotation/video/object/search"
                   hx-target=".search-result-section"
@@ -59,65 +58,87 @@
                 </div>
             </form>
         </div>
+    </div>
 
-        <div class="search-result-section flex-col">
-            @fragment("search")
-                @if(count($searchResults) > 0)
-                    <div class="search-result-data pl-1 pr-1">
-                        <div class="search-result-header">
-                            <div class="result-info">
-                                <div class="result-count" id="resultsCount">{!! count($searchResults ?? []) !!}
-                                    results
-                                </div>
+    <div class="search-result-section">
+        @fragment("search")
+            @if(count($searchResults) > 0)
+                <div class="search-result-data">
+                    <div class="search-result-header">
+                        <div class="result-info">
+                            <div class="result-count" id="resultsCount">{!! count($searchResults ?? []) !!}
+                                results
                             </div>
                         </div>
-                        <div class="card-container">
-                            <div
-                                class="search-results-grid card-grid dense"
-                                hx-get="/annotation/video/object"
-                                hx-target="#formsPane"
-                                hx-swap="innerHTML"
-                                hx-on::config-request="event.detail.parameters.append('idDynamicObject', event.detail.triggeringEvent.target.dataset.id)"
-                            >
-                                @foreach($searchResults as $object)
-                                    <div class="ui card fluid result-card"
+                    </div>
+                    <div class="card-container">
+                        <div
+                            class="search-results-grid card-grid dense"
+                        >
+                            @foreach($searchResults as $i => $object)
+                                @php
+                                    $status = "none";
+                                    if (($object->fe)) {
+                                        $status = ($object->lu) ? "complete" : "partial";
+                                    } else {
+                                        $status = ($object->lu) ? "partial" : "none";
+                                    }
+                                @endphp
 
-                                         tabindex="0"
-                                         role="button">
+                                <div class="ui card fluid result-card cursor-pointer {{$status}}"
+                                     hx-get="/annotation/video/object"
+                                     hx-target="#formsPane"
+                                     hx-swap="innerHTML"
+                                     hx-on::config-request="event.detail.parameters.append('idObject', this.dataset.id);event.detail.parameters.append('annotationType', '{{$annotationType}}');"
+                                     tabindex="0"
+                                     data-id="{{$object->idObject}}"
+                                     role="button">
+                                    <div
+                                        class="content"
+                                        data-id="{{$object->idObject}}"
+                                    >
+                                        <span class="right floated">
+                                            <x-ui::delete
+                                                title="delete Object"
+                                                onclick="messenger.confirmDelete(`Removing Object '#{{$object->idObject}}'.`, '/annotation/{{$annotationType}}/{{$idDocument}}/{{$object->idObject}}')"
+                                            ></x-ui::delete>
+                                        </span>
                                         <div
-                                            class="content"
+                                            class="header"
                                             data-id="{{$object->idObject}}"
                                         >
-                                            <div
-                                                class="header"
-                                                data-id="{{$object->idObject}}"
-                                            >
-                                                Object: #{{$object->idObject}}
-                                                {{--                                                {{$object->layerGroup}}/{{$object->nameLayerType}}--}}
-                                            </div>
-                                            <div
-                                                class="meta"
-                                                data-id="{{$object->idObject}}"
-                                            >
-                                                {{$object->displayName}}<br/>
-                                                Frames: {{$object->startFrame}}-{{$object->endFrame}}<br/>
-                                            </div>
+                                            Object: #{{$object->idObject}}
+                                        </div>
+                                        <div
+                                            class="meta"
+                                            data-id="{{$object->idObject}}"
+                                        >
+                                            @if($object->fe)
+                                                <x-element::frame
+                                                    name="{{$object->frame}}.{{$object->fe}}"></x-element::frame>
+                                            @endif
+                                            @if($object->lu)
+                                                <x-element::lu
+                                                    name="{{$object->lu}}"></x-element::lu>
+                                            @endif
+
+                                            Frames: {{$object->startFrame}}-{{$object->endFrame}}<br/>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                @else
-                    <div class="search-result-empty" id="emptyState">
-                        <i class="search icon empty-icon"></i>
-                        <h3 class="empty-title">No results found.</h3>
-                        <p class="empty-description">
-                            Enter your search above to find objects.
-                        </p>
-                    </div>
-                @endif
-            @endfragment
-        </div>
+                </div>
+            @else
+                <div class="search-result-empty" id="emptyState">
+                    <i class="search icon empty-icon"></i>
+                    <h3 class="empty-title">No results found.</h3>
+                    <p class="empty-description">
+                        Enter your search above to find objects.
+                    </p>
+                </div>
+            @endif
+        @endfragment
     </div>
 </div>

@@ -45,11 +45,20 @@
     {{-- Display field (readonly) --}}
     <div class="ui medium fluid left icon input">
         <input type="text"
-               x-model="displayValue"
+               x-model="rawDisplayValue"
                placeholder="{{ $placeholder }}"
                readonly
                @click="openModal()"
-               style="cursor: pointer;">
+               style="cursor: pointer;"
+               :style="displayValue && displayValue !== rawDisplayValue ? 'color: transparent; cursor: pointer;' : 'cursor: pointer;'">
+        
+        {{-- HTML overlay for formatted display (positioned over input text area only) --}}
+        <div x-show="displayValue && displayValue !== rawDisplayValue"
+             x-html="displayValue"
+             @click="openModal()"
+             style="position: absolute; top: 1px; left: 2.67142857em; right: 2.67142857em; bottom: 1px; cursor: pointer; padding: 0.67857143em 0; line-height: 1.21428571em; background: transparent; pointer-events: none; display: flex; align-items: center; z-index: 1;">
+        </div>
+        
         <i class="stream icon" style="cursor: pointer;" @click="openModal()"></i>
     </div>
 

@@ -37,7 +37,7 @@ class ImageController extends Controller
         if ($data->idObject == 0) {
             return view('Annotation.Image.Forms.formNewObject');
         }
-        $object = ImageService::getObject($data);
+        $object = ImageService::getObject($data->idObject);
         debug($object);
         $object->annotationType = $data->annotationType;
         if (is_null($object)) {
@@ -81,9 +81,9 @@ class ImageController extends Controller
     public function cloneObject(CloneData $data)
     {
         try {
-            $idDynamicObjectClone = ImageService::cloneObject($data);
+            $idStaticObjectClone = ImageService::cloneObject($data);
 
-            return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$idDynamicObjectClone}");
+            return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$idStaticObjectClone}");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
