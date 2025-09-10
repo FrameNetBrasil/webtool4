@@ -5,6 +5,7 @@
     {{ $attributes }}
     name="{{$name ?? $id}}"
     placeholder="{{$placeholder ?? 'Select a frame'}}"
+    :search-fields="['frame' => $displayValue]"
     search-url="/frame/list/forSelect"
     display-name="frame"
     display-field="name"

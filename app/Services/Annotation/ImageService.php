@@ -108,20 +108,20 @@ class ImageService
         return $i ?? null;
     }
 
-    public static function getObject(ObjectSearchData $data): object|null
+    public static function getObject(int $idObject): object|null
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $object = Criteria::table("view_staticobject")
-            ->where("idStaticObject", $data->idObject)
+            ->where("idStaticObject", $idObject)
             ->where("idLanguage", $idLanguage)
-            ->select("idStaticObject", "origin", "idImage", "idDocument","idLayerType","nameLayerType")
+            ->select("idStaticObject", "name","scene","idFlickr30kEntitiesChain","nobndbox","origin", "idImage", "idDocument", "idLayerType", "nameLayerType")
             ->orderBy("idStaticObject")
             ->keyBy("idStaticObject")
             ->first();
 
         $fe = Criteria::table("view_staticobject as sob")
             ->join("view_annotation_static_fe as fe", "sob.idStaticObject", "=", "fe.idStaticObject")
-            ->where("sob.idStaticObject", $data->idObject)
+            ->where("sob.idStaticObject", $idObject)
             ->where("fe.idLanguage", $idLanguage)
             ->select("fe.idAnnotation", "fe.idStaticObject", "fe.idFrameElement", "fe.idFrame", "fe.frameName", "fe.name", "fe.idEntity", "fe.idLanguage", "fe.bgColor", "fe.fgColor")
             ->keyBy("idStaticObject")
@@ -129,7 +129,7 @@ class ImageService
 
         $lu = Criteria::table("view_staticobject as sob")
             ->join("view_annotation_static_lu as lu", "sob.idStaticObject", "=", "lu.idStaticObject")
-            ->where("sob.idStaticObject", $data->idObject)
+            ->where("sob.idStaticObject", $idObject)
             ->where("lu.idLanguage", $idLanguage)
             ->select("lu.idAnnotation", "lu.idStaticObject", "lu.idLU", "lu.idEntity", "lu.name", "lu.frameName", "lu.idLanguage")
             ->keyBy("idStaticObject")
@@ -137,7 +137,7 @@ class ImageService
 
         if (!is_null($object)) {
             $bboxObject = Criteria::table("view_staticobject_boundingbox")
-                ->where("idStaticObject", $data->idObject)
+                ->where("idStaticObject", $idObject)
                 ->first();
             $object->bbox = $bboxObject;
             $object->idObject = $object->idStaticObject;
@@ -172,7 +172,7 @@ class ImageService
         $result = Criteria::table("view_staticobject")
             ->where("idDocument", $idDocument)
             ->where("idLanguage", $idLanguage)
-            ->select("idStaticObject", "origin", "idImage", "idDocument","idLayerType","nameLayerType")
+            ->select("idStaticObject", "origin", "idImage", "idDocument", "idLayerType", "nameLayerType")
             ->orderBy("idStaticObject")
             ->keyBy("idStaticObject")
             ->all();
@@ -230,7 +230,7 @@ class ImageService
         foreach ($result as $object) {
             $object->order = $j++;
             $object->idObject = $object->idStaticObject;
-            $object->bbox = Criteria::byId("view_staticobject_boundingbox","idStaticObject", $object->idObject);
+            $object->bbox = Criteria::byId("view_staticobject_boundingbox", "idStaticObject", $object->idObject);
             $object->fe = $fes[$object->idObject] ?? null;
             $object->lu = $lus[$object->idObject] ?? null;
             $objects[] = $object;
@@ -244,7 +244,7 @@ class ImageService
         $sob = Criteria::byId("staticobject", "idStaticObject", $data->idObject);
         Criteria::table("annotation")
             ->where("idStaticObject", $data->idObject)
-            ->update(['status'=>'DELETED']);
+            ->update(['status' => 'DELETED']);
         if ($data->idFrameElement) {
             $fe = Criteria::byId("frameelement", "idFrameElement", $data->idFrameElement);
             $json = json_encode([
@@ -356,42 +356,41 @@ class ImageService
     public static function cloneObject(CloneData $data): int
     {
         $idUser = AppService::getCurrentIdUser();
-        $idStaticObject = $data->idStaticObject;
-        $sob = self::getObject($idStaticObject);
+        $idStaticObject = $data->idObject;
+        $so = self::getObject($idStaticObject);
         $clone = json_encode([
-            'name' => $sob->name,
-            'scene' => 0,
-            'nobdnbox' => 0,
-            'idUser' => $idUser
+            'name' => $so->name,
+            'scene' => $so->scene ?? 0,
+            'idFlickr30kEntitiesChain' => $so->idFlickr30kEntitiesChain ?? 0,
+            'nobndbox' => $so->nobndbox ?? 0,
+            'idLayerType' => $so->idLayerType,
+            'origin' => (int)$so->origin,
+            'idUser' => $idUser,
         ]);
-        $idStaticObjectClone = Criteria::function("staticobject_create(?)", [$clone]);
-        $staticObjectClone = Criteria::byId("staticobject", "idStaticObject", $idStaticObjectClone);
-        $documentImage = Criteria::table("view_document_image")
-            ->where("idDocument", $data->idDocument)
+        $idStaticObjectClone = Criteria::function('staticobject_create(?)', [$clone]);
+//        $staticObjectClone = Criteria::byId('staticobject', 'idStaticObject', $idStaticObjectClone);
+        $documentImage = Criteria::table('view_document_image')
+            ->where('idDocument', $data->idDocument)
             ->first();
         $image = Image::byId($documentImage->idImage);
-        // create annotationobjectrelation for rel_image_staobj
-        $relation = json_encode([
-            'idAnnotationObject1' => $image->idAnnotationObject,
-            'idAnnotationObject2' => $staticObjectClone->idAnnotationObject,
-            'relationType' => 'rel_image_staobj'
+        // create relation video_dynamicobject
+        Criteria::create('image_staticobject', [
+            'idImage' => $image->idImage,
+            'idStaticObject' => $idStaticObjectClone,
         ]);
-        $idObjectRelation = Criteria::function("objectrelation_create(?)", [$relation]);
-        // cloning bboxes
-        $bbox = Criteria::table("view_staticobject_boundingbox")
-            ->where("idStaticObject", $idStaticObject)
-            ->first();
+        // cloning bbox
         $json = json_encode([
-            'frameNumber' => 0,
-            'frameTime' => 0,
-            'x' => (int)$bbox->x,
-            'y' => (int)$bbox->y,
-            'width' => (int)$bbox->width,
-            'height' => (int)$bbox->height,
-            'blocked' => (int)$bbox->blocked,
-            'idStaticObject' => (int)$idStaticObjectClone
+            'frameNumber' => 1,
+            'frameTime' => 1,
+            'x' => $so->bbox->x,
+            'y' => $so->bbox->y,
+            'width' => $so->bbox->width,
+            'height' => $so->bbox->height,
+            'blocked' => $so->bbox->blocked,
+            'isGroundTruth' => $so->bbox->isGroundTruth,
+            'idStaticObject' => $idStaticObjectClone,
         ]);
-        $idBoundingBox = Criteria::function("boundingbox_static_create(?)", [$json]);
+        $idBoundingBox = Criteria::function('boundingbox_static_create(?)', [$json]);
         return $idStaticObjectClone;
     }
 
@@ -446,13 +445,13 @@ class ImageService
         $json = json_encode([
             'frameNumber' => 1,
             'frameTime' => 1,
-            'x' => (int) $data->bbox['x'],
-            'y' => (int) $data->bbox['y'],
-            'width' => (int) $data->bbox['width'],
-            'height' => (int) $data->bbox['height'],
-            'blocked' => (int) $data->bbox['blocked'],
+            'x' => (int)$data->bbox['x'],
+            'y' => (int)$data->bbox['y'],
+            'width' => (int)$data->bbox['width'],
+            'height' => (int)$data->bbox['height'],
+            'blocked' => (int)$data->bbox['blocked'],
             'isGroundTruth' => $data->bbox['isGroundTruth'] ? 1 : 0,
-            'idStaticObject' => (int) $object->idStaticObject,
+            'idStaticObject' => (int)$object->idStaticObject,
         ]);
         debug($json);
         $idBoundingBox = Criteria::function('boundingbox_static_create(?)', [$json]);
@@ -502,7 +501,7 @@ class ImageService
 //        $objects = [];
 //
 //        if (!empty($data->frame) || !empty($data->lu) || !empty($data->searchIdLayerType) || ($data->idObject > 0)) {
-            $idLanguage = AppService::getCurrentIdLanguage();
+        $idLanguage = AppService::getCurrentIdLanguage();
 
 //            $result = Criteria::table("view_staticobject")
 //                ->where("idLanguage", $idLanguage)
@@ -528,57 +527,58 @@ class ImageService
 //                ->keyBy("idStaticObject")
 //                ->all();
 
-            $query = Criteria::table("view_staticobject as sob")
-                ->leftJoin("view_annotation_static_fe as fe", "sob.idStaticObject", "=", "fe.idStaticObject")
-                ->leftJoin("view_annotation_static_lu as lu", "sob.idStaticObject", "=", "lu.idStaticObject")
-                ->where("sob.idLanguage", $idLanguage)
-                ->where('fe.idLanguage', 'left', $idLanguage)
-                ->where('lu.idLanguage', 'left', $idLanguage)
-                ->where('sob.idDocument', $data->idDocument);
+        $query = Criteria::table("view_staticobject as sob")
+            ->leftJoin("view_annotation_static_fe as fe", "sob.idStaticObject", "=", "fe.idStaticObject")
+            ->leftJoin("view_annotation_static_lu as lu", "sob.idStaticObject", "=", "lu.idStaticObject")
+            ->where("sob.idLanguage", $idLanguage)
+            ->where('fe.idLanguage', 'left', $idLanguage)
+            ->where('lu.idLanguage', 'left', $idLanguage)
+            ->where('sob.idDocument', $data->idDocument);
 
-            if (!empty($data->frame)) {
-                $query->whereRaw('(fe.frameName LIKE ? OR fe.name LIKE ?)', [
-                    $data->frame . '%',
-                    $data->frame . '%',
-                ]);
+        if (!empty($data->frame)) {
+            $query->whereRaw('(fe.frameName LIKE ? OR fe.name LIKE ?)', [
+                $data->frame . '%',
+                $data->frame . '%',
+            ]);
+        }
+
+        if (!empty($data->lu)) {
+            $searchTerm = '%' . $data->lu . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('lu.name', 'like', $searchTerm);
+            });
+        }
+
+        if ($data->idObject != 0) {
+            $query->where('sob.idStaticObject', $data->idObject);
+        }
+
+        $objects = $query
+            ->select(
+                'sob.idStaticObject as idObject',
+                'sob.name',
+                'lu.name as luName',
+                'lu.frameName as luFrameName',
+                'fe.frameName as feFrameName',
+                'fe.name as feName'
+            )
+            ->orderBy('sob.idStaticObject')
+            ->all();
+
+        // Format search results for display
+        foreach ($objects as $i => $object) {
+            $object->order = ++$i;
+            $object->fe = (object)[];
+            $object->lu = (object)[];
+            if (!is_null($object->luName)) {
+                $object->lu->name = $object->luName;
+                $object->lu->frameName = $object->luFrameName;
             }
-
-            if (!empty($data->lu)) {
-                $searchTerm = '%' . $data->lu . '%';
-                $query->where(function ($q) use ($searchTerm) {
-                    $q->where('lu.name', 'like', $searchTerm);
-                });
+            if (!is_null($object->fe)) {
+                $object->fe->name = $object->feName;
+                $object->fe->frameName = $object->feFrameName;
             }
-
-            if ($data->idObject != 0) {
-                $query->where('sob.idStaticObject', $data->idObject);
-            }
-
-            $objects = $query
-                ->select(
-                    'sob.idStaticObject as idObject',
-                    'sob.name',
-                    'lu.name as luName',
-                    'lu.frameName as luFrameName',
-                    'fe.frameName as feFrameName',
-                    'fe.name as feName'
-                )
-                ->orderBy('sob.idStaticObject')
-                ->all();
-
-            // Format search results for display
-            foreach ($objects as $object) {
-                $object->fe = (object)[];
-                $object->lu = (object)[];
-                if (!is_null($object->luName)) {
-                    $object->lu->name = $object->luName;
-                    $object->lu->frameName = $object->luFrameName;
-                }
-                if (!is_null($object->fe)) {
-                    $object->fe->name = $object->feName;
-                    $object->fe->frameName = $object->feFrameName;
-                }
-            }
+        }
 //        }
 
         return $objects;
@@ -591,7 +591,7 @@ class ImageService
         if ($data->annotationType == 'staticBBox') {
             $layerType = Criteria::table("view_layertype")
                 ->where("idLanguage", AppService::getCurrentIdLanguage())
-                ->where("layerGroup","StaticAnnotation")
+                ->where("layerGroup", "StaticAnnotation")
                 ->first();
             $data->idLayerType = $layerType->idLayerType;
         }

@@ -8,7 +8,7 @@
                 <div>
                     <button
                         class="ui tiny icon button"
-                        hx-post="/annotation/video/cloneObject"
+                        hx-post="/annotation/image/cloneObject"
                         hx-vals='js:{"idDocument":{{$object->idDocument}},"idObject":{{$object->idObject}},"annotationType":"{{$annotationType}}"}'
                     >
                         Clone object

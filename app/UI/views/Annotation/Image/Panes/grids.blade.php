@@ -15,18 +15,24 @@
             'annotationType' => $annotationType
         ])
     </div>
-    <div class="ui tab h-full w-full sentences" data-tab="sentences">
+    <div
+        class="ui tab h-full w-full sentences"
+        data-tab="sentences"
+        hx-get="/annotation/staticBBox/sentences/{{$idDocument}}"
+        hx-trigger="load"
+    >
 
     </div>
 </div>
 <script type="text/javascript">
     $(function() {
         $(".tabs .item").tab({
-            onLoad: (tabPath) => {
-                if(tabPath === 'sentences') {
-                    htmx.ajax("GET", "/annotation/staticBBox/sentences/{{$idDocument}}", ".sentences");
-                }
-            }
+            {{--onLoad: (tabPath) => {--}}
+            {{--    console.log(tabPath);--}}
+            {{--    if(tabPath === 'sentences') {--}}
+            {{--        htmx.ajax("GET", "/annotation/staticBBox/sentences/{{$idDocument}}", ".sentences");--}}
+            {{--    }--}}
+            {{--}--}}
         });
     });
 </script>

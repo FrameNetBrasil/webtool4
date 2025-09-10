@@ -4,8 +4,10 @@
 <x-search::base
     name="{{$id}}"
     placeholder="{{$placeholder}}"
+    :search-fields="['lu' => $displayValue]"
     search-url="/lu/list/forSelect"
     display-formatter="displayFormaterLUSearch"
+    display-name="lu"
     display-field="name"
     value="{{$value}}"
     display-value="{{ $displayValue }}"
@@ -14,6 +16,7 @@
 />
 <script>
     function displayFormaterLUSearch(lu) {
+        console.log(lu);
         return `<div class="result"><span class="color_frame">${lu.frameName}</span>.${lu.name}</span></div>`;
     };
 </script>

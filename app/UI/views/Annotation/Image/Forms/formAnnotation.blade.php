@@ -26,7 +26,7 @@
                                 search-url="/lu/list/forSelect"
                                 value="{{ old('idFrame', $object?->lu->idLU ?? '') }}"
                                 display-value="{{ old('frame', $object?->lu->name ?? '') }}"
-                                modal-title="Search CV Name"
+                                modal-title="Search Framed Entity"
                         ></x-search::lu>
                     </div>
                 </div>

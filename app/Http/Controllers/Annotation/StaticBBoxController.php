@@ -27,6 +27,14 @@ class StaticBBoxController extends Controller
         ]);
     }
 
+    #[Get(path: '/annotation/staticBBox/sentences/{idDocument}')]
+    public function gridSentences(int $idDocument)
+    {
+        $sentences = BrowseService::listSentences($idDocument);
+        return view("Annotation.Image.Panes.sentences", [
+            'sentences' => $sentences
+        ]);
+    }
     private function getData(int $idDocument, ?int $idStaticObject = null): array
     {
         return ImageService::getResourceData($idDocument, $idStaticObject, 'staticBBox');
@@ -53,5 +61,6 @@ class StaticBBoxController extends Controller
             return $this->renderNotify('error', $e->getMessage());
         }
     }
+
 
 }

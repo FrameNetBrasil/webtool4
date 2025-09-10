@@ -37,7 +37,8 @@
     </div>
 </div>
 <div
-    style="position:relative;width:{{$imageWidth}}px;height:{{$imageHeight}}px;"
+    class="annotation-image"
+    style="width:{{$imageWidth}}px;height:{{$imageHeight}}px;"
 >
     <img
         alt="{{$image->name}}"
