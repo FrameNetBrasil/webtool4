@@ -26,10 +26,11 @@ class AISuggestionController extends Controller
     public function getAiSuggestions(AISuggestionData $data)
     {
         try {
+            debug($data);
             $results = [];
             if ($data->idFrame) {
                 $frame = Frame::byId($data->idFrame);
-                $results = AISuggestionService::handle($data->idFrame);
+                $results = AISuggestionService::handle($data);
 
             }
             return view("LU.AISuggestion.main", [
