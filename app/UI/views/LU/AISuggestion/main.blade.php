@@ -29,7 +29,7 @@
                                       hx-trigger="submit"
                                 >
                                     <div class="fields">
-                                        <div class="twelve wide field">
+                                        <div class="six wide field">
                                             <x-search::frame
                                                 id="idFrame"
                                                 label=""
@@ -39,6 +39,34 @@
                                                 display-value="{{ old('frame', '') }}"
                                                 modal-title="Search Frame"
                                             ></x-search::frame>
+                                        </div>
+                                        <div class="field">
+                                            <label>Model</label>
+                                            <div
+                                                class="ui selection dropdown"
+                                                x-init="$($el).dropdown()"
+                                            >
+                                                <input type="hidden" name="model" value="llama">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">LLama</div>
+                                                <div class="menu">
+                                                    <div class="item" data-value="llama">LLama</div>
+                                                    <div class="item" data-value="openai">OpenAI</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>POS</label>
+                                            <select
+                                                name="pos[]"
+                                                class="ui fluid search dropdown"
+                                                multiple=""
+                                                x-init="$($el).dropdown({keepSearchTerm: true})"
+                                            >
+                                                <option value="NOUN">NOUN</option>
+                                                <option value="VERB">VERB</option>
+                                                <option value="ADJ">ADJ</option>
+                                            </select>
                                         </div>
                                         <div class="field">
                                             <label></label>

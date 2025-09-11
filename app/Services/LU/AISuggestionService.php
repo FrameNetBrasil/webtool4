@@ -2,23 +2,25 @@
 
 namespace App\Services\LU;
 
+use App\Data\LU\AISuggestionData;
 use App\Database\Criteria;
 use App\Repositories\Frame;
 use App\Services\AppService;
 use Carbon\Carbon;
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class AISuggestionService extends AppService
 {
-    public static function handle(int $idFrame): array
+    public static function handle(AISuggestionData $data): array
     {
-        $frameId = $idFrame;
-        $targetN = 15;
-        $targetPos = 'NOUN';
-        $model = 'gpt-4o';
+        $frameId = $data->idFrame;
+        $targetPos = $data->pos;
+        $model = ($data->model == 'openai') ? 'gpt-4o' : 'llama';
+        $targetN = ($model == 'llama') ? 15 : 15;
         $dryRun = false;
 
         // Validate POS types
@@ -39,34 +41,34 @@ class AISuggestionService extends AppService
             // Validate frame exists
             $frame = self::validateFrame($frameId);
 
-            // Load prompt template
-            $promptTemplate = self::loadPromptTemplate();
-
             // Get current LUs for this frame
             $currentLUs = self::getCurrentLUs($frameId, $validPos);
 
-            // Build complete prompt
-            $fullPrompt = self::buildPrompt($promptTemplate, $frame, $currentLUs, $targetN, $targetPos);
+            // Load prompt template
 
-            if ($dryRun) {
-                //                $this->displayDryRun($fullPrompt);
-                //                return 0;
+            if ($model == 'gpt-4o') {
+                $promptTemplate = self::loadPromptTemplate();
+                // Build complete prompt
+                $pos = implode(",", $targetPos);
+                $fullPrompt = self::buildPrompt($promptTemplate, $frame, $currentLUs, $targetN, $pos);
+                if ($dryRun) {
+                    //                $this->displayDryRun($fullPrompt);
+                    //                return 0;
+                }
+                // Check API key
+                if (empty(config('openai.api_key'))) {
+                    throw new \Exception('❌ OpenAI API key not configured. Please set OPENAI_API_KEY in your .env file.');
+                }
+                // Call OpenAI API
+//                $response = self::callOpenAI($fullPrompt, $model);
+//                // Process and display results
+//                $results = self::processResponse($response, $frame);
+            } else {
+                $response = self::callLLama($frame, $currentLUs, $targetN, $targetPos);
             }
-
-            // Check API key
-            if (empty(config('openai.api_key'))) {
-                throw new \Exception('❌ OpenAI API key not configured. Please set OPENAI_API_KEY in your .env file.');
-            }
-
-            // Call OpenAI API
-            $response = self::callOpenAI($fullPrompt, $model);
-
-            debug($response);
-
-            // Process and display results
             $results = self::processResponse($response, $frame);
 
-            debug($results);
+//            $results = [];
 
             // Check for existing LUs
             $results = self::checkExistingLU($results, $frameId);
@@ -120,18 +122,16 @@ class AISuggestionService extends AppService
         }
     }
 
-    private static function validatePosTypes(string $targetPos): array
+    private static function validatePosTypes(array $targetPos): array
     {
         $validPosTypes = ['VERB', 'NOUN', 'ADJ'];
-        $requestedPos = array_map('trim', explode(',', strtoupper($targetPos)));
-
-        foreach ($requestedPos as $pos) {
+        foreach ($targetPos as $pos) {
             if (! in_array($pos, $validPosTypes)) {
                 throw new Exception("Invalid POS type '{$pos}'. Valid types are: VERB, NOUN, ADJ");
             }
         }
 
-        return $requestedPos;
+        return $targetPos;
     }
 
     private static function getCurrentLUs(int $frameId, array $validPos): array
@@ -143,6 +143,7 @@ class AISuggestionService extends AppService
             ->where('lu.idLanguage', 1) // Portuguese
             ->whereIn('udpos.POS', $validPos) // Filter by valid POS types
             ->orderBy('lu.name')
+            ->limit(20)
             ->get()
             ->all();
 
@@ -224,6 +225,42 @@ class AISuggestionService extends AppService
         //            $this->warn("🐛 Raw response saved to: storage/app/{$debugFile}");
         //        }
 
+        return $content;
+    }
+
+    private static function callLLama($frame, $currentLUs, $targetN, $targetPos): string
+    {
+        $content = '';
+        $exclusion_list = [];
+        foreach ($currentLUs as $lu) {
+            $exclusion_list[] = $lu->lemmaName;
+        }
+        $parameters = [
+            'frame' => $frame->name,
+            'frame_definition' => $frame->description,
+            'target_count' => $targetN,
+            'exclusion_list' => $exclusion_list,
+            'acceptable_pos' => $targetPos,
+            'temperature' => 0.1,
+            'max_tokens'=> 2048
+        ];
+        debug($parameters);
+        $client = new Client([
+            'timeout' => 300.0,
+        ]);
+
+        try {
+            $response = $client->post('http://server5.frame.net.br:5000/generate', [
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+                'json' => $parameters
+            ]);
+            $content = $response->getBody();
+            debug(json_decode($content));
+        } catch (\Exception $e) {
+            echo $e->getMessage() . "\n";
+        }
         return $content;
     }
 
