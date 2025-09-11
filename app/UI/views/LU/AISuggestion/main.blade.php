@@ -122,7 +122,7 @@
                                         <i class="search icon empty-icon"></i>
                                         <h3 class="empty-title">No results found.</h3>
                                         <p class="empty-description">
-                                            "Enter a frame to get LU suggestions."
+                                            Enter a frame to get LU suggestions.
                                         </p>
                                     </div>
                                 @endif
