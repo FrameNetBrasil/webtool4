@@ -10,8 +10,8 @@
     ];
     $annotationType = [
         'corpus' => ['title' => "Corpus", "pages" => ['annotationfe','annotationfulltext','annotationset']],
-        //'video' => ['title' => "Video", "pages" => ['annotationdynamic','annotationdeixis']],
-        'video' => ['title' => "Video", "pages" => ['annotationdeixis']],
+        'video' => ['title' => "Video", "pages" => ['annotationdynamic','annotationdeixis']],
+        //'video' => ['title' => "Video", "pages" => ['annotationdeixis']],
         'image' => ['title' => "Image", "pages" => ['annotationstaticbbox','annotationstaticevent']],
     ];
 

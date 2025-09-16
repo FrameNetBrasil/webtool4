@@ -40,7 +40,7 @@
         "google/cloud-storage": "^1.42",
         "guzzlehttp/guzzle": "^7.2",
         "james-heinrich/getid3": "^1.9",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^12.0",
         "laravel/octane": "^2.4",
         "laravel/reverb": "@beta",
         "laravel/tinker": "^2.9",
@@ -51,7 +51,8 @@
         "spatie/laravel-data": "*",
         "textalk/websocket": "^1.5",
         "thiagoalessio/tesseract_ocr": "^2.13",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "pestphp/pest": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -63,7 +64,7 @@
         "nunomaduro/collision": "^8.0",
         "phpfastcache/phpfastcache": "^9",
         "phplrt/phplrt": "^3.6",
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^11.0",
         "spatie/laravel-ignition": "^2.4"
     },
     "autoload": {
