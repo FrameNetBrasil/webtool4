@@ -89,7 +89,7 @@
                                      hx-get="/annotation/video/object"
                                      hx-target="#formsPane"
                                      hx-swap="innerHTML"
-                                     hx-on::config-request="event.detail.parameters.append('idObject', this.dataset.id);event.detail.parameters.append('annotationType', '{{$annotationType}}');"
+                                     hx-on::config-request="Object.assign(event.detail.parameters, {idObject: this.dataset.id, annotationType: '{{$annotationType}}', idDocument: '{{$idDocument}}'});"
                                      tabindex="0"
                                      data-id="{{$object->idObject}}"
                                      role="button">
