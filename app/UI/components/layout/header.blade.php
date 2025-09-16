@@ -88,7 +88,7 @@
             {!! $currentLanguage->description !!}<i class="dropdown icon"></i>
             <div class="menu" tabindex="-1">
                 @foreach($languages as $language)
-                    <a class="item" href="{{$language[1]}}">{{$language[0]}}</a>
+                    <div class="item" hx-get="{{$language[1]}}">{{$language[0]}}</div>
                 @endforeach
             </div>
         </div>
