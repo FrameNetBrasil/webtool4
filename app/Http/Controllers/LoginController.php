@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\ImperData;
 use App\Data\LoginData;
 use App\Data\TwoFactorData;
+use App\Database\Criteria;
 use App\Exceptions\LoginException;
 use App\Exceptions\UserNewException;
 use App\Exceptions\UserPendingException;
@@ -137,9 +138,8 @@ class LoginController extends Controller
     {
         $token = session('mail_token');
         if ($token == $data->password) {
-            $userInfo = User::byId($data->idUser);
             $user = new AuthUserService();
-            $user->impersonate($userInfo);
+            $user->impersonate($data->idUser);
             return $this->redirect("/");
         } else {
             return $this->notify('error', "Access denied.");
