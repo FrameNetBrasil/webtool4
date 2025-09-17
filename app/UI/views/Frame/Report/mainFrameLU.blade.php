@@ -66,9 +66,9 @@
                                             </div>
                                         </div>
 
-                                        <div class="search-result-section">
+                                        <div class="search-result-section d-flex gap-1">
                                             @fragment("search")
-                                                <div class="w-1/2 h-full overflow-auto p-1">
+                                                <div class="h-full overflow-auto flex-1">
                                                     @if(count($frames) > 0)
                                                         <table class="ui selectable striped compact table">
                                                             <tbody>
@@ -92,7 +92,7 @@
                                                         </div>
                                                     @endif
                                                 </div>
-                                                <div class="w-1/2 h-full overflow-auto p-1">
+                                                <div class="h-full overflow-auto flex-1">
                                                     @if(count($lus) > 0)
                                                         <table class="ui selectable striped compact table">
                                                             <tbody>
