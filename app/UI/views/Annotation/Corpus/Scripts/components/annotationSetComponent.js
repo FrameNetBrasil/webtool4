@@ -13,11 +13,22 @@ function annotationSetComponent(idAnnotationSet, token, corpusAnnotationType) {
         },
 
         get selection() {
-            let type = "", id = "", start = 0, end = 0;
+            let type = "", id = "", start = 0, end = 0, startNode, endNode;
             if (this.selectionRaw) {
                 let { anchorNode, anchorOffset, focusNode, focusOffset } = this.selectionRaw;
-                var startNode = anchorNode?.parentNode || null;
-                var endNode = focusNode?.parentNode || null;
+                console.log("====");
+                console.log(anchorNode, anchorOffset, focusNode, focusOffset );
+                if (anchorNode.nodeType === Node.TEXT_NODE) {
+                    startNode = anchorNode?.parentNode || null;
+                } else if (anchorNode.nodeType === Node.ELEMENT_NODE) {
+                    startNode = anchorNode;
+                }
+                if (focusNode.nodeType === Node.TEXT_NODE) {
+                    endNode = focusNode?.parentNode || null;
+                } else if (focusNode.nodeType === Node.ELEMENT_NODE) {
+                    endNode = focusNode;
+                }
+
                 if ((startNode !== null) && (endNode !== null)) {
                     if (startNode.dataset.type === "word") {
                         type = "word";
@@ -26,9 +37,13 @@ function annotationSetComponent(idAnnotationSet, token, corpusAnnotationType) {
                         }
                         if (endNode.dataset.endchar) {
                             end = endNode.dataset.endchar;
+                            if (endNode.classList.contains('colSpace')) {
+                                --end;
+                            }
                         }
                     }
                 }
+                console.log(type,id,start,end);
             }
             if (this.selectionNI) {
                 type = "ni";
