@@ -52,24 +52,22 @@
 <div class="columnAnnotation">
     <div class="rowWord">
         @foreach($words as $i => $w)
-            <div class="{!! $w['isPunct'] ? 'colSpace' : 'colWord' !!}">
-                @php
-                    $target = $groupedLayers['lty_target'][0][0];
-                    $isTarget = ($i >= $target->startWord) && ($i <= $target->endWord);
-                    // height = número de linhas para lty_fe
-                    $lines = count($groupedLayers['lty_target']);
-                    $height = 24;// + ($isTarget ? 0 : ($lines * 30))
-                @endphp
-                <span
-                        class="word {{$isTarget ? 'target' : ''}} {{$w['hasFE'] ? 'hasFE' : ''}}"
-                        id="word_{{$i}}"
-                        data-type="word"
-                        data-i="{{$i}}"
-                        data-startchar="{{$w['startChar']}}"
-                        data-endchar="{{$w['endChar']}}"
-                        style="height:{{$height}}px"
-                >{{$w['word']}}
-                    </span>
+            @php
+                $target = $groupedLayers['lty_target'][0][0];
+                $isTarget = ($i >= $target->startWord) && ($i <= $target->endWord);
+                // height = número de linhas para lty_fe
+                $lines = count($groupedLayers['lty_target']);
+                $height = 24;// + ($isTarget ? 0 : ($lines * 30))
+            @endphp
+            <div
+                class="{!! $w['isPunct'] ? 'colSpace' : 'colWord' !!} word{{$isTarget ? ' target' : ''}}{{$w['hasFE'] ? ' hasFE' : ''}}"
+                id="word_{{$i}}"
+                data-type="word"
+                data-i="{{$i}}"
+                data-startchar="{{$w['startChar']}}"
+                data-endchar="{{$w['endChar']}}"
+                style="height:{{$height}}px"
+            >{!! $w['word'] ?? ' '!!}
             </div>
         @endforeach
     </div>
