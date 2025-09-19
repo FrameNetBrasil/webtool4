@@ -14,7 +14,7 @@
         $('#{{$id}}_search')
             .search({
                 apiSettings: {
-                    url: "/lexicon3/lemma/listForSelect?q={query}"
+                    url: "/lexicon3/lemma/listForSearch?q={query}"
                 },
                 fields: {
                     title: "name"

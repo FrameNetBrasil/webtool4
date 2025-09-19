@@ -86,6 +86,7 @@ class ReportController extends Controller
     #[Get(path: '/frame/list/forSelect')]
     public function listForSelect(QData $data)
     {
+        debug($data);
         $name = (strlen($data->frame) > 2) ? $data->frame : 'none';
 
         return ['results' => Criteria::byFilterLanguage('view_frame', ['name', 'startswith', $name])->orderby('name')->all()];

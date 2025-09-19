@@ -61,7 +61,7 @@ class LUCandidateController extends Controller
         ]);
     }
 
-    #[Post(path: '/lucandidate/search')]
+    #[Post(path: '/luCandidate/search')]
     public function tree(SearchData $search)
     {
         debug($search);
