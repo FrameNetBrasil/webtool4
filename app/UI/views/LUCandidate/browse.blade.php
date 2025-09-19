@@ -24,12 +24,12 @@
         >
             <x-ui::browse-table
                 title="LU Candidate"
-                url="/lucandidate/search"
+                url="/luCandidate/search"
                 emptyMsg="Enter your search term above to find LUs."
                 :data="$data"
             >
                 <x-slot:actions>
-                    <a href="/lucandidate/new"
+                    <a href="/luCandidate/new"
                        rel="noopener noreferrer"
                        class="ui button secondary">
                         New LU Candidate

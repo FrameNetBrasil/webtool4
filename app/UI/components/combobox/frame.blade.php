@@ -14,7 +14,7 @@
         $('#{{$id}}_search')
             .search({
                 apiSettings: {
-                    url: "/frame/list/forSelect?q={query}"
+                    url: "/frame/list/forSelect?frame={query}"
                 },
                 fields: {
                     title: "name",
