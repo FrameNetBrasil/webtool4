@@ -13,6 +13,7 @@ function annotationSetComponent(idAnnotationSet, token, corpusAnnotationType) {
         },
 
         get selection() {
+            console.error("called selection");
             let type = "", id = "", start = 0, end = 0, startNode, endNode;
             if (this.selectionRaw) {
                 let { anchorNode, anchorOffset, focusNode, focusOffset } = this.selectionRaw;
@@ -28,9 +29,12 @@ function annotationSetComponent(idAnnotationSet, token, corpusAnnotationType) {
                 } else if (focusNode.nodeType === Node.ELEMENT_NODE) {
                     endNode = focusNode;
                 }
-
+                console.log("==== startNode", startNode);
+                console.log("==== endNode", endNode);
+                console.log("==== dataset", startNode.dataset);
                 if ((startNode !== null) && (endNode !== null)) {
                     if (startNode.dataset.type === "word") {
+                        this.selectionNI = false;
                         type = "word";
                         if (startNode.dataset.startchar) {
                             start = startNode.dataset.startchar;
@@ -45,6 +49,7 @@ function annotationSetComponent(idAnnotationSet, token, corpusAnnotationType) {
                 }
                 console.log(type,id,start,end);
             }
+            console.log("==== selectionNI", (this.selectionNI ? 'yes' : 'no'));
             if (this.selectionNI) {
                 type = "ni";
                 id = this.selectionNI.dataset.id;
@@ -68,13 +73,14 @@ function annotationSetComponent(idAnnotationSet, token, corpusAnnotationType) {
         },
 
         onLabelAnnotate(idEntity) {
-            console.log(this.selection);
+            //console.log(this.selection);
+            let selection = this.selection;
             let values = {
                 idAnnotationSet: this.idAnnotationSet,
                 corpusAnnotationType: this.corpusAnnotationType,
                 token: this.token,
                 idEntity,
-                selection: this.selection
+                selection
             };
             htmx.ajax("POST", `/annotation/corpus/object`, {
                 target: ".annotationSetColumns",
