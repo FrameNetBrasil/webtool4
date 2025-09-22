@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 
 class VideoService
 {
-    public static function getResourceData(int $idDocument, ?int $idObject = null, string $annotationType = ''): array
+    public static function getResourceData(int $idDocument, ?int $idObject = null, string $annotationType = '', ?int $frameNumber = null): array
     {
         $document = Document::byId($idDocument);
         if (! $document) {
@@ -66,6 +66,7 @@ class VideoService
             ],
             'groupedLayers' => $groupedLayers,
             'idObject' => is_null($idObject) ? 0 : $idObject,
+            'frameNumber' => is_null($frameNumber) ? 0 : $frameNumber,
             'comment' => $comment
         ];
 
@@ -537,7 +538,8 @@ class VideoService
     {
         $idUser = AppService::getCurrentIdUser();
         $idDynamicObject = $data->idObject;
-        $do = self::getObject($idDynamicObject);
+        $searchData = ObjectSearchData::from($data);
+        $do = self::getObject($searchData);
         $clone = json_encode([
             'name' => $do->name,
             'startFrame' => (int) $do->startFrame,
@@ -546,6 +548,7 @@ class VideoService
             'endTime' => (float) $do->endTime,
             'status' => (int) $do->status,
             'origin' => (int) $do->origin,
+            'idLayerType' => (int) $do->idLayerType,
             'idUser' => $idUser,
         ]);
         $idDynamicObjectClone = Criteria::function('dynamicobject_create(?)', [$clone]);

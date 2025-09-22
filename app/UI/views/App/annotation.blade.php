@@ -7,9 +7,10 @@
         'annotationstaticbbox' => ['Static bbox', '/annotation/staticBBox', 'Image annotation.','ui::icon.frame'],
         'annotationstaticevent' => ['Static event', '/annotation/staticEvent', 'Image annotation for eventive frames.','ui::icon.frame'],
         'annotationset' => ['Annotation Sets', '/annotation/as', 'Check annotation sets.','ui::icon.frame'],
+        'annotationsession' => ['Sessions', '/annotation/session', 'Sessions Report.','ui::icon.frame'],
     ];
     $annotationType = [
-        'corpus' => ['title' => "Corpus", "pages" => ['annotationfe','annotationfulltext','annotationset']],
+        'corpus' => ['title' => "Corpus", "pages" => ['annotationfe','annotationfulltext','annotationset','annotationsession']],
         //'video' => ['title' => "Video", "pages" => ['annotationdynamic','annotationdeixis']],
         'video' => ['title' => "Video", "pages" => ['annotationdeixis']],
         'image' => ['title' => "Image", "pages" => ['annotationstaticbbox','annotationstaticevent']],

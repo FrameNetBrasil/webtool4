@@ -38,5 +38,5 @@ services:
 
     redis:
         image: redis:7.2-alpine
-        ports:
-            - '${FORWARD_REDIS_PORT}:6379'
+#        ports:
+#            - '${FORWARD_REDIS_PORT}:6379'
