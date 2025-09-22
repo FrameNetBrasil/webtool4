@@ -14,7 +14,6 @@ class BrowseController extends Controller
     #[Post(path: '/annotation/browse/searchSentence')]
     public function search(SearchData $search)
     {
-        debug($search);
         if (! is_null($search->idCorpus)) {
             $data = BrowseService::browseDocumentsByCorpus($search->idCorpus, [], 'CorpusAnnotation');
         } elseif (! is_null($search->idDocument)) {

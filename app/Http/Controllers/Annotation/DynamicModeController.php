@@ -27,9 +27,9 @@ class DynamicModeController extends Controller
         ]);
     }
 
-    private function getData(int $idDocument, ?int $idDynamicObject = null): array
+    private function getData(int $idDocument, ?int $idDynamicObject = null, ?int $frameNumber = null): array
     {
-        return VideoService::getResourceData($idDocument, $idDynamicObject, 'dynamicMode');
+        return VideoService::getResourceData($idDocument, $idDynamicObject, 'dynamicMode', $frameNumber);
     }
 
     #[Get(path: '/annotation/dynamicMode/sentences/{idDocument}')]
@@ -42,10 +42,10 @@ class DynamicModeController extends Controller
     }
 
 
-    #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}')]
-    public function annotation(int|string $idDocument, ?int $idDynamicObject = null)
+    #[Get(path: '/annotation/dynamicMode/{idDocument}/{idDynamicObject?}/{frameNumber?}')]
+    public function annotation(int|string $idDocument, ?int $idDynamicObject = null, ?int $frameNumber = null)
     {
-        $data = $this->getData($idDocument, $idDynamicObject);
+        $data = $this->getData($idDocument, $idDynamicObject, $frameNumber);
 
         return response()
             ->view('Annotation.Video.annotation', $data)

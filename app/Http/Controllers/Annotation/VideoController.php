@@ -39,6 +39,7 @@ class VideoController extends Controller
         }
         $object = VideoService::getObject($data);
         $object->annotationType = $data->annotationType;
+        $object->frameNumber = $data->frameNumber;
         if (is_null($object)) {
             return $this->renderNotify('error', 'Object not found.');
         }
