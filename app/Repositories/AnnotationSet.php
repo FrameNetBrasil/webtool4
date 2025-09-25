@@ -14,7 +14,7 @@ class AnnotationSet
     public static function listTargetsForDocumentSentence(array $idDocumentSentences): Collection
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        debug("docsen",$idDocumentSentences);
+//        debug("docsen",$idDocumentSentences);
         return Criteria::table("view_annotationset as a")
             ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
             ->join("lu","a.idLU","=", "lu.idLU")

@@ -1,32 +1,36 @@
-<x-form
-    title="Edit Project"
-    hx-post="/project"
->
-    <x-slot:fields>
-        <x-hidden-field id="idProject" value="{{$project->idProject}}"></x-hidden-field>
-        <div class="field">
-            <x-text-field
-                label="Name"
-                id="name"
-                value="{{$project->name}}"
-            ></x-text-field>
+<form class="ui form">
+    <div class="ui card form-card w-full p-1">
+        <div class="content">
+            <input type="hidden" name="idProject" value="{{$project->idProject}}">
+
+            <div class="field">
+                <label for="name">Name</label>
+                <div class="ui small input">
+                    <input type="text" id="name" name="name" value="{{$project->name}}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="description">Description</label>
+                <textarea id="description" name="description">{{$project->description}}</textarea>
+            </div>
+
+            <div class="field">
+                <x-combobox.project-group
+                    label="Project Group"
+                    id="idProjectGroup"
+                    :value="$project->idProjectGroup"
+                ></x-combobox.project-group>
+            </div>
         </div>
-        <div class="field">
-            <x-multiline-field
-                label="Description"
-                id="description"
-                value="{{$project->description}}"
-            ></x-multiline-field>
+        <div class="extra content">
+            <button
+                type="submit"
+                class="ui primary button"
+                hx-post="/project"
+            >
+                Save
+            </button>
         </div>
-        <div class="field">
-            <x-combobox.project-group
-                label="Project Group"
-                id="idProjectGroup"
-                :value="$project->idProjectGroup"
-            ></x-combobox.project-group>
-        </div>
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-submit label="Save"></x-submit>
-    </x-slot:buttons>
-</x-form>
+    </div>
+</form>

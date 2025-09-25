@@ -1,21 +1,45 @@
-<x-layout.object>
-    <x-slot:name>
-        <span class="color_user">{{$dataset->name}} [{{$dataset->project->name}}]</span>
-    </x-slot:name>
-    <x-slot:detail>
-        <div class="ui label tag wt-tag-id">
-            #{{$dataset->idDataset}}
-        </div>
-        <x-button
-            label="Delete"
-            color="danger"
-            onclick="messenger.confirmDelete(`Removing Dataset '{{$dataset->name}}'.`, '/dataset/{{$dataset->idDataset}}')"
-        ></x-button>
-    </x-slot:detail>
-    <x-slot:description>
-        {{$dataset->description}}
-    </x-slot:description>
-    <x-slot:main>
-        @include("Dataset.menu")
-    </x-slot:main>
-</x-layout.object>
+<x-layout.index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['/dataset','Dataset'],['', 'Dataset #' . $dataset->idDataset]]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="ui container page-edit">
+                <div class="page-header-object">
+                    <div class="page-object">
+                        <div class="page-object-name">
+                            <span class="color_user">{{$dataset->name}} [{{$dataset->project->name}}]</span>
+                        </div>
+                        <div class="page-object-data">
+                            <div class="ui label wt-tag-id">
+                                #{{$dataset->idDataset}}
+                            </div>
+                            <button
+                                class="ui danger button"
+                                x-data
+                                @click.prevent="messenger.confirmDelete(`Removing Dataset '{{$dataset->name}}'.`, '/dataset/{{$dataset->idDataset}}')"
+                            >Delete</button>
+                        </div>
+                    </div>
+                    <div class="page-subtitle">
+                        {{$dataset->description}}
+                    </div>
+                </div>
+
+                <div class="page-content">
+                    <x-ui::tabs
+                        id="datasetTabs"
+                        style="secondary pointing"
+                        :tabs="[
+                            'edit' => ['id' => 'edit', 'label' => 'Edit', 'url' => '/dataset/'.$dataset->idDataset.'/formEdit'],
+                            'corpus' => ['id' => 'corpus', 'label' => 'Corpus', 'url' => '/dataset/'.$dataset->idDataset.'/corpus']
+                        ]"
+                        defaultTab="edit"
+                    />
+                </div>
+            </div>
+        </main>
+        <x-layout::footer></x-layout::footer>
+    </div>
+</x-layout.index>

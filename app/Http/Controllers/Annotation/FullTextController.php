@@ -16,7 +16,7 @@ class FullTextController extends Controller
     public function browse(SearchData $search)
     {
         $data = BrowseService::browseCorpusBySearch($search, [], 'CorpusAnnotation');
-
+        session(["corpusAnnotationType" => "fullText"]);
         return view('Annotation.browseSentences', [
             'page' => 'FullText Annotation',
             'url' => '/annotation/fullText/sentence',

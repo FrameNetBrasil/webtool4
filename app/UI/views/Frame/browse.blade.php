@@ -10,7 +10,14 @@
                 url="/frame/search"
                 emptyMsg="Enter your search term above to find frames."
                 :data="$data"
-            >
+            >   <x-slot:actions>
+                    <a href="/frame/new"
+                       rel="noopener noreferrer"
+                       class="ui button secondary">
+                        New Frame
+                    </a>
+                </x-slot:actions>
+
                 <x-slot:fields>
                     <div class="field">
                         <div class="ui left icon input w-full">
