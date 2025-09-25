@@ -281,7 +281,7 @@ class CosineService
         return $links;
     }
 
-    private static function createVectorFromNode(int $idCosineNode, string $type = ''): array
+    public static function createVectorFromNode(int $idCosineNode, string $type = ''): array
     {
         $vector = [];
         self::$processed = [];

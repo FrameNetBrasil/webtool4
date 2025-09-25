@@ -1,28 +1,28 @@
-<x-form
-    title="Dataset"
-    hx-post="/dataset"
->
-    <x-slot:fields>
-        <x-hidden-field
-            id="idDataset"
-            :value="$dataset->idDataset"
-        ></x-hidden-field>
-        <div class="field">
-            <x-text-field
-                label="Name"
-                id="name"
-                :value="$dataset->name"
-            ></x-text-field>
+<form class="ui form">
+    <div class="ui card form-card w-full p-1">
+        <div class="content">
+            <input type="hidden" name="idDataset" value="{{$dataset->idDataset}}">
+
+            <div class="field">
+                <label for="name">Name</label>
+                <div class="ui small input">
+                    <input type="text" id="name" name="name" value="{{$dataset->name}}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="description">Description</label>
+                <textarea id="description" name="description">{{$dataset->description ?? ''}}</textarea>
+            </div>
         </div>
-        <div class="field">
-            <x-multiline-field
-                label="Description"
-                id="description"
-                :value="$dataset->description ?? ''"
-            ></x-multiline-field>
+        <div class="extra content">
+            <button
+                type="submit"
+                class="ui primary button"
+                hx-post="/dataset"
+            >
+                Save
+            </button>
         </div>
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-submit label="Save"></x-submit>
-    </x-slot:buttons>
-</x-form>
+    </div>
+</form>

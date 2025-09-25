@@ -24,7 +24,7 @@ class SessionController extends Controller
     }
     #[Post(path: '/annotation/session/start')]
     public function sessionStart(SessionData $data) {
-        debug("start",$data);
+//        debug("start",$data);
         $session = SessionService::startSession($data);
 //        return $this->renderNotify("success", "Session started.");
         return response()->json([
@@ -36,7 +36,7 @@ class SessionController extends Controller
 
     #[Post(path: '/annotation/session/end')]
     public function sessionEnd(SessionData $data) {
-        debug("end",$data);
+//        debug("end",$data);
         $session = SessionService::endSession($data);
 //        return $this->renderNotify("success", "Session ended.");
         return response()->json([

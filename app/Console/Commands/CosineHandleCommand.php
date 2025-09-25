@@ -6,6 +6,7 @@ use App\Database\Criteria;
 use App\Services\AppService;
 use App\Services\CosineService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class CosineHandleCommand extends Command
 {
@@ -51,50 +52,50 @@ class CosineHandleCommand extends Command
         382,3,1561835,Pretérito_perfecto_simple_de_indicativo
         397,3,2740394,Pretérito_pluscuamperfecto_de_indicativo
          */
-        $constructions = [
-            '372' => 'Futuro_do_Indicativo',
-            '390' => 'Futuro_do_pretérito_do_indicativo',
-            '371' => 'Presente_do_Indicativo',
-            '376' => 'Pretérito_Imperfeito_do_Indicativo',
-            '408' => 'Pretérito_mais_que_perfeito_composto_do_indicativo',
-            '377' => 'Pretérito_Mais_Que_Perfeito_do_Indicativo',
-            '418' => 'Pretérito_perfeito_composto_do_indicativo',
-            '373' => 'Pretérito_Perfeito_do_Indicativo',
-            '401' => 'Condicional_del_indicativo',
-            '381' => 'Futuro_de_indicativo',
-            '380' => 'Presente_de_indicativo',
-            '384' => 'Pretérito_imperfecto_de_indicativo',
-            '396' => 'Pretérito_perfecto_compuesto_de_indicativo',
-            '382' => 'Pretérito_perfecto_simple_de_indicativo',
-            '397' => 'Pretérito_pluscuamperfecto_de_indicativo',
-        ];
-
-        CosineService::createLinkCxnCeToConcept(372);
-        CosineService::createLinkCxnCeToConcept(390);
-        CosineService::createLinkCxnCeToConcept(371);
-        CosineService::createLinkCxnCeToConcept(376);
-        CosineService::createLinkCxnCeToConcept(408);
-        CosineService::createLinkCxnCeToConcept(377);
-        CosineService::createLinkCxnCeToConcept(418);
-        CosineService::createLinkCxnCeToConcept(373);
-        CosineService::createLinkCxnCeToConcept(401);
-        CosineService::createLinkCxnCeToConcept(381);
-        CosineService::createLinkCxnCeToConcept(380);
-        CosineService::createLinkCxnCeToConcept(384);
-        CosineService::createLinkCxnCeToConcept(396);
-        CosineService::createLinkCxnCeToConcept(382);
-        CosineService::createLinkCxnCeToConcept(397);
-
-        $array1 = [372, 390, 371, 376, 408, 377, 418, 373];
-        $array2 = [401, 381, 380, 384, 396, 382, 397];
-        $handle = fopen(__DIR__ . "/natalia_cxn_cosine.csv", "w");
-        foreach ($array1 as $idConstruction1) {
-            foreach ($array2 as $idConstruction2) {
-                $result = CosineService::compareConstructions($idConstruction1, $idConstruction2);
-                fputcsv($handle, [$constructions[$idConstruction1], $constructions[$idConstruction2], $result->cosine]);;
-            }
-        }
-        fclose($handle);
+//        $constructions = [
+//            '372' => 'Futuro_do_Indicativo',
+//            '390' => 'Futuro_do_pretérito_do_indicativo',
+//            '371' => 'Presente_do_Indicativo',
+//            '376' => 'Pretérito_Imperfeito_do_Indicativo',
+//            '408' => 'Pretérito_mais_que_perfeito_composto_do_indicativo',
+//            '377' => 'Pretérito_Mais_Que_Perfeito_do_Indicativo',
+//            '418' => 'Pretérito_perfeito_composto_do_indicativo',
+//            '373' => 'Pretérito_Perfeito_do_Indicativo',
+//            '401' => 'Condicional_del_indicativo',
+//            '381' => 'Futuro_de_indicativo',
+//            '380' => 'Presente_de_indicativo',
+//            '384' => 'Pretérito_imperfecto_de_indicativo',
+//            '396' => 'Pretérito_perfecto_compuesto_de_indicativo',
+//            '382' => 'Pretérito_perfecto_simple_de_indicativo',
+//            '397' => 'Pretérito_pluscuamperfecto_de_indicativo',
+//        ];
+//
+//        CosineService::createLinkCxnCeToConcept(372);
+//        CosineService::createLinkCxnCeToConcept(390);
+//        CosineService::createLinkCxnCeToConcept(371);
+//        CosineService::createLinkCxnCeToConcept(376);
+//        CosineService::createLinkCxnCeToConcept(408);
+//        CosineService::createLinkCxnCeToConcept(377);
+//        CosineService::createLinkCxnCeToConcept(418);
+//        CosineService::createLinkCxnCeToConcept(373);
+//        CosineService::createLinkCxnCeToConcept(401);
+//        CosineService::createLinkCxnCeToConcept(381);
+//        CosineService::createLinkCxnCeToConcept(380);
+//        CosineService::createLinkCxnCeToConcept(384);
+//        CosineService::createLinkCxnCeToConcept(396);
+//        CosineService::createLinkCxnCeToConcept(382);
+//        CosineService::createLinkCxnCeToConcept(397);
+//
+//        $array1 = [372, 390, 371, 376, 408, 377, 418, 373];
+//        $array2 = [401, 381, 380, 384, 396, 382, 397];
+//        $handle = fopen(__DIR__ . "/natalia_cxn_cosine.csv", "w");
+//        foreach ($array1 as $idConstruction1) {
+//            foreach ($array2 as $idConstruction2) {
+//                $result = CosineService::compareConstructions($idConstruction1, $idConstruction2);
+//                fputcsv($handle, [$constructions[$idConstruction1], $constructions[$idConstruction2], $result->cosine]);;
+//            }
+//        }
+//        fclose($handle);
 
         /* Audion - PPM - 23/06/2025 */
         //CosineService::createFrameNetwork();
@@ -147,6 +148,137 @@ class CosineHandleCommand extends Command
 //            CosineService::compareSentences($pair[0], $pair[1]);
 //        }
 
-
+        // DTake - comparando names com LOME
+        $results = [];
+        $cmd = "
+select distinct a.idDocument
+from (
+select d.idDocument, count(distinct sob.idStaticObject) n
+from view_staticobject sob
+join document d on (sob.idDocument = d.idDocument)
+where d.entry like 'doc_dtake%'
+and sob.idLanguage = 2
+group by d.idDocument) a join (
+select d.idDocument, count(distinct sob.idStaticObject) n
+from view_staticobject sob
+join view_lu lu on (sob.name = lu.lemmaName)
+join document d on (sob.idDocument = d.idDocument)
+where d.entry like 'doc_dtake%'
+and lu.idlanguage = 2 and sob.idLanguage = 2
+group by d.idDocument) b on (a.idDocument = b.idDocument)
+where ((b.n / a.n) > 0.5)
+                    ";
+        $documents = DB::connection('webtool')->select($cmd);
+        print_r(count($documents));
+        $i = 0;
+        foreach ($documents as $row) {
+            $this->dtakeCreateLinkDocumentNamesToFrame($row->idDocument);
+            $this->dtakeCreateLinkDocumentLOMEToFrame($row->idDocument);
+            $doc1Node = Criteria::byId("cosine_node", "idReference", $row->idDocument + 100000);
+            $vector1 = CosineService::createVectorFromNode($doc1Node->idCosineNode);
+            $doc2Node = Criteria::byId("cosine_node", "idReference", $row->idDocument + 200000);
+            $vector2 = CosineService::createVectorFromNode($doc2Node->idCosineNode);
+            $result = CosineService::compareVectors($vector1, $vector2);
+            $results[$row->idDocument] = $result->cosine;
+//            if (++$i == 5) break;
+        };
+        print_r($results);
+        arsort($results);
+        print_r($results);
+        $handle = fopen(__DIR__ . "/dtake_documents", "w");
+        foreach($results as $idDocument=>$cosine) {
+            fputcsv($handle, [$idDocument, $cosine]);
+        }
+        fclose($handle);
     }
+
+    public function dtakeCreateLinkDocumentNamesToFrame(int $idDocument): void
+    {
+        // clear current network for the idDocument + 100000
+        $fakeIdDocument = $idDocument + 100000;
+        $documentNode = Criteria::byId("cosine_node", "idReference", $fakeIdDocument);
+        if ($documentNode) {
+            Criteria::table("cosine_link")
+                ->where("idCosineNodeSource", $documentNode->idCosineNode)
+                ->delete();
+            Criteria::table("cosine_node")
+                ->where("idCosineNode", $documentNode->idCosineNode)
+                ->delete();
+        }
+        //
+
+        $cmd = "
+select lu.idFrame
+from view_staticobject sob
+join view_lu lu on (sob.name = lu.lemmaName)
+join document d on (sob.idDocument = d.idDocument)
+where lu.idlanguage = 2 and sob.idLanguage = 2
+and d.iddocument = {$idDocument}
+";
+
+        $idCosineNodeDocument = Criteria::create("cosine_node", [
+            "name" => "doc_" . $fakeIdDocument,
+            "type" => "DOC",
+            "idReference" => $fakeIdDocument,
+        ]);
+        $data = DB::connection('webtool')->select($cmd);
+
+        foreach ($data as $row) {
+            $idCosineNodeFrame = Criteria::byId("cosine_node", "idFrame", $row->idFrame)->idCosineNode;
+            if ($idCosineNodeFrame) {
+                Criteria::create("cosine_link", [
+                    "idCosineNodeSource" => $idCosineNodeDocument,
+                    "idCosineNodeTarget" => $idCosineNodeFrame,
+                    "value" => 1.0,
+                    "type" => "lu"
+                ]);
+            }
+        }
+    }
+
+    public function dtakeCreateLinkDocumentLOMEToFrame(int $idDocument): void
+    {
+        // clear current network for the idDocument + 200000
+        $fakeIdDocument = $idDocument + 200000;
+        $documentNode = Criteria::byId("cosine_node", "idReference", $fakeIdDocument);
+        if ($documentNode) {
+            Criteria::table("cosine_link")
+                ->where("idCosineNodeSource", $documentNode->idCosineNode)
+                ->delete();
+            Criteria::table("cosine_node")
+                ->where("idCosineNode", $documentNode->idCosineNode)
+                ->delete();
+        }
+
+        $cmd = "
+select ds.idDocument, lome.idFrame
+from document_sentence ds
+    join sentence s on (ds.idSentence = s.idSentence)
+join lome_resultfe lome on (ds.idSentence = lome.idSentence)
+join document d on (ds.idDocument = d.idDocument)
+where d.entry like 'doc_dtake%'
+and (lome.type = 'lu')
+and (s.idOriginmm in (15,16))  and d.idDocument={$idDocument}
+";
+
+        $idCosineNodeDocument = Criteria::create("cosine_node", [
+            "name" => "doc_" . $fakeIdDocument,
+            "type" => "DOC",
+            "idReference" => $fakeIdDocument,
+        ]);
+        $data = DB::connection('webtool')->select($cmd);
+
+        foreach ($data as $row) {
+            $idCosineNodeFrame = Criteria::byId("cosine_node", "idFrame", $row->idFrame)->idCosineNode;
+            if ($idCosineNodeFrame) {
+                Criteria::create("cosine_link", [
+                    "idCosineNodeSource" => $idCosineNodeDocument,
+                    "idCosineNodeTarget" => $idCosineNodeFrame,
+                    "value" => 1.0,
+                    "type" => "lu"
+                ]);
+            }
+        }
+    }
+
 }

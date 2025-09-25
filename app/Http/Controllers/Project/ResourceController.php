@@ -9,6 +9,7 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Dataset;
 use App\Repositories\Project;
+use App\Services\Project\BrowseService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -19,10 +20,41 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 class ResourceController extends Controller
 {
     #[Get(path: '/project')]
-    public function resource()
+    public function resource(SearchData $search)
     {
-        return view("Project.resource");
+        $data = BrowseService::browseProjectDatasetBySearch($search);
+
+        return view("Project.browser", [
+            'title' => 'Project/Dataset',
+            'data' => $data,
+        ]);
     }
+
+    #[Post(path: '/project/search')]
+    public function search(SearchData $search)
+    {
+        $title = "";
+        $data = BrowseService::browseProjectDatasetBySearch($search);
+
+        // Handle tree expansion - when expanding a project, show datasets without title
+        if ($search->type === 'project' && $search->id != 0) {
+            $title = ''; // No title for expansions
+        }
+        // Handle search filtering
+        elseif (!empty($search->project)) {
+            $title = 'Projects';
+        } elseif (!empty($search->dataset)) {
+            $title = 'Datasets';
+        } else {
+            $title = 'Projects';
+        }
+
+        return view('Project.tree', [
+            'data' => $data,
+            'title' => $title,
+        ]);
+    }
+
 
     #[Get(path: '/project/grid/{fragment?}')]
     #[Post(path: '/project/grid/{fragment?}')]

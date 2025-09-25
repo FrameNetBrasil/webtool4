@@ -10,6 +10,7 @@ class SearchData extends Data
         public ?string $project = '',
         public ?string $dataset = '',
         public ?int $id = 0,
+        public ?string $type = '',
     )
     {
     }

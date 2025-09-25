@@ -9,6 +9,7 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Project;
 use App\Repositories\Task;
+use App\Services\Task\BrowseService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -18,9 +19,39 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 class ResourceController extends Controller
 {
     #[Get(path: '/task')]
-    public function resource()
+    public function resource(SearchData $search)
     {
-        return view("Task.resource");
+        $data = BrowseService::browseTaskUserBySearch($search);
+
+        return view("Task.browser", [
+            'title' => 'Task/User',
+            'data' => $data,
+        ]);
+    }
+
+    #[Post(path: '/task/search')]
+    public function search(SearchData $search)
+    {
+        $title = "";
+        $data = BrowseService::browseTaskUserBySearch($search);
+
+        // Handle tree expansion - when expanding a task, show users without title
+        if ($search->type === 'task' && $search->id != 0) {
+            $title = ''; // No title for expansions
+        }
+        // Handle search filtering
+        elseif (!empty($search->task)) {
+            $title = 'Tasks';
+        } elseif (!empty($search->user)) {
+            $title = 'Users';
+        } else {
+            $title = 'Tasks';
+        }
+
+        return view('Task.tree', [
+            'data' => $data,
+            'title' => $title,
+        ]);
     }
 
     #[Get(path: '/task/new')]

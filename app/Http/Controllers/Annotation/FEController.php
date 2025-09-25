@@ -18,7 +18,7 @@ class FEController extends Controller
     public function browse(SearchData $search)
     {
         $data = BrowseService::browseCorpusBySearch($search, [], 'CorpusAnnotation');
-
+        session(["corpusAnnotationType" => "fe"]);
         return view('Annotation.browseSentences', [
             'page' => 'FE Annotation',
             'url' => '/annotation/fe/sentence',
