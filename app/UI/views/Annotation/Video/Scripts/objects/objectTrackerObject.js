@@ -5,7 +5,16 @@ class ObjectTrackerObject {
     constructor(config) {
         this.framesManager = new FramesManager();
         this.annotatedObjects = [];
-        this.opticalFlow = new OpticalFlowObject();
+
+        // Initialize optical flow with defensive check
+        try {
+            this.opticalFlow = new OpticalFlowObject();
+            console.log("🔧 OpticalFlow initialized in ObjectTrackerObject");
+        } catch (error) {
+            console.error("❌ Failed to initialize OpticalFlow:", error);
+            this.opticalFlow = null;
+        }
+
         this.lastFrame = -1;
         // this.framesManager.onReset.push(() => {
         //     this.annotatedObjects = [];
@@ -15,6 +24,20 @@ class ObjectTrackerObject {
 
     config(config) {
         this.framesManager.setConfig(config);
+    }
+
+    ensureOpticalFlowInitialized() {
+        if (!this.opticalFlow) {
+            try {
+                this.opticalFlow = new OpticalFlowObject();
+                console.log("🔧 OpticalFlow re-initialized in ObjectTrackerObject");
+                return true;
+            } catch (error) {
+                console.error("❌ Failed to re-initialize OpticalFlow:", error);
+                return false;
+            }
+        }
+        return true;
     }
 
     add(annotatedObject) {
@@ -119,10 +142,15 @@ class ObjectTrackerObject {
                 this.opticalFlow.init(previousImageData);
                 let bboxes = [{x:bbox.x,y:bbox.y,width:bbox.width,height:bbox.height}];
                 let newBboxes = this.opticalFlow.track(currentImageData, bboxes);
-                // console.log("previous bboxes",bboxes);
-                // console.log("new bboxes",newBboxes);
+
+                // Debug logging for enhanced optical flow
+                if (window.opticalFlowDebugger) {
+                    window.opticalFlowDebugger.logTrackingResult(bboxes, newBboxes, frameNumber);
+                }
+
                 let newBbox = new BoundingBox(frameNumber,newBboxes[0].x,newBboxes[0].y,newBboxes[0].width,newBboxes[0].height,false);
-                console.log("newBbox",newBbox);
+                console.log("Enhanced tracking - newBbox:",newBbox);
+                console.log("Tracking stats:", this.opticalFlow.getTrackingStats());
                 annotatedObject.addBBox(newBbox);
                 //console.log("object.bboxes", annotatedObject.bboxes);
                 //toCompute.push({ annotatedObject: annotatedObject, bbox: bbox });
@@ -132,6 +160,11 @@ class ObjectTrackerObject {
     }
 
     async trackBBox(frameNumber, previousBbox) {
+        // Ensure optical flow is properly initialized
+        if (!this.ensureOpticalFlowInitialized()) {
+            throw new Error("OpticalFlow initialization failed - cannot perform tracking");
+        }
+
         let currentImageData = await this.framesManager.getFrameImage(frameNumber);
         // let currentImageData = await vatic.blobToImage(blob);
         //let previousImageData = this.imageData();
@@ -150,10 +183,15 @@ class ObjectTrackerObject {
                 this.opticalFlow.init(previousImageData);
                 let bboxes = [{x:previousBbox.x,y:previousBbox.y,width:previousBbox.width,height:previousBbox.height}];
                 let newBboxes = this.opticalFlow.track(currentImageData, bboxes);
-                // console.log("previous bboxes",bboxes);
-                // console.log("new bboxes",newBboxes);
+
+                // Debug logging for enhanced optical flow
+                if (window.opticalFlowDebugger) {
+                    window.opticalFlowDebugger.logTrackingResult(bboxes, newBboxes, frameNumber);
+                }
+
                 let newBbox = new BoundingBox(frameNumber,newBboxes[0].x,newBboxes[0].y,newBboxes[0].width,newBboxes[0].height,false);
-                console.log("newBbox",newBbox);
+                console.log("Enhanced tracking - newBbox:",newBbox);
+                console.log("Tracking stats:", this.opticalFlow.getTrackingStats());
                 // annotatedObject.addBBox(newBbox);
                 //console.log("object.bboxes", annotatedObject.bboxes);
                 //toCompute.push({ annotatedObject: annotatedObject, bbox: bbox });

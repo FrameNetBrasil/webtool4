@@ -76,12 +76,22 @@ function boxComponent(idVideoDOMElement) {
             // this.endFrame = this.object.endFrame;
             // this.currentFrame = this.object.startFrame;
 
-            this.tracker = new ObjectTrackerObject();
-            this.tracker.config({
-                canvas: this.canvas,
-                ctx: this.ctx,
-                video: this.video
-            });
+            // Initialize tracker with defensive check
+            if (typeof ObjectTrackerObject !== 'undefined') {
+                this.tracker = new ObjectTrackerObject();
+                this.tracker.config({
+                    canvas: this.canvas,
+                    ctx: this.ctx,
+                    video: this.video
+                });
+
+                // Initialize enhanced tracking capabilities
+                this.initializeEnhancedTracking();
+                console.log("🔧 ObjectTrackerObject initialized successfully");
+            } else {
+                console.error("❌ ObjectTrackerObject class not available");
+                this.tracker = null;
+            }
             this.isTracking = false;
             // document.dispatchEvent(new CustomEvent("video-seek-frame", {
             //     detail: {
@@ -107,9 +117,10 @@ function boxComponent(idVideoDOMElement) {
             this.annotationType = this.object.annotationType;
             this.currentFrame = this.object.startFrame;
             this.bboxes = this.object.bboxes;
+            let frameNumber = (this.object.frameNumber > 0) ? this.object.frameNumber : this.object.startFrame;
             document.dispatchEvent(new CustomEvent("video-seek-frame", {
                 detail: {
-                    frameNumber: this.object.startFrame
+                    frameNumber
                 }
             }));
             // console.log(this.bboxes);
@@ -147,6 +158,7 @@ function boxComponent(idVideoDOMElement) {
                     bbox//     bbox: bbox
                 }
             }).json();
+            this.bboxes[this.bbox.frameNumber] = bbox;
             console.log("bbox created id ", bbox.idBoundingBox);
             this.tracker.getFrameImage(this.currentFrame);
             await this.showBBox();
@@ -163,6 +175,7 @@ function boxComponent(idVideoDOMElement) {
                 }
             }).json();
             this.currentBBox = bbox;
+            this.bboxes[bbox.frameNumber] = bbox;
             document.dispatchEvent(new CustomEvent("bbox-update", {
                 detail: {
                     bbox
@@ -181,6 +194,7 @@ function boxComponent(idVideoDOMElement) {
                     bbox
                 }
             }).json();
+            this.bboxes[bbox.frameNumber] = bbox;
             this.showBBox();
         },
 
@@ -242,26 +256,284 @@ function boxComponent(idVideoDOMElement) {
         },
 
         createTrackedBBox(trackedBBox, blocked, isGroundTruth = false) {
-            return new BoundingBox(
-                this.currentFrame,
-                trackedBBox.x,
-                trackedBBox.y,
-                trackedBBox.width,
-                trackedBBox.height,
-                isGroundTruth,
-                blocked
-            );
+            // Check if BoundingBox class is available
+            if (typeof BoundingBox !== 'undefined') {
+                return new BoundingBox(
+                    this.currentFrame,
+                    trackedBBox.x,
+                    trackedBBox.y,
+                    trackedBBox.width,
+                    trackedBBox.height,
+                    isGroundTruth,
+                    blocked
+                );
+            } else {
+                // Fallback: create plain object with same structure
+                console.warn("⚠️ BoundingBox class not available - creating plain object");
+                return {
+                    frameNumber: this.currentFrame,
+                    x: trackedBBox.x,
+                    y: trackedBBox.y,
+                    width: trackedBBox.width,
+                    height: trackedBBox.height,
+                    isGroundTruth: isGroundTruth,
+                    blocked: blocked,
+                    idBoundingBox: null, // Will be set later
+                    visible: true
+                };
+            }
         },
 
         async performTracking(previousBBox) {
-            console.log("Performing tracking for frame", this.currentFrame);
-            let trackedBBox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
-            console.log("Generated tracked bbox", trackedBBox);
-            return trackedBBox;
+            console.log("🎯 Performing enhanced tracking for frame", this.currentFrame);
+
+            // Check if enhanced tracking is available
+            if (!this.tracker || typeof OpticalFlowObject === 'undefined' || typeof BoundingBox === 'undefined') {
+                console.warn("⚠️ Enhanced tracking classes not available - using fallback");
+                console.warn("💡 Returning unchanged bbox position (original behavior)");
+
+                // Return the original bbox as fallback
+                return {
+                    x: previousBBox.x,
+                    y: previousBBox.y,
+                    width: previousBBox.width,
+                    height: previousBBox.height,
+                    frameNumber: this.currentFrame
+                };
+            }
+
+            // Configure optical flow based on movement context
+            this.configureOpticalFlowForContext(previousBBox);
+
+            // Store original bbox for comparison
+            const originalBBox = {...previousBBox};
+
+            try {
+                // Perform tracking with enhanced optical flow
+                let trackedBBox = await this.tracker.trackBBox(this.currentFrame, previousBBox);
+
+                // Validate and analyze tracking result
+                this.analyzeTrackingResult(originalBBox, trackedBBox);
+
+                console.log("✅ Enhanced tracking completed - bbox:", trackedBBox);
+                return trackedBBox;
+
+            } catch (error) {
+                console.error("❌ Enhanced tracking failed:", error);
+
+                // Fallback: return unchanged bbox (same as old behavior)
+                console.warn("🔄 Falling back to unchanged bbox position");
+                console.warn("💡 Consider manual bbox adjustment or enabling aggressive tracking");
+
+                // Return the original bbox as fallback
+                return {
+                    x: previousBBox.x,
+                    y: previousBBox.y,
+                    width: previousBBox.width,
+                    height: previousBBox.height,
+                    frameNumber: this.currentFrame
+                };
+            }
+        },
+
+        configureOpticalFlowForContext(previousBBox) {
+            // Access the optical flow instance through the tracker
+            const opticalFlow = this.tracker?.opticalFlow;
+
+            if (!opticalFlow) {
+                console.warn("OpticalFlow instance not available - initializing...");
+
+                // Try to reinitialize optical flow if missing
+                if (this.tracker && typeof OpticalFlowObject !== 'undefined') {
+                    this.tracker.opticalFlow = new OpticalFlowObject();
+                    console.log("OpticalFlow instance recreated");
+                } else {
+                    console.error("Cannot initialize OpticalFlow - class not available");
+                    return;
+                }
+            }
+
+            // Analyze bbox size and position to determine optimal configuration
+            const bboxArea = previousBBox.width * previousBBox.height;
+            const isLargeBBox = bboxArea > 10000; // 100x100 pixels
+            const isSmallBBox = bboxArea < 2500;  // 50x50 pixels
+            const isNearEdge = previousBBox.x < 50 || previousBBox.y < 50 ||
+                              (previousBBox.x + previousBBox.width) > (this.canvas.width - 50) ||
+                              (previousBBox.y + previousBBox.height) > (this.canvas.height - 50);
+
+            // Determine optimal configuration
+            let configName = 'conservative'; // default
+
+            if (isNearEdge) {
+                configName = 'highPrecision';
+                console.log("🎯 Using high-precision tracking (near edge)");
+            } else if (isLargeBBox) {
+                configName = 'aggressive';
+                console.log("🎯 Using aggressive tracking (large object)");
+            } else if (isSmallBBox) {
+                configName = 'fastTracking';
+                console.log("🎯 Using fast tracking (small object)");
+            }
+
+            // Get the (possibly recreated) optical flow instance
+            const currentOpticalFlow = this.tracker.opticalFlow;
+
+            // Apply configuration through debugger if available
+            if (window.opticalFlowDebugger) {
+                window.opticalFlowDebugger.applyTestConfiguration(configName);
+            } else {
+                // Manual configuration if debugger not available
+                const configs = this.getOpticalFlowConfigurations();
+                if (configs[configName] && currentOpticalFlow) {
+                    currentOpticalFlow.updateConfig(configs[configName]);
+                    console.log(`Applied ${configName} configuration manually`);
+                }
+            }
+        },
+
+        getOpticalFlowConfigurations() {
+            return {
+                conservative: {
+                    pointsPerDimension: 11,
+                    baseSearchWindow: 30,
+                    adaptiveWindowMultiplier: 1.2,
+                    maxSearchWindow: 60,
+                    minConfidenceThreshold: 0.5,
+                    enableLogging: true
+                },
+                aggressive: {
+                    pointsPerDimension: 15,
+                    baseSearchWindow: 50,
+                    adaptiveWindowMultiplier: 2.0,
+                    maxSearchWindow: 120,
+                    minConfidenceThreshold: 0.2,
+                    enableLogging: true
+                },
+                highPrecision: {
+                    pointsPerDimension: 21,
+                    baseSearchWindow: 40,
+                    adaptiveWindowMultiplier: 1.8,
+                    maxSearchWindow: 100,
+                    minConfidenceThreshold: 0.4,
+                    enableLogging: true
+                },
+                fastTracking: {
+                    pointsPerDimension: 7,
+                    baseSearchWindow: 25,
+                    adaptiveWindowMultiplier: 1.5,
+                    maxSearchWindow: 80,
+                    minConfidenceThreshold: 0.3,
+                    enableLogging: true
+                }
+            };
+        },
+
+        analyzeTrackingResult(originalBBox, trackedBBox) {
+            if (!trackedBBox) {
+                console.error("❌ Tracking returned null bbox");
+                return;
+            }
+
+            // Calculate movement metrics
+            const deltaX = trackedBBox.x - originalBBox.x;
+            const deltaY = trackedBBox.y - originalBBox.y;
+            const movement = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            // Get tracking statistics if available
+            const stats = this.tracker.opticalFlow?.getTrackingStats();
+
+            console.log("📊 Tracking Analysis:", {
+                movement: `${movement.toFixed(2)}px`,
+                delta: `(${deltaX.toFixed(1)}, ${deltaY.toFixed(1)})`,
+                successRate: stats ? `${(stats.successfulPointsRatio * 100).toFixed(1)}%` : 'N/A',
+                confidence: stats ? stats.lastTrackingQuality.toFixed(3) : 'N/A'
+            });
+
+            // Warning thresholds
+            if (movement === 0 && this.currentFrame > 1) {
+                console.warn("⚠️ No movement detected - possible tracking failure");
+                console.warn("💡 Try: window.opticalFlowDebugger.applyTestConfiguration('aggressive')");
+            }
+
+            if (movement > 50) {
+                console.log("🚀 Large movement detected (" + movement.toFixed(1) + "px)");
+            }
+
+            if (stats && stats.successfulPointsRatio < 0.3) {
+                console.warn("⚠️ Low tracking confidence (" + (stats.successfulPointsRatio * 100).toFixed(1) + "%)");
+                console.warn("💡 Consider manual verification or different configuration");
+            }
+        },
+
+        initializeEnhancedTracking() {
+            // Ensure optical flow is available
+            if (!this.tracker.opticalFlow && typeof OpticalFlowObject !== 'undefined') {
+                this.tracker.opticalFlow = new OpticalFlowObject();
+                console.log("🔧 OpticalFlow instance created during initialization");
+            }
+
+            // Set default enhanced configuration
+            if (this.tracker.opticalFlow) {
+                this.tracker.opticalFlow.updateConfig({
+                    enableLogging: true,
+                    pointsPerDimension: 11,
+                    baseSearchWindow: 30,
+                    adaptiveWindowMultiplier: 1.5,
+                    maxSearchWindow: 80,
+                    minConfidenceThreshold: 0.3
+                });
+
+                console.log("🔧 Enhanced optical flow tracking initialized");
+            } else {
+                console.warn("⚠️ OpticalFlow not available - enhanced tracking disabled");
+            }
+
+            // Enable debugging capabilities
+            this.enableTrackingDebugging = false; // Default off, can be enabled per instance
+        },
+
+        enableDebugMode() {
+            this.enableTrackingDebugging = true;
+            if (window.opticalFlowDebugger) {
+                window.opticalFlowDebugger.enableDebugging();
+                console.log("🐛 Debug mode enabled for this bbox tracker");
+            } else {
+                console.warn("OpticalFlow debugger not available");
+            }
+        },
+
+        disableDebugMode() {
+            this.enableTrackingDebugging = false;
+            if (window.opticalFlowDebugger) {
+                window.opticalFlowDebugger.disableDebugging();
+                console.log("🐛 Debug mode disabled for this bbox tracker");
+            }
+        },
+
+        // Quick configuration methods for different scenarios
+        useAggressiveTracking() {
+            if (window.opticalFlowDebugger) {
+                window.opticalFlowDebugger.applyTestConfiguration('aggressive');
+                console.log("🚀 Switched to aggressive tracking mode");
+            } else if (this.tracker.opticalFlow) {
+                this.tracker.opticalFlow.updateConfig(this.getOpticalFlowConfigurations().aggressive);
+                console.log("🚀 Applied aggressive tracking configuration");
+            }
+        },
+
+        useConservativeTracking() {
+            if (window.opticalFlowDebugger) {
+                window.opticalFlowDebugger.applyTestConfiguration('conservative');
+                console.log("🛡️ Switched to conservative tracking mode");
+            } else if (this.tracker.opticalFlow) {
+                this.tracker.opticalFlow.updateConfig(this.getOpticalFlowConfigurations().conservative);
+                console.log("🛡️ Applied conservative tracking configuration");
+            }
         },
 
         async updateExistingBBox(bboxId, newBBox) {
             this.bbox = newBBox;
+            this.bboxes[this.bbox.frameNumber] = this.bbox;
             await ky.post(`${this.baseURL}/updateBBox`, {
                 json: {
                     _token: this._token,
@@ -280,12 +552,14 @@ function boxComponent(idVideoDOMElement) {
                     bbox: newBBox
                 }
             }).json();
+            this.bboxes[newBBox.frameNumber] = newBBox;
             return newBBox;
         },
 
         async handleNonGroundTruthBBox(bbox) {
             console.log("Recreating non-ground truth bbox via tracking for frame", this.currentFrame);
             let previousBBox = this.bboxes[this.currentFrame - 1];
+            console.log("previousBBox",previousBBox);
 
             if (previousBBox) {
                 let trackedBBox = await this.performTracking(previousBBox);
@@ -294,7 +568,7 @@ function boxComponent(idVideoDOMElement) {
 
                 await this.updateExistingBBox(bbox.idBoundingBox, newBBox);
                 //this.showBBox(); // Refresh to show updated bbox
-                this.displayBBox(bbox);
+                this.displayBBox(newBBox);
             } else {
                 // No previous bbox to track from - use existing bbox as is
                 console.log("No previous bbox for tracking, using existing bbox");
@@ -325,6 +599,7 @@ function boxComponent(idVideoDOMElement) {
             if (!bbox) {
                 bbox = await this.handleMissingBBox();
             }
+            console.log('===');
             console.log("showBBox", bbox);
             if (bbox) {
                 if (bbox.isGroundTruth) {

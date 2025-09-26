@@ -224,5 +224,31 @@ return [
             "cty_peripheral" => "Peripheral",
             "cty_extra-thematic" => "Extra-thematic",
         ]
+    ],
+    'neo4j' => [
+        'enabled' => env('NEO4J_ENABLED', false),
+        'auto_sync' => env('NEO4J_AUTO_SYNC', false),
+        'batch_size' => env('NEO4J_BATCH_SIZE', 100),
+        'retry_attempts' => env('NEO4J_RETRY_ATTEMPTS', 3),
+        'logging' => [
+            'enabled' => env('NEO4J_LOGGING_ENABLED', false),
+            'channel' => env('NEO4J_LOGGING_CHANNEL', 'daily'),
+            'level' => env('NEO4J_LOGGING_LEVEL', 'debug'),
+        ],
+        'default_labels' => [
+            'frame' => 'Frame',
+            'lexical_unit' => 'LexicalUnit',
+            'frame_element' => 'FrameElement',
+            'semantic_type' => 'SemanticType',
+            'construction' => 'Construction',
+        ],
+        'default_relationships' => [
+            'HAS_ELEMENT' => 'HAS_ELEMENT',
+            'INHERITS_FROM' => 'INHERITS_FROM',
+            'SUBFRAME_OF' => 'SUBFRAME_OF',
+            'USES' => 'USES',
+            'IS_PERSPECTIVIZED_IN' => 'IS_PERSPECTIVIZED_IN',
+            'SEE_ALSO' => 'SEE_ALSO',
+        ]
     ]
 ];
