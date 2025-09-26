@@ -13,7 +13,7 @@
             hx-trigger="load"
             hx-target="#formsPane"
             hx-get="/annotation/video/object"
-            hx-vals='{"idObject": {{$idObject}},"idDocument": {{$idDocument}}, "annotationType":"{{$annotationType}}" }'
+            hx-vals='{"idObject": {{$idObject}},"idDocument": {{$idDocument}}, "annotationType":"{{$annotationType}}","frameNumber": {{$frameNumber}}}'
             hx-swap="innerHTML"
         ></div>
     @endif

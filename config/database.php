@@ -183,6 +183,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Neo4j Database Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Neo4j graph database configuration for enhanced graph operations.
+    | This configuration supports the laudis/neo4j-php-client package.
+    |
+    */
+
+    'neo4j' => [
+        'host' => env('NEO4J_HOST', 'localhost'),
+        'port' => env('NEO4J_PORT', 7687),
+        'username' => env('NEO4J_USERNAME', 'neo4j'),
+        'password' => env('NEO4J_PASSWORD', ''),
+        'database' => env('NEO4J_DATABASE', 'neo4j'),
+        'scheme' => env('NEO4J_SCHEME', 'bolt'),
+        'ssl' => env('NEO4J_SSL', false),
+        'timeout' => env('NEO4J_TIMEOUT', 5),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Migration Repository Table
     |--------------------------------------------------------------------------
     |

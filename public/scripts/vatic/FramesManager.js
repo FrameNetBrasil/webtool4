@@ -49,8 +49,11 @@ class FramesManager {
         let frameImage = this.frames[frameNumber];
         if (typeof frameImage === "undefined") {
             let frameImage = await this.getFrameFromVideo();
+            console.error("get frame from video");
             this.addFrame(frameNumber, frameImage);
             return frameImage;
+        } else {
+            console.error("frameImage undefined");
         }
         return frameImage;
     }

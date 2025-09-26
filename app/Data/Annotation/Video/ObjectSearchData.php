@@ -13,6 +13,7 @@ class ObjectSearchData extends Data
         public ?string $frame = '',
         public ?string $lu = '',
         public ?string $annotationType = '',
+        public ?int $frameNumber = 0,
         public string $_token = '',
     ) {
         $this->_token = csrf_token();

@@ -370,10 +370,12 @@ class BrowseService
                 ->get()->keyBy('idDocumentSentence')->all();
         }
         if (!empty($sentences)) {
-            $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
-            debug($targets);
-            foreach ($targets as $idDocumentSentence => $spans) {
-                $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);
+            if ( session("corpusAnnotationType") != 'cxn') {
+                $targets = collect(AnnotationSet::listTargetsForDocumentSentence(array_keys($sentences)))->groupBy('idDocumentSentence')->toArray();
+//            debug($targets);
+                foreach ($targets as $idDocumentSentence => $spans) {
+                    $sentences[$idDocumentSentence]->text = self::decorateSentenceTarget($sentences[$idDocumentSentence]->text, $spans);
+                }
             }
         }
 

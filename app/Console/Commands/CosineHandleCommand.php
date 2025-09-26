@@ -207,12 +207,24 @@ where ((b.n / a.n) > 0.5)
         }
         //
 
+//        $cmd = "
+//select lu.idFrame
+//from view_staticobject sob
+//join view_lu lu on (sob.name = lu.lemmaName)
+//join document d on (sob.idDocument = d.idDocument)
+//where lu.idlanguage = 2 and sob.idLanguage = 2
+//and d.iddocument = {$idDocument}
+//";
+
         $cmd = "
-select lu.idFrame
-from view_staticobject sob
-join view_lu lu on (sob.name = lu.lemmaName)
-join document d on (sob.idDocument = d.idDocument)
-where lu.idlanguage = 2 and sob.idLanguage = 2
+select ds.idDocument, lu.idFrame
+from document_sentence ds
+join sentence s on (ds.idSentence = s.idSentence)
+join document d on (ds.idDocument = d.idDocument)
+join view_lexicon_lemma lm on (lower(s.text) = lm.name)
+join lu on (lu.idLexicon = lm.idLexicon)
+where d.entry like 'doc_dtake%'
+and (s.idOriginmm in (9))
 and d.iddocument = {$idDocument}
 ";
 
