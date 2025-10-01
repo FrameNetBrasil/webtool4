@@ -61,6 +61,12 @@
                                                 ></x-combobox.fe-frame>
                                             </div>
                                         </div>
+                                        <div class="field">
+                                            <label for="suggestedNewFrame">Suggestion for new Frame</label>
+                                            <div class="ui small input">
+                                                <input type="text" id="suggestedNewFrame" name="suggestedNewFrame" value="">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="field">
                                         <label>Reference</label>

@@ -148,6 +148,8 @@ class CosineHandleCommand extends Command
 //            CosineService::compareSentences($pair[0], $pair[1]);
 //        }
 
+//        CosineService::createFrameNetwork();
+
         // DTake - comparando names com LOME
         $results = [];
         $cmd = "
@@ -166,10 +168,10 @@ join document d on (sob.idDocument = d.idDocument)
 where d.entry like 'doc_dtake%'
 and lu.idlanguage = 2 and sob.idLanguage = 2
 group by d.idDocument) b on (a.idDocument = b.idDocument)
-where ((b.n / a.n) > 0.5)
+where ((b.n / a.n) > 0.3)
                     ";
         $documents = DB::connection('webtool')->select($cmd);
-        print_r(count($documents));
+        print_r(count($documents) . ' documents > 0.3' . PHP_EOL);
         $i = 0;
         foreach ($documents as $row) {
             $this->dtakeCreateLinkDocumentNamesToFrame($row->idDocument);
@@ -225,6 +227,7 @@ join view_lexicon_lemma lm on (lower(s.text) = lm.name)
 join lu on (lu.idLexicon = lm.idLexicon)
 where d.entry like 'doc_dtake%'
 and (s.idOriginmm in (9))
+and (lu.idFrame <> 0)
 and d.iddocument = {$idDocument}
 ";
 
@@ -236,6 +239,7 @@ and d.iddocument = {$idDocument}
         $data = DB::connection('webtool')->select($cmd);
 
         foreach ($data as $row) {
+//            print_r($row);
             $idCosineNodeFrame = Criteria::byId("cosine_node", "idFrame", $row->idFrame)->idCosineNode;
             if ($idCosineNodeFrame) {
                 Criteria::create("cosine_link", [
@@ -270,7 +274,9 @@ join lome_resultfe lome on (ds.idSentence = lome.idSentence)
 join document d on (ds.idDocument = d.idDocument)
 where d.entry like 'doc_dtake%'
 and (lome.type = 'lu')
-and (s.idOriginmm in (15,16))  and d.idDocument={$idDocument}
+and (lome.idFrame <> 0)
+and (s.idOriginmm in (15,16))
+and d.idDocument={$idDocument}
 ";
 
         $idCosineNodeDocument = Criteria::create("cosine_node", [

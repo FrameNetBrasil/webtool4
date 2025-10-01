@@ -53,13 +53,12 @@
                 </div>
             </div>
         </div>
-{{--        <div class="field">--}}
-{{--            <x-text-field--}}
-{{--                label="OR suggest new frame"--}}
-{{--                id="frameCandidate"--}}
-{{--                :value="$luCandidate->frameCandidate ?? ''"--}}
-{{--            ></x-text-field>--}}
-{{--        </div>--}}
+        <div class="field">
+            <label for="suggestedNewFrame">Suggestion for new Frame</label>
+            <div class="ui small input">
+                <input type="text" id="suggestedNewFrame" name="suggestedNewFrame" value="">
+            </div>
+        </div>
         <div class="field">
             <x-multiline-field
                 label="Discussion"

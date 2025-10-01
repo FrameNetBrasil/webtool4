@@ -20,7 +20,7 @@ class CreateData extends Data
         public ?int $idDynamicObject = null,
         public ?int $idStaticObject = null,
         public ?int $incorporatedFE = null,
-//        public ?string $frameCandidate = '',
+        public ?string $suggestedNewFrame = '',
         public ?int $idUser = null,
         public ?string $createdAt = '',
         public ?string $status = '',

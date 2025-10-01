@@ -62,14 +62,14 @@ class BrowseService
                 ->join("user", "usertask.idUser", "=", "user.idUser")
                 ->join("task", "usertask.idTask", "=", "task.idTask")
                 ->where("user.name", "startswith", $search->user)
-                ->select('user.idUser', 'user.name', 'user.email', 'task.name as taskName')
+                ->select('usertask.idUserTask', 'user.idUser', 'user.name', 'user.email', 'task.name as taskName')
                 ->orderBy("user.name")
                 ->limit(self::$limit)
                 ->all();
 
             foreach ($users as $user) {
-                $result[$user->idUser] = [
-                    'id' => $user->idUser,
+                $result[$user->idUserTask] = [
+                    'id' => $user->idUserTask,
                     'type' => 'user',
                     'text' => $user->name . ' [' . $user->taskName . ']',
                     'leaf' => true,
@@ -87,14 +87,14 @@ class BrowseService
             $users = Criteria::table("usertask")
                 ->join("user", "usertask.idUser", "=", "user.idUser")
                 ->where("usertask.idTask", $search->id)
-                ->select('user.idUser', 'user.name', 'user.email')
+                ->select('usertask.idUserTask', 'user.idUser', 'user.name', 'user.email')
                 ->orderBy("user.name")
                 ->limit(self::$limit)
                 ->all();
 
             foreach ($users as $user) {
-                $result[$user->idUser] = [
-                    'id' => $user->idUser,
+                $result[$user->idUserTask] = [
+                    'id' => $user->idUserTask,
                     'type' => 'user',
                     'text' => $user->name . ' [' . $user->email . ']',
                     'leaf' => true,
