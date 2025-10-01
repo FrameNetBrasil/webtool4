@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Database\Criteria;
+use App\Enum\Status;
 use App\Services\AppService;
 use Illuminate\Support\Facades\DB;
 
@@ -177,6 +178,7 @@ class WordForm
             ->where("l.idLanguageLM", "=", $idLanguageBase ?? $idLanguage)
             ->where("l.position", "=", 1)
             ->where("frame.idLanguage", "=", $idLanguage)
+            ->where("l.statusLU", Status::CREATED)
             ->orderBy("frame.name")
             ->orderBy("l.lu");
         return $criteria->all();

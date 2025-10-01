@@ -57,7 +57,7 @@
                                                         window.location.assign(`/task/${event.detail.id}/edit`);
                                                     }
                                                     if (type === 'user') {
-                                                        window.location.assign(`/user/${event.detail.id}/edit`);
+                                                        window.location.assign(`/usertask/${event.detail.id}/edit`);
                                                     }
                                                 }"
                     >

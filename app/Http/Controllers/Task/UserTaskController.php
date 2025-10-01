@@ -26,8 +26,12 @@ class UserTaskController extends Controller
     #[Get(path: '/usertask/{id}/edit')]
     public function edit(string $id)
     {
+        $usertask = UserTask::byId($id);
+        if (!$usertask) {
+            abort(404, 'UserTask not found');
+        }
         return view("UserTask.edit",[
-            'usertask' => UserTask::byId($id)
+            'usertask' => $usertask
         ]);
     }
 

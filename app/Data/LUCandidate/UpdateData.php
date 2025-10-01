@@ -22,7 +22,7 @@ class UpdateData extends Data
 //        public ?int $idDocument = null,
 //        public ?int $idBoundingBox = null,
         public ?int $incorporatedFE = null,
-//        public ?string $frameCandidate = '',
+        public ?string $suggestedNewFrame = '',
     )
     {
         if ($this->idFrame == 0) {

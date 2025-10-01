@@ -30,6 +30,7 @@ class LUCandidateController extends Controller
             ->where("idLanguage", AppService::getCurrentIdLanguage())
             ->where("name", "startswith", $search->lu)
             ->where("email", "startswith", $search->email)
+            ->where("email", "<>", "lome@frame.net.br")
             ->select('idLU', 'name', 'createdAt', 'frameName', 'origin', 'email')
 //            ->selectRaw("IFNULL(frameName, frameCandidate) as frameName")
             ->orderBy($search->sort, $search->order)->all();
