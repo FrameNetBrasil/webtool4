@@ -49,7 +49,7 @@ class LOMEService extends AppService
     {
 
         $client = new Client([
-            'base_uri' => 'http://localhost:7749',
+            'base_uri' => 'http://server4.frame.net.br:7749',
             //'base_uri' => 'http://200.131.61.134:80',
             'timeout' => 300.0,
         ]);
