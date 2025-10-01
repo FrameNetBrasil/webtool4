@@ -6,12 +6,14 @@ use App\Data\Annotation\Corpus\AnnotationData;
 use App\Data\Annotation\Corpus\DeleteFEData;
 use App\Data\Annotation\Corpus\DeleteObjectData;
 use App\Data\Annotation\Corpus\SelectionData;
+use App\Data\Annotation\Session\SessionData;
 use App\Data\LoginData;
 use App\Database\Criteria;
 use App\Enum\Status;
 use App\Repositories\AnnotationSet;
 use App\Repositories\Lexicon;
 use App\Services\Annotation\CorpusService;
+use App\Services\Annotation\SessionService;
 use App\Services\AppService;
 use App\Services\AuthUserService;
 use App\Services\LOME\LOMEService;
@@ -70,25 +72,27 @@ class LomeProcessCommand extends Command
             // corpus copini
             $sentences = DB::connection('webtool')
                 ->select("
-                select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence
+select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where ds.idDocument = 15781
+where d.idCorpus = 220
+order by ds.idDocumentSentence
                 ");
             AppService::setCurrentLanguage(1);
-            debug("count sentence = " . count($sentences));
+            print_r("count sentence = " . count($sentences) . PHP_EOL);
             mb_internal_encoding("UTF-8"); // this IS A MUST!! PHP has trouble with multibyte when no internal encoding is set!
             $s = 0;
             foreach ($sentences as $sentence) {
+                SessionService::startSession(SessionData::from(['idDocumentSentence' => $sentence->idDocumentSentence,'_token'=>'']));
                 ++$s;
                 try {
                     $text = trim($sentence->text);
 //                    print_r("====================\n");
 //                    print_r($sentence->idSentence . ": " . $text . "\n");
 //                    print_r("====================\n");
-                    print_r($s . "\n");
-//                    if ($s < 702) continue;
+                    print_r($s. '   ' . $text . "\n");
+                    if ($s > 4) break;
                     //print_r($tokens);
                     Criteria::deleteById("lome_resultfe", "idSentence", $sentence->idSentence);
                     //$result = $lome->process($text);
@@ -112,11 +116,11 @@ where ds.idDocument = 15781
                             $endCharLOME = $annotation->char_span[1];
 
                             $currentChar = $startChar = $endChar = $startCharLOME;
-                            while ($currentChar <= $endCharLOME) {
+                            while ($currentChar < $endCharLOME) {
                                 $char = mb_substr($text, $currentChar, 1);
-                                if (mb_strpos($punctuation, $char) !== false) {
-                                    break;
-                                }
+//                                if (mb_strpos($punctuation, $char) !== false) {
+//                                    break;
+//                                }
                                 $endChar = $currentChar;
                                 $currentChar++;
                             }
@@ -125,7 +129,8 @@ where ds.idDocument = 15781
 //                                $word .= $tokens[$t] . ' ';
 //                            }
 //                            debug("%%%% word = " . $word, $startChar, $endChar);
-                            Criteria::create("lome_resultfe", [
+                            print_r([$startCharLOME, $endCharLOME, $word]);
+                            $resultfe = [
                                 "start" => $startChar,
                                 "end" => $endChar,
                                 "word" => $word,
@@ -135,13 +140,18 @@ where ds.idDocument = 15781
                                 "idFrame" => $idFrame,
                                 "idFrameElement" => null,
                                 "idSentence" => $sentence->idSentence,
-                            ]);
+                            ];
+                            print_r($resultfe);
+                            Criteria::create("lome_resultfe", $resultfe);
                             $idAnnotationSet = null;
                             $luToken = $annotation->span[0];
                             $parts = explode(" ", $luToken);
                             if (count($parts) == 1) {
                                 if ($word == "'") {
                                     $word="\'";
+                                }
+                                if ($word == "\\") {
+                                    $word="/";
                                 }
                                 $lemma = DB::connection('webtool')->select("
                                 select l.idLexicon idLemma

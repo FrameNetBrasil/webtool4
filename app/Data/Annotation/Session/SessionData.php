@@ -17,7 +17,7 @@ class SessionData extends Data
     {
         $this->idUser = AppService::getCurrentIdUser();
         $this->timestamp = Carbon::now();
-        $this->_token = csrf_token();
+        $this->_token = csrf_token() ?? '';
     }
 
 }
