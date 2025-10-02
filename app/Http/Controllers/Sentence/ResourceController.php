@@ -6,6 +6,7 @@ use App\Data\Sentence\SearchData;
 use App\Data\Sentence\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -62,41 +63,6 @@ class ResourceController extends Controller
             'sentence' => $sentence,
             'hasAS' => !empty($as)
         ]);
-    }
-
-    #[Post(path: '/sentence/new')]
-    public function newSentence(CreateLemmaData $data)
-    {
-        try {
-            $exists = Criteria::table("lemma")
-                ->where("name", $data->name)
-                ->where("idPOS", $data->idPOS)
-                ->where("idLanguage", $data->idLanguage)
-                ->first();
-            if (!is_null($exists)) {
-                throw new \Exception("Lemma already exists.");
-            }
-            $newLemma = json_encode([
-                'name' => $data->name,
-                'idPOS' => $data->idPOS,
-                'idLanguage' => $data->idLanguage,
-            ]);
-            $idLemma = Criteria::function("lemma_create(?)", [$newLemma]);
-            $lemma = Lemma::byId($idLemma);
-            $lexemeentries = Criteria::table("lexemeentry as le")
-                ->join("lexeme", "le.idLexeme", "=", "lexeme.idLexeme")
-                ->where("le.idLemma", $idLemma)
-                ->select("le.*", "lexeme.name as lexeme")
-                ->orderBy("le.lexemeorder")
-                ->all();
-            $view = view('Sentence.lemma', [
-                'lemma' => $lemma,
-                'lexemeentries' => $lexemeentries
-            ]);
-            return $view->fragment("content");
-        } catch (\Exception $e) {
-            return $this->renderNotify("error", $e->getMessage());
-        }
     }
 
     #[Put(path: '/sentence')]

@@ -2,7 +2,6 @@
 
 namespace App\Data\LU;
 
-use App\Repositories\Lemma;
 use App\Repositories\Lexicon;
 use App\Services\AppService;
 use Spatie\LaravelData\Data;
@@ -21,7 +20,6 @@ class CreateData extends Data
         public ?int $idEntity = null
     )
     {
-        //$lemma = Lemma::byId($this->idLemma);
         $lemma = Lexicon::lemmaById($this->idLexicon);
         $this->name = strtolower($lemma->name . '.' . $lemma->udPOS);
         $this->incorporatedFE = ($this->incorporatedFE < 0) ? null : $this->incorporatedFE;

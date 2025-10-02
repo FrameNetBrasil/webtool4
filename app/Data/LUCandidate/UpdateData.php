@@ -2,7 +2,6 @@
 
 namespace App\Data\LUCandidate;
 
-use App\Repositories\Lemma;
 use App\Repositories\Lexicon;
 use Spatie\LaravelData\Data;
 
@@ -19,8 +18,6 @@ class UpdateData extends Data
         public ?int $idDocumentSentence = null,
         public ?int $idDynamicObject = null,
         public ?int $idStaticObject = null,
-//        public ?int $idDocument = null,
-//        public ?int $idBoundingBox = null,
         public ?int $incorporatedFE = null,
         public ?string $suggestedNewFrame = '',
     )

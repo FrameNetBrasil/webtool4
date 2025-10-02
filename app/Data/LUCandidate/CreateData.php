@@ -2,7 +2,6 @@
 
 namespace App\Data\LUCandidate;
 
-use App\Repositories\Lemma;
 use App\Services\AppService;
 use Carbon\Carbon;
 use Spatie\LaravelData\Data;
