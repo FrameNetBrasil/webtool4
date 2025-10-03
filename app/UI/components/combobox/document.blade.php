@@ -20,7 +20,7 @@
                     title: "name",
                     description: "corpusName"
                 },
-                maxResults: 20,
+                maxResults: 100,
                 minCharacters: 3,
                 onSelect: (result) => {
                     $('#{{$id}}').val(result.idDocument);
