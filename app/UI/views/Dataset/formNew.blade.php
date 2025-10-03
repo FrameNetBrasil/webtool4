@@ -1,29 +1,57 @@
-<x-form id="formNewDataset" title="New Dataset" :center="false" hx-post="/dataset/new">
-    <x-slot:fields>
-            <div class="field">
-                <x-text-field
-                    label="Name"
-                    id="name"
-                    value=""
-                ></x-text-field>
+<x-layout::index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['','New Dataset']]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="ui container">
+                <div class="page-content">
+                    <form class="ui form">
+                        <div class="ui card form-card w-full p-1">
+                            <div class="content">
+                                <div class="header">
+                                    Create new Dataset
+                                </div>
+                                <div class="description">
+
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="field">
+                                    <label for="name">Name</label>
+                                    <div class="ui small input">
+                                        <input type="text" id="name" name="name" value="">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label for="description">Description</label>
+                                    <textarea id="description" name="description"></textarea>
+                                </div>
+
+{{--                                <div class="field">--}}
+{{--                                    <x-combobox.project--}}
+{{--                                        id="idProject"--}}
+{{--                                        label="Project"--}}
+{{--                                        value="0"--}}
+{{--                                    >--}}
+{{--                                    </x-combobox.project>--}}
+{{--                                </div>--}}
+                            </div>
+                            <div class="extra content">
+                                <button
+                                    type="submit"
+                                    class="ui primary button"
+                                    hx-post="/dataset/new"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="field">
-                <x-multiline-field
-                    label="Description"
-                    id="description"
-                    value=""
-                ></x-multiline-field>
-            </div>
-{{--            <div class="field">--}}
-{{--                <x-combobox.project--}}
-{{--                    id="idProject"--}}
-{{--                    label="Project"--}}
-{{--                    value="0"--}}
-{{--                >--}}
-{{--                </x-combobox.project>--}}
-{{--            </div>--}}
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-submit label="Save"></x-submit>
-    </x-slot:buttons>
-</x-form>
+        </main>
+    </div>
+</x-layout::index>

@@ -1,18 +1,43 @@
-<x-form
-    title="New RelationGroup"
-    hx-post="/relations/relationgroup/new"
->
-    <x-slot:fields>
-        <div class="field">
-            <x-text-field
-                id="nameEn"
-                label="English Name"
-                value="">
+<x-layout::index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb
+            :sections="[['/','Home'],['','New RelationGroup']]"
+        ></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="ui container">
+                <div class="page-content">
+                    <form class="ui form">
+                        <div class="ui card form-card w-full p-1">
+                            <div class="content">
+                                <div class="header">
+                                    Create new RelationGroup
+                                </div>
+                                <div class="description">
 
-            </x-text-field>
-        </div>
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-submit label="Add RelationGroup"></x-submit>
-    </x-slot:buttons>
-</x-form>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="field">
+                                    <label for="nameEn">English Name</label>
+                                    <div class="ui small input">
+                                        <input type="text" id="nameEn" name="nameEn" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="extra content">
+                                <button
+                                    type="submit"
+                                    class="ui primary button"
+                                    hx-post="/relations/relationgroup/new"
+                                >
+                                    Add RelationGroup
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</x-layout::index>

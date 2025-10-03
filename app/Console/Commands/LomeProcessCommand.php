@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Data\Annotation\Corpus\AnnotationData;
-use App\Data\Annotation\Corpus\DeleteFEData;
 use App\Data\Annotation\Corpus\DeleteObjectData;
 use App\Data\Annotation\Corpus\SelectionData;
 use App\Data\Annotation\Session\SessionData;
@@ -76,7 +75,7 @@ select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where d.idCorpus = 220
+where d.idCorpus IN (227,228)
 order by ds.idDocumentSentence
                 ");
             AppService::setCurrentLanguage(1);
@@ -92,11 +91,11 @@ order by ds.idDocumentSentence
 //                    print_r($sentence->idSentence . ": " . $text . "\n");
 //                    print_r("====================\n");
                     print_r($s. '   ' . $text . "\n");
-                    if ($s > 4) break;
+//                    if ($s > 4) break;
                     //print_r($tokens);
                     Criteria::deleteById("lome_resultfe", "idSentence", $sentence->idSentence);
                     //$result = $lome->process($text);
-                    $ud = $trankit->parseSentenceRawTokens($text, 1);
+                    //$ud = $trankit->parseSentenceRawTokens($text, 1);
                     //print_r($ud);
                     $result = $lome->parse($text);
                     if (is_array($result)) {
