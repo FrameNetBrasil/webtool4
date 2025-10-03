@@ -15,7 +15,9 @@ class LayerType
     {
         $array = ['lty_fe', 'lty_gf', 'lty_pt', 'lty_other', 'lty_target', 'lty_sent'];
         $lPOS = ['V' => 'lty_verb', 'N' => 'lty_noun', 'A' => 'lty_adj', 'ADV' => 'lty_adv', 'PREP' => 'lty_prep'];
-        $pos = Criteria::byId("pos", "idPOS", $lu->idPOS);
+        $udPOS = Criteria::byId("pos_udpos","idUDPOS", $lu->idUDPOS);
+        debug($udPOS);
+        $pos = Criteria::byId("pos", "idPOS", $udPOS->idPOS);
         if (isset($lPOS[$pos->POS])) {
             $array[] = $lPOS[$pos->POS];
         }

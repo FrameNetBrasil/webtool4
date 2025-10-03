@@ -123,7 +123,7 @@ class WordForm
                     select l.form,count(l.idLU) as n
                     from view_lexicon l
                     where (l.form = '{$wf1}' collate 'utf8mb4_bin' )
-                    and (idLanguageLM = {$idLanguage})
+                    and (idLanguage = {$idLanguage})
                     group by l.form
                     having count(l.idLU) > 0
                 ");
@@ -141,7 +141,7 @@ class WordForm
                     select l.form,count(l.idLU) as n
                     from view_lexicon l
                     where (l.form = '{$wf1}')
-                    and (idLanguageLM = {$idLanguage})
+                    and (idLanguage = {$idLanguage})
                     group by l.form
                     having count(l.idLU) > 0
 
@@ -175,7 +175,7 @@ class WordForm
             ->select("idLU", "lu", "senseDescription", "frame.name as frameName")
             ->join("view_frame as frame", "l.idFrame", "=", "frame.idFrame")
             ->whereRaw("l.form = '{$wf1}'  collate 'utf8mb4_bin'")
-            ->where("l.idLanguageLM", "=", $idLanguageBase ?? $idLanguage)
+            ->where("l.idLanguage", "=", $idLanguageBase ?? $idLanguage)
             ->where("l.position", "=", 1)
             ->where("frame.idLanguage", "=", $idLanguage)
             ->where("l.statusLU", Status::CREATED)
