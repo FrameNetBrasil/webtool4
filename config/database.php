@@ -66,6 +66,41 @@ return [
 //            ],
         ],
 
+        'webtool41' => [
+            'driver' => 'mariadb',
+            //'platform' => 'pdo_mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_41_HOST', 'x'),
+            'port' => env('DB_41_PORT', ''),
+            'database' => env('DB_41_DATABASE', 'forge'),
+            'username' => env('DB_41_USERNAME', 'forge'),
+            'password' => env('DB_41_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'formatDate' => '%e/%m/%Y',
+            'formatDateWhere' => '%Y/%m/%e',
+            'formatTime' => '%T',
+            'sequence' => [
+                'table' => 'Sequence',
+                'name' => 'Name',
+                'value' => 'Value'
+            ],
+            'configurationClass' => 'Doctrine\DBAL\Configuration',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
+//            'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [
+//                \PDO::ATTR_EMULATE_PREPARES => true
+//            ],
+        ],
+
         'webtool37' => [
             'driver' => 'mariadb',
             //'platform' => 'pdo_mysql',
