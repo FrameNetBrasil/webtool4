@@ -9,14 +9,14 @@
         <x-hidden-field id="idLU" :value="$luCandidate->idLU"></x-hidden-field>
         @if($isManager)
         <div class="field">
-            <x-combobox.lexicon-lemma
-                id="idLexicon"
+            <x-combobox.lemma
+                id="idLemma"
                 label="Lemma [min: 3 chars]"
-                :value="$luCandidate->idLexicon"
-            ></x-combobox.lexicon-lemma>
+                :value="$luCandidate->idLemma"
+            ></x-combobox.lemma>
         </div>
         @else
-           <x-hidden-field id="idLexicon" :value="$luCandidate->idLexicon"></x-hidden-field>
+           <x-hidden-field id="idLemma" :value="$luCandidate->idLemma"></x-hidden-field>
         @endif
         <div class="field">
             <x-multiline-field

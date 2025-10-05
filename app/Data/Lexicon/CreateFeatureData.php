@@ -11,7 +11,7 @@ use \Illuminate\Validation\Validator;
 class CreateFeatureData extends Data
 {
     public function __construct(
-        public ?int    $idLexiconBase,
+        public ?int    $idLexiconExpression,
         public ?int    $idUDFeature,
         public string  $_token = '',
     )

@@ -13,7 +13,6 @@ class CreateData extends Data
         public ?string $senseDescription = '',
         public ?string $discussion = '',
         public ?int $idLemma = null,
-        public ?int $idLexicon = null,
         public ?int $idFrame = null,
         public ?int $idDocumentSentence = null,
         public ?int $idDynamicObject = null,
@@ -24,8 +23,7 @@ class CreateData extends Data
         public ?string $createdAt = '',
         public ?string $status = '',
         public ?string $origin = ''
-    )
-    {
+    ) {
         if (is_null($this->senseDescription)) {
             $this->senseDescription = '';
         }
@@ -40,6 +38,5 @@ class CreateData extends Data
         $this->status = 'PENDING';
         $this->origin = 'USER';
     }
-
 
 }

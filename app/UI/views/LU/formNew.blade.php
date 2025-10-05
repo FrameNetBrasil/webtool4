@@ -6,11 +6,11 @@
         ></x-hidden-field>
         <div class="three fields">
             <div class="field">
-                <x-combobox.lexicon-lemma
-                    id="idLexicon"
+                <x-combobox.lemma
+                    id="idLemma"
                     label="Lemma [min: 3 chars]"
                     value="0"
-                ></x-combobox.lexicon-lemma>
+                ></x-combobox.lemma>
             </div>
             <div class="field">
                 <x-text-field

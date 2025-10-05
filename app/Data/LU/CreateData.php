@@ -10,18 +10,16 @@ class CreateData extends Data
 {
     public function __construct(
         public int $idFrame,
-        public ?int $idLemma,
-        public int $idLexicon,
+        public int $idLemma,
         public ?string $name,
         public ?string $senseDescription = '',
         public ?int $incorporatedFE = -1,
         public ?int $active = 1,
         public ?int $idUser = 1,
         public ?int $idEntity = null
-    )
-    {
-        $lemma = Lexicon::lemmaById($this->idLexicon);
-        $this->name = strtolower($lemma->name . '.' . $lemma->udPOS);
+    ) {
+        $lemma = Lexicon::lemmaById($this->idLemma);
+        $this->name = strtolower($lemma->name.'.'.$lemma->udPOS);
         $this->incorporatedFE = ($this->incorporatedFE < 0) ? null : $this->incorporatedFE;
         $this->idUser = AppService::getCurrentIdUser();
         $this->senseDescription = $this->senseDescription ?? '';

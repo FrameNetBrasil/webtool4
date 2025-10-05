@@ -9,7 +9,7 @@
     display-field="name"
     value="{{$value ?? 0}}"
     display-value="{{ $displayValue ?? '' }}"
-    value-field="idLexicon"
+    value-field="idLemma"
     modal-title="{{$modalTitle ?? 'Search Lemma'}}"
 />
 <script>

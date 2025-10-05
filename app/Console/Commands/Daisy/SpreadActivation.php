@@ -12,13 +12,21 @@ class SpreadActivation extends Command
     protected $description = 'Spread activation through the Daisy graph starting from all Lexical Units related to a Lemma';
 
     private array $currentActivations = [];
+
     private array $nextActivations = [];
+
     private array $allActivations = [];
+
     private array $visitCount = [];
+
     private array $linkCache = [];
+
     private int $maxIterations;
+
     private float $threshold;
+
     private int $totalPropagations = 0;
+
     private array $startingNodes = [];
 
     public function handle(): int
@@ -34,10 +42,11 @@ class SpreadActivation extends Command
         $lus = $this->findLUsByLemma($idLemma);
         if (empty($lus)) {
             $this->error("❌ No Lexical Units found for idLemma={$idLemma}");
+
             return self::FAILURE;
         }
 
-        $this->info("Found " . count($lus) . " Lexical Unit(s) for lemma ID {$idLemma}:");
+        $this->info('Found '.count($lus)." Lexical Unit(s) for lemma ID {$idLemma}:");
         foreach ($lus as $lu) {
             $this->line("  • {$lu->name} (idLU: {$lu->idLU}, Frame: {$lu->frameName})");
         }
@@ -46,11 +55,12 @@ class SpreadActivation extends Command
         // Find corresponding daisy nodes
         $luNodes = $this->findLUNodes($lus);
         if (empty($luNodes)) {
-            $this->error("❌ No corresponding nodes found in daisy_node table");
+            $this->error('❌ No corresponding nodes found in daisy_node table');
+
             return self::FAILURE;
         }
 
-        $this->info("Starting from " . count($luNodes) . " LU node(s):");
+        $this->info('Starting from '.count($luNodes).' LU node(s):');
         foreach ($luNodes as $node) {
             $this->line("  • {$node->name} (Node ID: {$node->idDaisyNode})");
             $this->startingNodes[] = $node->idDaisyNode;
@@ -114,7 +124,7 @@ class SpreadActivation extends Command
                     $linkWeight = (float) $link->value;
 
                     // Accumulate activation in next iteration
-                    if (!isset($this->nextActivations[$targetNodeId])) {
+                    if (! isset($this->nextActivations[$targetNodeId])) {
                         $this->nextActivations[$targetNodeId] = 0.0;
                     }
 
@@ -129,7 +139,7 @@ class SpreadActivation extends Command
                 }
 
                 // Increment visit count
-                if (!isset($this->visitCount[$nodeId])) {
+                if (! isset($this->visitCount[$nodeId])) {
                     $this->visitCount[$nodeId] = 0;
                 }
                 $this->visitCount[$nodeId]++;
@@ -144,7 +154,7 @@ class SpreadActivation extends Command
             // Check stop condition: no active nodes
             if ($activeNodes === 0) {
                 if ($this->option('show-steps')) {
-                    $this->line("No active nodes. Stopping.");
+                    $this->line('No active nodes. Stopping.');
                 }
                 break;
             }
@@ -160,7 +170,7 @@ class SpreadActivation extends Command
 
             // Track all activations (keep highest value for each node)
             foreach ($this->currentActivations as $nodeId => $activation) {
-                if (!isset($this->allActivations[$nodeId]) || $activation > $this->allActivations[$nodeId]) {
+                if (! isset($this->allActivations[$nodeId]) || $activation > $this->allActivations[$nodeId]) {
                     $this->allActivations[$nodeId] = $activation;
                 }
             }
@@ -194,9 +204,10 @@ class SpreadActivation extends Command
     private function getLinksForNode(int $nodeId): array
     {
         // Check cache first
-        if (!isset($this->linkCache[$nodeId])) {
+        if (! isset($this->linkCache[$nodeId])) {
             $this->linkCache[$nodeId] = Daisy::getLinksByNode($nodeId, 'source');
         }
+
         return $this->linkCache[$nodeId];
     }
 
@@ -205,14 +216,14 @@ class SpreadActivation extends Command
         return \App\Database\Criteria::table('lu')
             ->join('frame', 'lu.idFrame', '=', 'frame.idFrame')
             ->select('lu.idLU', 'lu.name', 'lu.idFrame', 'frame.entry as frameName')
-            ->where('lu.idLexicon', $idLemma)
+            ->where('lu.idLemma', $idLemma)
             ->orderBy('lu.name')
             ->all();
     }
 
     private function findLUNodes(array $lus): array
     {
-        $idLUs = array_map(fn($lu) => $lu->idLU, $lus);
+        $idLUs = array_map(fn ($lu) => $lu->idLU, $lus);
 
         return \App\Database\Criteria::table('daisy_node')
             ->where('type', 'LU')
@@ -227,7 +238,7 @@ class SpreadActivation extends Command
         arsort($this->allActivations);
 
         $this->info('📊 Activation Results:');
-        $this->line("Total nodes activated: " . count($this->allActivations));
+        $this->line('Total nodes activated: '.count($this->allActivations));
         $this->line("Total propagations: {$this->totalPropagations}");
         $this->newLine();
 
@@ -242,7 +253,7 @@ class SpreadActivation extends Command
                 $node->type ?? 'N/A',
                 $node->name ?? 'N/A',
                 number_format($activation, 6),
-                $visits
+                $visits,
             ];
 
             // Limit table output to top 100 for readability
@@ -258,7 +269,7 @@ class SpreadActivation extends Command
 
         if (count($this->allActivations) > 100) {
             $this->newLine();
-            $this->warn("Showing top 100 nodes. Total activated: " . count($this->allActivations));
+            $this->warn('Showing top 100 nodes. Total activated: '.count($this->allActivations));
         }
     }
 }

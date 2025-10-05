@@ -13,15 +13,13 @@ class UpdateData extends Data
         public ?string $senseDescription = '',
         public ?string $discussion = '',
         public ?int $idLemma = null,
-        public ?int $idLexicon = null,
         public ?int $idFrame = null,
         public ?int $idDocumentSentence = null,
         public ?int $idDynamicObject = null,
         public ?int $idStaticObject = null,
         public ?int $incorporatedFE = null,
         public ?string $suggestedNewFrame = '',
-    )
-    {
+    ) {
         if ($this->idFrame == 0) {
             $this->idFrame = null;
         }
@@ -31,9 +29,8 @@ class UpdateData extends Data
         if (is_null($this->discussion)) {
             $this->discussion = '';
         }
-        $lemma = Lexicon::lemmabyId($this->idLexicon);
+        $lemma = Lexicon::lemmaById($this->idLemma);
         $this->name = $lemma->shortName;
     }
-
 
 }
