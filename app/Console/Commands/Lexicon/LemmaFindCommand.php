@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Lexicon;
 
-use App\Services\Lexicon\LexiconPatternService;
+use App\Services\Lemma\LexiconPatternService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
@@ -89,15 +89,16 @@ class LemmaFindCommand extends Command
             }
 
             try {
-                // Parse sentence using Trankit
-                $trankitOutput = $this->lemmaService->trankit->parseSentenceRawTokens($sentenceText, $idLanguage);
-                $tokens = $this->lemmaService->parseTrankitOutput($trankitOutput);
+                // Parse sentence and find lemmas using service
+                $occurrences = $this->lemmaService->parseSentenceAndFindLemmas($sentenceText, $idLanguage);
 
-                // Find occurrences
-                $sentenceId = 'sent_'.($index + 1);
-                $occurrences = $this->lemmaService->findLemmaOccurrences($tokens, $sentenceId, $type);
+                // Apply type filter if requested
+                if ($type) {
+                    $occurrences = array_filter($occurrences, fn ($occ) => $occ['lemma_type'] === $type);
+                }
 
                 if (count($occurrences) > 0) {
+                    $sentenceId = 'sent_'.($index + 1);
                     $allOccurrences[$sentenceId] = [
                         'text' => $sentenceText,
                         'occurrences' => $occurrences,
@@ -117,14 +118,13 @@ class LemmaFindCommand extends Command
         // Display results
         $this->displayResults($allOccurrences);
 
-        // Save to database
+        // Count total occurrences
         $totalOccurrences = 0;
         foreach ($allOccurrences as $sentenceData) {
-            $stored = $this->lemmaService->storeOccurrences($sentenceData['occurrences']);
-            $totalOccurrences += $stored;
+            $totalOccurrences += count($sentenceData['occurrences']);
         }
 
-        $this->info("✓ Found and stored {$totalOccurrences} lemma occurrence(s)");
+        $this->info("✓ Found {$totalOccurrences} lemma occurrence(s)");
 
         // Export to file if requested
         if ($output) {

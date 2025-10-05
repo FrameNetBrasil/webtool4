@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Database\Criteria;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +14,7 @@ class ProcessDocumentCsv extends Command
     private array $stats = [
         'processed' => 0,
         'successful' => 0,
-        'errors' => 0
+        'errors' => 0,
     ];
 
     public function handle(): int
@@ -25,8 +24,9 @@ class ProcessDocumentCsv extends Command
 
         $inputPath = app_path('Console/Commands/dtake_documents');
 
-        if (!file_exists($inputPath)) {
+        if (! file_exists($inputPath)) {
             $this->error("❌ Input CSV file not found: {$inputPath}");
+
             return self::FAILURE;
         }
 
@@ -41,10 +41,11 @@ class ProcessDocumentCsv extends Command
 
         if (empty($inputData)) {
             $this->error('❌ No data found in input CSV file');
+
             return self::FAILURE;
         }
 
-        $this->info("📊 Found " . count($inputData) . " documents to process");
+        $this->info('📊 Found '.count($inputData).' documents to process');
         $this->newLine();
 
         $this->info('🔍 Processing documents...');
@@ -74,12 +75,13 @@ class ProcessDocumentCsv extends Command
             if (count($row) >= 2 && is_numeric($row[0])) {
                 $data[] = [
                     'idDocument' => (int) $row[0],
-                    'cosine_similarity' => $row[1]
+                    'cosine_similarity' => $row[1],
                 ];
             }
         }
 
         fclose($handle);
+
         return $data;
     }
 
@@ -104,7 +106,7 @@ class ProcessDocumentCsv extends Command
                     'cosine_similarity' => $document['cosine_similarity'],
                     'names' => $names,
                     'title' => $title,
-                    'excerpt' => $excerpt
+                    'excerpt' => $excerpt,
                 ];
 
                 $this->stats['successful']++;
@@ -136,8 +138,8 @@ class ProcessDocumentCsv extends Command
             FROM document_sentence ds
             JOIN sentence s ON (ds.idSentence = s.idSentence)
             JOIN document d ON (ds.idDocument = d.idDocument)
-            JOIN view_lexicon_lemma lm ON (lower(s.text) = lm.name)
-            JOIN lu ON (lu.idLexicon = lm.idLexicon)
+            JOIN view_lemma lm ON (lower(s.text) = lm.name)
+            JOIN lu ON (lu.idLemma = lm.idLemma)
             WHERE d.entry LIKE 'doc_dtake%'
             AND (s.idOriginmm IN (9))
             AND (lu.idFrame <> 0)
@@ -145,7 +147,7 @@ class ProcessDocumentCsv extends Command
         ";
 
         $results = DB::select($query, [$idDocument]);
-        $names = array_map(function($result) {
+        $names = array_map(function ($result) {
             return $result->name;
         }, $results);
 
@@ -168,7 +170,8 @@ class ProcessDocumentCsv extends Command
         ";
 
         $results = DB::select($query, [$idDocument]);
-        return !empty($results) ? $results[0]->title : '';
+
+        return ! empty($results) ? $results[0]->title : '';
     }
 
     private function getDocumentExcerpt(int $idDocument): string
@@ -187,7 +190,8 @@ class ProcessDocumentCsv extends Command
         ";
 
         $results = DB::select($query, [$idDocument]);
-        return !empty($results) ? $results[0]->excerpt : '';
+
+        return ! empty($results) ? $results[0]->excerpt : '';
     }
 
     private function writeOutputCsv(string $outputPath, array $enrichedData): void
@@ -208,7 +212,7 @@ class ProcessDocumentCsv extends Command
                 $row['cosine_similarity'],
                 $row['names'],
                 $row['title'],
-                $row['excerpt']
+                $row['excerpt'],
             ]);
         }
 
@@ -223,7 +227,7 @@ class ProcessDocumentCsv extends Command
             [
                 ['Total Processed', $this->stats['processed']],
                 ['Successful', $this->stats['successful']],
-                ['Errors', $this->stats['errors']]
+                ['Errors', $this->stats['errors']],
             ]
         );
     }

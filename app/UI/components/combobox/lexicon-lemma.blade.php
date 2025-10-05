@@ -22,7 +22,7 @@
                 maxResults: 20,
                 minCharacters: 1,
                 onSelect: (result) => {
-                    $('#{{$id}}').val(result.idLexicon);
+                    $('#{{$id}}').val(result.idLemma);
                 }
             })
         ;

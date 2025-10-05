@@ -47,14 +47,14 @@
                                 <div class="ui form">
                                     @if($isManager)
                                         <div class="field">
-                                            <x-combobox.lexicon-lemma
-                                                id="idLexicon"
+                                            <x-combobox.lemma
+                                                id="idLemma"
                                                 label="Lemma [min: 3 chars]"
-                                                :value="$luCandidate->idLexicon"
-                                            ></x-combobox.lexicon-lemma>
+                                                :value="$luCandidate->idLemma"
+                                            ></x-combobox.lemma>
                                         </div>
                                     @else
-                                        <input type="hidden" value="{{$luCandidate->idLexicon}}">
+                                        <input type="hidden" name="idLemma" value="{{$luCandidate->idLemma}}">
                                     @endif
                                     <div class="field">
                                         <x-multiline-field
