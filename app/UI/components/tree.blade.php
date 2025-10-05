@@ -101,6 +101,7 @@
                         ></td>
                         <td
                                 class="content"
+                                colspan="999"
                         >
                             <!-- Tree Content Container -->
                             <div id="tree_{{$idNode}}"

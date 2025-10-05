@@ -16,9 +16,7 @@ class LemmaStoreCommand extends Command
     protected $signature = 'lemma:store
                             {--language= : Filter by language ID (1=Portuguese, 2=English)}
                             {--limit= : Limit number of lemmas to process (for testing)}
-                            {--dry-run : Preview lemmas without storing patterns}
-                            {--resume : Resume processing, skip already processed lemmas}
-                            {--force : Skip confirmation prompt}';
+                            {--dry-run : Preview lemmas without storing patterns}';
 
     /**
      * The console command description.
@@ -44,39 +42,37 @@ class LemmaStoreCommand extends Command
     public function handle(): int
     {
         // Increase memory limit for large batch processing
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '1G');
 
         $idLanguage = $this->option('language') ? (int) $this->option('language') : null;
         $limit = $this->option('limit') ? (int) $this->option('limit') : null;
         $dryRun = $this->option('dry-run');
-        $resume = $this->option('resume');
-        $force = $this->option('force');
 
         $languageFilter = $idLanguage ? config('udparser.languages')[$idLanguage] ?? "ID {$idLanguage}" : 'all languages';
 
         $this->info('📚 Lemma Pattern Storage from Database');
         $this->info("🌍 Language: {$languageFilter}");
-        if ($resume) {
-            $this->info('♻️  Mode: Resume (skip already processed)');
-        }
         if ($limit) {
             $this->info("🔢 Limit: {$limit} lemmas");
         }
         $this->newLine();
 
-        // Get ALL lemmas (not just MWEs)
+        // Get all lemmas without existing patterns (incremental processing)
+        // Use NOT EXISTS subquery instead of whereNotIn to avoid loading all IDs into memory
         $lemmaQuery = DB::table('view_lemma')
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('lexicon_pattern')
+                    ->whereColumn('lexicon_pattern.idLemma', 'view_lemma.idLemma');
+            })
             ->when($idLanguage, fn ($q) => $q->where('idLanguage', $idLanguage))
-            ->when($resume, fn ($q) => $q->whereNotIn('idLemma',
-                DB::table('lexicon_pattern')->pluck('idLemma')
-            ))
             ->when($limit, fn ($q) => $q->limit($limit))
             ->orderBy('idLemma');
 
         $totalLemmas = $lemmaQuery->count();
 
         if ($totalLemmas === 0) {
-            $this->warn('No lemmas found in database');
+            $this->warn('No lemmas without patterns found');
 
             return Command::SUCCESS;
         }
@@ -90,38 +86,10 @@ class LemmaStoreCommand extends Command
             return Command::SUCCESS;
         }
 
-        // Confirm truncate (only if not resuming)
-        if (! $resume) {
-            if (! $force) {
-                $this->warn('⚠️  This will TRUNCATE all existing pattern tables:');
-                $this->line('   - lexicon_pattern_constraint');
-                $this->line('   - lexicon_pattern_edge');
-                $this->line('   - lexicon_pattern_node');
-                $this->line('   - lexicon_pattern');
-                $this->newLine();
+        // Use service to store patterns (incremental, never truncate)
+        // Disable query logging to save memory
+        DB::connection()->disableQueryLog();
 
-                if (! $this->confirm('Do you want to continue?', false)) {
-                    $this->info('Operation cancelled');
-
-                    return Command::SUCCESS;
-                }
-            }
-
-            // Truncate pattern tables
-            $this->info('🗑️  Truncating pattern tables...');
-            DB::statement('SET FOREIGN_KEY_CHECKS=0');
-            DB::table('lexicon_pattern_constraint')->truncate();
-            DB::table('lexicon_pattern_edge')->truncate();
-            DB::table('lexicon_pattern_node')->truncate();
-            DB::table('lexicon_pattern')->truncate();
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
-            $this->newLine();
-        } else {
-            $this->info('♻️  Resuming from previous run (existing patterns preserved)...');
-            $this->newLine();
-        }
-
-        // Use service to store patterns
         $this->info('⚙️  Processing lemmas...');
         $this->output->progressStart($totalLemmas);
 
@@ -138,39 +106,46 @@ class LemmaStoreCommand extends Command
 
         // Process in chunks to avoid memory issues
         $chunkCount = 0;
-        $lemmaQuery->chunk(100, function ($lemmas) use ($idLanguage, &$results, $csvHandle, &$chunkCount) {
-            $idLemmas = $lemmas->pluck('idLemma')->toArray();
+        $lemmaQuery->chunk(50, function ($lemmas) use ($idLanguage, &$results, $csvHandle, &$chunkCount) {
+            foreach ($lemmas as $lemma) {
+                try {
+                    // Detect SWE vs MWE based on spaces in name
+                    $isSWE = ! str_contains($lemma->name, ' ');
 
-            $batchResults = $this->lemmaService->storeLemmaPatternsBatch(
-                $idLemmas,
-                $idLanguage ?? 1,
-                function ($processed, $total, $result) {
+                    if ($isSWE) {
+                        // Create simple SWE pattern directly
+                        $result = $this->createSimpleSWEPattern($lemma, $idLanguage ?? 1);
+                        $results['success']++;
+                    } else {
+                        // Use service for MWE (needs UD parser)
+                        $result = $this->lemmaService->storeLemmaPattern($lemma->idLemma, $idLanguage ?? 1);
+                        $results['success']++;
+                    }
+
                     $this->output->progressAdvance();
-                }
-            );
+                } catch (\Exception $e) {
+                    $results['failed']++;
+                    $results['errors'][$lemma->idLemma] = $e->getMessage();
 
-            // Log lemmas without expressions to CSV
-            foreach ($batchResults['errors'] as $idLemma => $error) {
-                if (str_contains($error, 'No expressions found')) {
-                    $lemma = $lemmas->firstWhere('idLemma', $idLemma);
-                    fputcsv($csvHandle, [
-                        $idLemma,
-                        $lemma->name ?? 'N/A',
-                        $error,
-                        now()->toDateTimeString(),
-                    ]);
+                    // Log lemmas without expressions to CSV
+                    if (str_contains($e->getMessage(), 'No expressions found')) {
+                        fputcsv($csvHandle, [
+                            $lemma->idLemma,
+                            $lemma->name ?? 'N/A',
+                            $e->getMessage(),
+                            now()->toDateTimeString(),
+                        ]);
+                    }
+
+                    $this->output->progressAdvance();
                 }
             }
 
-            // Aggregate results
-            $results['success'] += $batchResults['success'];
-            $results['failed'] += $batchResults['failed'];
-            $results['errors'] = array_merge($results['errors'], $batchResults['errors']);
-
-            // Force garbage collection every 10 chunks
+            // Force garbage collection every 5 chunks (more frequently)
             $chunkCount++;
-            if ($chunkCount % 10 === 0) {
+            if ($chunkCount % 5 === 0) {
                 gc_collect_cycles();
+                $this->lemmaService->clearCaches();
             }
         });
 
@@ -218,6 +193,58 @@ class LemmaStoreCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Create simple SWE pattern without UD parser
+     */
+    protected function createSimpleSWEPattern(object $lemma, int $idLanguage): array
+    {
+        try {
+            // Get expression (single word form)
+            $expressions = DB::table('view_lexicon_expression')
+                ->where('idLemma', $lemma->idLexicon)
+                ->orderBy('position')
+                ->get();
+
+            if ($expressions->isEmpty()) {
+                throw new \RuntimeException("No expressions found for lemma: {$lemma->idLemma}");
+            }
+
+            // Create pattern in transaction
+            return DB::transaction(function () use ($lemma, $expressions) {
+                // Create pattern entry
+                $idLexiconPattern = DB::table('lexicon_pattern')->insertGetId([
+                    'idLemma' => $lemma->idLemma,
+                    'patternType' => 'canonical',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                // Create single root node (SWE has only one node)
+                $firstExpression = $expressions->first();
+                DB::table('lexicon_pattern_node')->insert([
+                    'idLexiconPattern' => $idLexiconPattern,
+                    'position' => 0,
+                    'idLexicon' => $firstExpression->idForm,
+                    'idUDPOS' => $lemma->idUDPOS ?? null,
+                    'isRoot' => 1,
+                    'isRequired' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                // No edges needed for SWE (single word)
+
+                return [
+                    'idLemma' => $lemma->idLemma,
+                    'idLexiconPattern' => $idLexiconPattern,
+                    'type' => 'SWE',
+                ];
+            });
+        } catch (\Exception $e) {
+            throw new \RuntimeException("Failed to create SWE pattern for lemma {$lemma->idLemma}: {$e->getMessage()}");
+        }
     }
 
     /**
