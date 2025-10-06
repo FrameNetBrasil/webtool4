@@ -50,8 +50,8 @@ class LemmaController extends Controller
     {
         $name = (strlen($data->q) > 0) ? $data->q : 'none';
 
-        return ['results' => Criteria::byFilterLanguage('view_lexicon_lemma', ['name', 'startswith', trim($name)])
-            ->select('idLexicon', 'fullNameUD as name')
+        return ['results' => Criteria::byFilterLanguage('view_lemma', ['name', 'startswith', trim($name)])
+            ->select('idLemma', 'name', 'fullName')
             ->limit(50)
             ->orderby('name')->all()];
     }

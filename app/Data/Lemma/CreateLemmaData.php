@@ -12,15 +12,15 @@ class CreateLemmaData extends Data
 {
     public function __construct(
         public ?string $name,
-        public ?int $idPOS,
+//        public ?int $idPOS,
         public ?int $idUDPOS,
         public ?int $idLanguage,
         public string $_token = '',
     ) {
-        if (is_null($this->idPOS)) {
-            $pos = Criteria::byId('pos_udpos', 'idUDPOS', $this->idUDPOS);
-            $this->idPOS = $pos->idPOS;
-        }
+//        if (is_null($this->idPOS)) {
+//            $pos = Criteria::byId('pos_udpos', 'idUDPOS', $this->idUDPOS);
+//            $this->idPOS = $pos->idPOS;
+//        }
         if (is_null($this->idLanguage)) {
             $this->idLanguage = AppService::getCurrentIdLanguage();
         }
@@ -49,7 +49,7 @@ class CreateLemmaData extends Data
     {
         $validator->after(function ($validator) {
             $data = $validator->getData();
-            if (Str::contains($data['name'] ?? '', [',', ';', ':', '(', ')'])) {
+            if (Str::contains($data['name'] ?? '', [',', ';', ':', '(', ')','_','?','!','[',']'])) {
                 $validator->errors()->add('name', 'Invalid characters in lemma.');
             }
         });

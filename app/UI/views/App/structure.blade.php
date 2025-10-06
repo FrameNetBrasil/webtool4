@@ -1,7 +1,7 @@
 @php
     $options = [
         'frame' => ['Frame', '/frame', '','ui::icon.frame'],
-        'lexicon' => ['Lexicon', '/lexicon3', '','ui::icon.domain'],
+//        'lexicon' => ['Lexicon', '/lexicon3', '','ui::icon.domain'],
         'lemma' => ['Lemmas', '/lemma', '','ui::icon.domain'],
         'form' => ['Forms', '/form', '','ui::icon.domain'],
         'lucandidate' => ['LU Candidate', '/luCandidate', '','ui::icon.frame'],

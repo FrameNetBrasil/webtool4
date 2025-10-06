@@ -4,9 +4,10 @@
 <x-search::base
     name="{{$id}}"
     placeholder="{{$placeholder ?? 'Search Lemma'}}"
-    search-url="/lexicon3/lemma/listForSearch"
+    search-url="/lemma/listForSearch"
 {{--    display-formatter="displayFormaterLUSearch"--}}
-    display-field="name"
+    display-field="fullName"
+    search-field="name"
     value="{{$value ?? 0}}"
     display-value="{{ $displayValue ?? '' }}"
     value-field="idLemma"

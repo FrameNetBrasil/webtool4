@@ -108,6 +108,7 @@ return [
 //            'exportCxnJson' => ['Export Cxn', '/utils/exportCxn', 'exportcxnjson', 'ADMIN', 1, []],
         ]],
     ],
+    'languages' => ['pt','en'],
     'user' => ['userPanel', '/admin/user/main', '', [
         'language' => ['Language', '/language', '', [
             '2' => ['English', '/changeLanguage/en', '', []],
