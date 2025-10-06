@@ -2,7 +2,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/structure','Structure'],['/lexicon3','Lexicon'],['','New Form']]"
+            :sections="[['/','Home'],['/structure','Structure'],['/lemma','Lemmas'],['','New Lemma']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="ui container h-full">
@@ -15,7 +15,7 @@
                 </div>
                 <div class="page-content">
                     <form
-                        hx-post="/lexicon3/lemma/new"
+                        hx-post="/lemma/new"
                     >
                         <input type="hidden" name="idLexiconGroup" value="2">
                         <div class="ui fluid card form-card">
@@ -29,10 +29,10 @@
                             </div>
                             <div class="content">
                                 <div class="ui form">
-                                    <div class="two fields">
+                                    <div class="three fields">
                                         <div class="field">
                                             <x-ui::text-field
-                                                label="Lemma"
+                                                label="Name"
                                                 id="form"
                                                 value=""
                                             ></x-ui::text-field>
@@ -43,6 +43,13 @@
                                                 label="POS"
                                                 value=""
                                             ></x-combobox::ud-pos>
+                                        </div>
+                                        <div class="field">
+                                            <x-combobox::language
+                                                id="idLanguage"
+                                                label="Language"
+                                                value=""
+                                            ></x-combobox::language>
                                         </div>
                                     </div>
                                 </div>

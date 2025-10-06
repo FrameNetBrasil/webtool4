@@ -47,11 +47,13 @@
                                 <div class="ui form">
                                     @if($isManager)
                                         <div class="field">
-                                            <x-combobox.lemma
+                                            <x-search::lemma
                                                 id="idLemma"
-                                                label="Lemma [min: 3 chars]"
+                                                label="Lemma"
+                                                search-field="lemmaName"
                                                 :value="$luCandidate->idLemma"
-                                            ></x-combobox.lemma>
+                                                :display-value="$luCandidate->name"
+                                            ></x-search::lemma>
                                         </div>
                                     @else
                                         <input type="hidden" name="idLemma" value="{{$luCandidate->idLemma}}">
@@ -88,6 +90,12 @@
                                                     :idFrame="$luCandidate?->idFrame ?? 0"
                                                     :hasNull="false"
                                                 ></x-combobox.fe-frame>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label for="suggestedNewFrame">Suggestion for new Frame</label>
+                                            <div class="ui small input">
+                                                <input type="text" id="suggestedNewFrame" name="suggestedNewFrame" value="{{$luCandidate?->suggestedNewFrame}}">
                                             </div>
                                         </div>
                                     </div>

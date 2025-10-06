@@ -18,7 +18,7 @@
                             <button
                                 class="ui danger button"
                                 x-data
-                                @click.prevent="messenger.confirmDelete(`Removing Lemma '{{$lemma->fullName}}'.`, '/lemma/{{$lemma->idLexicon}}')"
+                                @click.prevent="messenger.confirmDelete(`Removing Lemma '{{$lemma->fullName}}'.`, '/lemma/{{$lemma->idLemma}}')"
                             >Delete</button>
                         </div>
                     </div>
@@ -28,9 +28,7 @@
                 </div>
                 <div class="page-content">
                     <form>
-                        <input type="hidden" name="idLexiconGroup" value="2">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden" name="idLexicon" value="{{$lemma->idLexicon}}">
                         <div class="ui fluid card form-card">
                             <div class="content">
                                 <div class="header">
@@ -42,7 +40,7 @@
                             </div>
                             <div class="content">
                                 <div class="ui form">
-                                    <div class="two fields">
+                                    <div class="three fields">
                                         <div class="field">
                                             <x-ui::text-field
                                                 label="Name"
@@ -57,6 +55,14 @@
                                                 :value="$lemma->idUDPOS"
                                             ></x-combobox::ud-pos>
                                         </div>
+                                        <div class="field">
+                                            <x-combobox::language
+                                                id="idLanguage"
+                                                label="Language"
+                                                :value="$lemma->idLanguage"
+                                            ></x-combobox::language>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -70,49 +76,59 @@
                             </div>
                         </div>
                     </form>
-                    <div class="ui warning message">
-                        <div class="header">
-                            Warning!
-                        </div>
-                        If lemma is a MWE, each expression can be another lemma or a word. Choose wisely.
-                    </div>
                     <form>
-                        <input type="hidden" name="idLemmaBase" value="{{$lemma->idLexicon}}">
+                        <input type="hidden" name="idLemma" value="{{$lemma->idLemma}}">
 
                         <div class="ui fluid card form-card">
                             <div class="content">
                                 <div class="header">
-                                    Add Expression
+                                    Add Expressions
                                 </div>
                                 <div class="description">
-
+                                    <div class="ui warning message">
+                                        <div class="header">
+                                            Warning!
+                                        </div>
+                                        If lemma is a MWE, each expression can be another lemma or a form. Choose wisely.
+                                    </div>
                                 </div>
                             </div>
                             <div class="content">
                                 <div class="ui form">
                                     <div class="fields">
-                                        <div class="field w-8rem">
-                                            <x-combobox::options
-                                                label="Type"
-                                                id="idLexiconGroup"
-                                                :options="[1 => 'word', 2 => 'lemma']"
-                                                value=""
-                                            ></x-combobox::options>
+                                        <div class="field" style="width:150px">
+                                            <x-search::lemma
+                                                id="idLemmaForExpression"
+                                                label="Lemma"
+{{--                                                placeholder="Select a Lemma"--}}
+{{--                                                search-url="/lemma/list/forSelect"--}}
+{{--                                                value=""--}}
+{{--                                                display-value=""--}}
+{{--                                                modal-title="Search Lemma"--}}
+                                            ></x-search::lemma>
                                         </div>
-                                        <div class="field">
-                                            <x-ui::text-field
-                                                label="Form"
-                                                id="form"
-                                                value=""
-                                            ></x-ui::text-field>
-                                        </div>
-                                        <div class="field">
-                                            <x-combobox::ud-pos
-                                                id="idUDPOSExpression"
-                                                label="UDPOS"
-                                                :value="$lemma->idUDPOS"
-                                            ></x-combobox::ud-pos>
-                                        </div>
+{{--                                        <div class="field w-8rem">--}}
+{{--                                            <x-combobox::options--}}
+{{--                                                label="Type"--}}
+{{--                                                id="idLexiconGroup"--}}
+{{--                                                :options="[1 => 'word', 2 => 'lemma']"--}}
+{{--                                                value=""--}}
+{{--                                            ></x-combobox::options>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="field">--}}
+{{--                                            <x-ui::text-field--}}
+{{--                                                label="Form"--}}
+{{--                                                id="form"--}}
+{{--                                                value=""--}}
+{{--                                            ></x-ui::text-field>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="field">--}}
+{{--                                            <x-combobox::ud-pos--}}
+{{--                                                id="idUDPOSExpression"--}}
+{{--                                                label="UDPOS"--}}
+{{--                                                :value="$lemma->idUDPOS"--}}
+{{--                                            ></x-combobox::ud-pos>--}}
+{{--                                        </div>--}}
                                     </div>
                                     <div class="fields">
                                         <div class="field">

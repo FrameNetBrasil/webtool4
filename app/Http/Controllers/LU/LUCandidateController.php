@@ -7,6 +7,7 @@ use App\Data\LUCandidate\SearchData;
 use App\Data\LUCandidate\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Repositories\Lemma;
 use App\Repositories\Lexicon;
 use App\Repositories\LUCandidate;
 use App\Repositories\User;
@@ -112,11 +113,12 @@ class LUCandidateController extends Controller
     #[Post(path: '/luCandidate')]
     public function newLU(CreateData $data)
     {
+        debug($data);
         try {
-            if ((is_null($data->idLexicon) || ($data->idLexicon == 0))) {
+            if ((is_null($data->idLemma) || ($data->idLemma == 0))) {
                 throw new \Exception("Lemma is required");
             } else {
-                $lemma = Lexicon::lemmabyId($data->idLexicon);
+                $lemma = Lemma::byId($data->idLemma);
                 $data->name = strtolower($lemma->shortName);
                 debug($data);
                 Criteria::function('lu_create(?)', [$data->toJson()]);

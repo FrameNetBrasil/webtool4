@@ -14,7 +14,7 @@ class Language
     public static function listForSelection(){
         return Criteria::table("language")
             ->selectRaw("idLanguage,concat(language,' - ',description) as ldescription")
-            ->where("idLanguage","<>","0")
+            ->whereIN("language",config("webtool.languages"))
             ->orderBy("ldescription")
             ->pluck('ldescription', 'idLanguage')
             ->all();

@@ -4,6 +4,7 @@ export default function (config) {
         name: config.name,
         searchUrl: config.searchUrl,
         displayField: config.displayField,
+        searchField: config.searchField || config.displayField, // Falls back to displayField
         displayFormatter: config.displayFormatter,
         valueField: config.valueField,
         onChange: config.onChange,
@@ -15,7 +16,8 @@ export default function (config) {
         searchPerformed: false,
         selectedValue: config.initialValue || '',
         displayValue: config.initialDisplayValue || '',
-        rawDisplayValue: config.initialDisplayValue || '', // Clean text version for search
+        rawDisplayValue: config.initialDisplayValue || '', // Clean text version for display
+        searchValue: '', // Value to use for search pre-population
         searchResults: [],
         errorMessage: '',
 
@@ -32,7 +34,7 @@ export default function (config) {
 
         // Helper method to resolve display value from value ID
         async resolveDisplayValue(value) {
-            if (!value || !this.resolveUrl) return { formatted: '', raw: '' };
+            if (!value || !this.resolveUrl) return { formatted: '', raw: '', search: '' };
 
             try {
                 const url = new URL(this.resolveUrl, window.location.origin);
@@ -47,16 +49,17 @@ export default function (config) {
                 const item = data.result || data;
 
                 const rawValue = item[this.displayField] || '';
-                const formattedValue = (this.displayFormatter && typeof window[this.displayFormatter] === 'function') 
-                    ? window[this.displayFormatter](item) 
+                const searchValue = item[this.searchField] || rawValue;
+                const formattedValue = (this.displayFormatter && typeof window[this.displayFormatter] === 'function')
+                    ? window[this.displayFormatter](item)
                     : rawValue;
 
-                return { formatted: formattedValue, raw: rawValue };
+                return { formatted: formattedValue, raw: rawValue, search: searchValue };
 
             } catch (error) {
                 console.error('Error resolving display value:', error);
                 const fallback = `ID: ${value}`;
-                return { formatted: fallback, raw: fallback };
+                return { formatted: fallback, raw: fallback, search: fallback };
             }
         },
 
@@ -75,6 +78,7 @@ export default function (config) {
                 this.resolveDisplayValue(this.selectedValue).then(resolved => {
                     this.displayValue = resolved.formatted;
                     this.rawDisplayValue = resolved.raw;
+                    this.searchValue = resolved.search;
                 });
             }
 
@@ -94,13 +98,14 @@ export default function (config) {
             this.errorMessage = '';
             document.body.classList.add('modal-open');
 
-            // Populate search fields with current raw display value if available
-            if (this.rawDisplayValue && this.rawDisplayValue.trim() !== '') {
-                // Get the first search field name to populate with current raw display value
+            // Populate search fields with current search value if available
+            const valueToSearch = this.searchValue || this.rawDisplayValue;
+            if (valueToSearch && valueToSearch.trim() !== '') {
+                // Get the first search field name to populate with current search value
                 const firstFieldName = Object.keys(this.searchParams)[0];
                 if (firstFieldName) {
-                    this.searchParams[firstFieldName] = this.rawDisplayValue;
-                    
+                    this.searchParams[firstFieldName] = valueToSearch;
+
                     // Perform search to show results matching current value
                     this.$nextTick(() => {
                         this.performSearch();
@@ -176,6 +181,7 @@ export default function (config) {
             this.selectedValue = result[this.valueField];
             this.displayValue = this.formatResultDisplay(result);
             this.rawDisplayValue = result[this.displayField] || '';
+            this.searchValue = result[this.searchField] || this.rawDisplayValue;
             this.closeModal();
 
             // Trigger change event for form validation and custom handlers
@@ -226,6 +232,7 @@ export default function (config) {
             this.selectedValue = '';
             this.displayValue = '';
             this.rawDisplayValue = '';
+            this.searchValue = '';
 
             // Also clear the search fields and results
             this.resetSearch();

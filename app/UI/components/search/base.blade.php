@@ -6,6 +6,7 @@
     'searchUrl' => '/__api/search',
     'searchFields' => ['q'], // Array of search field names
     'displayField' => 'name', // Field to display in readonly input OR function name
+    'searchField' => null, // Field to use for search pre-population (defaults to displayField if null)
     'displayFormatter' => null, // Function name for custom result display formatting
     'valueField' => 'id', // Field to store in hidden input
     'value' => '',
@@ -21,6 +22,7 @@
     searchUrl: '{{ $searchUrl }}',
     searchFields: {!! Js::from($searchFields) !!},
     displayField: '{{ $displayField }}',
+    searchField: '{{ $searchField ?? $displayField }}',
     displayFormatter: '{{ $displayFormatter }}',
     valueField: '{{ $valueField }}',
     initialValue: '{{ $value }}',

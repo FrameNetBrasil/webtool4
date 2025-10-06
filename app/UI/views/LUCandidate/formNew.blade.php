@@ -21,11 +21,15 @@
                             <div class="content">
                                 <div class="ui form">
                                     <div class="field">
-                                        <x-combobox.lemma
-                                            id="idLemma"
-                                            label="Lemma [min: 3 chars]"
-                                            value="0"
-                                        ></x-combobox.lemma>
+                                        <div class="field">
+                                            <x-search::lemma
+                                                id="idLemma"
+                                                label="Lemma"
+                                                search-field="lemmaName"
+                                                value=""
+                                                display-value=""
+                                            ></x-search::lemma>
+                                        </div>
                                     </div>
                                     <div class="field">
                                         <x-multiline-field
