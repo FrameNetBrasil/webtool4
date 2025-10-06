@@ -11,7 +11,8 @@
 
     $groups = [
         'frame' => ['title' => "Frame", "pages" => ['frame','reframing']],
-        'lexicon' => ['title' => "Lexicon", "pages" => ['lemma','form','lucandidate']],
+//        'lexicon' => ['title' => "Lexicon", "pages" => ['lemma','form','lucandidate']],
+        'lexicon' => ['title' => "Lexicon", "pages" => ['lucandidate']],
 //        'construction' => ['title' => "Construction", "pages" => ['constructicon']],
     ];
 @endphp
