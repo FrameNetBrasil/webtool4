@@ -58,15 +58,24 @@ class LomeProcessSentenceCommand extends Command
             $lome->init("https://lome.frame.net.br");
             $trankit = new TrankitService();
             $trankit->init("http://localhost:8405");
-            // corpus copini
+            // corpus dtake
+//            $sentences = DB::connection('webtool')
+//                ->select("
+//                select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence
+//from sentence s
+//join document_sentence ds on (s.idSentence = ds.idSentence)
+//join document d on (ds.idDocument = d.idDocument)
+//where d.idCorpus between 204 and 217
+//                and  s.idOriginMM in (15,16)
+//                ");
+            // corpus reporter_brasil lome
             $sentences = DB::connection('webtool')
                 ->select("
                 select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where d.idCorpus between 204 and 217
-                and  s.idOriginMM in (15,16)
+where d.idCorpus in (227,228)
                 ");
             AppService::setCurrentLanguage(1);
             debug("count sentence = " . count($sentences));

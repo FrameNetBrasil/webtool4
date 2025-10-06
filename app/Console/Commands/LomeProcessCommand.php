@@ -10,6 +10,7 @@ use App\Data\LoginData;
 use App\Database\Criteria;
 use App\Enum\Status;
 use App\Repositories\AnnotationSet;
+use App\Repositories\Lemma;
 use App\Repositories\Lexicon;
 use App\Services\Annotation\CorpusService;
 use App\Services\Annotation\SessionService;
@@ -63,26 +64,42 @@ class LomeProcessCommand extends Command
                 ->select('fe.idFrameElement', 'fe.name')
                 ->where('fe.idLanguage', 1)
                 ->chunkResult('idFrameElement', 'name');
+            $udPOS = Criteria::table('udpos')
+                ->select('idUDPOS', 'POS')
+                ->keyBy('POS')
+                ->all();
+
             $punctuation = " .,;:?/'][\{\}\"!@#$%&*\(\)-_+=“”";
             $lome = new LOMEService;
             $lome->init('https://lome.frame.net.br');
             $trankit = new TrankitService;
             $trankit->init('http://localhost:8405');
-            // corpus copini
+            // corpus dtake
+//            $sentences = DB::connection('webtool')
+//                ->select("
+//                select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence
+//from sentence s
+//join document_sentence ds on (s.idSentence = ds.idSentence)
+//join document d on (ds.idDocument = d.idDocument)
+//where d.idCorpus between 204 and 217
+//                and  s.idOriginMM in (15,16)
+//                ");
+            // corpus reporter_brasil lome
             $sentences = DB::connection('webtool')
-                ->select('
-select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence
+                ->select("
+                select s.idSentence, s.text,s.idOriginMM,ds.idDocumentSentence,d.entry as dentry
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where d.idCorpus IN (227,228)
-order by ds.idDocumentSentence
-                ');
+where d.idCorpus in (227)
+order by d.entry
+                ");
             AppService::setCurrentLanguage(1);
-            print_r('count sentence = '.count($sentences).PHP_EOL);
+            print_r('count sentence = ' . count($sentences) . PHP_EOL);
             mb_internal_encoding('UTF-8'); // this IS A MUST!! PHP has trouble with multibyte when no internal encoding is set!
             $s = 0;
             foreach ($sentences as $sentence) {
+                print_r("document = " . $sentence->dentry . PHP_EOL);
                 SessionService::startSession(SessionData::from(['idDocumentSentence' => $sentence->idDocumentSentence, '_token' => '']));
                 $s++;
                 try {
@@ -90,8 +107,8 @@ order by ds.idDocumentSentence
                     //                    print_r("====================\n");
                     //                    print_r($sentence->idSentence . ": " . $text . "\n");
                     //                    print_r("====================\n");
-                    print_r($s.'   '.$text."\n");
-                    //                    if ($s > 4) break;
+                    print_r($s . '   ' . $text . "\n");
+                    if ($s > 4) break;
                     // print_r($tokens);
                     Criteria::deleteById('lome_resultfe', 'idSentence', $sentence->idSentence);
                     // $result = $lome->process($text);
@@ -153,56 +170,65 @@ order by ds.idDocumentSentence
                                     $word = '/';
                                 }
                                 $lemma = DB::connection('webtool')->select("
-                                select l.idLexicon idLemma
-from view_lexicon_lemma l
-where l.name='{$word}'
-and l.udPOS='{$ud->tokens[$luToken]->upos}'
-and l.idlanguage = 1
+                                select idLemma
+from view_lemma
+where name collate 'utf8mb4_bin' = '{$word}'
+and udPOS='{$ud->tokens[$luToken]->upos}'
+and idlanguage = 1
 limit 1
-                            ");
-                                if (! empty($lemma)) {
-                                    //                                debug($lemma);
+                                ");
+                                if (empty($lemma)) {
+                                    $data = (object)[
+                                        'name' => strtolower($word),
+                                        'idUDPOS' => $udPOS[$ud->tokens[$luToken]->upos]->idUDPOS,
+                                        'idLanguage' => 1,
+                                        'idUser' => $user->idUser
+                                    ];
+                                    //                                    debug($data);
+                                    $idLemma = Criteria::function('lemma_create(?)', [json_encode($data)]);
+                                } else {
                                     $idLemma = $lemma[0]->idLemma;
-                                    $lu = DB::connection('webtool')->select("
+                                }
+                                $lu = DB::connection('webtool')->select("
                                 select lu.idLU
 from LU
 where (lu.idLemma = {$idLemma}) and (lu.idFrame = {$idFrame})
 limit 1
                                 ");
-                                    if (empty($lu)) {
-                                        // cria LU Candidate
-                                        $lm = Lexicon::lemmabyId($idLemma);
-                                        $data = (object) [
-                                            'name' => strtolower($lm->shortName),
-                                            'senseDescription' => '',
-                                            'discussion' => 'Created by LOME',
-                                            'idLexicon' => (int) $idLemma,
-                                            'idFrame' => (int) $idFrame,
-                                            'idDocumentSentence' => $sentence->idDocumentSentence,
-                                            'createdAt' => Carbon::now(),
-                                            'status' => 'PENDING',
-                                            'origin' => 'LOME',
-                                            'idUser' => $user->idUser,
-                                        ];
-                                        //                                    debug($data);
-                                        $idLU = Criteria::function('lu_create(?)', [json_encode($data)]);
-                                    } else {
-                                        $idLU = $lu[0]->idLU;
-                                    }
-                                    debug('idLU=', $idLU, $tokens[$luToken]);
-                                    // verifica annotationset para LU neste startChar (pode ter a mesma LU mais de uma vez na sentence)
-                                    $as = Criteria::table('view_annotationset as a')
-                                        ->join('view_annotation_text_target as t', 'a.idAnnotationSet', '=', 't.idAnnotationSet')
-                                        ->where('a.idDocumentSentence', $sentence->idDocumentSentence)
-                                        ->where('a.idLU', $idLU)
-                                        ->where('t.startChar', $startChar)
-                                        ->where('a.idUser', 611)
-                                        ->first();
-                                    if (! is_null($as)) {
-                                        Criteria::function('annotationset_hard_delete(?,?)', [$as->idAnnotationSet, $user->idUser]);
-                                    }
-                                    $idAnnotationSet = AnnotationSet::createForLU($sentence->idDocumentSentence, $idLU, $startChar, $endChar);
+                                if (empty($lu)) {
+                                    // cria LU Candidate
+                                    $lm = Lemma::byId($idLemma);
+                                    $data = (object)[
+                                        'name' => strtolower($lm->shortName),
+                                        'senseDescription' => '',
+                                        'discussion' => 'Created by LOME',
+                                        'idLemma' => (int)$idLemma,
+                                        'idFrame' => (int)$idFrame,
+                                        'idDocumentSentence' => $sentence->idDocumentSentence,
+                                        'createdAt' => Carbon::now(),
+                                        'status' => 'PENDING',
+                                        'origin' => 'LOME',
+                                        'idUser' => $user->idUser,
+                                    ];
+                                    //                                    debug($data);
+                                    $idLU = Criteria::function('lu_create(?)', [json_encode($data)]);
+                                } else {
+                                    $idLU = $lu[0]->idLU;
                                 }
+                                debug('idLU=', $idLU, $tokens[$luToken]);
+                                // verifica annotationset para LU neste startChar (pode ter a mesma LU mais de uma vez na sentence)
+                                $as = Criteria::table('view_annotationset as a')
+                                    ->join('view_annotation_text_target as t', 'a.idAnnotationSet', '=', 't.idAnnotationSet')
+                                    ->where('a.idDocumentSentence', $sentence->idDocumentSentence)
+                                    ->where('a.idLU', $idLU)
+                                    ->where('t.startChar', $startChar)
+                                    ->where('a.idUser', 611)
+                                    ->first();
+                                if (!is_null($as)) {
+                                    Criteria::function('annotationset_hard_delete(?,?)', [$as->idAnnotationSet, $user->idUser]);
+                                }
+                                $idAnnotationSet = AnnotationSet::createForLU($sentence->idDocumentSentence, $idLU, $startChar, $endChar);
+
                             }
 
                             foreach ($annotation->children as $fe) {
@@ -230,13 +256,13 @@ limit 1
                                     'idSentence' => $sentence->idSentence,
                                 ]);
 
-                                debug($idAnnotationSet, '['.$word.']', $startChar, $endChar);
-                                if (! is_null($idAnnotationSet)) {
+                                debug($idAnnotationSet, '[' . $word . ']', $startChar, $endChar);
+                                if (!is_null($idAnnotationSet)) {
                                     $range = SelectionData::from(json_encode([
                                         'type' => 'word',
                                         'id' => '',
-                                        'start' => (string) $startChar,
-                                        'end' => (string) $endChar,
+                                        'start' => (string)$startChar,
+                                        'end' => (string)$endChar,
                                     ]));
                                     $annotationData = AnnotationData::from([
                                         'idAnnotationSet' => $idAnnotationSet,
@@ -258,7 +284,7 @@ limit 1
                     }
                     // if ($s > 5) die;
                 } catch (\Exception $e) {
-                    print_r("\n".$sentence->idSentence.':'.$e->getMessage());
+                    print_r("\n" . $sentence->idSentence . ':' . $e->getMessage());
                     exit;
                 }
                 //                break;
