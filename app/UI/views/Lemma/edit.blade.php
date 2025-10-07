@@ -96,15 +96,10 @@
                             <div class="content">
                                 <div class="ui form">
                                     <div class="fields">
-                                        <div class="field" style="width:150px">
+                                        <div class="field w-15em">
                                             <x-search::lemma
                                                 id="idLemmaForExpression"
                                                 label="Lemma"
-{{--                                                placeholder="Select a Lemma"--}}
-{{--                                                search-url="/lemma/list/forSelect"--}}
-{{--                                                value=""--}}
-{{--                                                display-value=""--}}
-{{--                                                modal-title="Search Lemma"--}}
                                             ></x-search::lemma>
                                         </div>
 {{--                                        <div class="field w-8rem">--}}

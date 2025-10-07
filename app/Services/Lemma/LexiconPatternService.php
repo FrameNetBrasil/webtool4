@@ -52,15 +52,15 @@ class LexiconPatternService
             throw new \InvalidArgumentException("Lemma not found: {$idLemma}");
         }
 
-        // 2. Get word expressions
-        $expressions = $this->getLemmaExpressions($lemma->idLexicon);
-        if (empty($expressions)) {
-            throw new \RuntimeException("No expressions found for lemma: {$idLemma}");
+        // 2. Use lemma name directly as the text to parse
+        // For MWE: lemma name is the canonical form (e.g., "added time", "kick ball")
+        $lemmaText = $lemma->name;
+        if (empty($lemmaText)) {
+            throw new \RuntimeException("Empty lemma name for lemma: {$idLemma}");
         }
 
         // 3. Extract pattern using Trankit
-        $fullText = implode(' ', $expressions);
-        $pattern = $this->extractPatternFromLemma($fullText, $idLanguage);
+        $pattern = $this->extractPatternFromLemma($lemmaText, $idLanguage);
 
         // 4. Store pattern in database
         return DB::transaction(function () use ($idLemma, $pattern, $lemma) {
@@ -365,20 +365,6 @@ class LexiconPatternService
     // PROTECTED HELPER METHODS
     // =====================================================
 
-    /**
-     * Get word expressions for a lemma
-     *
-     * @param  int  $idLemma  Lemma ID
-     * @return array Array of word forms
-     */
-    protected function getLemmaExpressions(int $idLexicon): array
-    {
-        return DB::table('view_lexicon_expression')
-            ->where('idLemma', $idLexicon)
-            ->orderBy('position')
-            ->pluck('form')
-            ->toArray();
-    }
 
     /**
      * Extract pattern from lemma text using Trankit
@@ -506,7 +492,7 @@ class LexiconPatternService
 
             $pattern['nodes'][] = [
                 'position' => $index,
-                'idLexicon' => $this->getLexiconIdByForm($token['lemma']),
+                'idLexicon' => $this->getLexiconIdByForm(strtolower($token['form'])),
                 'idUDPOS' => $this->getUDPOSIdByName($token['upos']),
                 'is_root' => $isRoot,
                 'is_required' => true, // All nodes required for lemmas

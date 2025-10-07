@@ -10,6 +10,7 @@ class QData extends Data
         public ?string $q = '',
         public ?string $frame = '',
         public ?string $lu = '',
+        public ?string $lemmaName = '',
         public ?int $idLanguage = 0
     )
     {
