@@ -22,6 +22,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 #[Middleware('master')]
 class Resource3Controller extends Controller
 {
+    /*
     #[Get(path: '/lexicon3')]
     public function browse(SearchData $search)
     {
@@ -51,6 +52,7 @@ class Resource3Controller extends Controller
             'title' => $title,
         ]);
     }
+    * /
 
 //    #[Post(path: '/lexicon3/tree')]
 //    public function tree(TreeData $search)
@@ -70,7 +72,7 @@ class Resource3Controller extends Controller
     /*------
       Lemma
       ------ */
-
+/*
     #[Get(path: '/lexicon3/lemma/listForSearch')]
     public function listForSearch(QData $data)
     {
@@ -182,11 +184,11 @@ class Resource3Controller extends Controller
             return $this->renderNotify('error', 'Deletion failed. Check if there is some LU  using this lemma.');
         }
     }
-
+*/
     /*------
       Expression
       ------ */
-
+/*
     #[Get(path: '/lexicon3/expression/listForSelect')]
     public function listExpressionForSelect(QData $data)
     {
@@ -233,10 +235,11 @@ class Resource3Controller extends Controller
             return $this->renderNotify('error', $e->getMessage());
         }
     }
-
+*/
     /*--------
       Form
       -------- */
+    /*
     #[Get(path: '/lexicon3/morpheme/listForSelect')]
     public function listMorphemeForSelect(QData $data)
     {
@@ -336,11 +339,11 @@ class Resource3Controller extends Controller
             return $this->renderNotify('error', $e->getMessage());
         }
     }
-
+*/
     /*--------
       Features
      -------- */
-
+/*
     #[Get(path: '/lexicon3/feature/listForSelect')]
     public function listFeatureForSelect(QData $data)
     {
@@ -404,4 +407,5 @@ class Resource3Controller extends Controller
             return $this->renderNotify('error', $e->getMessage());
         }
     }
+*/
 }

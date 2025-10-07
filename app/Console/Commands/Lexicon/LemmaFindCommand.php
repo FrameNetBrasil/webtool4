@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Lexicon;
 
-use App\Services\Lemma\LexiconPatternService;
+use App\Services\Lexicon\LexiconPatternMatchingService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
@@ -27,15 +27,15 @@ class LemmaFindCommand extends Command
      */
     protected $description = 'Find lemma occurrences (SWE and MWE) in sentences';
 
-    protected LexiconPatternService $lemmaService;
+    protected LexiconPatternMatchingService $matchingService;
 
     /**
      * Create a new command instance.
      */
-    public function __construct(LexiconPatternService $lemmaService)
+    public function __construct(LexiconPatternMatchingService $matchingService)
     {
         parent::__construct();
-        $this->lemmaService = $lemmaService;
+        $this->matchingService = $matchingService;
     }
 
     /**
@@ -89,8 +89,8 @@ class LemmaFindCommand extends Command
             }
 
             try {
-                // Parse sentence and find lemmas using service
-                $occurrences = $this->lemmaService->parseSentenceAndFindLemmas($sentenceText, $idLanguage);
+                // Find lemmas in sentence using pattern matching service
+                $occurrences = $this->matchingService->findLemmasInSentence($sentenceText, $idLanguage);
 
                 // Apply type filter if requested
                 if ($type) {
@@ -157,8 +157,9 @@ class LemmaFindCommand extends Command
                 $type = $occ['lemma_type'];
                 $confidence = number_format($occ['confidence'] * 100, 1);
                 $indices = implode(', ', $occ['token_indices']);
+                $idLemma = $occ['lemma_id'];
 
-                $this->line("  <fg=green>→</> [{$type}] <fg=yellow>{$occ['lemma_text']}</> (confidence: {$confidence}%, tokens: {$indices})");
+                $this->line("  <fg=green>→</> [{$type}] <fg=yellow>{$occ['lemma_text']}</> (id: {$idLemma}, confidence: {$confidence}%, tokens: {$indices})");
             }
 
             $this->newLine();

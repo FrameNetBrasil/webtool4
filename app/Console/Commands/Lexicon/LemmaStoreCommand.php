@@ -68,10 +68,16 @@ class LemmaStoreCommand extends Command
                     ->whereColumn('lexicon_pattern.idLemma', 'view_lemma.idLemma');
             })
             ->when($idLanguage, fn ($q) => $q->where('idLanguage', $idLanguage))
-            ->when($limit, fn ($q) => $q->limit($limit))
             ->orderBy('idLemma');
 
-        $totalLemmas = $lemmaQuery->count();
+        // When limit is set, get IDs first to ensure both count and chunking respect the limit
+        if ($limit) {
+            $limitedIds = (clone $lemmaQuery)->limit($limit)->pluck('idLemma')->toArray();
+            $lemmaQuery->whereIn('idLemma', $limitedIds);
+            $totalLemmas = count($limitedIds);
+        } else {
+            $totalLemmas = $lemmaQuery->count();
+        }
 
         if ($totalLemmas === 0) {
             $this->warn('No MWE lemmas without patterns found');
@@ -194,23 +200,14 @@ class LemmaStoreCommand extends Command
     protected function displayDryRunPreview($lemmaQuery, ?int $limit): void
     {
         $this->info('🔍 DRY RUN MODE - Previewing MWE lemmas:');
+        $this->info('   (Lemma name will be parsed with Trankit to generate UD pattern)');
         $this->newLine();
 
         $lemmas = $lemmaQuery->limit($limit ?? 10)->get();
 
         foreach ($lemmas as $index => $lemma) {
-            // Get expressions for this lemma from lexicon_expression table
-            $expressions = DB::table('lexicon_expression')
-                ->join('lexicon', 'lexicon_expression.idExpression', '=', 'lexicon.idLexicon')
-                ->where('lexicon_expression.idLexicon', $lemma->idLexicon)
-                ->orderBy('lexicon_expression.position')
-                ->pluck('lexicon.form')
-                ->toArray();
-
-            $fullText = implode(' ', $expressions);
             $langName = config('udparser.languages')[$lemma->idLanguage] ?? "ID {$lemma->idLanguage}";
-
-            $this->line(($index + 1).". [{$langName}] [MWE] {$lemma->name} → \"{$fullText}\"");
+            $this->line(($index + 1).". [{$langName}] [MWE] {$lemma->name}");
         }
 
         $this->newLine();
