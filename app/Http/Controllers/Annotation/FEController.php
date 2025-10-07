@@ -21,7 +21,7 @@ class FEController extends Controller
         session(["corpusAnnotationType" => "fe"]);
         return view('Annotation.browseSentences', [
             'page' => 'FE Annotation',
-            'url' => '/annotation/fe/sentence',
+            'url' => '/annotation/fe',
             'data' => $data,
         ]);
     }
@@ -31,7 +31,7 @@ class FEController extends Controller
     {
         $data = CorpusService::getResourceData($idDocumentSentence, $idAnnotationSet, 'fe');
         $page = 'FE Annotation';
-        $url = '/annotation/fe/sentence';
+        $url = '/annotation/fe';
 
         return view('Annotation.Corpus.annotation', array_merge($data, compact('page', 'url')));
     }

@@ -19,7 +19,7 @@ class FullTextController extends Controller
         session(["corpusAnnotationType" => "fullText"]);
         return view('Annotation.browseSentences', [
             'page' => 'FullText Annotation',
-            'url' => '/annotation/fullText/sentence',
+            'url' => '/annotation/fullText',
             'data' => $data,
         ]);
     }
@@ -29,7 +29,7 @@ class FullTextController extends Controller
     {
         $data = CorpusService::getResourceData($idDocumentSentence, $idAnnotationSet, 'fullText');
         $page = 'FullText Annotation';
-        $url = '/annotation/fullText/sentence';
+        $url = '/annotation/fullText';
 
         return view('Annotation.Corpus.annotation', array_merge($data, compact('page', 'url')));
     }
