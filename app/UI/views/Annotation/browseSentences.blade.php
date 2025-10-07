@@ -59,7 +59,7 @@
                                                     if ((type === 'corpus') || (type === 'document')) {
                                                         event.detail.tree.toggleNodeState(idNode);
                                                     } else if (type === 'sentence') {
-                                                        window.open(`{{$url}}/${event.detail.id}`, '_blank');
+                                                        window.open(`{{$url}}/sentence/${event.detail.id}`, '_blank');
                                                     }
                                                 }"
                     >

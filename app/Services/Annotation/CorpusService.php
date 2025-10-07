@@ -268,7 +268,10 @@ class CorpusService
     {
         $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
         // get words/chars
-        $wordsChars = AnnotationSet::getWordsChars(htmlspecialchars_decode($sentence->text));
+        //$text = htmlspecialchars_decode($sentence->text);
+        $text = $sentence->text;
+        debug($text);
+        $wordsChars = AnnotationSet::getWordsChars($text);
         $words = $wordsChars->words;
         $wordsByChar = [];
         foreach ($words as $word) {
@@ -279,7 +282,7 @@ class CorpusService
         $wordTarget = [];
         foreach ($targets as $target) {
             $wordTarget[$target->startChar] = [
-                'word' => mb_substr($sentence->text, $target->startChar, ($target->endChar - $target->startChar + 1)),
+                'word' => mb_substr($text, $target->startChar, ($target->endChar - $target->startChar + 1)),
                 'startChar' => $target->startChar,
                 'endChar' => $target->endChar,
                 'hasLU' => true,
@@ -288,7 +291,10 @@ class CorpusService
         }
         $wordList = [];
         $nextChar = 0;
+        debug($wordsByChar);
+        debug($wordTarget);
         while ($nextChar < count($wordsChars->chars)) {
+            debug($nextChar);
             if (isset($wordTarget[$nextChar])) {
                 $wordList[] = $wordTarget[$nextChar];
                 $nextChar = $wordTarget[$nextChar]['endChar'] + 1;

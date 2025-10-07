@@ -91,7 +91,7 @@ class LomeProcessCommand extends Command
 from sentence s
 join document_sentence ds on (s.idSentence = ds.idSentence)
 join document d on (ds.idDocument = d.idDocument)
-where d.idCorpus in (227)
+where d.idCorpus in (227,228)
 order by d.entry
                 ");
             AppService::setCurrentLanguage(1);
@@ -108,7 +108,7 @@ order by d.entry
                     //                    print_r($sentence->idSentence . ": " . $text . "\n");
                     //                    print_r("====================\n");
                     print_r($s . '   ' . $text . "\n");
-                    if ($s > 4) break;
+                    //if ($s > 4) break;
                     // print_r($tokens);
                     Criteria::deleteById('lome_resultfe', 'idSentence', $sentence->idSentence);
                     // $result = $lome->process($text);
@@ -126,6 +126,9 @@ order by d.entry
                         //                        print_r($tokens);
                         foreach ($annotations as $annotation) {
                             //                        print_r($annotation);
+                            print_r("=========================\n");
+                            print_r("   new annotation\n");
+                            print_r("=========================\n");
                             $x = explode('_', strtolower($annotation->label));
                             $idFrame = $x[1];
                             $startCharLOME = $annotation->char_span[0];
@@ -157,10 +160,18 @@ order by d.entry
                                 'idFrameElement' => null,
                                 'idSentence' => $sentence->idSentence,
                             ];
-                            print_r($resultfe);
+                            //print_r($resultfe);
                             Criteria::create('lome_resultfe', $resultfe);
                             $idAnnotationSet = null;
                             $luToken = $annotation->span[0];
+                            print_r([$startCharLOME, $endCharLOME, $luToken,$ud->tokens[$luToken]->upos]);
+                            if (($ud->tokens[$luToken]->upos == 'PUNCT')
+                                || ($ud->tokens[$luToken]->upos == 'PROPN')
+                                || ($ud->tokens[$luToken]->upos == 'PART')
+                                || ($ud->tokens[$luToken]->upos == 'SYM')
+                                || ($ud->tokens[$luToken]->upos == 'X')) {
+                                continue;
+                            }
                             $parts = explode(' ', $luToken);
                             if (count($parts) == 1) {
                                 if ($word == "'") {
@@ -169,53 +180,72 @@ order by d.entry
                                 if ($word == '\\') {
                                     $word = '/';
                                 }
-                                $lemma = DB::connection('webtool')->select("
-                                select idLemma
-from view_lemma
-where name collate 'utf8mb4_bin' = '{$word}'
-and udPOS='{$ud->tokens[$luToken]->upos}'
-and idlanguage = 1
+                                $lexicon = DB::connection('webtool')->select("
+                                select idLU
+from view_lexicon
+where form collate 'utf8mb4_bin' = '{$word}'
+and idFrame = {$idFrame}
+and head = 1
+and position = 1
 limit 1
                                 ");
-                                if (empty($lemma)) {
-                                    $data = (object)[
-                                        'name' => strtolower($word),
-                                        'idUDPOS' => $udPOS[$ud->tokens[$luToken]->upos]->idUDPOS,
-                                        'idLanguage' => 1,
-                                        'idUser' => $user->idUser
-                                    ];
-                                    //                                    debug($data);
-                                    $idLemma = Criteria::function('lemma_create(?)', [json_encode($data)]);
-                                } else {
-                                    $idLemma = $lemma[0]->idLemma;
-                                }
-                                $lu = DB::connection('webtool')->select("
+                                if (count($lexicon) == 0) {
+                                    $lemma = DB::connection('webtool')->select("
+                                select idLemma
+from view_lexicon
+where form collate 'utf8mb4_bin' = '{$word}'
+and udPOS='{$ud->tokens[$luToken]->upos}'
+and idlanguage = 1
+and head = 1
+and position = 1
+limit 1
+                                ");
+                                    if (empty($lemma)) {
+                                        print_r("   --- creating lemma {$word}\n");
+                                        $data = (object)[
+                                            'name' => strtolower($word),
+                                            'idUDPOS' => $udPOS[$ud->tokens[$luToken]->upos]->idUDPOS,
+                                            'idLanguage' => 1,
+                                            'idUser' => $user->idUser
+                                        ];
+                                        //                                    debug($data);
+                                        $idLemma = Criteria::function('lemma_create(?)', [json_encode($data)]);
+                                    } else {
+                                        $idLemma = $lemma[0]->idLemma;
+                                    }
+                                    print_r("idLemma = {$idLemma}\n");
+                                    $lu = DB::connection('webtool')->select("
                                 select lu.idLU
 from LU
 where (lu.idLemma = {$idLemma}) and (lu.idFrame = {$idFrame})
 limit 1
                                 ");
-                                if (empty($lu)) {
-                                    // cria LU Candidate
-                                    $lm = Lemma::byId($idLemma);
-                                    $data = (object)[
-                                        'name' => strtolower($lm->shortName),
-                                        'senseDescription' => '',
-                                        'discussion' => 'Created by LOME',
-                                        'idLemma' => (int)$idLemma,
-                                        'idFrame' => (int)$idFrame,
-                                        'idDocumentSentence' => $sentence->idDocumentSentence,
-                                        'createdAt' => Carbon::now(),
-                                        'status' => 'PENDING',
-                                        'origin' => 'LOME',
-                                        'idUser' => $user->idUser,
-                                    ];
-                                    //                                    debug($data);
-                                    $idLU = Criteria::function('lu_create(?)', [json_encode($data)]);
+                                    if (empty($lu)) {
+                                        // cria LU Candidate
+                                        $lm = Lemma::byId($idLemma);
+                                        print_r("   --- creating lu candidate {$lm->shortName}\n");
+                                        $data = (object)[
+                                            'name' => strtolower($lm->shortName),
+                                            'senseDescription' => '',
+                                            'discussion' => 'Created by LOME',
+                                            'idLemma' => (int)$idLemma,
+                                            'idFrame' => (int)$idFrame,
+                                            'idDocumentSentence' => $sentence->idDocumentSentence,
+                                            'createdAt' => Carbon::now(),
+                                            'status' => 'PENDING',
+                                            'origin' => 'LOME',
+                                            'idUser' => $user->idUser,
+                                        ];
+                                        //                                    debug($data);
+                                        $idLU = Criteria::function('lu_create(?)', [json_encode($data)]);
+                                    } else {
+                                        $idLU = $lu[0]->idLU;
+                                    }
                                 } else {
-                                    $idLU = $lu[0]->idLU;
+                                    $idLU = $lexicon[0]->idLU;
                                 }
-                                debug('idLU=', $idLU, $tokens[$luToken]);
+                                print_r("idLU = {$idLU}\n");
+//                                debug('idLU=', $idLU, $tokens[$luToken]);
                                 // verifica annotationset para LU neste startChar (pode ter a mesma LU mais de uma vez na sentence)
                                 $as = Criteria::table('view_annotationset as a')
                                     ->join('view_annotation_text_target as t', 'a.idAnnotationSet', '=', 't.idAnnotationSet')
@@ -225,9 +255,12 @@ limit 1
                                     ->where('a.idUser', 611)
                                     ->first();
                                 if (!is_null($as)) {
+                                    print_r("as exists - hard delete\n");
                                     Criteria::function('annotationset_hard_delete(?,?)', [$as->idAnnotationSet, $user->idUser]);
                                 }
+
                                 $idAnnotationSet = AnnotationSet::createForLU($sentence->idDocumentSentence, $idLU, $startChar, $endChar);
+                                print_r("AS created {$idAnnotationSet}\n");
 
                             }
 

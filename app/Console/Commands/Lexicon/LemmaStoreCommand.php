@@ -23,7 +23,7 @@ class LemmaStoreCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Store lemma patterns from database (all SWE and MWE)';
+    protected $description = 'Store lemma patterns for MWE (Multi-Word Expressions) only';
 
     protected LexiconPatternService $lemmaService;
 
@@ -57,9 +57,11 @@ class LemmaStoreCommand extends Command
         }
         $this->newLine();
 
-        // Get all lemmas without existing patterns (incremental processing)
+        // Get MWE lemmas without existing patterns (incremental processing)
+        // Filter: only lemmas with spaces (MWE)
         // Use NOT EXISTS subquery instead of whereNotIn to avoid loading all IDs into memory
         $lemmaQuery = DB::table('view_lemma')
+            ->where('name', 'like', '% %')
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('lexicon_pattern')
@@ -72,12 +74,12 @@ class LemmaStoreCommand extends Command
         $totalLemmas = $lemmaQuery->count();
 
         if ($totalLemmas === 0) {
-            $this->warn('No lemmas without patterns found');
+            $this->warn('No MWE lemmas without patterns found');
 
             return Command::SUCCESS;
         }
 
-        $this->info("Found {$totalLemmas} lemma(s) to process");
+        $this->info("Found {$totalLemmas} MWE lemma(s) to process");
         $this->newLine();
 
         if ($dryRun) {
@@ -109,18 +111,9 @@ class LemmaStoreCommand extends Command
         $lemmaQuery->chunk(50, function ($lemmas) use ($idLanguage, &$results, $csvHandle, &$chunkCount) {
             foreach ($lemmas as $lemma) {
                 try {
-                    // Detect SWE vs MWE based on spaces in name
-                    $isSWE = ! str_contains($lemma->name, ' ');
-
-                    if ($isSWE) {
-                        // Create simple SWE pattern directly
-                        $result = $this->createSimpleSWEPattern($lemma, $idLanguage ?? 1);
-                        $results['success']++;
-                    } else {
-                        // Use service for MWE (needs UD parser)
-                        $result = $this->lemmaService->storeLemmaPattern($lemma->idLemma, $idLanguage ?? 1);
-                        $results['success']++;
-                    }
+                    // Process MWE using UD parser service
+                    $result = $this->lemmaService->storeLemmaPattern($lemma->idLemma, $idLanguage ?? 1);
+                    $results['success']++;
 
                     $this->output->progressAdvance();
                 } catch (\Exception $e) {
@@ -196,80 +189,28 @@ class LemmaStoreCommand extends Command
     }
 
     /**
-     * Create simple SWE pattern without UD parser
-     */
-    protected function createSimpleSWEPattern(object $lemma, int $idLanguage): array
-    {
-        try {
-            // Get expression (single word form)
-            $expressions = DB::table('view_lexicon_expression')
-                ->where('idLemma', $lemma->idLexicon)
-                ->orderBy('position')
-                ->get();
-
-            if ($expressions->isEmpty()) {
-                throw new \RuntimeException("No expressions found for lemma: {$lemma->idLemma}");
-            }
-
-            // Create pattern in transaction
-            return DB::transaction(function () use ($lemma, $expressions) {
-                // Create pattern entry
-                $idLexiconPattern = DB::table('lexicon_pattern')->insertGetId([
-                    'idLemma' => $lemma->idLemma,
-                    'patternType' => 'canonical',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                // Create single root node (SWE has only one node)
-                $firstExpression = $expressions->first();
-                DB::table('lexicon_pattern_node')->insert([
-                    'idLexiconPattern' => $idLexiconPattern,
-                    'position' => 0,
-                    'idLexicon' => $firstExpression->idForm,
-                    'idUDPOS' => $lemma->idUDPOS ?? null,
-                    'isRoot' => 1,
-                    'isRequired' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                // No edges needed for SWE (single word)
-
-                return [
-                    'idLemma' => $lemma->idLemma,
-                    'idLexiconPattern' => $idLexiconPattern,
-                    'type' => 'SWE',
-                ];
-            });
-        } catch (\Exception $e) {
-            throw new \RuntimeException("Failed to create SWE pattern for lemma {$lemma->idLemma}: {$e->getMessage()}");
-        }
-    }
-
-    /**
      * Display dry run preview
      */
     protected function displayDryRunPreview($lemmaQuery, ?int $limit): void
     {
-        $this->info('🔍 DRY RUN MODE - Previewing lemmas:');
+        $this->info('🔍 DRY RUN MODE - Previewing MWE lemmas:');
         $this->newLine();
 
         $lemmas = $lemmaQuery->limit($limit ?? 10)->get();
 
         foreach ($lemmas as $index => $lemma) {
-            // Get expressions for this lemma
-            $expressions = DB::table('view_lexicon_expression')
-                ->where('idLemma', $lemma->idLexicon)
-                ->orderBy('position')
-                ->pluck('form')
+            // Get expressions for this lemma from lexicon_expression table
+            $expressions = DB::table('lexicon_expression')
+                ->join('lexicon', 'lexicon_expression.idExpression', '=', 'lexicon.idLexicon')
+                ->where('lexicon_expression.idLexicon', $lemma->idLexicon)
+                ->orderBy('lexicon_expression.position')
+                ->pluck('lexicon.form')
                 ->toArray();
 
             $fullText = implode(' ', $expressions);
             $langName = config('udparser.languages')[$lemma->idLanguage] ?? "ID {$lemma->idLanguage}";
-            $type = count($expressions) > 1 ? 'MWE' : 'SWE';
 
-            $this->line(($index + 1).". [{$langName}] [{$type}] {$lemma->name} → \"{$fullText}\"");
+            $this->line(($index + 1).". [{$langName}] [MWE] {$lemma->name} → \"{$fullText}\"");
         }
 
         $this->newLine();
