@@ -151,6 +151,7 @@ class CosineHandleCommand extends Command
         //        CosineService::createFrameNetwork();
 
         // DTake - comparando names com LOME
+        /*
         $results = [];
         $cmd = "
 select distinct a.idDocument
@@ -209,14 +210,6 @@ where ((b.n / a.n) > 0.3)
         }
         //
 
-        //        $cmd = "
-        // select lu.idFrame
-        // from view_staticobject sob
-        // join view_lu lu on (sob.name = lu.lemmaName)
-        // join document d on (sob.idDocument = d.idDocument)
-        // where lu.idlanguage = 2 and sob.idLanguage = 2
-        // and d.iddocument = {$idDocument}
-        // ";
 
         $cmd = "
 select ds.idDocument, lu.idFrame
@@ -297,5 +290,80 @@ and d.idDocument={$idDocument}
                 ]);
             }
         }
+        */
+
+        // Reporter Brasil - comparando anotação manual e anotação via LOME
+        // A diferença é que não posso comparar sentenças, pois os idSentences são os mesmos
+        // tenho de comparar com base no idDocumentSentence
+
+        $docs = [
+            'Reporter_Brasil_03_11',
+            'Reporter_Brasil_03_12',
+            'Reporter_Brasil_02_13',
+            'Reporter_Brasil_02_14',
+            'Reporter_Brasil_04_01',
+            'Reporter_Brasil_04_03',
+            'Reporter_Brasil_04_06',
+            'Reporter_Brasil_05_01',
+            'Reporter_Brasil_05_02',
+            'Reporter_Brasil_05_03',
+            'Reporter_Brasil_07_02',
+            'Reporter_Brasil_07_03',
+            'Reporter_Brasil_07_07'
+        ];
+        $annoDocs = Criteria::table("view_document")
+            ->where("idLanguage",1)
+            ->whereNotIn("idCorpus",[227,228,229])
+            ->whereIN("name", $docs)
+            ->select("idDocument")
+            ->all();
+        foreach($annoDocs as $annoDoc){
+            $idDocument = $annoDoc->idDocument;
+            CosineService::createLinkDocumentSentenceToFrame($idDocument);
+        }
+        $lomeDocs = Criteria::table("view_document")
+            ->where("idLanguage",1)
+            ->whereIn("idCorpus",[228])
+            ->whereIN("name", $docs)
+            ->select("idDocument")
+            ->all();
+        foreach($lomeDocs as $lomeDoc){
+            $idDocument = $lomeDoc->idDocument;
+            CosineService::createLinkDocumentSentenceToFrame($idDocument);
+        }
+
+        $documents = Criteria::table("document_sentence as ds1")
+            ->join("document_sentence as ds2", "ds1.idSentence", "=", "ds2.idSentence")
+            ->join("document as d1", "ds1.idDocument", "=", "d1.idDocument")
+            ->join("view_document as d2", "ds2.idDocument", "=", "d2.idDocument")
+            ->where("d2.idCorpus", 228)
+            ->whereNotIn("d1.idCorpus", [227,228,229])
+            ->where("d2.idLanguage", 1)
+            ->select("d2.name","ds1.idDocumentSentence as idDs1","ds2.idDocumentSentence as idDs2")
+            ->get()->groupBy("name")->toArray();
+//        print_r($documents);
+        foreach($documents as $name => $docSentencePairs){
+            print_r($name . "\n");
+            $result = [];
+            foreach($docSentencePairs as $pair) {
+//                print_r($pair->idDs1 . '     ' . $pair->idDs2 . "\n");
+                $r = CosineService::compareDocumentSentences($pair->idDs1, $pair->idDs2);
+                print_r($r);
+                die;
+                $result[] = [
+                    "idDocumentSentence1" => $pair->idDs1,
+                    "idDocumentSentence2" => $pair->idDs2,
+                    "cosine" => $r->cosine
+                ];
+            }
+//            print_r($result);
+//            die;
+            CosineService::writeToCSV(__DIR__ . "/{$name}.csv", $result);
+        }
+
     }
+
+
+
+
 }
