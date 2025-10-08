@@ -171,16 +171,32 @@ class WordForm
 //            ->where("frame.idLanguage", "=", $idLanguage)
 //            ->orderBy("frame.name")
 //            ->orderBy("l.lu");
-        $criteria = Criteria::table("view_lexicon as l")
-            ->select("idLU", "lu", "senseDescription", "frame.name as frameName")
-            ->join("view_frame as frame", "l.idFrame", "=", "frame.idFrame")
-            ->whereRaw("l.form = '{$wf1}'  collate 'utf8mb4_bin'")
-            ->where("l.idLanguage", "=", $idLanguageBase ?? $idLanguage)
-            ->where("l.position", "=", 1)
+
+//        select distinct `lu`.`idLU`, `l2`.`lu`, `lu`.`senseDescription`, `frame`.`name` as `frameName`
+//from `view_lexicon` as `l1`
+//    inner join view_lexicon as l2 on (l1.lemmaName = l2.form)
+//         inner join `view_lu` as lu on `l2`.`idLemma` = `lu`.`idLemma`
+//         inner join `view_frame` as `frame` on `lu`.`idFrame` = `frame`.`idFrame`
+//where l1.form = 'tem' collate 'utf8mb4_bin'
+//    and `l1`.`idLanguage` = 1
+//    and `l1`.`position` = 1
+//    and `frame`.`idLanguage` = 1
+//    and `lu`.`status` = 'CREATED'
+//order by `frame`.`name` asc, `l2`.`lu` asc;
+
+        $criteria = Criteria::table("view_lexicon as l1")
+            ->select("lu.idLU", "l2.lu", "lu.senseDescription", "frame.name as frameName")
+            ->distinct()
+            ->join("view_lexicon as l2", "l1.lemmaName","=","l2.form")
+            ->join("view_lu as lu", "l2.idLemma","=","lu.idLemma")
+            ->join("view_frame as frame", "lu.idFrame", "=", "frame.idFrame")
+            ->whereRaw("l1.form = '{$wf1}'  collate 'utf8mb4_bin'")
+            ->where("l1.idLanguage", "=", $idLanguageBase ?? $idLanguage)
+            ->where("l1.position", "=", 1)
             ->where("frame.idLanguage", "=", $idLanguage)
-            ->where("l.statusLU", Status::CREATED)
+            ->where("lu.status", Status::CREATED)
             ->orderBy("frame.name")
-            ->orderBy("l.lu");
+            ->orderBy("l2.lu");
         return $criteria->all();
     }
 
