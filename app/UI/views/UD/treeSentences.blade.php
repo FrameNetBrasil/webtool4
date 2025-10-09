@@ -1,5 +1,5 @@
 <x-tree
     title=""
-    url="/d3/searchSentence"
+    url="/ud/searchSentence"
     :data="$data"
 ></x-tree>

@@ -2,21 +2,20 @@
 
 namespace App\Data\Lemma;
 
-use App\Database\Criteria;
+use App\Services\AppService;
 use Spatie\LaravelData\Data;
 
 class UpdateLemmaData extends Data
 {
     public function __construct(
+        public ?int $idLemma= null,
         public ?string $name,
-//        public ?int $idPOS,
         public ?int $idUDPOS,
+        public ?int $idLanguage,
+        public ?int $idUser= null,
         public string $_token = '',
     ) {
-//        if (is_null($this->idPOS) && ! is_null($this->idUDPOS)) {
-//            $pos = Criteria::byId('pos_udpos', 'idUDPOS', $this->idUDPOS);
-//            $this->idPOS = $pos->idPOS;
-//        }
+        $this->idUser = AppService::getCurrentIdUser();
     }
 
     public static function rules(): array

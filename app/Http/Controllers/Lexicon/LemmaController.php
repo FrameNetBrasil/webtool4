@@ -48,7 +48,8 @@ class LemmaController extends Controller
     #[Get(path: '/lemma/listForSearch')]
     public function listForSearch(QData $data)
     {
-        $name = (strlen($data->q) > 0) ? $data->q : 'none';
+        debug($data);
+        $name = (strlen($data->lemmaName) > 0) ? $data->lemmaName : 'none';
 
         return ['results' => Criteria::byFilterLanguage('view_lemma', ['name', 'startswith', trim($name)])
             ->select('idLemma', 'name', 'fullName')
@@ -66,29 +67,22 @@ class LemmaController extends Controller
     public function create(CreateLemmaData $data)
     {
         try {
-            $exists = Criteria::table('view_lexicon_lemma')
+            $exists = Criteria::table('view_lemma')
                 ->whereRaw("name = '{$data->name}' collate 'utf8mb4_bin'")
                 ->where('idUDPOS', $data->idUDPOS)
                 ->where('idLanguage', $data->idLanguage)
                 ->first();
-            if (! is_null($exists)) {
+            if (!is_null($exists)) {
                 throw new \Exception('Lemma already exists.');
             }
             $newLemma = json_encode([
-                'form' => $data->name,
-                'idLexiconGroup' => 2, // Lemmas always have group 2
+                'name' => $data->name,
                 'idLanguage' => $data->idLanguage,
-                'idPOS' => $data->idPOS,
                 'idUDPOS' => $data->idUDPOS,
+                'idUser' => AppService::getCurrentIdUser()
             ]);
-            $idLemma = Criteria::function('lexicon_create(?)', [$newLemma]);
-            $lemma = Lemma::byId($idLemma);
-            $view = view('Lemma.edit', [
-                'lemma' => $lemma,
-                'expressions' => [],
-            ]);
-
-            return $view;
+            $idLemma = Criteria::function('lemma_create(?)', [$newLemma]);
+            return $this->clientRedirect("/lemma/{$idLemma}");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
@@ -121,6 +115,7 @@ class LemmaController extends Controller
         return view('Lemma.edit', [
             'lemma' => $lemma,
             'expressions' => $expressions,
+            'isMWE' => str_contains($lemma->name, " "),
             'pattern' => null, // Temporarily disabled
         ]);
     }
@@ -128,16 +123,9 @@ class LemmaController extends Controller
     #[Put(path: '/lemma/{idLemma}')]
     public function update(int $idLemma, UpdateLemmaData $data)
     {
+        $data->idLemma = $idLemma;
         try {
-            Criteria::table('lexicon')
-                ->where('idLexicon', $idLemma)
-                ->where('idLexiconGroup', 2)
-                ->update([
-                    'form' => $data->name,
-                    'idUDPOS' => $data->idUDPOS,
-                    'idPOS' => $data->idPOS,
-                ]);
-
+            Criteria::function('lemma_update(?)', [json_encode($data->toArray())]);
             return $this->renderNotify('success', 'Lemma updated.');
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
@@ -175,20 +163,32 @@ class LemmaController extends Controller
     #[Post(path: '/lemma/{idLemma}/expression')]
     public function createExpression(int $idLemma, CreateExpressionData $data)
     {
+        $data->idLemma = $idLemma;
         try {
-            if ($data->idLexicon) {
+            if (trim($data->form) != '') {
+                $lexicon = Criteria::table("lexicon")
+                    ->whereRaw("form collate 'utf8mb4_bin' = '{$data->form}'")
+                    ->first();
+                if (is_null($lexicon)) {
+                    $newLexicon = json_encode([
+                        'form' => $data->form,
+                        'idLexiconGroup' => 1
+                    ]);
+                    $idLexicon = Criteria::function('lexicon_create(?)', [$newLexicon]);
+                } else {
+                    $idLexicon = $lexicon->idLexicon;
+                }
                 Criteria::create('lexicon_expression', [
-                    'idLexicon' => $idLemma,
-                    'idExpression' => $data->idLexicon,
+                    'idLemma' => $idLemma,
+                    'idExpression' => $idLexicon,
                     'position' => $data->position,
                     'head' => $data->head,
                     'breakBefore' => $data->breakBefore,
                 ]);
                 $this->trigger('reload-gridExpressions');
-
                 return $this->renderNotify('success', 'Expression added.');
             } else {
-                throw new \Exception('Expression not found.');
+                throw new \Exception('Expression not informed.');
             }
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
@@ -285,7 +285,7 @@ class LemmaController extends Controller
         $patternService = app(LexiconPatternService::class);
         $pattern = $patternService->getLemmaPattern($idLemma);
 
-        if (! $pattern) {
+        if (!$pattern) {
             return response()->json(['error' => 'No pattern found for this lemma'], 404);
         }
 
@@ -389,7 +389,7 @@ class LemmaController extends Controller
             $parentId = $edge['idNodeHead'];
             $childId = $edge['idNodeDependent'];
 
-            if (! isset($childrenMap[$parentId])) {
+            if (!isset($childrenMap[$parentId])) {
                 $childrenMap[$parentId] = [];
             }
             $childrenMap[$parentId][] = $childId;
@@ -399,7 +399,7 @@ class LemmaController extends Controller
         // Find root node (node with isRoot=1 or no parent)
         $rootNode = null;
         foreach ($pattern['nodes'] as $node) {
-            if ($node['isRoot'] || ! isset($parentMap[$node['idLexiconPatternNode']])) {
+            if ($node['isRoot'] || !isset($parentMap[$node['idLexiconPatternNode']])) {
                 $rootNode = $node;
                 break;
             }
@@ -419,14 +419,14 @@ class LemmaController extends Controller
                 'deprel' => 'root',
             ],
             'labels' => ['<root>', '#{#00008b}root'],
-            'firstson' => $rootNode ? 'w'.$rootNode['position'] : null,
+            'firstson' => $rootNode ? 'w' . $rootNode['position'] : null,
             'rbrother' => null,
         ];
 
         // Create nodes for each pattern node
         foreach ($pattern['nodes'] as $node) {
-            $nodeId = 'w'.$node['position'];
-            $parentId = isset($parentMap[$node['idLexiconPatternNode']]) ? 'w'.$nodeMap[$parentMap[$node['idLexiconPatternNode']]]['position'] : 'w0';
+            $nodeId = 'w' . $node['position'];
+            $parentId = isset($parentMap[$node['idLexiconPatternNode']]) ? 'w' . $nodeMap[$parentMap[$node['idLexiconPatternNode']]]['position'] : 'w0';
 
             // Find relation label for this node
             $relationLabel = '';
@@ -440,8 +440,8 @@ class LemmaController extends Controller
             // Build labels array
             $labels = [
                 $node['form'],
-                '#{#00008b}'.$relationLabel,
-                '#{#004048}'.$node['posLabel'],
+                '#{#00008b}' . $relationLabel,
+                '#{#004048}' . $node['posLabel'],
             ];
 
             $treexNodes[] = [
@@ -449,7 +449,7 @@ class LemmaController extends Controller
                 'ord' => $node['position'],
                 'parent' => $parentId,
                 'data' => [
-                    'id' => (string) $node['position'],
+                    'id' => (string)$node['position'],
                     'form' => $node['form'],
                     'deprel' => $relationLabel,
                     'upos' => $node['posLabel'],
@@ -465,7 +465,7 @@ class LemmaController extends Controller
         $childrenByParent = [];
         foreach ($treexNodes as $node) {
             if ($node['parent']) {
-                if (! isset($childrenByParent[$node['parent']])) {
+                if (!isset($childrenByParent[$node['parent']])) {
                     $childrenByParent[$node['parent']] = [];
                 }
                 $childrenByParent[$node['parent']][] = $node['id'];
@@ -500,7 +500,7 @@ class LemmaController extends Controller
             if ($index > 0) {
                 $desc[] = [' ', 'space'];
             }
-            $desc[] = [$node['form'], 'w'.$node['position']];
+            $desc[] = [$node['form'], 'w' . $node['position']];
         }
 
         return [[

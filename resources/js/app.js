@@ -17,7 +17,8 @@ import searchComponent from './components/searchComponent.js';
 import treeComponent from './components/treeComponent.js';
 import searchFormComponent from './components/searchFormComponent.js';
 import dataGridComponent from './components/dataGridComponent.js';
-import d3TreeComponent from './components/d3TreeComponent.js';
+import udTreeComponent from './components/udTreeComponent.js';
+import grapherComponent from './components/grapherComponent.js';
 
 import '../css/fomantic-ui/semantic.less';
 // import 'primeflex/primeflex.css';
@@ -31,7 +32,8 @@ window.ky = ky;
 window.Split = Split;
 
 // Make components available globally
-window.d3TreeComponent = d3TreeComponent;
+window.udTreeComponent = udTreeComponent;
+window.grapherComponent = grapherComponent;
 
 // Make Alpine available globally before any components try to use it
 window.Alpine = Alpine;
@@ -43,7 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     Alpine.data('treeComponent', treeComponent);
     Alpine.data('browseSearchComponent', browseSearchComponent);
     Alpine.data('dataGrid', dataGridComponent);
-    Alpine.data('d3Tree', d3TreeComponent);
+    Alpine.data('udTree', udTreeComponent);
+    Alpine.data('grapher', grapherComponent);
     Alpine.start();
 
 });

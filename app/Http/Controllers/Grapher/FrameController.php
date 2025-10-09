@@ -68,11 +68,8 @@ class FrameController extends Controller
     #[Post(path: '/grapher/framefe/graph/{idEntityRelation}')]
     public function frameFeGraph(?int $idEntityRelation = null)
     {
-        if (empty($data->frameRelation)) {
-            $frameRelation = session('frameRelation') ?? [];
-        }
+        $frameRelation = session('frameRelation') ?? [];
         $nodes = session('graphNodes') ?? [];
-        $idRelationType = session('idRelationType');
         $graph = RelationService::listFrameRelationsForGraph($nodes, $frameRelation);
         $feGraph = RelationService::listFrameFERelationsForGraph($idEntityRelation);
         foreach ($feGraph['nodes'] as $idNode => $node) {

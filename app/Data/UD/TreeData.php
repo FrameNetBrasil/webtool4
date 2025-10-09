@@ -1,19 +1,16 @@
 <?php
 
-namespace App\Data\D3;
+namespace App\Data\UD;
 
 use Spatie\LaravelData\Data;
 
-class SearchData extends Data
+class TreeData extends Data
 {
     public function __construct(
-        public ?string $corpus = '',
-        public ?string $document = '',
-        public ?string $id = '',
-        public ?string $type = '',
         public ?int $idCorpus = null,
         public ?int $idDocument = null,
-        public ?int $idDocumentSentence = null,
+        public ?string $id = '',
+        public ?string $type = '',
         public ?string $taskGroupName = null,
         public string $_token = '',
     ) {

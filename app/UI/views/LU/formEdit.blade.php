@@ -8,7 +8,17 @@
                 :value="$lu->senseDescription"
             ></x-multiline-field>
         </div>
-        <div class="two fields">
+        <div class="three fields">
+            <div class="field">
+                <x-search::lemma
+                    id="idLemma"
+                    label="Lemma"
+                    search-field="lemmaName"
+                    :value="$lu->idLemma"
+                    :display-value="$lu->name"
+                    :search-value="$lu->lemmaName"
+                ></x-search::lemma>
+            </div>
             <div class="field">
                 <x-combobox.fe-frame
                     id="incorporatedFE"

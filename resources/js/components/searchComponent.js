@@ -17,7 +17,7 @@ export default function (config) {
         selectedValue: config.initialValue || '',
         displayValue: config.initialDisplayValue || '',
         rawDisplayValue: config.initialDisplayValue || '', // Clean text version for display
-        searchValue: '', // Value to use for search pre-population
+        searchValue: config.initialSearchValue || '', // Value to use for search pre-population
         searchResults: [],
         errorMessage: '',
 
@@ -181,7 +181,8 @@ export default function (config) {
             this.selectedValue = result[this.valueField];
             this.displayValue = this.formatResultDisplay(result);
             this.rawDisplayValue = result[this.displayField] || '';
-            this.searchValue = result[this.searchField] || this.rawDisplayValue;
+            // Store the searchField value for future modal searches
+            this.searchValue = result[this.searchField] || result[this.displayField] || '';
             this.closeModal();
 
             // Trigger change event for form validation and custom handlers
