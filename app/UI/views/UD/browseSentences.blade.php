@@ -7,7 +7,7 @@
         <main class="app-main">
             <x-ui::browse-tree
                 :title="$page"
-                url="/d3/searchSentence"
+                url="/ud/searchSentence"
                 emptyMsg="Enter your search term above to find items."
                 :data="$data"
             >
@@ -64,7 +64,7 @@
                                                 }"
                     >
                         <div id="treeArea">
-                            @include("D3.treeSentences")
+                            @include("UD.treeSentences")
                         </div>
                     </div>
                 </x-slot:tree>

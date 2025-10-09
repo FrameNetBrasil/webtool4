@@ -1,41 +1,46 @@
-<x-form>
-    <x-slot:fields>
-        <x-hidden-field
-            id="idFrame"
-            :value="$idFrame"
-        ></x-hidden-field>
-        <div class="three fields">
-            <div class="field">
-                <x-combobox.lemma
-                    id="idLemma"
-                    label="Lemma [min: 3 chars]"
-                    value="0"
-                ></x-combobox.lemma>
-            </div>
-            <div class="field">
-                <x-text-field
-                    label="Sense Description"
-                    id="senseDescription"
-                    value=""
-                ></x-text-field>
-            </div>
-            <div class="field">
-                <x-combobox.fe-frame
-                    id="incorporatedFE"
-                    label="Incorporated FE"
-                    :value="-1"
-                    :idFrame="$idFrame"
-                    nullName="No incorporated FE"
-                    :hasNull="true"
-                ></x-combobox.fe-frame>
+<form>
+    <div class="ui fluid card form-card">
+        <div class="content">
+            <div class="ui form">
+                <div class="two fields">
+                    <div class="field">
+                        <x-search::lemma
+                            id="idLemma"
+                            label="Lemma"
+                            search-field="lemmaName"
+                            value=""
+                            display-value=""
+                        ></x-search::lemma>
+                    </div>
+                    <div class="field">
+                        <x-combobox.fe-frame
+                            id="incorporatedFE"
+                            name="incorporatedFE"
+                            label="Incorporated FE"
+                            style="width:250px"
+                            :value="0"
+                            :idFrame="$idFrame"
+                            :hasNull="false"
+                        ></x-combobox.fe-frame>
+                    </div>
+                </div>
+                <div class="field">
+                    <x-multiline-field
+                        label="Sense Description"
+                        id="senseDescription"
+                        value=""
+                    ></x-multiline-field>
+                </div>
+                <div class="extra content">
+                    <div class="ui buttons">
+                        <button
+                            class="ui button primary"
+                            hx-post="/lu"
+                        >AddLU
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </x-slot:fields>
-    <x-slot:buttons>
-        <x-button
-            label="Add LU"
-            hx-post="/lu"
-        ></x-button>
-    </x-slot:buttons>
-</x-form>
-
+    </div>
+</form>

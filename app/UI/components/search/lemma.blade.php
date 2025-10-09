@@ -5,6 +5,7 @@
     'searchField' => 'name',
     'value' => 0,
     'displayValue' => '',
+    'searchValue' => null,
     'modalTitle' => 'Search Lemma'
 ])
 
@@ -21,6 +22,7 @@
     search-field="{{$searchField}}"
     value="{{$value}}"
     display-value="{{$displayValue}}"
+    search-value="{{$searchValue}}"
     value-field="idLemma"
     modal-title="{{$modalTitle}}"
 />

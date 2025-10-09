@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\D3;
+namespace App\Http\Controllers\UD;
 
 use App\Data\Annotation\Browse\SearchData;
 use App\Http\Controllers\Controller;
@@ -11,7 +11,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Post;
 #[Middleware('auth')]
 class BrowseController extends Controller
 {
-    #[Post(path: '/d3/searchSentence')]
+    #[Post(path: '/ud/searchSentence')]
     public function search(SearchData $search)
     {
         if (! is_null($search->idCorpus)) {
@@ -29,9 +29,8 @@ class BrowseController extends Controller
             //            $title = "Corpora";
         }
 
-        return view('D3.treeSentences', [
+        return view('UD.treeSentences', [
             'data' => $data,
         ]);
     }
-
 }

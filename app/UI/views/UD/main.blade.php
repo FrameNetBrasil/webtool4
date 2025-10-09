@@ -2,7 +2,7 @@
     <div class="app-layout no-tools">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['','D3 Tree']]"
+            :sections="[['/','Home'],['','UD Tree']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content">
@@ -20,11 +20,11 @@
                     </div>
                 @endif
 
-                {{-- D3 Tree Component --}}
+                {{-- UD Tree Component --}}
                 <div
                     class="w-full"
                     id="tree-container"
-                    x-data="d3TreeInstance"
+                    x-data="udTreeInstance"
                     x-init="init()"
                 >
                 </div>
@@ -40,7 +40,7 @@
 
         // Create tree instance that Alpine can use
         document.addEventListener('alpine:init', () => {
-            Alpine.data('d3TreeInstance', () => {
+            Alpine.data('udTreeInstance', () => {
                 const config = {
                     data: window.treeData,
                     orientation: 'horizontal',
@@ -49,7 +49,7 @@
                     fontSize: '12px'
                 };
 
-                const instance = d3TreeComponent(config);
+                const instance = udTreeComponent(config);
                 window.treeInstance = instance; // Make available for buttons
                 return instance;
             });

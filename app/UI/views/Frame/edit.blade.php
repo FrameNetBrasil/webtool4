@@ -28,37 +28,6 @@
                         </div>
                     </div>
                 </div>
-
-{{--                <div class="page-header-object">--}}
-{{--                    <div class="page-object">--}}
-{{--                        <div class="page-object-name">--}}
-{{--                            <span class="color_frame">{{$frame?->name}}</span>--}}
-{{--                        </div>--}}
-{{--                        <div class="page-object-data">--}}
-{{--                            @foreach ($classification as $name => $values)--}}
-{{--                                @foreach ($values as $value)--}}
-{{--                                    <div--}}
-{{--                                        class="sm:pb-1"--}}
-{{--                                    >--}}
-{{--                                        <div class="ui label wt-tag-{{$name}}">--}}
-{{--                                            {{$value}}--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                @endforeach--}}
-{{--                            @endforeach--}}
-{{--                            @if(session('isAdmin'))--}}
-{{--                                <x-button--}}
-{{--                                    label="Delete"--}}
-{{--                                    color="danger"--}}
-{{--                                    onclick="messenger.confirmDelete(`Removing Frame '{{$frame?->name}}'.`, '/frame/{{$frame->idFrame}}')"--}}
-{{--                                ></x-button>--}}
-{{--                            @endif--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="page-subtitle">--}}
-{{--                        {{$frame->description}}--}}
-{{--                    </div>--}}
-{{--                </div>--}}
                 <div class="page-content">
                     <div class="frame-metadata-section">
                         @include('Frame.Report.partials.frame-metadata')

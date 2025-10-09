@@ -1,28 +1,28 @@
-idDocumentSentence1,idDocumentSentence2,cosine
-3126237,5229380,1
-3126239,5229381,1
-3126241,5229382,1
-3126243,5229383,1
-3126245,5229384,1
-3126247,5229385,1
-3126251,5229386,1
-3126253,5229387,1
-3126255,5229388,1
-3126257,5229389,1
-3126259,5229390,1
-3126261,5229391,1
-3126263,5229392,1
-3126265,5229393,1
-3348674,5229394,1
-3348678,5229395,1
-3348680,5229396,1
-3348682,5229397,1
-4358915,5229398,1
-4358917,5229399,1
-4358919,5229400,1
-4358921,5229401,1
-4358923,5229402,1
-4358925,5229403,1
-4358927,5229404,1
-4358929,5229405,1
-4358931,5229406,1
+idDocumentSentence1,idDocumentSentence2,cosine,sentence
+3126243,5229356,0.778935,"Aqui a gente tem um trabalho constante, pelo menos há três anos."
+4358917,5229372,0.460891,"Que deve dar mais eficiência a logística reversa e a economia circular do vidro."
+3126263,5229365,-1,"Medidas regulatórias, elas tendem a incentivar a reciclagem, né."
+3126247,5229358,0.959227,"Chega aqui da forma que está aqui."
+4358921,5229374,0.603645,"E as vezes dá um trabalho mesmo, porque a gente tem que fazer constantes avisos."
+3348674,5229367,0.68411,"Aí entra  para onde as empilhadeiras estão levando, dali sobe e começa a triagem."
+3126253,5229360,0.855898,"Vai mandar para a indústria, a indústria vai processar e vai fazer a embalagem."
+4358925,5229376,0.814761,"Não se perde no processo."
+3348680,5229369,0.763381,"No total, dá uns noventa tipos diferentes."
+3126237,5229353,0.444182,"Com um potencial de reciclagem muito alto, o vidro é um dos materiais secos menos recuperados no Brasil."
+3126257,5229362,-1,"A gente tem hoje, especificamente para o vidro, uma meta que segue o PLANARIS (Plano Nacional de Resíduos Sólidos)."
+4358929,5229378,-1,"Ela preveu o encerramento dos lixões e o reaproveitamento de cerca de cinquenta por cento dos materiais em vinte anos."
+3126241,5229355,0.852235,"Neste condomínio em Brasília, a separação do lixo já é feita há alguns anos, mas o trabalho de conscientização não é fácil."
+4358915,5229371,0.303139,"Ficando atrás de outras categorias como papel, plástico e metal."
+3126261,5229364,-1,"Uma das formas é a reciclagem, mas hoje apenas cerca de dois por cento dos resíduos das cidades passam por isso."
+4358919,5229373,0.618115,"Sempre tendo que avisar aos moradores, passando, olhando, vendo se eles estão fazendo a separação correta do lixo."
+3126245,5229357,0.302299,"Em alguns casos, o destino do lixo são as cooperativas de catadores."
+3126265,5229366,-1,"Aqui, nós salvamos o mundo porque a gente cuida de pessoas, a gente cuida da saúde das pessoas,  cuida da saúde do meio ambiente."
+3126251,5229359,0.415541,"A gente separa papéis, vidros, metais e plásticos."
+4358923,5229375,0.721067,"Inclusive, o vidro é um dos produtos que é infinitamente reciclável e uma tonelada de vidro dá uma tonelada de embalagem nova."
+3348678,5229368,0.299052,"Aí, na esteira, cada material vai para um ""bag"" diferente."
+4358927,5229377,-1,"E a nossa meta é que a gente chegue em quarenta por cento até dois mil e trinta e dois."
+3126255,5229361,0.795439,"Em 2022, o país instituiu o sistema de logística reversa de embalagens de vidro."
+3126239,5229354,0.740398,"Pois é, agora esse cenário pode mudar, já que o país tem uma entidade que vai gerenciar."
+3348682,5229370,-1,"Então a gente tem hoje, o número que a gente estima é de um pouco mais de vinte e cinco por cento de reciclagem do vidro."
+3126259,5229363,-1,"A Política Nacional de Resíduos Sólidos de dois mil e dez apontou diretrizes para a melhoria da gestão do lixo:"
+4358931,5229379,-1,"E ainda inclui pessoas no processo."

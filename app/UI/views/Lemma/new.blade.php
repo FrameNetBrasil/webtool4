@@ -15,7 +15,7 @@
                 </div>
                 <div class="page-content">
                     <form
-                        hx-post="/lemma/new"
+                        hx-post="/lemma"
                     >
                         <input type="hidden" name="idLexiconGroup" value="2">
                         <div class="ui fluid card form-card">
@@ -32,8 +32,8 @@
                                     <div class="three fields">
                                         <div class="field">
                                             <x-ui::text-field
-                                                label="Name"
-                                                id="form"
+                                                label="Name (unflected form)"
+                                                id="name"
                                                 value=""
                                             ></x-ui::text-field>
                                         </div>

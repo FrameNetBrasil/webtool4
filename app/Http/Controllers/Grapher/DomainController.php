@@ -65,21 +65,21 @@ class DomainController extends Controller
     #[Post(path: '/grapher/framefe/graph/{idEntityRelation}')]
     public function frameFeGraph(?int $idEntityRelation = null)
     {
-        ddump($this->data);
+        $frameRelation = session('frameRelation') ?? [];
         $nodes = session('graphNodes') ?? [];
-        $idRelationType = session('idRelationType');
-        $this->data->graph = RelationService::listFrameRelationsForGraph($nodes, $idRelationType);
+        $graph = RelationService::listFrameRelationsForGraph($nodes, $frameRelation);
         $feGraph = RelationService::listFrameFERelationsForGraph($idEntityRelation);
         foreach ($feGraph['nodes'] as $idNode => $node) {
-            $this->data->graph['nodes'][$idNode] = $node;
+            $graph['nodes'][$idNode] = $node;
         }
         foreach ($feGraph['links'] as $idSource => $links) {
             foreach ($links as $idTarget => $link) {
-                $this->data->graph['links'][$idSource][$idTarget] = $link;
+                $graph['links'][$idSource][$idTarget] = $link;
             }
         }
-        ddump($this->data);
 
-        return $this->render('frameGraph');
+        return view('Grapher.Domain.domainGraph', [
+            'graph' => $graph,
+        ]);
     }
 }

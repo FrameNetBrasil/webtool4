@@ -1,49 +1,67 @@
-<x-layout.grapher>
-    <x-slot:head>
-        <x-layout::breadcrumb :sections="[['/','Home'],['','Frame Grapher']]"></x-layout::breadcrumb>
-    </x-slot:head>
-    <x-slot:main>
-        <form>
-            <div class="flex flex-row gap-2 pl-2 pt-2">
-                <x-combobox.frame
-                    id="idFrame"
-                    label=""
-                    placeholder="Frame (min: 3 chars)"
-                    :hasDescription="false"
-                    style="width:250px"
-                ></x-combobox.frame>
-                <x-checkbox.relation
-                    id="frameRelation"
-                    label="Relations to show"
-                    :relations="$relations"
-                ></x-checkbox.relation>
-                <div>
-                    <x-button
-                        id="btnSubmit"
-                        label="Submit"
-                        hx-target="#graph"
-                        hx-post="/grapher/frame/graph"
-                    ></x-button>
+<x-layout::index>
+    <div class="app-layout minimal">
+        <x-layout::header></x-layout::header>
+        <x-layout::breadcrumb :sections="[['/','Home'],['/grapher','Grapher'],['','Frame']]"></x-layout::breadcrumb>
+        <main class="app-main">
+            <div class="page-content" id="grapherApp">
+                <div class="page-header">
+                    <div class="page-header-content">
+                        <div class="page-title">
+                            Frame Grapher
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <x-button
-                        id="btnClear"
-                        label="Clear"
-                        color="secondary"
-                        hx-target="#graph"
-                        hx-post="/grapher/frame/graph/0"
-                    ></x-button>
+                <div class="grapher-controls">
+                    <form>
+                        <div class="flex flex-row gap-2">
+                            <x-combobox.frame
+                                id="idFrame"
+                                label=""
+                                placeholder="Frame (min: 3 chars)"
+                                :hasDescription="false"
+                                style="width:250px"
+                            ></x-combobox.frame>
+                            <x-checkbox.relation
+                                id="frameRelation"
+                                label="Relations to show"
+                                :relations="$relations"
+                            ></x-checkbox.relation>
+                            <div>
+                                <x-button
+                                    id="btnSubmit"
+                                    label="Submit"
+                                    hx-target="#graph"
+                                    hx-post="/grapher/frame/graph"
+                                ></x-button>
+                            </div>
+                            <div>
+                                <x-button
+                                    id="btnClear"
+                                    label="Clear"
+                                    color="secondary"
+                                    hx-target="#graph"
+                                    hx-post="/grapher/frame/graph/0"
+                                ></x-button>
+                            </div>
+                            <div>
+                                <x-button
+                                    id="btnToogle"
+                                    type="button"
+                                    label="Grapher options"
+                                    color="secondary"
+                                    onclick="$('#grapherOptionsModal').modal({detachable: false}).modal('show');"
+                                ></x-button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <x-button
-                        id="btnToogle"
-                        type="button"
-                        label="Grapher options"
-                        color="secondary"
-                        hx-on:click="$('#graph-drawer').flyout('toggle');"
-                    ></x-button>
+                <div class="grapher-canvas">
+                    <div id="graph" class="wt-layout-grapher"></div>
                 </div>
+                @include('Grapher.controls')
+                @include('Grapher.report')
             </div>
-        </form>
-    </x-slot:main>
-</x-layout.grapher>
+        </main>
+        <x-layout::footer></x-layout::footer>
+    </div>
+</x-layout::index>

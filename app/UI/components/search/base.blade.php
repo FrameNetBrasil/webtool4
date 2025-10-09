@@ -7,6 +7,7 @@
     'searchFields' => ['q'], // Array of search field names
     'displayField' => 'name', // Field to display in readonly input OR function name
     'searchField' => null, // Field to use for search pre-population (defaults to displayField if null)
+    'searchValue' => null, // Actual value to use for search (when different from displayValue)
     'displayFormatter' => null, // Function name for custom result display formatting
     'valueField' => 'id', // Field to store in hidden input
     'value' => '',
@@ -27,6 +28,7 @@
     valueField: '{{ $valueField }}',
     initialValue: '{{ $value }}',
     initialDisplayValue: '{{ $displayValue }}',
+    initialSearchValue: '{{ $searchValue }}',
     onChange: '{{ $onChange }}',
     resolveUrl: '{{ $resolveUrl }}'
 })" class="search-component">

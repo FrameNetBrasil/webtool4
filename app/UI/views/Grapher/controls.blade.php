@@ -1,65 +1,67 @@
-<div class="ui right flyout" id="graph-drawer">
+<div class="ui modal" id="grapherOptionsModal">
     <i class="close icon"></i>
-    <div class="ui header">
-        <div class="content">
-            Grapher Options
-        </div>
+    <div class="header">
+        Grapher Options
     </div>
     <div class="content">
-        <div class="flex flex-column ui form">
+        <div class="ui form">
             <div class="field">
-                <x-combobox.options
-                    id="ranker"
-                    label="Ranker"
-                    value="network-simplex"
-                    :options="['network-simplex'=>'network-simplex','tight-tree' => 'tight-tree','longest-path'=>'longest-path']"
-                ></x-combobox.options>
+                <label for="ranker">Ranker</label>
+                <select id="ranker" x-model="ranker">
+                    <option value="network-simplex">network-simplex</option>
+                    <option value="tight-tree">tight-tree</option>
+                    <option value="longest-path">longest-path</option>
+                </select>
             </div>
             <div class="field">
-                <x-combobox.options
-                    id="rankdir"
-                    label="RankDir"
-                    value="BT"
-                    :options="['TB'=>'Top-Bottom','BT' => 'Bottom-Top','RL'=>'Right-Left','LR' => 'Left-Right']"
-                ></x-combobox.options>
+                <label for="rankdir">RankDir</label>
+                <select id="rankdir" x-model="rankdir">
+                    <option value="TB">Top-Bottom</option>
+                    <option value="BT">Bottom-Top</option>
+                    <option value="RL">Right-Left</option>
+                    <option value="LR">Left-Right</option>
+                </select>
             </div>
             <div class="field">
-                <x-combobox.options
-                    id="align"
-                    label="Align"
-                    value="DL"
-                    :options="['DL'=>'Down-Left','DR' => 'Down-Right','UL'=>'Up-Left','UR' => 'Up-Right']"
-                ></x-combobox.options>
+                <label for="align">Align</label>
+                <select id="align" x-model="align">
+                    <option value="DL">Down-Left</option>
+                    <option value="DR">Down-Right</option>
+                    <option value="UL">Up-Left</option>
+                    <option value="UR">Up-Right</option>
+                </select>
             </div>
             <div class="field">
-                <x-combobox.options
-                    id="connector"
-                    label="Connector"
-                    value="normal"
-                    :options="['normal'=>'Normal','smooth' => 'Smooth','jumpover'=>'Jumpover','curve' => 'Curve']"
-                ></x-combobox.options>
+                <label for="connector">Connector</label>
+                <select id="connector" x-model="connector">
+                    <option value="normal">Normal</option>
+                    <option value="smooth">Smooth</option>
+                    <option value="jumpover">Jumpover</option>
+                    <option value="curve">Curve</option>
+                </select>
             </div>
             <div class="field">
                 <div class="ui checkbox">
-                    <input type=checkbox checked id="vertices">
-                    <label for="vertices">Vertices:</label>
+                    <input type="checkbox" id="vertices" x-model="vertices">
+                    <label for="vertices">Vertices</label>
                 </div>
             </div>
             <div class="field">
-                <label for="ranksep">RankSep:</label>
-                <input id="ranksep" type="range" min="1" max="100" value="50" />
+                <label for="ranksep">RankSep: <span x-text="ranksep"></span></label>
+                <input id="ranksep" type="range" min="1" max="100" x-model="ranksep" />
             </div>
             <div class="field">
-                <label for="edgesep">EdgeSep:</label>
-                <input id="edgesep" type="range" min="1" max="100" value="50" />
+                <label for="edgesep">EdgeSep: <span x-text="edgesep"></span></label>
+                <input id="edgesep" type="range" min="1" max="100" x-model="edgesep" />
             </div>
             <div class="field">
-                <label for="nodesep">NodeSep:</label>
-                <input id="nodesep" type="range" min="1" max="100" value="50" />
+                <label for="nodesep">NodeSep: <span x-text="nodesep"></span></label>
+                <input id="nodesep" type="range" min="1" max="100" x-model="nodesep" />
             </div>
-
         </div>
     </div>
     <div class="actions">
+        <div class="ui cancel button">Cancel</div>
+        <div class="ui primary button" @click="relayout(); $('#grapherOptionsModal').modal('hide');">Apply</div>
     </div>
 </div>

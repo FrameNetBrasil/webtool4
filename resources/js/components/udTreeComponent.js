@@ -1,13 +1,14 @@
 /**
- * Alpine.js D3 Tidy Tree Component
- * Renders hierarchical tree structures using D3.js
+ * Alpine.js UD Tree Component
+ * Renders hierarchical tree structures for Universal Dependencies parsing
+ * Uses JointJS for visualization
  * Supports: horizontal tree, vertical tree, and dependency arc diagrams
  *
  * Usage:
- * <div x-data="d3Tree(config)" x-init="init()" id="tree-container"></div>
+ * <div x-data="udTree(config)" x-init="init()" id="tree-container"></div>
  */
 
-export default function d3TreeComponent(config = {}) {
+export default function udTreeComponent(config = {}) {
     return {
         // Configuration properties
         data: config.data || {},
