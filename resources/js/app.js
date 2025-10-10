@@ -19,6 +19,7 @@ import searchFormComponent from './components/searchFormComponent.js';
 import dataGridComponent from './components/dataGridComponent.js';
 import udTreeComponent from './components/udTreeComponent.js';
 import grapherComponent from './components/grapherComponent.js';
+import contextMenuComponent from './components/contextMenuComponent.js';
 
 import '../css/fomantic-ui/semantic.less';
 // import 'primeflex/primeflex.css';
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Alpine.data('dataGrid', dataGridComponent);
     Alpine.data('udTree', udTreeComponent);
     Alpine.data('grapher', grapherComponent);
+    Alpine.data('contextMenu', contextMenuComponent);
     Alpine.start();
 
 });

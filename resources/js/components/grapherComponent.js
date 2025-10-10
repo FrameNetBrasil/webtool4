@@ -30,6 +30,7 @@ export default function grapherComponent(config = {}) {
 
         // State
         initialized: false,
+        hoverTimer: null,
 
         /**
          * Initialize the grapher component
@@ -100,6 +101,13 @@ export default function grapherComponent(config = {}) {
                 }
             });
 
+            this.paper.on('cell:pointerdown', (cellView, evt) => {
+                // Disable pan when interacting with cells to allow dragging
+                if (this.panAndZoom) {
+                    this.panAndZoom.disablePan();
+                }
+            });
+
             this.paper.on('cell:pointerup blank:pointerup', (cellView, event) => {
                 if (this.panAndZoom) {
                     this.panAndZoom.disablePan();
@@ -109,6 +117,7 @@ export default function grapherComponent(config = {}) {
             // Setup other event handlers
             this.paper.on('cell:pointerclick', (cellView) => this.cellClick(cellView));
             this.paper.on('cell:pointerdblclick', (cellView) => this.cellDblClick(cellView));
+            this.paper.on('cell:contextmenu', (cellView, evt) => this.cellContextMenu(cellView, evt));
             this.paper.on('link:mouseenter', (linkView) => this.linkEnter(linkView));
             this.paper.on('link:mouseleave', (linkView) => this.linkLeave(linkView));
             this.paper.on('element:mouseenter', (elementView) => this.elementEnter(elementView));
@@ -142,7 +151,7 @@ export default function grapherComponent(config = {}) {
                         id: index,
                         z: 2,
                     });
-                    rect.resize(w, 20);
+                    rect.resize(w, 30);
                     rect.attr({
                         body: {
                             class: `color_${node.type}`,
@@ -164,7 +173,7 @@ export default function grapherComponent(config = {}) {
                             body: {},
                             foreignObject: {
                                 width: w,
-                                height: 16,
+                                height: 24,
                                 class: `fe`,
                             },
                             fespanicon: {
@@ -191,7 +200,7 @@ export default function grapherComponent(config = {}) {
                             ]
                         }]
                     });
-                    rect.resize(w, 20);
+                    rect.resize(w, 28);
                 }
 
                 if (rect) {
@@ -300,14 +309,11 @@ export default function grapherComponent(config = {}) {
 
         /**
          * Handle cell click event
+         * Removed to avoid conflict with double-click
+         * Report is now accessible via context menu
          */
         cellClick(cellView) {
-            const currentElement = cellView.model;
-            if (cellView.model.isElement()) {
-                // Open frame report in modal
-                htmx.ajax('GET', `/grapher/frame/report/${currentElement.id}`, { target: '#frameReport' });
-                $('#grapherReportModal').modal('show');
-            }
+            // No action on single click
         },
 
         /**
@@ -321,6 +327,52 @@ export default function grapherComponent(config = {}) {
                 htmx.ajax('POST', `/grapher/${graphType}/graph/${currentElement.id}`, { target: '#graph' });
             } else if (cellView.model.isLink()) {
                 console.log(currentElement.source(), currentElement.target());
+            }
+        },
+
+        /**
+         * Handle cell context menu (right-click) event
+         */
+        cellContextMenu(cellView, evt) {
+            const currentElement = cellView.model;
+            if (cellView.model.isElement()) {
+                evt.preventDefault();
+                evt.stopPropagation();
+
+                // Find the context menu component and show it
+                const contextMenuEl = document.getElementById('grapherContextMenu');
+                if (contextMenuEl && window.Alpine) {
+                    const contextMenu = window.Alpine.$data(contextMenuEl);
+                    if (contextMenu && contextMenu.show) {
+                        contextMenu.show(evt, {
+                            id: currentElement.id,
+                            name: this.nodes[currentElement.id]?.name || '',
+                            type: this.nodes[currentElement.id]?.type || ''
+                        });
+                    }
+                }
+            }
+        },
+
+        /**
+         * Handle context menu actions
+         */
+        handleContextMenuAction(action, nodeId) {
+            switch (action) {
+                case 'view-report':
+                    htmx.ajax('GET', `/grapher/frame/report/${nodeId}`, { target: '#frameReport' });
+                    $('#grapherReportModal').modal('show');
+                    break;
+                case 'expand':
+                    const graphType = this.getGraphType();
+                    htmx.ajax('POST', `/grapher/${graphType}/graph/${nodeId}`, { target: '#graph' });
+                    break;
+                case 'remove':
+                    const cell = this.graph.getCell(nodeId);
+                    if (cell) {
+                        cell.remove();
+                    }
+                    break;
             }
         },
 
@@ -370,20 +422,96 @@ export default function grapherComponent(config = {}) {
          * Handle element mouse enter event
          */
         elementEnter(elementView) {
-            const removeButton = new joint.elementTools.Remove({});
-            const toolsView = new joint.dia.ToolsView({
-                tools: [removeButton]
-            });
+            const currentElement = elementView.model;
 
-            elementView.addTools(toolsView);
-            elementView.showTools();
+            // Clear any existing timer
+            if (this.hoverTimer) {
+                clearTimeout(this.hoverTimer);
+            }
+
+            // Add 300ms delay before showing context menu and tools
+            this.hoverTimer = setTimeout(() => {
+                // Small remove button centered on top-left corner
+                const removeButton = new joint.elementTools.Remove({
+                    offset: { x: 0, y: 0 },
+                    markup: [{
+                        tagName: 'circle',
+                        selector: 'button',
+                        attributes: {
+                            'r': 7,
+                            'fill': '#FF6B6B',
+                            'cursor': 'pointer'
+                        }
+                    }, {
+                        tagName: 'path',
+                        selector: 'icon',
+                        attributes: {
+                            'd': 'M -3 -3 3 3 M -3 3 3 -3',
+                            'fill': 'none',
+                            'stroke': '#FFFFFF',
+                            'stroke-width': 2,
+                            'pointer-events': 'none'
+                        }
+                    }]
+                });
+
+                const toolsView = new joint.dia.ToolsView({
+                    tools: [removeButton]
+                });
+
+                elementView.addTools(toolsView);
+                elementView.showTools();
+
+                // Show context menu on hover
+                const bbox = elementView.getBBox();
+
+                // Get the actual DOM element position in viewport coordinates
+                const nodeEl = elementView.el;
+                const nodeRect = nodeEl.getBoundingClientRect();
+
+                const contextMenuEl = document.getElementById('grapherContextMenu');
+                if (contextMenuEl && window.Alpine) {
+                    const contextMenu = window.Alpine.$data(contextMenuEl);
+                    if (contextMenu && contextMenu.showAtPosition) {
+                        contextMenu.showAtPosition(
+                            nodeRect.left,
+                            nodeRect.bottom + 5,
+                            {
+                                id: currentElement.id,
+                                name: this.nodes[currentElement.id]?.name || '',
+                                type: this.nodes[currentElement.id]?.type || ''
+                            }
+                        );
+                    }
+                }
+            }, 300);
         },
 
         /**
          * Handle element mouse leave event
          */
         elementLeave(elementView) {
+            // Clear hover timer if leaving before tools appear
+            if (this.hoverTimer) {
+                clearTimeout(this.hoverTimer);
+                this.hoverTimer = null;
+            }
+
             elementView.hideTools();
+
+            // Hide context menu when leaving element (unless mouse is over the menu)
+            const contextMenuEl = document.getElementById('grapherContextMenu');
+            if (contextMenuEl && window.Alpine) {
+                const contextMenu = window.Alpine.$data(contextMenuEl);
+                if (contextMenu && contextMenu.hide) {
+                    // Small delay to allow moving mouse to the menu
+                    setTimeout(() => {
+                        if (!contextMenu.isMouseOver) {
+                            contextMenu.hide();
+                        }
+                    }, 100);
+                }
+            }
         },
 
         /**
@@ -403,8 +531,20 @@ export default function grapherComponent(config = {}) {
         updateData(newNodes, newLinks) {
             this.nodes = newNodes || {};
             this.links = newLinks || {};
-            this.buildGraph();
-            this.layout();
+
+            // Check if paper's SVG still exists in DOM
+            const graphEl = this.$el.querySelector('#graph') || this.$el;
+            const paperStillExists = graphEl && graphEl.querySelector('svg');
+
+            // If paper was removed by HTMX swap, reinitialize everything
+            if (this.initialized && !paperStillExists) {
+                this.initializeGraph();
+                this.layout();
+            } else if (this.graph && this.initialized) {
+                // Paper exists, just rebuild with new data
+                this.buildGraph();
+                this.layout();
+            }
         },
 
         /**
@@ -420,7 +560,13 @@ export default function grapherComponent(config = {}) {
          * Public API method to trigger relayout from modal
          */
         relayout() {
-            this.layout();
+            // Only rebuild if graph is already initialized
+            if (this.graph && this.initialized) {
+                // Rebuild graph to apply connector changes
+                this.buildGraph();
+                // Apply layout with new settings
+                this.layout();
+            }
         }
     };
 }
