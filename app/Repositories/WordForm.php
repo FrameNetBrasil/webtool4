@@ -119,11 +119,13 @@ class WordForm
         if ($wf1 == "'") {
             $wf1 = "\'";
         }
+        $status = Status::CREATED->value;
         $r = DB::select("
                     select l.form,count(l.idLU) as n
                     from view_lexicon l
                     where (l.form = '{$wf1}' collate 'utf8mb4_bin' )
                     and (idLanguage = {$idLanguage})
+                    and (statusLU = '{$status}')
                     group by l.form
                     having count(l.idLU) > 0
                 ");
@@ -133,6 +135,7 @@ class WordForm
     public static function hasLU(array $wordformList): bool
     {
         $idLanguage = AppService::getCurrentIdLanguage();
+        $status = Status::CREATED->value;
         $list = [];
         foreach ($wordformList as $wf) {
             if ($wf != '') {
@@ -142,6 +145,7 @@ class WordForm
                     from view_lexicon l
                     where (l.form = '{$wf1}')
                     and (idLanguage = {$idLanguage})
+                    and (statusLU = '{$status}')
                     group by l.form
                     having count(l.idLU) > 0
 
@@ -194,6 +198,8 @@ class WordForm
             ->where("l1.idLanguage", "=", $idLanguageBase ?? $idLanguage)
             ->where("l1.position", "=", 1)
             ->where("frame.idLanguage", "=", $idLanguage)
+            ->where("l1.idLanguage", "=", $idLanguage)
+            ->where("l2.idLanguage", "=", $idLanguage)
             ->where("lu.status", Status::CREATED)
             ->orderBy("frame.name")
             ->orderBy("l2.lu");
