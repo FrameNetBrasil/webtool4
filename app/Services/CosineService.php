@@ -410,6 +410,13 @@ class CosineService
         return $vector;
     }
 
+    private static function createVectorForReference(int $idReference): array
+    {
+        print_r('idReference = '.$idReference."\n");
+        $referenceNode = Criteria::byId('cosine_node', 'idReference', $idReference);
+        return self::createVectorFromNode($referenceNode->idCosineNode);
+    }
+
     public static function compareTimespan(int $idDocument, int $idOriginMM, string $type = ''): array
     {
         $results = [];
@@ -498,6 +505,14 @@ class CosineService
             print_r($vector1);
             print_r($vector2);
         }
+
+        return self::compareVectors($vector1, $vector2);
+    }
+
+    public static function compareReferences(int $idReference1, int $idReference2): object
+    {
+        $vector1 = self::createVectorForReference($idReference1);
+        $vector2 = self::createVectorForReference($idReference2);
 
         return self::compareVectors($vector1, $vector2);
     }
