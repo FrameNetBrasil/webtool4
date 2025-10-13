@@ -296,6 +296,7 @@ and d.idDocument={$idDocument}
         // A diferença é que não posso comparar sentenças, pois os idSentences são os mesmos
         // tenho de comparar com base no idDocumentSentence
 
+        /*
         $docs = [
             'Reporter_Brasil_03_11',
             'Reporter_Brasil_03_12',
@@ -363,6 +364,94 @@ and d.idDocument={$idDocument}
             //            print_r($result);
             //            die;
             CosineService::writeToCSV(__DIR__."/{$name}.csv", $result);
+        }
+        */
+
+        // Mariane_videos
+        $references = [];
+        $idReference = 1;
+        $fileName = __DIR__ . "/Mariane_ad/PPM1_videos.csv";
+        if (($handle = fopen($fileName, "r")) !== FALSE) {
+            while (($line = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $references[trim($line[0])] = $idReference++;
+            }
+        }
+        fclose($handle);
+        print_r($references);
+        $fileName = __DIR__ . "/Mariane_ad/ppm01_with_anno.csv";
+        if (($handle = fopen($fileName, "r")) !== FALSE) {
+            while (($line = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $video = $line[0];
+                $frames = explode(";", trim($line[1]));
+                $idReference = $references[$video];
+
+                $referenceNode = Criteria::byId('cosine_node', 'idReference', $idReference);
+                if ($referenceNode?->idCosineNode) {
+                    Criteria::table('cosine_link')
+                        ->where('idCosineNodeSource', $referenceNode->idCosineNode)
+                        ->delete();
+                    Criteria::table('cosine_node')
+                        ->where('idCosineNode', $referenceNode->idCosineNode)
+                        ->delete();
+                }
+                $idCosineNodeReference = Criteria::create('cosine_node', [
+                    'name' => 'ref_' . $idReference,
+                    'type' => 'REF',
+                    'idReference' => $idReference,
+                ]);
+
+                foreach ($frames as $frame) {
+                    $idCosineNodeFrame = Criteria::byId('cosine_node', 'idFrame', $frame)->idCosineNode;
+                    Criteria::create('cosine_link', [
+                        'idCosineNodeSource' => $idCosineNodeReference,
+                        'idCosineNodeTarget' => $idCosineNodeFrame,
+                        'value' => 1.0,
+                        'type' => 'lu',
+                    ]);
+                }
+
+            }
+        }
+        fclose($handle);
+        $fileName = __DIR__ . "/Mariane_ad/ppm01_wo_anno.csv";
+        if (($handle = fopen($fileName, "r")) !== FALSE) {
+            while (($line = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $video = $line[0];
+                $frames = explode(";", trim($line[1]));
+                $idReference = $references[$video] + 1000;
+
+                $referenceNode = Criteria::byId('cosine_node', 'idReference', $idReference);
+                if ($referenceNode?->idCosineNode) {
+                    Criteria::table('cosine_link')
+                        ->where('idCosineNodeSource', $referenceNode->idCosineNode)
+                        ->delete();
+                    Criteria::table('cosine_node')
+                        ->where('idCosineNode', $referenceNode->idCosineNode)
+                        ->delete();
+                }
+                $idCosineNodeReference = Criteria::create('cosine_node', [
+                    'name' => 'ref_' . $idReference,
+                    'type' => 'REF',
+                    'idReference' => $idReference,
+                ]);
+
+                foreach ($frames as $frame) {
+                    $idCosineNodeFrame = Criteria::byId('cosine_node', 'idFrame', $frame)->idCosineNode;
+                    Criteria::create('cosine_link', [
+                        'idCosineNodeSource' => $idCosineNodeReference,
+                        'idCosineNodeTarget' => $idCosineNodeFrame,
+                        'value' => 1.0,
+                        'type' => 'lu',
+                    ]);
+                }
+
+            }
+        }
+        fclose($handle);
+
+        foreach ($references as $idReference) {
+            $r = CosineService::compareReferences($idReference, $idReference + 1000);
+            print_r($r);
         }
 
     }
