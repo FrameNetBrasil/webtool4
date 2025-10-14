@@ -1,3 +1,78 @@
+==
+Numero de AS em cada documento
+
+select name, a1.n
+from (
+select d.name,
+       count(distinct a.idAnnotationSet) n
+from view_annotationset a
+join view_document d on (a.idDocument = d.idDocument)
+where  d.name in (
+                'Reporter_Brasil_03_11',
+            'Reporter_Brasil_03_12',
+            'Reporter_Brasil_02_13',
+            'Reporter_Brasil_02_14',
+            'Reporter_Brasil_04_01',
+            'Reporter_Brasil_04_03',
+            'Reporter_Brasil_04_06',
+            'Reporter_Brasil_05_01',
+            'Reporter_Brasil_05_02',
+            'Reporter_Brasil_05_03',
+            'Reporter_Brasil_07_02',
+            'Reporter_Brasil_07_03',
+            'Reporter_Brasil_07_07'
+    )
+    and d.idLanguage = 1
+    and  d.idCorpus not in (227,228,229)
+    ) a
+    join  (
+          select d.name,
+                 count(distinct a.idAnnotationSet) n
+          from view_annotationset a
+          join view_document d on (a.idDocument = d.idDocument)
+          where  d.name in (
+                          'Reporter_Brasil_03_11',
+                      'Reporter_Brasil_03_12',
+                      'Reporter_Brasil_02_13',
+                      'Reporter_Brasil_02_14',
+                      'Reporter_Brasil_04_01',
+                      'Reporter_Brasil_04_03',
+                      'Reporter_Brasil_04_06',
+                      'Reporter_Brasil_05_01',
+                      'Reporter_Brasil_05_02',
+                      'Reporter_Brasil_05_03',
+                      'Reporter_Brasil_07_02',
+                      'Reporter_Brasil_07_03',
+                      'Reporter_Brasil_07_07'
+              )
+              and d.idLanguage = 1
+              and  d.idCorpus = 227
+              ) b on (a.name = b.name)
+              join (
+                   select d.name,
+                          count(distinct a.idAnnotationSet) n
+                   from view_annotationset a
+                   join view_document d on (a.idDocument = d.idDocument)
+                   where  d.name in (
+                                   'Reporter_Brasil_03_11',
+                               'Reporter_Brasil_03_12',
+                               'Reporter_Brasil_02_13',
+                               'Reporter_Brasil_02_14',
+                               'Reporter_Brasil_04_01',
+                               'Reporter_Brasil_04_03',
+                               'Reporter_Brasil_04_06',
+                               'Reporter_Brasil_05_01',
+                               'Reporter_Brasil_05_02',
+                               'Reporter_Brasil_05_03',
+                               'Reporter_Brasil_07_02',
+                               'Reporter_Brasil_07_03',
+                               'Reporter_Brasil_07_07'
+                       )
+                       and d.idLanguage = 1
+                       and  d.idCorpus = 228
+                       ) c on (a.name = c.name);
+
+
 == Diversidade de frames
 
 -- Quantos F e FE únicos
@@ -5,7 +80,7 @@ em Anno, LOME, LOMEEdt
 
 -- Anno
 
-select count(distinct idFrame),count(distinct idFrameElement)
+select d.name, count(distinct idFrame),count(distinct idFrameElement)
 from view_annotation_text_fe afe
 join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
 join view_document d on (a.idDocument = d.idDocument)
@@ -25,11 +100,12 @@ where  d.name in (
             'Reporter_Brasil_07_07'
     )
     and d.idLanguage = 1
-    and  d.idCorpus not in (227,228,229);
+    and  d.idCorpus not in (227,228,229)
+    group by d.name;
 
 -- LOME
 
-select count(distinct idFrame),count(distinct idFrameElement)
+select d.name,count(distinct idFrame),count(distinct idFrameElement)
 from view_annotation_text_fe afe
 join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
 join view_document d on (a.idDocument = d.idDocument)
@@ -49,12 +125,13 @@ where  d.name in (
             'Reporter_Brasil_07_07'
     )
     and d.idLanguage = 1
-    and  d.idCorpus in (227);
+    and  d.idCorpus in (227)
+    group by d.name;
 
 
 -- LOMEEdt
 
-select count(distinct idFrame),count(distinct idFrameElement)
+select d.name,count(distinct idFrame),count(distinct idFrameElement)
 from view_annotation_text_fe afe
 join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
 join view_document d on (a.idDocument = d.idDocument)
@@ -74,7 +151,8 @@ where  d.name in (
             'Reporter_Brasil_07_07'
     )
     and d.idLanguage = 1
-    and  d.idCorpus in (228);
+    and  d.idCorpus in (228)
+    group by d.name;
 
 -- Quantos F e FE únicos por sentença (em média)
 em Anno, LOME, LOMEEdt
