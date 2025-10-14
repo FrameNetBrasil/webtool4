@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Annotation;
+namespace App\Console\Commands\Reporter_Brasil;
 
 use App\Database\Criteria;
 use Illuminate\Console\Command;
@@ -183,7 +183,9 @@ class ReportBrasilEvalCommand extends Command
             ->keyBy('status')
             ->all();
 
-        // Get FE annotations grouped by timeline operation for this document
+        // Get FE annotations grouped by timeline operation and user type for this document
+        // Note: view_annotation_text_fe has multiple rows per annotation (one per language)
+        // So we count all rows to get the total FE annotation count
         $feAnnotationsByOperation = Criteria::table('view_annotation_text_fe as fe')
             ->join('view_annotationset as vas', 'fe.idAnnotationSet', '=', 'vas.idAnnotationSet')
             ->leftJoin('timeline as tl', function ($join) {
@@ -191,7 +193,12 @@ class ReportBrasilEvalCommand extends Command
                     ->where('tl.tableName', '=', 'annotation');
             })
             ->where('vas.idDocument', '=', $document->idDocument)
-            ->selectRaw('COALESCE(tl.operation, "C") as operation, COUNT(DISTINCT fe.idAnnotation) as count')
+            ->selectRaw('
+                COALESCE(tl.operation, "C") as operation,
+                COUNT(*) as count,
+                SUM(CASE WHEN COALESCE(tl.idUser, 611) = 611 THEN 1 ELSE 0 END) as automatic_count,
+                SUM(CASE WHEN COALESCE(tl.idUser, 611) <> 611 THEN 1 ELSE 0 END) as human_count
+            ')
             ->groupBy('operation')
             ->get()
             ->keyBy('operation')
@@ -248,6 +255,7 @@ class ReportBrasilEvalCommand extends Command
             'total_annotations' => $totalAnnotations,
             'total_fe_annotations' => $totalFeAnnotations,
             'status_counts' => $annotationSetsByStatus,
+            'fe_operations' => $feAnnotationsByOperation,
             'annotation_sets' => $annotationSets,
         ];
     }
@@ -589,26 +597,20 @@ class ReportBrasilEvalCommand extends Command
     {
         $handle = fopen($outputPath, 'w');
 
-        // Collect all unique statuses
-        $allStatuses = [];
-        foreach ($results as $result) {
-            foreach ($result['status_counts'] as $status => $statusData) {
-                if (! in_array($status, $allStatuses)) {
-                    $allStatuses[] = $status;
-                }
-            }
-        }
-        sort($allStatuses);
+        // Use fixed operations from timeline (C=Create, U=Update, D=Delete)
+        $allOperations = ['C', 'U', 'D'];
 
-        // Build header - same format as brasil_summary.csv
+        // Build header - with timeline operations and automatic/human counts
         $header = [
             'Document Name',
             'Document ID',
             'Corpus',
             'Total AS Count',
         ];
-        foreach ($allStatuses as $status) {
-            $header[] = "Status {$status} Count";
+        foreach ($allOperations as $operation) {
+            $header[] = "Operation {$operation} Count";
+            $header[] = "Operation {$operation} Automatic";
+            $header[] = "Operation {$operation} Human";
         }
         $header[] = 'Total Annotations';
 
@@ -623,9 +625,12 @@ class ReportBrasilEvalCommand extends Command
                 $result['annotation_set_count'],
             ];
 
-            // Add count for each status
-            foreach ($allStatuses as $status) {
-                $row[] = $result['status_counts'][$status]->count ?? 0;
+            // Add count for each operation from timeline with automatic/human breakdown
+            foreach ($allOperations as $operation) {
+                $operationData = $result['fe_operations'][$operation] ?? null;
+                $row[] = $operationData->count ?? 0;
+                $row[] = $operationData->automatic_count ?? 0;
+                $row[] = $operationData->human_count ?? 0;
             }
 
             // Use FE annotations count instead of target annotations

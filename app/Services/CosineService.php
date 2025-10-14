@@ -172,10 +172,6 @@ class CosineService
                 ->select('lu.idFrame')
                 ->distinct()
                 ->all();
-            if ($docSentence->idDocumentSentence == 3118762) {
-                print_r('idCosineNodeSentence = '.$idCosineNodeSentence."\n");
-                print_r($frames);
-            }
             foreach ($frames as $frame) {
                 $idCosineNodeFrame = Criteria::byId('cosine_node', 'idFrame', $frame->idFrame)->idCosineNode;
                 Criteria::create('cosine_link', [
@@ -401,12 +397,6 @@ class CosineService
             return [];
         }
         $vector = self::createVectorFromNode($sentenceNode->idCosineNode);
-        if ($idDocumentSentence == 3118762) {
-            print_r('idCosineNodeSentence = '.$sentenceNode->idCosineNode."\n");
-            print_r($vector);
-            print_r("==============================\n");
-        }
-
         return $vector;
     }
 
@@ -414,6 +404,9 @@ class CosineService
     {
         print_r('idReference = '.$idReference."\n");
         $referenceNode = Criteria::byId('cosine_node', 'idReference', $idReference);
+        if (is_null($referenceNode)) {
+            return [];
+        }
         return self::createVectorFromNode($referenceNode->idCosineNode);
     }
 
@@ -501,11 +494,6 @@ class CosineService
     {
         $vector1 = self::createVectorForDocumentSentence($idDocumentSentence1);
         $vector2 = self::createVectorForDocumentSentence($idDocumentSentence2);
-        if ($idDocumentSentence1 == 3118762) {
-            print_r($vector1);
-            print_r($vector2);
-        }
-
         return self::compareVectors($vector1, $vector2);
     }
 
