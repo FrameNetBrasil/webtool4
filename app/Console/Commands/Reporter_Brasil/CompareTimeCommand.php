@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Annotation;
+namespace App\Console\Commands\Reporter_Brasil;
 
 use App\Database\Criteria;
 use Illuminate\Console\Command;

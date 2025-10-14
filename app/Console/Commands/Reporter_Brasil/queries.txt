@@ -1,0 +1,170 @@
+== Diversidade de frames
+
+-- Quantos F e FE únicos
+em Anno, LOME, LOMEEdt
+
+-- Anno
+
+select count(distinct idFrame),count(distinct idFrameElement)
+from view_annotation_text_fe afe
+join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
+join view_document d on (a.idDocument = d.idDocument)
+where  d.name in (
+                'Reporter_Brasil_03_11',
+            'Reporter_Brasil_03_12',
+            'Reporter_Brasil_02_13',
+            'Reporter_Brasil_02_14',
+            'Reporter_Brasil_04_01',
+            'Reporter_Brasil_04_03',
+            'Reporter_Brasil_04_06',
+            'Reporter_Brasil_05_01',
+            'Reporter_Brasil_05_02',
+            'Reporter_Brasil_05_03',
+            'Reporter_Brasil_07_02',
+            'Reporter_Brasil_07_03',
+            'Reporter_Brasil_07_07'
+    )
+    and d.idLanguage = 1
+    and  d.idCorpus not in (227,228,229);
+
+-- LOME
+
+select count(distinct idFrame),count(distinct idFrameElement)
+from view_annotation_text_fe afe
+join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
+join view_document d on (a.idDocument = d.idDocument)
+where  d.name in (
+                'Reporter_Brasil_03_11',
+            'Reporter_Brasil_03_12',
+            'Reporter_Brasil_02_13',
+            'Reporter_Brasil_02_14',
+            'Reporter_Brasil_04_01',
+            'Reporter_Brasil_04_03',
+            'Reporter_Brasil_04_06',
+            'Reporter_Brasil_05_01',
+            'Reporter_Brasil_05_02',
+            'Reporter_Brasil_05_03',
+            'Reporter_Brasil_07_02',
+            'Reporter_Brasil_07_03',
+            'Reporter_Brasil_07_07'
+    )
+    and d.idLanguage = 1
+    and  d.idCorpus in (227);
+
+
+-- LOMEEdt
+
+select count(distinct idFrame),count(distinct idFrameElement)
+from view_annotation_text_fe afe
+join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
+join view_document d on (a.idDocument = d.idDocument)
+where  d.name in (
+                'Reporter_Brasil_03_11',
+            'Reporter_Brasil_03_12',
+            'Reporter_Brasil_02_13',
+            'Reporter_Brasil_02_14',
+            'Reporter_Brasil_04_01',
+            'Reporter_Brasil_04_03',
+            'Reporter_Brasil_04_06',
+            'Reporter_Brasil_05_01',
+            'Reporter_Brasil_05_02',
+            'Reporter_Brasil_05_03',
+            'Reporter_Brasil_07_02',
+            'Reporter_Brasil_07_03',
+            'Reporter_Brasil_07_07'
+    )
+    and d.idLanguage = 1
+    and  d.idCorpus in (228);
+
+-- Quantos F e FE únicos por sentença (em média)
+em Anno, LOME, LOMEEdt
+
+-- Anno
+
+select d.name,
+       count(distinct a.idSentence) as '#sentences',
+       count(distinct idFrame) as '#distinct_frames',
+       count(distinct idFrameElement) as '#distinct_fes',
+       count(distinct idFrame)/count(distinct a.idSentence) as 'avg_frame_sentence',
+       count(distinct idFrameElement)/count(distinct a.idSentence) as 'avg_fe_sentence'
+from view_annotation_text_fe afe
+join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
+join view_document d on (a.idDocument = d.idDocument)
+where  d.name in (
+                'Reporter_Brasil_03_11',
+            'Reporter_Brasil_03_12',
+            'Reporter_Brasil_02_13',
+            'Reporter_Brasil_02_14',
+            'Reporter_Brasil_04_01',
+            'Reporter_Brasil_04_03',
+            'Reporter_Brasil_04_06',
+            'Reporter_Brasil_05_01',
+            'Reporter_Brasil_05_02',
+            'Reporter_Brasil_05_03',
+            'Reporter_Brasil_07_02',
+            'Reporter_Brasil_07_03',
+            'Reporter_Brasil_07_07'
+    )
+    and d.idLanguage = 1
+    and  d.idCorpus not in (227,228,229)
+group by d.name;
+
+-- LOME
+
+select d.name,
+       count(distinct a.idSentence) as '#sentences',
+       count(distinct idFrame) as '#distinct_frames',
+       count(distinct idFrameElement) as '#distinct_fes',
+       count(distinct idFrame)/count(distinct a.idSentence) as 'avg_frame_sentence',
+       count(distinct idFrameElement)/count(distinct a.idSentence) as 'avg_fe_sentence'
+from view_annotation_text_fe afe
+join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
+join view_document d on (a.idDocument = d.idDocument)
+where  d.name in (
+                'Reporter_Brasil_03_11',
+            'Reporter_Brasil_03_12',
+            'Reporter_Brasil_02_13',
+            'Reporter_Brasil_02_14',
+            'Reporter_Brasil_04_01',
+            'Reporter_Brasil_04_03',
+            'Reporter_Brasil_04_06',
+            'Reporter_Brasil_05_01',
+            'Reporter_Brasil_05_02',
+            'Reporter_Brasil_05_03',
+            'Reporter_Brasil_07_02',
+            'Reporter_Brasil_07_03',
+            'Reporter_Brasil_07_07'
+    )
+    and d.idLanguage = 1
+    and  d.idCorpus = 227
+group by d.name;
+
+-- LOMEEdt
+
+select d.name,
+       count(distinct a.idSentence) as '#sentences',
+       count(distinct idFrame) as '#distinct_frames',
+       count(distinct idFrameElement) as '#distinct_fes',
+       count(distinct idFrame)/count(distinct a.idSentence) as 'avg_frame_sentence',
+       count(distinct idFrameElement)/count(distinct a.idSentence) as 'avg_fe_sentence'
+from view_annotation_text_fe afe
+join view_annotationset a on (afe.idAnnotationSet = a.idAnnotationSet)
+join view_document d on (a.idDocument = d.idDocument)
+where  d.name in (
+                'Reporter_Brasil_03_11',
+            'Reporter_Brasil_03_12',
+            'Reporter_Brasil_02_13',
+            'Reporter_Brasil_02_14',
+            'Reporter_Brasil_04_01',
+            'Reporter_Brasil_04_03',
+            'Reporter_Brasil_04_06',
+            'Reporter_Brasil_05_01',
+            'Reporter_Brasil_05_02',
+            'Reporter_Brasil_05_03',
+            'Reporter_Brasil_07_02',
+            'Reporter_Brasil_07_03',
+            'Reporter_Brasil_07_07'
+    )
+    and d.idLanguage = 1
+    and  d.idCorpus = 228
+group by d.name;
