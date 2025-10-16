@@ -1,4 +1,5 @@
 <form>
+    <input type="hidden" name="idFrame" value="{{$idFrame}}">
     <div class="ui fluid card form-card">
         <div class="content">
             <div class="ui form">
@@ -36,7 +37,7 @@
                         <button
                             class="ui button primary"
                             hx-post="/lu"
-                        >AddLU
+                        >Add LU
                         </button>
                     </div>
                 </div>
