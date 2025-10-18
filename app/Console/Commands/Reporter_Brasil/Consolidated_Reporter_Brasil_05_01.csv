@@ -1,5 +1,4 @@
 idDocumentSentence1,idDocumentSentence2,cosine_anno_lome,cosine_anno_lomeedt,cosine_lome_lomeedt,sentence
-4361530,5229876,0.954493,0.954493,1,"Devido a uma operação para apreender suspeitos de roubos de veículos em vias expressas da cidade."
 3111673,5229869,0.595746,0.595746,1,"Próximo a um conjunto de favelas da Maré, um ônibus foi incendiado na Avenida Brasil."
 3111679,5229871,0.426854,0.426854,1,"Os veículos só voltaram a circular no fim da manhã."
 3111664,5229864,0.454544,0.454544,1,"Um policial e dois suspeitos foram mortos."
@@ -13,3 +12,4 @@ idDocumentSentence1,idDocumentSentence2,cosine_anno_lome,cosine_anno_lomeedt,cos
 3111681,5229872,0.643835,0.643835,1,"Segundo os governos municipal e estadual, quarenta escolas do município e duas do estado não abriram as portas por causa dos tiroteios."
 3111685,5229874,0.451067,0.451067,1,"A PM disse que prendeu dois suspeitos e recuperou quatro veículos roubados, além de apreender armas e material usado para embalar entorpecentes."
 3111669,5229867,0.629647,0.629647,1,"Outros dois homens suspeitos de serem seguranças do tráfico morreram."
+4361530,5229876,0.954493,0.954493,1,"Devido a uma operação para apreender suspeitos de roubos de veículos em vias expressas da cidade."
