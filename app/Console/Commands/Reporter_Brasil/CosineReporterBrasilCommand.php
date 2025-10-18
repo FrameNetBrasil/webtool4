@@ -42,7 +42,6 @@ class CosineReporterBrasilCommand extends Command
             'Reporter_Brasil_02_13',
             'Reporter_Brasil_02_14',
             'Reporter_Brasil_04_01',
-            'Reporter_Brasil_04_03',
             'Reporter_Brasil_04_06',
             'Reporter_Brasil_05_01',
             'Reporter_Brasil_05_02',

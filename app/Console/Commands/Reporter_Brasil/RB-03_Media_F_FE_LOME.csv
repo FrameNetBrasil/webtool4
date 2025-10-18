@@ -1,0 +1,13 @@
+name,#sentences,#distinct_frames,#distinct_fes,avg_frame_sentence,avg_fe_sentence
+Reporter_Brasil_02_13,22,53,83,2.4091,3.7727
+Reporter_Brasil_02_14,23,56,94,2.4348,4.0870
+Reporter_Brasil_03_11,26,56,86,2.1538,3.3077
+Reporter_Brasil_03_12,26,57,92,2.1923,3.5385
+Reporter_Brasil_04_01,46,87,138,1.8913,3.0000
+Reporter_Brasil_04_06,9,20,28,2.2222,3.1111
+Reporter_Brasil_05_01,15,26,41,1.7333,2.7333
+Reporter_Brasil_05_02,23,54,75,2.3478,3.2609
+Reporter_Brasil_05_03,20,59,93,2.9500,4.6500
+Reporter_Brasil_07_02,22,58,91,2.6364,4.1364
+Reporter_Brasil_07_03,13,46,69,3.5385,5.3077
+Reporter_Brasil_07_07,17,60,77,3.5294,4.5294

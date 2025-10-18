@@ -15,6 +15,7 @@ class CompareTimeCommand extends Command
      */
     protected $signature = 'annotation:compare-time
                             {--output= : Output CSV file path for results}
+                            {--aggregated-output= : Output CSV file path for aggregated document-level results}
                             {--group-by=document : Group results by document or sentence}';
 
     /**
@@ -108,11 +109,37 @@ class CompareTimeCommand extends Command
 
         // Export to CSV if requested
         if ($outputPath) {
-            $this->exportToCSV($allResults, $outputPath);
-            $this->info("✓ Results exported to: {$outputPath}");
+            // Resolve paths relative to command directory
+            $fullOutputPath = $this->resolveOutputPath($outputPath);
+            $this->exportToCSV($allResults, $fullOutputPath);
+            $this->info("✓ Results exported to: {$fullOutputPath}");
+
+            // Export aggregated document-level CSV
+            $aggregatedPath = $this->option('aggregated-output');
+            if ($aggregatedPath) {
+                $fullAggregatedPath = $this->resolveOutputPath($aggregatedPath);
+            } else {
+                $fullAggregatedPath = str_replace('.csv', '_aggregated.csv', $fullOutputPath);
+            }
+            $this->exportAggregatedToCSV($allResults, $fullAggregatedPath);
+            $this->info("✓ Aggregated results exported to: {$fullAggregatedPath}");
         }
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Resolve output path relative to command directory if not absolute
+     */
+    private function resolveOutputPath(string $path): string
+    {
+        // If path is absolute, return as-is
+        if (str_starts_with($path, '/') || preg_match('/^[A-Z]:/i', $path)) {
+            return $path;
+        }
+
+        // Otherwise, resolve relative to command directory
+        return __DIR__.'/'.$path;
     }
 
     /**
@@ -262,6 +289,89 @@ class CompareTimeCommand extends Command
                 // $result['avg_time_per_session_ds2'],
                 $result['sentence_text'],
             ]);
+        }
+
+        fclose($handle);
+    }
+
+    /**
+     * Export aggregated document-level results to CSV
+     */
+    protected function exportAggregatedToCSV(array $results, string $outputPath): void
+    {
+        $handle = fopen($outputPath, 'w');
+
+        // Write header
+        fputcsv($handle, [
+            'Document Name',
+            'number of sentences',
+            'avg sentence length',
+            'avg time DS1',
+            'avg time DS2',
+            'time difference',
+        ]);
+
+        // Group results by document
+        $documentGroups = [];
+        foreach ($results as $result) {
+            $documentGroups[$result['document_name']][] = $result;
+        }
+
+        // Process each document
+        foreach ($documentGroups as $documentName => $documentResults) {
+            // Filter valid sentences (exclude if time is 0 or > 10000 for either DS1 or DS2)
+            $validResults = array_filter($documentResults, function ($result) {
+                return $result['total_time_ds1'] > 0
+                    && $result['total_time_ds2'] > 0
+                    && $result['total_time_ds1'] <= 10000
+                    && $result['total_time_ds2'] <= 10000;
+            });
+
+            $validCount = count($validResults);
+
+            if ($validCount === 0) {
+                // If no valid sentences, write row with zeros
+                fputcsv($handle, [
+                    $documentName,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                ]);
+
+                continue;
+            }
+
+            // Calculate average sentence length
+            $totalLength = array_sum(array_map(fn ($r) => mb_strlen($r['sentence_text']), $validResults));
+            $avgLength = round($totalLength / $validCount, 2);
+
+            // Calculate average times
+            $avgTimeDS1 = array_sum(array_column($validResults, 'total_time_ds1')) / $validCount;
+            $avgTimeDS2 = array_sum(array_column($validResults, 'total_time_ds2')) / $validCount;
+
+            // Calculate time difference
+            $timeDifference = $avgTimeDS1 - $avgTimeDS2;
+
+            // Write row
+            fputcsv($handle, [
+                $documentName,
+                $validCount,
+                $avgLength,
+                round($avgTimeDS1, 2),
+                round($avgTimeDS2, 2),
+                round($timeDifference, 2),
+            ]);
+
+            // Display filtering info if verbose
+            if ($this->option('verbose')) {
+                $totalCount = count($documentResults);
+                $filtered = $totalCount - $validCount;
+                if ($filtered > 0) {
+                    $this->line("  {$documentName}: {$validCount}/{$totalCount} valid sentences (filtered {$filtered})");
+                }
+            }
         }
 
         fclose($handle);

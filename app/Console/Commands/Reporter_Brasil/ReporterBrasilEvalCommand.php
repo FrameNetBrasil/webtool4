@@ -5,14 +5,14 @@ namespace App\Console\Commands\Reporter_Brasil;
 use App\Database\Criteria;
 use Illuminate\Console\Command;
 
-class ReportBrasilEvalCommand extends Command
+class ReporterBrasilEvalCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'annotation:report-brasil-eval
+    protected $signature = 'annotation:reporter-brasil-eval
                             {--output= : Output CSV file path for detailed results}
                             {--summary= : Output CSV file path for document summary only}
                             {--fe-summary= : Output CSV file path for Frame Element annotations summary}';
@@ -41,7 +41,7 @@ class ReportBrasilEvalCommand extends Command
         $this->info('📊 Reporter Brasil Evaluation - Annotation Sets Report');
         $this->newLine();
 
-        $csvPath = app_path('Console/Commands/Annotation/report_brasil_eval.csv');
+        $csvPath = app_path('Console/Commands/Reporter_Brasil/reporter_brasil_eval.csv');
 
         if (! file_exists($csvPath)) {
             $this->error("❌ CSV file not found: {$csvPath}");
@@ -175,7 +175,7 @@ class ReportBrasilEvalCommand extends Command
         $this->stats['found']++;
 
         // Get annotation sets grouped by status for this document
-        $annotationSetsByStatus = Criteria::table('view_annotationset')
+        $annotationSetsByStatus = Criteria::table('view_annotationset_full')
             ->selectRaw('status, COUNT(*) as count')
             ->where('idDocument', '=', $document->idDocument)
             ->groupBy('status')
@@ -187,12 +187,13 @@ class ReportBrasilEvalCommand extends Command
         // Note: view_annotation_text_fe has multiple rows per annotation (one per language)
         // So we count all rows to get the total FE annotation count
         $feAnnotationsByOperation = Criteria::table('view_annotation_text_fe as fe')
-            ->join('view_annotationset as vas', 'fe.idAnnotationSet', '=', 'vas.idAnnotationSet')
+            ->join('view_annotationset_full as vas', 'fe.idAnnotationSet', '=', 'vas.idAnnotationSet')
             ->leftJoin('timeline as tl', function ($join) {
                 $join->on('tl.id', '=', 'fe.idAnnotation')
                     ->where('tl.tableName', '=', 'annotation');
             })
             ->where('vas.idDocument', '=', $document->idDocument)
+            ->where("fe.idLanguage", 1)
             ->selectRaw('
                 COALESCE(tl.operation, "C") as operation,
                 COUNT(*) as count,
@@ -205,7 +206,7 @@ class ReportBrasilEvalCommand extends Command
             ->all();
 
         // Get all annotation sets for detailed processing
-        $annotationSets = Criteria::table('view_annotationset')
+        $annotationSets = Criteria::table('view_annotationset_full')
             ->where('idDocument', '=', $document->idDocument)
             ->orderBy('idAnnotationSet')
             ->get()
@@ -220,12 +221,14 @@ class ReportBrasilEvalCommand extends Command
         foreach ($annotationSets as $annotationSet) {
             $annotations = Criteria::table('view_annotation_text_target')
                 ->where('idAnnotationSet', '=', $annotationSet->idAnnotationSet)
+                ->where("idLanguage", 1)
                 ->orderBy('idAnnotation')
                 ->get()
                 ->all();
 
             $feAnnotations = Criteria::table('view_annotation_text_fe')
                 ->where('idAnnotationSet', '=', $annotationSet->idAnnotationSet)
+                ->where("idLanguage", 1)
                 ->orderBy('idAnnotation')
                 ->get()
                 ->all();

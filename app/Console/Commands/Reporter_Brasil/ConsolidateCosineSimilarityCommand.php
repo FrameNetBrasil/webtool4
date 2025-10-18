@@ -36,7 +36,7 @@ class ConsolidateCosineSimilarityCommand extends Command
         $this->info('📊 Reporter Brasil Cosine Similarity Consolidation');
         $this->newLine();
 
-        $csvPath = app_path('Console/Commands/Reporter_Brasil/report_brasil_eval.csv');
+        $csvPath = app_path('Console/Commands/Reporter_Brasil/reporter_brasil_eval.csv');
 
         if (! file_exists($csvPath)) {
             $this->error("❌ CSV file not found: {$csvPath}");
