@@ -1,19 +1,22 @@
-1. Número de AS em cada documento
-2. F/FE únicos - Anno
-3. F/FE únicos - LOME
-4. F/FE únicos - LOME Edit
-5. Média de F/FE por sentença - Anno
-6. Média de F/FE por sentença - LOME
-7. Média de F/FE por sentença - LOME Edit
-8. Cosine
+RB-01. Número de AS em cada documento
+RB-02.
+- F/FE únicos - Anno
+- F/FE únicos - LOME
+- F/FE únicos - LOME Edit
+RB-03.
+- Média de F/FE por sentença - Anno
+- Média de F/FE por sentença - LOME
+- Média de F/FE por sentença - LOME Edit
+RB-04.
     - rodar php artisan cosine:reporterbrasil
     - rodar php artisan cosine:consolidate-reporter-brasil
     - rodar php artisan cosine:aggregate-reporter-brasil
-9. Tempos
+RB-05.
     - rodar php artisan annotation:compare-time --output=RB_compare_time.csv
-10. Edições
+RB-06. Edições realizadas
     - rodar php artisan annotation:reporter-brasil-eval --summary=RB_summary_as.csv --fe-summary=RB_summary_fes.csv
-11. FEs CORE/NI
+RB-07. FEs CORE/NI
+RB-08. FEs CORE minimum
 
 ===
 1.Numero de AS em cada documento
