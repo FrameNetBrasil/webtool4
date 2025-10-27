@@ -63,7 +63,7 @@ class CosineReporterBrasilCommand extends Command
         }
         $lomeDocs = Criteria::table('view_document')
             ->where('idLanguage', 1)
-            ->whereIn('idCorpus', [227])
+            ->whereIn('idCorpus', [227,228])
             ->whereIN('name', $docs)
             ->select('idDocument')
             ->all();
@@ -152,6 +152,9 @@ class CosineReporterBrasilCommand extends Command
             ->get()->groupBy('name')->toArray();
         //        print_r($documents);
         foreach ($documents as $name => $docSentencePairs) {
+//            if (!in_array($name, $docs)) {
+//                continue;
+//            }
             print_r($name."\n");
             $result = [];
             foreach ($docSentencePairs as $pair) {
