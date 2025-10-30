@@ -697,7 +697,7 @@ class XsdCompliantGenerators
                 $elRealization->appendChild($elFE);
                 foreach ($gfptas as $gf => $ptas) {
                     foreach ($ptas as $pt => $idRealization) {
-                        print_r($gf . '   ' . $pt . '    ' . count($realizationAS[$idRealization[0]]) . "\n");
+                        //print_r($gf . '   ' . $pt . '    ' . count($realizationAS[$idRealization[0]]) . "\n");
                         $elPattern = $dom->createElement('pattern');
                         $elPattern->setAttribute('total', count($realizationAS[$idRealization[0]]));
                         $elValenceUnit = $dom->createElement('valenceUnit');

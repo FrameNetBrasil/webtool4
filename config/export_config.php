@@ -177,7 +177,7 @@ return [
 
     // Performance settings
     'performance' => [
-        'memory_limit' => '512M',
+        'memory_limit' => '2G', // Increased for large exports
         'max_execution_time' => 0, // 0 = no limit
         'chunk_size' => 1000, // For large result sets
         'enable_gc' => true, // Enable garbage collection
