@@ -2,7 +2,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['','New LayerGroup']]"
+            :sections="[['/','Home'],['/admin','Admin'],['/layers','Layer/GenericLabel'],['','New Layer Group']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="ui container">
@@ -11,10 +11,7 @@
                         <div class="ui card form-card w-full p-1">
                             <div class="content">
                                 <div class="header">
-                                    Create new LayerGroup
-                                </div>
-                                <div class="description">
-
+                                    Create new Layer Group
                                 </div>
                             </div>
                             <div class="content">
@@ -24,23 +21,18 @@
                                         <input type="text" id="name" name="name" value="">
                                     </div>
                                 </div>
-
                                 <div class="field">
-                                    <x-combobox.options
-                                        id="type"
-                                        label="Type"
-                                        :options="['Deixis' => 'Deixis','Text' => 'Text']"
-                                        value=""
-                                    >
-                                    </x-combobox.options>
+                                    <label for="type">Type</label>
+                                    <div class="ui small input">
+                                        <input type="text" id="type" name="type" value="">
+                                    </div>
                                 </div>
                             </div>
                             <div class="extra content">
                                 <button
                                     type="submit"
                                     class="ui primary button"
-                                    hx-post="/layers/layergroup/new"
-                                    hx-target="#editarea"
+                                    hx-post="/layers/new"
                                 >
                                     Save
                                 </button>

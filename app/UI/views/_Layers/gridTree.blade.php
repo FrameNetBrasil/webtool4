@@ -55,7 +55,7 @@
         }
     } else {
         $genericlabels = Criteria::table("genericlabel as gl")
-            ->join("view_layerType lt","lt.idLayterType","=","gl.idLayerType")
+            ->join("view_layerType lt","lt.idLayerType","=","gl.idLayerType")
             ->select('idGenericLabel', 'name', "lt.name as layerName")
             ->where("gl.name", "startswith", $search->genericlabel)
             ->where('gl.idLanguage', "=", $idLanguage)
@@ -115,13 +115,13 @@
                             onClickRow: (row) => {
                                 let id = row.id.substr(1);
                                 if (row.type === "layergroup") {
-                                    htmx.ajax("GET", `/layers/layergroup/${id}/edit`, "#editarea");
+                                    htmx.ajax("GET", `/layers/${id}/formEdit`, "#editArea");
                                 }
                                 if (row.type === "layertype") {
-                                    htmx.ajax("GET", `/layers/layertype/${id}/edit`, "#editarea");
+                                    htmx.ajax("GET", `/layertype/${id}/formEdit`, "#editArea");
                                 }
                                 if (row.type === "genericlabel") {
-                                    htmx.ajax("GET", `/layers/genericlabel/${id}/edit`, "#editarea");
+                                    htmx.ajax("GET", `/genericlabel/${id}/formEdit`, "#editArea");
                                 }
                             }
                         });

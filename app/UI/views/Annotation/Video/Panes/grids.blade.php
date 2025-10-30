@@ -7,10 +7,12 @@
         class="item"
         data-tab="objects"
     >Objects</a>
+    @if($annotationType != 'canvas')
     <a
         class="item"
         data-tab="sentences"
     >Sentences</a>
+    @endif
 </div>
 <div class="gridBody">
     <div
@@ -26,9 +28,11 @@
             'annotationType' => $annotationType
         ])
     </div>
+    @if($annotationType != 'canvas')
     <div class="ui tab h-full w-full sentences" data-tab="sentences">
 
     </div>
+    @endif
 </div>
 <script type="text/javascript">
     $(function() {
