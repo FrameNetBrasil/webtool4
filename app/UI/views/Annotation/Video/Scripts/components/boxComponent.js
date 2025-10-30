@@ -396,7 +396,7 @@ function boxComponent(idVideoDOMElement) {
                 return newBBox;
                 //this.showBBox(); // Refresh to show new bbox
             } else {
-                if (this.currentFrame !== this.object.startFrame) {
+                if ((this.currentFrame !== this.object.startFrame) && (this.isTracking)) {
                     messenger.notify("warning", "There is no previous BBox to tracking");
                 }
                 return null;

@@ -50,7 +50,7 @@ class VideoService
         $timelineConfig = self::getTimelineConfig($timelineData);
         $groupedLayers = self::groupLayersByName($timelineData);
 
-        $at = ($annotationType == 'deixis') ? AnnotationType::DEIXIS->value : AnnotationType::DYNAMICMODE->value;
+        $at = ($annotationType == 'deixis') ? AnnotationType::DEIXIS->value : (($annotationType == 'canvas') ? AnnotationType::CANVAS->value : AnnotationType::DYNAMICMODE->value);
         $comment = $idObject ? CommentService::getComment($idObject, $idDocument, $at) : null;
         return [
             'idDocument' => $idDocument,
@@ -75,20 +75,16 @@ class VideoService
     public static function getLayersByDocument(int $idDocument, string $annotationType): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $view = ($annotationType == 'deixis') ? 'view_annotation_deixis as ad' : 'view_annotation_dynamic as ad';
+        $view = 'view_annotation_dynamic as ad';
+        if ($annotationType == 'deixis') {
+            $view = 'view_annotation_deixis as ad';
+        }
+        if ($annotationType == 'canvas') {
+            $view = 'view_annotation_canvas as ad';
+        }
         $objects = Criteria::table($view)
-//            ->leftJoin('view_lu', 'ad.idLu', '=', 'view_lu.idLU')
-//            ->leftJoin('frameelement as fe', 'ad.idFrameElement', '=', 'fe.idFrameElement')
-//            ->leftJoin('color', 'fe.idColor', '=', 'color.idColor')
-//            ->leftJoin('view_frame', 'view_lu.idFrame', '=', 'view_frame.idFrame')
-//            ->leftJoin('annotationcomment as ac', 'ad.idDynamicObject', '=', 'ac.idDynamicObject')
             ->where('ad.idLanguage', $idLanguage)
-//            ->where('ad.idLanguageFLU', 'left', $idLanguage)
-//            ->where('ad.idLanguageGL', 'left', $idLanguage)
-//            ->where('ad.idLanguageFFE', 'left', $idLanguage)
-//            ->where('ad.idLanguageFE', 'left', $idLanguage)
             ->where('ad.idDocument', $idDocument)
-//            ->where('view_frame.idLanguage', 'left', $idLanguage)
             ->select('ad.idDynamicObject as idObject', 'ad.name', 'ad.startFrame', 'ad.endFrame', 'ad.startTime', 'ad.endTime', 'ad.status', 'ad.origin',
                 'ad.layerGroup','ad.layerOrder','ad.idLayerType','ad.nameLayerType',
                 'ad.idAnnotationGL','ad.idGenericLabel','ad.gl',
@@ -101,16 +97,6 @@ class VideoService
             ->orderBy('ad.idDynamicObject')
             ->keyBy('idObject')
             ->all();
-//        $bboxes = [];
-//        $idDynamicObjectList = array_keys($objects);
-//        if (count($idDynamicObjectList) > 0) {
-//            $bboxList = Criteria::table('view_dynamicobject_boundingbox')
-//                ->whereIN('idDynamicObject', $idDynamicObjectList)
-//                ->all();
-//            foreach ($bboxList as $bbox) {
-//                $bboxes[$bbox->idDynamicObject][] = $bbox;
-//            }
-//        }
         $countBBoxes = [];
         $idDynamicObjectList = array_keys($objects);
         if (count($idDynamicObjectList) > 0) {
@@ -179,7 +165,7 @@ class VideoService
             $idLayerType = $object->idLayerType;
         }
         $result = [];
-        if ($annotationType == 'deixis') {
+        if (($annotationType == 'deixis') || ($annotationType == 'canvas')) {
             foreach ($objectsRows as $layers) {
                 foreach ($layers as $objects) {
                     $result[] = [
@@ -256,7 +242,13 @@ class VideoService
 
     public static function getObject(ObjectSearchData $data): ?object
     {
-        $view = ($data->annotationType == 'deixis') ? 'view_annotation_deixis as ad' : 'view_annotation_dynamic as ad';
+        $view = 'view_annotation_dynamic as ad';
+        if ($data->annotationType == 'deixis') {
+            $view = 'view_annotation_deixis as ad';
+        }
+        if ($data->annotationType == 'canvas') {
+            $view = 'view_annotation_canvas as ad';
+        }
         $idObject = $data->idObject;
         $idLanguage = AppService::getCurrentIdLanguage();
 
@@ -377,7 +369,13 @@ class VideoService
             $data->idLayerType = $layerType->idLayerType;
             $data->endFrame = $data->startFrame;
         }
-        $origin = ($data->annotationType == 'deixis') ? 5 : 1;
+        $origin = 1;
+        if ($data->annotationType == 'deixis') {
+            $origin = 5;
+        }
+        if ($data->annotationType == 'canvas') {
+            $origin = 6;
+        }
         $idUser = AppService::getCurrentIdUser();
         $do = json_encode([
             'name' => '',
@@ -489,6 +487,16 @@ class VideoService
             $annotation = json_encode([
                 'idDynamicObject' => $do->idDynamicObject,
                 'idEntity' => $lu->idEntity,
+                'idUser' => AppService::getCurrentIdUser()
+            ]);
+            $idAnnotation = Criteria::function('annotation_create(?)', [$annotation]);
+            Timeline::addTimeline('annotation', $idAnnotation, 'C');
+        }
+        if ($data->idGenericLabel) {
+            $gl = Criteria::byId('genericlabel', 'idGenericLabel', $data->idGenericLabel);
+            $annotation = json_encode([
+                'idDynamicObject' => $do->idDynamicObject,
+                'idEntity' => $gl->idEntity,
                 'idUser' => AppService::getCurrentIdUser()
             ]);
             $idAnnotation = Criteria::function('annotation_create(?)', [$annotation]);

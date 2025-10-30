@@ -9,22 +9,8 @@
         <x-button
             label="New LayerGroup"
             color="secondary"
-            hx-get="/layers/layergroup/new"
-            hx-target="#editarea"
-            hx-swap="innerHTML"
-        ></x-button>
-        <x-button
-            label="New LayerType"
-            color="secondary"
-            hx-get="/layers/layertype/new"
-            hx-target="#editarea"
-            hx-swap="innerHTML"
-        ></x-button>
-        <x-button
-            label="New GenericLabel"
-            color="secondary"
-            hx-get="/layers/genericlabel/new"
-            hx-target="#editarea"
+            hx-get="/layers/new"
+            hx-target="#editArea"
             hx-swap="innerHTML"
         ></x-button>
     </x-slot:actions>
@@ -47,7 +33,7 @@
                     id="genericlabel"
                     value="{{$search->genericlabel}}"
                     placeholder="Search GenericLabel"
-                    hx-post="/lexicon/grid/search"
+                    hx-post="/layers/grid/search"
                     hx-trigger="input changed delay:500ms, search"
                     hx-target="#layersTreeWrapper"
                     hx-swap="innerHTML"
@@ -65,7 +51,7 @@
     </x-slot:grid>
     <x-slot:edit>
         <div
-            id="editarea"
+            id="editArea"
             hx-on:clear-editarea="this.innerHTML=''"
         >
         </div>

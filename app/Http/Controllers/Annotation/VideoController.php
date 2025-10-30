@@ -103,7 +103,8 @@ class VideoController extends Controller
             $this->trigger('updateObjectAnnotationEvent');
 
             // return Criteria::byId("dynamicobject", "idDynamicObject", $idDynamicObject);
-            return $this->renderNotify('success', 'Object updated.');
+            //return $this->renderNotify('success', 'Object updated.');
+            return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$idDynamicObject}");
         } catch (\Exception $e) {
             debug($e->getMessage());
 
