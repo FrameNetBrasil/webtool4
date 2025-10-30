@@ -2,25 +2,25 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['','Corpus/Document']]"
+            :sections="[['/','Home'],['/manager','Manager'],['','Group/User']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <x-ui::browse-tree
-                title="Corpus/Document"
-                url="/corpus/browse/search"
-                emptyMsg="Enter your search term above to find Corpus or Documents."
+                title="Group/User"
+                url="/user/search"
+                emptyMsg="Enter your search term above to find Groups or Users."
                 :data="$data"
             >
                 <x-slot:actions>
-                    <a href="/corpus/new"
+                    <a href="/group/new"
                        rel="noopener noreferrer"
                        class="ui button secondary">
-                        New Corpus
+                        New Group
                     </a>
-                    <a href="/document/new"
+                    <a href="/user/new"
                        rel="noopener noreferrer"
                        class="ui button secondary">
-                        New Document
+                        New User
                     </a>
                 </x-slot:actions>
                 <x-slot:fields>
@@ -30,8 +30,8 @@
                                 <i class="search icon"></i>
                                 <input
                                     type="search"
-                                    name="corpus"
-                                    placeholder="Search Corpus"
+                                    name="group"
+                                    placeholder="Search Group"
                                     autocomplete="off"
                                 >
                             </div>
@@ -41,8 +41,8 @@
                                 <i class="search icon"></i>
                                 <input
                                     type="search"
-                                    name="document"
-                                    placeholder="Search Document"
+                                    name="user"
+                                    placeholder="Search User (login/email/name)"
                                     autocomplete="off"
                                 >
                             </div>
@@ -53,21 +53,21 @@
                 <x-slot:tree>
                     <div
                         x-data
-                        class="w-full"
+                        class="w-full h-full"
                         @tree-item-selected.document="(event) => {
                                                     let type =  event.detail.type;
                                                     let idNode = type + '_' + event.detail.id;
                                                     console.log(event.detail);
-                                                    if (type === 'corpus') {
-                                                        window.location.assign(`/corpus/${event.detail.id}/edit`);
+                                                    if (type === 'group') {
+                                                        window.location.assign(`/group/${event.detail.id}/edit`);
                                                     }
-                                                    if (type === 'document') {
-                                                        window.location.assign(`/document/${event.detail.id}/edit`);
+                                                    if (type === 'user') {
+                                                        window.location.assign(`/user/${event.detail.id}/edit`);
                                                     }
                                                 }"
                     >
-                        <div id="treeArea">
-                            @include("Corpus.tree")
+                        <div id="treeArea" class="h-full">
+                            @include("User.tree", ['title' => '', 'data' => $data])
                         </div>
                     </div>
                 </x-slot:tree>
