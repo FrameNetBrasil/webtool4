@@ -23,6 +23,7 @@ return [
         'AUTH0_BASE_URL' => env('AUTH0_BASE_URL'),
     ],
     'actions' => [
+        'documentation' => ['Documentation', '/docs', '', []],
         'report' => ['Report', '/report', '', [
             'reportframe' => ['Frame', '/report/frame', '', []],
             'reportlu' => ['LU', '/report/lu', '', []],
