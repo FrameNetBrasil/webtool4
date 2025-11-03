@@ -137,9 +137,40 @@ function boxComponent(idVideoDOMElement) {
             await this.tracking();
         },
 
-        onStopTracking() {
+        async onStopTracking() {
             console.log("bbox onStopTracking");
             this.isTracking = false;
+
+            // Mark the current bbox as ground truth to preserve it
+            // let bbox = this.bboxes[this.currentFrame];
+            // if (bbox && !bbox.isGroundTruth) {
+            //     console.log("Promoting current bbox to ground truth on stop");
+            //     bbox.isGroundTruth = true;
+            //
+            //     // Update in database
+            //     if (bbox.idBoundingBox) {
+            //         await ky.post(`${this.baseURL}/updateBBox`, {
+            //             json: {
+            //                 _token: this._token,
+            //                 idBoundingBox: bbox.idBoundingBox,
+            //                 bbox: {
+            //                     frameNumber: bbox.frameNumber,
+            //                     x: bbox.x,
+            //                     y: bbox.y,
+            //                     width: bbox.width,
+            //                     height: bbox.height,
+            //                     blocked: bbox.blocked,
+            //                     isGroundTruth: true
+            //                 }
+            //             }
+            //         }).json();
+            //
+            //         // Update local state
+            //         this.bboxes[this.currentFrame] = bbox;
+            //         this.currentBBox = bbox;
+            //         console.log("BBox promoted to ground truth successfully");
+            //     }
+            // }
         },
 
         async onBBoxCreated(e) {
@@ -311,7 +342,12 @@ function boxComponent(idVideoDOMElement) {
                 this.tracker.opticalFlow.init(previousImageData);
 
                 // Track the bounding box
-                let bboxes = [{x: previousBBox.x, y: previousBBox.y, width: previousBBox.width, height: previousBBox.height}];
+                let bboxes = [{
+                    x: previousBBox.x,
+                    y: previousBBox.y,
+                    width: previousBBox.width,
+                    height: previousBBox.height
+                }];
                 let newBboxes = this.tracker.opticalFlow.track(currentImageData, bboxes);
 
                 console.log("✅ Tracking completed - previous:", bboxes[0], "new:", newBboxes[0]);
@@ -361,13 +397,14 @@ function boxComponent(idVideoDOMElement) {
                 }
             }).json();
             this.bboxes[newBBox.frameNumber] = newBBox;
+            this.currentBBox = newBBox;
             return newBBox;
         },
 
         async handleNonGroundTruthBBox(bbox) {
             console.log("Recreating non-ground truth bbox via tracking for frame", this.currentFrame);
             let previousBBox = this.bboxes[this.currentFrame - 1];
-            console.log("previousBBox",previousBBox);
+            console.log("previousBBox", previousBBox);
 
             if (previousBBox && this.isTracking) {
                 // Only re-track if tracking is enabled
@@ -386,21 +423,22 @@ function boxComponent(idVideoDOMElement) {
         },
 
         async handleMissingBBox() {
-            let previousBBox = this.bboxes[this.currentFrame - 1];
-            if (previousBBox) {
-                console.log("create new bbox via tracking on frame", this.currentFrame, previousBBox);
-                let trackedBBox = await this.performTracking(previousBBox);
-                let newBBox = this.createTrackedBBox(trackedBBox, previousBBox.blocked, false);
-
-                await this.createNewBBox(newBBox);
-                return newBBox;
-                //this.showBBox(); // Refresh to show new bbox
-            } else {
-                if ((this.currentFrame !== this.object.startFrame) && (this.isTracking)) {
+            //  if ((this.currentFrame > this.object.startFrame) && (this.isTracking)) {
+            if ((this.currentFrame > this.object.startFrame)) {
+                let previousBBox = this.bboxes[this.currentFrame - 1];
+                if (previousBBox) {
+                    console.log("create new bbox via tracking on frame", this.currentFrame, previousBBox);
+                    let trackedBBox = await this.performTracking(previousBBox);
+                    let newBBox = this.createTrackedBBox(trackedBBox, previousBBox.blocked, false);
+                    await this.createNewBBox(newBBox);
+                    return newBBox;
+                } else if (this.isTracking) {
                     messenger.notify("warning", "There is no previous BBox to tracking");
+                    await this.onStopTracking();
+                    return null;
                 }
-                return null;
             }
+            return null;
         },
 
         async showBBox() {
@@ -411,18 +449,19 @@ function boxComponent(idVideoDOMElement) {
             console.log('===');
             console.log("showBBox", bbox);
             if (bbox) {
-                if (bbox.isGroundTruth && !this.isTracking) {
-                    // Ground truth bbox when NOT tracking - use as is
-                    console.log("Using ground truth bbox for frame", this.currentFrame);
-                    this.displayBBox(bbox);
-                } else if (bbox.isGroundTruth && this.isTracking) {
-                    // Ground truth bbox when tracking is enabled - use it but allow tracking from it
-                    console.log("Ground truth bbox - serving as tracking reference for frame", this.currentFrame);
-                    this.displayBBox(bbox);
-                } else {
-                    // Non-ground truth bbox - recreate via tracking if enabled
-                    await this.handleNonGroundTruthBBox(bbox);
-                }
+                // if (bbox.isGroundTruth && !this.isTracking) {
+                //     // Ground truth bbox when NOT tracking - use as is
+                //     console.log("Using ground truth bbox for frame", this.currentFrame);
+                //     this.displayBBox(bbox);
+                // } else if (bbox.isGroundTruth && this.isTracking) {
+                //     // Ground truth bbox when tracking is enabled - use it but allow tracking from it
+                //     console.log("Ground truth bbox - serving as tracking reference for frame", this.currentFrame);
+                //     this.displayBBox(bbox);
+                // } else {
+                //     // Non-ground truth bbox - recreate via tracking if enabled
+                //     await this.handleNonGroundTruthBBox(bbox);
+                // }
+                this.displayBBox(bbox);
             }
             document.dispatchEvent(new CustomEvent("bbox-drawn", {
                 detail: {

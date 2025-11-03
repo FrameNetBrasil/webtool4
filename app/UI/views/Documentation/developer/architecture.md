@@ -1,3 +1,9 @@
+---
+title: System Architecture
+order: 1
+description: Technical architecture and design patterns
+---
+
 # System Architecture
 
 Understanding Webtool 4.2's technical architecture.

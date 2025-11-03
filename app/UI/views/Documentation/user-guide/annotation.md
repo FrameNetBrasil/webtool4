@@ -1,3 +1,9 @@
+---
+title: Annotation Guide
+order: 1
+description: How to annotate text with frame semantic information
+---
+
 # Annotation Guide
 
 Learn how to annotate text with frame semantic information.

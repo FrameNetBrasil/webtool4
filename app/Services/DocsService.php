@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
+use Symfony\Component\Yaml\Yaml;
 
 class DocsService extends Controller
 {
@@ -17,33 +19,102 @@ class DocsService extends Controller
     }
 
     /**
+     * Parse YAML frontmatter from markdown file
+     */
+    private static function parseFrontmatter(string $filePath): array
+    {
+        if (! File::exists($filePath)) {
+            return [];
+        }
+
+        try {
+            $document = YamlFrontMatter::parseFile($filePath);
+
+            return $document->matter();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get folder metadata from _folder.yml file
+     */
+    private static function getFolderMetadata(string $folderPath): array
+    {
+        $metaFile = $folderPath.'/_folder.yml';
+
+        if (! File::exists($metaFile)) {
+            return [];
+        }
+
+        try {
+            $content = File::get($metaFile);
+
+            return Yaml::parse($content) ?? [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Sort items by order field, then alphabetically
+     */
+    private static function sortByOrder(array $items): array
+    {
+        usort($items, function ($a, $b) {
+            // Get order values, default to PHP_INT_MAX if not set
+            $orderA = $a['order'] ?? PHP_INT_MAX;
+            $orderB = $b['order'] ?? PHP_INT_MAX;
+
+            // Sort by order first
+            if ($orderA !== $orderB) {
+                return $orderA <=> $orderB;
+            }
+
+            // Fall back to alphabetical sorting by text
+            return strcasecmp($a['text'], $b['text']);
+        });
+
+        return $items;
+    }
+
+    /**
      * Build hierarchical tree structure from documentation folder
      */
     public static function buildTree(?string $parentPath = null): array
     {
         $basePath = self::getDocsPath();
-        $currentPath = $parentPath ? $basePath . '/' . $parentPath : $basePath;
+        $currentPath = $parentPath ? $basePath.'/'.$parentPath : $basePath;
 
-        if (!File::exists($currentPath)) {
+        if (! File::exists($currentPath)) {
             return [];
         }
 
-        $items = [];
+        $folders = [];
+        $documents = [];
         $directories = File::directories($currentPath);
         $files = File::files($currentPath);
 
         // Process directories first
         foreach ($directories as $directory) {
             $dirName = basename($directory);
-            $relativePath = $parentPath ? $parentPath . '/' . $dirName : $dirName;
 
-            $items[] = [
+            // Skip metadata files
+            if ($dirName === '_folder.yml') {
+                continue;
+            }
+
+            $relativePath = $parentPath ? $parentPath.'/'.$dirName : $dirName;
+            $metadata = self::getFolderMetadata($directory);
+
+            $folders[] = [
                 'id' => md5($relativePath),
                 'type' => 'folder',
-                'text' => self::formatName($dirName),
+                'text' => $metadata['title'] ?? self::formatName($dirName),
                 'path' => $relativePath,
                 'leaf' => false,
                 'state' => 'closed',
+                'order' => $metadata['order'] ?? PHP_INT_MAX,
             ];
         }
 
@@ -54,16 +125,27 @@ class DocsService extends Controller
             }
 
             $fileName = $file->getFilename();
-            $relativePath = $parentPath ? $parentPath . '/' . $fileName : $fileName;
+            $relativePath = $parentPath ? $parentPath.'/'.$fileName : $fileName;
+            $frontmatter = self::parseFrontmatter($file->getPathname());
 
-            $items[] = [
+            $documents[] = [
                 'id' => md5($relativePath),
                 'type' => 'document',
-                'text' => self::formatName(Str::replace('.md', '', $fileName)),
+                'text' => $frontmatter['title'] ?? self::formatName(Str::replace('.md', '', $fileName)),
                 'path' => $relativePath,
                 'leaf' => true,
+                'order' => $frontmatter['order'] ?? PHP_INT_MAX,
             ];
         }
+
+        // Merge folders and documents
+        $items = array_merge($folders, $documents);
+
+        // Sort all items together by order
+        $items = self::sortByOrder($items);
+
+        // Remove order field before returning (internal use only)
+        $items = array_map(fn ($item) => array_diff_key($item, ['order' => '']), $items);
 
         return $items;
     }
@@ -73,9 +155,9 @@ class DocsService extends Controller
      */
     public static function getDocument(string $path): array
     {
-        $filePath = self::getDocsPath() . '/' . $path;
+        $filePath = self::getDocsPath().'/'.$path;
 
-        if (!File::exists($filePath)) {
+        if (! File::exists($filePath)) {
             return [
                 'found' => false,
                 'content' => null,
@@ -86,7 +168,19 @@ class DocsService extends Controller
             ];
         }
 
+        $frontmatter = self::parseFrontmatter($filePath);
         $markdownContent = File::get($filePath);
+
+        // Remove frontmatter from markdown content for rendering
+        if (! empty($frontmatter)) {
+            try {
+                $document = YamlFrontMatter::parseFile($filePath);
+                $markdownContent = $document->body();
+            } catch (\Exception $e) {
+                // Fall back to full content if parsing fails
+            }
+        }
+
         $html = Str::markdown($markdownContent, [
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
@@ -96,7 +190,7 @@ class DocsService extends Controller
             'found' => true,
             'content' => $markdownContent,
             'html' => $html,
-            'title' => self::extractTitle($markdownContent),
+            'title' => $frontmatter['title'] ?? self::extractTitle($markdownContent),
             'toc' => self::extractTableOfContents($markdownContent),
             'breadcrumbs' => self::getBreadcrumbs($path),
         ];
@@ -110,7 +204,7 @@ class DocsService extends Controller
         $docsPath = self::getDocsPath();
 
         // Look for getting-started.md first
-        if (File::exists($docsPath . '/getting-started.md')) {
+        if (File::exists($docsPath.'/getting-started.md')) {
             return 'getting-started.md';
         }
 
@@ -145,7 +239,7 @@ class DocsService extends Controller
             }
 
             $content = File::get($file->getPathname());
-            $relativePath = Str::replace($docsPath . '/', '', $file->getPathname());
+            $relativePath = Str::replace($docsPath.'/', '', $file->getPathname());
 
             // Search in filename and content
             $filename = strtolower($file->getFilename());
@@ -224,7 +318,7 @@ class DocsService extends Controller
         $currentPath = '';
 
         foreach ($parts as $index => $part) {
-            $currentPath .= ($currentPath ? '/' : '') . $part;
+            $currentPath .= ($currentPath ? '/' : '').$part;
             $isLast = $index === count($parts) - 1;
 
             $text = self::formatName(Str::replace('.md', '', $part));
@@ -266,7 +360,7 @@ class DocsService extends Controller
         $excerpt = substr($content, $start, $contextLength);
 
         if ($start > 0) {
-            $excerpt = '...' . $excerpt;
+            $excerpt = '...'.$excerpt;
         }
 
         if ($start + $contextLength < strlen($content)) {

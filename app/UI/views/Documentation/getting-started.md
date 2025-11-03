@@ -1,3 +1,9 @@
+---
+title: Getting Started
+order: 1
+description: Quick start guide for Webtool 4.2
+---
+
 # Getting Started
 
 Welcome to the Webtool 4.2 Documentation. This guide will help you understand the linguistic annotation and FrameNet management system.
