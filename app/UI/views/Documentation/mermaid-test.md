@@ -1,3 +1,9 @@
+---
+title: Mermaid Diagram Test
+order: 2
+description: Examples of Mermaid diagram rendering
+---
+
 # Mermaid Diagram Test
 
 This page demonstrates Mermaid diagram rendering in Webtool 4.2 documentation.

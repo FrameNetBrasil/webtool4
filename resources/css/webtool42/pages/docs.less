@@ -18,19 +18,20 @@
     Two-column: Sidebar + Content
 -------------------- */
 
-// Override main layout overflow for docs pages
-.app-layout.minimal {
-    main.app-main {
-        overflow: visible !important;
-        height: auto !important;
-    }
-}
+// Override removed - let main container constrain content for proper scrolling
+// .app-layout.minimal {
+//     main.app-main {
+//         overflow: visible !important;
+//         height: auto !important;
+//     }
+// }
 
 .docs-layout {
     display: flex;
-    min-height: calc(100vh - @headerHeight - @breadcrumbHeight - @footerHeight);
+    height: calc(100vh - @headerHeight - @breadcrumbHeight - @footerHeight);
     background: @background;
     position: relative;
+    overflow: hidden;
 }
 
 /* -------------------
@@ -151,8 +152,11 @@
 .docs-content-wrapper {
     flex: 1;
     display: flex;
+    flex-direction: row;
     gap: @wt-row-unit;
-    overflow: visible;
+    overflow: hidden;
+    min-width: 0; // Allows flex item to shrink properly
+    min-height: 0; // Allows flex item to shrink and enables scrolling
 }
 
 .docs-content {
@@ -160,6 +164,27 @@
     padding: @docs-content-padding;
     max-width: @docs-content-max-width;
     min-width: 0; // Allows flex item to shrink
+    min-height: 0; // Allows content to scroll within flex container
+    overflow-y: auto;
+    align-self: stretch; // Ensure it fills the full height of parent
+
+    // Scrollbar styling
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @gray300;
+        border-radius: 4px;
+
+        &:hover {
+            background: @gray400;
+        }
+    }
 
     // Typography for markdown content
     h1, h2, h3, h4, h5, h6 {

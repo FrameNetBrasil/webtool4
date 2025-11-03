@@ -46,14 +46,15 @@
         "laravel/tinker": "^2.9",
         "laudis/neo4j-php-client": "^2.6",
         "openai-php/laravel": "^0.11.0",
+        "pestphp/pest": "^3.0",
         "php-ffmpeg/php-ffmpeg": "^1.2",
         "phplrt/runtime": "^3.6",
         "rdx/laravelcollective-annotations": "dev-main",
         "spatie/laravel-data": "*",
+        "spatie/yaml-front-matter": "^2.1",
         "textalk/websocket": "^1.5",
         "thiagoalessio/tesseract_ocr": "^2.13",
-        "vlucas/phpdotenv": "^5.4",
-        "pestphp/pest": "^3.0"
+        "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

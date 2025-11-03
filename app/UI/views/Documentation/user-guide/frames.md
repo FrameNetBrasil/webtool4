@@ -1,10 +1,12 @@
+---
+title: Working with Frames
+order: 2
+description: Create, edit, and manage semantic frames
+---
+
 # Working with Frames
 
 This guide explains how to create, edit, and manage semantic frames in Webtool 4.2.
-
-## What is a Frame?
-
-A frame is a conceptual structure that describes a type of event, relation, or state along with its participants (frame elements).
 
 ## Creating a New Frame
 
