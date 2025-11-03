@@ -31,6 +31,14 @@ class SemanticType
             ->all();
     }
 
+    public static function listNamespace()
+    {
+        return Criteria::byFilterLanguage("view_namespace",[])
+            ->select('idSemanticType', 'name')
+            ->orderBy('name')
+            ->all();
+    }
+
     public static function listRelations(int $idEntity)
     {
         return Criteria::table("view_relation")

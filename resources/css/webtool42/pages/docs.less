@@ -1,0 +1,640 @@
+/*******************************
+    Documentation Pages
+*******************************/
+
+/* -------------------
+    Layout Variables
+-------------------- */
+
+@docs-sidebar-width: 280px;
+@docs-sidebar-width-tablet: 260px;
+@docs-toc-sidebar-width: 240px;
+@docs-content-max-width: 900px;
+@docs-nav-padding: @wt-2-unit;
+@docs-content-padding: @wt-row-unit;
+
+/* -------------------
+    Documentation Layout
+    Two-column: Sidebar + Content
+-------------------- */
+
+// Override main layout overflow for docs pages
+.app-layout.minimal {
+    main.app-main {
+        overflow: visible !important;
+        height: auto !important;
+    }
+}
+
+.docs-layout {
+    display: flex;
+    min-height: calc(100vh - @headerHeight - @breadcrumbHeight - @footerHeight);
+    background: @background;
+    position: relative;
+}
+
+/* -------------------
+    Sidebar Navigation
+-------------------- */
+
+.docs-sidebar {
+    width: @docs-sidebar-width;
+    min-width: @docs-sidebar-width;
+    background: @gray50;
+    border-right: 1px solid @gray200;
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - @headerHeight - @breadcrumbHeight);
+    padding: @docs-nav-padding;
+
+    // Scrollbar styling
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @gray300;
+        border-radius: 4px;
+
+        &:hover {
+            background: @gray400;
+        }
+    }
+}
+
+// Navigation tree structure
+.docs-nav {
+
+    .nav-section {
+        margin-bottom: @wt-2-unit;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // Top-level folders
+    .nav-folder {
+        margin-bottom: @wt-unit;
+
+        > .folder-title {
+            display: flex;
+            align-items: center;
+            padding: @wt-unit @wt-unit;
+            font-weight: @semibold;
+            font-size: @fontSize;
+            color: @gray800;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            font-size: 12px;
+            margin-bottom: @wt-mini-unit;
+        }
+
+        > .folder-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    // Navigation links
+    .nav-item {
+        list-style: none;
+
+        a {
+            display: block;
+            padding: @wt-unit @wt-2-unit;
+            color: @gray700;
+            text-decoration: none;
+            border-radius: @relativeBorderRadius;
+            transition: all @transitionFast;
+            font-size: @fontSize;
+            line-height: @lineHeightBody;
+
+            &:hover {
+                background: @gray100;
+                color: @primaryColor;
+                padding-left: calc(@wt-2-unit + 4px);
+            }
+
+            &.active {
+                background: @overlayPrimary10;
+                color: @primaryColor;
+                font-weight: @semibold;
+                border-left: 3px solid @primaryColor;
+                padding-left: calc(@wt-2-unit - 3px);
+            }
+        }
+    }
+
+    // Nested items
+    .nav-nested {
+        margin-left: @wt-2-unit;
+        margin-top: @wt-mini-unit;
+
+        .nav-item a {
+            font-size: 13px;
+            padding: 6px @wt-2-unit;
+        }
+    }
+}
+
+/* -------------------
+    Content Area
+-------------------- */
+
+.docs-content-wrapper {
+    flex: 1;
+    display: flex;
+    gap: @wt-row-unit;
+    overflow: visible;
+}
+
+.docs-content {
+    flex: 1;
+    padding: @docs-content-padding;
+    max-width: @docs-content-max-width;
+    min-width: 0; // Allows flex item to shrink
+
+    // Typography for markdown content
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: @semibold;
+        line-height: @lineHeightHeading;
+        color: @gray900;
+        margin-top: @wt-row-unit;
+        margin-bottom: @wt-2-unit;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        // Anchor links for headings
+        .header-anchor {
+            color: @gray400;
+            text-decoration: none;
+            margin-left: @wt-unit;
+            opacity: 0;
+            transition: opacity @transitionFast;
+            font-weight: @normal;
+        }
+
+        &:hover .header-anchor {
+            opacity: 1;
+        }
+    }
+
+    h1 {
+        font-size: 36px;
+        border-bottom: 1px solid @gray200;
+        padding-bottom: @wt-2-unit;
+    }
+
+    h2 {
+        font-size: 28px;
+        margin-top: @wt-row-unit + @wt-2-unit;
+        padding-bottom: @wt-unit;
+        border-bottom: 1px solid @gray100;
+    }
+
+    h3 {
+        font-size: 22px;
+    }
+
+    h4 {
+        font-size: 18px;
+    }
+
+    h5, h6 {
+        font-size: @fontSize;
+    }
+
+    p {
+        margin: @wt-2-unit 0;
+        line-height: @lineHeightBody;
+        color: @textColor;
+    }
+
+    // Links
+    a {
+        color: @primaryColor;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color @transitionFast;
+
+        &:hover {
+            border-bottom-color: @primaryColor;
+        }
+
+        // External links
+        &[href^="http"]::after {
+            content: " ↗";
+            font-size: 0.85em;
+            opacity: 0.6;
+        }
+    }
+
+    // Lists
+    ul, ol {
+        margin: @wt-2-unit 0;
+        padding-left: @wt-row-unit;
+        line-height: @lineHeightBody;
+
+        li {
+            margin: @wt-unit 0;
+        }
+
+        ul, ol {
+            margin: @wt-unit 0;
+        }
+    }
+
+    // Code blocks
+    code {
+        font-family: @codeFont;
+        font-size: 13px;
+        background: @gray100;
+        padding: 2px 6px;
+        border-radius: @relativeBorderRadius;
+        color: @gray800;
+    }
+
+    pre {
+        background: @gray900;
+        color: @gray100;
+        padding: @wt-2-unit;
+        border-radius: @relativeBorderRadius;
+        overflow-x: auto;
+        margin: @wt-2-unit 0;
+        line-height: @lineHeightCode;
+
+        code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            font-size: 13px;
+        }
+
+        // Scrollbar for code blocks
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: @gray800;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: @gray600;
+            border-radius: 4px;
+        }
+    }
+
+    // Tables
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: @wt-2-unit 0;
+
+        th, td {
+            padding: @wt-unit @wt-2-unit;
+            border: 1px solid @gray200;
+            text-align: left;
+        }
+
+        th {
+            background: @gray50;
+            font-weight: @semibold;
+            color: @gray900;
+        }
+
+        tr:hover {
+            background: @gray50;
+        }
+    }
+
+    // Blockquotes
+    blockquote {
+        border-left: 4px solid @primaryColor;
+        padding-left: @wt-2-unit;
+        margin: @wt-2-unit 0;
+        color: @gray700;
+        font-style: italic;
+
+        p:first-child {
+            margin-top: 0;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // Horizontal rules
+    hr {
+        border: none;
+        border-top: 1px solid @gray200;
+        margin: @wt-row-unit 0;
+    }
+
+    // Images
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: @relativeBorderRadius;
+        margin: @wt-2-unit 0;
+    }
+
+    // Mermaid diagrams
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        margin: @wt-row-unit 0;
+        padding: @wt-2-unit;
+        background: @white !important;
+        border: 1px solid @gray200;
+        border-radius: @relativeBorderRadius;
+
+        svg {
+            max-width: 100%;
+            height: auto;
+            background: transparent !important;
+        }
+
+        // Override Mermaid's default dark background
+        [id^="mermaid-"] {
+            background: transparent !important;
+        }
+    }
+
+    // Pre blocks containing mermaid code that hasn't been rendered
+    pre.mermaid {
+        background: @gray50;
+        border: 1px solid @gray200;
+        color: @gray800;
+    }
+}
+
+/* -------------------
+    Right Sidebar - Table of Contents
+-------------------- */
+
+.docs-toc-sidebar {
+    width: @docs-toc-sidebar-width;
+    min-width: @docs-toc-sidebar-width;
+    padding: @docs-content-padding @wt-2-unit;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - @headerHeight - @breadcrumbHeight);
+    overflow-y: auto;
+    align-self: flex-start;
+
+    // Scrollbar styling
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @gray300;
+        border-radius: 3px;
+
+        &:hover {
+            background: @gray400;
+        }
+    }
+}
+
+.docs-toc {
+    .toc-title {
+        font-weight: @semibold;
+        font-size: 12px;
+        margin-bottom: @wt-2-unit;
+        color: @gray800;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        display: flex;
+        align-items: center;
+        gap: @wt-unit;
+    }
+
+    .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-left: 1px solid @gray200;
+
+        li {
+            margin: 0;
+
+            a {
+                display: block;
+                padding: @wt-mini-unit @wt-2-unit;
+                color: @gray700;
+                font-size: 13px;
+                text-decoration: none;
+                border-bottom: none;
+                border-left: 2px solid transparent;
+                margin-left: -1px;
+                transition: all @transitionFast;
+
+                &:hover {
+                    color: @primaryColor;
+                    border-left-color: @primaryColor;
+                    background: @gray50;
+                }
+
+                &.active {
+                    color: @primaryColor;
+                    border-left-color: @primaryColor;
+                    font-weight: @semibold;
+                }
+            }
+        }
+
+        // Nested TOC items (h3)
+        li.toc-nested {
+            a {
+                padding-left: @wt-row-unit;
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+/* -------------------
+    Welcome/Index Page
+-------------------- */
+
+.docs-welcome {
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: @wt-2-unit;
+    }
+
+    .docs-sections {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: @wt-2-unit;
+        margin-top: @wt-row-unit;
+    }
+
+    .docs-section-card {
+        background: @white;
+        border: 1px solid @gray200;
+        border-radius: @relativeBorderRadius;
+        padding: @wt-2-unit;
+        transition: all @transitionFast;
+
+        &:hover {
+            border-color: @primaryColor;
+            box-shadow: @shadowMD;
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: @semibold;
+            color: @gray900;
+            margin-bottom: @wt-unit;
+        }
+
+        .section-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin: @wt-mini-unit 0;
+
+                a {
+                    color: @primaryColor;
+                    text-decoration: none;
+                    font-size: 14px;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* -------------------
+    Responsive Design
+-------------------- */
+
+// Large desktop - hide TOC sidebar on smaller screens
+@media (max-width: @widescreenMonitorBreakpoint) {
+    .docs-toc-sidebar {
+        display: none;
+    }
+
+    .docs-content {
+        max-width: 100%;
+    }
+}
+
+// Tablet
+@media (max-width: @computerBreakpoint) {
+    .docs-sidebar {
+        width: @docs-sidebar-width-tablet;
+        min-width: @docs-sidebar-width-tablet;
+    }
+
+    .docs-content {
+        padding: @wt-2-unit;
+    }
+}
+
+// Mobile
+@media (max-width: @tabletBreakpoint) {
+    .docs-layout {
+        flex-direction: column;
+    }
+
+    .docs-sidebar {
+        width: 100%;
+        min-width: 100%;
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid @gray200;
+        max-height: 60vh;
+
+        // Make sidebar collapsible on mobile
+        &.collapsed {
+            max-height: 48px;
+            overflow: hidden;
+
+            .docs-nav {
+                display: none;
+            }
+        }
+    }
+
+    .docs-content {
+        padding: @wt-2-unit @wt-unit;
+
+        h1 {
+            font-size: 28px;
+        }
+
+        h2 {
+            font-size: 22px;
+        }
+
+        h3 {
+            font-size: 18px;
+        }
+    }
+
+    .docs-welcome .docs-sections {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* -------------------
+    Mobile Toggle Button
+-------------------- */
+
+.docs-sidebar-toggle {
+    display: none;
+
+    @media (max-width: @tabletBreakpoint) {
+        display: block;
+        width: 100%;
+        padding: @wt-unit @wt-2-unit;
+        background: @gray50;
+        border: none;
+        border-bottom: 1px solid @gray200;
+        cursor: pointer;
+        font-weight: @semibold;
+        color: @gray900;
+        text-align: left;
+        transition: background @transitionFast;
+
+        &:hover {
+            background: @gray100;
+        }
+
+        &::after {
+            content: "▼";
+            float: right;
+            transition: transform @transitionFast;
+        }
+
+        &.collapsed::after {
+            transform: rotate(-90deg);
+        }
+    }
+}

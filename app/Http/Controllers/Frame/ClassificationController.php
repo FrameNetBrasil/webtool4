@@ -47,6 +47,14 @@ class ClassificationController extends Controller
         ]);
     }
 
+    #[Get(path: '/frame/{id}/classification/formNamespace')]
+    public function formNamespace(string $id)
+    {
+        return view("Classification.formNamespace",[
+            'idFrame' => $id
+        ]);
+    }
+
     #[Post(path: '/frame/classification/domain')]
     public function framalDomain(UpdateClassificationData $data)
     {
@@ -64,6 +72,17 @@ class ClassificationController extends Controller
         try {
             RelationService::updateFramalType($data);
             return $this->renderNotify("success", "Type updated.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Post(path: '/frame/classification/namespace')]
+    public function framalNamespace(UpdateClassificationData $data)
+    {
+        try {
+            RelationService::updateFramalNamespace($data);
+            return $this->renderNotify("success", "Namespace updated.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }

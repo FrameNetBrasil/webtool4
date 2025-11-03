@@ -209,6 +209,24 @@ class RelationService extends Controller
         }
     }
 
+    public static function updateFramalNamespace(UpdateClassificationData $data)
+    {
+        $frame = Frame::byId($data->idFrame);
+        $relationType = Criteria::byId("relationtype", "entry", "rel_namespace");
+        try {
+            Criteria::table("entityrelation")
+                ->where("idEntity1", $frame->idEntity)
+                ->where("idRelationType", $relationType->idRelationType)
+                ->delete();
+            foreach ($data->namespace as $idSemanticType) {
+                $st = SemanticType::byId($idSemanticType);
+                self::create("rel_namespace", $frame->idEntity, $st->idEntity);
+            }
+        } catch (\Exception $e) {
+            throw new \Exception("Error updating relations. " . $e);
+        }
+    }
+
     /*
      * Cxn
      */
