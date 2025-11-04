@@ -19,6 +19,13 @@
                             </div>
                             @if(session('isAdmin'))
                                 <button
+                                    class="ui right labeled icon button"
+                                    hx-get="/frame/nextFrom/{{$frame->idFrame}}"
+                                >
+                                    <i class="right arrow icon"></i>
+                                    Next
+                                </button>
+                                <button
                                     x-data
                                     type=button"
                                     class="ui danger button"

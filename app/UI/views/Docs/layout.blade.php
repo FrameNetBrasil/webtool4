@@ -1,15 +1,25 @@
 <x-layout::index>
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
-        <x-layout::breadcrumb
-            :sections="[['/','Home'],['/docs','Documentation']]"
-        ></x-layout::breadcrumb>
-
+        @if(isset($document['breadcrumbs'][2]))
+            <x-layout::breadcrumb
+                :sections="[['/','Home'],['/docs','Documentation'],['',$document['breadcrumbs'][1]['text'] . '/' . $document['breadcrumbs'][2]['text']]]"
+            ></x-layout::breadcrumb>
+        @elseif(isset($document['breadcrumbs'][1]))
+            <x-layout::breadcrumb
+                :sections="[['/','Home'],['/docs','Documentation'],['',$document['breadcrumbs'][1]['text']]]"
+            ></x-layout::breadcrumb>
+        @else
+            <x-layout::breadcrumb
+                :sections="[['/','Home'],['','Documentation']]"
+            ></x-layout::breadcrumb>
+        @endif
         <main class="app-main">
             <div class="docs-layout">
                 <!-- Sidebar Navigation -->
                 <aside class="docs-sidebar">
-                    <button class="docs-sidebar-toggle" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed')">
+                    <button class="docs-sidebar-toggle"
+                            onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed')">
                         Documentation Menu
                     </button>
                     <nav class="docs-nav">

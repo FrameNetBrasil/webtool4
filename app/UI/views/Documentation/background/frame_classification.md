@@ -58,14 +58,17 @@ Thus, the idea implemented was the definition of *namespaces* for frames. These 
 
 - In the current version, the following namespaces are implemented:
 
-| Namespace             | Description                                                                                                    |
-|-----------------------|----------------------------------------------------------------------------------------------------------------| 
-| @eventive | Eventive frames that do not have an explicitly defined agent, cause, or experiencer (e.g., natural phenomena). |
-| @causative | Eventive frames that have a cause or an agent.                                                                 |
-| @inchoative | Eventive frames that exhibit inchoative alternation.                                                           |
-| @stative | Frames that represent states.                                                                                  |
-| @experience | Eventive frames that profile the participant as an experiencer in an event.                                    |
-| @transition | Eventive frames that represent changes in situation (states, attributes, categories, etc.).                    |
-| @attribute | Frames that represent attributes or attribute values.                                                          |
-| @entity | Frames that represent entities.                                                                                |
-| @relation | Frames that represent relationships.                                                                           |
+| Namespace                                               | Description                                                                                                                             | Typical structure                                                              |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| <span class="color_situation">@situation</span> | This is a "catch-all" namespace for frames that do not fit into the other namespaces. Used for scenario frames and image-schema frames. | Variable structure                        |
+| <span class="color_eventive">@eventive</span>           | Eventive frames that do not have an explicitly defined agent, cause, or experiencer (e.g., natural phenomena).                          | FE core ("event") incorporated by LU.                                          |
+| <span class="color_causative">@causative</span>         | Eventive frames that have a cause or an agent.                                                                                          | FE core "agent" or "cause" (in excludes relation)                              |
+| <span class="color_inchoative">@inchoative</span>       | Eventive frames that exhibit inchoative alternation.                                                                                    | FE core indicating the affected element.                                       |
+| <span class="color_stative">@stative</span>             | Frames that represent states.                                                                                                           | FE core for entity, FE core-unexpressed for state.                             |
+| <span class="color_experience">@experience</span>       | Eventive frames that profile the participant as an experiencer in an event.                                                             | FE core for entity experimenting the event ("experiencer", "perceiver", etc)   |
+| <span class="color_transition">@transition</span>       | Eventive frames that represent changes in situation (states, attributes, categories, etc.).                                             | FE core for entity under transition; FEs for initial/final state or condition. |
+| <span class="color_attribute">@attribute</span>         | Frames that represent attributes or attribute values.                                                                                   | FE core for attribute, FE core-unexpressed for attribute.                      |
+| <span class="color_entity">@entity</span>               | Frames that represent entities.                                                                                                         | FE core for entity, incorporated by LU.                                        |
+| <span class="color_relation">@relation </span>          | Frames that represent relationships.                                                                                                    | FEs core for related concepts and FE core joining the concepts.                |
+| <span class="color_pragmatic">@pragmatic</span>         | Pragmatic frames.                                                                                                                       | Variable structure.                                                            |
+

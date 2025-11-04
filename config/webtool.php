@@ -23,7 +23,6 @@ return [
         'AUTH0_BASE_URL' => env('AUTH0_BASE_URL'),
     ],
     'actions' => [
-        'documentation' => ['Documentation', '/docs', '', []],
         'report' => ['Report', '/report', '', [
             'reportframe' => ['Frame', '/report/frame', '', []],
             'reportlu' => ['LU', '/report/lu', '', []],
@@ -45,6 +44,7 @@ return [
             //            'domaingrapher' => ['Frames by Domain', '/domain/grapher', 'domaingrapher', '', '', []],
             //            'ccngrapher' => ['Constructicon', '/ccn/grapher', 'ccngrapher', '', '', []],
         ]],
+        'documentation' => ['Documentation', '/docs', '', []],
         'annotation' => ['Annotation', '/annotation', 'MASTER', [
             //            'lexicalAnnotation' => ['Frame Mode', '/lexicalAnnotation', 'lexicalAnnotation', '', 1, []],
             //            'cnxAnnotation' => ['Construction Mode', '/constructionalAnnotation', 'cxnAnnotation', '', 1, []],

@@ -4,6 +4,7 @@
     use App\Services\AppService;
 
     $actions = config('webtool.actions');
+    debug($actions);
     $isLogged = Auth::check();
     if ($isLogged) {
         $user = Auth::user();
