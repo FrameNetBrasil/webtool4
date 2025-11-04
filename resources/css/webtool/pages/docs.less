@@ -10,8 +10,8 @@
 @docs-sidebar-width-tablet: 260px;
 @docs-toc-sidebar-width: 240px;
 @docs-content-max-width: 900px;
-@docs-nav-padding: @wt-2-unit;
-@docs-content-padding: @wt-row-unit;
+@docs-nav-padding: @relativeSmall;
+@docs-content-padding: @relativeLarge;
 
 /* -------------------
     Documentation Layout
@@ -72,7 +72,7 @@
 .docs-nav {
 
     .nav-section {
-        margin-bottom: @wt-2-unit;
+        margin-bottom: @relativeSmall;
 
         &:last-child {
             margin-bottom: 0;
@@ -81,19 +81,19 @@
 
     // Top-level folders
     .nav-folder {
-        margin-bottom: @wt-unit;
+        margin-bottom: @relative8px;
 
         > .folder-title {
             display: flex;
             align-items: center;
-            padding: @wt-unit @wt-unit;
+            padding: @relative8px @relative8px;
             font-weight: @semibold;
             font-size: @fontSize;
             color: @gray800;
             text-transform: uppercase;
             letter-spacing: 0.025em;
             font-size: 12px;
-            margin-bottom: @wt-mini-unit;
+            margin-bottom: @relative8px;
         }
 
         > .folder-items {
@@ -109,7 +109,7 @@
 
         a {
             display: block;
-            padding: @wt-unit @wt-2-unit;
+            padding: @relative8px @relativeSmall;
             color: @gray700;
             text-decoration: none;
             border-radius: @relativeBorderRadius;
@@ -120,7 +120,7 @@
             &:hover {
                 background: @gray100;
                 color: @primaryColor;
-                padding-left: calc(@wt-2-unit + 4px);
+                padding-left: calc(@relativeSmall + 4px);
             }
 
             &.active {
@@ -128,19 +128,19 @@
                 color: @primaryColor;
                 font-weight: @semibold;
                 border-left: 3px solid @primaryColor;
-                padding-left: calc(@wt-2-unit - 3px);
+                padding-left: calc(@relativeSmall - 3px);
             }
         }
     }
 
     // Nested items
     .nav-nested {
-        margin-left: @wt-2-unit;
-        margin-top: @wt-mini-unit;
+        margin-left: @relativeSmall;
+        margin-top: @relative8px;
 
         .nav-item a {
             font-size: 13px;
-            padding: 6px @wt-2-unit;
+            padding: 6px @relativeSmall;
         }
     }
 }
@@ -153,7 +153,7 @@
     flex: 1;
     display: flex;
     flex-direction: row;
-    gap: @wt-row-unit;
+    gap: @relativeMedium;
     overflow: hidden;
     min-width: 0; // Allows flex item to shrink properly
     min-height: 0; // Allows flex item to shrink and enables scrolling
@@ -191,8 +191,8 @@
         font-weight: @semibold;
         line-height: @lineHeightHeading;
         color: @gray900;
-        margin-top: @wt-row-unit;
-        margin-bottom: @wt-2-unit;
+        margin-top: @relativeMedium;
+        margin-bottom: @relativeSmall;
 
         &:first-child {
             margin-top: 0;
@@ -202,7 +202,7 @@
         .header-anchor {
             color: @gray400;
             text-decoration: none;
-            margin-left: @wt-unit;
+            margin-left: @relative8px;
             opacity: 0;
             transition: opacity @transitionFast;
             font-weight: @normal;
@@ -216,13 +216,13 @@
     h1 {
         font-size: 36px;
         border-bottom: 1px solid @gray200;
-        padding-bottom: @wt-2-unit;
+        padding-bottom: @relativeSmall;
     }
 
     h2 {
         font-size: 28px;
-        margin-top: @wt-row-unit + @wt-2-unit;
-        padding-bottom: @wt-unit;
+        margin-top: @relativeMedium;
+        padding-bottom: @relative8px;
         border-bottom: 1px solid @gray100;
     }
 
@@ -239,7 +239,7 @@
     }
 
     p {
-        margin: @wt-2-unit 0;
+        margin: @relativeSmall 0;
         line-height: @lineHeightBody;
         color: @textColor;
     }
@@ -265,16 +265,16 @@
 
     // Lists
     ul, ol {
-        margin: @wt-2-unit 0;
-        padding-left: @wt-row-unit;
+        margin: @relativeSmall 0;
+        padding-left: @relativeMedium;
         line-height: @lineHeightBody;
 
         li {
-            margin: @wt-unit 0;
+            margin: @relative8px 0;
         }
 
         ul, ol {
-            margin: @wt-unit 0;
+            margin: @relative8px 0;
         }
     }
 
@@ -291,10 +291,10 @@
     pre {
         background: @gray900;
         color: @gray100;
-        padding: @wt-2-unit;
+        padding: @relativeSmall;
         border-radius: @relativeBorderRadius;
         overflow-x: auto;
-        margin: @wt-2-unit 0;
+        margin: @relativeSmall 0;
         line-height: @lineHeightCode;
 
         code {
@@ -323,10 +323,10 @@
     table {
         width: 100%;
         border-collapse: collapse;
-        margin: @wt-2-unit 0;
+        margin: @relativeSmall 0;
 
         th, td {
-            padding: @wt-unit @wt-2-unit;
+            padding: @relative8px @relativeSmall;
             border: 1px solid @gray200;
             text-align: left;
         }
@@ -345,8 +345,8 @@
     // Blockquotes
     blockquote {
         border-left: 4px solid @primaryColor;
-        padding-left: @wt-2-unit;
-        margin: @wt-2-unit 0;
+        padding-left: @relativeSmall;
+        margin: @relativeSmall 0;
         color: @gray700;
         font-style: italic;
 
@@ -363,7 +363,7 @@
     hr {
         border: none;
         border-top: 1px solid @gray200;
-        margin: @wt-row-unit 0;
+        margin: @relativeMedium 0;
     }
 
     // Images
@@ -371,15 +371,15 @@
         max-width: 100%;
         height: auto;
         border-radius: @relativeBorderRadius;
-        margin: @wt-2-unit 0;
+        margin: @relativeSmall 0;
     }
 
     // Mermaid diagrams
     .mermaid {
         display: flex;
         justify-content: center;
-        margin: @wt-row-unit 0;
-        padding: @wt-2-unit;
+        margin: @relativeMedium 0;
+        padding: @relativeSmall;
         background: @white !important;
         border: 1px solid @gray200;
         border-radius: @relativeBorderRadius;
@@ -411,7 +411,7 @@
 .docs-toc-sidebar {
     width: @docs-toc-sidebar-width;
     min-width: @docs-toc-sidebar-width;
-    padding: @docs-content-padding @wt-2-unit;
+    padding: @docs-content-padding @relativeSmall;
     position: sticky;
     top: 0;
     height: calc(100vh - @headerHeight - @breadcrumbHeight);
@@ -441,13 +441,13 @@
     .toc-title {
         font-weight: @semibold;
         font-size: 12px;
-        margin-bottom: @wt-2-unit;
+        margin-bottom: @relativeSmall;
         color: @gray800;
         text-transform: uppercase;
         letter-spacing: 0.025em;
         display: flex;
         align-items: center;
-        gap: @wt-unit;
+        gap: @relative8px;
     }
 
     .toc-list {
@@ -461,7 +461,7 @@
 
             a {
                 display: block;
-                padding: @wt-mini-unit @wt-2-unit;
+                padding: @relative8px @relativeSmall;
                 color: @gray700;
                 font-size: 13px;
                 text-decoration: none;
@@ -487,7 +487,7 @@
         // Nested TOC items (h3)
         li.toc-nested {
             a {
-                padding-left: @wt-row-unit;
+                padding-left: @relativeMedium;
                 font-size: 12px;
             }
         }
@@ -502,21 +502,21 @@
 
     h2 {
         margin-top: 0;
-        margin-bottom: @wt-2-unit;
+        margin-bottom: @relativeSmall;
     }
 
     .docs-sections {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: @wt-2-unit;
-        margin-top: @wt-row-unit;
+        gap: @relativeSmall;
+        margin-top: @relativeMedium;
     }
 
     .docs-section-card {
         background: @white;
         border: 1px solid @gray200;
         border-radius: @relativeBorderRadius;
-        padding: @wt-2-unit;
+        padding: @relativeSmall;
         transition: all @transitionFast;
 
         &:hover {
@@ -529,7 +529,7 @@
             font-size: 18px;
             font-weight: @semibold;
             color: @gray900;
-            margin-bottom: @wt-unit;
+            margin-bottom: @relative8px;
         }
 
         .section-items {
@@ -538,7 +538,7 @@
             margin: 0;
 
             li {
-                margin: @wt-mini-unit 0;
+                margin: @relative8px 0;
 
                 a {
                     color: @primaryColor;
@@ -577,7 +577,7 @@
     }
 
     .docs-content {
-        padding: @wt-2-unit;
+        padding: @relativeSmall;
     }
 }
 
@@ -608,7 +608,7 @@
     }
 
     .docs-content {
-        padding: @wt-2-unit @wt-unit;
+        padding: @relativeSmall @relative8px;
 
         h1 {
             font-size: 28px;
@@ -638,7 +638,7 @@
     @media (max-width: @tabletBreakpoint) {
         display: block;
         width: 100%;
-        padding: @wt-unit @wt-2-unit;
+        padding: @relative8px @relativeSmall;
         background: @gray50;
         border: none;
         border-bottom: 1px solid @gray200;

@@ -9,7 +9,7 @@
         'annotation' => ['Annotation', '/annotation', 'MASTER', []],
         'structure' => ['Structure', '/structure', 'MASTER', []],
         'manager' => ['Manager', '/manager', 'MANAGER', []],
-//        'utils' => ['Utils', '/utils', 'ADMIN', []],
+        'docs' => ['Documentation', '/docs', '', []],
     ];
     $isLogged = Auth::check();
     if ($isLogged) {

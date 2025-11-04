@@ -20,6 +20,7 @@ class DocsController extends Controller
         if ($path !== null) {
             $path = urldecode($path);
             $document = DocsService::getDocument($path);
+            debug($document);
         } else {
             // Show menu - no document
             $document = [

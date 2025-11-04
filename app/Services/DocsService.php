@@ -182,7 +182,7 @@ class DocsService extends Controller
         }
 
         $html = Str::markdown($markdownContent, [
-            'html_input' => 'strip',
+            'html_input' => 'allow',
             'allow_unsafe_links' => false,
         ]);
 

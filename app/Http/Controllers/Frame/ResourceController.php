@@ -17,6 +17,7 @@ use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
+use Illuminate\Support\Facades\App;
 
 #[Middleware("master")]
 class ResourceController extends Controller
@@ -59,6 +60,18 @@ class ResourceController extends Controller
             'frame' => Frame::byId($id),
             'classification' => Frame::getClassificationLabels($id)
         ]);
+    }
+
+    #[Get(path: '/frame/nextFrom/{id}')]
+    public function nextFrom(string $id)
+    {
+        $current = Frame::byId($id);
+        $next = Criteria::table("view_frame")
+            ->where("idLanguage",AppService::getCurrentIdLanguage())
+            ->where("name",">", $current->name)
+            ->orderBy("name")
+            ->first();
+        return $this->clientRedirect("/frame/{$next->idFrame}");
     }
 
 }
