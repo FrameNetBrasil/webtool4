@@ -3,6 +3,7 @@
 namespace App\Services\Frame;
 
 use App\Database\Criteria;
+use App\Repositories\Frame;
 use App\Services\AppService;
 use Illuminate\Database\Query\JoinClause;
 
@@ -24,10 +25,11 @@ class BrowseService
             })
             ->orderBy('name')->all();
         foreach ($frames as $frame) {
+            $frame->namespace = Frame::getNamespace($frame->idFrame);
             $result[$frame->idFrame] = [
                 'id' => $frame->idFrame,
                 'type' => 'frame',
-                'text' => view('Frame.partials.frame', (array) $frame)->render(),
+                'text' => view('Frame.partials.frame_ns', ['frame' => $frame])->render(),
                 'leaf' => true,
             ];
         }

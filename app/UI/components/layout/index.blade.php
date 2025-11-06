@@ -72,31 +72,5 @@ document.body.style.opacity = '1';
 <script src="/scripts/utils/jsfeat.js"></script>
 <script src="/scripts/utils/nudged.js"></script>
 
-<!-- Mermaid.js for rendering diagrams in documentation -->
-<script type="module">
-  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: 'default',
-    securityLevel: 'loose'
-  });
-
-  function renderMermaidDiagrams() {
-    document.querySelectorAll('pre > code.language-mermaid').forEach((codeBlock) => {
-      const pre = codeBlock.parentElement;
-      const mermaidCode = codeBlock.textContent;
-      const mermaidPre = document.createElement('pre');
-      mermaidPre.className = 'mermaid';
-      mermaidPre.textContent = mermaidCode;
-      pre.replaceWith(mermaidPre);
-    });
-    mermaid.run({ querySelector: '.mermaid' });
-  }
-
-  document.addEventListener('DOMContentLoaded', renderMermaidDiagrams);
-  document.body.addEventListener('htmx:afterSwap', renderMermaidDiagrams);
-</script>
-
 </body>
 </html>

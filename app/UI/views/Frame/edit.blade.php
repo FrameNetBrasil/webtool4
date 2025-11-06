@@ -12,7 +12,7 @@
                         <div class="page-header-main">
                             <div class="page-title-section">
                                 <div class="page-title">
-                                    <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
+                                    <x-ui::element.frame_ns :frame="$frame"></x-ui::element.frame_ns>
                                 </div>
                                 <div
                                     class="page-subtitle">{!! str_replace('ex>','code>',nl2br($frame->description)) !!}</div>

@@ -37,6 +37,28 @@ class `Inchoative_frame`
 `Inchoative_frame` --> `Stative_frame`: inchoative_of
 ```
 
+- Example:
+  - Stative: the door is open.
+  - Inchoative: the door opened.
+  - Causative: the boy opened the door.
+
+Each use of the verb should be represented by different LU, which should be related to each other by lexical relations (causative_of/inchoative_of):
+
+```mermaid
+graph LR
+abrir_LEMMA -- has_lu --> abrir_EVENT_LU1
+abrir_LEMMA -- has_lu --> abrir_EVENT_LU2
+aberta_LEMMA -- has_lu --> aberta_EVENT_LU3
+menino_AGENT -- causes --> abrir_CAUSATIVE_FRAME
+porta_THEME -- attends --> abrir_INCHOATIVE_FRAME
+abrir_EVENT_LU1 -- evokes --> abrir_CAUSATIVE_FRAME
+abrir_EVENT_LU2 -- evokes --> abrir_INCHOATIVE_FRAME
+aberta_EVENT_LU3 -- evokes --> abrir_STATIVE_FRAME
+abrir_CAUSATIVE_FRAME -- causative_of --> abrir_INCHOATIVE_FRAME
+abrir_INCHOATIVE_FRAME -- inchoative_of --> abrir_STATIVE_FRAME
+
+```
+
 ### Perspective
 - Name: Perspective
 - Intention: The implementation of this pattern (through the **Perspective_on** relation) indicates the presence of at least two different viewpoints, in relation to a neutral frame. 

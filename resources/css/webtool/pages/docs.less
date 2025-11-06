@@ -394,6 +394,20 @@
         [id^="mermaid-"] {
             background: transparent !important;
         }
+
+        // Larger and bold text for all diagram labels
+        p, span, div, text, tspan, .nodeLabel {
+            font-size: 16px !important;
+            font-weight: 600 !important;
+        }
+
+        // Force white text color on highlighted Mermaid nodes
+        .highlighted {
+            p, span, div, text, tspan {
+                color: #ffffff !important;
+                fill: #ffffff !important;
+            }
+        }
     }
 
     // Pre blocks containing mermaid code that hasn't been rendered
@@ -401,6 +415,85 @@
         background: @gray50;
         border: 1px solid @gray200;
         color: @gray800;
+    }
+
+    // Mermaid diagram wrapper for expand button positioning
+    .mermaid-wrapper {
+        position: relative;
+        margin: @relativeMedium 0;
+
+        // Expand button
+        .diagram-expand-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 8px 10px;
+            opacity: 0;
+            transition: opacity @transitionFast, background @transitionFast;
+            z-index: 10;
+            background: @white;
+            border: 1px solid @gray300;
+            box-shadow: @shadowSM;
+
+            &:hover {
+                background: @gray50;
+                border-color: @primaryColor;
+
+                i {
+                    color: @primaryColor;
+                }
+            }
+
+            i {
+                color: @gray600;
+                font-size: 16px;
+                margin: 0;
+            }
+        }
+
+        // Show button on hover
+        &:hover .diagram-expand-btn {
+            opacity: 1;
+        }
+    }
+}
+
+/* -------------------
+    Modal for Enlarged Diagrams
+-------------------- */
+
+#diagramModal {
+    &.ui.modal {
+        width: 85% !important;
+        //max-width: 1400px;
+
+        > .header {
+            background: @gray50;
+            border-bottom: 1px solid @gray200;
+            font-weight: @semibold;
+            color: @gray900;
+        }
+
+        > .content.diagram-modal-content {
+            padding: @relativeLarge;
+            background: @white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+
+            svg {
+                max-width: 100%;
+                max-height: 65vh;
+                height: auto;
+                width: auto;
+            }
+        }
+
+        > .actions {
+            background: @gray50;
+            border-top: 1px solid @gray200;
+        }
     }
 }
 
