@@ -8,15 +8,18 @@
         @if(isset($classification))
             {{-- Domain and Type tags --}}
             @foreach ($classification as $name => $classes)
-                @if(($name == 'rel_framal_domain') || ($name == 'rel_framal_type') || ($name == 'rel_namespace'))
+                @if(($name == 'rel_framal_domain') || ($name == 'rel_framal_type'))
                     @foreach ($classes as $value)
-                        <div class="ui small label {!! ($name == 'rel_namespace') ? 'color_' . substr(strtolower($value),1) : '' !!}">
+                        <div class="ui small label">
                             {{ $value }}
                         </div>
                     @endforeach
                 @endif
             @endforeach
         @endif
+            <div class="ui small label {{$frame->namespace->color}}">
+                {{ $frame->namespace->name }}
+            </div>
     </div>
 
     <div class="metadata-right">

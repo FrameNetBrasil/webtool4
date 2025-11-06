@@ -1,4 +1,4 @@
-<x-layout::index>
+<x-layout::document>
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         @if(isset($document['breadcrumbs'][2]))
@@ -76,4 +76,4 @@
 
         <x-layout::footer></x-layout::footer>
     </div>
-</x-layout::index>
+</x-layout::document>
