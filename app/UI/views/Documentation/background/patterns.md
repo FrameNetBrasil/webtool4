@@ -25,7 +25,6 @@ Most of these relations have not yet been implemented.
 ```mermaid
 classDiagram 
 class `Transitive_action` 
-class `State` 
 class `Event` 
 class `Causative_frame` 
 class `Stative_frame` 
@@ -33,7 +32,8 @@ class `Inchoative_frame`
 `Transitive_action` <-- `Causative_frame` 
 `State or Gradable_attributes` <|-- `Stative_frame` 
 `Event` <|-- `Inchoative_frame` 
-`Causative_frame` --> `Inchoative_frame`: causative_of 
+`Causative_frame` --> `Inchoative_frame`: causative_of
+`Causative_frame` --> `Stative_frame`: causative_of  
 `Inchoative_frame` --> `Stative_frame`: inchoative_of
 ```
 
@@ -76,6 +76,21 @@ class `Frame_C:Perspectivized`
 `Frame_A:Neutral` --> `Frame_B:Perspectivized`: perspective_on 
 `Frame_A:Neutral` --> `Frame_C:Perspectivized`: perspective_on
 ```
+### Experience
+- Name: Experience
+- Intention: Implementation of this pattern (through the **Causative_of** relation) indicates an experience that change conditions of a entity.
+
+- Diagram
+
+```mermaid
+classDiagram 
+class `Frame_A:Experience` 
+class `Frame_B:State` 
+class `Frame_C:Attribute` 
+`Frame_A:Experience` --> `Frame_B:State`: causative_of 
+`Frame_A:Experience` --> `Frame_C:Attribute`: causative_of
+```
+
 ### EventState
 - Name: EventState
 - Intention: To explicitly separate LUs associated with events (in eventive frames) from LUs related to states that precede or follow these events (in stative frames). 
