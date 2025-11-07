@@ -549,7 +549,7 @@ class VideoService
         $searchData = ObjectSearchData::from($data);
         $do = self::getObject($searchData);
         $clone = json_encode([
-            'name' => $do->name,
+            'name' => '',
             'startFrame' => (int) $do->startFrame,
             'endFrame' => (int) $do->endFrame,
             'startTime' => (float) $do->startTime,
