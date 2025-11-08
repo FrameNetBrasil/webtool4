@@ -164,6 +164,8 @@ Frames are classified into namespaces based on their core FE qualia signatures.
 Causative frames foreground the **AGENTIVE ROLE**, emphasizing the causal force behind events. These frames center on entities (Agent) or events (Cause) that bring about or initiate events, 
 whether through intentional action or non-intentional causation.
 
+[Full discussion](/docs/namespaces/causative.md)
+
 **Core Elements (highlighted in red):**
 - **Event**: The occurrence being caused
 - **Agent**: Intentional, volitional causer
@@ -234,6 +236,8 @@ graph TB
 Inchoative frames emphasize the **beginning or initiation** of a state change, foregrounding the **TELIC ROLE** through the Patient. 
 These frames focus on entities that undergo change, typically expressing "coming into a state" or "beginning to be."
 
+[Full discussion](/docs/namespaces/inchoative.md)
+
 **Core Elements (highlighted in red):**
 - **Event**: The initiating occurrence
 - **Patient**: The entity undergoing change
@@ -301,6 +305,8 @@ graph TB
 
 Experience frames emphasize **psychological or perceptual events**, foregrounding the **TELIC ROLE** through the Experiencer and the **FORMAL ROLE** through resulting Conditions. These frames focus on perception, emotion, and cognition, where an entity perceives or experiences a stimulus.
 
+[Full discussion](/docs/namespaces/experience.md)
+
 **Core Elements (highlighted in red):**
 - **Event**: The perceptual or psychological occurrence
 - **Experiencer**: The perceiving or experiencing entity
@@ -367,6 +373,8 @@ graph TB
 ### Stative
 
 Stative frames emphasize **static situations without internal change**, foregrounding the **FORMAL ROLE**. These frames describe states, properties, attributes, and categorical classifications that hold over time without expressing dynamic change.
+
+[Full discussion](/docs/namespaces/stative.md)
 
 **Core Elements (highlighted in red):**
 - **Event**: The static situation (often better conceptualized as a state)
@@ -437,6 +445,8 @@ graph TB
 ### Transition
 
 Transition frames emphasize **change from one state to another**, combining **TELIC ROLE** (Patient as affected entity) with **FORMAL ROLE** (Conditions as source and target states). These frames explicitly express state transitions with clear before/after conditions.
+
+[Full discussion](/docs/namespaces/transition.md)
 
 **Core Elements (highlighted in red):**
 - **Event**: The transitional occurrence
@@ -509,6 +519,8 @@ These frames focus on the happening or process as the primary semantic component
 
 Eventive frames that do not have an explicitly defined agent, cause, or experiencer. This includes, for example, events without agentive focus, 
 events with non-human agents, natural phenomena (rain, erosion, combustion, growth), several different types of processes (physical, social, etc).
+
+[Full discussion](/docs/namespaces/eventive.md)
 
 **Core Elements (highlighted in red):**
 - **Event**: The central dynamic occurrence
