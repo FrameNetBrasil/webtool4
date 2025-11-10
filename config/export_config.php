@@ -41,7 +41,7 @@ return [
         'active_only' => true,
 
         // Default corpus filter (null = all corpora)
-        'default_corpus' => null,
+        'default_corpus' => [136],
 
         // Frame export filters
         'frames' => [
