@@ -35,6 +35,12 @@
                                         @endforeach
                                     </ul>
                                 </div>
+                            @elseif($section['type'] === 'parent')
+                                <div class="nav-folder">
+                                    <ul class="folder-items">
+                                        @include('Docs.partials.nav-item', ['item' => $section, 'currentPath' => $currentPath ?? null])
+                                    </ul>
+                                </div>
                             @elseif($section['leaf'])
                                 <div class="nav-folder">
                                     <ul class="folder-items">

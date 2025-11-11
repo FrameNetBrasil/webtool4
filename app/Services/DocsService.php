@@ -79,6 +79,44 @@ class DocsService extends Controller
     }
 
     /**
+     * Check if a folder has a _main.md file (indicates it's a parent page with children)
+     */
+    private static function hasMainPage(string $folderPath): bool
+    {
+        return File::exists($folderPath.'/_main.md');
+    }
+
+    /**
+     * Get children pages from a parent folder (excluding _main.md)
+     */
+    private static function getChildrenPages(string $folderPath, string $relativePath): array
+    {
+        $children = [];
+        $files = File::files($folderPath);
+
+        foreach ($files as $file) {
+            if ($file->getExtension() !== 'md' || $file->getFilename() === '_main.md') {
+                continue;
+            }
+
+            $fileName = $file->getFilename();
+            $childRelativePath = $relativePath.'/'.$fileName;
+            $frontmatter = self::parseFrontmatter($file->getPathname());
+
+            $children[] = [
+                'id' => md5($childRelativePath),
+                'type' => 'document',
+                'text' => $frontmatter['title'] ?? self::formatName(Str::replace('.md', '', $fileName)),
+                'path' => $childRelativePath,
+                'leaf' => true,
+                'order' => $frontmatter['order'] ?? PHP_INT_MAX,
+            ];
+        }
+
+        return self::sortByOrder($children);
+    }
+
+    /**
      * Build hierarchical tree structure from documentation folder
      */
     public static function buildTree(?string $parentPath = null): array
@@ -106,21 +144,42 @@ class DocsService extends Controller
 
             $relativePath = $parentPath ? $parentPath.'/'.$dirName : $dirName;
             $metadata = self::getFolderMetadata($directory);
+            $hasMain = self::hasMainPage($directory);
 
-            $folders[] = [
-                'id' => md5($relativePath),
-                'type' => 'folder',
-                'text' => $metadata['title'] ?? self::formatName($dirName),
-                'path' => $relativePath,
-                'leaf' => false,
-                'state' => 'closed',
-                'order' => $metadata['order'] ?? PHP_INT_MAX,
-            ];
+            if ($hasMain) {
+                // This is a parent page with children
+                $mainPath = $relativePath.'/_main.md';
+                $mainFrontmatter = self::parseFrontmatter($directory.'/_main.md');
+                $children = self::getChildrenPages($directory, $relativePath);
+
+                $documents[] = [
+                    'id' => md5($relativePath),
+                    'type' => 'parent',
+                    'text' => $mainFrontmatter['title'] ?? $metadata['title'] ?? self::formatName($dirName),
+                    'path' => $relativePath,  // Path without _main.md
+                    'mainPath' => $mainPath,  // Actual file path
+                    'leaf' => false,
+                    'state' => 'closed',
+                    'children' => $children,
+                    'order' => $mainFrontmatter['order'] ?? $metadata['order'] ?? PHP_INT_MAX,
+                ];
+            } else {
+                // Regular folder without main page
+                $folders[] = [
+                    'id' => md5($relativePath),
+                    'type' => 'folder',
+                    'text' => $metadata['title'] ?? self::formatName($dirName),
+                    'path' => $relativePath,
+                    'leaf' => false,
+                    'state' => 'closed',
+                    'order' => $metadata['order'] ?? PHP_INT_MAX,
+                ];
+            }
         }
 
         // Process markdown files
         foreach ($files as $file) {
-            if ($file->getExtension() !== 'md') {
+            if ($file->getExtension() !== 'md' || $file->getFilename() === '_main.md') {
                 continue;
             }
 
@@ -155,7 +214,20 @@ class DocsService extends Controller
      */
     public static function getDocument(string $path): array
     {
-        $filePath = self::getDocsPath().'/'.$path;
+        $basePath = self::getDocsPath();
+        $filePath = $basePath.'/'.$path;
+
+        // Check if path is a folder with _main.md
+        if (File::isDirectory($filePath) && File::exists($filePath.'/_main.md')) {
+            $filePath = $filePath.'/_main.md';
+            $path = $path.'/_main.md';
+        }
+
+        // If path doesn't end with .md and it's not a directory, try adding .md
+        if (! str_ends_with($path, '.md') && ! File::isDirectory($filePath)) {
+            $filePath .= '.md';
+            $path .= '.md';
+        }
 
         if (! File::exists($filePath)) {
             return [
@@ -194,6 +266,89 @@ class DocsService extends Controller
             'toc' => self::extractTableOfContents($markdownContent),
             'breadcrumbs' => self::getBreadcrumbs($path),
         ];
+    }
+
+    /**
+     * Build a flat ordered list of all documentation pages for global navigation
+     */
+    public static function buildGlobalOrder(): array
+    {
+        $flatList = [];
+        $tree = self::buildTree();
+
+        self::flattenTree($tree, $flatList);
+
+        return $flatList;
+    }
+
+    /**
+     * Recursively flatten the tree into a flat list of pages
+     */
+    private static function flattenTree(array $tree, array &$flatList): void
+    {
+        foreach ($tree as $item) {
+            if ($item['type'] === 'folder') {
+                // Recursively process folder contents
+                $children = self::buildTree($item['path']);
+                self::flattenTree($children, $flatList);
+            } elseif ($item['type'] === 'parent') {
+                // Add parent page
+                $flatList[] = [
+                    'path' => $item['path'],
+                    'title' => $item['text'],
+                ];
+
+                // Add children pages
+                if (! empty($item['children'])) {
+                    foreach ($item['children'] as $child) {
+                        $flatList[] = [
+                            'path' => Str::replace('.md', '', $child['path']),
+                            'title' => $child['text'],
+                        ];
+                    }
+                }
+            } elseif ($item['type'] === 'document') {
+                // Add regular document
+                $flatList[] = [
+                    'path' => Str::replace('.md', '', $item['path']),
+                    'title' => $item['text'],
+                ];
+            }
+        }
+    }
+
+    /**
+     * Get the previous page in global navigation order
+     */
+    public static function getPreviousPage(string $currentPath): ?array
+    {
+        $pages = self::buildGlobalOrder();
+        $normalizedPath = Str::replace('.md', '', Str::replace('/_main.md', '', $currentPath));
+
+        foreach ($pages as $index => $page) {
+            if ($page['path'] === $normalizedPath && $index > 0) {
+                return $pages[$index - 1];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the next page in global navigation order
+     */
+    public static function getNextPage(string $currentPath): ?array
+    {
+        $pages = self::buildGlobalOrder();
+        $normalizedPath = Str::replace('.md', '', Str::replace('/_main.md', '', $currentPath));
+
+        foreach ($pages as $index => $page) {
+            if ($page['path'] === $normalizedPath && $index < count($pages) - 1) {
+                return $pages[$index + 1];
+            }
+        }
+
+        return null;
     }
 
     /**

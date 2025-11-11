@@ -395,7 +395,7 @@ class ExportXmlFrameworkCommand extends Command
         if ($corpusId = $this->option('corpus')) {
             $query->where('idCorpus', $corpusId);
         } elseif (isset($this->config['filters']['default_corpus'])) {
-            $query->where('idCorpus', $this->config['filters']['default_corpus']);
+            $query->whereIn('idCorpus', $this->config['filters']['default_corpus']);
         }
 
         return $query;
@@ -522,6 +522,15 @@ class ExportXmlFrameworkCommand extends Command
         // Generate filename and save
         $filename = $this->generateFilename('fulltext', $document->idDocument);
         $this->saveXmlDocument($dom, $filename, 'fulltext');
+
+        // Aggressively free memory after each document
+        unset($dom, $filename);
+        $this->generators->resetCaches();
+
+        // Force garbage collection
+        if (function_exists('gc_collect_cycles')) {
+            gc_collect_cycles();
+        }
     }
 
     /**

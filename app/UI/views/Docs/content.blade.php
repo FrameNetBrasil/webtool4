@@ -4,6 +4,9 @@
         <div class="doc-markdown-content">
             {!! $document['html'] !!}
         </div>
+
+        {{-- Page Navigation (Previous/Next) --}}
+        @include('Docs.partials.page-nav', ['previousPage' => $previousPage ?? null, 'nextPage' => $nextPage ?? null])
     </article>
 @else
     <div class="ui message warning">
