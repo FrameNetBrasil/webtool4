@@ -11,7 +11,6 @@ use App\Data\Annotation\Video\ObjectSearchData;
 use App\Data\Annotation\Video\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Enum\AnnotationType;
-use App\Repositories\AnnotationSet;
 use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Timeline;
@@ -52,6 +51,7 @@ class VideoService
 
         $at = ($annotationType == 'deixis') ? AnnotationType::DEIXIS->value : (($annotationType == 'canvas') ? AnnotationType::CANVAS->value : AnnotationType::DYNAMICMODE->value);
         $comment = $idObject ? CommentService::getComment($idObject, $idDocument, $at) : null;
+
         return [
             'idDocument' => $idDocument,
             'document' => $document,
@@ -67,7 +67,7 @@ class VideoService
             'groupedLayers' => $groupedLayers,
             'idObject' => is_null($idObject) ? 0 : $idObject,
             'frameNumber' => is_null($frameNumber) ? 0 : $frameNumber,
-            'comment' => $comment
+            'comment' => $comment,
         ];
 
     }
@@ -86,10 +86,10 @@ class VideoService
             ->where('ad.idLanguage', $idLanguage)
             ->where('ad.idDocument', $idDocument)
             ->select('ad.idDynamicObject as idObject', 'ad.name', 'ad.startFrame', 'ad.endFrame', 'ad.startTime', 'ad.endTime', 'ad.status', 'ad.origin',
-                'ad.layerGroup','ad.layerOrder','ad.idLayerType','ad.nameLayerType',
-                'ad.idAnnotationGL','ad.idGenericLabel','ad.gl',
+                'ad.layerGroup', 'ad.layerOrder', 'ad.idLayerType', 'ad.nameLayerType',
+                'ad.idAnnotationGL', 'ad.idGenericLabel', 'ad.gl',
                 'ad.idAnnotationLU', 'ad.idLU', 'ad.lu', 'ad.lu as luName', 'ad.frame as luFrameName', 'ad.idAnnotationFE', 'ad.idFrameElement', 'ad.idFrame', 'ad.frame', 'ad.fe',
-                'ad.fgColorGL', 'ad.bgColorGL','ad.fgColorFE', 'ad.bgColorFE')
+                'ad.fgColorGL', 'ad.bgColorGL', 'ad.fgColorFE', 'ad.bgColorFE')
             ->orderBy('ad.layerGroup')
             ->orderBy('ad.nameLayerType')
             ->orderBy('ad.startFrame')
@@ -102,8 +102,8 @@ class VideoService
         if (count($idDynamicObjectList) > 0) {
             $bboxes = Criteria::table('view_dynamicobject_boundingbox')
                 ->whereIN('idDynamicObject', $idDynamicObjectList)
-                ->select("idDynamicObject")
-                ->selectRaw("count(*) as count")
+                ->select('idDynamicObject')
+                ->selectRaw('count(*) as count')
                 ->all();
             foreach ($bboxes as $bbox) {
                 $countBBoxes[$bbox->idDynamicObject][] = $bbox->count;
@@ -184,6 +184,8 @@ class VideoService
                 }
             }
         }
+        debug($result);
+
         return $result;
     }
 
@@ -192,28 +194,25 @@ class VideoService
      */
     private static function getTimelineConfig($timelineData): array
     {
-        $minFrame = PHP_INT_MAX;
         $maxFrame = PHP_INT_MIN;
 
         foreach ($timelineData as $layer) {
             foreach ($layer['objects'] as $object) {
-                $minFrame = min($minFrame, $object->startFrame);
                 $maxFrame = max($maxFrame, $object->endFrame);
             }
         }
 
-        // Add padding
-        $minFrame = max(0, $minFrame - 100);
+        // Add padding to maxFrame
         $maxFrame = $maxFrame + 100;
 
         return [
-            'minFrame' => $minFrame,
+            'minFrame' => 0,
             'maxFrame' => $maxFrame,
             'frameToPixel' => 1,
             'minObjectWidth' => 16,
             'objectHeight' => 24,
             'labelWidth' => 150,
-            'timelineWidth' => ($maxFrame - $minFrame) * 1,
+            'timelineWidth' => $maxFrame * 1,
             'timelineHeight' => (24 * count($timelineData)) + 10,
         ];
     }
@@ -256,10 +255,10 @@ class VideoService
             ->where('ad.idLanguage', $idLanguage)
             ->where('ad.idDynamicObject', $idObject)
             ->select('ad.idDynamicObject as idObject', 'ad.name', 'ad.startFrame', 'ad.endFrame', 'ad.startTime', 'ad.endTime', 'ad.status', 'ad.origin',
-                'ad.layerGroup','ad.layerOrder','ad.idLayerType','ad.nameLayerType',
-                'ad.idAnnotationGL','ad.idGenericLabel','ad.gl',
+                'ad.layerGroup', 'ad.layerOrder', 'ad.idLayerType', 'ad.nameLayerType',
+                'ad.idAnnotationGL', 'ad.idGenericLabel', 'ad.gl',
                 'ad.idAnnotationLU', 'ad.idLU', 'ad.lu', 'ad.lu as luName', 'ad.frame as luFrameName', 'ad.idAnnotationFE', 'ad.idFrameElement', 'ad.idFrame', 'ad.frame', 'ad.fe',
-                'ad.fgColorGL', 'ad.bgColorGL','ad.fgColorFE', 'ad.bgColorFE')
+                'ad.fgColorGL', 'ad.bgColorGL', 'ad.fgColorFE', 'ad.bgColorFE')
             ->first();
         if (! is_null($object)) {
             $object->idDocument = $data->idDocument;
@@ -286,10 +285,11 @@ class VideoService
             }
             $object->bboxes = Criteria::table('view_dynamicobject_boundingbox')
                 ->where('idDynamicObject', $idObject)
-                ->keyBy("frameNumber")
+                ->keyBy('frameNumber')
                 ->all();
             $object->hasBBoxes = (count($object->bboxes) > 0);
         }
+
         return $object;
     }
 
@@ -299,62 +299,62 @@ class VideoService
 
         $searchResults = [];
 
-//        if (! empty($data->frame) || ! empty($data->lu) || ! empty($data->searchIdLayerType) || ($data->idObject > 0)) {
-            $idLanguage = AppService::getCurrentIdLanguage();
+        //        if (! empty($data->frame) || ! empty($data->lu) || ! empty($data->searchIdLayerType) || ($data->idObject > 0)) {
+        $idLanguage = AppService::getCurrentIdLanguage();
 
-            $query = Criteria::table($view)
-                ->where('ad.idLanguage', 'left', $idLanguage)
-                ->where('ad.idDocument', $data->idDocument);
+        $query = Criteria::table($view)
+            ->where('ad.idLanguage', 'left', $idLanguage)
+            ->where('ad.idDocument', $data->idDocument);
 
-            if (! empty($data->frame)) {
-                $query->whereRaw('(ad.frame LIKE ? OR ad.fe LIKE ?)', [
-                    $data->frame.'%',
-                    $data->frame.'%',
-                ]);
+        if (! empty($data->frame)) {
+            $query->whereRaw('(ad.frame LIKE ? OR ad.fe LIKE ?)', [
+                $data->frame.'%',
+                $data->frame.'%',
+            ]);
+        }
+
+        if (! empty($data->lu)) {
+            $searchTerm = '%'.$data->lu.'%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('ad.lu', 'like', $searchTerm);
+            });
+        }
+
+        if ($data->idObject != 0) {
+            $query->where('ad.idDynamicObject', $data->idObject);
+        }
+
+        $searchResults = $query
+            ->select(
+                'ad.idDynamicObject as idObject',
+                'ad.name',
+                'ad.startFrame',
+                'ad.endFrame',
+                'ad.startTime',
+                'ad.endTime',
+                'ad.lu',
+                'ad.frame',
+                'ad.fe'
+            )
+            ->orderBy('ad.startFrame')
+            ->orderBy('ad.endFrame')
+            ->orderBy('ad.idDynamicObject')
+            ->all();
+
+        // Format search results for display
+        foreach ($searchResults as $object) {
+            $object->displayName = '';
+            if (! empty($object->lu)) {
+                $object->displayName .= ($object->displayName ? ' | ' : '').$object->lu;
             }
-
-            if (! empty($data->lu)) {
-                $searchTerm = '%'.$data->lu.'%';
-                $query->where(function ($q) use ($searchTerm) {
-                    $q->where('ad.lu', 'like', $searchTerm);
-                });
+            if (! empty($object->fe)) {
+                $object->displayName .= ($object->displayName ? ' | ' : '').$object->frame.'.'.$object->fe;
             }
-
-            if ($data->idObject != 0) {
-                $query->where('ad.idDynamicObject', $data->idObject);
+            if (empty($object->displayName)) {
+                $object->displayName = 'None';
             }
-
-            $searchResults = $query
-                ->select(
-                    'ad.idDynamicObject as idObject',
-                    'ad.name',
-                    'ad.startFrame',
-                    'ad.endFrame',
-                    'ad.startTime',
-                    'ad.endTime',
-                    'ad.lu',
-                    'ad.frame',
-                    'ad.fe'
-                )
-                ->orderBy('ad.startFrame')
-                ->orderBy('ad.endFrame')
-                ->orderBy('ad.idDynamicObject')
-                ->all();
-
-            // Format search results for display
-            foreach ($searchResults as $object) {
-                $object->displayName = '';
-                if (! empty($object->lu)) {
-                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->lu;
-                }
-                if (! empty($object->fe)) {
-                    $object->displayName .= ($object->displayName ? ' | ' : '').$object->frame.'.'.$object->fe;
-                }
-                if (empty($object->displayName)) {
-                    $object->displayName = 'None';
-                }
-            }
-//        }
+        }
+        //        }
 
         return $searchResults;
     }
@@ -362,9 +362,9 @@ class VideoService
     public static function createNewObjectAtLayer(CreateObjectData $data): object
     {
         if ($data->annotationType == 'dynamicMode') {
-            $layerType = Criteria::table("view_layertype")
-                ->where("idLanguage", AppService::getCurrentIdLanguage())
-                ->where("layerGroup","DynamicAnnotation")
+            $layerType = Criteria::table('view_layertype')
+                ->where('idLanguage', AppService::getCurrentIdLanguage())
+                ->where('layerGroup', 'DynamicAnnotation')
                 ->first();
             $data->idLayerType = $layerType->idLayerType;
             $data->endFrame = $data->startFrame;
@@ -469,7 +469,7 @@ class VideoService
 
     public static function updateObjectAnnotation(ObjectAnnotationData $data): int
     {
-//        $usertask = Task::getCurrentUserTask($data->idDocument);
+        //        $usertask = Task::getCurrentUserTask($data->idDocument);
         $do = Criteria::byId('dynamicobject', 'idDynamicObject', $data->idObject);
         Criteria::deleteById('annotation', 'idDynamicObject', $do->idDynamicObject);
         if ($data->idFrameElement) {
@@ -477,9 +477,9 @@ class VideoService
             $annotation = json_encode([
                 'idDynamicObject' => $do->idDynamicObject,
                 'idEntity' => $fe->idEntity,
-                'idUser' => AppService::getCurrentIdUser()
+                'idUser' => AppService::getCurrentIdUser(),
             ]);
-            $idAnnotation = Criteria::function("annotation_create(?)", [$annotation]);
+            $idAnnotation = Criteria::function('annotation_create(?)', [$annotation]);
             Timeline::addTimeline('annotation', $idAnnotation, 'C');
         }
         if ($data->idLU) {
@@ -487,7 +487,7 @@ class VideoService
             $annotation = json_encode([
                 'idDynamicObject' => $do->idDynamicObject,
                 'idEntity' => $lu->idEntity,
-                'idUser' => AppService::getCurrentIdUser()
+                'idUser' => AppService::getCurrentIdUser(),
             ]);
             $idAnnotation = Criteria::function('annotation_create(?)', [$annotation]);
             Timeline::addTimeline('annotation', $idAnnotation, 'C');
@@ -497,11 +497,12 @@ class VideoService
             $annotation = json_encode([
                 'idDynamicObject' => $do->idDynamicObject,
                 'idEntity' => $gl->idEntity,
-                'idUser' => AppService::getCurrentIdUser()
+                'idUser' => AppService::getCurrentIdUser(),
             ]);
             $idAnnotation = Criteria::function('annotation_create(?)', [$annotation]);
             Timeline::addTimeline('annotation', $idAnnotation, 'C');
         }
+
         return $data->idObject;
     }
 
@@ -523,14 +524,14 @@ class VideoService
         // se pode remover o objeto se for Manager ou se for o criador do objeto
         $idUser = AppService::getCurrentIdUser();
         $user = User::byId($idUser);
-        if (!User::isManager($user)) {
-            $tl = Criteria::table("timeline")
-                ->where("tablename", "dynamicobject")
-                ->where("id", $idObject)
-                ->select("idUser")
+        if (! User::isManager($user)) {
+            $tl = Criteria::table('timeline')
+                ->where('tablename', 'dynamicobject')
+                ->where('id', $idObject)
+                ->select('idUser')
                 ->first();
             if ($tl->idUser != $idUser) {
-                throw new \Exception("Object can not be removed.");
+                throw new \Exception('Object can not be removed.');
             }
         }
         DB::transaction(function () use ($idObject) {
@@ -538,7 +539,7 @@ class VideoService
             self::deleteBBoxesByObject($idObject);
             // remove dynamicobject
             $idUser = AppService::getCurrentIdUser();
-            Criteria::function("dynamicobject_delete(?,?)", [$idObject, $idUser]);
+            Criteria::function('dynamicobject_delete(?,?)', [$idObject, $idUser]);
         });
     }
 
@@ -629,7 +630,7 @@ class VideoService
         Criteria::table('boundingbox')
             ->where('idBoundingBox', $data->idBoundingBox)
             ->update($data->bbox);
+
         return $data->idBoundingBox;
     }
-
 }

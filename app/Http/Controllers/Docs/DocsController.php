@@ -7,7 +7,7 @@ use App\Services\DocsService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 
-#[Middleware("web")]
+#[Middleware('web')]
 class DocsController extends Controller
 {
     #[Get(path: '/docs/{path?}', where: ['path' => '.*'])]
@@ -20,7 +20,8 @@ class DocsController extends Controller
         if ($path !== null) {
             $path = urldecode($path);
             $document = DocsService::getDocument($path);
-            debug($document);
+            $previousPage = DocsService::getPreviousPage($path);
+            $nextPage = DocsService::getNextPage($path);
         } else {
             // Show menu - no document
             $document = [
@@ -31,12 +32,16 @@ class DocsController extends Controller
                 'toc' => [],
                 'breadcrumbs' => [['text' => 'Documentation', 'path' => null]],
             ];
+            $previousPage = null;
+            $nextPage = null;
         }
 
-        return view("Docs.browser", [
+        return view('Docs.browser', [
             'tree' => $tree,
             'document' => $document,
             'currentPath' => $path,
+            'previousPage' => $previousPage,
+            'nextPage' => $nextPage,
         ]);
     }
 
@@ -46,8 +51,8 @@ class DocsController extends Controller
         $path = urldecode($path);
         $document = DocsService::getDocument($path);
 
-        if (!$document['found']) {
-            return response()->view("Docs.content", [
+        if (! $document['found']) {
+            return response()->view('Docs.content', [
                 'document' => [
                     'found' => false,
                     'html' => '<p class="ui message warning">Document not found.</p>',
@@ -55,11 +60,18 @@ class DocsController extends Controller
                     'toc' => [],
                     'breadcrumbs' => [],
                 ],
+                'previousPage' => null,
+                'nextPage' => null,
             ], 404);
         }
 
-        return view("Docs.content", [
+        $previousPage = DocsService::getPreviousPage($path);
+        $nextPage = DocsService::getNextPage($path);
+
+        return view('Docs.content', [
             'document' => $document,
+            'previousPage' => $previousPage,
+            'nextPage' => $nextPage,
         ]);
     }
 }

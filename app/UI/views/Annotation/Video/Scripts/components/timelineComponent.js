@@ -62,25 +62,16 @@ function timelineComponent(config) {
             const rulerContent = document.getElementById("ruler-content");
             rulerContent.innerHTML = "";
 
-            // Major ticks every 1000 frames
-            // for (let frame = config.minFrame; frame <= config.maxFrame; frame += 1000) {
-            //     const tick = document.createElement('div');
-            //     tick.className = 'ruler-tick major';
-            //     tick.style.left = frame + 'px';
-            //     tick.textContent = frame.toLocaleString();
-            //     rulerContent.appendChild(tick);
-            // }
-            //
-            // Minor ticks every 100 frames
-            for (let frame = 100; frame <= config.maxFrame; frame += 100) {
+            // Generate ticks every 100 frames, starting from 0
+            for (let frameNumber = 0; frameNumber <= config.maxFrame; frameNumber += 100) {
                 const tick = document.createElement("div");
-                if (frame % 1000 === 0) {
+                if (frameNumber % 1000 === 0) {
                     tick.className = "tick major";
                 } else {
                     tick.className = "tick";
                 }
-                tick.style.left = frame + "px";
-                tick.textContent = frame.toLocaleString();
+                tick.style.left = frameNumber + "px";
+                tick.textContent = frameNumber.toLocaleString();
                 rulerContent.appendChild(tick);
             }
         },
@@ -107,8 +98,8 @@ function timelineComponent(config) {
 
             // Function to update frame info
             function updateFrameInfo(scrollLeft, viewportWidth) {
-                const frameStart = Math.floor(scrollLeft / config.frameToPixel) + config.minFrame;
-                const frameEnd = Math.floor((scrollLeft + viewportWidth) / config.frameToPixel) + config.minFrame;
+                const frameStart = Math.floor(scrollLeft / config.frameToPixel);
+                const frameEnd = Math.floor((scrollLeft + viewportWidth) / config.frameToPixel);
 
                 // console.log("Updating frame info:", {
                 //     scrollLeft,
@@ -168,7 +159,7 @@ function timelineComponent(config) {
             const frameNumber = this.frameInput;
             const timelineContent = document.getElementById("timeline-content");
 
-            const framePosition = (frameNumber - config.minFrame) * config.frameToPixel;
+            const framePosition = frameNumber * config.frameToPixel;
             const viewportWidth = timelineContent.clientWidth;
             const centerOffset = viewportWidth / 2;
 

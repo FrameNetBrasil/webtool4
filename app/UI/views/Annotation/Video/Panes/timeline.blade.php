@@ -76,7 +76,7 @@
                                 @foreach ($visualLayer['lines'] as $lineIndex => $line)
                                     @foreach ($line['objects'] as $objIndex => $objectData)
                                         @php
-                                            $startPos = ($objectData->startFrame - $timeline['config']['minFrame']) * $timeline['config']['frameToPixel'];
+                                            $startPos = $objectData->startFrame * $timeline['config']['frameToPixel'];
                                             $duration = $objectData->endFrame - $objectData->startFrame;
                                             $width = max($timeline['config']['minObjectWidth'], $duration * $timeline['config']['frameToPixel']);
                                             $top = $lineIndex * $timeline['config']['objectHeight'];
