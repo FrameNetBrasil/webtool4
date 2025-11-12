@@ -1,6 +1,6 @@
 ---
 title: Inchoative
-order: 2
+order: 3
 description: Inchoative
 ---
 
@@ -145,7 +145,7 @@ Inchoative locational changes typically involve:
 **b) Social/economic states**:
 - *enriquecer* (become rich), *empobrecer* (become poor), *formar-se* (graduate)
 
-**c) Psychological/emotional states** (overlaps with Experience namespace):
+**c) Psychological/emotional states** (overlaps with Experiential namespace):
 - *alegrar-se* (become happy), *entristecer-se* (become sad), *zangar-se* (become angry)
 
 **d) Legal/institutional states**:
@@ -626,10 +626,49 @@ Same verb, different argument structure:
 - **Inchoative**: Focus on achieved state (*A porta abriu* = is now open)
 - **Transition**: Focus on path/trajectory (*João foi para o Rio* = movement along path)
 
-### Inchoative vs. Experience
-Psychological inchoatives overlap with experience:
+### Inchoative vs. Experiential
+Psychological inchoatives overlap with experiential frames:
 - *João alegrou-se* (became happy) - inchoative reading (state change)
 - *João se alegrou com a notícia* (felt joy from news) - experiencer reading (psychological event)
+
+### Inchoative vs. Action
+
+**Core distinction**: **Agent presence** and **perspective**
+
+**Inchoative** (No agent, result-focused):
+```
+O vaso quebrou (The vase broke)
+- Theme: vaso (affected entity)
+- No agent mentioned
+- Focus: result state (broken)
+- BECOME(broken(vaso))
+```
+
+**Action** (Agent present, activity-focused):
+```
+João correu (João ran)
+- Agent: João (doer)
+- Activity: running
+- Focus: process of running
+- ACT(João, run)
+```
+
+**Key differences**:
+1. **Participant structure**:
+   - Inchoative: Theme only (no agent)
+   - Action: Agent required
+
+2. **Semantic focus**:
+   - Inchoative: Result/endpoint achieved
+   - Action: Activity/process performed
+
+3. **Telicity**:
+   - Inchoative: Telic (has endpoint)
+   - Action: Typically atelic (no endpoint)
+
+**No direct overlap**: These namespaces are complementary rather than competing:
+- Inchoatives describe changes without profiling causers
+- Actions describe activities by agents without required results
 
 [//]: # (### **11. Recommendations for FrameNet Brasil / DAISY**)
 

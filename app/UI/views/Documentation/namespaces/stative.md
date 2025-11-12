@@ -1,6 +1,6 @@
 ---
 title: Stative
-order: 4
+order: 6
 description: Stative
 ---
 
@@ -982,9 +982,9 @@ GROUND = Oblique PP
 O livro₁ está perto de si₁ mesmo (The book is near itself - reflexive controlled by Figure)
 ```
 
-### Experiencer-Stimulus in Experience States
+### Experiencer-Stimulus in Experiential States
 
-Experience-type statives have **Experiencer-Stimulus** structure:
+Experiential-type statives have **Experiencer-Stimulus** structure:
 
 **Experiencer**: Sentient being having experience
 **Stimulus**: Object/content of experience
