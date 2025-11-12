@@ -8,12 +8,29 @@ description: Causative
 
 ## Core Definition
 
-Causative frames foreground the **AGENTIVE ROLE**, emphasizing the causal force that brings about events. 
-These frames center on how entities or events initiate, trigger, or bring about changes in the world. 
-The causative namespace captures the semantic domain where **causation itself** is the primary conceptual content, regardless of what type of change results.
+Causative frames foreground the **AGENTIVE ROLE**, emphasizing the causal force that brings about events **with specific results or outcomes**.
+These frames center on how entities or events initiate, trigger, or bring about **changes in the world**.
+The causative namespace captures the semantic domain where **causation itself** is the primary conceptual content, where an Agent or Cause
+brings about a state change or result in another entity.
 
-**Theoretical foundation**: Causatives encode a basic cognitive schema where one entity or event is conceptualized as the **source of energy** or **impetus** 
+**Theoretical foundation**: Causatives encode a basic cognitive schema where one entity or event is conceptualized as the **source of energy** or **impetus**
 for another event or state change (Talmy's Force Dynamics, Langacker's Action Chain model).
+
+**Key characteristic**: Causative frames are **result-oriented** and typically **telic** (have an inherent endpoint or goal state). The caused event or resultant state is semantically salient and often independently verifiable.
+
+## Scope Clarification
+
+**What Causative frames INCLUDE**:
+- Agentive causation with results: *João quebrou o vaso* (João broke the vase → broken vase)
+- Creation events: *Maria construiu uma casa* (Maria built a house → existing house)
+- Change-of-state causation: *O calor derreteu o gelo* (Heat melted the ice → liquid water)
+- Physical, social, and psychological causation with outcomes
+
+**What Causative frames EXCLUDE** (see other namespaces):
+- **Pure agentive activities without results** → See **Action namespace** (*João correu* - João ran)
+- **Non-agentive natural phenomena** → See **Eventive namespace** (*O vento soprou* - The wind blew; *Choveu* - It rained)
+- **Result-focused without agent** → See **Inchoative namespace** (*O vaso quebrou* - The vase broke)
+- **Path-oriented motion** → See **Transition namespace** (*João foi para casa* - João went home)
 
 ## Subtypes based on Causation type
 
@@ -104,11 +121,16 @@ An interesting intermediate case: sentient entity causes event but without inten
 
 **Semantic features**: `[-intentional, -volitional, ±sentient]`
 
-**Examples**:
-- *O vento quebrou a janela* ("The wind broke the window") - natural force
-- *O terremoto destruiu a cidade* ("The earthquake destroyed the city") - natural event
-- *A doença matou milhares* ("The disease killed thousands") - biological process
+**Examples** (primarily abstract/non-physical causes):
 - *O erro causou o acidente* ("The mistake caused the accident") - abstract cause
+- *A doença matou milhares* ("The disease killed thousands") - biological process
+- *O medo paralisou João* ("Fear paralyzed João") - psychological cause
+- *A inflação aumentou os preços* ("Inflation increased prices") - economic cause
+
+**Note on natural forces**: Non-agentive natural phenomena (wind, rain, earthquakes) are now classified in the **Eventive namespace** rather than Causative, even when they cause results. This maintains clearer boundaries:
+- *O vento quebrou a janela* → **Eventive** (natural force)
+- *O terremoto destruiu a cidade* → **Eventive** (natural event)
+- Focus here is on **abstract or biological causes** that are not natural environmental phenomena.
 
 **Cognitive status**: The Cause is construed as:
 1. **Lacking mental states** (no intentions, desires, goals)
@@ -116,10 +138,10 @@ An interesting intermediate case: sentient entity causes event but without inten
 3. **Not morally/legally responsible** (though can be involved in causal responsibility)
 
 **Linguistic consequences**:
-- Incompatible with purpose clauses: ✗ *O vento quebrou a janela para irritar João*
-- Incompatible with intentionality adverbs: ✗ *O vento quebrou a janela deliberadamente*
-- Cannot take imperatives: ✗ *Vento, quebre a janela!*
-- Question with *como* (how/mechanism) not *por que* (why/reason): *Como o vento quebrou a janela?*
+- Incompatible with purpose clauses: ✗ *O erro causou o acidente para irritar alguém*
+- Incompatible with intentionality adverbs: ✗ *A doença matou deliberadamente*
+- Cannot take imperatives: ✗ *Erro, cause o acidente!*
+- Question with *como* (how/mechanism) not *por que* (why/reason): *Como o erro causou o acidente?*
 
 #### The Agent-Cause gradient
 
@@ -177,7 +199,7 @@ Cause operates through mental/emotional influence.
 **Mechanism**: Persuasion, emotional influence, information transfer
 **Result**: Changes in psychological states or belief-induced actions
 
-**Special property**: Often involves **stimulus-experiencer** structure that overlaps with Experience namespace (see your Experiencer discussion in event structure).
+**Special property**: Often involves **stimulus-experiencer** structure that overlaps with Experiential namespace (see your Experiencer discussion in event structure).
 
 #### Diagnostic
 - Physical: ✓ Operates without conscious participants
@@ -424,13 +446,125 @@ O vento balançou a árvore → ? A árvore está balançada (activity, not resu
 | **Directness** | Direct | Single causal link | *quebrar, matar* | Single lexical verb |
 | | Indirect | Causal chain | *causar, fazer com que* | Requires periphrasis |
 | **Intentionality** | Agent | +intentional, +volitional | *construir, matar* | Purpose clauses ✓ |
-| | Cause | -intentional | *vento quebrar* | Purpose clauses ✗ |
+| | Cause (abstract) | -intentional | *erro causar, doença matar* | Purpose clauses ✗ |
 | **Domain** | Physical | Physical mechanism | *quebrar, derreter* | Physical objects |
 | | Social | Social framework | *demitir, aprovar* | Institutional context |
 | | Psychological | Mental influence | *convencer, assustar* | Mental state change |
 | **Aspect** | Achievement | Punctual result | *quebrar, explodir* | Incompatible with progressive |
 | | Accomplishment | Durative process | *construir, pintar* | Compatible with durative PP |
 
+## Boundary Cases and Namespace Distinctions
+
+The Causative namespace has important boundaries with other namespaces, particularly the new **Action namespace** and the **Eventive namespace**.
+
+### Causative vs. Action
+
+**Core distinction**: **Result-orientation** (telicity)
+
+**Causative** (Result-oriented, telic):
+```
+João quebrou o vaso (João broke the vase)
+- Agent: João
+- Result: vaso quebrado (broken vase)
+- Telic: has inherent endpoint (broken state)
+- Semantic decomposition: CAUSE(João, BECOME(broken(vaso)))
+```
+
+**Action** (Process-oriented, atelic):
+```
+João correu (João ran)
+- Agent: João
+- Activity: running
+- Atelic: no inherent endpoint
+- Semantic decomposition: ACT(João, run)
+```
+
+**Diagnostic distinction**:
+
+**Test 1: Result State**
+- **Causative**: Can verify result independently
+  - *João quebrou o vaso* → ✓ *O vaso está quebrado* (vase is broken)
+- **Action**: No verifiable result state
+  - *João correu* → ✗ *João está corrido* (nonsensical)
+
+**Test 2: Telicity ("em X tempo" vs. "por X tempo")**
+- **Causative**: Compatible with "em X tempo" (bounded)
+  - ✓ *João quebrou o vaso em um segundo*
+- **Action**: Compatible with "por X tempo" (unbounded)
+  - ✓ *João correu por uma hora*
+
+**Test 3: Periphrastic Causative**
+- **Causative**: Can paraphrase with *fazer com que*
+  - ✓ *João quebrou o vaso* → *João fez com que o vaso quebrasse*
+- **Action**: Periphrastic causative is odd/changes meaning
+  - ? *João correu* → *João fez com que corresse* (coercion needed)
+
+**Ambiguous cases** (can be read both ways):
+
+*João empurrou Maria* (João pushed Maria)
+- **Causative reading**: Pushing caused Maria to move/fall (result-focus)
+  - Result: Maria displaced or fell
+- **Action reading**: João performed pushing activity (process-focus)
+  - Focus: activity of pushing itself
+
+**Classification guideline**:
+- If a clear result state can be verified → **Causative**
+- If focus is on activity without clear result → **Action**
+- If both readings are equally accessible → tag as both or context-dependent
+
+### Causative vs. Eventive
+
+**Core distinction**: **Agency/Causation** vs. **Pure Occurrence**
+
+**Causative** (Agentive causation):
+```
+João quebrou a janela (João broke the window)
+- Intentional agent performs causative action
+- Agent-Patient structure
+```
+
+**Eventive** (Natural phenomenon):
+```
+O vento soprou (The wind blew)
+Choveu (It rained)
+- No intentional agent
+- Event-centric, minimal participant structure
+- Natural forces and processes
+```
+
+**Note on non-agentive causes**:
+Historically, non-agentive natural forces in causative structures (*O vento quebrou a janela* - The wind broke the window) were classified in Causative namespace. However, for greater theoretical clarity, **non-agentive natural phenomena** (wind, rain, earthquakes) are now classified in the **Eventive namespace**, even when they cause results. This separates:
+- **Agentive causation** (sentient entities causing changes) → **Causative**
+- **Natural processes** (non-agentive forces and phenomena) → **Eventive**
+
+### Causative vs. Inchoative
+
+**Core distinction**: **Profiled participant**
+
+**Causative** (Agent/Cause profiled):
+```
+João quebrou o vaso (João broke the vase)
+- Focus: João (causer)
+- Agent in subject position
+- CAUSE(João, BECOME(broken(vaso)))
+```
+
+**Inchoative** (Theme/Patient profiled):
+```
+O vaso quebrou (The vase broke)
+- Focus: vaso (affected entity)
+- Theme in subject position
+- BECOME(broken(vaso))
+```
+
+**The Causative-Inchoative Alternation**:
+Many verbs participate in this alternation:
+```
+Causative (transitive): João quebrou o vaso
+Inchoative (intransitive): O vaso quebrou
+```
+
+This alternation is a fundamental property linking the two namespaces - they describe the same type of event from different perspectives (causer vs. affected entity).
 
 [//]: # (### **6. Recommendations for FrameNet Brasil / DAISY**)
 

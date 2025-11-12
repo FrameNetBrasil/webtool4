@@ -1,6 +1,6 @@
 ---
 title: Eventive
-order: 6
+order: 7
 description: Eventive
 ---
 
@@ -8,15 +8,15 @@ description: Eventive
 
 ## Core Definition
 
-Eventive frames foreground **dynamic occurrences** as central phenomena, emphasizing the **Event itself** rather than specific participant roles. 
-These frames profile **happenings or processes** where the event's occurrence is the primary semantic content, with participants playing supporting 
-but less differentiated or less semantically specified roles. The essence of eventive frames is that "something happens" - the event is salient, 
+Eventive frames foreground **dynamic occurrences** as central phenomena, emphasizing the **Event itself** rather than specific participant roles.
+These frames profile **happenings or processes** where the event's occurrence is the primary semantic content, with participants playing supporting
+but less differentiated or less semantically specified roles. The essence of eventive frames is that "something happens" - the event is salient,
 participants may be backgrounded, underspecified, or absent.
 
 **Theoretical foundation**: Eventive frames encode the basic template:
 
 ```
-OCCUR(Event) 
+OCCUR(Event)
   [with optional: PARTICIPANT(Theme/Patient, role_unspecified)]
   [with optional: LOCATION(where)]
   [with optional: TIME(when)]
@@ -25,14 +25,33 @@ OCCUR(Event)
 **Key characteristics**:
 - **Event-centric**: The event itself is primary, not who causes it or who is affected
 - **Participant flexibility**: Participants may be optional, backgrounded, or unspecified
-- **No obligatory Agent/Cause**: Unlike causatives, no causer is required or profiled
+- **No obligatory Agent/Cause**: Unlike causatives and actions, no volitional causer is required or profiled
 - **No obligatory affected Patient**: Unlike inchoatives, change-of-state may be absent or backgrounded
 - **No obligatory Path**: Unlike transitions, directional movement is not central
 - **Dynamic**: Unlike statives, involves change/happening over time
+- **Non-agentive**: Typically involves natural phenomena, not intentional agents
 
 **Vendler aspectual diversity**: Can be Activities (atelic) or Accomplishments (telic), rarely States
 
 **Philosophical grounding**: Eventive frames capture what Davidson (1967) called "pure events" - occurrences that can be described without necessarily specifying all participants. They emphasize **eventuality** (that something occurred) over **participation structure**.
+
+## Scope Clarification
+
+**What Eventive frames INCLUDE**:
+- Natural meteorological phenomena: *Choveu* (It rained), *Nevou* (It snowed)
+- Natural forces and processes: *O vento soprou* (The wind blew), *O rio transbordou* (The river overflowed)
+- **Non-agentive causal events**: *O vento quebrou a janela* (The wind broke the window), *O terremoto destruiu a cidade* (The earthquake destroyed the city)
+- Spontaneous occurrences: *Aconteceu um acidente* (An accident happened)
+- Biological/physiological processes (non-volitional): *A planta cresceu* (The plant grew)
+
+**What Eventive frames EXCLUDE** (see other namespaces):
+- **Agentive activities** → See **Action namespace** (*João correu* - João ran)
+- **Agentive causation with results** → See **Causative namespace** (*João quebrou o vaso* - João broke the vase)
+- **Result-focused without explicit cause** → See **Inchoative namespace** (*O vaso quebrou* - The vase broke)
+
+**Note on non-agentive causes**: Natural forces (wind, rain, earthquakes) causing changes are classified as **Eventive** rather than Causative. While they may cause results, the lack of agency/intentionality places them in this namespace:
+- *O vento quebrou a janela* (Wind broke the window) → **Eventive** (natural force, no agent)
+- *João quebrou a janela* (João broke the window) → **Causative** (agentive causation)
 
 ## Natural Phenomena Subtypes
 
@@ -1325,6 +1344,34 @@ A porta abriu (The door opened)
 - Agent present → Causative
 - Agent absent, spontaneous → Eventive
 
+### Eventive vs. Action
+
+**Core distinction**: **Agency** - volitional agent vs. natural phenomenon
+
+**Action**: Volitional agent performs activity
+```
+João correu (João ran)
+- Sentient, volitional agent
+- Intentional activity
+- Can take imperatives: *Corra!*
+- ACT(João, run)
+```
+
+**Eventive**: Natural phenomenon or non-agentive occurrence
+```
+O vento soprou (The wind blew)
+Choveu (It rained)
+- No volitional agent
+- Natural process
+- Cannot take imperatives: ✗ *Vento, sopre!*
+- OCCUR(wind_blow)
+```
+
+**Clear boundary**:
+- Sentient, volitional agent required → **Action**
+- No agent or non-agentive force → **Eventive**
+
+**Note on causative natural forces**: When natural forces cause results (*O vento quebrou a janela* - Wind broke the window), these are classified as **Eventive** rather than Causative, maintaining the distinction between agentive and non-agentive causation.
 
 ### Eventive vs. Stative
 
@@ -1479,7 +1526,7 @@ The Eventive namespace serves as a **residual category** for dynamic occurrences
 1. NOT Causative (no profiled Agent/Cause)
 2. NOT Inchoative (not focused on result state achievement)
 3. NOT Transition (no profiled path/goal structure)
-4. NOT Experience (no Experiencer undergoing mental/perceptual event)
+4. NOT Experiential (no Experiencer undergoing mental/perceptual event)
 5. NOT Stative (not static property or relation)
 
 **Core examples that are clearly Eventive**:

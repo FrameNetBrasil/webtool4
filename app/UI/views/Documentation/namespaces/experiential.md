@@ -1,19 +1,19 @@
 ---
-title: Experience
-order: 3
-description: Experience
+title: Experiential
+order: 4
+description: Experiential
 ---
 
-# Experience Namespace
+# Experiential Namespace
 
 ## Core Definition
 
-Experience frames foreground the **TELIC ROLE** with a specialized focus on the **Experiencer** as the endpoint or locus of psychological, perceptual, or cognitive events. 
-These frames center on sentient entities undergoing mental states, perceiving stimuli, or processing information. 
-Unlike typical telic frames where a Patient undergoes physical change, Experience frames involve **mental/perceptual states** 
+Experiential frames foreground the **TELIC ROLE** with a specialized focus on the **Experiencer** as the endpoint or locus of psychological, perceptual, or cognitive events.
+These frames center on sentient entities undergoing mental states, perceiving stimuli, or processing information.
+Unlike typical telic frames where a Patient undergoes physical change, Experiential frames involve **mental/perceptual states**
 where the Experiencer is affected psychologically rather than physically.
 
-**Theoretical foundation**: Experience frames encode events where a sentient being (Experiencer) 
+**Theoretical foundation**: Experiential frames encode events where a sentient being (Experiencer)
 has a **mental state** or **perceptual experience** triggered by or directed toward a Stimulus. The core template involves:
 
 ```
@@ -27,12 +27,12 @@ EXPERIENCE(Experiencer, Stimulus, Mental_State/Content)
 - **Subjectivity**: Events are inherently from the Experiencer's perspective
 - **Aspectual flexibility**: Can pattern as states, achievements, or activities
 
-**Philosophical background**: Experience frames relate to **qualia** (phenomenal experience), **intentionality** (aboutness of mental states), 
+**Philosophical background**: Experiential frames relate to **qualia** (phenomenal experience), **intentionality** (aboutness of mental states),
 and **subjectivity** (first-person perspective). This connects to the TELIC quale emphasis - the Experiencer is the "endpoint" or "target" of the experiential event.
 
 ## Experiencer Types: Four Major Domains
 
-Experience frames divide into four major subtypes based on the **modality** or **domain** of experience:
+Experiential frames divide into four major subtypes based on the **modality** or **domain** of experience:
 
 ### Perception (Sensory Experience)
 
@@ -225,7 +225,7 @@ Experience frames divide into four major subtypes based on the **modality** or *
 
 ## The Control Dimension: Agentive vs. Non-agentive Experiencers
 
-A crucial distinction in Experience frames is whether the Experiencer has **volitional control** over the experience.
+A crucial distinction in Experiential frames is whether the Experiencer has **volitional control** over the experience.
 
 ### Agentive/Controlled Experience
 
@@ -374,7 +374,7 @@ João OLHOU para Maria (intentional perception - João directed gaze toward Mari
 
 ## Stimulus Types: What Triggers Experience
 
-Experience frames vary based on the **nature of the Stimulus** that triggers or is the object of the experience.
+Experiential frames vary based on the **nature of the Stimulus** that triggers or is the object of the experience.
 
 ### Entity Stimuli (Object of Experience)
 
@@ -463,7 +463,7 @@ Experience frames vary based on the **nature of the Stimulus** that triggers or 
 
 ### No Explicit Stimulus (Stimulus-less Experience)
 
-Some experience frames have no explicit external Stimulus - the experience is purely internal.
+Some experiential frames have no explicit external Stimulus - the experience is purely internal.
 
 **Examples**:
 
@@ -500,7 +500,7 @@ João TEME o cachorro
 (João fears the dog)
 ```
 
-**Pattern B: Stimulus-Subject (Subject Experiencer)**  
+**Pattern B: Stimulus-Subject (Subject Experiencer)**
 ```
 Stimulus VERB Experiencer
 O cachorro ASSUSTA João
@@ -621,7 +621,7 @@ Many verbs appear in multiple patterns:
 **Example paradigm for "frighten/fear"**:
 ```
 (A) João teme o cachorro (Exp-Subj: João fears the dog)
-(B) O cachorro assusta João (Stim-Subj: The dog frightens João)  
+(B) O cachorro assusta João (Stim-Subj: The dog frightens João)
 (C) João se assustou com o cachorro (Reflexive: João got frightened by the dog)
 ```
 
@@ -630,7 +630,7 @@ Many verbs appear in multiple patterns:
 - (B) Causing fear (causative, eventive)
 - (C) Becoming frightened (inchoative, change of state)
 
-### Theoretical Analysis: Belletti & Rizzi**
+### Theoretical Analysis: Belletti & Rizzi
 
 **The puzzle**: Why do psych verbs have such unusual argument structures?
 
@@ -651,9 +651,9 @@ Many verbs appear in multiple patterns:
 
 ## Cross-Categorial Behavior: States vs. Events
 
-Experience frames exhibit **aspectual flexibility** - they can pattern as either **states** or **events** depending on the verb and context.
+Experiential frames exhibit **aspectual flexibility** - they can pattern as either **states** or **events** depending on the verb and context.
 
-### Stative Experience Frames
+### Stative Experiential Frames
 
 **Definition**: Experiences that are ongoing states without internal change.
 
@@ -705,7 +705,7 @@ Incompatible with agentive modifiers:
 - No inherent endpoint
 - Typically involuntary
 
-### Eventive Experience Frames
+### Eventive Experiential Frames
 
 **Definition**: Experiences that are dynamic events with internal temporal structure.
 
@@ -803,8 +803,8 @@ João viu Maria ontem (João saw Maria yesterday - punctual perception)
 
 ## Evidentiality: Information Source in Epistemic Frames
 
-**Evidentiality** is a semantic category marking the **source of information** or **basis for knowledge**. 
-While Portuguese doesn't have grammaticalized evidential marking like some languages (Quechua, Turkish), epistemic Experience frames encode evidential distinctions.
+**Evidentiality** is a semantic category marking the **source of information** or **basis for knowledge**.
+While Portuguese doesn't have grammaticalized evidential marking like some languages (Quechua, Turkish), epistemic Experiential frames encode evidential distinctions.
 
 ### What is Evidentiality?
 
@@ -932,7 +932,7 @@ João ACHA que Maria está grávida (thinks - belief/assumption)
 [//]: # ()
 [//]: # (---)
 
-## Summary Table: Experience Frame Properties
+## Summary Table: Experiential Frame Properties
 
 | **Type** | **Modality** | **Control** | **Aspect** | **Stimulus** | **Example** |
 |----------|--------------|-------------|------------|--------------|-------------|
@@ -948,21 +948,21 @@ João ACHA que Maria está grávida (thinks - belief/assumption)
 | **Aspect** | Stative (*amar*) | Eventive (*apaixonar-se*) | Progressive test |
 | **Evidentiality** | Direct (*ver*) | Indirect (*achar*) | Certainty level |
 
-## Diagnostic Tests for Experience Frames
+## Diagnostic Tests for Experiential Frames
 
 ### Test 1: Experiencer Identification
 Does the frame require a sentient being undergoing mental/perceptual state?
 ```
-✓ João viu Maria (João = Experiencer, sentient) → EXPERIENCE
-✗ A pedra caiu (pedra ≠ sentient) → NOT EXPERIENCE
+✓ João viu Maria (João = Experiencer, sentient) → EXPERIENTIAL
+✗ A pedra caiu (pedra ≠ sentient) → NOT EXPERIENTIAL
 ```
 
 ### Test 2: Mental/Perceptual Content
 Does the frame involve mental states, perception, or psychological events?
 ```
-✓ João sabe a resposta (knowledge = mental) → EXPERIENCE
-✓ Maria sentiu dor (sensation = perceptual) → EXPERIENCE
-✗ João quebrou o vaso (physical action) → NOT EXPERIENCE
+✓ João sabe a resposta (knowledge = mental) → EXPERIENTIAL
+✓ Maria sentiu dor (sensation = perceptual) → EXPERIENTIAL
+✗ João quebrou o vaso (physical action) → NOT EXPERIENTIAL
 ```
 
 ### Test 3: Control Test
@@ -997,39 +997,39 @@ Achar → assumptive
 
 ## Boundary Cases and Overlaps
 
-### Experience vs. Inchoative
+### Experiential vs. Inchoative
 
 **Overlap**: Emotional inchoatives (reflexive psych verbs)
-- *João se alegrou* - both EXPERIENCE (emotion) and INCHOATIVE (change of state)
-- Classification: **Experience-Inchoative hybrid**
+- *João se alegrou* - both EXPERIENTIAL (emotion) and INCHOATIVE (change of state)
+- Classification: **Experiential-Inchoative hybrid**
 
 **Recommendation**: Tag with both namespace features:
-- Primary: Experience (domain is psychological)
+- Primary: Experiential (domain is psychological)
 - Secondary: Inchoative (aspectual structure is change-of-state)
 
-### Experience vs. Causative
+### Experiential vs. Causative
 
 **Overlap**: Stimulus-Subject psych verbs
-- *O filme emocionou Maria* - both EXPERIENCE (emotion) and CAUSATIVE (film causes emotion)
-- Classification: **Experience-Causative hybrid**
+- *O filme emocionou Maria* - both EXPERIENTIAL (emotion) and CAUSATIVE (film causes emotion)
+- Classification: **Experiential-Causative hybrid**
 
-**Recommendation**: 
-- Primary: Experience (Experiencer is core participant)
+**Recommendation**:
+- Primary: Experiential (Experiencer is core participant)
 - Relation: `Causative_variant_of` linking to Experiencer-Subject frame
 
-### Experience vs. Stative
+### Experiential vs. Stative
 
 **Overlap**: Epistemic states, emotional states
-- *João sabe a resposta* - EXPERIENCE (knowledge) and STATIVE (no change)
-- *João ama Maria* - EXPERIENCE (emotion) and STATIVE (ongoing state)
+- *João sabe a resposta* - EXPERIENTIAL (knowledge) and STATIVE (no change)
+- *João ama Maria* - EXPERIENTIAL (emotion) and STATIVE (ongoing state)
 
-**Recommendation**: Experience frames can be **aspectually stative** while remaining in Experience namespace (domain-based classification takes precedence)
+**Recommendation**: Experiential frames can be **aspectually stative** while remaining in Experiential namespace (domain-based classification takes precedence)
 
 [//]: # ()
 [//]: # (### **11. Recommendations for FrameNet Brasil / DAISY**)
 
 [//]: # ()
-[//]: # (1. **Tag experience frames with subtype features**:)
+[//]: # (1. **Tag experiential frames with subtype features**:)
 
 [//]: # (   - `[experience_type: perception|emotion|cognition|bodily]`)
 
@@ -1065,6 +1065,6 @@ Achar → assumptive
 [//]: # ()
 [//]: # (5. **Cross-namespace tagging** for hybrid cases:)
 
-[//]: # (   - Emotional inchoatives: [Experience + Inchoative])
+[//]: # (   - Emotional inchoatives: [Experiential + Inchoative])
 
-[//]: # (   - Causative psych verbs: [Experience + Causative])
+[//]: # (   - Causative psych verbs: [Experiential + Causative])

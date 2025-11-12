@@ -1,6 +1,6 @@
 ---
 title: Relational
-order: 7
+order: 8
 description: Relational
 ---
 
@@ -1235,10 +1235,10 @@ João sabe a resposta (João knows the answer)
 ```
 
 **Classification choice**:
-- Can tag as **Experience namespace** (psychological/epistemic content)
+- Can tag as **Experiential namespace** (psychological/epistemic content)
 - Can also tag as **Relational** (dyadic structure, experiencer-stimulus relation)
 
-**Recommendation**: Tag psychological states as **Experience** primary, **Relational** secondary (they are relational in structure but experiential in content).
+**Recommendation**: Tag psychological states as **Experiential** primary, **Relational** secondary (they are relational in structure but experiential in content).
 
 ## Summary Table: Relational Frame Properties
 

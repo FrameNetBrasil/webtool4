@@ -1140,17 +1140,18 @@ João foi para casa (João went home)
 - If result state prominent → Inchoative
 - If path/trajectory prominent → Transition
 
-### Transition vs. Activity
+### Transition vs. Action
 
 **Overlap**: Manner-of-motion verbs
 
-**Activity** (no Goal/Path):
+**Action** (no Goal/Path):
 ```
 João correu (durante uma hora)
 (João ran for an hour)
-- Focus: manner of action
+- Focus: manner of action (running activity)
 - No inherent endpoint
 - Atelic
+- ACT(João, run)
 ```
 
 **Transition** (with Goal/Path):
@@ -1160,15 +1161,20 @@ João correu PARA casa
 - Focus: path to destination
 - Inherent endpoint (home)
 - Telic
+- MOVE(João, to_Goal(casa), via_Manner(running))
 ```
 
-**Diagnostic**: Presence of Goal/Source/Path → Transition
+**Diagnostic**: Presence of Goal/Source/Path → Transition; absence → Action
 
-### Transition vs. Experience
+**Key difference**:
+- **Action**: Profiles the activity itself (running as an activity)
+- **Transition**: Profiles the path/trajectory (movement to a goal)
+
+### Transition vs. Experiential
 
 **Overlap**: Abstract "movement" in perceptual/epistemic domain
 
-**Experience**:
+**Experiential**:
 ```
 João percebeu o erro
 (João perceived the error)
