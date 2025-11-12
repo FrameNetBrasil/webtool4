@@ -56,6 +56,10 @@ class SemanticNetworkService
                 foreach ($frames as $frameEntry => $frame) {
                     // Build semantic network for this frame
                     $pool = $this->buildFrameNetwork($frame, $windows, $idWindow);
+
+                    // Populate pool sets with word energy contributions
+                    $pool = $this->populatePoolSets($pool, $windows, $idWindow);
+
                     $windows[$idWindow][$word][$frameEntry]->pool = $pool;
                 }
             }
@@ -65,11 +69,45 @@ class SemanticNetworkService
     }
 
     /**
+     * Populate pool object sets with word energy contributions
+     */
+    private function populatePoolSets(array $pool, array $windows, int $currentWindowId): array
+    {
+        // For each pool object (related frame)
+        foreach ($pool as $poolFrameName => $poolObject) {
+            // Check all words in the current window
+            foreach ($windows[$currentWindowId] as $word => $frames) {
+                foreach ($frames as $candidateFrameEntry => $candidateFrame) {
+                    // If word evokes a frame that matches this pool frame
+                    if ($candidateFrameEntry === $poolFrameName) {
+                        // Add this word as a contributor to the pool set
+                        $poolObject->addContributor(
+                            word: $word,
+                            frame: $candidateFrameEntry,
+                            energy: $candidateFrame->energy,
+                            iword: $candidateFrame->iword,
+                            level: $poolObject->level,
+                            idWindow: $currentWindowId,
+                            isQualia: false
+                        );
+
+                        debug("        Added contributor: word='{$word}', frame='{$candidateFrameEntry}', energy={$candidateFrame->energy}");
+                    }
+                }
+            }
+        }
+
+        return $pool;
+    }
+
+    /**
      * Build semantic network for a single frame
      */
     private function buildFrameNetwork(object $frame, array $windows, int $idWindow): array
     {
         $pool = [];
+
+        debug("Building network for frame: {$frame->frameEntry} (idFrame={$frame->idFrame}), searchType={$this->searchType}, level={$this->level}");
 
         // Step 1: Add direct frame
         $pool[$frame->frameEntry] = new PoolObjectData(
@@ -78,24 +116,44 @@ class SemanticNetworkService
             baseFrame: $frame->frameEntry,
             level: 1
         );
+        debug('  Step 1: Added direct frame to pool');
 
         // Step 2: Frame family relations (searchType >= 2)
         if ($this->searchType >= 2) {
+            debug('  Step 2: Querying frame relations...');
             $frameRelations = $this->queryFrameRelations($frame->idFrame);
-            $pool = array_merge($pool, $this->expandFrameRelations($frameRelations, $frame->frameEntry, 1.0, $this->level));
+            debug('  Found {count} frame relations', ['count' => count($frameRelations)]);
+            if (! empty($frameRelations)) {
+                debug('  Frame relations:', array_column($frameRelations, 'frameEntry'));
+            }
+            $expanded = $this->expandFrameRelations($frameRelations, $frame->frameEntry, 1.0, $this->level);
+            debug('  Expanded to {count} pool entries', ['count' => count($expanded)]);
+            $pool = array_merge($pool, $expanded);
+        } else {
+            debug('  Step 2: SKIPPED (searchType < 2)');
         }
 
         // Step 3: Frame Element constraints (searchType >= 3)
         if ($this->searchType >= 3) {
+            debug('  Step 3: Querying FE constraints...');
             $feConstraints = $this->queryFEConstraints($frame->idFrame);
+            debug('  Found {count} FE constraints', ['count' => count($feConstraints)]);
             $pool = array_merge($pool, $this->processFEConstraints($feConstraints, $frame->frameEntry));
+        } else {
+            debug('  Step 3: SKIPPED (searchType < 3)');
         }
 
         // Step 4: Qualia relations (searchType >= 4)
         if ($this->searchType >= 4) {
+            debug('  Step 4: Querying qualia relations...');
             $qualiaRelations = $this->queryQualiaRelations($frame->idLU, $windows);
+            debug('  Found {count} qualia relations', ['count' => count($qualiaRelations)]);
             $pool = array_merge($pool, $this->processQualiaRelations($qualiaRelations, $frame->frameEntry, $idWindow));
+        } else {
+            debug('  Step 4: SKIPPED (searchType < 4)');
         }
+
+        debug('  Final pool size: {count} entries', ['count' => count($pool)]);
 
         return $pool;
     }
@@ -190,7 +248,7 @@ class SemanticNetworkService
     {
         try {
             $constraints = Criteria::table('view_frameelement as fe')
-                ->selectRaw('fr.idFrame, fe.typeEntry')
+                ->selectRaw('fr.idFrame, fe.coreType as typeEntry')
                 ->join('view_relation as r', 'fe.idEntity', '=', 'r.idEntity2')
                 ->join('frame as fr', 'r.idEntity3', '=', 'fr.idEntity')
                 ->where('r.relationType', '=', 'rel_constraint_frame')

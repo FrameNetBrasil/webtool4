@@ -308,7 +308,7 @@ return [
     */
 
     'winnerSelection' => [
-        'excludeVerbs' => true,
+        'excludeVerbs' => false,
         'gregnetMode' => false,
     ],
 

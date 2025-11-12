@@ -1,21 +1,81 @@
 # Daisy Disambiguation Pipeline - Technical Documentation
 
-This document provides comprehensive technical documentation for the Daisy semantic disambiguation pipeline, intended for migration to Laravel or other frameworks.
+This document provides comprehensive technical documentation for the Daisy semantic disambiguation pipeline implemented in Laravel 12. It covers the complete architecture, API endpoints, service layers, and algorithm details for frame semantic disambiguation using FrameNet and the GRID (Graph-based Reasoning for Inference and Disambiguation) algorithm.
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Pipeline Architecture](#pipeline-architecture)
-3. [Step 1: Universal Dependencies Parsing](#step-1-universal-dependencies-parsing)
-4. [Step 2: GRID Window Creation](#step-2-grid-window-creation)
-5. [Step 3: Lexical Unit Matching](#step-3-lexical-unit-matching)
-6. [Step 4: Semantic Network Construction](#step-4-semantic-network-construction)
-7. [Step 5: Spreading Activation](#step-5-spreading-activation)
-8. [Step 6: Winner Selection](#step-6-winner-selection)
-9. [Data Structures](#data-structures)
-10. [Database Schema Requirements](#database-schema-requirements)
-11. [Configuration Parameters](#configuration-parameters)
-12. [Algorithms](#algorithms)
+1. [Quick Start](#quick-start)
+2. [Overview](#overview)
+3. [Pipeline Architecture](#pipeline-architecture)
+4. [Step 1: Universal Dependencies Parsing](#step-1-universal-dependencies-parsing)
+5. [Step 2: GRID Window Creation](#step-2-grid-window-creation)
+6. [Step 3: Lexical Unit Matching](#step-3-lexical-unit-matching)
+7. [Step 4: Semantic Network Construction](#step-4-semantic-network-construction)
+8. [Step 5: Spreading Activation](#step-5-spreading-activation)
+9. [Step 6: Winner Selection](#step-6-winner-selection)
+10. [Data Structures](#data-structures)
+11. [Database Schema Requirements](#database-schema-requirements)
+12. [Configuration Parameters](#configuration-parameters)
+13. [Laravel API Implementation](#laravel-api-implementation)
+14. [Algorithms](#algorithms)
+15. [Implementation Status](#implementation-status)
+
+---
+
+## Quick Start
+
+### For API Users
+
+**Endpoint:** `POST /daisy/parse`
+
+**Request:**
+```bash
+curl -X POST http://localhost:8001/daisy/parse \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sentence": "O menino construiu uma casa",
+    "idLanguage": 1,
+    "searchType": 2,
+    "level": 1
+  }'
+```
+
+**Response:** HTML view with disambiguation results, including:
+- Semantic frames identified for each word
+- Energy scores showing confidence
+- Graph visualization data
+- Universal Dependencies parse
+
+### For Developers
+
+**Using the Service:**
+
+```php
+use App\Data\Daisy\DaisyInputData;
+use App\Services\Daisy\DaisyService;
+
+$input = new DaisyInputData(
+    sentence: 'O menino construiu uma casa',
+    idLanguage: 1,      // 1=Portuguese, 2=English
+    searchType: 2,      // 1-4, higher = more comprehensive
+    level: 1,           // 1-5, higher = deeper networks
+    gregnetMode: false
+);
+
+$result = app(DaisyService::class)->disambiguate($input);
+
+// Access results
+$winners = $result->result;      // Disambiguated frames per word
+$graph = $result->graph;         // Visualization data
+$udParse = $result->sentenceUD;  // UD parse
+$weights = $result->weights;     // Energy scores
+```
+
+**Key Files:**
+- `app/Http/Controllers/Daisy/DaisyController.php` - HTTP endpoints
+- `app/Services/Daisy/DaisyService.php` - Main orchestrator
+- `app/Data/Daisy/DaisyInputData.php` - Input DTO
+- `app/Data/Daisy/DaisyOutputData.php` - Output DTO
 
 ---
 
@@ -27,34 +87,73 @@ This document provides comprehensive technical documentation for the Daisy seman
 - Disambiguates between multiple candidate frames
 - Uses a graph-based spreading activation algorithm (GRID)
 
-### Main Services
+### Laravel Implementation
 
-- `DisambiguationService.php` - Main orchestrator
+#### API Endpoints
+
+- **POST** `/daisy/parse` - Main disambiguation endpoint, returns HTML view with results
+- **POST** `/daisy/graph` - Graph visualization endpoint, returns graph data only
+- **GET** `/daisy` - Interface for Daisy semantic parser
+
+#### Main Services
+
+- `DaisyService.php` - Main orchestrator that coordinates the complete pipeline
 - `GridService.php` - GRID parsing and window creation
-- `UDPipeService.php` - Universal Dependencies parsing interface
-- `DbService.php` - Database queries for lemmas and lexical units
-- `FramenetService.php` - FrameNet data access
+- `TrankitService.php` - Universal Dependencies parsing interface
+- `LexicalUnitService.php` - Lexical unit matching
+- `SemanticNetworkService.php` - Semantic network construction
+- `SpreadingActivationService.php` - Energy spreading algorithm
+- `WinnerSelectionService.php` - Winner selection and formatting
+
+#### Data Objects
+
+- `DaisyInputData.php` - Input validation and type-safe input parameters
+- `DaisyOutputData.php` - Structured output with results, graph, UD parse, and weights
 
 ---
 
 ## Pipeline Architecture
 
 ```
-Input Sentence
+HTTP POST /daisy/parse
      ↓
-[1. UD Parsing] → UDPipe REST API
+DaisyController::parse(DaisyInputData)
      ↓
-[2. GRID Window Creation] → Parse to windows
+DaisyService::disambiguate()
      ↓
-[3. Lexical Unit Matching] → Query FrameNet DB
+┌─────────────────────────────────────────────┐
+│                                             │
+│  [1. UD Parsing]                            │
+│      TrankitService                         │
+│      → Trankit REST API                     │
+│                                             │
+│  [2. GRID Window Creation]                  │
+│      GridService::processToWindows()        │
+│      → Parse to windows & lemmas            │
+│                                             │
+│  [3. Lexical Unit Matching]                 │
+│      LexicalUnitService::matchLexicalUnits()│
+│      → Query FrameNet DB                    │
+│                                             │
+│  [4. Semantic Network Construction]         │
+│      SemanticNetworkService::buildSemanticNetworks()│
+│      → Build frame graph & pools            │
+│                                             │
+│  [5. Spreading Activation]                  │
+│      SpreadingActivationService::processSpreadingActivation()│
+│      → Calculate energy distribution        │
+│                                             │
+│  [6. Winner Selection]                      │
+│      WinnerSelectionService::generateWinners()│
+│      → Select and format winners            │
+│                                             │
+└─────────────────────────────────────────────┘
      ↓
-[4. Semantic Network Construction] → Build frame graph
+DaisyOutputData (result, graph, sentenceUD, weights)
      ↓
-[5. Spreading Activation] → Calculate energy
+Blade View: Daisy.daisyResults
      ↓
-[6. Winner Selection] → Return disambiguated frames
-     ↓
-Output: Frame annotations
+HTTP Response: HTML with results table & graph
 ```
 
 ---
@@ -62,32 +161,26 @@ Output: Frame annotations
 ## Step 1: Universal Dependencies Parsing
 
 ### Input
-- Raw sentence string (lowercase)
+- Raw sentence string
+- Language ID (1=Portuguese, 2=English)
 
 ### Process
 
-1. **Call UDPipe REST API**
-   - Portuguese: `http://udpipe:8080/process`
-   - English: `http://udpipe_en:8081/process`
-   - Parameters:
-     ```
-     tokenizer=tokenizer
-     tagger=tagger
-     parser=parser
-     output=conllu
-     data=<sentence>
-     ```
+1. **Call Trankit REST API**
+   - Configured via `config('daisy.trankitUrl')` (default: `http://localhost:8405`)
+   - Trankit provides Universal Dependencies parsing for multiple languages
+   - Method: `TrankitService::getUDTrankit($sentence, $idLanguage)`
 
-2. **Parse CoNLL-U Output**
-   Extract columns:
-   - Column 0: `id` (word index)
-   - Column 1: `word` (word form)
-   - Column 3: `pos` (UPOS tag)
-   - Column 6: `deps` (head index)
-   - Column 7: `ud` (dependency relation)
+2. **Parse Response**
+   Extract UD parse data with columns:
+   - `id` - Word index in sentence
+   - `word` - Word form (surface text)
+   - `pos` - UPOS tag (Universal Part-of-Speech)
+   - `deps` - Dependency head index
+   - `ud` - Dependency relation type
 
 3. **Filter Relations** (getDaisyUD)
-   Keep only these UD relations:
+   Keep only these UD relations relevant for semantic parsing:
    ```php
    'root', 'nsubj', 'obj', 'iobj', 'csubj', 'ccomp',
    'xcomp', 'obl', 'advcl', 'acl', 'amod', 'nmod', 'advmod'
@@ -109,6 +202,8 @@ Array of word objects:
 - If relation contains ':', split and use first part (e.g., `nmod:tmod` → `nmod`)
 - Store ALL words but mark which are in `keep` set
 - Preserve original word order using `id`
+- Trankit is initialized in `DaisyService::__construct()` with configured URL
+- Parsing is performed via `DaisyService::parseWithTrankit()`
 
 ---
 
@@ -811,26 +906,249 @@ class ClusterRel {   // Relation
 
 ## Configuration Parameters
 
-### DisambiguationService Parameters
+### DaisyInputData Structure
+
+The Laravel implementation uses `DaisyInputData` (Data Transfer Object with validation):
 
 ```php
-$config = [
-    'idLanguage' => 1,        // 1=Portuguese, 2=English
-    'level' => 1,             // Frame relation depth (1-5)
-    'searchType' => 2,        // Network type (1-4)
-    'sentence' => $text,      // Input sentence
-];
+class DaisyInputData extends Data
+{
+    public function __construct(
+        public string $sentence,          // Required: min 3 chars
+        public int $idLanguage = 1,       // Required: 1=Portuguese, 2=English
+        public int $searchType = 2,       // Required: 1-4 (network depth)
+        public int $level = 1,            // Required: 1-5 (relation depth)
+        public bool $gregnetMode = false, // Optional: GregNet mode
+    ) {}
+}
 ```
 
-**searchType Values:**
-- `1`: Direct frames only
-- `2`: Direct + frame family (inheritance, perspective, subframe)
-- `3`: Level 2 + Frame Element constraints
-- `4`: Level 3 + Qualia relations (recommended for best results)
+#### Validation Rules
 
-**level Values:**
-- `1`: One level of frame relations (fast)
-- `2-5`: Deeper network (slower, more comprehensive)
+```php
+'sentence'    => 'required|string|min:3'
+'idLanguage'  => 'required|integer|in:1,2'
+'searchType'  => 'required|integer|min:1|max:4'
+'level'       => 'required|integer|min:1|max:5'
+'gregnetMode' => 'boolean'
+```
+
+#### Request Example (POST /daisy/parse)
+
+```json
+{
+  "sentence": "O menino construiu uma casa",
+  "idLanguage": 1,
+  "searchType": 2,
+  "level": 1,
+  "gregnetMode": false
+}
+```
+
+### Parameter Descriptions
+
+**idLanguage** - Target language for parsing and lexical unit matching:
+- `1`: Portuguese (default)
+- `2`: English
+
+**searchType** - Semantic network construction depth:
+- `1`: Direct frames only (fastest)
+- `2`: Direct + frame family relations (inheritance, perspective, subframe) _(default)_
+- `3`: Level 2 + Frame Element constraints
+- `4`: Level 3 + Qualia relations (slowest, most comprehensive, recommended for best results)
+
+**level** - Frame relation expansion depth:
+- `1`: One level of frame relations (fast) _(default)_
+- `2-5`: Deeper network expansion (slower, more comprehensive)
+- Higher values explore more distant frame relations
+
+**gregnetMode** - Special mode for knowledge graph construction:
+- `false`: Standard disambiguation (default)
+- `true`: Include all POS types and multiple winners per word
+
+---
+
+## Laravel API Implementation
+
+### DaisyController::parse() Method
+
+Located in `app/Http/Controllers/Daisy/DaisyController.php:42`
+
+```php
+#[Post(path: '/daisy/parse')]
+public function parse(DaisyInputData $data)
+{
+    try {
+        // Run Daisy disambiguation pipeline
+        $result = $this->daisyService->disambiguate($data);
+
+        // Return results view
+        return view('Daisy.daisyResults', [
+            'result' => $result->result,
+            'graph' => $result->graph,
+            'sentenceUD' => $result->sentenceUD,
+            'weights' => $result->weights,
+            'sentence' => $data->sentence,
+        ]);
+    } catch (\Exception $e) {
+        logger()->error('Daisy parse error: '.$e->getMessage());
+
+        return view('Daisy.daisyResults', [
+            'error' => 'Error processing sentence: '.$e->getMessage(),
+            'result' => [],
+            'graph' => ['nodes' => [], 'links' => []],
+            'sentenceUD' => [],
+            'weights' => [],
+            'sentence' => $data->sentence,
+        ]);
+    }
+}
+```
+
+### DaisyOutputData Structure
+
+```php
+class DaisyOutputData extends Data
+{
+    public function __construct(
+        public array $result,      // Formatted winners per window
+        public array $graph,       // Graph visualization data
+        public array $sentenceUD,  // Universal Dependencies parse
+        public array $windows,     // Internal window structures
+        public array $weights      // Energy scores per LU
+    ) {}
+}
+```
+
+### Output Structure
+
+#### result - Disambiguation Winners
+```php
+[
+  1 => [  // Window ID
+    'casa' => [  // Word
+      [
+        'frame' => '(casa.n:Frame.Building:0)',
+        'value' => '12.50'
+      ]
+    ]
+  ]
+]
+```
+
+#### graph - Visualization Data
+```php
+[
+  'nodes' => [
+    // Word nodes
+    ['id' => 'word_1', 'label' => 'casa', 'type' => 'word'],
+    // Frame nodes
+    ['id' => 'frame_45', 'label' => 'Building', 'type' => 'frame'],
+  ],
+  'links' => [
+    // Evokes relations
+    ['source' => 'word_1', 'target' => 'frame_45', 'type' => 'evokes'],
+    // Frame relations
+    ['source' => 'frame_45', 'target' => 'frame_12', 'type' => 'inheritance'],
+  ]
+]
+```
+
+#### sentenceUD - Universal Dependencies Parse
+```php
+[
+  [
+    'id' => '1',
+    'word' => 'casa',
+    'pos' => 'NOUN',
+    'ud' => 'root',
+    'deps' => '0'
+  ],
+  // ... more words
+]
+```
+
+#### weights - Energy Scores
+```php
+[
+  1 => [  // Window ID
+    123 => '12.50',  // idLU => energy value
+    456 => '8.30',
+  ]
+]
+```
+
+### DaisyService::disambiguate() Pipeline
+
+Located in `app/Services/Daisy/DaisyService.php:52`
+
+The main orchestration method that executes the complete 6-step pipeline:
+
+```php
+public function disambiguate(DaisyInputData $input): DaisyOutputData
+{
+    // Step 1: Parse sentence with Trankit (UD parsing)
+    $udParsed = $this->parseWithTrankit($input->sentence, $input->idLanguage);
+
+    // Step 2: Create GRID windows
+    $gridResult = $this->gridService->processToWindows($udParsed);
+    $windows = $gridResult['windows'];
+    $lemmas = $gridResult['lemmas'];
+
+    // Step 3: Match lexical units
+    $windows = $this->lexicalUnitService->matchLexicalUnits($windows, $lemmas);
+
+    // Step 4: Build semantic networks
+    $windows = $this->semanticNetworkService->buildSemanticNetworks($windows);
+
+    // Step 5: Apply spreading activation
+    $windows = $this->spreadingActivationService->processSpreadingActivation($windows);
+
+    // Step 6: Select winners
+    $winnerResult = $this->winnerSelectionService->generateWinners($windows);
+    $winners = $winnerResult['winners'];
+    $weights = $winnerResult['weights'];
+
+    // Format results
+    $result = $this->winnerSelectionService->formatWinners($winners, $windows);
+
+    // Generate graph visualization data
+    $graph = $this->generateGraphData($windows, $winners, $udParsed);
+
+    return new DaisyOutputData(
+        result: $result,
+        graph: $graph,
+        sentenceUD: $udParsed,
+        windows: $windows,
+        weights: $weights
+    );
+}
+```
+
+### Error Handling
+
+The controller implements comprehensive error handling:
+
+1. **Input Validation**: Laravel automatically validates via `DaisyInputData::rules()`
+2. **Pipeline Errors**: Caught and logged with full stack trace
+3. **User Feedback**: Returns view with error message and empty structures
+4. **Logging**: Errors logged via Laravel logger with context
+
+```php
+logger()->error('Daisy parse error: '.$e->getMessage(), [
+    'trace' => $e->getTraceAsString(),
+]);
+```
+
+### View Integration
+
+The controller returns Blade views:
+
+- `Daisy.daisyResults` - Full results with table and graph
+- `Daisy.daisyGraph` - Graph visualization only (POST /daisy/graph)
+- `Daisy.daisy` - Input interface (GET /daisy)
+
+---
 
 ### Combination Value Matrix
 
@@ -1025,37 +1343,64 @@ Function spreadActivation(windows):
 
 ---
 
-## Implementation Checklist for Laravel
+## Implementation Status
 
-### Phase 1: Infrastructure
-- [ ] Set up UDPipe REST client (Guzzle)
-- [ ] Create FrameNet database models (Eloquent)
-- [ ] Implement caching layer (Redis)
-- [ ] Create grid function configuration
+### ✅ Completed - Laravel 12 Implementation
 
-### Phase 2: Core Services
-- [ ] UDPipe parsing service
-- [ ] Grid window creation service
-- [ ] Lexical unit matching service
-- [ ] Frame network builder service
+The Daisy disambiguation pipeline has been successfully migrated to Laravel 12 with modern architecture:
 
-### Phase 3: Algorithms
-- [ ] Implement spreading activation
-- [ ] Implement winner selection
-- [ ] Add qualia processing
-- [ ] Add equivalence processing
+#### Phase 1: Infrastructure ✅
+- ✅ Set up Trankit REST client (replaced UDPipe)
+- ✅ FrameNet database integration (using existing schema)
+- ✅ Grid function configuration via `config/daisy.php`
+- ✅ Laravel Data DTOs for type safety
 
-### Phase 4: Optimization
-- [ ] Cache lemma queries
+#### Phase 2: Core Services ✅
+- ✅ `TrankitService` - UD parsing service
+- ✅ `GridService` - Grid window creation service
+- ✅ `LexicalUnitService` - Lexical unit matching service
+- ✅ `SemanticNetworkService` - Frame network builder service
+
+#### Phase 3: Algorithms ✅
+- ✅ `SpreadingActivationService` - Spreading activation algorithm
+- ✅ `WinnerSelectionService` - Winner selection with formatting
+- ✅ Qualia processing integration
+- ✅ Equivalence processing support
+
+#### Phase 4: API & Controllers ✅
+- ✅ `DaisyController` with route attributes
+- ✅ Input validation via `DaisyInputData`
+- ✅ Structured output via `DaisyOutputData`
+- ✅ Error handling and logging
+- ✅ Blade view integration
+
+#### Phase 5: Features ✅
+- ✅ Standard disambiguation mode
+- ✅ GregNet mode for knowledge graphs
+- ✅ Graph visualization data generation
+- ✅ Multi-language support (Portuguese/English)
+
+### 🔄 In Progress / Future Enhancements
+
+#### Optimization
+- [ ] Cache lemma queries (Redis/Memcached)
 - [ ] Optimize frame relation queries
-- [ ] Implement batch processing
+- [ ] Implement batch processing for multiple sentences
 - [ ] Add parallel processing for large texts
+- [ ] Queue support for async processing
 
-### Phase 5: Testing
-- [ ] Unit tests for each algorithm
-- [ ] Integration tests for full pipeline
+#### Testing
+- [ ] Unit tests for each service
+- [ ] Feature tests for full pipeline
 - [ ] Benchmark against reference implementation
 - [ ] Validate output formats
+- [ ] Test coverage for edge cases
+
+#### Monitoring & Analytics
+- [ ] Performance metrics collection
+- [ ] Query performance tracking
+- [ ] Success/error rate monitoring
+- [ ] Usage analytics
 
 ---
 

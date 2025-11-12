@@ -76,7 +76,7 @@
 
         @if(!empty($sentenceUD))
             <div class="mt-6 pt-6 border-t border-gray-200">
-                <h4 class="text-md font-medium text-gray-700 mb-3">Universal Dependencies Parse</h4>
+                <h4 class="text-md font-medium text-gray-700 mb-3">Universal Dependencies Parsing</h4>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
