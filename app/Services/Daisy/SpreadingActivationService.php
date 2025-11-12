@@ -28,20 +28,31 @@ class SpreadingActivationService
      */
     public function processSpreadingActivation(array $windows): array
     {
+        debug('=== SPREADING ACTIVATION START ===');
         foreach ($windows as $idWindow => $words) {
             foreach ($words as $word => $frames) {
                 foreach ($frames as $frameEntry => $frame) {
+                    $initialEnergy = $frame->energy;
+                    debug("  Frame {$frameEntry} (word '{$word}'): initial energy = {$initialEnergy}");
+
                     // Calculate energy from spreading activation
                     $spreadEnergy = $this->calculateSpreadEnergy($frame, $word, $idWindow);
+                    debug("    Spread energy from pool: {$spreadEnergy}");
 
                     // Update frame energy
                     $windows[$idWindow][$word][$frameEntry]->energy += $spreadEnergy;
 
                     // Apply bonuses
-                    $windows[$idWindow][$word][$frameEntry]->energy += $this->calculateBonuses($frame);
+                    $bonuses = $this->calculateBonuses($frame);
+                    debug("    Bonuses (MWE/MKNOB): {$bonuses}");
+                    $windows[$idWindow][$word][$frameEntry]->energy += $bonuses;
+
+                    $finalEnergy = $windows[$idWindow][$word][$frameEntry]->energy;
+                    debug("    Final energy after spreading: {$finalEnergy}");
                 }
             }
         }
+        debug('=== SPREADING ACTIVATION END ===');
 
         return $windows;
     }
@@ -52,11 +63,30 @@ class SpreadingActivationService
     private function calculateSpreadEnergy(object $frame, string $currentWord, int $currentWindowId): float
     {
         $totalEnergy = 0.0;
+        $poolSize = count($frame->pool);
+        debug("      Pool has {$poolSize} entries");
 
-        foreach ($frame->pool as $poolObject) {
+        if (empty($frame->pool)) {
+            debug('      WARNING: Empty pool!');
+
+            return 0.0;
+        }
+
+        foreach ($frame->pool as $poolFrameName => $poolObject) {
+            $setSize = isset($poolObject->set) && is_countable($poolObject->set) ? count($poolObject->set) : 0;
+            debug("        Pool frame '{$poolFrameName}': set size = {$setSize}");
+
+            if (! isset($poolObject->set) || empty($poolObject->set)) {
+                debug('          No \'set\' data in pool object');
+
+                continue;
+            }
+
             foreach ($poolObject->set as $contributingWord => $element) {
                 // Don't self-activate
                 if ($currentWord === $contributingWord) {
+                    debug("          Word '{$contributingWord}': SKIPPED (self)");
+
                     continue;
                 }
 
@@ -64,12 +94,17 @@ class SpreadingActivationService
                 // - Same window OR
                 // - Qualia relation
                 $canUse = $element['isQualia'] || ($element['idWindow'] === $currentWindowId);
+                debug("          Word '{$contributingWord}': isQualia={$element['isQualia']}, idWindow={$element['idWindow']} vs current={$currentWindowId}, canUse={$canUse}");
 
                 if ($canUse) {
-                    $totalEnergy += $element['energy'];
+                    $energy = $element['energy'];
+                    debug("            Adding energy: {$energy}");
+                    $totalEnergy += $energy;
                 }
             }
         }
+
+        debug("      Total spread energy: {$totalEnergy}");
 
         return $totalEnergy;
     }

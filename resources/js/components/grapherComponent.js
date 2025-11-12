@@ -141,17 +141,39 @@ export default function grapherComponent(config = {}) {
             for (const index in this.nodes) {
                 const node = this.nodes[index];
                 let rect;
-                const text = node.name;
+                let text = node.name;
                 let w;
 
-                if (node.type === 'frame') {
+                // Add energy to label if present (for frame nodes with energy)
+                if (node.energy) {
+                    text = `${node.name}\n(${node.energy})`;
+                }
+
+                if (node.type === 'word') {
+                    // Word node - use ellipse shape
+                    w = Math.max(text.length * 8, 80);
+                    rect = new joint.shapes.standard.Ellipse({
+                        id: index,
+                        z: 2,
+                    });
+                    rect.resize(w, 50);
+                    rect.attr({
+                        body: {
+                            class: `color_${node.type}`,
+                        },
+                        label: {
+                            class: `color_${node.type}--text`,
+                            text: text,
+                        }
+                    });
+                } else if (node.type === 'frame') {
                     // Frame node
                     w = Math.max(text.length * 8, 100);
                     rect = new joint.shapes.standard.Rectangle({
                         id: index,
                         z: 2,
                     });
-                    rect.resize(w, 30);
+                    rect.resize(w, 40);  // Increased height to accommodate energy label
                     rect.attr({
                         body: {
                             class: `color_${node.type}`,

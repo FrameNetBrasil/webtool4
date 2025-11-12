@@ -66,8 +66,12 @@ class DaisyService
 
         // Step 2: Create GRID windows
         $gridResult = $this->gridService->processToWindows($udParsed);
+        // debug($gridResult);
         $windows = $gridResult['windows'];
         $lemmas = $gridResult['lemmas'];
+        //        debug("===========");
+        //        debug($windows);
+        //        debug("===========");
 
         // Step 3: Match lexical units
         $windows = $this->lexicalUnitService->matchLexicalUnits($windows, $lemmas);
@@ -79,7 +83,46 @@ class DaisyService
         $windows = $this->spreadingActivationService->processSpreadingActivation($windows);
 
         // Step 6: Select winners
+        debug('=== DaisyService: Before generateWinners ===');
+        debug('Windows count:', count($windows));
+        debug('Windows type:', gettype($windows));
+
+        // Debug: Check structure of first window
+        if (! empty($windows)) {
+            $firstWindowKey = array_key_first($windows);
+            $firstWindow = $windows[$firstWindowKey];
+            debug("First window key: {$firstWindowKey}, type:", gettype($firstWindow));
+
+            if (is_array($firstWindow) && ! empty($firstWindow)) {
+                $firstWordKey = array_key_first($firstWindow);
+                $firstWordFrames = $firstWindow[$firstWordKey];
+                debug("  First word: '{$firstWordKey}', type:", gettype($firstWordFrames), 'count:', is_countable($firstWordFrames) ? count($firstWordFrames) : 'N/A');
+
+                if (is_array($firstWordFrames) && ! empty($firstWordFrames)) {
+                    $firstFrameKey = array_key_first($firstWordFrames);
+                    $firstFrame = $firstWordFrames[$firstFrameKey];
+                    debug("    First frame: '{$firstFrameKey}', type:", gettype($firstFrame));
+                    if (is_object($firstFrame)) {
+                        debug('    Frame class:', get_class($firstFrame));
+                        debug('    Frame has energy?', isset($firstFrame->energy), 'value =', $firstFrame->energy ?? 'N/A');
+                        debug('    Frame has iword?', isset($firstFrame->iword));
+                        debug('    Frame pool size:', is_array($firstFrame->pool) ? count($firstFrame->pool) : 'N/A');
+                        if (! empty($firstFrame->pool)) {
+                            debug('    Pool keys:', array_keys($firstFrame->pool));
+                        } else {
+                            debug('    WARNING: Pool is EMPTY - no semantic network built!');
+                        }
+                    }
+                }
+            }
+        }
+
         $winnerResult = $this->winnerSelectionService->generateWinners($windows);
+
+        debug('=== DaisyService: After generateWinners ===');
+        debug('Winner result keys:', array_keys($winnerResult));
+        debug('Winners count:', count($winnerResult['winners'] ?? []));
+        debug('Weights count:', count($winnerResult['weights'] ?? []));
         $winners = $winnerResult['winners'];
         $weights = $winnerResult['weights'];
 
@@ -117,9 +160,93 @@ class DaisyService
         $nodes = [];
         $links = [];
 
-        // TODO: Implement graph generation
-        // - Create nodes for words and frames
-        // - Create links for evokes relations and frame relations
+        // Step 1: Create word nodes from UD parse
+        foreach ($udParsed as $wordData) {
+            $wordId = 'word_'.$wordData['id'];
+            $nodes[$wordId] = [
+                'name' => $wordData['word'],
+                'type' => 'word',
+                'pos' => $wordData['pos'] ?? '',
+                'shape' => 'ellipse',  // Different from frames
+            ];
+        }
+
+        // Step 2: Create frame nodes from winners and evokes links
+        foreach ($winners as $iword => $winnerFrames) {
+            if (! empty($winnerFrames)) {
+                foreach ($winnerFrames as $winner) {
+                    $frameId = 'frame_'.$winner['frame'];
+
+                    // Add frame node (only once even if multiple words evoke it)
+                    if (! isset($nodes[$frameId])) {
+                        $nodes[$frameId] = [
+                            'name' => $winner['frame'],
+                            'type' => 'frame',
+                            'energy' => number_format($winner['value'], 3),  // 3 decimals
+                            'shape' => 'rectangle',
+                        ];
+                    }
+
+                    // Create evokes link (word → frame)
+                    $wordId = 'word_'.$iword;
+                    if (! isset($links[$wordId])) {
+                        $links[$wordId] = [];
+                    }
+                    $links[$wordId][$frameId] = [
+                        'relationEntry' => 'evokes',
+                        'type' => 'wf',
+                        'energy' => $winner['value'],
+                    ];
+                }
+            }
+        }
+
+        // Step 3: Add immediate frame relations (only for winner frames)
+        $winnerFrameNames = [];
+        foreach ($winners as $winnerFrames) {
+            foreach ($winnerFrames as $winner) {
+                $winnerFrameNames[] = $winner['frame'];
+            }
+        }
+
+        foreach ($windows as $idWindow => $words) {
+            foreach ($words as $word => $frames) {
+                foreach ($frames as $frameEntry => $frame) {
+                    // Only process if this frame is a winner
+                    if (! in_array($frameEntry, $winnerFrameNames)) {
+                        continue;
+                    }
+
+                    $frameId = 'frame_'.$frameEntry;
+
+                    // Add immediate pool relations only (level 1)
+                    if (isset($frame->pool) && is_array($frame->pool)) {
+                        foreach ($frame->pool as $poolFrameName => $poolObject) {
+                            if ($poolFrameName === $frameEntry) {
+                                continue;
+                            } // Skip self
+                            if ($poolObject->level > 1) {
+                                continue;
+                            } // Only immediate relations
+
+                            $relatedFrameId = 'frame_'.$poolFrameName;
+
+                            // Only add if related frame is also a winner
+                            if (in_array($poolFrameName, $winnerFrameNames) && isset($nodes[$relatedFrameId])) {
+                                if (! isset($links[$frameId])) {
+                                    $links[$frameId] = [];
+                                }
+                                $links[$frameId][$relatedFrameId] = [
+                                    'relationEntry' => 'related',
+                                    'type' => 'ff',
+                                    'factor' => $poolObject->factor,
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         return [
             'nodes' => $nodes,
