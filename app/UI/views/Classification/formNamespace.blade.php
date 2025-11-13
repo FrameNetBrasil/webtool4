@@ -18,6 +18,6 @@
         </div>
     </x-slot:fields>
     <x-slot:buttons>
-        <x-submit label="Update Type"></x-submit>
+        <x-submit label="Update Namespace"></x-submit>
     </x-slot:buttons>
 </x-form>
