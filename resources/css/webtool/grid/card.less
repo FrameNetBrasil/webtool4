@@ -44,6 +44,23 @@
         grid-template-rows: 1fr;
     }
 
+    &.dense-4col {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: @relativeSmall;
+
+        .ui.card {
+            font-size: 0.9em;
+
+            .header {
+                font-size: 0.95em;
+            }
+
+            .icon {
+                font-size: 1.1em;
+            }
+        }
+    }
+
     // Mobile responsiveness
     @media (max-width: @mobileBreakpoint) {
         grid-template-columns: 1fr;
@@ -51,7 +68,8 @@
 
         &.dense,
         &.wide-cards,
-        &.small-cards {
+        &.small-cards,
+        &.dense-4col {
             grid-template-columns: 1fr;
         }
     }
