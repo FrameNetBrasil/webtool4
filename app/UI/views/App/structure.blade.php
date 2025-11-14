@@ -7,6 +7,8 @@
         'lucandidate' => ['LU Candidate', '/luCandidate', '','ui::icon.frame'],
         'constructicon' => ['Constructicon', '/constructicon', '','ui::icon.construction'],
         'reframing' => ['Reframing', '/reframing', '','ui::icon.lu'],
+        'class' => ['Class', '/class', '','ui::icon.frame'],
+        'microframe' => ['MicroFrame', '/microframe', '','ui::icon.microframe'],
     ];
 
     $groups = [
@@ -14,6 +16,7 @@
 //        'lexicon' => ['title' => "Lexicon", "pages" => ['lemma','form','lucandidate']],
         'lexicon' => ['title' => "Lexicon", "pages" => ['lucandidate','lemma']],
 //        'construction' => ['title' => "Construction", "pages" => ['constructicon']],
+        'ontology' => ['title' => "Ontology", "pages" => ['class','microframe']],
     ];
 @endphp
 
