@@ -1,0 +1,3958 @@
+{
+    "timestamp": "2025-11-17T16:34:39-03:00",
+    "summary": {
+        "total_frame_elements": 482,
+        "mapped": 66,
+        "unmapped": 416,
+        "classes_in_ontology": 93
+    },
+    "mappings": [
+        {
+            "idFrameElement": 14071,
+            "idEntity": 2747371,
+            "frameName": "Action",
+            "feName": "Execution",
+            "objectProperty": "executesTask",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#executesTask",
+            "propertyRange": null,
+            "rangeUri": null,
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14074,
+            "idEntity": 2747374,
+            "frameName": "Action",
+            "feName": "Participation",
+            "objectProperty": "hasParticipant",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasParticipant",
+            "propertyRange": "Agent",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Agent",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14075,
+            "idEntity": 2747375,
+            "frameName": "Action",
+            "feName": "Participation",
+            "objectProperty": "hasParticipant",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasParticipant",
+            "propertyRange": "Agent",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Agent",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14098,
+            "idEntity": 2747398,
+            "frameName": "Classification",
+            "feName": "Setting",
+            "objectProperty": "isSettingFor",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isSettingFor",
+            "propertyRange": "Concept",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Concept",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14099,
+            "idEntity": 2747399,
+            "frameName": "Classification",
+            "feName": "Setting",
+            "objectProperty": "isSettingFor",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isSettingFor",
+            "propertyRange": "Concept",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Concept",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14100,
+            "idEntity": 2747400,
+            "frameName": "Classification",
+            "feName": "Setting",
+            "objectProperty": "isSettingFor",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isSettingFor",
+            "propertyRange": "Concept",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Concept",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14103,
+            "idEntity": 2747403,
+            "frameName": "Collection",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Collection",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Collection",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14104,
+            "idEntity": 2747404,
+            "frameName": "Collection",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Collection",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Collection",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14105,
+            "idEntity": 2747405,
+            "frameName": "Collection",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Collection",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Collection",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14111,
+            "idEntity": 2747411,
+            "frameName": "Collective",
+            "feName": "Membership",
+            "objectProperty": "hasMember",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasMember",
+            "propertyRange": "Agent",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Agent",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14143,
+            "idEntity": 2747443,
+            "frameName": "Concept",
+            "feName": "Classification",
+            "objectProperty": "classifies",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#classifies",
+            "propertyRange": "Entity",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Entity",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14144,
+            "idEntity": 2747444,
+            "frameName": "Concept",
+            "feName": "Definition",
+            "objectProperty": "isDefinedIn",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isDefinedIn",
+            "propertyRange": "Description",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Description",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14140,
+            "idEntity": 2747440,
+            "frameName": "Concept",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Concept",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Concept",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14141,
+            "idEntity": 2747441,
+            "frameName": "Concept",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Concept",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Concept",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14142,
+            "idEntity": 2747442,
+            "frameName": "Concept",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Concept",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Concept",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14199,
+            "idEntity": 2747499,
+            "frameName": "Event",
+            "feName": "Constitution",
+            "objectProperty": "hasConstituent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasConstituent",
+            "propertyRange": "Event",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14200,
+            "idEntity": 2747500,
+            "frameName": "Event",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Event",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14201,
+            "idEntity": 2747501,
+            "frameName": "Event",
+            "feName": "Participation",
+            "objectProperty": "hasParticipant",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasParticipant",
+            "propertyRange": "Object",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Object",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14202,
+            "idEntity": 2747502,
+            "frameName": "Event",
+            "feName": "Temporal_interval",
+            "objectProperty": "hasTimeInterval",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasTimeInterval",
+            "propertyRange": "TimeInterval",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#TimeInterval",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14233,
+            "idEntity": 2747533,
+            "frameName": "Group",
+            "feName": "Description",
+            "objectProperty": "isDescribedBy",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isDescribedBy",
+            "propertyRange": "Plan",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Plan",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14283,
+            "idEntity": 2747583,
+            "frameName": "Object",
+            "feName": "Classification",
+            "objectProperty": "isClassifiedBy",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isClassifiedBy",
+            "propertyRange": "Role",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14280,
+            "idEntity": 2747580,
+            "frameName": "Object",
+            "feName": "Constitution",
+            "objectProperty": "hasConstituent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasConstituent",
+            "propertyRange": "Object",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Object",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14281,
+            "idEntity": 2747581,
+            "frameName": "Object",
+            "feName": "Location",
+            "objectProperty": "hasLocation",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasLocation",
+            "propertyRange": "Entity",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Entity",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14282,
+            "idEntity": 2747582,
+            "frameName": "Object",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Object",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Object",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14284,
+            "idEntity": 2747584,
+            "frameName": "Object",
+            "feName": "Participation",
+            "objectProperty": "isParticipantIn",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isParticipantIn",
+            "propertyRange": "Event",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14300,
+            "idEntity": 2747600,
+            "frameName": "Parameter",
+            "feName": "Classification",
+            "objectProperty": "classifies",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#classifies",
+            "propertyRange": "Region",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Region",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14307,
+            "idEntity": 2747607,
+            "frameName": "Parameter",
+            "feName": "Classification",
+            "objectProperty": "classifies",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#classifies",
+            "propertyRange": "Region",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Region",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14303,
+            "idEntity": 2747603,
+            "frameName": "Parameter",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Parameter",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Parameter",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14304,
+            "idEntity": 2747604,
+            "frameName": "Parameter",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Parameter",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Parameter",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14305,
+            "idEntity": 2747605,
+            "frameName": "Parameter",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Parameter",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Parameter",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14306,
+            "idEntity": 2747606,
+            "frameName": "Parameter",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Parameter",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Parameter",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14371,
+            "idEntity": 2747671,
+            "frameName": "Place",
+            "feName": "Location",
+            "objectProperty": "isLocationOf",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isLocationOf",
+            "propertyRange": null,
+            "rangeUri": null,
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14376,
+            "idEntity": 2747676,
+            "frameName": "Place",
+            "feName": "Location",
+            "objectProperty": "isLocationOf",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isLocationOf",
+            "propertyRange": null,
+            "rangeUri": null,
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14378,
+            "idEntity": 2747678,
+            "frameName": "Plan",
+            "feName": "Composition",
+            "objectProperty": "hasComponent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasComponent",
+            "propertyRange": "Goal",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Goal",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14392,
+            "idEntity": 2747692,
+            "frameName": "Project",
+            "feName": "Role_definition",
+            "objectProperty": "definesRole",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#definesRole",
+            "propertyRange": "Role",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14393,
+            "idEntity": 2747693,
+            "frameName": "Project",
+            "feName": "Task_definition",
+            "objectProperty": "definesTask",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#definesTask",
+            "propertyRange": "Task",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Task",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14402,
+            "idEntity": 2747702,
+            "frameName": "Quality",
+            "feName": "Constitution",
+            "objectProperty": "hasConstituent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasConstituent",
+            "propertyRange": "Quality",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Quality",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14403,
+            "idEntity": 2747703,
+            "frameName": "Quality",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Quality",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Quality",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14404,
+            "idEntity": 2747704,
+            "frameName": "Quality",
+            "feName": "Region",
+            "objectProperty": "hasRegion",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasRegion",
+            "propertyRange": "Region",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Region",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14406,
+            "idEntity": 2747706,
+            "frameName": "Region",
+            "feName": "Constitution",
+            "objectProperty": "hasConstituent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasConstituent",
+            "propertyRange": "Region",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Region",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14408,
+            "idEntity": 2747708,
+            "frameName": "Region",
+            "feName": "Overlap",
+            "objectProperty": "overlaps",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#overlaps",
+            "propertyRange": "Region",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Region",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14407,
+            "idEntity": 2747707,
+            "frameName": "Region",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Region",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Region",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14409,
+            "idEntity": 2747709,
+            "frameName": "Region",
+            "feName": "Sequence",
+            "objectProperty": "precedes",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#precedes",
+            "propertyRange": "Region",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Region",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14417,
+            "idEntity": 2747717,
+            "frameName": "Right",
+            "feName": "Role_definition",
+            "objectProperty": "definesRole",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#definesRole",
+            "propertyRange": null,
+            "rangeUri": null,
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14418,
+            "idEntity": 2747718,
+            "frameName": "Right",
+            "feName": "Task_definition",
+            "objectProperty": "definesTask",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#definesTask",
+            "propertyRange": null,
+            "rangeUri": null,
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14426,
+            "idEntity": 2747726,
+            "frameName": "Role",
+            "feName": "Classification",
+            "objectProperty": "classifies",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#classifies",
+            "propertyRange": "Object",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Object",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14433,
+            "idEntity": 2747733,
+            "frameName": "Role",
+            "feName": "Classification",
+            "objectProperty": "classifies",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#classifies",
+            "propertyRange": "Object",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Object",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14429,
+            "idEntity": 2747729,
+            "frameName": "Role",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Role",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14430,
+            "idEntity": 2747730,
+            "frameName": "Role",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Role",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14431,
+            "idEntity": 2747731,
+            "frameName": "Role",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Role",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14432,
+            "idEntity": 2747732,
+            "frameName": "Role",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Role",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14437,
+            "idEntity": 2747737,
+            "frameName": "Situation",
+            "feName": "Satisfaction",
+            "objectProperty": "satisfies",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#satisfies",
+            "propertyRange": "Description",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Description",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14477,
+            "idEntity": 2747777,
+            "frameName": "SpatioTemporalRegion",
+            "feName": "Constitution",
+            "objectProperty": "hasConstituent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasConstituent",
+            "propertyRange": "SpaceRegion",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#SpaceRegion",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14478,
+            "idEntity": 2747778,
+            "frameName": "SpatioTemporalRegion",
+            "feName": "Constitution",
+            "objectProperty": "hasConstituent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasConstituent",
+            "propertyRange": "SpaceRegion",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#SpaceRegion",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14479,
+            "idEntity": 2747779,
+            "frameName": "SpatioTemporalRegion",
+            "feName": "Constitution",
+            "objectProperty": "hasConstituent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasConstituent",
+            "propertyRange": "SpaceRegion",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#SpaceRegion",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14498,
+            "idEntity": 2747798,
+            "frameName": "Task",
+            "feName": "Execution",
+            "objectProperty": "isExecutedIn",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isExecutedIn",
+            "propertyRange": "Action",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Action",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14492,
+            "idEntity": 2747792,
+            "frameName": "Task",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Task",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Task",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14493,
+            "idEntity": 2747793,
+            "frameName": "Task",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Task",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Task",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14494,
+            "idEntity": 2747794,
+            "frameName": "Task",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Task",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Task",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14495,
+            "idEntity": 2747795,
+            "frameName": "Task",
+            "feName": "Parthood",
+            "objectProperty": "hasPart",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasPart",
+            "propertyRange": "Task",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Task",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14502,
+            "idEntity": 2747802,
+            "frameName": "Task",
+            "feName": "Task_attribution",
+            "objectProperty": "isTaskOf",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isTaskOf",
+            "propertyRange": "Role",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14503,
+            "idEntity": 2747803,
+            "frameName": "Theory",
+            "feName": "Composition",
+            "objectProperty": "hasComponent",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#hasComponent",
+            "propertyRange": "Relation",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Relation",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14518,
+            "idEntity": 2747818,
+            "frameName": "Transition",
+            "feName": "Setting",
+            "objectProperty": "isSettingFor",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isSettingFor",
+            "propertyRange": "Process",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Process",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14519,
+            "idEntity": 2747819,
+            "frameName": "Transition",
+            "feName": "Setting",
+            "objectProperty": "isSettingFor",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#isSettingFor",
+            "propertyRange": "Process",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Process",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14541,
+            "idEntity": 2747841,
+            "frameName": "Workflow",
+            "feName": "Role_definition",
+            "objectProperty": "definesRole",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#definesRole",
+            "propertyRange": "Role",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role",
+            "matchType": "common_pattern",
+            "confidence": 95
+        },
+        {
+            "idFrameElement": 14542,
+            "idEntity": 2747842,
+            "frameName": "Workflow",
+            "feName": "Task_definition",
+            "objectProperty": "definesTask",
+            "propertyUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#definesTask",
+            "propertyRange": "Task",
+            "rangeUri": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Task",
+            "matchType": "common_pattern",
+            "confidence": 95
+        }
+    ],
+    "unmapped": [
+        {
+            "idFrameElement": 14072,
+            "idEntity": 2747372,
+            "frameName": "Action",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "hasParticipant, executesTask, isActionIncludedIn"
+        },
+        {
+            "idFrameElement": 14073,
+            "idEntity": 2747373,
+            "frameName": "Action",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasParticipant, executesTask, isActionIncludedIn"
+        },
+        {
+            "idFrameElement": 14076,
+            "idEntity": 2747376,
+            "frameName": "Action",
+            "feName": "Temporal_interval",
+            "reason": "No matching property found",
+            "availableProperties": "hasParticipant, executesTask, isActionIncludedIn"
+        },
+        {
+            "idFrameElement": 14080,
+            "idEntity": 2747380,
+            "frameName": "Agent",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+        },
+        {
+            "idFrameElement": 14077,
+            "idEntity": 2747377,
+            "frameName": "Agent",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+        },
+        {
+            "idFrameElement": 14078,
+            "idEntity": 2747378,
+            "frameName": "Agent",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+        },
+        {
+            "idFrameElement": 14079,
+            "idEntity": 2747379,
+            "frameName": "Agent",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+        },
+        {
+            "idFrameElement": 14081,
+            "idEntity": 2747381,
+            "frameName": "Agent",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+        },
+        {
+            "idFrameElement": 14082,
+            "idEntity": 2747382,
+            "frameName": "Amount",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14084,
+            "idEntity": 2747384,
+            "frameName": "Amount",
+            "feName": "Overlap",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14083,
+            "idEntity": 2747383,
+            "frameName": "Amount",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14085,
+            "idEntity": 2747385,
+            "frameName": "Amount",
+            "feName": "Sequence",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14090,
+            "idEntity": 2747390,
+            "frameName": "Biological object",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14086,
+            "idEntity": 2747386,
+            "frameName": "Biological object",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14087,
+            "idEntity": 2747387,
+            "frameName": "Biological object",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14088,
+            "idEntity": 2747388,
+            "frameName": "Biological object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14089,
+            "idEntity": 2747389,
+            "frameName": "Biological object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14091,
+            "idEntity": 2747391,
+            "frameName": "Biological object",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14096,
+            "idEntity": 2747396,
+            "frameName": "Chemical object",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14092,
+            "idEntity": 2747392,
+            "frameName": "Chemical object",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14093,
+            "idEntity": 2747393,
+            "frameName": "Chemical object",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14094,
+            "idEntity": 2747394,
+            "frameName": "Chemical object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14095,
+            "idEntity": 2747395,
+            "frameName": "Chemical object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14097,
+            "idEntity": 2747397,
+            "frameName": "Chemical object",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14106,
+            "idEntity": 2747406,
+            "frameName": "Collection",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+        },
+        {
+            "idFrameElement": 14101,
+            "idEntity": 2747401,
+            "frameName": "Collection",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+        },
+        {
+            "idFrameElement": 14107,
+            "idEntity": 2747407,
+            "frameName": "Collection",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+        },
+        {
+            "idFrameElement": 14102,
+            "idEntity": 2747402,
+            "frameName": "Collection",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+        },
+        {
+            "idFrameElement": 14108,
+            "idEntity": 2747408,
+            "frameName": "Collection",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+        },
+        {
+            "idFrameElement": 14115,
+            "idEntity": 2747415,
+            "frameName": "Collective",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "hasMember"
+        },
+        {
+            "idFrameElement": 14109,
+            "idEntity": 2747409,
+            "frameName": "Collective",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "hasMember"
+        },
+        {
+            "idFrameElement": 14116,
+            "idEntity": 2747416,
+            "frameName": "Collective",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "hasMember"
+        },
+        {
+            "idFrameElement": 14110,
+            "idEntity": 2747410,
+            "frameName": "Collective",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "hasMember"
+        },
+        {
+            "idFrameElement": 14112,
+            "idEntity": 2747412,
+            "frameName": "Collective",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasMember"
+        },
+        {
+            "idFrameElement": 14113,
+            "idEntity": 2747413,
+            "frameName": "Collective",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasMember"
+        },
+        {
+            "idFrameElement": 14114,
+            "idEntity": 2747414,
+            "frameName": "Collective",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasMember"
+        },
+        {
+            "idFrameElement": 14117,
+            "idEntity": 2747417,
+            "frameName": "Collective",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "hasMember"
+        },
+        {
+            "idFrameElement": 14124,
+            "idEntity": 2747424,
+            "frameName": "Collective agent",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14120,
+            "idEntity": 2747420,
+            "frameName": "Collective agent",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14125,
+            "idEntity": 2747425,
+            "frameName": "Collective agent",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14126,
+            "idEntity": 2747426,
+            "frameName": "Collective agent",
+            "feName": "Introduction",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14121,
+            "idEntity": 2747421,
+            "frameName": "Collective agent",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14122,
+            "idEntity": 2747422,
+            "frameName": "Collective agent",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14123,
+            "idEntity": 2747423,
+            "frameName": "Collective agent",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14127,
+            "idEntity": 2747427,
+            "frameName": "Collective agent",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14118,
+            "idEntity": 2747418,
+            "frameName": "Collective agent",
+            "feName": "Proxy_agency",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14119,
+            "idEntity": 2747419,
+            "frameName": "Collective agent",
+            "feName": "Proxy_agency",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14134,
+            "idEntity": 2747434,
+            "frameName": "Community",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14130,
+            "idEntity": 2747430,
+            "frameName": "Community",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14135,
+            "idEntity": 2747435,
+            "frameName": "Community",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14136,
+            "idEntity": 2747436,
+            "frameName": "Community",
+            "feName": "Introduction",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14131,
+            "idEntity": 2747431,
+            "frameName": "Community",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14132,
+            "idEntity": 2747432,
+            "frameName": "Community",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14133,
+            "idEntity": 2747433,
+            "frameName": "Community",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14137,
+            "idEntity": 2747437,
+            "frameName": "Community",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14128,
+            "idEntity": 2747428,
+            "frameName": "Community",
+            "feName": "Proxy_agency",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14129,
+            "idEntity": 2747429,
+            "frameName": "Community",
+            "feName": "Proxy_agency",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14138,
+            "idEntity": 2747438,
+            "frameName": "Concept",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "isDefinedIn, hasPart, characterizes, classifies, covers, hasParameter, isConceptExpressedBy, isConceptUsedIn, isRelatedToConcept, isSubordinatedTo, isSuperordinatedTo"
+        },
+        {
+            "idFrameElement": 14145,
+            "idEntity": 2747445,
+            "frameName": "Concept",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "isDefinedIn, hasPart, characterizes, classifies, covers, hasParameter, isConceptExpressedBy, isConceptUsedIn, isRelatedToConcept, isSubordinatedTo, isSuperordinatedTo"
+        },
+        {
+            "idFrameElement": 14139,
+            "idEntity": 2747439,
+            "frameName": "Concept",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "isDefinedIn, hasPart, characterizes, classifies, covers, hasParameter, isConceptExpressedBy, isConceptUsedIn, isRelatedToConcept, isSubordinatedTo, isSuperordinatedTo"
+        },
+        {
+            "idFrameElement": 14146,
+            "idEntity": 2747446,
+            "frameName": "Concept",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "isDefinedIn, hasPart, characterizes, classifies, covers, hasParameter, isConceptExpressedBy, isConceptUsedIn, isRelatedToConcept, isSubordinatedTo, isSuperordinatedTo"
+        },
+        {
+            "idFrameElement": 14152,
+            "idEntity": 2747452,
+            "frameName": "Configuration",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14147,
+            "idEntity": 2747447,
+            "frameName": "Configuration",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14153,
+            "idEntity": 2747453,
+            "frameName": "Configuration",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14148,
+            "idEntity": 2747448,
+            "frameName": "Configuration",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14149,
+            "idEntity": 2747449,
+            "frameName": "Configuration",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14150,
+            "idEntity": 2747450,
+            "frameName": "Configuration",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14151,
+            "idEntity": 2747451,
+            "frameName": "Configuration",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14154,
+            "idEntity": 2747454,
+            "frameName": "Configuration",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14159,
+            "idEntity": 2747459,
+            "frameName": "Contract",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14155,
+            "idEntity": 2747455,
+            "frameName": "Contract",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14160,
+            "idEntity": 2747460,
+            "frameName": "Contract",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14156,
+            "idEntity": 2747456,
+            "frameName": "Contract",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14157,
+            "idEntity": 2747457,
+            "frameName": "Contract",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14158,
+            "idEntity": 2747458,
+            "frameName": "Contract",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14161,
+            "idEntity": 2747461,
+            "frameName": "Contract",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14166,
+            "idEntity": 2747466,
+            "frameName": "Description",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+        },
+        {
+            "idFrameElement": 14162,
+            "idEntity": 2747462,
+            "frameName": "Description",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+        },
+        {
+            "idFrameElement": 14167,
+            "idEntity": 2747467,
+            "frameName": "Description",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+        },
+        {
+            "idFrameElement": 14163,
+            "idEntity": 2747463,
+            "frameName": "Description",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+        },
+        {
+            "idFrameElement": 14164,
+            "idEntity": 2747464,
+            "frameName": "Description",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+        },
+        {
+            "idFrameElement": 14165,
+            "idEntity": 2747465,
+            "frameName": "Description",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+        },
+        {
+            "idFrameElement": 14168,
+            "idEntity": 2747468,
+            "frameName": "Description",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+        },
+        {
+            "idFrameElement": 14173,
+            "idEntity": 2747473,
+            "frameName": "Design",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14169,
+            "idEntity": 2747469,
+            "frameName": "Design",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14174,
+            "idEntity": 2747474,
+            "frameName": "Design",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14170,
+            "idEntity": 2747470,
+            "frameName": "Design",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14171,
+            "idEntity": 2747471,
+            "frameName": "Design",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14172,
+            "idEntity": 2747472,
+            "frameName": "Design",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14175,
+            "idEntity": 2747475,
+            "frameName": "Design",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14180,
+            "idEntity": 2747480,
+            "frameName": "Designed artifact",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14176,
+            "idEntity": 2747476,
+            "frameName": "Designed artifact",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14181,
+            "idEntity": 2747481,
+            "frameName": "Designed artifact",
+            "feName": "Description",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14182,
+            "idEntity": 2747482,
+            "frameName": "Designed artifact",
+            "feName": "Description",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14177,
+            "idEntity": 2747477,
+            "frameName": "Designed artifact",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14178,
+            "idEntity": 2747478,
+            "frameName": "Designed artifact",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14179,
+            "idEntity": 2747479,
+            "frameName": "Designed artifact",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14183,
+            "idEntity": 2747483,
+            "frameName": "Designed artifact",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14188,
+            "idEntity": 2747488,
+            "frameName": "DesignedSubstance",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14184,
+            "idEntity": 2747484,
+            "frameName": "DesignedSubstance",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14189,
+            "idEntity": 2747489,
+            "frameName": "DesignedSubstance",
+            "feName": "Description",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14190,
+            "idEntity": 2747490,
+            "frameName": "DesignedSubstance",
+            "feName": "Description",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14185,
+            "idEntity": 2747485,
+            "frameName": "DesignedSubstance",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14186,
+            "idEntity": 2747486,
+            "frameName": "DesignedSubstance",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14187,
+            "idEntity": 2747487,
+            "frameName": "DesignedSubstance",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14191,
+            "idEntity": 2747491,
+            "frameName": "DesignedSubstance",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14196,
+            "idEntity": 2747496,
+            "frameName": "Diagnosis",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14192,
+            "idEntity": 2747492,
+            "frameName": "Diagnosis",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14197,
+            "idEntity": 2747497,
+            "frameName": "Diagnosis",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14193,
+            "idEntity": 2747493,
+            "frameName": "Diagnosis",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14194,
+            "idEntity": 2747494,
+            "frameName": "Diagnosis",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14195,
+            "idEntity": 2747495,
+            "frameName": "Diagnosis",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14198,
+            "idEntity": 2747498,
+            "frameName": "Diagnosis",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14203,
+            "idEntity": 2747503,
+            "frameName": "Event type",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14209,
+            "idEntity": 2747509,
+            "frameName": "Event type",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14204,
+            "idEntity": 2747504,
+            "frameName": "Event type",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14210,
+            "idEntity": 2747510,
+            "frameName": "Event type",
+            "feName": "Definition",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14211,
+            "idEntity": 2747511,
+            "frameName": "Event type",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14205,
+            "idEntity": 2747505,
+            "frameName": "Event type",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14206,
+            "idEntity": 2747506,
+            "frameName": "Event type",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14207,
+            "idEntity": 2747507,
+            "frameName": "Event type",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14208,
+            "idEntity": 2747508,
+            "frameName": "Event type",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14212,
+            "idEntity": 2747512,
+            "frameName": "Event type",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14217,
+            "idEntity": 2747517,
+            "frameName": "Functional substance",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14213,
+            "idEntity": 2747513,
+            "frameName": "Functional substance",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14214,
+            "idEntity": 2747514,
+            "frameName": "Functional substance",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14215,
+            "idEntity": 2747515,
+            "frameName": "Functional substance",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14216,
+            "idEntity": 2747516,
+            "frameName": "Functional substance",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14218,
+            "idEntity": 2747518,
+            "frameName": "Functional substance",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14223,
+            "idEntity": 2747523,
+            "frameName": "Goal",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14219,
+            "idEntity": 2747519,
+            "frameName": "Goal",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14224,
+            "idEntity": 2747524,
+            "frameName": "Goal",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14220,
+            "idEntity": 2747520,
+            "frameName": "Goal",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14221,
+            "idEntity": 2747521,
+            "frameName": "Goal",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14222,
+            "idEntity": 2747522,
+            "frameName": "Goal",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14225,
+            "idEntity": 2747525,
+            "frameName": "Goal",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14232,
+            "idEntity": 2747532,
+            "frameName": "Group",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14228,
+            "idEntity": 2747528,
+            "frameName": "Group",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14234,
+            "idEntity": 2747534,
+            "frameName": "Group",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14235,
+            "idEntity": 2747535,
+            "frameName": "Group",
+            "feName": "Introduction",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14229,
+            "idEntity": 2747529,
+            "frameName": "Group",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14230,
+            "idEntity": 2747530,
+            "frameName": "Group",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14231,
+            "idEntity": 2747531,
+            "frameName": "Group",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14236,
+            "idEntity": 2747536,
+            "frameName": "Group",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14226,
+            "idEntity": 2747526,
+            "frameName": "Group",
+            "feName": "Proxy_agency",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14227,
+            "idEntity": 2747527,
+            "frameName": "Group",
+            "feName": "Proxy_agency",
+            "reason": "No matching property found",
+            "availableProperties": "isDescribedBy"
+        },
+        {
+            "idFrameElement": 14241,
+            "idEntity": 2747541,
+            "frameName": "Information object",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14237,
+            "idEntity": 2747537,
+            "frameName": "Information object",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14242,
+            "idEntity": 2747542,
+            "frameName": "Information object",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14238,
+            "idEntity": 2747538,
+            "frameName": "Information object",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14239,
+            "idEntity": 2747539,
+            "frameName": "Information object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14240,
+            "idEntity": 2747540,
+            "frameName": "Information object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14243,
+            "idEntity": 2747543,
+            "frameName": "Information object",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14249,
+            "idEntity": 2747549,
+            "frameName": "Local concept",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14244,
+            "idEntity": 2747544,
+            "frameName": "Local concept",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14250,
+            "idEntity": 2747550,
+            "frameName": "Local concept",
+            "feName": "Definition",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14251,
+            "idEntity": 2747551,
+            "frameName": "Local concept",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14245,
+            "idEntity": 2747545,
+            "frameName": "Local concept",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14246,
+            "idEntity": 2747546,
+            "frameName": "Local concept",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14247,
+            "idEntity": 2747547,
+            "frameName": "Local concept",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14248,
+            "idEntity": 2747548,
+            "frameName": "Local concept",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14252,
+            "idEntity": 2747552,
+            "frameName": "Local concept",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14257,
+            "idEntity": 2747557,
+            "frameName": "Method",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14253,
+            "idEntity": 2747553,
+            "frameName": "Method",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14258,
+            "idEntity": 2747558,
+            "frameName": "Method",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14254,
+            "idEntity": 2747554,
+            "frameName": "Method",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14256,
+            "idEntity": 2747556,
+            "frameName": "Method",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14255,
+            "idEntity": 2747555,
+            "frameName": "Method",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14259,
+            "idEntity": 2747559,
+            "frameName": "Method",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14264,
+            "idEntity": 2747564,
+            "frameName": "Narrative",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14260,
+            "idEntity": 2747560,
+            "frameName": "Narrative",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14265,
+            "idEntity": 2747565,
+            "frameName": "Narrative",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14261,
+            "idEntity": 2747561,
+            "frameName": "Narrative",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14262,
+            "idEntity": 2747562,
+            "frameName": "Narrative",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14263,
+            "idEntity": 2747563,
+            "frameName": "Narrative",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14266,
+            "idEntity": 2747566,
+            "frameName": "Narrative",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14271,
+            "idEntity": 2747571,
+            "frameName": "Natural person",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14267,
+            "idEntity": 2747567,
+            "frameName": "Natural person",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14268,
+            "idEntity": 2747568,
+            "frameName": "Natural person",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14269,
+            "idEntity": 2747569,
+            "frameName": "Natural person",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14270,
+            "idEntity": 2747570,
+            "frameName": "Natural person",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14272,
+            "idEntity": 2747572,
+            "frameName": "Natural person",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14277,
+            "idEntity": 2747577,
+            "frameName": "Norm",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14273,
+            "idEntity": 2747573,
+            "frameName": "Norm",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14278,
+            "idEntity": 2747578,
+            "frameName": "Norm",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14274,
+            "idEntity": 2747574,
+            "frameName": "Norm",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14275,
+            "idEntity": 2747575,
+            "frameName": "Norm",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14276,
+            "idEntity": 2747576,
+            "frameName": "Norm",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14279,
+            "idEntity": 2747579,
+            "frameName": "Norm",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14285,
+            "idEntity": 2747585,
+            "frameName": "ObjectAggregate",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14290,
+            "idEntity": 2747590,
+            "frameName": "Organism",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14286,
+            "idEntity": 2747586,
+            "frameName": "Organism",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14287,
+            "idEntity": 2747587,
+            "frameName": "Organism",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14288,
+            "idEntity": 2747588,
+            "frameName": "Organism",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14289,
+            "idEntity": 2747589,
+            "frameName": "Organism",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14291,
+            "idEntity": 2747591,
+            "frameName": "Organism",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14297,
+            "idEntity": 2747597,
+            "frameName": "Organization",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14293,
+            "idEntity": 2747593,
+            "frameName": "Organization",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14298,
+            "idEntity": 2747598,
+            "frameName": "Organization",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14294,
+            "idEntity": 2747594,
+            "frameName": "Organization",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14295,
+            "idEntity": 2747595,
+            "frameName": "Organization",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14296,
+            "idEntity": 2747596,
+            "frameName": "Organization",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14299,
+            "idEntity": 2747599,
+            "frameName": "Organization",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14292,
+            "idEntity": 2747592,
+            "frameName": "Organization",
+            "feName": "Proxy_agency",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14301,
+            "idEntity": 2747601,
+            "frameName": "Parameter",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+        },
+        {
+            "idFrameElement": 14308,
+            "idEntity": 2747608,
+            "frameName": "Parameter",
+            "feName": "Definition",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+        },
+        {
+            "idFrameElement": 14309,
+            "idEntity": 2747609,
+            "frameName": "Parameter",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+        },
+        {
+            "idFrameElement": 14302,
+            "idEntity": 2747602,
+            "frameName": "Parameter",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+        },
+        {
+            "idFrameElement": 14310,
+            "idEntity": 2747610,
+            "frameName": "Parameter",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+        },
+        {
+            "idFrameElement": 14311,
+            "idEntity": 2747611,
+            "frameName": "parthood",
+            "feName": "Part_inclusion",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14313,
+            "idEntity": 2747613,
+            "frameName": "parthood",
+            "feName": "Setting",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14312,
+            "idEntity": 2747612,
+            "frameName": "parthood",
+            "feName": "Whole_inclusion",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14318,
+            "idEntity": 2747618,
+            "frameName": "Pattern",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14314,
+            "idEntity": 2747614,
+            "frameName": "Pattern",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14319,
+            "idEntity": 2747619,
+            "frameName": "Pattern",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14315,
+            "idEntity": 2747615,
+            "frameName": "Pattern",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14316,
+            "idEntity": 2747616,
+            "frameName": "Pattern",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14317,
+            "idEntity": 2747617,
+            "frameName": "Pattern",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14320,
+            "idEntity": 2747620,
+            "frameName": "Pattern",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14324,
+            "idEntity": 2747624,
+            "frameName": "Person",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14321,
+            "idEntity": 2747621,
+            "frameName": "Person",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14322,
+            "idEntity": 2747622,
+            "frameName": "Person",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14323,
+            "idEntity": 2747623,
+            "frameName": "Person",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14325,
+            "idEntity": 2747625,
+            "frameName": "Person",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14331,
+            "idEntity": 2747631,
+            "frameName": "Personification",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14327,
+            "idEntity": 2747627,
+            "frameName": "Personification",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14332,
+            "idEntity": 2747632,
+            "frameName": "Personification",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14328,
+            "idEntity": 2747628,
+            "frameName": "Personification",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14329,
+            "idEntity": 2747629,
+            "frameName": "Personification",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14330,
+            "idEntity": 2747630,
+            "frameName": "Personification",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14333,
+            "idEntity": 2747633,
+            "frameName": "Personification",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14326,
+            "idEntity": 2747626,
+            "frameName": "Personification",
+            "feName": "Proxy_agency",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14338,
+            "idEntity": 2747638,
+            "frameName": "Physical agent",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14334,
+            "idEntity": 2747634,
+            "frameName": "Physical agent",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14335,
+            "idEntity": 2747635,
+            "frameName": "Physical agent",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14336,
+            "idEntity": 2747636,
+            "frameName": "Physical agent",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14337,
+            "idEntity": 2747637,
+            "frameName": "Physical agent",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14339,
+            "idEntity": 2747639,
+            "frameName": "Physical agent",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14344,
+            "idEntity": 2747644,
+            "frameName": "Physical artifact",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14340,
+            "idEntity": 2747640,
+            "frameName": "Physical artifact",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14345,
+            "idEntity": 2747645,
+            "frameName": "Physical artifact",
+            "feName": "Description",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14341,
+            "idEntity": 2747641,
+            "frameName": "Physical artifact",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14342,
+            "idEntity": 2747642,
+            "frameName": "Physical artifact",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14343,
+            "idEntity": 2747643,
+            "frameName": "Physical artifact",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14346,
+            "idEntity": 2747646,
+            "frameName": "Physical artifact",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14347,
+            "idEntity": 2747647,
+            "frameName": "Physical attribute",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14350,
+            "idEntity": 2747650,
+            "frameName": "Physical attribute",
+            "feName": "Overlap",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14348,
+            "idEntity": 2747648,
+            "frameName": "Physical attribute",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14349,
+            "idEntity": 2747649,
+            "frameName": "Physical attribute",
+            "feName": "Region",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14351,
+            "idEntity": 2747651,
+            "frameName": "Physical attribute",
+            "feName": "Sequence",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14356,
+            "idEntity": 2747656,
+            "frameName": "Physical body",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14352,
+            "idEntity": 2747652,
+            "frameName": "Physical body",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14353,
+            "idEntity": 2747653,
+            "frameName": "Physical body",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14354,
+            "idEntity": 2747654,
+            "frameName": "Physical body",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14355,
+            "idEntity": 2747655,
+            "frameName": "Physical body",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14357,
+            "idEntity": 2747657,
+            "frameName": "Physical body",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14362,
+            "idEntity": 2747662,
+            "frameName": "Physical object",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14358,
+            "idEntity": 2747658,
+            "frameName": "Physical object",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14359,
+            "idEntity": 2747659,
+            "frameName": "Physical object",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14360,
+            "idEntity": 2747660,
+            "frameName": "Physical object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14361,
+            "idEntity": 2747661,
+            "frameName": "Physical object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14363,
+            "idEntity": 2747663,
+            "frameName": "Physical object",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14368,
+            "idEntity": 2747668,
+            "frameName": "Physical place",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14364,
+            "idEntity": 2747664,
+            "frameName": "Physical place",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14365,
+            "idEntity": 2747665,
+            "frameName": "Physical place",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14366,
+            "idEntity": 2747666,
+            "frameName": "Physical place",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14367,
+            "idEntity": 2747667,
+            "frameName": "Physical place",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14369,
+            "idEntity": 2747669,
+            "frameName": "Physical place",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14374,
+            "idEntity": 2747674,
+            "frameName": "Place",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "isLocationOf"
+        },
+        {
+            "idFrameElement": 14370,
+            "idEntity": 2747670,
+            "frameName": "Place",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "isLocationOf"
+        },
+        {
+            "idFrameElement": 14375,
+            "idEntity": 2747675,
+            "frameName": "Place",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "isLocationOf"
+        },
+        {
+            "idFrameElement": 14372,
+            "idEntity": 2747672,
+            "frameName": "Place",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "isLocationOf"
+        },
+        {
+            "idFrameElement": 14373,
+            "idEntity": 2747673,
+            "frameName": "Place",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "isLocationOf"
+        },
+        {
+            "idFrameElement": 14377,
+            "idEntity": 2747677,
+            "frameName": "Place",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "isLocationOf"
+        },
+        {
+            "idFrameElement": 14383,
+            "idEntity": 2747683,
+            "frameName": "Plan",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14379,
+            "idEntity": 2747679,
+            "frameName": "Plan",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14384,
+            "idEntity": 2747684,
+            "frameName": "Plan",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14380,
+            "idEntity": 2747680,
+            "frameName": "Plan",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14381,
+            "idEntity": 2747681,
+            "frameName": "Plan",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14382,
+            "idEntity": 2747682,
+            "frameName": "Plan",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14385,
+            "idEntity": 2747685,
+            "frameName": "Plan",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14386,
+            "idEntity": 2747686,
+            "frameName": "Plan execution",
+            "feName": "Satisfaction",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14387,
+            "idEntity": 2747687,
+            "frameName": "Plan execution",
+            "feName": "Satisfaction",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14388,
+            "idEntity": 2747688,
+            "frameName": "Process",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14389,
+            "idEntity": 2747689,
+            "frameName": "Process",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14390,
+            "idEntity": 2747690,
+            "frameName": "Process",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14391,
+            "idEntity": 2747691,
+            "frameName": "Process",
+            "feName": "Temporal_interval",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14399,
+            "idEntity": 2747699,
+            "frameName": "Project",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14394,
+            "idEntity": 2747694,
+            "frameName": "Project",
+            "feName": "Composition",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14395,
+            "idEntity": 2747695,
+            "frameName": "Project",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14400,
+            "idEntity": 2747700,
+            "frameName": "Project",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14396,
+            "idEntity": 2747696,
+            "frameName": "Project",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14397,
+            "idEntity": 2747697,
+            "frameName": "Project",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14398,
+            "idEntity": 2747698,
+            "frameName": "Project",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14401,
+            "idEntity": 2747701,
+            "frameName": "Project",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14405,
+            "idEntity": 2747705,
+            "frameName": "Quality",
+            "feName": "Quale",
+            "reason": "No matching property found",
+            "availableProperties": "hasRegion, isQualityOf, hasConstituent, hasPart"
+        },
+        {
+            "idFrameElement": 14414,
+            "idEntity": 2747714,
+            "frameName": "Relation",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14410,
+            "idEntity": 2747710,
+            "frameName": "Relation",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14415,
+            "idEntity": 2747715,
+            "frameName": "Relation",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14411,
+            "idEntity": 2747711,
+            "frameName": "Relation",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14412,
+            "idEntity": 2747712,
+            "frameName": "Relation",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14413,
+            "idEntity": 2747713,
+            "frameName": "Relation",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14416,
+            "idEntity": 2747716,
+            "frameName": "Relation",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14423,
+            "idEntity": 2747723,
+            "frameName": "Right",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14419,
+            "idEntity": 2747719,
+            "frameName": "Right",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14424,
+            "idEntity": 2747724,
+            "frameName": "Right",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14420,
+            "idEntity": 2747720,
+            "frameName": "Right",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14421,
+            "idEntity": 2747721,
+            "frameName": "Right",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14422,
+            "idEntity": 2747722,
+            "frameName": "Right",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14425,
+            "idEntity": 2747725,
+            "frameName": "Right",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14427,
+            "idEntity": 2747727,
+            "frameName": "Role",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+        },
+        {
+            "idFrameElement": 14434,
+            "idEntity": 2747734,
+            "frameName": "Role",
+            "feName": "Definition",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+        },
+        {
+            "idFrameElement": 14435,
+            "idEntity": 2747735,
+            "frameName": "Role",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+        },
+        {
+            "idFrameElement": 14428,
+            "idEntity": 2747728,
+            "frameName": "Role",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+        },
+        {
+            "idFrameElement": 14436,
+            "idEntity": 2747736,
+            "frameName": "Role",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+        },
+        {
+            "idFrameElement": 14443,
+            "idEntity": 2747743,
+            "frameName": "Social agent",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14439,
+            "idEntity": 2747739,
+            "frameName": "Social agent",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14444,
+            "idEntity": 2747744,
+            "frameName": "Social agent",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14440,
+            "idEntity": 2747740,
+            "frameName": "Social agent",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14441,
+            "idEntity": 2747741,
+            "frameName": "Social agent",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14442,
+            "idEntity": 2747742,
+            "frameName": "Social agent",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14445,
+            "idEntity": 2747745,
+            "frameName": "Social agent",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14438,
+            "idEntity": 2747738,
+            "frameName": "Social agent",
+            "feName": "Proxy_agency",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14453,
+            "idEntity": 2747753,
+            "frameName": "Social attribute",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14456,
+            "idEntity": 2747756,
+            "frameName": "Social attribute",
+            "feName": "Overlap",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14454,
+            "idEntity": 2747754,
+            "frameName": "Social attribute",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14455,
+            "idEntity": 2747755,
+            "frameName": "Social attribute",
+            "feName": "Region",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14457,
+            "idEntity": 2747757,
+            "frameName": "Social attribute",
+            "feName": "Sequence",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14450,
+            "idEntity": 2747750,
+            "frameName": "Social object",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14446,
+            "idEntity": 2747746,
+            "frameName": "Social object",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14451,
+            "idEntity": 2747751,
+            "frameName": "Social object",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14447,
+            "idEntity": 2747747,
+            "frameName": "Social object",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14448,
+            "idEntity": 2747748,
+            "frameName": "Social object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14449,
+            "idEntity": 2747749,
+            "frameName": "Social object",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14452,
+            "idEntity": 2747752,
+            "frameName": "Social object",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14463,
+            "idEntity": 2747763,
+            "frameName": "Social person",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14459,
+            "idEntity": 2747759,
+            "frameName": "Social person",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14464,
+            "idEntity": 2747764,
+            "frameName": "Social person",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14460,
+            "idEntity": 2747760,
+            "frameName": "Social person",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14461,
+            "idEntity": 2747761,
+            "frameName": "Social person",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14462,
+            "idEntity": 2747762,
+            "frameName": "Social person",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14465,
+            "idEntity": 2747765,
+            "frameName": "Social person",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14458,
+            "idEntity": 2747758,
+            "frameName": "Social person",
+            "feName": "Proxy_agency",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14470,
+            "idEntity": 2747770,
+            "frameName": "Social relation",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14466,
+            "idEntity": 2747766,
+            "frameName": "Social relation",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14471,
+            "idEntity": 2747771,
+            "frameName": "Social relation",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14467,
+            "idEntity": 2747767,
+            "frameName": "Social relation",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14468,
+            "idEntity": 2747768,
+            "frameName": "Social relation",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14469,
+            "idEntity": 2747769,
+            "frameName": "Social relation",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14472,
+            "idEntity": 2747772,
+            "frameName": "Social relation",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14473,
+            "idEntity": 2747773,
+            "frameName": "Space region",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14475,
+            "idEntity": 2747775,
+            "frameName": "Space region",
+            "feName": "Overlap",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14474,
+            "idEntity": 2747774,
+            "frameName": "Space region",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14476,
+            "idEntity": 2747776,
+            "frameName": "Space region",
+            "feName": "Sequence",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14481,
+            "idEntity": 2747781,
+            "frameName": "SpatioTemporalRegion",
+            "feName": "Overlap",
+            "reason": "No matching property found",
+            "availableProperties": "hasConstituent, hasConstituent"
+        },
+        {
+            "idFrameElement": 14480,
+            "idEntity": 2747780,
+            "frameName": "SpatioTemporalRegion",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasConstituent, hasConstituent"
+        },
+        {
+            "idFrameElement": 14482,
+            "idEntity": 2747782,
+            "frameName": "SpatioTemporalRegion",
+            "feName": "Sequence",
+            "reason": "No matching property found",
+            "availableProperties": "hasConstituent, hasConstituent"
+        },
+        {
+            "idFrameElement": 14487,
+            "idEntity": 2747787,
+            "frameName": "Substance",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14483,
+            "idEntity": 2747783,
+            "frameName": "Substance",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14484,
+            "idEntity": 2747784,
+            "frameName": "Substance",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14485,
+            "idEntity": 2747785,
+            "frameName": "Substance",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14486,
+            "idEntity": 2747786,
+            "frameName": "Substance",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14488,
+            "idEntity": 2747788,
+            "frameName": "Substance",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": ""
+        },
+        {
+            "idFrameElement": 14489,
+            "idEntity": 2747789,
+            "frameName": "Task",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+        },
+        {
+            "idFrameElement": 14496,
+            "idEntity": 2747796,
+            "frameName": "Task",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+        },
+        {
+            "idFrameElement": 14490,
+            "idEntity": 2747790,
+            "frameName": "Task",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+        },
+        {
+            "idFrameElement": 14497,
+            "idEntity": 2747797,
+            "frameName": "Task",
+            "feName": "Definition",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+        },
+        {
+            "idFrameElement": 14499,
+            "idEntity": 2747799,
+            "frameName": "Task",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+        },
+        {
+            "idFrameElement": 14491,
+            "idEntity": 2747791,
+            "frameName": "Task",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+        },
+        {
+            "idFrameElement": 14500,
+            "idEntity": 2747800,
+            "frameName": "Task",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+        },
+        {
+            "idFrameElement": 14501,
+            "idEntity": 2747801,
+            "frameName": "Task",
+            "feName": "Task_definition",
+            "reason": "No matching property found",
+            "availableProperties": "hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+        },
+        {
+            "idFrameElement": 14508,
+            "idEntity": 2747808,
+            "frameName": "Theory",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14504,
+            "idEntity": 2747804,
+            "frameName": "Theory",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14509,
+            "idEntity": 2747809,
+            "frameName": "Theory",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14505,
+            "idEntity": 2747805,
+            "frameName": "Theory",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14506,
+            "idEntity": 2747806,
+            "frameName": "Theory",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14507,
+            "idEntity": 2747807,
+            "frameName": "Theory",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14510,
+            "idEntity": 2747810,
+            "frameName": "Theory",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "hasComponent"
+        },
+        {
+            "idFrameElement": 14512,
+            "idEntity": 2747812,
+            "frameName": "Time interval",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14514,
+            "idEntity": 2747814,
+            "frameName": "Time interval",
+            "feName": "Overlap",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14513,
+            "idEntity": 2747813,
+            "frameName": "Time interval",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14515,
+            "idEntity": 2747815,
+            "frameName": "Time interval",
+            "feName": "Sequence",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14511,
+            "idEntity": 2747811,
+            "frameName": "Time-indexed relation",
+            "feName": "Setting",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14516,
+            "idEntity": 2747816,
+            "frameName": "Transition",
+            "feName": "Event_inclusion",
+            "reason": "No matching property found",
+            "availableProperties": "includesEvent, includesObject, isSettingFor, isSettingFor, includesTime, isSettingFor"
+        },
+        {
+            "idFrameElement": 14517,
+            "idEntity": 2747817,
+            "frameName": "Transition",
+            "feName": "Object_inclusion",
+            "reason": "No matching property found",
+            "availableProperties": "includesEvent, includesObject, isSettingFor, isSettingFor, includesTime, isSettingFor"
+        },
+        {
+            "idFrameElement": 14520,
+            "idEntity": 2747820,
+            "frameName": "Transition",
+            "feName": "Satisfaction",
+            "reason": "No matching property found",
+            "availableProperties": "includesEvent, includesObject, isSettingFor, isSettingFor, includesTime, isSettingFor"
+        },
+        {
+            "idFrameElement": 14526,
+            "idEntity": 2747826,
+            "frameName": "Type collection",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14521,
+            "idEntity": 2747821,
+            "frameName": "Type collection",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14527,
+            "idEntity": 2747827,
+            "frameName": "Type collection",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14522,
+            "idEntity": 2747822,
+            "frameName": "Type collection",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14523,
+            "idEntity": 2747823,
+            "frameName": "Type collection",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14524,
+            "idEntity": 2747824,
+            "frameName": "Type collection",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14525,
+            "idEntity": 2747825,
+            "frameName": "Type collection",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14528,
+            "idEntity": 2747828,
+            "frameName": "Type collection",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14529,
+            "idEntity": 2747829,
+            "frameName": "Unit of measure",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14536,
+            "idEntity": 2747836,
+            "frameName": "Unit of measure",
+            "feName": "Classification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14530,
+            "idEntity": 2747830,
+            "frameName": "Unit of measure",
+            "feName": "Constitution",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14537,
+            "idEntity": 2747837,
+            "frameName": "Unit of measure",
+            "feName": "Definition",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14538,
+            "idEntity": 2747838,
+            "frameName": "Unit of measure",
+            "feName": "Expression",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14531,
+            "idEntity": 2747831,
+            "frameName": "Unit of measure",
+            "feName": "Location",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14540,
+            "idEntity": 2747840,
+            "frameName": "Unit of measure",
+            "feName": "Parametric_specification",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14532,
+            "idEntity": 2747832,
+            "frameName": "Unit of measure",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14533,
+            "idEntity": 2747833,
+            "frameName": "Unit of measure",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14534,
+            "idEntity": 2747834,
+            "frameName": "Unit of measure",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14535,
+            "idEntity": 2747835,
+            "frameName": "Unit of measure",
+            "feName": "Parthood",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14539,
+            "idEntity": 2747839,
+            "frameName": "Unit of measure",
+            "feName": "Participation",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14548,
+            "idEntity": 2747848,
+            "frameName": "Workflow",
+            "feName": "Classification",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14543,
+            "idEntity": 2747843,
+            "frameName": "Workflow",
+            "feName": "Composition",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14544,
+            "idEntity": 2747844,
+            "frameName": "Workflow",
+            "feName": "Constitution",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14549,
+            "idEntity": 2747849,
+            "frameName": "Workflow",
+            "feName": "Expression",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14545,
+            "idEntity": 2747845,
+            "frameName": "Workflow",
+            "feName": "Location",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14546,
+            "idEntity": 2747846,
+            "frameName": "Workflow",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14547,
+            "idEntity": 2747847,
+            "frameName": "Workflow",
+            "feName": "Parthood",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14550,
+            "idEntity": 2747850,
+            "frameName": "Workflow",
+            "feName": "Participation",
+            "reason": "No matching property found",
+            "availableProperties": "definesRole, definesTask"
+        },
+        {
+            "idFrameElement": 14551,
+            "idEntity": 2747851,
+            "frameName": "Workflow execution",
+            "feName": "Satisfaction",
+            "reason": "Class not found in ontology"
+        },
+        {
+            "idFrameElement": 14552,
+            "idEntity": 2747852,
+            "frameName": "Workflow execution",
+            "feName": "Satisfaction",
+            "reason": "Class not found in ontology"
+        }
+    ]
+}

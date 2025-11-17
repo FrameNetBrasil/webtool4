@@ -61,3 +61,27 @@ They can specifically express aspects such as:
 - **Manner**: The way in which an action or relation occurs.
 - **Means**: The method or instrument through which a relation is established.
 - Other circumstantial or participant-oriented dimensions.
+
+```mermaid
+graph TB
+    FEx["FEx<br/>(Correspondente<br/>a property)"]
+    ClasseA["Classe A"]
+    microframe["microframe"]
+    domain["domain"]
+    range["range"]
+    ClasseB["Classe B"]
+    target["target"]
+    
+    FEx --> ClasseA
+    ClasseA --> domain
+    ClasseA --> microframe
+    domain --> range
+    microframe --> range
+    range --> ClasseB
+    ClasseB --> target
+    
+    style FEx fill:#f9f,stroke:#333,stroke-width:2px
+    style ClasseA fill:#bbf,stroke:#333,stroke-width:2px
+    style ClasseB fill:#bbf,stroke:#333,stroke-width:2px
+    style range fill:#ffa,stroke:#333,stroke-width:2px
+```
