@@ -21,7 +21,7 @@ class ReportService
             $idLanguage = AppService::getCurrentIdLanguage();
         }
         if (is_numeric($idFrame)) {
-            $frame = Frame::byId($idFrame);
+            $frame = Criteria::byFilterLanguage("view_microframe", ['idFrame', '=', $idFrame])->first();
         } else {
             $frame = Criteria::table('view_frame')
                 ->where('name', $idFrame)
@@ -30,12 +30,12 @@ class ReportService
         }
         $report['frame'] = $frame;
         $report['fe'] = self::getFEData($frame, $idLanguage);
-        $report['fecoreset'] = self::getFECoreSet($frame);
+//        $report['fecoreset'] = self::getFECoreSet($frame);
         $report['frame']->description = self::decorate($frame->description, $report['fe']['styles']);
-        $report['relations'] = self::getRelations($frame);
-        $report['classification'] = Frame::getClassificationLabels($idFrame);
-        $report['lus'] = self::getLUs($frame, $idLanguage);
-        $report['vus'] = self::getVUs($frame, $idLanguage);
+//        $report['relations'] = self::getRelations($frame);
+//        $report['classification'] = Frame::getClassificationLabels($idFrame);
+//        $report['lus'] = self::getLUs($frame, $idLanguage);
+//        $report['vus'] = self::getVUs($frame, $idLanguage);
 
         return $report;
     }
@@ -46,27 +46,24 @@ class ReportService
             ->where('idLanguage', '=', $idLanguage)
             ->where('idFrame', '=', $frame->idFrame)
             ->all();
-        $core = [];
-        $coreun = [];
-        $coreper = [];
-        $coreext = [];
-        $noncore = [];
+        $domain = [];
+        $range = [];
         $feByEntry = [];
         foreach ($fes as $fe) {
             $feByEntry[$fe->entry] = $fe;
         }
         // $config = config('webtool.relations');
-        $relations = RelationService::listRelationsFEInternal($frame->idFrame);
-        $relationsByIdFE = [];
-        foreach ($relations as $relation) {
-            $relationsByIdFE[$relation->feIdFrameElement][] = [
-                'relatedFEName' => $relation->relatedFEName,
-                'relatedFEIdColor' => $relation->relatedFEIdColor,
-                'name' => $relation->name,
-                'color' => $relation->color,
-            ];
-        }
-        $semanticTypes = RelationService::listFEST($frame->idFrame);
+//        $relations = RelationService::listRelationsFEInternal($frame->idFrame);
+//        $relationsByIdFE = [];
+//        foreach ($relations as $relation) {
+//            $relationsByIdFE[$relation->feIdFrameElement][] = [
+//                'relatedFEName' => $relation->relatedFEName,
+//                'relatedFEIdColor' => $relation->relatedFEIdColor,
+//                'name' => $relation->name,
+//                'color' => $relation->color,
+//            ];
+//        }
+//        $semanticTypes = RelationService::listFEST($frame->idFrame);
         $styles = [];
         foreach ($fes as $fe) {
             $styles[strtolower($fe->name)] = "color_{$fe->idColor}";
@@ -75,29 +72,22 @@ class ReportService
             $fe->relations = $relationsByIdFE[$fe->idFrameElement] ?? [];
             $fe->lower = strtolower($fe->name);
             $fe->description = self::decorate($fe->description, $styles);
-            if ($fe->coreType == 'cty_core') {
-                $core[] = $fe;
-            } elseif ($fe->coreType == 'cty_core-unexpressed') {
-                $coreun[] = $fe;
-            } else {
-                if ($fe->coreType == 'cty_peripheral') {
-                    $coreper[] = $fe;
-                }
-                if ($fe->coreType == 'cty_extra-thematic') {
-                    $coreext[] = $fe;
-                }
-                $noncore[] = $fe;
+            if ($fe->coreType == 'cty_domain') {
+                $domain[] = $fe;
+            } elseif ($fe->coreType == 'cty_range') {
+                $range[] = $fe;
             }
         }
 
         return [
             'styles' => $styles,
-            'core' => $core,
-            'core_unexpressed' => $coreun,
-            'peripheral' => $coreper,
-            'extra_thematic' => $coreext,
-            'noncore' => $noncore,
-            'semanticTypes' => $semanticTypes,
+            'domain' => $domain,
+            'range' => $range,
+//            'core_unexpressed' => $coreun,
+//            'peripheral' => $coreper,
+//            'extra_thematic' => $coreext,
+//            'noncore' => $noncore,
+//            'semanticTypes' => $semanticTypes,
         ];
     }
 

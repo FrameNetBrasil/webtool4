@@ -13,18 +13,6 @@
             <div class="fe-section core-section">
                 <div class="ui card fluid data-card section-card">
                     <div class="content">
-                        <div class="data-card-header">
-                            <div class="data-card-title">
-                                <h3 class="ui header" id="core">
-                                    <a href="#core">Core Frame Elements</a>
-                                </h3>
-                            </div>
-                            <button class="ui icon basic button section-toggle"
-                                    onclick="toggleSection('core-fes')"
-                                    aria-expanded="true">
-                                <i class="chevron up icon"></i>
-                            </button>
-                        </div>
                         <div class="section-content" id="core-fes">
                             <div class="fe-cards-grid">
                                 @foreach($fe['core'] as $feObj)
