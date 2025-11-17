@@ -247,12 +247,13 @@ class UpdateDulEntriesCommand extends Command
     }
 
     /**
-     * Find class entity by nameEn
+     * Find class entity by defaultName in frame table
      */
-    private function findClassEntity(string $nameEn): ?object
+    private function findClassEntity(string $name): ?object
     {
-        $result = Criteria::table('class')
-            ->where('nameEn', '=', $nameEn)
+        $result = Criteria::table('frame')
+            ->where('defaultName', '=', $name)
+            ->where('idNamespace', '=', 13) // Class namespace
             ->select('idEntity')
             ->first();
 

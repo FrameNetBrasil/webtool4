@@ -288,12 +288,13 @@ class UpdateDulPropertiesEntriesCommand extends Command
     }
 
     /**
-     * Find microframe entity by name (snake_case)
+     * Find microframe entity by defaultName in frame table
      */
     private function findMicroframeEntity(string $name): ?object
     {
-        $result = Criteria::table('microframe')
-            ->where('name', '=', $name)
+        $result = Criteria::table('frame')
+            ->where('defaultName', '=', $name)
+            ->where('idNamespace', '=', 14) // Microframe namespace
             ->select('idEntity')
             ->first();
 

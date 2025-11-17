@@ -25,7 +25,6 @@ class BrowseService
             })
             ->orderBy('name')->all();
         foreach ($frames as $frame) {
-            $frame->namespace = Frame::getNamespace($frame->idFrame);
             $result[$frame->idFrame] = [
                 'id' => $frame->idFrame,
                 'type' => 'frame',

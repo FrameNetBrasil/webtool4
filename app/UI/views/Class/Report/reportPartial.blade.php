@@ -4,9 +4,10 @@
             <div class="page-header-main">
                 <div class="page-title-section">
                     <div class="page-title">
-                        <x-ui::element.semantictype name="{{$class->name}}"></x-ui::element.semantictype>
+                        <x-ui::element.frame name="{{$frame->name}}"></x-ui::element.frame>
                     </div>
-                    <div class="page-subtitle">{!! str_replace('ex>','code>',nl2br($class->description)) !!}</div>
+                    <div
+                        class="page-subtitle">{!! str_replace('ex>','code>',nl2br($frame->description)) !!}</div>
                 </div>
                 @if($isHtmx)
                     <div class="page-actions">
@@ -23,9 +24,9 @@
         </div>
     </div>
     <div class="page-content">
-        {{-- Class Overview Section --}}
-        <div class="class-metadata-section mb-8">
-            @include('Class.Report.partials.class-overview')
+        {{-- Frame Metadata Section --}}
+        <div class="frame-metadata-section">
+            @include('Class.Report.partials.frame-metadata')
         </div>
 
         {{-- Stats Section --}}
@@ -33,29 +34,27 @@
             @include('Class.Report.partials.stats-card')
         </div>
 
-        {{-- Frame Elements Using This Class Section --}}
+        {{-- Frame Elements Section --}}
         <div class="frame-elements-section mb-8">
             @include('Class.Report.partials.frame-elements-cards')
         </div>
 
-        {{-- Relations Section (if any exist) --}}
-        @if(!empty($relations))
-            <div class="relations-section mb-8">
-                <div class="section-header">
-                    <h2 class="ui header section-title" id="relations">
-                        <a href="#relations">Relations</a>
-                    </h2>
-                    <button class="ui button basic icon section-toggle"
-                            onclick="toggleSection('relations-content')"
-                            aria-expanded="true">
-                        <i class="chevron up icon"></i>
-                    </button>
-                </div>
-                <div class="section-content" id="relations-content">
-                    @include('Class.Report.partials.relations-card')
-                </div>
-            </div>
-        @endif
+        {{-- Frame Relations Section --}}
+{{--        <div class="frame-relations-section mb-8">--}}
+{{--            <div class="section-header">--}}
+{{--                <h2 class="ui header section-title" id="frame-relations">--}}
+{{--                    <a href="#frame-relations">Frame-Frame Relations</a>--}}
+{{--                </h2>--}}
+{{--                <button class="ui button basic icon section-toggle"--}}
+{{--                        onclick="toggleSection('relations-content')"--}}
+{{--                        aria-expanded="true">--}}
+{{--                    <i class="chevron up icon"></i>--}}
+{{--                </button>--}}
+{{--            </div>--}}
+{{--            <div class="section-content" id="relations-content">--}}
+{{--                @include('Class.Report.partials.relations-card')--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
     </div>
 </div>

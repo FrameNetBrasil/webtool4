@@ -37,15 +37,15 @@
                                     class="ui selectable striped compact table"
                                 >
                                     <tbody>
-                                    @foreach($data as $class)
+                                    @foreach($data as $frame)
                                         <tr>
                                             <td>
                                                 <div
-                                                    hx-get="/report/class/{{$class['id']}}"
+                                                    hx-get="/report/class/{{$frame['id']}}"
                                                     hx-target=".report"
                                                     hx-on::before-request="$.tab('change tab','report')"
                                                 >
-                                                    {!! $class['text'] !!}
+                                                    {!! $frame['text'] !!}
                                                 </div>
                                             </td>
                                         </tr>

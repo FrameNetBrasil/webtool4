@@ -33,10 +33,10 @@ class ReportController extends Controller
         ])->fragment('search');
     }
 
-    #[Get(path: '/report/class/{idClass}/{lang?}')]
-    public function report(int|string $idClass = '', string $lang = '')
+    #[Get(path: '/report/class/{idFrame}/{lang?}')]
+    public function report(int|string $idFrame = '', string $lang = '')
     {
-        $data = ReportService::report($idClass, $lang);
+        $data = ReportService::report($idFrame, $lang);
         $data['isHtmx'] = $this->isHtmx();
 
         if ($data['isHtmx']) {

@@ -2,7 +2,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/report','Report'],['/report/class','Class'],['',$class->name]]"
+            :sections="[['/','Home'],['/report','Report'],['/report/class','Class'],['',$frame->name]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content">

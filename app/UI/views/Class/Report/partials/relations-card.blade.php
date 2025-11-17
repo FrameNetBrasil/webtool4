@@ -1,5 +1,5 @@
 {{--
-    Class Relations Card - Display entity relations for this class
+    Frame Relations Card - Organized display of frame-to-frame relations
     Parameters:
     - $relations: Relations array grouped by type
 --}}
@@ -11,21 +11,22 @@
                     @foreach($relations as $nameEntry => $relations1)
                         @php([$entry, $name] = explode('|', $nameEntry))
                         @php($relId = str_replace(' ', '_', $name))
-                        <div class="relation-type-section">
+                        <div class="relation-type-section"
+                             title="<span class='color_{{ $entry }}'>{{ $name }}</span>">
                             <div class="relation-type-header">
                                 <h4 class="ui header small">{{ $name }}</h4>
                             </div>
-                            <div class="relation-entities">
+                            <div class="relation-frames">
                                 <div class="flex flex-wrap gap-1">
-                                    @foreach($relations1 as $idEntity => $relation)
-                                        <div class="ui label basic">
-                                            {{ $relation['name'] }}
-                                            @if($relation['direction'] === 'outgoing')
-                                                <i class="arrow right icon"></i>
-                                            @else
-                                                <i class="arrow left icon"></i>
-                                            @endif
-                                        </div>
+                                    @foreach($relations1 as $idFrame => $relation)
+                                        <button
+                                            id="btnRelation_{{ $relId }}_{{ $idFrame }}"
+                                            class="ui button basic relation-frame-btn"
+                                        >
+                                            <a href="/report/class/{{ $idFrame }}">
+                                                <x-ui::element.frame name="{{ $relation['name'] }}"></x-ui::element.frame>
+                                            </a>
+                                        </button>
                                     @endforeach
                                 </div>
                             </div>
@@ -39,7 +40,7 @@
                 <div class="empty-state">
                     <div class="ui message info">
                         <div class="header">No Relations</div>
-                        <p>This class does not have any documented entity relations.</p>
+                        <p>This frame does not have any documented frame-to-frame relations.</p>
                     </div>
                 </div>
             @endif

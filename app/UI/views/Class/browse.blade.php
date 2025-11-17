@@ -6,18 +6,17 @@
         ></x-layout::breadcrumb>
         <main class="app-main">
             <x-ui::browse-table
-                title="Class Structure"
+                title="Frame Structure"
                 url="/class/search"
-                emptyMsg="Enter your search term above to find classes."
+                emptyMsg="Enter your search term above to find frames."
                 :data="$data"
-            >
-{{--                <x-slot:actions>--}}
-{{--                    <a href="/class/new"--}}
-{{--                       rel="noopener noreferrer"--}}
-{{--                       class="ui button secondary">--}}
-{{--                        New Frame--}}
-{{--                    </a>--}}
-{{--                </x-slot:actions>--}}
+            >   <x-slot:actions>
+                    <a href="/class/new"
+                       rel="noopener noreferrer"
+                       class="ui button secondary">
+                        New Frame
+                    </a>
+                </x-slot:actions>
 
                 <x-slot:fields>
                     <div class="field">
@@ -25,8 +24,8 @@
                             <i class="search icon"></i>
                             <input
                                 type="search"
-                                name="class"
-                                placeholder="Search Class"
+                                name="frame"
+                                placeholder="Search Frame"
                                 autocomplete="off"
                             >
                         </div>
@@ -39,14 +38,14 @@
                         class="ui selectable striped compact table"
                     >
                         <tbody>
-                        @foreach($data as $class)
+                        @foreach($data as $frame)
                             <tr>
                                 <td>
                                     <a
-                                        href="/class/{{$class['id']}}"
+                                        href="/class/{{$frame['id']}}"
                                         hx-boost="true"
                                     >
-                                        {!! $class['text'] !!}
+                                        {!! $frame['text'] !!}
                                     </a>
                                 </td>
                             </tr>
