@@ -3,7 +3,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/structure','Structure'],['/class','Frame'],['',$frame?->name]]"
+            :sections="[['/','Home'],['/structure','Structure'],['/microframe','Frame'],['',$frame?->name]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="ui container page-edit">
@@ -20,7 +20,7 @@
                             @if(session('isAdmin'))
                                 <button
                                     class="ui right labeled icon button"
-                                    hx-get="/class/nextFrom/{{$frame->idFrame}}"
+                                    hx-get="/microframe/nextFrom/{{$frame->idFrame}}"
                                 >
                                     <i class="right arrow icon"></i>
                                     Next
@@ -29,7 +29,7 @@
                                     x-data
                                     type=button"
                                     class="ui danger button"
-                                    @click="messenger.confirmDelete(`Removing Frame '{{$frame?->name}}'.`, '/class/{{$frame->idFrame}}')"
+                                    @click="messenger.confirmDelete(`Removing Frame '{{$frame?->name}}'.`, '/microframe/{{$frame->idFrame}}')"
                                 >Delete</button>
                             @endif
                         </div>

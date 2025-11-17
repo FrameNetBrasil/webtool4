@@ -23,7 +23,7 @@
                                             id="btnRelation_{{ $relId }}_{{ $idFrame }}"
                                             class="ui button basic relation-frame-btn"
                                         >
-                                            <a href="/report/class/{{ $idFrame }}">
+                                            <a href="/report/microframe/{{ $idFrame }}">
                                                 <x-ui::element.frame name="{{ $relation['name'] }}"></x-ui::element.frame>
                                             </a>
                                         </button>

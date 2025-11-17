@@ -2,7 +2,9 @@
     $reports = [
         'reportframe' => ['Frame', '/report/frame', 'List of all frames and its structure.','ui::icon.frame'],
         'reportlu' => ['LU', '/report/lu', 'List of lexical and visual Lexical Units','ui::icon.lu'],
-        'namespaceframe' => ['Namespaces', '/namespace', 'List of all frames grouped by namespaces.','ui::icon.frame'],
+        'namespaceframe' => ['Frames by namespace', '/namespace', 'List of all frames grouped by namespaces.','ui::icon.frame'],
+        'classes' => ['Class', '/report/class', 'List of all ontological classes.','ui::icon.frame'],
+        'microframe' => ['Microframe', '/report/microframe', 'List of all microframes.','ui::icon.frame'],
 //        'cxnreport' => ['Constructions', '/report/cxn', 'List of all constructions and its structure.', 'ui::icon.construction' ],
 //        'reporttqr' => ['TQR', '/report/qualia', 'Structure of Ternary Qualia Relarion (TQR).', 'ui::icon.qualia'],
 //        'reportst' => ['SemanticType', '/report/semanticType', 'List of Semantic Types and its hierarchy.','ui::icon.semantictype'],

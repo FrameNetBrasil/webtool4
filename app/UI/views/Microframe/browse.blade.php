@@ -7,11 +7,11 @@
         <main class="app-main">
             <x-ui::browse-table
                 title="Frame Structure"
-                url="/class/search"
+                url="/microframe/search"
                 emptyMsg="Enter your search term above to find frames."
                 :data="$data"
             >   <x-slot:actions>
-                    <a href="/class/new"
+                    <a href="/microframe/new"
                        rel="noopener noreferrer"
                        class="ui button secondary">
                         New Frame
@@ -42,7 +42,7 @@
                             <tr>
                                 <td>
                                     <a
-                                        href="/class/{{$frame['id']}}"
+                                        href="/microframe/{{$frame['id']}}"
                                         hx-boost="true"
                                     >
                                         {!! $frame['text'] !!}

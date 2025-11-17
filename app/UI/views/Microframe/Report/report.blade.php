@@ -2,11 +2,11 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/report','Report'],['/report/class','Class'],['',$frame->name]]"
+            :sections="[['/','Home'],['/report','Report'],['/report/microframe','Frame'],['',$frame->name]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content">
-                @include("Class.Report.reportPartial")
+                @include("Frame.Report.reportPartial")
             </div>
         </main>
         <x-layout::footer></x-layout::footer>

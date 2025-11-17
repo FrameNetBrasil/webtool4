@@ -31,7 +31,7 @@
                                 <button
                                     type="submit"
                                     class="ui primary button"
-                                    hx-post="/class"
+                                    hx-post="/microframe"
                                 >
                                     Add Frame
                                 </button>

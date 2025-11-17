@@ -12,5 +12,5 @@
 <x-objectmenu
     id="frameMenu"
     :items="$items"
-    :path="'/class/' . $frame->idFrame"
+    :path="'/microframe/' . $frame->idFrame"
 ></x-objectmenu>

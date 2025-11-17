@@ -2,7 +2,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/report','Report'],['','Class']]"
+            :sections="[['/','Home'],['/report','Report'],['','Microframe']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="page-content slide">
@@ -12,9 +12,9 @@
                 >
                     <div class="ui tab h-full" data-tab="browse">
                         <x-ui::browse-table
-                            title="Class Report"
-                            url="/report/class/search"
-                            emptyMsg="Enter your search term above to find classes."
+                            title="Microframe Report"
+                            url="/report/microframe/search"
+                            emptyMsg="Enter your search term above to find microframes."
                             :data="$data"
                         >
                             <x-slot:fields>
@@ -23,8 +23,8 @@
                                         <i class="search icon"></i>
                                         <input
                                             type="search"
-                                            name="class"
-                                            placeholder="Search Class"
+                                            name="microframe"
+                                            placeholder="Search Microframe"
                                             autocomplete="off"
                                         >
                                     </div>
@@ -41,7 +41,7 @@
                                         <tr>
                                             <td>
                                                 <div
-                                                    hx-get="/report/class/{{$frame['id']}}"
+                                                    hx-get="/report/microframe/{{$frame['id']}}"
                                                     hx-target=".report"
                                                     hx-on::before-request="$.tab('change tab','report')"
                                                 >

@@ -1,4 +1,4 @@
-<div class="d-flex justify-left {!! $frame->namespace ? $frame->namespace->color : 'color_frame' !!}">
+<div class="d-flex justify-left color_{!! $frame->idColor !!}">
     <i class="icon material">dashboard</i>
     <div>{{$frame->name}}</div>
 </div>
