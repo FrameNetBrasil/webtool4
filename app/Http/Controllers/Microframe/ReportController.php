@@ -51,7 +51,7 @@ class ReportController extends Controller
         $data = ReportService::report($idFrame, $lang);
         $data['isHtmx'] = $this->isHtmx();
         if ($data['isHtmx']) {
-            return view('Frame.Report.reportPartial', $data);
+            return view('Microframe.Report.reportPartial', $data);
         }
 
         return view('Microframe.Report.report', $data);

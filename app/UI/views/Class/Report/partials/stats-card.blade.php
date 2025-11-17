@@ -17,30 +17,30 @@
                 <div class="stat-value">{{ count($fe['core'] ?? []) }}</div>
                 <div class="stat-label">Core FEs</div>
             </div>
-            @if(isset($fe['core_unexpressed']) && count($fe['core_unexpressed']) > 0)
-                <div class="stat-item">
-                    <div class="stat-value">{{ count($fe['core_unexpressed']) }}</div>
-                    <div class="stat-label">Core Unexpressed</div>
-                </div>
-            @endif
-            @if(isset($fe['peripheral']) && count($fe['peripheral']) > 0)
-                <div class="stat-item">
-                    <div class="stat-value">{{ count($fe['peripheral']) }}</div>
-                    <div class="stat-label">Peripheral FEs</div>
-                </div>
-            @endif
-            @if(isset($fe['extra_thematic']) && count($fe['extra_thematic']) > 0)
-                <div class="stat-item">
-                    <div class="stat-value">{{ count($fe['extra_thematic']) }}</div>
-                    <div class="stat-label">Extra-thematic</div>
-                </div>
-            @endif
+{{--            @if(isset($fe['core_unexpressed']) && count($fe['core_unexpressed']) > 0)--}}
+{{--                <div class="stat-item">--}}
+{{--                    <div class="stat-value">{{ count($fe['core_unexpressed']) }}</div>--}}
+{{--                    <div class="stat-label">Core Unexpressed</div>--}}
+{{--                </div>--}}
+{{--            @endif--}}
+{{--            @if(isset($fe['peripheral']) && count($fe['peripheral']) > 0)--}}
+{{--                <div class="stat-item">--}}
+{{--                    <div class="stat-value">{{ count($fe['peripheral']) }}</div>--}}
+{{--                    <div class="stat-label">Peripheral FEs</div>--}}
+{{--                </div>--}}
+{{--            @endif--}}
+{{--            @if(isset($fe['extra_thematic']) && count($fe['extra_thematic']) > 0)--}}
+{{--                <div class="stat-item">--}}
+{{--                    <div class="stat-value">{{ count($fe['extra_thematic']) }}</div>--}}
+{{--                    <div class="stat-label">Extra-thematic</div>--}}
+{{--                </div>--}}
+{{--            @endif--}}
+{{--            <div class="stat-item">--}}
+{{--                <div class="stat-value">{{ array_sum(array_map('count', $lus)) }}</div>--}}
+{{--                <div class="stat-label">Lexical Units</div>--}}
+{{--            </div>--}}
             <div class="stat-item">
-                <div class="stat-value">{{ array_sum(array_map('count', $lus)) }}</div>
-                <div class="stat-label">Lexical Units</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">{{ count($relations) }}</div>
+                <div class="stat-value">{{ count($relations ?? []) }}</div>
                 <div class="stat-label">Relation Types</div>
             </div>
         </div>

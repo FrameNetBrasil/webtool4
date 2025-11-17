@@ -16,7 +16,7 @@
                             @click="$.tab('change tab','browse')"
                         >
                             <i class="left arrow icon"></i>
-                            Back to Frames
+                            Back to Microframe
                         </button>
                     </div>
                 @endif
@@ -26,55 +26,52 @@
     <div class="page-content">
         {{-- Frame Metadata Section --}}
         <div class="frame-metadata-section">
-            @include('Frame.Report.partials.frame-metadata')
+            @include('Microframe.Report.partials.frame-metadata')
         </div>
 
         {{-- Stats Section --}}
-        <div class="stats-section mb-8">
-            @include('Frame.Report.partials.stats-card')
-        </div>
+{{--        <div class="stats-section mb-8">--}}
+{{--            @include('Microframe.Report.partials.stats-card')--}}
+{{--        </div>--}}
 
         {{-- Frame Elements Section --}}
         <div class="frame-elements-section mb-8">
-            @include('Frame.Report.partials.frame-elements-cards')
+            @include('Microframe.Report.partials.frame-elements-cards')
         </div>
 
         {{-- Frame Relations Section --}}
-        <div class="frame-relations-section mb-8">
-            <div class="section-header">
-                <h2 class="ui header section-title" id="frame-relations">
-                    <a href="#frame-relations">Frame-Frame Relations</a>
-                </h2>
-                <button class="ui button basic icon section-toggle"
-                        onclick="toggleSection('relations-content')"
-                        aria-expanded="true">
-                    <i class="chevron up icon"></i>
-                </button>
-            </div>
-            <div class="section-content" id="relations-content">
-                @include('Frame.Report.partials.relations-card')
-            </div>
-        </div>
+{{--        <div class="frame-relations-section mb-8">--}}
+{{--            <div class="section-header">--}}
+{{--                <h2 class="ui header section-title" id="frame-relations">--}}
+{{--                    <a href="#frame-relations">Frame-Frame Relations</a>--}}
+{{--                </h2>--}}
+{{--                <button class="ui button basic icon section-toggle"--}}
+{{--                        onclick="toggleSection('relations-content')"--}}
+{{--                        aria-expanded="true">--}}
+{{--                    <i class="chevron up icon"></i>--}}
+{{--                </button>--}}
+{{--            </div>--}}
+{{--            <div class="section-content" id="relations-content">--}}
+{{--                @include('Frame.Report.partials.relations-card')--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
         {{-- Lexical Units Section --}}
-        <div class="lexical-units-section mb-8">
-            <div class="section-header">
-                <h2 class="ui header section-title" id="lexical-units">
-                    <a href="#lexical-units">Lexical Units</a>
-                </h2>
-                <button class="ui button basic icon section-toggle"
-                        onclick="toggleSection('lexical-units-content')"
-                        aria-expanded="true">
-                    <i class="chevron up icon"></i>
-                </button>
-            </div>
-            <div class="section-content" id="lexical-units-content">
-                @include('Frame.Report.partials.lexical-units-card')
-            </div>
-        </div>
-
-        {{-- Visual Units Section --}}
-        @include('Frame.Report.partials.visual-units-section')
+{{--        <div class="lexical-units-section mb-8">--}}
+{{--            <div class="section-header">--}}
+{{--                <h2 class="ui header section-title" id="lexical-units">--}}
+{{--                    <a href="#lexical-units">Lexical Units</a>--}}
+{{--                </h2>--}}
+{{--                <button class="ui button basic icon section-toggle"--}}
+{{--                        onclick="toggleSection('lexical-units-content')"--}}
+{{--                        aria-expanded="true">--}}
+{{--                    <i class="chevron up icon"></i>--}}
+{{--                </button>--}}
+{{--            </div>--}}
+{{--            <div class="section-content" id="lexical-units-content">--}}
+{{--                @include('Frame.Report.partials.lexical-units-card')--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
     </div>
 </div>
