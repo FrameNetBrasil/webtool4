@@ -1,0 +1,417 @@
+idFrameElement,idEntity,frameName,feName,reason,availableProperties
+14072,2747372,Action,Constitution,"No matching property found","hasParticipant, executesTask, isActionIncludedIn"
+14073,2747373,Action,Parthood,"No matching property found","hasParticipant, executesTask, isActionIncludedIn"
+14076,2747376,Action,Temporal_interval,"No matching property found","hasParticipant, executesTask, isActionIncludedIn"
+14080,2747380,Agent,Classification,"No matching property found","actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+14077,2747377,Agent,Constitution,"No matching property found","actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+14078,2747378,Agent,Location,"No matching property found","actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+14079,2747379,Agent,Parthood,"No matching property found","actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+14081,2747381,Agent,Participation,"No matching property found","actsFor, conceptualizes, isAgentIncludedIn, isAgentInvolvedIn"
+14082,2747382,Amount,Constitution,"No matching property found",
+14084,2747384,Amount,Overlap,"No matching property found",
+14083,2747383,Amount,Parthood,"No matching property found",
+14085,2747385,Amount,Sequence,"No matching property found",
+14090,2747390,"Biological object",Classification,"Class not found in ontology",
+14086,2747386,"Biological object",Constitution,"Class not found in ontology",
+14087,2747387,"Biological object",Location,"Class not found in ontology",
+14088,2747388,"Biological object",Parthood,"Class not found in ontology",
+14089,2747389,"Biological object",Parthood,"Class not found in ontology",
+14091,2747391,"Biological object",Participation,"Class not found in ontology",
+14096,2747396,"Chemical object",Classification,"Class not found in ontology",
+14092,2747392,"Chemical object",Constitution,"Class not found in ontology",
+14093,2747393,"Chemical object",Location,"Class not found in ontology",
+14094,2747394,"Chemical object",Parthood,"Class not found in ontology",
+14095,2747395,"Chemical object",Parthood,"Class not found in ontology",
+14097,2747397,"Chemical object",Participation,"Class not found in ontology",
+14106,2747406,Collection,Classification,"No matching property found","hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+14101,2747401,Collection,Constitution,"No matching property found","hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+14107,2747407,Collection,Expression,"No matching property found","hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+14102,2747402,Collection,Location,"No matching property found","hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+14108,2747408,Collection,Participation,"No matching property found","hasPart, hasMember, isCharacterizedBy, isCoveredBy, isUnifiedBy"
+14115,2747415,Collective,Classification,"No matching property found",hasMember
+14109,2747409,Collective,Constitution,"No matching property found",hasMember
+14116,2747416,Collective,Expression,"No matching property found",hasMember
+14110,2747410,Collective,Location,"No matching property found",hasMember
+14112,2747412,Collective,Parthood,"No matching property found",hasMember
+14113,2747413,Collective,Parthood,"No matching property found",hasMember
+14114,2747414,Collective,Parthood,"No matching property found",hasMember
+14117,2747417,Collective,Participation,"No matching property found",hasMember
+14124,2747424,"Collective agent",Classification,"Class not found in ontology",
+14120,2747420,"Collective agent",Constitution,"Class not found in ontology",
+14125,2747425,"Collective agent",Expression,"Class not found in ontology",
+14126,2747426,"Collective agent",Introduction,"Class not found in ontology",
+14121,2747421,"Collective agent",Location,"Class not found in ontology",
+14122,2747422,"Collective agent",Parthood,"Class not found in ontology",
+14123,2747423,"Collective agent",Parthood,"Class not found in ontology",
+14127,2747427,"Collective agent",Participation,"Class not found in ontology",
+14118,2747418,"Collective agent",Proxy_agency,"Class not found in ontology",
+14119,2747419,"Collective agent",Proxy_agency,"Class not found in ontology",
+14134,2747434,Community,Classification,"No matching property found",
+14130,2747430,Community,Constitution,"No matching property found",
+14135,2747435,Community,Expression,"No matching property found",
+14136,2747436,Community,Introduction,"No matching property found",
+14131,2747431,Community,Location,"No matching property found",
+14132,2747432,Community,Parthood,"No matching property found",
+14133,2747433,Community,Parthood,"No matching property found",
+14137,2747437,Community,Participation,"No matching property found",
+14128,2747428,Community,Proxy_agency,"No matching property found",
+14129,2747429,Community,Proxy_agency,"No matching property found",
+14138,2747438,Concept,Constitution,"No matching property found","isDefinedIn, hasPart, characterizes, classifies, covers, hasParameter, isConceptExpressedBy, isConceptUsedIn, isRelatedToConcept, isSubordinatedTo, isSuperordinatedTo"
+14145,2747445,Concept,Expression,"No matching property found","isDefinedIn, hasPart, characterizes, classifies, covers, hasParameter, isConceptExpressedBy, isConceptUsedIn, isRelatedToConcept, isSubordinatedTo, isSuperordinatedTo"
+14139,2747439,Concept,Location,"No matching property found","isDefinedIn, hasPart, characterizes, classifies, covers, hasParameter, isConceptExpressedBy, isConceptUsedIn, isRelatedToConcept, isSubordinatedTo, isSuperordinatedTo"
+14146,2747446,Concept,Participation,"No matching property found","isDefinedIn, hasPart, characterizes, classifies, covers, hasParameter, isConceptExpressedBy, isConceptUsedIn, isRelatedToConcept, isSubordinatedTo, isSuperordinatedTo"
+14152,2747452,Configuration,Classification,"No matching property found",
+14147,2747447,Configuration,Constitution,"No matching property found",
+14153,2747453,Configuration,Expression,"No matching property found",
+14148,2747448,Configuration,Location,"No matching property found",
+14149,2747449,Configuration,Parthood,"No matching property found",
+14150,2747450,Configuration,Parthood,"No matching property found",
+14151,2747451,Configuration,Parthood,"No matching property found",
+14154,2747454,Configuration,Participation,"No matching property found",
+14159,2747459,Contract,Classification,"No matching property found",
+14155,2747455,Contract,Constitution,"No matching property found",
+14160,2747460,Contract,Expression,"No matching property found",
+14156,2747456,Contract,Location,"No matching property found",
+14157,2747457,Contract,Parthood,"No matching property found",
+14158,2747458,Contract,Parthood,"No matching property found",
+14161,2747461,Contract,Participation,"No matching property found",
+14166,2747466,Description,Classification,"No matching property found","defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+14162,2747462,Description,Constitution,"No matching property found","defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+14167,2747467,Description,Expression,"No matching property found","defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+14163,2747463,Description,Location,"No matching property found","defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+14164,2747464,Description,Parthood,"No matching property found","defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+14165,2747465,Description,Parthood,"No matching property found","defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+14168,2747468,Description,Participation,"No matching property found","defines, definesRole, definesTask, describes, expands, introduces, isExpandedIn, isRelatedToDescription, isSatisfiedBy, unifies, usesConcept"
+14173,2747473,Design,Classification,"No matching property found",
+14169,2747469,Design,Constitution,"No matching property found",
+14174,2747474,Design,Expression,"No matching property found",
+14170,2747470,Design,Location,"No matching property found",
+14171,2747471,Design,Parthood,"No matching property found",
+14172,2747472,Design,Parthood,"No matching property found",
+14175,2747475,Design,Participation,"No matching property found",
+14180,2747480,"Designed artifact",Classification,"Class not found in ontology",
+14176,2747476,"Designed artifact",Constitution,"Class not found in ontology",
+14181,2747481,"Designed artifact",Description,"Class not found in ontology",
+14182,2747482,"Designed artifact",Description,"Class not found in ontology",
+14177,2747477,"Designed artifact",Location,"Class not found in ontology",
+14178,2747478,"Designed artifact",Parthood,"Class not found in ontology",
+14179,2747479,"Designed artifact",Parthood,"Class not found in ontology",
+14183,2747483,"Designed artifact",Participation,"Class not found in ontology",
+14188,2747488,DesignedSubstance,Classification,"No matching property found",
+14184,2747484,DesignedSubstance,Constitution,"No matching property found",
+14189,2747489,DesignedSubstance,Description,"No matching property found",
+14190,2747490,DesignedSubstance,Description,"No matching property found",
+14185,2747485,DesignedSubstance,Location,"No matching property found",
+14186,2747486,DesignedSubstance,Parthood,"No matching property found",
+14187,2747487,DesignedSubstance,Parthood,"No matching property found",
+14191,2747491,DesignedSubstance,Participation,"No matching property found",
+14196,2747496,Diagnosis,Classification,"No matching property found",
+14192,2747492,Diagnosis,Constitution,"No matching property found",
+14197,2747497,Diagnosis,Expression,"No matching property found",
+14193,2747493,Diagnosis,Location,"No matching property found",
+14194,2747494,Diagnosis,Parthood,"No matching property found",
+14195,2747495,Diagnosis,Parthood,"No matching property found",
+14198,2747498,Diagnosis,Participation,"No matching property found",
+14203,2747503,"Event type",Classification,"Class not found in ontology",
+14209,2747509,"Event type",Classification,"Class not found in ontology",
+14204,2747504,"Event type",Constitution,"Class not found in ontology",
+14210,2747510,"Event type",Definition,"Class not found in ontology",
+14211,2747511,"Event type",Expression,"Class not found in ontology",
+14205,2747505,"Event type",Location,"Class not found in ontology",
+14206,2747506,"Event type",Parthood,"Class not found in ontology",
+14207,2747507,"Event type",Parthood,"Class not found in ontology",
+14208,2747508,"Event type",Parthood,"Class not found in ontology",
+14212,2747512,"Event type",Participation,"Class not found in ontology",
+14217,2747517,"Functional substance",Classification,"Class not found in ontology",
+14213,2747513,"Functional substance",Constitution,"Class not found in ontology",
+14214,2747514,"Functional substance",Location,"Class not found in ontology",
+14215,2747515,"Functional substance",Parthood,"Class not found in ontology",
+14216,2747516,"Functional substance",Parthood,"Class not found in ontology",
+14218,2747518,"Functional substance",Participation,"Class not found in ontology",
+14223,2747523,Goal,Classification,"No matching property found",
+14219,2747519,Goal,Constitution,"No matching property found",
+14224,2747524,Goal,Expression,"No matching property found",
+14220,2747520,Goal,Location,"No matching property found",
+14221,2747521,Goal,Parthood,"No matching property found",
+14222,2747522,Goal,Parthood,"No matching property found",
+14225,2747525,Goal,Participation,"No matching property found",
+14232,2747532,Group,Classification,"No matching property found",isDescribedBy
+14228,2747528,Group,Constitution,"No matching property found",isDescribedBy
+14234,2747534,Group,Expression,"No matching property found",isDescribedBy
+14235,2747535,Group,Introduction,"No matching property found",isDescribedBy
+14229,2747529,Group,Location,"No matching property found",isDescribedBy
+14230,2747530,Group,Parthood,"No matching property found",isDescribedBy
+14231,2747531,Group,Parthood,"No matching property found",isDescribedBy
+14236,2747536,Group,Participation,"No matching property found",isDescribedBy
+14226,2747526,Group,Proxy_agency,"No matching property found",isDescribedBy
+14227,2747527,Group,Proxy_agency,"No matching property found",isDescribedBy
+14241,2747541,"Information object",Classification,"Class not found in ontology",
+14237,2747537,"Information object",Constitution,"Class not found in ontology",
+14242,2747542,"Information object",Expression,"Class not found in ontology",
+14238,2747538,"Information object",Location,"Class not found in ontology",
+14239,2747539,"Information object",Parthood,"Class not found in ontology",
+14240,2747540,"Information object",Parthood,"Class not found in ontology",
+14243,2747543,"Information object",Participation,"Class not found in ontology",
+14249,2747549,"Local concept",Classification,"Class not found in ontology",
+14244,2747544,"Local concept",Constitution,"Class not found in ontology",
+14250,2747550,"Local concept",Definition,"Class not found in ontology",
+14251,2747551,"Local concept",Expression,"Class not found in ontology",
+14245,2747545,"Local concept",Location,"Class not found in ontology",
+14246,2747546,"Local concept",Parthood,"Class not found in ontology",
+14247,2747547,"Local concept",Parthood,"Class not found in ontology",
+14248,2747548,"Local concept",Parthood,"Class not found in ontology",
+14252,2747552,"Local concept",Participation,"Class not found in ontology",
+14257,2747557,Method,Classification,"No matching property found",
+14253,2747553,Method,Constitution,"No matching property found",
+14258,2747558,Method,Expression,"No matching property found",
+14254,2747554,Method,Location,"No matching property found",
+14256,2747556,Method,Parthood,"No matching property found",
+14255,2747555,Method,Parthood,"No matching property found",
+14259,2747559,Method,Participation,"No matching property found",
+14264,2747564,Narrative,Classification,"No matching property found",
+14260,2747560,Narrative,Constitution,"No matching property found",
+14265,2747565,Narrative,Expression,"No matching property found",
+14261,2747561,Narrative,Location,"No matching property found",
+14262,2747562,Narrative,Parthood,"No matching property found",
+14263,2747563,Narrative,Parthood,"No matching property found",
+14266,2747566,Narrative,Participation,"No matching property found",
+14271,2747571,"Natural person",Classification,"Class not found in ontology",
+14267,2747567,"Natural person",Constitution,"Class not found in ontology",
+14268,2747568,"Natural person",Location,"Class not found in ontology",
+14269,2747569,"Natural person",Parthood,"Class not found in ontology",
+14270,2747570,"Natural person",Parthood,"Class not found in ontology",
+14272,2747572,"Natural person",Participation,"Class not found in ontology",
+14277,2747577,Norm,Classification,"No matching property found",
+14273,2747573,Norm,Constitution,"No matching property found",
+14278,2747578,Norm,Expression,"No matching property found",
+14274,2747574,Norm,Location,"No matching property found",
+14275,2747575,Norm,Parthood,"No matching property found",
+14276,2747576,Norm,Parthood,"No matching property found",
+14279,2747579,Norm,Participation,"No matching property found",
+14285,2747585,ObjectAggregate,Parthood,"No matching property found",
+14290,2747590,Organism,Classification,"No matching property found",
+14286,2747586,Organism,Constitution,"No matching property found",
+14287,2747587,Organism,Location,"No matching property found",
+14288,2747588,Organism,Parthood,"No matching property found",
+14289,2747589,Organism,Parthood,"No matching property found",
+14291,2747591,Organism,Participation,"No matching property found",
+14297,2747597,Organization,Classification,"No matching property found",
+14293,2747593,Organization,Constitution,"No matching property found",
+14298,2747598,Organization,Expression,"No matching property found",
+14294,2747594,Organization,Location,"No matching property found",
+14295,2747595,Organization,Parthood,"No matching property found",
+14296,2747596,Organization,Parthood,"No matching property found",
+14299,2747599,Organization,Participation,"No matching property found",
+14292,2747592,Organization,Proxy_agency,"No matching property found",
+14301,2747601,Parameter,Constitution,"No matching property found","classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+14308,2747608,Parameter,Definition,"No matching property found","classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+14309,2747609,Parameter,Expression,"No matching property found","classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+14302,2747602,Parameter,Location,"No matching property found","classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+14310,2747610,Parameter,Participation,"No matching property found","classifies, hasPart, isConstraintFor, isParameterFor, parametrizes"
+14311,2747611,parthood,Part_inclusion,"Class not found in ontology",
+14313,2747613,parthood,Setting,"Class not found in ontology",
+14312,2747612,parthood,Whole_inclusion,"Class not found in ontology",
+14318,2747618,Pattern,Classification,"No matching property found",
+14314,2747614,Pattern,Constitution,"No matching property found",
+14319,2747619,Pattern,Expression,"No matching property found",
+14315,2747615,Pattern,Location,"No matching property found",
+14316,2747616,Pattern,Parthood,"No matching property found",
+14317,2747617,Pattern,Parthood,"No matching property found",
+14320,2747620,Pattern,Participation,"No matching property found",
+14324,2747624,Person,Classification,"No matching property found",
+14321,2747621,Person,Constitution,"No matching property found",
+14322,2747622,Person,Location,"No matching property found",
+14323,2747623,Person,Parthood,"No matching property found",
+14325,2747625,Person,Participation,"No matching property found",
+14331,2747631,Personification,Classification,"No matching property found",
+14327,2747627,Personification,Constitution,"No matching property found",
+14332,2747632,Personification,Expression,"No matching property found",
+14328,2747628,Personification,Location,"No matching property found",
+14329,2747629,Personification,Parthood,"No matching property found",
+14330,2747630,Personification,Parthood,"No matching property found",
+14333,2747633,Personification,Participation,"No matching property found",
+14326,2747626,Personification,Proxy_agency,"No matching property found",
+14338,2747638,"Physical agent",Classification,"Class not found in ontology",
+14334,2747634,"Physical agent",Constitution,"Class not found in ontology",
+14335,2747635,"Physical agent",Location,"Class not found in ontology",
+14336,2747636,"Physical agent",Parthood,"Class not found in ontology",
+14337,2747637,"Physical agent",Parthood,"Class not found in ontology",
+14339,2747639,"Physical agent",Participation,"Class not found in ontology",
+14344,2747644,"Physical artifact",Classification,"Class not found in ontology",
+14340,2747640,"Physical artifact",Constitution,"Class not found in ontology",
+14345,2747645,"Physical artifact",Description,"Class not found in ontology",
+14341,2747641,"Physical artifact",Location,"Class not found in ontology",
+14342,2747642,"Physical artifact",Parthood,"Class not found in ontology",
+14343,2747643,"Physical artifact",Parthood,"Class not found in ontology",
+14346,2747646,"Physical artifact",Participation,"Class not found in ontology",
+14347,2747647,"Physical attribute",Constitution,"Class not found in ontology",
+14350,2747650,"Physical attribute",Overlap,"Class not found in ontology",
+14348,2747648,"Physical attribute",Parthood,"Class not found in ontology",
+14349,2747649,"Physical attribute",Region,"Class not found in ontology",
+14351,2747651,"Physical attribute",Sequence,"Class not found in ontology",
+14356,2747656,"Physical body",Classification,"Class not found in ontology",
+14352,2747652,"Physical body",Constitution,"Class not found in ontology",
+14353,2747653,"Physical body",Location,"Class not found in ontology",
+14354,2747654,"Physical body",Parthood,"Class not found in ontology",
+14355,2747655,"Physical body",Parthood,"Class not found in ontology",
+14357,2747657,"Physical body",Participation,"Class not found in ontology",
+14362,2747662,"Physical object",Classification,"Class not found in ontology",
+14358,2747658,"Physical object",Constitution,"Class not found in ontology",
+14359,2747659,"Physical object",Location,"Class not found in ontology",
+14360,2747660,"Physical object",Parthood,"Class not found in ontology",
+14361,2747661,"Physical object",Parthood,"Class not found in ontology",
+14363,2747663,"Physical object",Participation,"Class not found in ontology",
+14368,2747668,"Physical place",Classification,"Class not found in ontology",
+14364,2747664,"Physical place",Constitution,"Class not found in ontology",
+14365,2747665,"Physical place",Location,"Class not found in ontology",
+14366,2747666,"Physical place",Parthood,"Class not found in ontology",
+14367,2747667,"Physical place",Parthood,"Class not found in ontology",
+14369,2747669,"Physical place",Participation,"Class not found in ontology",
+14374,2747674,Place,Classification,"No matching property found",isLocationOf
+14370,2747670,Place,Constitution,"No matching property found",isLocationOf
+14375,2747675,Place,Expression,"No matching property found",isLocationOf
+14372,2747672,Place,Parthood,"No matching property found",isLocationOf
+14373,2747673,Place,Parthood,"No matching property found",isLocationOf
+14377,2747677,Place,Participation,"No matching property found",isLocationOf
+14383,2747683,Plan,Classification,"No matching property found",hasComponent
+14379,2747679,Plan,Constitution,"No matching property found",hasComponent
+14384,2747684,Plan,Expression,"No matching property found",hasComponent
+14380,2747680,Plan,Location,"No matching property found",hasComponent
+14381,2747681,Plan,Parthood,"No matching property found",hasComponent
+14382,2747682,Plan,Parthood,"No matching property found",hasComponent
+14385,2747685,Plan,Participation,"No matching property found",hasComponent
+14386,2747686,"Plan execution",Satisfaction,"Class not found in ontology",
+14387,2747687,"Plan execution",Satisfaction,"Class not found in ontology",
+14388,2747688,Process,Constitution,"No matching property found",
+14389,2747689,Process,Parthood,"No matching property found",
+14390,2747690,Process,Participation,"No matching property found",
+14391,2747691,Process,Temporal_interval,"No matching property found",
+14399,2747699,Project,Classification,"No matching property found","definesRole, definesTask"
+14394,2747694,Project,Composition,"No matching property found","definesRole, definesTask"
+14395,2747695,Project,Constitution,"No matching property found","definesRole, definesTask"
+14400,2747700,Project,Expression,"No matching property found","definesRole, definesTask"
+14396,2747696,Project,Location,"No matching property found","definesRole, definesTask"
+14397,2747697,Project,Parthood,"No matching property found","definesRole, definesTask"
+14398,2747698,Project,Parthood,"No matching property found","definesRole, definesTask"
+14401,2747701,Project,Participation,"No matching property found","definesRole, definesTask"
+14405,2747705,Quality,Quale,"No matching property found","hasRegion, isQualityOf, hasConstituent, hasPart"
+14414,2747714,Relation,Classification,"No matching property found",
+14410,2747710,Relation,Constitution,"No matching property found",
+14415,2747715,Relation,Expression,"No matching property found",
+14411,2747711,Relation,Location,"No matching property found",
+14412,2747712,Relation,Parthood,"No matching property found",
+14413,2747713,Relation,Parthood,"No matching property found",
+14416,2747716,Relation,Participation,"No matching property found",
+14423,2747723,Right,Classification,"No matching property found","definesRole, definesTask"
+14419,2747719,Right,Constitution,"No matching property found","definesRole, definesTask"
+14424,2747724,Right,Expression,"No matching property found","definesRole, definesTask"
+14420,2747720,Right,Location,"No matching property found","definesRole, definesTask"
+14421,2747721,Right,Parthood,"No matching property found","definesRole, definesTask"
+14422,2747722,Right,Parthood,"No matching property found","definesRole, definesTask"
+14425,2747725,Right,Participation,"No matching property found","definesRole, definesTask"
+14427,2747727,Role,Constitution,"No matching property found","classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+14434,2747734,Role,Definition,"No matching property found","classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+14435,2747735,Role,Expression,"No matching property found","classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+14428,2747728,Role,Location,"No matching property found","classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+14436,2747736,Role,Participation,"No matching property found","classifies, hasPart, hasTask, isRoleDefinedIn, isRoleOf"
+14443,2747743,"Social agent",Classification,"Class not found in ontology",
+14439,2747739,"Social agent",Constitution,"Class not found in ontology",
+14444,2747744,"Social agent",Expression,"Class not found in ontology",
+14440,2747740,"Social agent",Location,"Class not found in ontology",
+14441,2747741,"Social agent",Parthood,"Class not found in ontology",
+14442,2747742,"Social agent",Parthood,"Class not found in ontology",
+14445,2747745,"Social agent",Participation,"Class not found in ontology",
+14438,2747738,"Social agent",Proxy_agency,"Class not found in ontology",
+14453,2747753,"Social attribute",Constitution,"Class not found in ontology",
+14456,2747756,"Social attribute",Overlap,"Class not found in ontology",
+14454,2747754,"Social attribute",Parthood,"Class not found in ontology",
+14455,2747755,"Social attribute",Region,"Class not found in ontology",
+14457,2747757,"Social attribute",Sequence,"Class not found in ontology",
+14450,2747750,"Social object",Classification,"Class not found in ontology",
+14446,2747746,"Social object",Constitution,"Class not found in ontology",
+14451,2747751,"Social object",Expression,"Class not found in ontology",
+14447,2747747,"Social object",Location,"Class not found in ontology",
+14448,2747748,"Social object",Parthood,"Class not found in ontology",
+14449,2747749,"Social object",Parthood,"Class not found in ontology",
+14452,2747752,"Social object",Participation,"Class not found in ontology",
+14463,2747763,"Social person",Classification,"Class not found in ontology",
+14459,2747759,"Social person",Constitution,"Class not found in ontology",
+14464,2747764,"Social person",Expression,"Class not found in ontology",
+14460,2747760,"Social person",Location,"Class not found in ontology",
+14461,2747761,"Social person",Parthood,"Class not found in ontology",
+14462,2747762,"Social person",Parthood,"Class not found in ontology",
+14465,2747765,"Social person",Participation,"Class not found in ontology",
+14458,2747758,"Social person",Proxy_agency,"Class not found in ontology",
+14470,2747770,"Social relation",Classification,"Class not found in ontology",
+14466,2747766,"Social relation",Constitution,"Class not found in ontology",
+14471,2747771,"Social relation",Expression,"Class not found in ontology",
+14467,2747767,"Social relation",Location,"Class not found in ontology",
+14468,2747768,"Social relation",Parthood,"Class not found in ontology",
+14469,2747769,"Social relation",Parthood,"Class not found in ontology",
+14472,2747772,"Social relation",Participation,"Class not found in ontology",
+14473,2747773,"Space region",Constitution,"Class not found in ontology",
+14475,2747775,"Space region",Overlap,"Class not found in ontology",
+14474,2747774,"Space region",Parthood,"Class not found in ontology",
+14476,2747776,"Space region",Sequence,"Class not found in ontology",
+14481,2747781,SpatioTemporalRegion,Overlap,"No matching property found","hasConstituent, hasConstituent"
+14480,2747780,SpatioTemporalRegion,Parthood,"No matching property found","hasConstituent, hasConstituent"
+14482,2747782,SpatioTemporalRegion,Sequence,"No matching property found","hasConstituent, hasConstituent"
+14487,2747787,Substance,Classification,"No matching property found",
+14483,2747783,Substance,Constitution,"No matching property found",
+14484,2747784,Substance,Location,"No matching property found",
+14485,2747785,Substance,Parthood,"No matching property found",
+14486,2747786,Substance,Parthood,"No matching property found",
+14488,2747788,Substance,Participation,"No matching property found",
+14489,2747789,Task,Classification,"No matching property found","hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+14496,2747796,Task,Classification,"No matching property found","hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+14490,2747790,Task,Constitution,"No matching property found","hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+14497,2747797,Task,Definition,"No matching property found","hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+14499,2747799,Task,Expression,"No matching property found","hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+14491,2747791,Task,Location,"No matching property found","hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+14500,2747800,Task,Participation,"No matching property found","hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+14501,2747801,Task,Task_definition,"No matching property found","hasPart, isExecutedIn, isTaskDefinedIn, isTaskOf"
+14508,2747808,Theory,Classification,"No matching property found",hasComponent
+14504,2747804,Theory,Constitution,"No matching property found",hasComponent
+14509,2747809,Theory,Expression,"No matching property found",hasComponent
+14505,2747805,Theory,Location,"No matching property found",hasComponent
+14506,2747806,Theory,Parthood,"No matching property found",hasComponent
+14507,2747807,Theory,Parthood,"No matching property found",hasComponent
+14510,2747810,Theory,Participation,"No matching property found",hasComponent
+14512,2747812,"Time interval",Constitution,"Class not found in ontology",
+14514,2747814,"Time interval",Overlap,"Class not found in ontology",
+14513,2747813,"Time interval",Parthood,"Class not found in ontology",
+14515,2747815,"Time interval",Sequence,"Class not found in ontology",
+14511,2747811,"Time-indexed relation",Setting,"Class not found in ontology",
+14516,2747816,Transition,Event_inclusion,"No matching property found","includesEvent, includesObject, isSettingFor, isSettingFor, includesTime, isSettingFor"
+14517,2747817,Transition,Object_inclusion,"No matching property found","includesEvent, includesObject, isSettingFor, isSettingFor, includesTime, isSettingFor"
+14520,2747820,Transition,Satisfaction,"No matching property found","includesEvent, includesObject, isSettingFor, isSettingFor, includesTime, isSettingFor"
+14526,2747826,"Type collection",Classification,"Class not found in ontology",
+14521,2747821,"Type collection",Constitution,"Class not found in ontology",
+14527,2747827,"Type collection",Expression,"Class not found in ontology",
+14522,2747822,"Type collection",Location,"Class not found in ontology",
+14523,2747823,"Type collection",Parthood,"Class not found in ontology",
+14524,2747824,"Type collection",Parthood,"Class not found in ontology",
+14525,2747825,"Type collection",Parthood,"Class not found in ontology",
+14528,2747828,"Type collection",Participation,"Class not found in ontology",
+14529,2747829,"Unit of measure",Classification,"Class not found in ontology",
+14536,2747836,"Unit of measure",Classification,"Class not found in ontology",
+14530,2747830,"Unit of measure",Constitution,"Class not found in ontology",
+14537,2747837,"Unit of measure",Definition,"Class not found in ontology",
+14538,2747838,"Unit of measure",Expression,"Class not found in ontology",
+14531,2747831,"Unit of measure",Location,"Class not found in ontology",
+14540,2747840,"Unit of measure",Parametric_specification,"Class not found in ontology",
+14532,2747832,"Unit of measure",Parthood,"Class not found in ontology",
+14533,2747833,"Unit of measure",Parthood,"Class not found in ontology",
+14534,2747834,"Unit of measure",Parthood,"Class not found in ontology",
+14535,2747835,"Unit of measure",Parthood,"Class not found in ontology",
+14539,2747839,"Unit of measure",Participation,"Class not found in ontology",
+14548,2747848,Workflow,Classification,"No matching property found","definesRole, definesTask"
+14543,2747843,Workflow,Composition,"No matching property found","definesRole, definesTask"
+14544,2747844,Workflow,Constitution,"No matching property found","definesRole, definesTask"
+14549,2747849,Workflow,Expression,"No matching property found","definesRole, definesTask"
+14545,2747845,Workflow,Location,"No matching property found","definesRole, definesTask"
+14546,2747846,Workflow,Parthood,"No matching property found","definesRole, definesTask"
+14547,2747847,Workflow,Parthood,"No matching property found","definesRole, definesTask"
+14550,2747850,Workflow,Participation,"No matching property found","definesRole, definesTask"
+14551,2747851,"Workflow execution",Satisfaction,"Class not found in ontology",
+14552,2747852,"Workflow execution",Satisfaction,"Class not found in ontology",
