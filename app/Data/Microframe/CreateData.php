@@ -8,9 +8,8 @@ use Spatie\LaravelData\Data;
 class CreateData extends Data
 {
     public function __construct(
-        public string $name,
-        public string $nameInverse,
-        public ?int $idMicroFrameGroup = null,
+        public string $nameEn,
+        public ?int $idNamespace = 14,
         public ?int $idUser = 1,
         public string $_token = '',
     ) {

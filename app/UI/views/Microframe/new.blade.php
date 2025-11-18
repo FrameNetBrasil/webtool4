@@ -2,7 +2,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['','New Frame']]"
+            :sections="[['/','Home'],['','New Microframe']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="ui container">
@@ -11,7 +11,7 @@
                         <div class="ui card form-card w-full p-1">
                             <div class="content">
                                 <div class="header">
-                                    Create new Frame
+                                    Create new Microframe
                                 </div>
                                 <div class="description">
 
@@ -33,7 +33,7 @@
                                     class="ui primary button"
                                     hx-post="/microframe"
                                 >
-                                    Add Frame
+                                    Add Microframe
                                 </button>
                             </div>
                         </div>

@@ -16,7 +16,7 @@
                         <div class="section-content" id="core-fes">
                             <div class="fe-cards-grid">
                                 @foreach($fe['core'] as $feObj)
-                                    @include('Frame.Report.partials.fe-card', [
+                                    @include('Class.Report.partials.fe-card', [
                                         'feObj' => $feObj,
                                         'semanticTypes' => $fe['semanticTypes'] ?? [],
                                         'feType' => 'core'
