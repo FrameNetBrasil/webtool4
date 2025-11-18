@@ -31,7 +31,7 @@ This keeps the documentation readable, searchable, and easier to maintain.
 
 ## Core Principles
 
-### 1. **Split content into smaller notes**
+### 1. Split content into smaller notes
 
 If a file is getting too long, it probably contains more than one concept.
 
@@ -39,6 +39,7 @@ Example:
 
 The section “Namespace Classification Using Qualia” inside [Events](https://webtool.frame.net.br/docs/background/events) could be broken down like this:
 
+```
 namespace-classification-using-qualia.md
 │
 ├── namespace-causative.md
@@ -48,10 +49,11 @@ namespace-classification-using-qualia.md
 ├── namespace-transition.md
 ├── namespace-eventive.md
 └── qualia-roles-and-namespace-mapping.md
+```
 
 This makes the content far easier to find.
 
-### 2. **Use links generously**
+### 2. Use links generously
 
 Zettelkasten works because notes point to each other.  
 Every new file should link to:
@@ -67,7 +69,7 @@ Example:
 
 In this example, each underlined segment should link to its own dedicated page. This network of links lets a reader jump directly between related ideas — instead of scrolling through one long document — and builds a map of connected concepts you can expand over time.
 
-### **3. Start every note with “what it’s for” using YAML frontmatter**
+### 3. Start every note with “what it’s for” using YAML frontmatter
 
 Each Markdown file should begin with a short YAML block that explains the purpose of the note. This replaces long introductions and gives readers an immediate sense of what the page is about. At minimum, include a summary.
 
