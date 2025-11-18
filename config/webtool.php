@@ -220,12 +220,16 @@ return [
             'cty_core-unexpressed' => 'black dot circle',
             'cty_peripheral' => 'black stop circle outline',
             'cty_extra-thematic' => 'black circle outline',
+            'cty_domain' => 'black dot circle',
+            'cty_range' => 'black dot circle outline',
         ],
         'coreness' => [
             'cty_core' => 'Core',
             'cty_core-unexpressed' => 'Core-Unexpressed',
             'cty_peripheral' => 'Peripheral',
             'cty_extra-thematic' => 'Extra-thematic',
+            'cty_domain' => 'Domain',
+            'cty_range' => 'Range',
         ],
     ],
     'neo4j' => [

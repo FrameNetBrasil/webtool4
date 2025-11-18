@@ -1,12 +1,12 @@
 @php
     $items = [
         ['entries','Translations'],
-        ['fes','FrameElements'],
-        ['lus','LUs'],
-        ['classification','Classification'],
+        ['fes','Domain/Range'],
+//        ['lus','LUs'],
+//        ['classification','Classification'],
         ['relations','F-F Relations'],
-        ['feRelations','FE-FE Relations'],
-        ['semanticTypes','SemanticTypes'],
+//        ['feRelations','FE-FE Relations'],
+//        ['semanticTypes','SemanticTypes'],
     ];
 @endphp
 <x-objectmenu

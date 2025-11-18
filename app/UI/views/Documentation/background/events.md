@@ -663,36 +663,3 @@ which assist domain experts in representing a certain portion of reality accordi
 For this reason, in DUL both events and situations are allowed, together with descriptions, in order to encode the modelling needs,
 independently from the position (if any) chosen by the model designer.
 
-## Test: Graphviz Integration
-
-This is a test of Graphviz force-directed layout using the `neato` engine for complex network visualization:
-
-```dot
-graph {
-// Set default font for the entire graph
-      graph [fontname="Noto Sans"];
-      node [fontname="Noto Sans"];
-      edge [fontname="Noto Sans"];
-
-    layout=neato;
-    overlap=false;
-    splines=true;
-
-    // Frame nodes
-    Event [shape=ellipse, style=filled, fillcolor=lightblue];
-    Agent [shape=box, style=filled, fillcolor=lightgreen];
-    Patient [shape=box, style=filled, fillcolor=lightyellow];
-    Cause [shape=box, style=filled, fillcolor=lightcoral];
-    Theme [shape=box, style=filled, fillcolor=lightgray];
-    Instrument [shape=box, style=filled, fillcolor=wheat];
-
-    // Relationships
-    Agent -- Event [label="causes"];
-    Cause -- Event [label="triggers"];
-    Event -- Patient [label="affects"];
-    Event -- Theme [label="involves"];
-    Agent -- Instrument [label="uses"];
-    Instrument -- Event [label="in"];
-}
-```
-
