@@ -32,7 +32,7 @@ class ReportService
         $report['fe'] = self::getFEData($frame, $idLanguage);
 //        $report['fecoreset'] = self::getFECoreSet($frame);
         $report['frame']->description = self::decorate($frame->description, $report['fe']['styles']);
-//        $report['relations'] = self::getRelations($frame);
+        $report['relations'] = self::getRelations($frame);
 //        $report['classification'] = Frame::getClassificationLabels($idFrame);
 //        $report['lus'] = self::getLUs($frame, $idLanguage);
 //        $report['vus'] = self::getVUs($frame, $idLanguage);
@@ -65,7 +65,7 @@ class ReportService
 //                'color' => $relation->color,
 //            ];
 //        }
-//        $semanticTypes = RelationService::listFEST($frame->idFrame);
+        $restrictions = RelationService::listFERestrictions($frame->idFrame);
         $styles = [];
         foreach ($fes as $fe) {
             $styles[strtolower($fe->name)] = "color_{$fe->idColor}";
@@ -81,7 +81,7 @@ class ReportService
         return [
             'styles' => $styles,
             'core' => $core,
-//            'semanticTypes' => $semanticTypes
+            'semanticTypes' => $restrictions
         ];
     }
 
@@ -99,17 +99,17 @@ class ReportService
     public static function getRelations($frame): array
     {
         $relations = [];
-        $result = RelationService::listRelationsFrame($frame->idFrame);
+        $result = RelationService::listRelationsClass($frame->idFrame);
         foreach ($result as $row) {
             $relationName = $row->relationType . '|' . $row->name;
-            $relations[$relationName][$row->idFrameRelated] = [
+            $relations[$row->direction][$relationName][$row->idFrameRelated] = [
                 'idEntityRelation' => $row->idEntityRelation,
                 'idFrame' => $row->idFrameRelated,
                 'name' => $row->related,
                 'color' => $row->color
             ];
         }
-        ksort($relations);
+        //ksort($relations);
         return $relations;
     }
 

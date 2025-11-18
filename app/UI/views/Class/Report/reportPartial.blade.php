@@ -40,21 +40,16 @@
         </div>
 
         {{-- Frame Relations Section --}}
-{{--        <div class="frame-relations-section mb-8">--}}
-{{--            <div class="section-header">--}}
-{{--                <h2 class="ui header section-title" id="frame-relations">--}}
-{{--                    <a href="#frame-relations">Frame-Frame Relations</a>--}}
-{{--                </h2>--}}
-{{--                <button class="ui button basic icon section-toggle"--}}
-{{--                        onclick="toggleSection('relations-content')"--}}
-{{--                        aria-expanded="true">--}}
-{{--                    <i class="chevron up icon"></i>--}}
-{{--                </button>--}}
-{{--            </div>--}}
-{{--            <div class="section-content" id="relations-content">--}}
-{{--                @include('Class.Report.partials.relations-card')--}}
-{{--            </div>--}}
-{{--        </div>--}}
+        <div class="frame-relations-section mb-8">
+            <div class="section-header">
+                <h2 class="ui header section-title" id="frame-relations">
+                    <a href="#frame-relations">Class-Class Relations</a>
+                </h2>
+            </div>
+            <div class="section-content" id="relations-content">
+                @include('Class.Report.partials.relations-card')
+            </div>
+        </div>
 
     </div>
 </div>

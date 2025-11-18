@@ -172,6 +172,64 @@ class RelationService extends Controller
         return $relations;
     }
 
+    public static function listFERestrictions(int $idFrame)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        $relations = Criteria::table("view_relation as r")
+            ->join("view_frameelement as fe", "r.idEntity2", "=", "fe.idEntity")
+            ->join("view_frameelement as fet", "r.idEntity3", "=", "fet.idEntity")
+            ->join("view_class as cl", "fet.idFrame", "=", "cl.idFrame")
+            ->select("fe.idFrameElement", "fe.name", "cl.name")
+            ->where("fe.idFrame", $idFrame)
+            ->where("fe.idLanguage", $idLanguage)
+            ->where("fet.idLanguage", $idLanguage)
+            ->where("cl.idLanguage", $idLanguage)
+            ->orderBy("fe.idFrameElement")
+            ->keyBy("idFrameElement")
+            ->all();
+        return $relations;
+    }
+
+    public static function listRelationsClass(int $idFrame)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        //$config = config('webtool.relations');
+        $result = [];
+        $relations = Criteria::table("view_class_relation")
+            ->where("c1IdFrame", $idFrame)
+            ->where("idLanguage", $idLanguage)
+            ->orderBy("relationType")
+            ->orderBy("c2Name")
+            ->all();
+        foreach ($relations as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
+                'idFrameRelated' => $relation->c2IdFrame,
+                'related' => $relation->c2Name,
+                'direction' => 'direct'
+            ];
+        }
+        $inverse = Criteria::table("view_class_relation")
+            ->where("c2IdFrame", $idFrame)
+            ->where("idLanguage", $idLanguage)
+            ->all();
+        foreach ($inverse as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
+                'idFrameRelated' => $relation->c1IdFrame,
+                'related' => $relation->c1Name,
+                'direction' => 'inverse'
+            ];
+        }
+        return $result;
+    }
+
 
     public static function updateFramalDomain(UpdateClassificationData $data)
     {
