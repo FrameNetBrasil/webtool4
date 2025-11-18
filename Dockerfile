@@ -7,7 +7,7 @@ RUN addgroup -g $WWWGROUP www \
     && mkdir /var/log/laravel \
     && touch /var/log/laravel/laravel.log \
     && chown -R sail:www /var/log/laravel \
-    && apk add --no-cache graphviz ttf-freefont
+    && apk add --no-cache graphviz ttf-freefont font-noto
 
 #COPY . /www
 #RUN chown -R sail:www /www
