@@ -3,7 +3,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/structure','Structure'],['/microframe','Frame'],['',$frame?->name]]"
+            :sections="[['/','Home'],['/structure','Structure'],['/microframe','Microframe'],['',$frame?->name]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="ui container page-edit">
@@ -37,10 +37,10 @@
                 </div>
                 <div class="page-content">
                     <div class="frame-metadata-section">
-                        @include('Frame.Report.partials.frame-metadata')
+                        @include('Microframe.Report.partials.frame-metadata')
                     </div>
 
-                    @include("Frame.menu")
+                    @include("Microframe.menu")
                 </div>
             </div>
         </main>

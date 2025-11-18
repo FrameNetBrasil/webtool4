@@ -2,19 +2,19 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/structure','Structure'],['','Class']]"
+            :sections="[['/','Home'],['/structure','Structure'],['','Microframe']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <x-ui::browse-table
-                title="Frame Structure"
+                title="Microframe Structure"
                 url="/microframe/search"
-                emptyMsg="Enter your search term above to find frames."
+                emptyMsg="Enter your search term above to find microframes."
                 :data="$data"
             >   <x-slot:actions>
                     <a href="/microframe/new"
                        rel="noopener noreferrer"
                        class="ui button secondary">
-                        New Frame
+                        New Microframe
                     </a>
                 </x-slot:actions>
 
@@ -24,8 +24,8 @@
                             <i class="search icon"></i>
                             <input
                                 type="search"
-                                name="frame"
-                                placeholder="Search Frame"
+                                name="microframe"
+                                placeholder="Search Microframe"
                                 autocomplete="off"
                             >
                         </div>

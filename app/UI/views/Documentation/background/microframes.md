@@ -52,6 +52,137 @@ The relations Frame-Frame and FrameElement-FrameElement follow the same pattern 
 
 Microframes are used to express qualia relations between LUs, evolving the original idea of TQR (Ternary Qualia Relation).
 
+```dot
+digraph G {
+    graph [fontname="Noto Sans" fontsize=12];
+    node [fontname="Noto Sans" fontsize=12 shape=rectangle style=filled color="#9370DB" fillcolor="#ECECFF"];
+    edge [fontname="Noto Sans" fontsize=12];
+    layout=dot
+    rankdir=LR;
+    bgcolor=transparent;
+
+    subgraph cluster_0 {
+        style=filled;
+        color=lightyellow;
+        label = "Qualia relations";
+        
+        cB [label="LU_B"]
+        cA [label="LU_A"]
+        mf [label="Microframe"]
+        relation [shape=point fillcolor=black]
+        
+        // Force mf to be on the right side
+        {rank=same; relation; mf}
+        
+        cB -> relation  [arrowsize=0.3 label="domain" color="red" fontcolor=red]
+        cA -> relation [arrowsize=0.3  label="range"  color="blue" fontcolor=blue]
+        mf -> relation [arrowsize=0.3]
+    }
+}
+```
+
+### Ontological relations
+
+Microframes are used to express subsumption relations between classes and between properties (microframes).
+
+```dot
+digraph G {
+    graph [fontname="Noto Sans" fontsize=12];
+    node [fontname="Noto Sans" fontsize=12 shape=rectangle style=filled color="#9370DB" fillcolor="#ECECFF"];
+    edge [fontname="Noto Sans" fontsize=12];
+    layout=dot
+    rankdir=LR;
+    bgcolor=transparent;
+
+    subgraph cluster_0 {
+        style=filled;
+        color=lightyellow;
+        label = "Subsumption between classes";
+        
+        cB [label="Class_B"]
+        cA [label="Class_A"]
+        mf [label="Subsumption (Microframe)"]
+        relation [shape=point fillcolor=black]
+        feX [shape=circle label="", xlabel="target" width="0.1"]
+        feTarget [shape=circle label="", xlabel="target" width="0.1"]
+        
+        // Force mf to be on the right side
+        {rank=same; relation; mf}
+        
+        cA -> feX [arrowsize=0.3]
+        cB-> feTarget [arrowsize=0.3]
+        feX -> relation  [arrowsize=0.3 label="Subframe (domain)" color="red" fontcolor=red]
+        feTarget -> relation [arrowsize=0.3  label="Superframe (range)"  color="blue" fontcolor=blue]
+        mf -> relation [arrowsize=0.3]
+    }
+}
+```
+
+```dot
+digraph G {
+    graph [fontname="Noto Sans" fontsize=12];
+    node [fontname="Noto Sans" fontsize=12 shape=rectangle style=filled color="#9370DB" fillcolor="#ECECFF"];
+    edge [fontname="Noto Sans" fontsize=12];
+    layout=dot
+    rankdir=LR;
+    bgcolor=transparent;
+
+    subgraph cluster_0 {
+        style=filled;
+        color=lightyellow;
+        label = "Subsumption between microframes";
+        
+        cB [label="Microframe_B"]
+        cA [label="Microframe_A"]
+        mf [label="Subsumption (Microframe)"]
+        relation [shape=point fillcolor=black]
+        
+        // Force mf to be on the right side
+        {rank=same; relation; mf}
+        
+        cA -> relation  [arrowsize=0.3 label="Subframe (domain)" color="red" fontcolor=red]
+        cB -> relation [arrowsize=0.3  label="Superframe (range)"  color="blue" fontcolor=blue]
+        mf -> relation [arrowsize=0.3]
+    }
+}
+```
+
+Microframes are used to express object properties for ontology classes.
+
+```dot
+digraph G {
+    graph [fontname="Noto Sans" fontsize=12];
+    node [fontname="Noto Sans" fontsize=12 shape=rectangle style=filled color="#9370DB" fillcolor="#ECECFF"];
+    edge [fontname="Noto Sans" fontsize=12];
+    layout=dot
+    rankdir=LR;
+    bgcolor=transparent;
+
+    subgraph cluster_0 {
+        style=filled;
+        color=lightyellow;
+        label = "Class properties";
+        
+        cB [label="Class_B"]
+        cA [label="Class_A"]
+        mf [label="Microframe"]
+        relation [shape=point fillcolor=black]
+        feX [shape=circle label="", xlabel="fe_x" width="0.1"]
+        feTarget [shape=circle label="", xlabel="target" width="0.1"]
+        
+        // Force mf to be on the right side
+        {rank=same; relation; mf}
+        
+        cA -> feX [arrowsize=0.3]
+        cB-> feTarget [arrowsize=0.3]
+        feX -> relation  [arrowsize=0.3 label="domain" color="red" fontcolor=red]
+        feTarget -> relation [arrowsize=0.3  label="range"  color="blue" fontcolor=blue]
+        mf -> relation [arrowsize=0.3]
+    }
+}
+```
+
+
 ### Generalization Across Events
 
 Microframes allow for the **generalization of situations** that are common across a wide range of events.
@@ -61,27 +192,3 @@ They can specifically express aspects such as:
 - **Manner**: The way in which an action or relation occurs.
 - **Means**: The method or instrument through which a relation is established.
 - Other circumstantial or participant-oriented dimensions.
-
-```mermaid
-graph TB
-    FEx["FEx<br/>(Correspondente<br/>a property)"]
-    ClasseA["Classe A"]
-    microframe["microframe"]
-    domain["domain"]
-    range["range"]
-    ClasseB["Classe B"]
-    target["target"]
-    
-    FEx --> ClasseA
-    ClasseA --> domain
-    ClasseA --> microframe
-    domain --> range
-    microframe --> range
-    range --> ClasseB
-    ClasseB --> target
-    
-    style FEx fill:#f9f,stroke:#333,stroke-width:2px
-    style ClasseA fill:#bbf,stroke:#333,stroke-width:2px
-    style ClasseB fill:#bbf,stroke:#333,stroke-width:2px
-    style range fill:#ffa,stroke:#333,stroke-width:2px
-```

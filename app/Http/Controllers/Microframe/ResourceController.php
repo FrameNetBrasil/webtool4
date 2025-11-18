@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Microframe;
 
-use App\Data\Frame\CreateData;
+use App\Data\Microframe\CreateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Frame;
+use App\Repositories\Microframe;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -18,7 +19,7 @@ class ResourceController extends Controller
     #[Get(path: '/microframe/new')]
     public function new()
     {
-        return view('Frame.new');
+        return view('Microframe.new');
     }
 
     #[Post(path: '/microframe')]
@@ -51,17 +52,16 @@ class ResourceController extends Controller
     #[Get(path: '/microframe/{id}')]
     public function get(string $id)
     {
-        return view('Frame.edit', [
-            'frame' => Frame::byId($id),
-            'classification' => Frame::getClassificationLabels($id),
+        return view('Microframe.edit', [
+            'frame' => Microframe::byId($id),
         ]);
     }
 
     #[Get(path: '/microframe/nextFrom/{id}')]
     public function nextFrom(string $id)
     {
-        $current = Frame::byId($id);
-        $next = Criteria::table('view_frame')
+        $current = Microframe::byId($id);
+        $next = Criteria::table('view_microframe')
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->where('name', '>', $current->name)
             ->orderBy('name')
