@@ -38,6 +38,7 @@
         "doctrine/collections": "^2.2",
         "google/cloud-speech": "^1.19",
         "google/cloud-storage": "^1.42",
+        "graphp/graphviz": "^0.2.2",
         "guzzlehttp/guzzle": "^7.2",
         "james-heinrich/getid3": "^1.9",
         "laravel/framework": "^12.0",
