@@ -20,6 +20,7 @@
                 <div class="rowFE">
                     @foreach($fesData as $idEntity)
                         @php($fe = $fes[$idEntity])
+                        @if($fe->coreType != 'cty_target')
                         <div class="colFE">
                             <button
                                 class="ui right labeled icon button mb-2 color_{{$fe->idColor}}"
@@ -33,6 +34,7 @@
                                 <x-element::fe :type="$fe->coreType" name="{{$fe->name}}" idColor="{{$fe->idColor}}"></x-element::fe>
                             </button>
                         </div>
+                        @endif
                     @endforeach
                 </div>
             @endif

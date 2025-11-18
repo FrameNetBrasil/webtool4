@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Process\Process;
 
 class DocsService extends Controller
 {
@@ -257,6 +258,9 @@ class DocsService extends Controller
             'html_input' => 'allow',
             'allow_unsafe_links' => false,
         ]);
+
+        // Process Graphviz diagrams
+        $html = self::renderGraphvizDiagrams($html);
 
         return [
             'found' => true,
@@ -523,5 +527,43 @@ class DocsService extends Controller
         }
 
         return $excerpt;
+    }
+
+    /**
+     * Process and render Graphviz diagrams in HTML
+     */
+    private static function renderGraphvizDiagrams(string $html): string
+    {
+        // Match code blocks with language-dot or language-graphviz classes
+        $pattern = '/<pre><code class="language-(dot|graphviz)">(.*?)<\/code><\/pre>/is';
+
+        return preg_replace_callback($pattern, function ($matches) {
+            $dotCode = html_entity_decode($matches[2], ENT_QUOTES | ENT_HTML5);
+
+            try {
+                // Use Graphviz command-line tool to render DOT to SVG
+                $process = new Process(['dot', '-Tsvg']);
+                $process->setInput($dotCode);
+                $process->setTimeout(30);
+                $process->run();
+
+                if (! $process->isSuccessful()) {
+                    throw new \RuntimeException($process->getErrorOutput());
+                }
+
+                $svg = $process->getOutput();
+
+                // Wrap SVG in a container div for styling and interactivity
+                return '<div class="graphviz-diagram-wrapper">'
+                    .'<div class="graphviz-diagram">'.$svg.'</div>'
+                    .'</div>';
+            } catch (\Exception $e) {
+                // If rendering fails, return error message with original code
+                return '<div class="graphviz-error">'
+                    .'<p><strong>Graphviz rendering error:</strong> '.htmlspecialchars($e->getMessage()).'</p>'
+                    .'<pre><code class="language-dot">'.htmlspecialchars($dotCode).'</code></pre>'
+                    .'</div>';
+            }
+        }, $html);
     }
 }

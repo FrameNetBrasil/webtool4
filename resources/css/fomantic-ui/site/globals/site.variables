@@ -9,6 +9,10 @@
      User Global Variables
 *******************************/
 
+@fontName: "Noto Sans";
+@googleFontName: @fontName;
+@importGoogleFonts: true;
+
 @codeFont: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
 @headerFont: @fontName, @fallbackFonts;
 @pageFont: @fontName, @fallbackFonts;

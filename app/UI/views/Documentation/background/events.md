@@ -658,9 +658,41 @@ Anyway, this approach to event classification is based on the designer's choices
 Ultimately, this discussion has no end, because realists will keep defending the idea that events in reality are not changed by the way we describe them, 
 while constructivists will keep defending the idea that, whatever *true reality* is about, it can't be modelled without the theoretical burden of how we observe and describe it. 
 
-Both positions are in principle valid, but, if taken too radically, they focus on issues that are only partly relevant to the aim of computational ontologies, 
-which assist domain experts in representing a certain portion of reality according to their own assumptions and requirements. 
-For this reason, in DUL both events and situations are allowed, together with descriptions, in order to encode the modelling needs, 
+Both positions are in principle valid, but, if taken too radically, they focus on issues that are only partly relevant to the aim of computational ontologies,
+which assist domain experts in representing a certain portion of reality according to their own assumptions and requirements.
+For this reason, in DUL both events and situations are allowed, together with descriptions, in order to encode the modelling needs,
 independently from the position (if any) chosen by the model designer.
 
+## Test: Graphviz Integration
+
+This is a test of Graphviz force-directed layout using the `neato` engine for complex network visualization:
+
+```dot
+graph {
+// Set default font for the entire graph
+      graph [fontname="Noto Sans"];
+      node [fontname="Noto Sans"];
+      edge [fontname="Noto Sans"];
+
+    layout=neato;
+    overlap=false;
+    splines=true;
+
+    // Frame nodes
+    Event [shape=ellipse, style=filled, fillcolor=lightblue];
+    Agent [shape=box, style=filled, fillcolor=lightgreen];
+    Patient [shape=box, style=filled, fillcolor=lightyellow];
+    Cause [shape=box, style=filled, fillcolor=lightcoral];
+    Theme [shape=box, style=filled, fillcolor=lightgray];
+    Instrument [shape=box, style=filled, fillcolor=wheat];
+
+    // Relationships
+    Agent -- Event [label="causes"];
+    Cause -- Event [label="triggers"];
+    Event -- Patient [label="affects"];
+    Event -- Theme [label="involves"];
+    Agent -- Instrument [label="uses"];
+    Instrument -- Event [label="in"];
+}
+```
 

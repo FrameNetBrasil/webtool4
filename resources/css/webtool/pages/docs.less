@@ -491,6 +491,104 @@
             opacity: 1;
         }
     }
+
+    // Graphviz diagrams
+    .graphviz-diagram-wrapper {
+        position: relative;
+        margin: @relativeMedium 0;
+
+        .graphviz-diagram {
+            display: flex;
+            justify-content: center;
+            padding: @relativeSmall;
+            background: @white;
+            border: 1px solid @gray200;
+            border-radius: @relativeBorderRadius;
+            overflow-x: auto;
+
+            svg {
+                max-width: 100%;
+                height: auto;
+            }
+
+            // Scrollbar for wide diagrams
+            &::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: @gray100;
+                border-radius: 4px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: @gray400;
+                border-radius: 4px;
+
+                &:hover {
+                    background: @gray500;
+                }
+            }
+        }
+
+        // Expand button (shared styling with Mermaid)
+        .diagram-expand-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 8px 10px;
+            opacity: 0;
+            transition: opacity @transitionFast, background @transitionFast;
+            z-index: 10;
+            background: @white;
+            border: 1px solid @gray300;
+            box-shadow: @shadowSM;
+
+            &:hover {
+                background: @gray50;
+                border-color: @primaryColor;
+
+                i {
+                    color: @primaryColor;
+                }
+            }
+
+            i {
+                color: @gray600;
+                font-size: 16px;
+                margin: 0;
+            }
+        }
+
+        // Show button on hover
+        &:hover .diagram-expand-btn {
+            opacity: 1;
+        }
+    }
+
+    // Graphviz error display
+    .graphviz-error {
+        background: #fff5f5;
+        border: 1px solid #ff6b6b;
+        border-radius: @relativeBorderRadius;
+        padding: @relativeSmall;
+        margin: @relativeSmall 0;
+
+        p {
+            margin: 0 0 @relative8px 0;
+            color: #c92a2a;
+
+            strong {
+                font-weight: @semibold;
+            }
+        }
+
+        pre {
+            background: @gray900;
+            color: @gray100;
+            margin: 0;
+        }
+    }
 }
 
 /* -------------------
