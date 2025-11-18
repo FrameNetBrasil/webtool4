@@ -669,7 +669,11 @@ This is a test of Graphviz force-directed layout using the `neato` engine for co
 
 ```dot
 graph {
-    graph [fontname = "Noto Sans"];
+// Set default font for the entire graph
+      graph [fontname="Noto Sans"];
+      node [fontname="Noto Sans"];
+      edge [fontname="Noto Sans"];
+
     layout=neato;
     overlap=false;
     splines=true;
