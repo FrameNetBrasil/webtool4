@@ -81,8 +81,51 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', renderMermaidDiagrams);
-        document.body.addEventListener('htmx:afterSwap', renderMermaidDiagrams);
+        function addGraphvizExpandButtons() {
+            document.querySelectorAll('.graphviz-diagram-wrapper').forEach((wrapper) => {
+                // Check if button already exists
+                if (wrapper.querySelector('.diagram-expand-btn')) {
+                    return;
+                }
+
+                // Create expand button
+                const expandBtn = document.createElement('button');
+                expandBtn.className = 'ui icon button diagram-expand-btn';
+                expandBtn.setAttribute('aria-label', 'Expand diagram');
+                expandBtn.setAttribute('title', 'View enlarged diagram');
+                expandBtn.innerHTML = '<i class="expand arrows alternate icon"></i>';
+
+                // Add button to wrapper
+                wrapper.appendChild(expandBtn);
+
+                // Add click handler
+                expandBtn.addEventListener('click', function() {
+                    const diagramContainer = wrapper.querySelector('.graphviz-diagram');
+                    const svg = diagramContainer?.querySelector('svg');
+
+                    if (svg) {
+                        // Clone the SVG
+                        const clonedSvg = svg.cloneNode(true);
+
+                        // Clear previous content and add cloned SVG
+                        const modalContent = document.querySelector('#diagramModal .diagram-modal-content');
+                        modalContent.innerHTML = '';
+                        modalContent.appendChild(clonedSvg);
+
+                        // Show modal
+                        $('#diagramModal').modal('show');
+                    }
+                });
+            });
+        }
+
+        function initializeDiagrams() {
+            renderMermaidDiagrams();
+            addGraphvizExpandButtons();
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeDiagrams);
+        document.body.addEventListener('htmx:afterSwap', initializeDiagrams);
     </script>
 
 </x-layout.index>
