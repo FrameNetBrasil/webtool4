@@ -33,9 +33,11 @@ class ReportService
 //        $report['fecoreset'] = self::getFECoreSet($frame);
         $report['frame']->description = self::decorate($frame->description, $report['fe']['styles']);
         $report['relations'] = self::getRelations($frame);
+        $report['asRestriction'] = self::getAsRestriction($frame);
 //        $report['classification'] = Frame::getClassificationLabels($idFrame);
 //        $report['lus'] = self::getLUs($frame, $idLanguage);
 //        $report['vus'] = self::getVUs($frame, $idLanguage);
+        debug($report['asRestriction']);
         return $report;
     }
 
@@ -100,6 +102,23 @@ class ReportService
     {
         $relations = [];
         $result = RelationService::listRelationsClass($frame->idFrame);
+        foreach ($result as $row) {
+            $relationName = $row->relationType . '|' . $row->name;
+            $relations[$row->direction][$relationName][$row->idFrameRelated] = [
+                'idEntityRelation' => $row->idEntityRelation,
+                'idFrame' => $row->idFrameRelated,
+                'name' => $row->related,
+                'color' => $row->color
+            ];
+        }
+        //ksort($relations);
+        return $relations;
+    }
+
+    public static function getAsRestriction($frame): array
+    {
+        $relations = [];
+        $result = RelationService::listClassAsRestriction($frame->idFrame);
         foreach ($result as $row) {
             $relationName = $row->relationType . '|' . $row->name;
             $relations[$row->direction][$relationName][$row->idFrameRelated] = [

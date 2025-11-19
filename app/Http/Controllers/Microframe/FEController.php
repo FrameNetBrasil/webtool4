@@ -13,7 +13,7 @@ class FEController extends Controller
     #[Get(path: '/microframe/{id}/fes')]
     public function fes(string $id)
     {
-        return view("Frame.fes",[
+        return view("Microframe.fes",[
             'idFrame' => $id
         ]);
     }
@@ -21,7 +21,7 @@ class FEController extends Controller
     #[Get(path: '/microframe/{id}/fes/formNew')]
     public function formNewFE(string $id)
     {
-        return view("FE.formNew",[
+        return view("FE.formNewMicroframe",[
             'idFrame' => $id
         ]);
     }

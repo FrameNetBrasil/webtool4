@@ -13,21 +13,17 @@
                         @foreach($relations1 as $nameEntry => $relations2)
                             @php([$entry, $name] = explode('|', $nameEntry))
                             @php($relId = str_replace(' ', '_', $name))
-                            <div class="relation-type-section"
-                                 title="<span class='color_{{ $entry }}'>{{ $name }}</span>">
-                                <div class="relation-type-header">
+                            <div class="ui segment">
+                                <div class="ui two column very relaxed grid">
                                     @if ($direction == 'direct')
+                                    <div class="column w-1/4">
                                         <h4 class="ui header small">{{$frame->name}} <span class="color_frame">{{ $name }}</span></h4>
-                                    @else
-                                        <h4 class="ui header small"><span class="color_frame">{{ $name }}</span> {{$frame->name}} </h4>
-                                    @endif
-                                </div>
-                                <div class="relation-frames">
-                                    <div class="flex flex-wrap gap-1">
+                                    </div>
+                                    <div class="column w-3/4">
                                         @foreach($relations2 as $idFrame => $relation)
                                             <button
                                                 id="btnRelation_{{ $relId }}_{{ $idFrame }}"
-                                                class="ui button basic relation-frame-btn"
+                                                class="ui button basic relation-frame-btn mb-1"
                                             >
                                                 <a href="/report/class/{{ $idFrame }}">
                                                     <x-ui::element.frame
@@ -36,11 +32,27 @@
                                             </button>
                                         @endforeach
                                     </div>
+                                    @endif
+                                        @if ($direction == 'inverse')
+                                            <div class="column w-3/4">
+                                                @foreach($relations2 as $idFrame => $relation)
+                                                    <button
+                                                        id="btnRelation_{{ $relId }}_{{ $idFrame }}"
+                                                        class="ui button basic relation-frame-btn mb-1"
+                                                    >
+                                                        <a href="/report/class/{{ $idFrame }}">
+                                                            <x-ui::element.frame
+                                                                name="{{ $relation['name'] }}"></x-ui::element.frame>
+                                                        </a>
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                            <div class="column w-1/4">
+                                                <h4 class="ui header small"><span class="color_frame">{{ $name }}</span> {{$frame->name}} </h4>
+                                            </div>
+                                        @endif
                                 </div>
                             </div>
-                            @if(!$loop->last)
-                                <div class="ui divider"></div>
-                            @endif
                         @endforeach
                     @endforeach
                 </div>

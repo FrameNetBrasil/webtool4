@@ -2,11 +2,11 @@
     hx-trigger="load"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/semanticType/{{$idEntity}}/childSubTypeAdd/{{$root}}"
+    hx-get="/class/{{$frame->idFrame}}/relations/formNew"
 ></div>
 <div
     hx-trigger="load"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/semanticType/{{$idEntity}}/childSubTypeGrid"
+    hx-get="/class/{{$frame->idFrame}}/relations/grid"
 ></div>

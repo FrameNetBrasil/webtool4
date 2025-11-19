@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\SemanticType;
 
 use App\Database\Criteria;
 use App\Repositories\Frame;
 use App\Repositories\SemanticType;
+use App\Services\AppService;
+use App\Services\RelationService;
 
-class ReportSTService
+class ReportService
 {
 
     public static function report(int|string $idSemanticType, string $lang = ''): array

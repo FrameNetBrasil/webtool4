@@ -25,6 +25,9 @@ class CreateData extends Data
         if ($this->coreType == 'cty_range') {
             $this->idColor = 19;
         }
+        if ($this->coreType == 'cty_property') {
+            $this->idColor = 1;
+        }
         $this->_token = csrf_token();
     }
 }

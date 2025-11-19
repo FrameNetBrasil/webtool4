@@ -2,9 +2,7 @@
     $items = [
         ['entries','Translations'],
         ['fes','FrameElements'],
-        ['lus','LUs'],
-        ['classification','Classification'],
-        ['relations','F-F Relations'],
+        ['relations','C-C Relations'],
         ['feRelations','FE-FE Relations'],
         ['semanticTypes','SemanticTypes'],
     ];

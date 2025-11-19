@@ -51,6 +51,18 @@
             </div>
         </div>
 
+        {{-- AsRestriction Relations Section --}}
+        <div class="frame-relations-section mb-8">
+            <div class="section-header">
+                <h2 class="ui header section-title" id="asRestriction-relations">
+                    <a href="#asRestriction-relations">As restriction</a>
+                </h2>
+            </div>
+            <div class="section-content" id="asRestriction-content">
+                @include('Class.Report.partials.asRestriction-card')
+            </div>
+        </div>
+
     </div>
 </div>
 <script>

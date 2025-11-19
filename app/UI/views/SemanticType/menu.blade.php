@@ -1,11 +1,10 @@
 @php
 $items = [
     ['entries','Translations'],
-    ['subTypes','SubTypes'],
 ];
 @endphp
 <x-objectmenu
-    id="semanticTypeMenu_{{$semanticType->idSemanticType}}"
+    id="corpusMenu"
     :items="$items"
-    :path="'semanticType/' . $semanticType->idSemanticType"
+    :path="'/corpus/' . $corpus->idCorpus"
 ></x-objectmenu>

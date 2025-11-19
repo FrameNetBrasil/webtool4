@@ -13,25 +13,23 @@
                 ></x-text-field>
             </div>
             <div class="field">
-                <x-combobox.options
+                <x-combobox.fe-coreness
                     id="coreType"
                     label="Coreness"
-                    :options="['cty_domain' => 'Domain', 'cty_range' => 'Range']"
-                    value="cty_domain"
-                ></x-combobox.options>
+                ></x-combobox.fe-coreness>
             </div>
-{{--            <div class="field">--}}
-{{--                <x-combobox.color--}}
-{{--                    id="idColor"--}}
-{{--                    label="Color"--}}
-{{--                    value=""--}}
-{{--                ></x-combobox.color>--}}
-{{--            </div>--}}
+            <div class="field">
+                <x-combobox.color
+                    id="idColor"
+                    label="Color"
+                    value=""
+                ></x-combobox.color>
+            </div>
         </div>
     </x-slot:fields>
     <x-slot:buttons>
         <x-button
-            label="Add Domain/Range"
+            label="Add FE"
             hx-post="/fe"
         ></x-button>
     </x-slot:buttons>
