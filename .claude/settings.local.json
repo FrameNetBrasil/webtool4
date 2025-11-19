@@ -1,6 +1,22 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(php artisan tinker:*)",
+      "Bash(paste:*)",
+      "Bash(cat:*)",
+      "Bash(php artisan make:command:*)",
+      "Bash(php artisan fix:frame-element-relations:*)",
+      "Bash(php artisan import:microframe-relations:*)",
+      "Bash(vendor/bin/pint:*)",
+      "mcp__laravel-boost__database-schema",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_console_messages"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "laravel-boost"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }

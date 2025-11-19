@@ -222,6 +222,7 @@ return [
             'cty_extra-thematic' => 'black circle outline',
             'cty_domain' => 'black dot circle',
             'cty_range' => 'black dot circle outline',
+            'cty_property' => 'black dot circle outline',
         ],
         'coreness' => [
             'cty_core' => 'Core',
@@ -230,6 +231,7 @@ return [
             'cty_extra-thematic' => 'Extra-thematic',
             'cty_domain' => 'Domain',
             'cty_range' => 'Range',
+            'cty_property' => 'Core',
         ],
     ],
     'neo4j' => [

@@ -36,6 +36,24 @@ class RelationService extends Controller
         return Criteria::function('relation_create(?)', [$data]);
     }
 
+    static public function createMicroframe(string $microframeName, int $idEntityDomain, int $idEntityRange): ?int
+    {
+        $user = AppService::getCurrentUser();
+        $microframe = Criteria::table("view_microframe as mf")
+            ->where("mf.idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->where("mf.name", "=", $microframeName)
+            ->first();
+        $data = json_encode([
+            'relationType' => 'rel_microframe',
+            'idEntity1' => $microframe->idEntity,
+            'idEntity2' => $idEntityDomain,
+            'idEntity3' => $idEntityRange,
+            'idRelation' => null,
+            'idUser' => $user ? $user->idUser : 0
+        ]);
+        return Criteria::function('relation_create(?)', [$data]);
+    }
+
     public static function listRelationsFrame(int $idFrame)
     {
         $idLanguage = AppService::getCurrentIdLanguage();
@@ -230,6 +248,31 @@ class RelationService extends Controller
         return $result;
     }
 
+    public static function listClassAsRestriction(int $idFrame)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        //$config = config('webtool.relations');
+        $result = [];
+        $relations = Criteria::table("view_class_fe_relation")
+            ->where("c2IdFrame", $idFrame)
+            ->where("idLanguage", $idLanguage)
+            ->where("fe1Name","<>", "Target") // classes relations
+            ->orderBy("relationType")
+            ->orderBy("c1Name")
+            ->all();
+        foreach ($relations as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
+                'idFrameRelated' => $relation->c1IdFrame,
+                'related' => $relation->c1Name,
+                'direction' => 'direct'
+            ];
+        }
+        return $result;
+    }
 
     public static function updateFramalDomain(UpdateClassificationData $data)
     {

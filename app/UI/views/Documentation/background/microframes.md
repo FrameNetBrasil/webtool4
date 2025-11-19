@@ -83,7 +83,8 @@ digraph G {
 
 ### Ontological relations
 
-Microframes are used to express subsumption relations between classes and between properties (microframes).
+Microframes are used to express subsumption relations between classes and between properties (microframes). The same structure is
+used to express object properties (relations between ontological classes).
 
 ```dot
 digraph G {
@@ -97,11 +98,11 @@ digraph G {
     subgraph cluster_0 {
         style=filled;
         color=lightyellow;
-        label = "Subsumption between classes";
+        label = "Subsumption/relations between classes/properties";
         
-        cB [label="Class_B"]
-        cA [label="Class_A"]
-        mf [label="Subsumption (Microframe)"]
+        cB [label="Class_Microframe_B"]
+        cA [label="Class_Microframe_A"]
+        mf [label="Relation (Microframe)"]
         relation [shape=point fillcolor=black]
         feX [shape=circle label="", xlabel="target" width="0.1"]
         feTarget [shape=circle label="", xlabel="target" width="0.1"]
@@ -118,36 +119,7 @@ digraph G {
 }
 ```
 
-```dot
-digraph G {
-    graph [fontname="Noto Sans" fontsize=12];
-    node [fontname="Noto Sans" fontsize=12 shape=rectangle style=filled color="#9370DB" fillcolor="#ECECFF"];
-    edge [fontname="Noto Sans" fontsize=12];
-    layout=dot
-    rankdir=LR;
-    bgcolor=transparent;
-
-    subgraph cluster_0 {
-        style=filled;
-        color=lightyellow;
-        label = "Subsumption between microframes";
-        
-        cB [label="Microframe_B"]
-        cA [label="Microframe_A"]
-        mf [label="Subsumption (Microframe)"]
-        relation [shape=point fillcolor=black]
-        
-        // Force mf to be on the right side
-        {rank=same; relation; mf}
-        
-        cA -> relation  [arrowsize=0.3 label="Subframe (domain)" color="red" fontcolor=red]
-        cB -> relation [arrowsize=0.3  label="Superframe (range)"  color="blue" fontcolor=blue]
-        mf -> relation [arrowsize=0.3]
-    }
-}
-```
-
-Microframes are used to express object properties for ontology classes.
+Microframes are used to express OWL restrictions for ontology classes (represented as Frame Elements in the the class).
 
 ```dot
 digraph G {

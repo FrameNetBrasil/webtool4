@@ -7,33 +7,33 @@
 <div class="ui card fluid data-card relations-card">
     <div class="content">
         <div class="description">
-            @if(count($relations) > 0)
+            @if(count($asRestriction) > 0)
                 <div class="relations-container">
-                    @foreach($relations as $direction => $relations1)
+                    @foreach($asRestriction as $direction => $relations1)
                         @foreach($relations1 as $nameEntry => $relations2)
                             @php([$entry, $name] = explode('|', $nameEntry))
                             @php($relId = str_replace(' ', '_', $name))
                             <div class="ui segment">
                                 <div class="ui two column very relaxed grid">
-                                    @if ($direction == 'direct')
-                                    <div class="column w-1/4">
-                                        <h4 class="ui header small">{{$frame->name}} <span class="color_frame">{{ $name }}</span></h4>
-                                    </div>
-                                    <div class="column w-3/4">
-                                        @foreach($relations2 as $idFrame => $relation)
-                                            <button
-                                                id="btnRelation_{{ $relId }}_{{ $idFrame }}"
-                                                class="ui button basic relation-frame-btn mb-1"
-                                            >
-                                                <a href="/report/class/{{ $idFrame }}">
-                                                    <x-ui::element.frame
-                                                        name="{{ $relation['name'] }}"></x-ui::element.frame>
-                                                </a>
-                                            </button>
-                                        @endforeach
-                                    </div>
-                                    @endif
-                                        @if ($direction == 'inverse')
+{{--                                    @if ($direction == 'direct')--}}
+{{--                                    <div class="column w-1/4">--}}
+{{--                                        <h4 class="ui header small">{{$frame->name}} <span class="color_frame">{{ $name }}</span></h4>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="column w-3/4">--}}
+{{--                                        @foreach($relations2 as $idFrame => $relation)--}}
+{{--                                            <button--}}
+{{--                                                id="btnRelation_{{ $relId }}_{{ $idFrame }}"--}}
+{{--                                                class="ui button basic relation-frame-btn mb-1"--}}
+{{--                                            >--}}
+{{--                                                <a href="/report/class/{{ $idFrame }}">--}}
+{{--                                                    <x-ui::element.frame--}}
+{{--                                                        name="{{ $relation['name'] }}"></x-ui::element.frame>--}}
+{{--                                                </a>--}}
+{{--                                            </button>--}}
+{{--                                        @endforeach--}}
+{{--                                    </div>--}}
+{{--                                    @endif--}}
+{{--                                        @if ($direction == 'inverse')--}}
                                             <div class="column w-3/4">
                                                 @foreach($relations2 as $idFrame => $relation)
                                                     <button
@@ -50,7 +50,7 @@
                                             <div class="column w-1/4">
                                                 <h4 class="ui header small"><span class="color_frame">{{ $name }}</span> {{$frame->name}} </h4>
                                             </div>
-                                        @endif
+{{--                                        @endif--}}
                                 </div>
                             </div>
                         @endforeach

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Microframe;
+namespace App\Http\Controllers\Class;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FE\BrowseController as FEBrowseController;
@@ -10,23 +10,23 @@ use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 #[Middleware("master")]
 class FEController extends Controller
 {
-    #[Get(path: '/microframe/{id}/fes')]
+    #[Get(path: '/class/{id}/fes')]
     public function fes(string $id)
     {
-        return view("Microframe.fes",[
+        return view("Class.fes",[
             'idFrame' => $id
         ]);
     }
 
-    #[Get(path: '/microframe/{id}/fes/formNew')]
+    #[Get(path: '/class/{id}/fes/formNew')]
     public function formNewFE(string $id)
     {
-        return view("FE.formNewMicroframe",[
+        return view("FE.formNewClass",[
             'idFrame' => $id
         ]);
     }
 
-    #[Get(path: '/microframe/{id}/fes/grid')]
+    #[Get(path: '/class/{id}/fes/grid')]
     public function gridFE(string $id)
     {
         return view("FE.grid",[

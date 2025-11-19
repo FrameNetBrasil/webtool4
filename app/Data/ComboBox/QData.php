@@ -11,6 +11,7 @@ class QData extends Data
         public ?string $frame = '',
         public ?string $lu = '',
         public ?string $lemmaName = '',
+        public ?string $semanticType = '',
         public ?int $idLanguage = 0
     )
     {

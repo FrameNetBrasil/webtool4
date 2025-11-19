@@ -6,7 +6,7 @@
     hx-get="/frame/{{$idFrame}}/fes/grid"
 >
     <div class="flex-grow-1 content bg-white">
-        @php($coreType = ['cty_core','cty_core-unexpressed','cty_peripheral','cty_extra-thematic','cty_domain','cty_range'])
+        @php($coreType = ['cty_core','cty_core-unexpressed','cty_peripheral','cty_extra-thematic','cty_domain','cty_range','cty_property'])
         @foreach($coreType as $ct)
             @php($array = $fes[$ct] ?? [])
             @if(!empty($array))
