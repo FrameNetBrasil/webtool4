@@ -27,11 +27,11 @@
                                     </x-text-field>
                                 </div>
                                 <div class="field">
-                                    <x-ui::tree
-                                        :title="$title ?? ''"
-                                        url="/semanticType/browse/search"
-                                        :data="$data"
-                                    ></x-ui::tree>
+                                    <x-ui::tree.semantictype
+                                        id="idSemanticType"
+                                        label="SemanticType"
+                                        baseType="microframe_type"
+                                    ></x-ui::tree.semantictype>
                                 </div>
                             </div>
                             <div class="extra content">

@@ -25,11 +25,12 @@ class BrowseService
                 $semanticTypes = SemanticType::listRoots();
             }
         }
-        debug($semanticTypes);
+//        debug($semanticTypes);
         foreach ($semanticTypes as $semanticType) {
             $result[$semanticType->idSemanticType] = [
                 'id' => $semanticType->idSemanticType,
                 'type' => 'semanticType',
+                'name' => $semanticType->name,
                 'text' => view('SemanticType.partials.semanticType', ['semanticType' => $semanticType])->render(),
                 'leaf' => SemanticType::countChildren($semanticType->idSemanticType) <= 0,
                 'state' => 'closed',

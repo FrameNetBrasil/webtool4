@@ -21,10 +21,10 @@ class ResourceController extends Controller
     #[Get(path: '/microframe/new')]
     public function new()
     {
-        $search = new SearchData(semanticType: 'microframe_type');
-        $data = BrowseService::browseSemanticTypeBySearch($search);
+//        $search = new SearchData(semanticType: 'FrameNet');
+//        $data = BrowseService::browseSemanticTypeBySearch($search);
         return view('Microframe.new',[
-            "data" => $data
+//            "data" => $data
         ]);
     }
 
@@ -32,9 +32,11 @@ class ResourceController extends Controller
     public function store(CreateData $data)
     {
         try {
-            $idFrame = Criteria::function('frame_create(?)', [$data->toJson()]);
-
-            return $this->clientRedirect("/microframe/{$idFrame}");
+            debug($data);
+//            $idFrame = Criteria::function('frame_create(?)', [$data->toJson()]);
+//
+//            return $this->clientRedirect("/microframe/{$idFrame}");
+            return $this->renderNotify("success", "Microframe created.");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
