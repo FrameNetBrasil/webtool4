@@ -82,7 +82,7 @@ export default function () {
         },
 
         // Select item
-        selectItem(itemId, type) {
+        selectItem(itemId, type, item) {
             this.selectedItem = itemId;
             // console.log(`Item selected: ${itemId}  ${type}`);
 
@@ -96,7 +96,8 @@ export default function () {
                 detail: {
                     tree: this,
                     id: itemId,
-                    type: type
+                    type: type,
+                    item: item
                 },
                 bubbles: true
             }));
