@@ -44,16 +44,12 @@ class SemanticType
 
     public static function listRelations(int $idEntity)
     {
-        return Criteria::table("view_relation")
-            ->join("view_semantictype", "view_relation.idEntity2", "=", "view_semantictype.idEntity")
-            ->filter([
-                ["view_relation.idEntity1", "=", $idEntity],
-                ["view_relation.relationType", "=", "rel_hassemtype"],
-                ["view_semantictype.idLanguage", "=", AppService::getCurrentIdLanguage()]
-            ])->orderBy("view_semantictype.name")->all();
+        return Criteria::table("view_relation as r")
+            ->join("view_semantictype as st", "r.idEntity2", "=", "st.idEntity")
+            ->where("r.idEntity1", "=", $idEntity)
+            ->where("st.idLanguage",AppService::getCurrentIdLanguage())
+            ->orderBy("st.name")->all();
     }
-
-
 
     public static function listTree(string $semanticType)
     {

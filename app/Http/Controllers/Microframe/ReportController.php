@@ -62,9 +62,8 @@ class ReportController extends Controller
     public function listForSelect(QData $data)
     {
         debug($data);
-        $name = (strlen($data->frame) > 2) ? $data->frame : 'none';
-
-        return ['results' => Criteria::byFilterLanguage('view_frame', ['name', 'startswith', $name])->orderby('name')->all()];
+        $name = (strlen($data->microframe) > 2) ? $data->microframe : 'none';
+        return ['results' => Criteria::byFilterLanguage('view_microframe', ['name', 'startswith', $name])->orderby('name')->all()];
     }
 
 }

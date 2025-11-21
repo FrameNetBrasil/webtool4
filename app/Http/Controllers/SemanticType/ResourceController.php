@@ -9,6 +9,7 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\SemanticType;
 use App\Services\AppService;
+use App\Services\RelationService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -83,4 +84,101 @@ class ResourceController extends Controller
         $name = (strlen($data->semanticType) > 2) ? $data->semanticType : 'none';
         return ['results' => Criteria::byFilterLanguage("view_semantictype",["name","startswith",$name])->orderby("name")->all()];
     }
+
+    /***
+     * Child
+     */
+    #[Get(path: '/semanticType/{idEntity}/childAdd/{root}')]
+    public function childFormAdd(string $idEntity, string $root)
+    {
+        return view("SemanticType.childAdd", [
+            'idEntity' => $idEntity,
+            'root' => $root
+        ]);
+    }
+
+    #[Get(path: '/semanticType/{idEntity}/childGrid')]
+    public function childGrid(string $idEntity)
+    {
+        $relations = SemanticType::listRelations($idEntity);
+        return view("SemanticType.childGrid", [
+            'idEntity' => $idEntity,
+            'relations' => $relations
+        ]);
+    }
+
+    #[Post(path: '/semanticType/{idEntity}/add')]
+    public function childAdd(CreateData $data)
+    {
+        try {
+            $st = SemanticType::byId($data->idSemanticType);
+            RelationService::create(
+                'rel_hassemtype',
+                $data->idEntity,
+                $st->idEntity,
+                null,
+                null,
+                $data->idUser
+            );
+            $this->trigger('reload-gridChildST');
+            return $this->renderNotify("success", "Semantic Type added.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Delete(path: '/semanticType/relation/{idEntityRelation}')]
+    public function childDelete(int $idEntityRelation)
+    {
+        try {
+            Criteria::table("entityrelation")->where("idEntityRelation", $idEntityRelation)->delete();
+            $this->trigger('reload-gridChildST');
+            return $this->renderNotify("success", "Relation deleted.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+    #[Get(path: '/semanticType/{idEntity}/childSubTypeAdd/{root}')]
+    public function childFormAddSubType(string $idEntity, string $root)
+    {
+        return view("SemanticType.childSubTypeAdd", [
+            'idEntity' => $idEntity,
+            'root' => $root
+        ]);
+    }
+
+    #[Post(path: '/semanticType/{idEntity}/addSubType')]
+    public function childAddSubType(CreateData $data)
+    {
+        try {
+            $parent = SemanticType::byIdEntity($data->idEntity);
+            $child = SemanticType::byId($data->idSemanticType);
+            RelationService::create(
+                'rel_subtypeof',
+                $child->idEntity,
+                $parent->idEntity,
+                null,
+                null
+            );
+            $this->trigger('reload-gridChildST');
+            return $this->renderNotify("success", "Subtype added.");
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
+    }
+
+
+    #[Get(path: '/semanticType/{idEntity}/childSubTypeGrid')]
+    public function childGridSubType(string $idEntity)
+    {
+        $relations = SemanticType::listChildren($idEntity);
+        debug($relations);
+        return view("SemanticType.childSubTypeGrid", [
+            'idEntity' => $idEntity,
+            'relations' => $relations
+        ]);
+    }
+
+
 }

@@ -8,7 +8,9 @@ use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Frame;
 use App\Repositories\Microframe;
+use App\Repositories\SemanticType;
 use App\Services\AppService;
+use App\Services\RelationService;
 use App\Services\SemanticType\BrowseService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -21,11 +23,7 @@ class ResourceController extends Controller
     #[Get(path: '/microframe/new')]
     public function new()
     {
-//        $search = new SearchData(semanticType: 'FrameNet');
-//        $data = BrowseService::browseSemanticTypeBySearch($search);
-        return view('Microframe.new',[
-//            "data" => $data
-        ]);
+        return view('Microframe.new');
     }
 
     #[Post(path: '/microframe')]
@@ -33,9 +31,10 @@ class ResourceController extends Controller
     {
         try {
             debug($data);
-//            $idFrame = Criteria::function('frame_create(?)', [$data->toJson()]);
-//
-//            return $this->clientRedirect("/microframe/{$idFrame}");
+            $idFrame = Criteria::function('frame_create(?)', [$data->toJson()]);
+            $microframe = Microframe::byId($idFrame);
+            $semanticType = SemanticType::byId($data->idSemanticType);
+            RelationService::createMicroframe("subsumption", $microframe->idEntity, $semanticType->idEntity);
             return $this->renderNotify("success", "Microframe created.");
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());

@@ -13,30 +13,31 @@ use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
 #[Middleware(name: 'auth')]
-class ClassController extends Controller
+class MicroframeController extends Controller
 {
-    #[Delete(path: '/relation/class/{idEntityRelation}')]
+    #[Delete(path: '/relation/microframe/{idEntityRelation}')]
     public function deleteFrameRelation(string $idEntityRelation)
     {
         try {
             Criteria::deleteById("entityrelation","idRelation", $idEntityRelation);
             Criteria::deleteById("entityrelation","idEntityRelation", $idEntityRelation);
-            $this->trigger('reload-gridClassRelation');
+            $this->trigger('reload-gridMicroframeRelation');
             return $this->renderNotify("success", "Relation deleted.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", "Deletion denied. Check for associated relations.");
         }
     }
 
-    #[Post(path: '/relation/class')]
+    #[Post(path: '/relation/microframe')]
     public function newFrameRelation(ClassData $data)
     {
         try {
-            $domain = Class_::byId($data->idFrame);
-            $range = Class_::byId($data->idFrameRelated);
+            debug($data);
+            $domain = Microframe::byId($data->idFrame);
+            $range = Microframe::byId($data->idFrameRelated);
             $microframe = Microframe::byIdEntity($data->idEntityMicroframe);
             RelationService::createMicroframe($microframe->name, $domain->idEntity, $range->idEntity);
-            $this->trigger('reload-gridClassRelation');
+            $this->trigger('reload-gridMicroframeRelation');
             debug($data);
             return $this->renderNotify("success", "Relation created.");
         } catch (\Exception $e) {

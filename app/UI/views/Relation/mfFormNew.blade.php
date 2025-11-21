@@ -9,20 +9,20 @@
                     ></x-combobox.microframe-relation>
                 </div>
                 <div class="field w-15em">
-                    <x-search::class
+                    <x-search::microframe
                         id="idFrameRelated"
-                        label="Related Class"
-                        placeholder="Select a Class"
-                        search-url="/class/list/forSelect"
+                        label="Related Microframe"
+                        placeholder="Select a Microframe"
+                        search-url="/microframe/list/forSelect"
                         value=""
                         display-value=""
-                        modal-title="Search Class"
-                    ></x-search::class>
+                        modal-title="Search Microframe"
+                    ></x-search::microframe>
                 </div>
             </div>
 
     </x-slot:fields>
     <x-slot:buttons>
-        <x-submit label="Add Relation" hx-post="/relation/class"></x-submit>
+        <x-submit label="Add Relation" hx-post="/relation/microframe"></x-submit>
     </x-slot:buttons>
 </x-form>

@@ -104,16 +104,12 @@ digraph G {
         cA [label="Class_Microframe_A"]
         mf [label="Relation (Microframe)"]
         relation [shape=point fillcolor=black]
-        feX [shape=circle label="", xlabel="target" width="0.1"]
-        feTarget [shape=circle label="", xlabel="target" width="0.1"]
         
         // Force mf to be on the right side
         {rank=same; relation; mf}
         
-        cA -> feX [arrowsize=0.3]
-        cB-> feTarget [arrowsize=0.3]
-        feX -> relation  [arrowsize=0.3 label="Subframe (domain)" color="red" fontcolor=red]
-        feTarget -> relation [arrowsize=0.3  label="Superframe (range)"  color="blue" fontcolor=blue]
+        cA -> relation  [arrowsize=0.3 label="Subframe (domain)" color="red" fontcolor=red]
+        cB -> relation [arrowsize=0.3  label="Superframe (range)"  color="blue" fontcolor=blue]
         mf -> relation [arrowsize=0.3]
     }
 }
@@ -140,15 +136,13 @@ digraph G {
         mf [label="Microframe"]
         relation [shape=point fillcolor=black]
         feX [shape=circle label="", xlabel="fe_x" width="0.1"]
-        feTarget [shape=circle label="", xlabel="target" width="0.1"]
         
         // Force mf to be on the right side
         {rank=same; relation; mf}
         
         cA -> feX [arrowsize=0.3]
-        cB-> feTarget [arrowsize=0.3]
         feX -> relation  [arrowsize=0.3 label="domain" color="red" fontcolor=red]
-        feTarget -> relation [arrowsize=0.3  label="range"  color="blue" fontcolor=blue]
+        cB -> relation [arrowsize=0.3  label="range"  color="blue" fontcolor=blue]
         mf -> relation [arrowsize=0.3]
     }
 }

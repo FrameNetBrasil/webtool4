@@ -106,18 +106,17 @@ class ReportService
     public static function getRelations($frame): array
     {
         $relations = [];
-        $result = RelationService::listRelationsFrame($frame->idFrame);
+        $result = RelationService::listRelationsMicroframe($frame->idFrame);
         foreach ($result as $row) {
-            $relationName = $row->relationType.'|'.$row->name;
-            $relations[$relationName][$row->idFrameRelated] = [
+            $relationName = $row->relationType . '|' . $row->name;
+            $relations[$row->direction][$relationName][$row->idFrameRelated] = [
                 'idEntityRelation' => $row->idEntityRelation,
                 'idFrame' => $row->idFrameRelated,
                 'name' => $row->related,
-                'color' => $row->color,
+                'color' => $row->color
             ];
         }
-        ksort($relations);
-
+        //ksort($relations);
         return $relations;
     }
 

@@ -29,7 +29,7 @@
                                     x-data
                                     type=button"
                                     class="ui danger button"
-                                    @click="messenger.confirmDelete(`Removing Frame '{{$frame?->name}}'.`, '/microframe/{{$frame->idFrame}}')"
+                                    @click="messenger.confirmDelete(`Removing Microframe '{{$frame?->name}}'.`, '/microframe/{{$frame->idFrame}}')"
                                 >Delete</button>
                             @endif
                         </div>

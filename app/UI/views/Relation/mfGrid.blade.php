@@ -1,10 +1,10 @@
 <div
     id="gridFrameRelations"
     class="ui card h-full w-full mb-2"
-    hx-trigger="reload-gridClassRelation from:body"
+    hx-trigger="reload-gridMicroframeRelation from:body"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/class/{{$idFrame}}/relations/grid"
+    hx-get="/microframe/{{$idFrame}}/relations/grid"
 >
     <div class="flex-grow-1 content bg-white">
 
@@ -33,7 +33,7 @@
                                 <a
                                     hx-target="#gridFrameRelationsContent"
                                     hx-swap="innerHTML"
-                                    hx-get="/class/relations/{{$relation['idEntityRelation']}}/class/{{$idFrame}}"
+                                    hx-get="/microframe/relations/{{$relation['idEntityRelation']}}/microframe/{{$idFrame}}"
                                     class="fe-fe cursor-pointer right pl-2"
                                 >
                                     FE-FE
@@ -41,7 +41,7 @@
                                 <div class="right pl-2">
                                     <x-delete
                                         title="delete Relation"
-                                        onclick="messenger.confirmDelete(`Removing Relation '{{$name}} {{$relation['name']}}'.`, '/relation/class/{{$relation['idEntityRelation']}}')"
+                                        onclick="messenger.confirmDelete(`Removing Relation '{{$name}} {{$relation['name']}}'.`, '/relation/microframe/{{$relation['idEntityRelation']}}')"
                                     ></x-delete>
                                 </div>
                             </div>

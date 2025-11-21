@@ -28,8 +28,8 @@ class MicroframeRelation extends Component
         ];
 
         $relations = Criteria::table("view_microframe as mf")
-            ->join("view_microframe_relation as mfr", "mf.idEntity", "=", "mfr.idEntityDomain")
-            ->join("semantictype as st", "mfr.idEntityRange", "=", "st.idEntity")
+            ->join("view_relation as r", "mf.idEntity", "=", "r.idEntity1")
+            ->join("semantictype as st", "r.idEntity2", "=", "st.idEntity")
             ->where("st.entry", $groupEntries[$group])
             ->where('mf.idLanguage', $idLanguage)
             ->select("mf.idEntity","mf.entry","mf.name")
