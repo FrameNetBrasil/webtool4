@@ -12,18 +12,7 @@ class Frame
     public static function byId(int $id): object
     {
         $frame = Criteria::byFilterLanguage("view_frame", ['idFrame', '=', $id])->first();
-        $frame->namespace = self::getNamespace($id);
         return $frame;
-    }
-
-    public static function getNamespace(int $idFrame): object
-    {
-        $namespace = Criteria::byFilterLanguage("view_frame_classification", [
-            ['idFrame', '=', $idFrame],
-            ['relationType','=','rel_namespace']
-        ])->first();
-        $namespace->color = "color_" . strtolower(substr($namespace->name,1));
-        return $namespace;
     }
 
     public static function byIdEntity(int $idEntity): object

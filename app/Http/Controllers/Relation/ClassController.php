@@ -32,10 +32,10 @@ class ClassController extends Controller
     public function newFrameRelation(ClassData $data)
     {
         try {
-            $feTarget = Class_::getFETarget($data->idFrame);
-            $feTargetRelated = Class_::getFETarget($data->idFrameRelated);
+            $domain = Class_::byId($data->idFrame);
+            $range = Class_::byId($data->idFrameRelated);
             $microframe = Microframe::byIdEntity($data->idEntityMicroframe);
-            RelationService::createMicroframe($microframe->name, $feTarget->idEntity, $feTargetRelated->idEntity);
+            RelationService::createMicroframe($microframe->name, $domain->idEntity, $range->idEntity);
             $this->trigger('reload-gridClassRelation');
             debug($data);
             return $this->renderNotify("success", "Relation created.");

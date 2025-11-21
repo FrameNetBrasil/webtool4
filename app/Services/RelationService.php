@@ -45,9 +45,9 @@ class RelationService extends Controller
             ->first();
         $data = json_encode([
             'relationType' => 'rel_microframe',
-            'idEntity1' => $microframe->idEntity,
-            'idEntity2' => $idEntityDomain,
-            'idEntity3' => $idEntityRange,
+            'idEntity1' => $idEntityDomain,
+            'idEntity2' => $idEntityRange,
+            'idEntityMicroframe' => $microframe->idEntity,
             'idRelation' => null,
             'idUser' => $user ? $user->idUser : 0
         ]);
@@ -269,6 +269,46 @@ class RelationService extends Controller
                 'idFrameRelated' => $relation->c1IdFrame,
                 'related' => $relation->c1Name,
                 'direction' => 'direct'
+            ];
+        }
+        return $result;
+    }
+
+    public static function listRelationsMicroframe(int $idFrame)
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+        //$config = config('webtool.relations');
+        $result = [];
+        $relations = Criteria::table("view_microframe_relation")
+            ->where("c1IdFrame", $idFrame)
+            ->where("idLanguage", $idLanguage)
+            ->orderBy("relationType")
+            ->orderBy("c2Name")
+            ->all();
+        foreach ($relations as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
+                'idFrameRelated' => $relation->c2IdFrame,
+                'related' => $relation->c2Name,
+                'direction' => 'direct'
+            ];
+        }
+        $inverse = Criteria::table("view_microframe_relation")
+            ->where("c2IdFrame", $idFrame)
+            ->where("idLanguage", $idLanguage)
+            ->all();
+        foreach ($inverse as $relation) {
+            $result[] = (object)[
+                'idEntityRelation' => $relation->idEntityRelation,
+                'relationType' => $relation->relationType,
+                'name' => $relation->nameDirect,
+                'color' => $relation->color,
+                'idFrameRelated' => $relation->c1IdFrame,
+                'related' => $relation->c1Name,
+                'direction' => 'inverse'
             ];
         }
         return $result;

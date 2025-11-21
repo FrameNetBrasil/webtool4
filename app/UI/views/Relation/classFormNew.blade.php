@@ -8,7 +8,7 @@
                         group="subsumption"
                     ></x-combobox.microframe-relation>
                 </div>
-                <div class="field">
+                <div class="field w-15em">
                     <x-search::class
                         id="idFrameRelated"
                         label="Related Class"

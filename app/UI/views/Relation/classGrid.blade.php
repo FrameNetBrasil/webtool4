@@ -41,7 +41,7 @@
                                 <div class="right pl-2">
                                     <x-delete
                                         title="delete Relation"
-                                        onclick="messenger.confirmDelete(`Removing Relation '{{$name}} {{$relation['name']}}'.`, '/relation/frame/{{$relation['idEntityRelation']}}')"
+                                        onclick="messenger.confirmDelete(`Removing Relation '{{$name}} {{$relation['name']}}'.`, '/relation/class/{{$relation['idEntityRelation']}}')"
                                     ></x-delete>
                                 </div>
                             </div>
