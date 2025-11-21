@@ -57,7 +57,9 @@ class ResourceController extends Controller
     public function create(CreateData $data)
     {
         try {
-            Criteria::function('semantictype_create(?)', [$data->toJson()]);
+            debug($data);
+            $idSemanticType = Criteria::function('semantictype_create(?)', [$data->toJson()]);
+            SemanticType::setParent($idSemanticType, $data->idSemanticTypeParent);
             return $this->renderNotify("success", "SemanticType created.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());

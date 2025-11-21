@@ -26,6 +26,13 @@
 
                                     </x-text-field>
                                 </div>
+                                <div class="field">
+                                    <x-ui::tree
+                                        :title="$title ?? ''"
+                                        url="/semanticType/browse/search"
+                                        :data="$data"
+                                    ></x-ui::tree>
+                                </div>
                             </div>
                             <div class="extra content">
                                 <button

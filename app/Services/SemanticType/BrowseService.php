@@ -25,6 +25,7 @@ class BrowseService
                 $semanticTypes = SemanticType::listRoots();
             }
         }
+        debug($semanticTypes);
         foreach ($semanticTypes as $semanticType) {
             $result[$semanticType->idSemanticType] = [
                 'id' => $semanticType->idSemanticType,
