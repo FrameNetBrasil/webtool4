@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Microframe;
 
 use App\Data\Microframe\CreateData;
+use App\Data\SemanticType\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Repositories\Frame;
 use App\Repositories\Microframe;
 use App\Services\AppService;
+use App\Services\SemanticType\BrowseService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -19,7 +21,11 @@ class ResourceController extends Controller
     #[Get(path: '/microframe/new')]
     public function new()
     {
-        return view('Microframe.new');
+        $search = new SearchData(semanticType: 'microframe_type');
+        $data = BrowseService::browseSemanticTypeBySearch($search);
+        return view('Microframe.new',[
+            "data" => $data
+        ]);
     }
 
     #[Post(path: '/microframe')]

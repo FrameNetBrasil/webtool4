@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Class;
 
 use App\Data\Class\SearchData;
+use App\Data\ComboBox\QData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Services\Class\BrowseService;
 use App\Services\Class\ReportService;
@@ -44,5 +46,12 @@ class ReportController extends Controller
         }
 
         return view('Class.Report.report', $data);
+    }
+
+    #[Get(path: '/class/list/forSelect')]
+    public function listForSelect(QData $data)
+    {
+        $name = (strlen($data->class) > 2) ? $data->class : 'none';
+        return ['results' => Criteria::byFilterLanguage('view_class', ['name', 'startswith', $name])->orderby('name')->all()];
     }
 }

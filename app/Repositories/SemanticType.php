@@ -104,10 +104,8 @@ class SemanticType
     public static function listRoots() : array
     {
         $criteriaER = Criteria::table("view_relation as r")
-            ->join("view_microframe as mf", "r.idEntity1", "=", "mf.idEntity")
-            ->select('r.idEntity2')
-            ->where("mf.name", "=", 'subsumption')
-            ->where("mf.idLanguage", "=", AppService::getCurrentIdLanguage());
+            ->select('r.idEntity1')
+            ->where("r.name", "=", 'subsumption');
         $rows = Criteria::table("view_semantictype")
             ->where("view_semantictype.idEntity", "NOT IN", $criteriaER)
             ->where('view_semantictype.idLanguage', AppService::getCurrentIdLanguage())
@@ -119,12 +117,12 @@ class SemanticType
     public static function listChildren(int $idSemanticType)
     {
         $rows = Criteria::table("view_relation as r")
-            ->join("view_microframe as mf", "r.idEntity1", "=", "mf.idEntity")
-            ->join("view_semantictype as child", "r.idEntity2", "=", "child.idEntity")
-            ->join("view_semantictype as parent", "r.idEntity3", "=", "parent.idEntity")
+            ->join("view_semantictype as child", "r.idEntity1", "=", "child.idEntity")
+            ->join("view_semantictype as parent", "r.idEntity2", "=", "parent.idEntity")
             ->select("child.idSemanticType", "child.idEntity", "child.name", "child.description")
-            ->where("mf.name", "=", 'subsumption')
-            ->where("mf.idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->where("r.name", "=", 'subsumption')
+            ->where("child.idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->where("parent.idLanguage", "=", AppService::getCurrentIdLanguage())
             ->where("parent.idSemanticType", "=", $idSemanticType)
             ->orderBy("child.name")
             ->all();
@@ -134,11 +132,12 @@ class SemanticType
     public static function countChildren(int $idSemanticType)
     {
         return Criteria::table("view_relation as r")
-            ->join("view_microframe as mf", "r.idEntity1", "=", "mf.idEntity")
-            ->join("view_semantictype as parent", "r.idEntity3", "=", "parent.idEntity")
-            ->where("mf.name", "=", 'subsumption')
-            ->where("mf.idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->join("view_semantictype as parent", "r.idEntity2", "=", "parent.idEntity")
+            ->join("view_semantictype as child", "r.idEntity1", "=", "child.idEntity")
+            ->where("r.name", "=", 'subsumption')
             ->where("parent.idSemanticType", "=", $idSemanticType)
+            ->where("child.idLanguage", "=", AppService::getCurrentIdLanguage())
+            ->where("parent.idLanguage", "=", AppService::getCurrentIdLanguage())
             ->count();
     }
 

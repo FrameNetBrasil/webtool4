@@ -23,50 +23,25 @@ class MicroframeRelation extends Component
     {
         $idLanguage = AppService::getCurrentIdLanguage();
         $groupEntries = [
-            'frame' => 'rgp_frame_relations',
-            'fe' => 'rgp_fe_relations',
-            'cxn' => 'rgp_cxn_relations',
-            'constraints' => 'rgp_constraints',
-            'qualia' => 'rgp_qualia',
-            'class' => 'rgp_qualia'
+            'ontological' => 'sty_mf_type_ontological',
+            'subsumption' => 'sty_mf_type_subsumption',
         ];
-        $relations = Criteria::table("view_relationtype")
-            ->where('rgEntry', $groupEntries[$this->group])
-            ->where('idLanguage', $idLanguage)
+
+        $relations = Criteria::table("view_microframe as mf")
+            ->join("view_microframe_relation as mfr", "mf.idEntity", "=", "mfr.idEntityDomain")
+            ->join("semantictype as st", "mfr.idEntityRange", "=", "st.idEntity")
+            ->where("st.entry", $groupEntries[$group])
+            ->where('mf.idLanguage', $idLanguage)
+            ->select("mf.idEntity","mf.entry","mf.name")
             ->all();
         $this->options = [];
-        //$config = config('webtool.relations');
-        if ($group == 'frame') {
-            $this->options[] = [
-                'value' => 'header',
-                'entry' => '0',
-                'name' => 'Direct relation',
-                'color' => '#000',
-            ];
-        }
         foreach($relations as $relation) {
             $this->options[] = [
-                'value' => 'd' . $relation->idRelationType,
+                'value' => $relation->idEntity,
                 'entry' => $relation->entry,
-                'name' => $relation->nameDirect,
-                'color' => $relation->color,
+                'name' => $relation->name,
+                'color' => 1,
             ];
-        }
-        if ($group == 'frame') {
-            $this->options[] = [
-                'value' => 'header',
-                'entry' => '0',
-                'name' => 'Inverse relation',
-                'color' => '#000',
-            ];
-            foreach ($relations as $relation) {
-                $this->options[] = [
-                    'value' => 'i' . $relation->idRelationType,
-                    'entry' => $relation->entry,
-                    'name' => $relation->nameInverse,
-                    'color' => $relation->color,
-                ];
-            }
         }
     }
 
