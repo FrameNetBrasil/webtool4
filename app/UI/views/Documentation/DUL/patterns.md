@@ -26,16 +26,34 @@ DUL is not just a taxonomy but a **library of reusable patterns**. Each pattern 
 
 **Solution**: Separate **intensional** (conceptual) and **extensional** (actual) aspects:
 
-```mermaid
-graph TB
-    Description -->|defines| Concept
-    Description -->|defines| Role
-    Description -->|defines| Task
-    Description -->|defines| Parameter
-    
-    Situation -->|satisfies| Description
-    Situation -->|isSettingFor| E("Entity <br>(classified, related, contextualized)")
-        
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=TB;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+    layout=dot;
+
+  Description [color=blue fillcolor=blue] 
+  Concept [color=blue fillcolor=blue]
+  Task [color=blue fillcolor=blue]
+  Parameter [color=blue fillcolor=blue]
+  Role [color=blue fillcolor=blue]
+  Situation [color=orange fillcolor=orange]
+  E [label="Entity \n(classified, related,\ncontextualized)"]
+  
+  Description -> Concept [label="defines" color=blue fontcolor=blue]
+  Description -> Role [label="defines" color=blue fontcolor=blue]
+  Description -> Task [label="defines" color=blue fontcolor=blue]
+  Description -> Parameter [label="defines" color=blue fontcolor=blue]
+  
+  Situation -> Description [label="satisfies" color=orange fontcolor=orange]
+  Situation -> E [label="is setting for" color=orange fontcolor=orange]
+  
+}
+
 ```
 
 **When to use:**
@@ -66,13 +84,22 @@ CookingSession (PlanExecution, a Situation)
 
 **Solution**: Reify attributes as Qualities, link to abstract Regions:
 
-```mermaid
-graph LR
-    Entity -->|hasQuality| Quality
-    Quality -->|hasRegion| Region
-        
-```
+```dot
+# http://www.graphviz.org/content/cluster
 
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+    layout=dot;
+
+  Entity -> Quality [label="has quality"]
+  Quality -> Region [label="has region"]
+  
+}
+
+```
 
 **When to use:**
 - Scientific observation: Same phenomenon, different measurements
@@ -98,13 +125,24 @@ MeasurementSituation
 
 **Solution**: Symmetric participation relation:
 
+```dot
+# http://www.graphviz.org/content/cluster
 
-```mermaid
-graph LR
-    Event -->|hasParticipant| Object
-    Object -->|hasParticipant| Event
-        
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+    
+   
+  Event -> Object [label="has participant"]
+  Event -> "Agent (Object)" [label="has participant"]
+  
+}
+
 ```
+
 **Extensions:**
 - **Agent participation**: Action --hasParticipant--> Agent (agent-specific)
 - **Co-participation**: Object --coparticipatesWith--> Object (derived from shared event)
@@ -130,14 +168,26 @@ Vitas --coparticipatesWith--> Jimmy (inferred)
 
 **Solution**: Two-level information model:
 
+```dot
+# http://www.graphviz.org/content/cluster
 
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+    
+  "Information Realization" [color=darkgreen fillcolor=darkgreen]
+  "Information Object" [color=darkgreen fillcolor=darkgreen]
+  "Social Object" [color=red fillcolor=red]
+  
+  "Information Realization" -> "Information Object" [label="realizes" color=darkgreen fontcolor=darkgreen]
+  "Information Object" -> "Social Object" [label="expresses" color=darkgreen fontcolor=darkgreen] 
+}
 
-```mermaid
-graph LR
-    InformationRealization -->|realizes| InformationObject
-    InformationObject -->|expresses| SocialObject
-        
 ```
+
 **When to use:**
 - Cultural heritage: Work vs. manifestations (FRBR-compatible)
 - Legal documents: Legal content vs. physical copies
@@ -163,37 +213,82 @@ OralRecitation₁ (InformationRealization / Event)
 
 **Pattern A: Reflexive Part-Whole**
 
-```mermaid
-graph LR
-    Entity -->|hasPart| E("Entity<br>(reflexive, transitive)")
-        
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+
+    E [label="Entity\n(reflexive, transitive)"]
+    Entity -> E [label="has part"]    
+}
+
 ```
+
 Use when: General decomposition, entity is part of itself (mereologically valid)
 
 **Pattern B: Proper Part-Whole**
 
-```mermaid
-graph LR
-    Entity -->|hasProperPart| E("Entity<br>(asymmetric, transitive)")
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+
+    E [label="Entity\n(asymetric, transitive)"]
+    Entity -> E [label="has proper part"]    
+}
 
 ```
+
 Use when: Strict decomposition, part ≠ whole
 
 **Pattern C: Component-System**
 
-```mermaid
-graph LR
-    Entity -->|hasComponent| E("Entity<br>(asymmetric, NOT transitive)")
-        
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+
+    E [label="Entity\n(asymetric, NOT transitive)"]
+    Entity -> E [label="has component"]    
+}
+
 ```
+
 Use when: Designed artifacts with direct structural components
 
 **Pattern D: Constitution**
-```mermaid
-graph LR
-    Entity -->|hasConstituent| E("Entity<br>(cross-layer)")
-        
+
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+
+    E [label="Entity\n(cross-layer)"]
+    Entity -> E [label="has constituent"]    
+}
+
 ```
+
 Use when: Different ontological strata (social/physical, organism/molecular)
 
 **Example Pattern Instance:**
@@ -217,13 +312,28 @@ Person₁ (BiologicalObject)
 
 **Solution**: Classification as a special Situation:
 
-```mermaid
-graph TB
-    C("Classification (TimeIndexedRelation)") -->|satisfies| D("Description (defines Concept)")
-    C -->|isSettingFor| CO("Concept (classifier)")
-    C -->|isSettingFor| E("Entity (classified)")
-    C -->|isSettingFor| T("TimeInterval (when)")
-        
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+
+    C [label="Classification (TimeIndexedRelation)"]
+    D [label="Description (defines Concept)"]
+    CC [label="Concept (classifier)"]
+    EC [label="Entity (classified)"]
+    T [label="TimeInterval (when)"]
+    
+    C -> D [label="satisfies"]
+    C -> CC [label="is setting for"]
+    C -> EC [label="is setting for"]
+    C -> T [label="is setting for"]    
+}
+
 ```
 
 **When to use:**
@@ -252,13 +362,29 @@ Classification₂
 
 **Solution**: Distinguish PhysicalPlace and Place:
 
-```mermaid
-graph TB
-    PP("PhysicalPlace (PhysicalObject)") -->|hasSpaceRegion| SR("SpaceRegion<br>(geometric location)")
-    PS("Place (SocialObject)") -->|isExpressedBy| IO("InformationObject<br>(social definition)")
-    PS -->|describes| PP
-        
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=TB;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+
+    PP [label="PhysicalPlace (PhysicalObject)"]
+    SR [label="SpaceRegion (Region)\n(geometric location)"]
+    PS [label="Place (SocialObject)"]
+    IO [label="InformationObject\n(social definition)"]
+    
+    PS -> PP [label="describes"]
+    PS -> IO [label="is expressed by"]
+    PP -> SR [label="has (space) region"] 
+    
+}
+
 ```
+
 **When to use:**
 - Physical location: Coordinates, geometric regions
 - Social/administrative places: Countries, neighborhoods, institutions
@@ -281,12 +407,27 @@ Paris_City (Place, SocialObject)
 
 **Solution**: Precedence relations:
 
-```mermaid
-graph TB
-    Entity -->|precedes| E1("Entity<br>transitive")
-    Entity -->|directlyPrecedes| E2("Entity<br>(intransitive, strict adjacency)")
-        
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=TB;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+  layout=dot;
+
+    ET [label="Entity\n(transitive)"]
+    EI [label="Entity\n(intransitive, strict adjacency)"]
+    
+    Entity -> ET [label="precedes"]
+    Entity -> EI [label="directly precedes"]
+     
+    
+}
+
 ```
+
 **When to use:**
 - Workflow: Task sequences
 - Narrative: Event chronology
