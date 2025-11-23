@@ -52,7 +52,7 @@ class ImportFrameNamespaceCommand extends Command
         $this->newLine();
 
         // Configuration
-        $csvPath = $this->option('csv') ?? __DIR__.'/frame_namespace.csv';
+        $csvPath = $this->option('csv') ?? __DIR__ . '/frame_namespace.csv';
         $isDryRun = $this->option('dry-run');
         $userId = (int) $this->option('user') ?? 6;
 

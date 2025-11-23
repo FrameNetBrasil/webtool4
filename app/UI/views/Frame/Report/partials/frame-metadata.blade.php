@@ -17,8 +17,8 @@
                 @endif
             @endforeach
         @endif
-            <div class="ui small label {{$frame->namespace->color}}">
-                {{ $frame->namespace->name }}
+            <div class="ui small label">
+                <x-element::namespace :namespace="$frame"></x-element::namespace>
             </div>
     </div>
 

@@ -6,6 +6,89 @@ description: Design patterns
 
 # Key Design Patterns
 
+## Overview of Object Properties
+
+
+```dot
+# http://www.graphviz.org/content/cluster
+
+digraph G {
+  rankdir=LR;
+  graph [fontname = "Noto Sans"];
+  node [fontname = "Noto Sans" shape="box" style="rounded" ];
+  edge [fontname = "Noto Sans"];
+    layout=dot;
+
+  Description [color=purple fillcolor=purple fontcolor=purple] 
+  Situation [color=orange fillcolor=orange fontcolor=orange]
+  Collection [color=deeppink fillcolor=deeppink fontcolor=deeppink]
+  Entity
+  "Entity*"
+  Quality [color=brown fillcolor=brown fontcolor=brown]
+  Region [color=brown fillcolor=brown fontcolor=brown]
+  "Object Aggregate"
+  Event [color=cyan3 fillcolor=cyan3  fontcolor=cyan3]
+  
+  
+  Concept [color=blue fillcolor=blue fontcolor=blue]
+  Role [color=blue fillcolor=blue fontcolor=blue]
+  Task [color=blue fillcolor=blue fontcolor=blue]
+  Parameter [color=blue fillcolor=blue fontcolor=blue]
+
+  Object
+  "Social Object"
+  "Object Aggregate"
+
+  "Information Realization" [color=darkgreen fillcolor=darkgreen fontcolor=darkgreen]
+  "Information Object" [color=darkgreen fillcolor=darkgreen fontcolor=darkgreen]
+
+  Agent [color=red fillcolor=red  fontcolor=red]
+  "Physical Agent" [color=red fillcolor=red  fontcolor=red]
+  "Social Agent" [color=red fillcolor=red  fontcolor=red]
+
+  Agent -> "Social Agent" [label="acts for" color="red" fontcolor="red"]
+  Concept -> "Collection" [label="characterizes" color="blue"  fontcolor="blue"]
+  Concept -> "Entity" [label="classifies" color="blue" fontcolor="blue"]
+  Agent -> "Social Object"   [label="conceptualizes" color="red"  fontcolor="red"]
+  "Information Realization" -> Situation [label="concretely expresses" color="darkgreen" fontcolor="darkgreen"]
+  Concept -> "Collection" [label="covers" color="blue" fontcolor="blue"]
+  Description -> Concept [label="defines"  color="purple" fontcolor="purple"]
+  Description -> Role [label="defines role"   color="purple" fontcolor="purple"]
+  Description -> Task [label="defines task"   color="purple" fontcolor="purple"]
+  Description -> Parameter [label="defines"   color="purple" fontcolor="purple"]
+  Description -> Entity [label="describes"   color="purple" fontcolor="purple"]
+  "Information Object" -> "Social Object" [label="expresses" color="darkgreen" fontcolor="darkgreen"]
+  "Information Object" -> Concept [label="expresses concept" color="darkgreen"  fontcolor="darkgreen"]
+  Collection -> Entity [label="has member" color="deeppink" fontcolor="deeppink" fontcolor="deeppink"]
+  Entity -> Quality [label="has quality"]
+  Entity -> Region [label="has region"]
+  Object -> Role [label="has  role"]
+  Situation -> Entity [label="is setting for"  color="orange" fontcolor="orange"]
+  Role -> Task [label="has task" color="blue" fontcolor="blue"]
+  Description -> "Social Agent" [label="introduces"   color="purple" fontcolor="purple"]
+  "Information Object" -> Entity [label="is about" color="darkgreen" fontcolor="darkgreen"]
+  "Information Realization" -> "Information Object" [label="realizes" color="darkgreen" fontcolor="darkgreen"]
+  "Information Realization" -> Entity [label="realizes information about" color="darkgreen" fontcolor="darkgreen"]
+  Situation -> Description [label="satisfies" color="orange" fontcolor="orange"]
+  Description -> Collection [label="unifies"   color="purple" fontcolor="purple"]
+  Description -> Concept [label="uses concept"    color="purple" fontcolor="purple"]
+  "Physical Agent" -> "Social Agent" [label="acts through" color="red" fontcolor="red"]
+  "Object Aggregate" -> Collection [label="is member of"]
+  Event -> Object [label="has participant" color=cyan3 fontcolor=cyan3]
+  Event -> Agent [label="has participant" color=cyan3 fontcolor=cyan3]
+  Entity -> "Entity*" [label="has part"]
+  Entity -> "Entity*" [label="has proper part"]
+  Entity -> "Entity*" [label="has component"]
+  Entity -> "Entity*" [label="has constituent"]
+  Entity -> "Entity*" [label="precedes"]
+  Entity -> "Entity*" [label="directly precedes"]
+  Parameter -> Region [label="classifies" color="blue" fontcolor="blue"]
+  Situation -> Event [label="includes event"  color="orange" fontcolor="orange"]
+  Situation -> Object [label="includes object"  color="orange" fontcolor="orange"]
+}
+
+```
+
 ## Overview of DUL Patterns
 
 DUL is not just a taxonomy but a **library of reusable patterns**. Each pattern solves a recurring modeling problem.

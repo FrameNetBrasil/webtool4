@@ -47,7 +47,7 @@ class ImportDulPropertiesFeCommand extends Command
         $this->newLine();
 
         // Configuration
-        $csvPath = $this->option('csv') ?? __DIR__.'/DUL_properties_edited.csv';
+        $csvPath = $this->option('csv') ?? __DIR__ . '/DUL_properties_edited.csv';
         $isDryRun = $this->option('dry-run');
         $userId = (int) $this->option('user') ?? 6;
 
