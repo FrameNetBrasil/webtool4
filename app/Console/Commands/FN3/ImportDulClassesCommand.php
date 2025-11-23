@@ -41,7 +41,7 @@ class ImportDulClassesCommand extends Command
         $this->newLine();
 
         // Configuration
-        $csvPath = $this->option('csv') ?? __DIR__.'/dul_classes.csv';
+        $csvPath = $this->option('csv') ?? __DIR__ . '/dul_classes.csv';
         $isDryRun = $this->option('dry-run');
         $userId = (int) $this->option('user') ?? 6;
 

@@ -47,7 +47,7 @@ class UpdateDulPropertiesEntriesCommand extends Command
         $this->newLine();
 
         // Configuration
-        $jsonPath = $this->option('json') ?? __DIR__.'/DUL.jsonld';
+        $jsonPath = $this->option('json') ?? __DIR__ . '/DUL.jsonld';
         $isDryRun = $this->option('dry-run');
         $userId = (int) $this->option('user') ?? 6;
 

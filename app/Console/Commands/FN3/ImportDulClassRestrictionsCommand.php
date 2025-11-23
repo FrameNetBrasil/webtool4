@@ -60,7 +60,7 @@ class ImportDulClassRestrictionsCommand extends Command
         $this->newLine();
 
         // Configuration
-        $csvPath = $this->option('csv') ?? __DIR__.'/dul_class_restrictions.csv';
+        $csvPath = $this->option('csv') ?? __DIR__ . '/dul_class_restrictions.csv';
         $isDryRun = $this->option('dry-run');
         $userId = (int) $this->option('user') ?? 6;
 
