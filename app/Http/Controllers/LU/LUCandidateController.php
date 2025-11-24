@@ -166,11 +166,32 @@ class LUCandidateController extends Controller
                 ->where("idLU", $id)
                 ->all();
         }
+
+        // Calculate Previous ID (alphabetically by name, same origin)
+        $idPrevious = Criteria::table("view_lucandidate")
+            ->where("idLanguage", AppService::getCurrentIdLanguage())
+            ->where("origin", $luCandidate->origin)
+            ->where("name", "<", $luCandidate->name)
+            ->orderBy("name", "desc")
+            ->select("idLU")
+            ->first()?->idLU;
+
+        // Calculate Next ID (alphabetically by name, same origin)
+        $idNext = Criteria::table("view_lucandidate")
+            ->where("idLanguage", AppService::getCurrentIdLanguage())
+            ->where("origin", $luCandidate->origin)
+            ->where("name", ">", $luCandidate->name)
+            ->orderBy("name", "asc")
+            ->select("idLU")
+            ->first()?->idLU;
+
         debug($asLOME);
         return view("LUCandidate.edit", [
             'luCandidate' => $luCandidate,
             'isManager' => $isManager,
             'asLOME' => $asLOME,
+            'idPrevious' => $idPrevious,
+            'idNext' => $idNext,
         ]);
     }
 
