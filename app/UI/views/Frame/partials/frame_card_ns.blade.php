@@ -7,8 +7,12 @@
 >
     <div class="content">
         <div class="header">
-            <x-ui::icon.frame/>
-            {{$frame['name']}}
+            @if($frame['namespace']->name == 'Microframe')
+                <x-ui::icon.microframe/>
+            @else
+                <x-ui::icon.frame_ns :frame="$frame"/>
+            @endif
+            <span class="color_{{$frame['idColor']}}">{{$frame['name']}}</span>
         </div>
     </div>
 </div>

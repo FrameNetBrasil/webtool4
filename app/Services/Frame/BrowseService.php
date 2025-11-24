@@ -44,78 +44,78 @@ class BrowseService
             ->orderBy('name')
             ->all();
 
-        // Build subquery for namespace classification
-        $subQuery = Criteria::table('view_frame_classification as c')
-            ->join('view_namespace as ns', 'c.idSemanticType', '=', 'ns.idSemanticType')
-            ->selectRaw("c.idFrame, ns.name as namespace, ns.idSemanticType, concat('color_',lower(substr(ns.name,2))) as color")
-            ->where('c.relationType', 'rel_namespace')
-            ->where('c.idLanguage', AppService::getCurrentIdLanguage())
-            ->where('ns.idLanguage', AppService::getCurrentIdLanguage());
+//        // Build subquery for namespace classification
+//        $subQuery = Criteria::table('view_frame_classification as c')
+//            ->join('view_namespace as ns', 'c.idSemanticType', '=', 'ns.idSemanticType')
+//            ->selectRaw("c.idFrame, ns.name as namespace, ns.idSemanticType, concat('color_',lower(substr(ns.name,2))) as color")
+//            ->where('c.relationType', 'rel_namespace')
+//            ->where('c.idLanguage', AppService::getCurrentIdLanguage())
+//            ->where('ns.idLanguage', AppService::getCurrentIdLanguage());
+//
+//        $subQueryDomains = Criteria::table('view_frame_classification')
+//            ->selectRaw('idFrame, group_concat(name) as domain')
+//            ->where('relationType', 'rel_framal_domain')
+//            ->where('idLanguage', AppService::getCurrentIdLanguage())
+//            ->groupBy('idFrame');
+//
+//        // Query frames with namespace info
+//        $framesQuery = Criteria::table('view_frame as f')
+//            ->where('f.idLanguage', AppService::getCurrentIdLanguage())
+//            ->joinSub($subQuery, 'namespace', function (JoinClause $join) {
+//                $join->on('f.idFrame', '=', 'namespace.idFrame');
+//            })
+//            ->joinSub($subQueryDomains, 'domains', function (JoinClause $join) {
+//                $join->on('f.idFrame', '=', 'domains.idFrame');
+//            })
+//            ->orderBy('f.name');
 
-        $subQueryDomains = Criteria::table('view_frame_classification')
-            ->selectRaw('idFrame, group_concat(name) as domain')
-            ->where('relationType', 'rel_framal_domain')
-            ->where('idLanguage', AppService::getCurrentIdLanguage())
-            ->groupBy('idFrame');
-
-        // Query frames with namespace info
-        $framesQuery = Criteria::table('view_frame as f')
-            ->where('f.idLanguage', AppService::getCurrentIdLanguage())
-            ->joinSub($subQuery, 'namespace', function (JoinClause $join) {
-                $join->on('f.idFrame', '=', 'namespace.idFrame');
-            })
-            ->joinSub($subQueryDomains, 'domains', function (JoinClause $join) {
-                $join->on('f.idFrame', '=', 'domains.idFrame');
-            })
-            ->orderBy('f.name');
-
-        // Apply search filter if provided
-        if (! empty($search->frame)) {
-            $framesQuery->where('f.name', 'startswith', $search->frame);
-        }
-
-        $frames = $framesQuery->all();
-
-        // Group frames by namespace
         $result = ['namespaces' => []];
+        foreach($namespaces as $namespace) {
+            $result['namespaces'][$namespace->idNamespace] = $namespace;
+        }
 
         foreach ($namespaces as $namespace) {
-            $namespaceData = [
-                'idNamespace' => $namespace->idSemanticType,
-                'name' => $namespace->name,
-                'description' => $namespace->description,
-                'color' => 'color_'.strtolower(substr($namespace->name, 1)),
-                'frames' => [],
-            ];
+//            $namespaceData = [
+//                'idNamespace' => $namespace->idNamespace,
+//                'name' => $namespace->name,
+//                'description' => $namespace->description,
+//                'color' => 'color_'.$namespace->idColor,
+//                'frames' => [],
+//            ];
 
-            // Filter frames for this namespace
-            $namespaceFrames = array_filter($frames, function ($frame) use ($namespace) {
-                return $frame->idSemanticType == $namespace->idSemanticType;
-            });
-
-            foreach ($namespaceFrames as $frame) {
-                $frame->namespace = (object) [
-                    'idNamespace' => $frame->idSemanticType,
-                    'color' => $frame->color,
-                ];
-                $namespaceData['frames'][] = [
+            // Query frames with namespace info
+            $frames = Criteria::table('view_frame_all as f')
+                ->where('f.idLanguage', AppService::getCurrentIdLanguage())
+                ->where("f.idNamespace",$namespace->idNamespace )
+                ->orderBy('f.name');
+            // Apply search filter if provided
+            if (! empty($search->frame)) {
+                $frames->where('f.name', 'startswith', $search->frame);
+            }
+            $frames = $frames->all();
+            $framesForNamespace = [];
+            foreach ($frames as $frame) {
+                $framesForNamespace[] = [
                     'id' => $frame->idFrame,
                     'name' => $frame->name,
-                    'description' => $frame->description,
-                    'domain' => $frame->domain,
-                    'color' => $frame->color,
-                    'frame' => $frame,
+//                    'description' => $frame->description,
+//                    'domain' => '',
+                    'idColor' => $frame->idColor,
+                    'namespace' =>  (object) [
+                        'idNamespace' => $frame->idNamespace,
+                        'name' => $namespace->name,
+                        'color' => $frame->idColor,
+                    ]
                 ];
             }
-
-            $namespaceData['count'] = count($namespaceData['frames']);
+            $count = count($framesForNamespace);
 
             // Only include namespaces with frames (when searching)
-            if (empty($search->frame) || $namespaceData['count'] > 0) {
-                $result['namespaces'][] = $namespaceData;
+            if (empty($search->frame) || $count > 0) {
+                $result['frames'][$frame->idNamespace] = $framesForNamespace;
             }
+            $result['namespaces'][$frame->idNamespace]->count = $count;
         }
-
         return $result;
     }
 

@@ -53,25 +53,27 @@
                                         @fragment('search')
                                             @if(isset($data['namespaces']) && count($data['namespaces']) > 0)
                                                 <div class="search-result-data">
-                                                    <div class="tabs-component namespace-tabs-context" style="display: flex; gap: 1rem; height: 100%;">
+                                                    <div class="tabs-component namespace-tabs-context"
+                                                         style="display: flex; gap: 1rem; height: 100%;">
                                                         <!-- Left: Vertical Menu -->
                                                         <div
                                                             class="ui vertical menu"
                                                             x-init="$('.namespace-tabs-context .menu .item').tab()"
                                                             style="flex-shrink: 0; width: 200px; overflow-y: auto;"
                                                         >
-                                                            @foreach($data['namespaces'] as $index => $namespace)
-                                                                @if($namespace['count'] > 0)
+                                                            @foreach($data['namespaces'] as $idNamespace => $namespace)
+                                                                @if($namespace->count > 0)
                                                                     <a
-                                                                        class="item {{$index === 0 ? 'active' : ''}}"
-                                                                        data-tab="ns-{{$namespace['idNamespace']}}"
+                                                                        class="item {{$loop->first ? 'active' : ''}}"
+                                                                        data-tab="ns-{{$namespace->idNamespace}}"
                                                                         style="display: flex; align-items: center; justify-content: space-between;"
                                                                     >
-                                                                        <div class="{{$namespace['color']}}" style="font-weight: 600;">
-                                                                            {{$namespace['name']}}
+                                                                        <div class="color_{{$namespace->idColor}}"
+                                                                             style="font-weight: 600;">
+                                                                            {{$namespace->name}}
                                                                         </div>
                                                                         <div class="ui mini label">
-                                                                            {{$namespace['count']}}
+                                                                            {{$namespace->count}}
                                                                         </div>
                                                                     </a>
                                                                 @endif
@@ -79,19 +81,20 @@
                                                         </div>
 
                                                         <!-- Right: Tab Content -->
-                                                        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
-                                                            @foreach($data['namespaces'] as $index => $namespace)
-                                                                @if($namespace['count'] > 0)
+                                                        <div
+                                                            style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
+                                                            @foreach($data['namespaces'] as $idNamespace => $namespace)
+                                                                @if($namespace->count > 0)
                                                                     <div
-                                                                        class="ui tab segment {{$index === 0 ? 'active' : ''}}"
-                                                                        data-tab="ns-{{$namespace['idNamespace']}}"
+                                                                        class="ui tab segment {{$loop->first === 0 ? 'active' : ''}}"
+                                                                        data-tab="ns-{{$namespace->idNamespace}}"
                                                                         style="flex: 1; overflow-y: auto; margin: 0; border: 1px solid rgba(34, 36, 38, 0.15);"
                                                                     >
                                                                         <div class="card-grid dense-4col">
-                                                                            @foreach($namespace['frames'] as $frame)
+                                                                            @foreach($data['frames'][$namespace->idNamespace] as $frame)
                                                                                 @include('Frame.partials.frame_card_ns', [
                                                                                     'frame' => $frame,
-                                                                                    'color' => $namespace['color']
+                                                                                    'color' => $namespace->idColor
                                                                                 ])
                                                                             @endforeach
                                                                         </div>
