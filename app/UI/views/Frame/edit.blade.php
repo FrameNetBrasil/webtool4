@@ -20,6 +20,15 @@
                             @if(session('isAdmin'))
                                 <button
                                     class="ui right labeled icon button"
+                                    hx-get="/frame/clone/{{$frame->idFrame}}"
+                                >
+                                    <i class="clone icon"></i>
+                                    Clone
+                                </button>
+                            @endif
+                            @if(session('isAdmin'))
+                                <button
+                                    class="ui right labeled icon button"
                                     hx-get="/frame/nextFrom/{{$frame->idFrame}}"
                                 >
                                     <i class="right arrow icon"></i>
