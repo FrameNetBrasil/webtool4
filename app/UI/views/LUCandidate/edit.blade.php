@@ -17,6 +17,24 @@
                                 #{{$luCandidate->idLU}}
                             </div>
                             @if($isManager)
+                                @if($idPrevious)
+                                    <a href="/luCandidate/{{$idPrevious}}">
+                                        <button class="ui left labeled icon button">
+                                            <i class="left arrow icon"></i>
+                                            Previous
+                                        </button>
+                                    </a>
+                                @endif
+                                @if($idNext)
+                                    <a href="/luCandidate/{{$idNext}}">
+                                        <button class="ui right labeled icon button">
+                                            <i class="right arrow icon"></i>
+                                            Next
+                                        </button>
+                                    </a>
+                                @endif
+                            @endif
+                            @if($isManager)
                                 <button
                                     class="ui danger button"
                                     x-data
