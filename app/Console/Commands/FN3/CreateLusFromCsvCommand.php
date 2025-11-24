@@ -42,7 +42,7 @@ class CreateLusFromCsvCommand extends Command
     /** @var array<string, array{idLemma: int, idUDPOS: int, udPOS: string}> */
     private array $lemmaCache = [];
 
-    /** @var array<int, int> */
+    /** @var array<int, array{idFrame: int, frameName: string}> */
     private array $luFrameCache = [];
 
     private array $missingLemmas = [];
@@ -100,6 +100,12 @@ class CreateLusFromCsvCommand extends Command
         $this->info("Found {$this->formatNumber($this->stats['total_rows'])} rows to process");
         $this->newLine();
 
+        // Cache LU frames from source idLU values (needed for both stages)
+        $this->info('Caching source LU frames...');
+        $this->cacheLuFrames($rows);
+        $this->info("  - Cached {$this->formatNumber(count($this->luFrameCache))} frames from source LUs");
+        $this->newLine();
+
         // Stage 1: Verify lemmas
         $this->info('Stage 1: Verifying lemmas...');
         $this->newLine();
@@ -150,12 +156,6 @@ class CreateLusFromCsvCommand extends Command
 
         $this->newLine();
         $this->info('Stage 2: Creating LUs...');
-        $this->newLine();
-
-        // Cache LU frames from source idLU values
-        $this->info('Caching source LU frames...');
-        $this->cacheLuFrames($rows);
-        $this->info("  - Cached {$this->formatNumber(count($this->luFrameCache))} frames from source LUs");
         $this->newLine();
 
         $this->withProgressBar($rows, function ($row) use ($isDryRun, $userId) {
@@ -242,6 +242,10 @@ class CreateLusFromCsvCommand extends Command
         $lemmaNamePt = $row['lemmaNamePt'];
         $idPOS = $row['idPOS'];
 
+        // Get frame info from cache
+        $frameInfo = $this->luFrameCache[$row['idLU']] ?? null;
+        $frameName = $frameInfo['frameName'] ?? 'UNKNOWN';
+
         // Check if POS mapping exists
         if (! isset($this->posMapping[$idPOS])) {
             $this->missingLemmas[] = [
@@ -252,6 +256,7 @@ class CreateLusFromCsvCommand extends Command
                 'udPOS' => 'UNKNOWN',
                 'idUDPOS' => null,
                 'senseDescription' => $row['senseDescription'],
+                'frameName' => $frameName,
                 'reason' => "Invalid idPOS: {$idPOS}",
             ];
             $this->stats['lemmas_missing']++;
@@ -296,6 +301,7 @@ class CreateLusFromCsvCommand extends Command
                 'udPOS' => $udPOS,
                 'idUDPOS' => $idUDPOS,
                 'senseDescription' => $row['senseDescription'],
+                'frameName' => $frameName,
                 'reason' => 'Lemma not found in database',
             ];
             $this->stats['lemmas_missing']++;
@@ -306,6 +312,8 @@ class CreateLusFromCsvCommand extends Command
     {
         $idLUs = array_unique(array_column($rows, 'idLU'));
 
+        // First, get idFrame from source English LUs
+        $luFrames = [];
         foreach (array_chunk($idLUs, 500) as $chunk) {
             $lus = Criteria::table('lu')
                 ->whereIn('idLU', $chunk)
@@ -313,8 +321,32 @@ class CreateLusFromCsvCommand extends Command
                 ->get();
 
             foreach ($lus as $lu) {
-                $this->luFrameCache[$lu->idLU] = $lu->idFrame;
+                $luFrames[$lu->idLU] = $lu->idFrame;
             }
+        }
+
+        // Then, get Portuguese frame names for all frames
+        $frameIds = array_unique(array_values($luFrames));
+        $frameNames = [];
+
+        foreach (array_chunk($frameIds, 500) as $chunk) {
+            $frames = Criteria::table('view_frame')
+                ->whereIn('idFrame', $chunk)
+                ->where('idLanguage', 1) // Portuguese
+                ->select('idFrame', 'name')
+                ->get();
+
+            foreach ($frames as $frame) {
+                $frameNames[$frame->idFrame] = $frame->name;
+            }
+        }
+
+        // Build the cache with idFrame and Portuguese frame name
+        foreach ($luFrames as $idLU => $idFrame) {
+            $this->luFrameCache[$idLU] = [
+                'idFrame' => $idFrame,
+                'frameName' => $frameNames[$idFrame] ?? 'UNKNOWN',
+            ];
         }
     }
 
@@ -344,9 +376,9 @@ class CreateLusFromCsvCommand extends Command
         $idLemma = $lemmaInfo['idLemma'];
 
         // Get frame from source LU
-        $idFrame = $this->luFrameCache[$row['idLU']] ?? null;
+        $frameInfo = $this->luFrameCache[$row['idLU']] ?? null;
 
-        if (! $idFrame) {
+        if (! $frameInfo) {
             $this->stats['errors']++;
             $this->errorDetails[] = [
                 'line' => $row['line_number'],
@@ -357,6 +389,8 @@ class CreateLusFromCsvCommand extends Command
 
             return;
         }
+
+        $idFrame = $frameInfo['idFrame'];
 
         // Check if LU already exists
         $exists = Criteria::table('lu')
@@ -412,7 +446,7 @@ class CreateLusFromCsvCommand extends Command
         }
 
         // Write header
-        fputcsv($handle, ['lemmaName(pt)', 'lemmaName(en)', 'idPOS', 'udPOS', 'idUDPOS', 'idLanguage', 'senseDescription(pt)', 'source_line', 'reason']);
+        fputcsv($handle, ['lemmaName(pt)', 'lemmaName(en)', 'idPOS', 'udPOS', 'idUDPOS', 'idLanguage', 'senseDescription(pt)', 'frameName', 'source_line', 'reason']);
 
         // Write missing lemmas
         foreach ($this->missingLemmas as $missing) {
@@ -424,6 +458,7 @@ class CreateLusFromCsvCommand extends Command
                 $missing['idUDPOS'],
                 1, // idLanguage (Portuguese)
                 $missing['senseDescription'],
+                $missing['frameName'],
                 $missing['line'],
                 $missing['reason'],
             ]);
