@@ -17,7 +17,6 @@ class BrowseNamespaceController extends Controller
     public function browse(SearchNamespaceData $search)
     {
         $frames = BrowseService::browseNamespaceFrameBySearch($search);
-
         return view('Frame.Report.mainNamespace', [
             'data' => $frames,
         ]);
