@@ -35,7 +35,6 @@ suspect,suspeitar,86,"COD: acreditar que alguém é culpado de um crime ou ofens
 suspect,suspeito,83,"COD: uma pessoa suspeita de um crime ou ofensa.",13487,lus_imported_from_english_with_lemma_chunk101_2025-11-14_171052.csv
 appeal,recurso,83,"COD: uma aplicação para um tribunal superior para que uma decisão seja revertida.",13488,lus_imported_from_english_with_lemma_chunk101_2025-11-14_171052.csv
 appeal,recorrer,86,"COD: recorrer a um tribunal superior para reverter a decisão de um tribunal inferior.",13489,lus_imported_from_english_with_lemma_chunk101_2025-11-14_171052.csv
-appellate,"de apelação",84,"COD: (de um tribunal) lidando com apelações.",13490,lus_imported_from_english_with_lemma_chunk101_2025-11-14_171052.csv
 wanted,procurado,84,"FN: caçado ou procurado pela polícia por um crime.",13492,lus_imported_from_english_with_lemma_chunk101_2025-11-14_171052.csv
 examine,interrogar,86,"COD: formalmente questionar (um réu ou testemunha) no tribunal.",13493,lus_imported_from_english_with_lemma_chunk101_2025-11-14_171052.csv
 cross,"interrogatório cruzado",83,"FN: abreviação de interrogatório cruzado.",13495,lus_imported_from_english_with_lemma_chunk101_2025-11-14_171052.csv
@@ -101,7 +100,6 @@ process,processar,86,"COD: realizar uma série de operações para alterar ou pr
 develop,revelar,86,"FN: aplicar químicos em filme fotográfico para trazer imagens à tona",13808,lus_imported_from_english_with_lemma_chunk103_2025-11-14_171729.csv
 development,revelação,83,"FN: o processamento de filme fotográfico para revelar imagens",13809,lus_imported_from_english_with_lemma_chunk103_2025-11-14_171729.csv
 total,totalizar,86,"COD: achar o total de",13811,lus_imported_from_english_with_lemma_chunk103_2025-11-14_171729.csv
-endangerment,"colocação em risco",83,"FN: o processo de colocar em risco.",13816,lus_imported_from_english_with_lemma_chunk103_2025-11-14_171729.csv
 mask,mascarar,86,"COD: ocultar de vista",13821,lus_imported_from_english_with_lemma_chunk103_2025-11-14_171729.csv
 cover,cobrir,86,"FN: bloquear parcialmente ou totalmente uma entidade de visão",13822,lus_imported_from_english_with_lemma_chunk103_2025-11-14_171729.csv
 screen,proteger,86,"COD: esconder, proteger ou abrigar com uma tela",13824,lus_imported_from_english_with_lemma_chunk104_2025-11-14_172029.csv
@@ -187,7 +185,7 @@ huddle,agrupar-se,86,"COD: enrolar o corpo em um pequeno espaço.",14122,lus_imp
 combination,combinação,83,"FN: uma mistura de duas ou mais partes que formam um único novo todo",14143,lus_imported_from_english_with_lemma_chunk106_2025-11-14_172620.csv
 join,juntar,86,"FN: para se reunir para formar uma única unidade",14146,lus_imported_from_english_with_lemma_chunk106_2025-11-14_172620.csv
 mix,misturar,86,"FN: para se reunir e formar uma unidade",14148,lus_imported_from_english_with_lemma_chunk106_2025-11-14_172620.csv
-grin,"sorrir amplamente",86,"COD: sorria amplamente",14163,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
+grin,"sorrir",86,"COD: sorria amplamente",14163,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
 depict,retratar,86,"FN: caracterizar graficamente",14169,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
 depiction,representação,83,"COD: representação é um derivado de retratar",14170,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
 describe,descrever,86,"COD: dar uma conta detalhada em palavras de.",14171,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
@@ -200,7 +198,6 @@ warm,aquecer,86,"FN: tornar-se mais quente por estar sujeito a uma fonte de calo
 lose,perder,86,"COD: não conseguir vencer.",14196,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
 loss,perda,83,"COD: uma derrota no esporte.",14197,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
 tie,empatar,86,"COD: alcançar a mesma pontuação ou classificação que outro concorrente.",14198,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
-show,"ficar em terceiro",86,"FN: terminar em terceiro lugar numa corrida",14202,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
 win,vencer,86,"FN: ser vitorioso",14203,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
 fold,desistir,86,"FN: (no poke) esse ato de encerrar voluntariamente uma rodada de pôquer, geralmente com o objetivo de proteger o jogador de perdas de apostas mais altas.",14204,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
 blast,estrondar,86,"COD: produz música ou barulho contínuo e alto.",14206,lus_imported_from_english_with_lemma_chunk107_2025-11-14_172914.csv
@@ -304,7 +301,6 @@ fresh,fresco,84,"FN: não utilizado anteriormente; novo.",14526,lus_imported_fro
 maturity,maturidade,83,"FN: a idade da maturidade que, em animais, é definida como desenvolvimento sexual completo, e em humanos é específica da cultura",14528,lus_imported_from_english_with_lemma_chunk110_2025-11-14_173739.csv
 elderly,idoso,84,"FN: velho",14531,lus_imported_from_english_with_lemma_chunk110_2025-11-14_173739.csv
 alien,alienígena,83,"Vida extraterrestre é vida que não tem origem na Terra; Aurelia e Blue Moon são exemplos hipotéticos de um planeta e uma lua em que a vida extraterrestre poderia evoluir.",22011,lus_imported_from_english_with_lemma_chunk111_2025-11-14_174034.csv
-native,"nativo americano",83,"Os habitantes pré-colombianos da América do Norte e do Sul e seus descendentes; Um membro de um dos povos indígenas das Américas (geralmente excluindo os aleutas, inuit, metis ou yupik).; Um membro de alguns povos indígenas das Américas, especialmente nos Estados Unidos, mas excluindo os inuit, yupik e aleutas.",22021,lus_imported_from_english_with_lemma_chunk111_2025-11-14_174034.csv
 scottish,escocês,84,"Pessoas que são nativas da Escócia.",34145,lus_imported_from_english_with_lemma_chunk111_2025-11-14_174034.csv
 "lose it","perder o controle",86,"FN: perder o controle, geralmente devido a frustração e raiva ou medo.",14577,lus_imported_from_english_with_lemma_chunk111_2025-11-14_174034.csv
 "break down",desmoronar,86,"FN: falha em manter o controle emocional e fica perturbado.",30942,lus_imported_from_english_with_lemma_chunk111_2025-11-14_174034.csv
@@ -430,7 +426,7 @@ divulge,divulgar,86,"COD: tornar conhecido.",15095,lus_imported_from_english_wit
 confession,confissão,83,"FN: uma declaração confessando um crime",15098,lus_imported_from_english_with_lemma_chunk118_2025-11-14_180105.csv
 leak,divulgar,86,"COD: divulgar intencionalmente (informação confidencial).",15103,lus_imported_from_english_with_lemma_chunk118_2025-11-14_180105.csv
 admit,admitir,86,"COD: confessa ser verdadeiro ou ser o caso.",15105,lus_imported_from_english_with_lemma_chunk118_2025-11-14_180105.csv
-"come forward",Apresentar-se,86,"FN: Informação voluntária",15106,lus_imported_from_english_with_lemma_chunk118_2025-11-14_180105.csv
+"come forward",apresentar-se,86,"FN: Informação voluntária",15106,lus_imported_from_english_with_lemma_chunk118_2025-11-14_180105.csv
 final,final,84,"FN: O último em um conjunto",15125,lus_imported_from_english_with_lemma_chunk118_2025-11-14_180105.csv
 next,próximo,84,"A entidade que vem logo após a que é o atual.",34132,lus_imported_from_english_with_lemma_chunk118_2025-11-14_180105.csv
 source,Fonte,83,"COD: uma pessoa que fornece informações.",15127,lus_imported_from_english_with_lemma_chunk118_2025-11-14_180105.csv
@@ -577,7 +573,7 @@ tenderloin,"filé mignon",83,"Uma fatia de carne retirada do lado e das costas d
 canjiquinha,canjiquinha,83,"Uma delícia típica brasileira do estado de Minas Gerais, que consiste em milho moído, cozido com carne de porco (geralmente costelas) e outros temperos caseiros.",24669,lus_imported_from_english_with_lemma_chunk124_2025-11-14_182354.csv
 artichoke,alcachofra,83,"A cabeça de arteiro não aberta – uma planta europeia semelhante a um cardo, cultivada por suas grandes cabeças florais – das quais o coração e as bases carnudas dos brácteas são comestíveis.",33482,lus_imported_from_english_with_lemma_chunk124_2025-11-14_182354.csv
 broccoli,brócolis,83,"Uma variedade cultivada de couve que produz cabeças de flores verdes ou roxas comestíveis como leguminosas.",33484,lus_imported_from_english_with_lemma_chunk124_2025-11-14_182354.csv
-lemon,Limão-siciliano,83,"Uma fruta cítrica amarela pálida em forma de ovo com casca grossa e suco aromático e ácido.",33488,lus_imported_from_english_with_lemma_chunk124_2025-11-14_182354.csv
+lemon,limão,83,"Uma fruta cítrica amarela pálida em forma de ovo com casca grossa e suco aromático e ácido.",33488,lus_imported_from_english_with_lemma_chunk124_2025-11-14_182354.csv
 mushroom,cogumelo,83,"Um crescimento fúngico que normalmente assume a forma de um chapéu com uma cúpula em um caule, com lamelas sob o chapéu.",33489,lus_imported_from_english_with_lemma_chunk124_2025-11-14_182354.csv
 orange,laranja,83,"Uma grande fruta cítrica redonda e suculenta com uma casca dura e brilhante de cor vermelha-amarela.",33490,lus_imported_from_english_with_lemma_chunk124_2025-11-14_182354.csv
 advance,avançar,86,"FN: fazer avançar em algo",15548,lus_imported_from_english_with_lemma_chunk124_2025-11-14_182354.csv
@@ -962,7 +958,7 @@ range,faixa,83,"COD: um conjunto de coisas diferentes do mesmo tipo geral.",1677
 medley,medley,83,"COD: uma mistura variada.",16777,lus_imported_from_english_with_lemma_chunk136_2025-11-14_185716.csv
 uniformity,uniformidade,83,"FN: a qualidade de ser uniforme.",16781,lus_imported_from_english_with_lemma_chunk136_2025-11-14_185716.csv
 uninterrupted,ininterrupto,84,"FN: sem interrupção.",16794,lus_imported_from_english_with_lemma_chunk136_2025-11-14_185716.csv
-today,"o presente",83,"COD: no presente período de tempo; atualmente.",16808,lus_imported_from_english_with_lemma_chunk137_2025-11-14_185953.csv
+today,"presente",83,"COD: no presente período de tempo; atualmente.",16808,lus_imported_from_english_with_lemma_chunk137_2025-11-14_185953.csv
 newly,recentemente,89,"FN: acontecendo muito recentemente",16822,lus_imported_from_english_with_lemma_chunk137_2025-11-14_185953.csv
 "as of","a partir de",90,"FN: identifica o Landmark FE",31005,lus_imported_from_english_with_lemma_chunk137_2025-11-14_185953.csv
 aim,apontar,86,"COD: apontar (uma arma ou câmera) para um alvo.",16843,lus_imported_from_english_with_lemma_chunk137_2025-11-14_185953.csv
@@ -996,7 +992,6 @@ thereabouts,"por volta de",89,"COD: usado para indicar que uma data ou figura é
 odd,ímpar,84,"COD: na região de.",16955,lus_imported_from_english_with_lemma_chunk138_2025-11-14_190233.csv
 mostly,principalmente,89,"A maior parte de um número de entidades.",34035,lus_imported_from_english_with_lemma_chunk138_2025-11-14_190233.csv
 proportional,proporcional,84,"Correspondendo em tamanho ou quantidade ao tamanho ou quantidade da comparação.",34342,lus_imported_from_english_with_lemma_chunk138_2025-11-14_190233.csv
-accredit,acreditarar,86,"FN: dar autoridade para agir em um papel oficial.",16964,lus_imported_from_english_with_lemma_chunk138_2025-11-14_190233.csv
 finger,identificar,86,"COD: identificar ou escolher (alguém) para um propósito específico.",16968,lus_imported_from_english_with_lemma_chunk138_2025-11-14_190233.csv
 tap,designar,86,"COD: designa ou seleciona uma tarefa ou honra.",16969,lus_imported_from_english_with_lemma_chunk138_2025-11-14_190233.csv
 name,nomear,86,"FN: designa alguém para desempenhar um dever.",16970,lus_imported_from_english_with_lemma_chunk138_2025-11-14_190233.csv
@@ -1021,7 +1016,6 @@ too,demais,89,"Mais do que suficiente, ou adequado à situação ou entidade.",3
 purely,puramente,89,"Completamente, 100%.",34413,lus_imported_from_english_with_lemma_chunk139_2025-11-14_190452.csv
 in,em,90,"FN: encontrado dentro",17052,lus_imported_from_english_with_lemma_chunk139_2025-11-14_190452.csv
 fish,pescar,86,"FN: Para procurar carne viva aquática através do uso de ferramentas eficazes.",17055,lus_imported_from_english_with_lemma_chunk139_2025-11-14_190452.csv
-seal,"caçar focas",86,"Caçar focas",17056,lus_imported_from_english_with_lemma_chunk139_2025-11-14_190452.csv
 gather,reunir,86,"FN: recuperar e reunir culturas",17058,lus_imported_from_english_with_lemma_chunk139_2025-11-14_190452.csv
 pick,pegar,86,"FN: procure e recupere",17059,lus_imported_from_english_with_lemma_chunk139_2025-11-14_190452.csv
 bag,conseguir,86,"FN: obter com sucesso",17062,lus_imported_from_english_with_lemma_chunk139_2025-11-14_190452.csv
@@ -1085,7 +1079,7 @@ unfulfilled,"não realizado",84,"FN: um sentimento de não estar realizado.",171
 dissatisfied,insatisfeito,84,"FN: não se sentir satisfeito",17115,lus_imported_from_english_with_lemma_chunk140_2025-11-14_190711.csv
 satisfied,satisfeito,84,"FN: caracterizado por sentir satisfação",17116,lus_imported_from_english_with_lemma_chunk140_2025-11-14_190711.csv
 "wrapped up",absorvido,84,"FN: distraído e ocupado com",17126,lus_imported_from_english_with_lemma_chunk140_2025-11-14_190711.csv
-suspicious,Suspeito/a,84,"FN: a ideia ou impressão de que algo ou alguém é de natureza questionável, desonesta ou perigosa.",17128,lus_imported_from_english_with_lemma_chunk140_2025-11-14_190711.csv
+suspicious,suspeito,84,"FN: a ideia ou impressão de que algo ou alguém é de natureza questionável, desonesta ou perigosa.",17128,lus_imported_from_english_with_lemma_chunk140_2025-11-14_190711.csv
 curiously,curiosamente,89,"FN: estranhamente",32783,lus_imported_from_english_with_lemma_chunk140_2025-11-14_190711.csv
 interest,interesse,83,"FN: preocupação com o desfecho de (um estado de coisas ou evento)",32784,lus_imported_from_english_with_lemma_chunk140_2025-11-14_190711.csv
 delight,alegria,83,"FN: prazer, alegria",17129,lus_imported_from_english_with_lemma_chunk140_2025-11-14_190711.csv
@@ -1284,12 +1278,11 @@ amidst,"no meio de",90,"FN: no meio de; rodeado por",17681,lus_imported_from_eng
 trail,trilha,83,"FN: coleção de alterações ao longo de uma linha contínua inferida que indicam o caminho percorrido por uma entidade em movimento.",17684,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 strike,impressionar,86,"FN: um fenômeno tem um efeito transitório sobre um experimentador causando algum tipo de avaliação ou resposta cognitiva.",17688,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 hit,impactar,86,"FN: um fenômeno tem um efeito transitório sobre um experimentador causando algum tipo de avaliação ou resposta cognitiva.",17690,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
-"occur (to)","ocorrer a",86,"FN: tornar-se conhecido (para alguém) de repente.",30969,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
+"occur (to)","ocorrer",86,"FN: tornar-se conhecido (para alguém) de repente.",30969,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 "come (to)",perceber,86,"FN: ficar óbvio (para alguém).",30970,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 serve,servir,86,"FN: exercer funções e deveres (por um tempo finito) associados a uma função ou cargo.",17699,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 function,funcionar,86,"FN: ser utilizado (como algum objeto útil).",30981,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 pertinent,pertinente,84,"FN: significativo em termos do atual tópico de discussão",17705,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
-play,"ser relevante",86,"Ser relevante para",17706,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 relevance,relevância,83,"A qualidade de ser relevante.",34328,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 great,ótimo,84,"FN: particularmente hábil, influente ou importante",17707,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
 state,estado,83,"FN: termo descritivo geral de uma fase da matéria.",17710,lus_imported_from_english_with_lemma_chunk145_2025-11-14_192105.csv
@@ -1520,7 +1513,7 @@ combination,combinação,83,"FN: Um conjunto de operações ou sequência de sí
 password,senha,83,"FN: Uma sequência de caracteres que pode ser usada para conceder acesso a um local físico ou digital.",18213,lus_imported_from_english_with_lemma_chunk150_2025-11-14_193543.csv
 impair,prejudicar,86,impedido,18217,lus_imported_from_english_with_lemma_chunk150_2025-11-14_193543.csv
 inhibit,inibir,86,impedir,18219,lus_imported_from_english_with_lemma_chunk150_2025-11-14_193543.csv
-borrow,"tomar emprestado",86,"FN: tomar posse de algo com o conhecimento de que deve ser devolvido",18227,lus_imported_from_english_with_lemma_chunk150_2025-11-14_193543.csv
+borrow,"pegar emprestado",86,"FN: tomar posse de algo com o conhecimento de que deve ser devolvido",18227,lus_imported_from_english_with_lemma_chunk150_2025-11-14_193543.csv
 "hang on to",manter,86,"FN: para manter posse de um item ou uma emoção",18231,lus_imported_from_english_with_lemma_chunk150_2025-11-14_193543.csv
 die,apagar,86,"FN: (De fogo) Parar de queimar.",18242,lus_imported_from_english_with_lemma_chunk151_2025-11-14_193947.csv
 "burn out",apagar,86,"FN: Pare de queimar",18243,lus_imported_from_english_with_lemma_chunk151_2025-11-14_193947.csv
@@ -1560,7 +1553,7 @@ by,"perto de",90,"FN: localizado não muito longe de.",18331,lus_imported_from_e
 "in front","em frente",90,"FN: em uma posição antes ou à frente de",18336,lus_imported_from_english_with_lemma_chunk153_2025-11-14_194816.csv
 opposite,oposto,84,"FN: localizado de frente para, em frente a ou no outro extremo de algo",18343,lus_imported_from_english_with_lemma_chunk153_2025-11-14_194816.csv
 left,esquerda,83,"FN: algo que está à esquerda do marco em questão",18344,lus_imported_from_english_with_lemma_chunk153_2025-11-14_194816.csv
-right,"lado direito",83,"FN: algo que está à direita do marco em questão",18346,lus_imported_from_english_with_lemma_chunk153_2025-11-14_194816.csv
+right,"direita",83,"FN: algo que está à direita do marco em questão",18346,lus_imported_from_english_with_lemma_chunk153_2025-11-14_194816.csv
 left,esquerda,83,"FN: algo que está à esquerda do trajetório/figura",18348,lus_imported_from_english_with_lemma_chunk153_2025-11-14_194816.csv
 right,direita,83,"FN: algo que está no ou ao lado direito do trajeto/figura",18350,lus_imported_from_english_with_lemma_chunk153_2025-11-14_194816.csv
 port,bombordo,83,"FN: para o lado esquerdo; uso é estritamente náutico",18355,lus_imported_from_english_with_lemma_chunk153_2025-11-14_194816.csv
@@ -1776,7 +1769,7 @@ canoeing,canoagem,83,"O esporte em que os atletas ajoelham ou sentam-se de frent
 shooting,tiro,83,"Um esporte que envolve testes de proficiência usando vários tipos de armas, como armas de fogo e armas de ar comprimido.",3175,lus_imported_from_english_with_lemma_chunk164_2025-11-14_203328.csv
 volleyball,vôlei,83,"Um esporte em equipe no qual duas equipes de seis jogadores são separadas por uma rede.",21714,lus_imported_from_english_with_lemma_chunk164_2025-11-14_203328.csv
 skate,skate,83,"Um esporte no qual o atleta desliza sobre o chão e supera obstáculos equilibrando-se em uma prancha de quatro rodas.",28130,lus_imported_from_english_with_lemma_chunk164_2025-11-14_203328.csv
-kayak,"praticar caiaque",86,"esporte em que o atleta vai remando em um barco em um rio.",34883,lus_imported_from_english_with_lemma_chunk164_2025-11-14_203328.csv
+kayak,"caiaque",86,"esporte em que o atleta vai remando em um barco em um rio.",34883,lus_imported_from_english_with_lemma_chunk164_2025-11-14_203328.csv
 sport,esporte,83,"Uma atividade física que segue regras e é praticada na forma de competições, e ao mesmo tempo é praticada para fins recreativos, profissionais ou de aprimoramento da saúde.",27872,lus_imported_from_english_with_lemma_chunk164_2025-11-14_203328.csv
 offense,ataque,83,"No esporte, ataque ou ofensa.",3235,lus_imported_from_english_with_lemma_chunk164_2025-11-14_203328.csv
 twist,torção,83,"movimento em torno do eixo corporal.",21748,lus_imported_from_english_with_lemma_chunk165_2025-11-14_203907.csv
@@ -1891,7 +1884,6 @@ front,frente,83,"No trampolim ginástica é o salto para a frente.",31574,lus_im
 visit,visitar,86,"COD: ir ver e passar algum tempo",5410,lus_imported_from_english_with_lemma_chunk16_2025-11-14_124402.csv
 make,alcançar,86,"COD: conseguir chegar a (um lugar) ou apanhar (um trem ou outro meio de transporte).",5412,lus_imported_from_english_with_lemma_chunk16_2025-11-14_124402.csv
 get,chegar,86,"COD: vir ou ir eventualmente ou com alguma dificuldade",5413,lus_imported_from_english_with_lemma_chunk16_2025-11-14_124402.csv
-crest,"alcançar o topo",86,"COD: alcançar o topo de.",5416,lus_imported_from_english_with_lemma_chunk16_2025-11-14_124402.csv
 entry,entrada,83,"COD: um ato ou a ação de entrar.",5417,lus_imported_from_english_with_lemma_chunk16_2025-11-14_124402.csv
 hit,acertar,86,"FN: alcançar um destino ou local.",5419,lus_imported_from_english_with_lemma_chunk16_2025-11-14_124402.csv
 find,encontrar,86,"FN: alcançar um destino ou uma meta",5422,lus_imported_from_english_with_lemma_chunk16_2025-11-14_124402.csv
@@ -1972,7 +1964,7 @@ flesh,pele,83,"COD: a superfície do corpo humano",7641,lus_imported_from_englis
 wing,asa,83,"COD: uma membro anterior modificado ou outro apêndice que permite que um pássaro, morcego, inseto ou outra criatura voe.",7658,lus_imported_from_english_with_lemma_chunk172_2025-11-14_211200.csv
 fin,barbatana,83,"COD: uma apêndice achatado no corpo de um peixe ou outro animal aquático, usado para propulsão, direção e equilíbrio",7677,lus_imported_from_english_with_lemma_chunk172_2025-11-14_211200.csv
 temple,têmpora,83,"COD: a parte achatada de cada lado da cabeça, entre a testa e a orelha.",7692,lus_imported_from_english_with_lemma_chunk172_2025-11-14_211200.csv
-sole,"planta do pé",83,"COD: o lado inferior do pé de uma pessoa.",7698,lus_imported_from_english_with_lemma_chunk172_2025-11-14_211200.csv
+sole,"sola",83,"COD: o lado inferior do pé de uma pessoa.",7698,lus_imported_from_english_with_lemma_chunk172_2025-11-14_211200.csv
 crown,coroa,83,"FN: a parte superior da cabeça de uma pessoa.",7711,lus_imported_from_english_with_lemma_chunk172_2025-11-14_211200.csv
 muscular,muscular,84,,39850,lus_imported_from_english_with_lemma_chunk172_2025-11-14_211200.csv
 altered,alterado,84,"FN: descreve entidades que sofreram alteração, geralmente de um atributo, em vez de categorização.",18535,lus_imported_from_english_with_lemma_chunk172_2025-11-14_211200.csv
@@ -2084,7 +2076,6 @@ gut,eviscerar,86,"COD: remover ou destruir as partes internas de",5519,lus_impor
 bone,desossar,86,"COD: retire os ossos de (carne ou peixe) antes de cozinhar",5520,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 unload,descarregar,86,"COD: remove a carga de.",5530,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 evacuate,evacuar,86,"FN: esvaziar um recipiente (especialmente um edifício de pessoas, para garantir segurança)",5534,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
-seed,desnuclear,86,"FN: remover a semente de algo, tipicamente uma fruta",5543,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 stone,descaroçar,86,"FN: remover a pedra de algo, tipicamente uma fruta de pedra",5544,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 stalk,desgalhar,86,"FN: remover o caule de algo, tipicamente um vegetal",5545,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 flush,lavar,86,"FN: livre de sujeira, detritos, etc., por passar com um fluido.",5546,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
@@ -2117,13 +2108,11 @@ strew,Espalhar,86,"COD: cobrir (uma superfície ou área) com coisas espalhadas 
 flood,inundar,86,"COD: preencher ou perfumar completamente",5594,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 crowd,encher,86,"FN: preencher (quase completamente) um espaço",5595,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 pave,pavimentar,86,"COD: cobrir (uma peça de terreno) com pedras ou tijolos planos",5596,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
-panel,painelar,86,"COD: cobrir (uma parede ou outra superfície) com painéis.",5602,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 wash,cobrir,86,"FN: cobrir com uma camada fina (esp cor ou metal).",5604,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 plank,tabelar,86,"FN: cobrir com tábuas.",5605,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 yoke,jungir,86,"FN: encaixe com uma viga de tração.",5606,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 dress,decorar,86,"COD: decore de forma artística ou atraente",5607,lus_imported_from_english_with_lemma_chunk17_2025-11-14_124656.csv
 buzz,zumbir,86,"FN: mover-se fazendo um zumbido baixo semelhante ao de uma abelha.",5610,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
-clump,"caminhar pesadamente",86,"FN: mover-se fazendo um barulho entediante e pesado.",5618,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
 patter,tamborilar,86,"FN: corre fazendo um som de batidinha leve.",5627,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
 swish,sussurrar,86,"COD: move com um som de assobio ou correção.",5638,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
 zing,disparar,86,"COD: move rapidamente.",5645,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
@@ -2154,7 +2143,8 @@ pile,empilhar,86,"COD: lugar (coisas) uma sobre a outra",5708,lus_imported_from_
 place,colocar,86,"Colocar em uma posição específica.",5709,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
 plant,plantar,86,"COD: coloque (uma semente, bulbo ou planta) no chão para que ela possa crescer.",5711,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
 position,posicionar,86,"COD: colocar ou organizar em uma posição específica.",5712,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
-rest,repousar,86,"COD: lugar ou ser colocado de modo a ficar em uma posição especificada",5713,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
+rest,repousar,86,"COD: lugar ou ser colocado de modo a ficar em uma posição especificada",5713,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csvG2246
+
 set,colocar,86,"COD: colocar, deitar ou ficar (algo) em um lugar ou posição especificada",5714,lus_imported_from_english_with_lemma_chunk18_2025-11-14_124951.csv
 situate,situar,86,"COD: lugar em um local ou contexto específico",5715,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
 smear,Espalhar,86,"COD: espalhar (uma substância gordurosa ou pegajosa) sobre uma superfície",5716,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
@@ -2163,9 +2153,7 @@ bag,embolsar,86,"COD: colocar numa bolsa",5723,lus_imported_from_english_with_le
 bottle,engarrafar,86,"COD: lugar em garrafas para armazenamento",5726,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
 box,encaixotar,86,"COD: colar em ... uma caixa",5728,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
 crate,encaixotar,86,"COD: embalar em uma caixa para transporte",5730,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
-garage,engarajar,86,"COD: colocar ou manter (um veículo motorizado) em um garagem.",5732,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
 pocket,embolsar,86,"COD: colocar no bolso",5733,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
-shelve,prateleirar,86,"COD: colocar em prateleira",5734,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
 dust,polvilhar,86,"FN: aplicar (uma substância em pó) levemente sobre uma superfície",5743,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
 heap,empilhar,86,"COD: colocar ou formar uma pilha",5744,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
 rub,esfregar,86,"COD: aplicar com uma ação de esfregar",5746,lus_imported_from_english_with_lemma_chunk19_2025-11-14_125245.csv
@@ -2257,7 +2245,6 @@ pad,caminhar,86,"COD: caminhar com passos firmes fazendo um som suave e abafado.
 pounce,atacar,86,"COD: primavera ou mergulhar de repente para pegar ou como se pegasse a presa.",5862,lus_imported_from_english_with_lemma_chunk20_2025-11-14_125552.csv
 roam,vaguear,86,"FN: vaguear sem rumo por, através ou sobre (um lugar).",5866,lus_imported_from_english_with_lemma_chunk20_2025-11-14_125552.csv
 scoot,Deslizar,86,"COD: move rapidamente com um movimento rápido e esguio",5873,lus_imported_from_english_with_lemma_chunk20_2025-11-14_125552.csv
-sleepwalk,sonambulizar,86,"COD: andar e às vezes realizar outras ações enquanto dorme.",5883,lus_imported_from_english_with_lemma_chunk20_2025-11-14_125552.csv
 sprint,Sprint,83,"COD: uma corrida curta e rápida no ciclismo, corridas de cavalos, etc.",5890,lus_imported_from_english_with_lemma_chunk20_2025-11-14_125552.csv
 sprint,correr,86,"COD: correr na velocidade máxima por uma curta distância.",5891,lus_imported_from_english_with_lemma_chunk20_2025-11-14_125552.csv
 steal,esgueirar-se,86,"COD: mover-se em segredo ou de forma furtiva",5893,lus_imported_from_english_with_lemma_chunk20_2025-11-14_125552.csv
@@ -2267,7 +2254,6 @@ strut,empavonar-se,86,"COD: andar com uma postura rígida, ereta e arrogante.",5
 tread,caminhar,86,"COD: caminhar ou andar ao longo de",5911,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 trek,caminhar,86,"COD: ir em uma caminhada.",5912,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 trip,tropeçar,86,"COD: tropeçar ou cair ao pisar em algo.",5913,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
-trudge,"caminhar pesadamente",86,"COD: andar devagar e com passos pesados, tipicamente por causa de exaustão ou condições adversas.",5916,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 walk,caminhada,83,"COD: uma excursão ou ato de viajar a pé.",5921,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 waltz,valsar,86,"COD: mover ou agir de forma leve, casual ou descuidada:",5922,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 wander,vaguear,86,"COD: caminhar ou se mover de maneira descontraída, casual ou sem rumo.",5923,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
@@ -2282,7 +2268,6 @@ storm,irromper,86,"COD: mover com raiva ou força em uma direção especificada.
 drive,dirigir,86,"FN: (de um veículo) mover-se sob o seu próprio poder ou dirigido por um motorista",5941,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 sail,Navegar,86,"FN: (de embarcação) mover-se sobre a água.",5942,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 cruise,navegar,86,"FN: (de um veículo) mover-se suavemente e rapidamente.",5944,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
-tack,"navegar contra o vento",86,"FN: (de um barco) mover-se em e através de um vento",5945,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 taxi,taxiar,86,"FN: (de um avião) mover-se lentamente no chão após o pouso ou antes do decolagem.",5946,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 shoulder,ombrear,86,"FN: mover-se empurrando obstáculos ou transeuntes com o ombro",5947,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
 swing,balançar,86,"FN: para se propulsar mudando repentinamente de direção",5949,lus_imported_from_english_with_lemma_chunk21_2025-11-14_125851.csv
@@ -2332,11 +2317,10 @@ burn,queimar,86,"Sente dor, como se fosse calor",6036,lus_imported_from_english_
 itch,coçar,86,"COD: uma sensação desconfortável que causa um desejo de coçar a pele",6038,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
 sting,picar,86,"FN: apresenta uma dor aguda, como se fosse causada por uma ferida de faca",6041,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
 tickle,"fazer cócegas",86,"FN: ter uma sensação de coceira.",6042,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
-goosebump,Arrepios,83,"FN: um estado pimpolado da pele com pelos eretos, produzido por frio ou medo",6045,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
+goosebump,arrepio,83,"FN: um estado pimpolado da pele com pelos eretos, produzido por frio ou medo",6045,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
 pain,doer,86,"COD: causar dor mental ou física em.",6046,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
 pain,dor,83,"COD: uma sensação corporal fortemente desagradável, como a causada por doença ou lesão.",6047,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
 discomfort,desconforto,83,"FN: um estado de desconforto físico",6051,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
-blast,"tocar alto",86,"COD: produz música ou barulho contínuo e alto.",6057,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
 chuckle,rir,86,"COD: rir em voz baixa ou para dentro.",6067,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
 clatter,ranger,86,"FN: fazer um barulho alto de rangendo",6070,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
 cough,Tossir,86,"COD: expulsam o ar dos pulmões com um som súbito e agudo.",6073,lus_imported_from_english_with_lemma_chunk22_2025-11-14_130151.csv
@@ -2377,7 +2361,7 @@ hot,quente,84,"Descriando uma alta temperatura.",34284,lus_imported_from_english
 overthrow,derrubar,86,"COD: remover à força do poder",6204,lus_imported_from_english_with_lemma_chunk24_2025-11-14_130757.csv
 revolt,revoltar,86,"COD: subir em rebelião contra a autoridade",6206,lus_imported_from_english_with_lemma_chunk24_2025-11-14_130757.csv
 revolution,revolução,83,"COD: o derrubamento à força de um governo ou ordem social, em favor de um novo sistema.",6207,lus_imported_from_english_with_lemma_chunk24_2025-11-14_130757.csv
-dethrone,dethronar,86,"COD: com objeto de retirar (um monarca) do poder.",6211,lus_imported_from_english_with_lemma_chunk24_2025-11-14_130757.csv
+dethrone,destronar,86,"COD: com objeto de retirar (um monarca) do poder.",6211,lus_imported_from_english_with_lemma_chunk24_2025-11-14_130757.csv
 election,eleição,83,"COD: um procedimento formal pelo qual uma pessoa é eleita, especialmente para um cargo político.",6216,lus_imported_from_english_with_lemma_chunk24_2025-11-14_130757.csv
 enthrone,entronizar,86,"COD: instalar (um monarca ou bispo) em um trono com a devida cerimônia.",6218,lus_imported_from_english_with_lemma_chunk24_2025-11-14_130757.csv
 crown,coroar,86,"COD: colocar cerimonialmente uma coroa na cabeça de (alguém) para investir como monarca.",6220,lus_imported_from_english_with_lemma_chunk24_2025-11-14_130757.csv
@@ -2455,7 +2439,7 @@ dispenser,dispensador,83,"FN: Um dispositivo que armazena uma substância ou (ho
 drum,tambor,83,"COD: objeto ou parte cilíndrica, especialmente um recipiente:",6477,lus_imported_from_english_with_lemma_chunk26_2025-11-14_131414.csv
 etui,estojo,83,"COD: (antigo) uma pequena caixa decorativa para guardar agulhas, cosméticos e outros artigos.",6481,lus_imported_from_english_with_lemma_chunk26_2025-11-14_131414.csv
 keg,barril,83,"COD: uma pequena barril, especialmente um de menos de 10 galões ou (nos EUA) 30 galões",6490,lus_imported_from_english_with_lemma_chunk26_2025-11-14_131414.csv
-overnighter,"mala de viagem",83,"COD: uma mala de viagem.",6493,lus_imported_from_english_with_lemma_chunk26_2025-11-14_131414.csv
+overnighter,mala,83,"COD: uma mala de viagem.",6493,lus_imported_from_english_with_lemma_chunk26_2025-11-14_131414.csv
 pack,pacote,83,"FN: um pequeno recipiente ou caixa que os bens são vendidos em",6494,lus_imported_from_english_with_lemma_chunk26_2025-11-14_131414.csv
 pannier,cesto,83,"FN: um grande recipiente transportado nas costas (de um animal).",6499,lus_imported_from_english_with_lemma_chunk26_2025-11-14_131414.csv
 folder,pasta,83,"COD: uma capa ou carteira dobrável para armazenar papéis soltos.",6510,lus_imported_from_english_with_lemma_chunk27_2025-11-14_131704.csv
@@ -2620,7 +2604,7 @@ father-in-law,sogro,83,"FN: o pai da pessoa cônjuge",7213,lus_imported_from_eng
 son-in-law,genro,83,"FN: o marido de uma filha da pessoa",7214,lus_imported_from_english_with_lemma_chunk33_2025-11-14_133342.csv
 brother-in-law,cunhado,83,"COD: o irmão da esposa ou do marido de alguém, ou o marido da irmã ou da cunhada de alguém.",7222,lus_imported_from_english_with_lemma_chunk33_2025-11-14_133342.csv
 child,criança,83,"COD: o filho ou filha de qualquer idade",7231,lus_imported_from_english_with_lemma_chunk33_2025-11-14_133342.csv
-in-law,"parente por afinidade",83,"COD: um parente por casamento",7232,lus_imported_from_english_with_lemma_chunk33_2025-11-14_133342.csv
+in-law,"parente",83,"COD: um parente por casamento",7232,lus_imported_from_english_with_lemma_chunk33_2025-11-14_133342.csv
 kid,criança,83,"COD: (informal) uma criança ou jovem.",7250,lus_imported_from_english_with_lemma_chunk33_2025-11-14_133342.csv
 clan,clã,83,"FN: grupo de pessoas relacionadas por sangue ou casamento",7252,lus_imported_from_english_with_lemma_chunk33_2025-11-14_133342.csv
 people,gente,83,"FN: um substantivo que descreve uma linhagem familiar geral.",7253,lus_imported_from_english_with_lemma_chunk33_2025-11-14_133342.csv
@@ -2645,7 +2629,7 @@ system,sistema,83,"FN: uma máquina complexa cujos componentes funcionam juntos 
 core,núcleo,83,"COD: a parte central de um reator nuclear, que contém o material físsil.",7323,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
 player,reprodutor,83,"FN: uma máquina que lê e decodifica informações digitais.",7324,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
 range,fogão,83,"FN: fogão de cozinha; usado para cozinhar alimentos.",7325,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
-level,"nível de bolha",83,"FN: um dispositivo usado para determinar se uma superfície é perfeitamente horizontal.",7327,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
+level,nível,83,"FN: um dispositivo usado para determinar se uma superfície é perfeitamente horizontal.",7327,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
 computer,computador,83,"Um aparelho eletrônico usado para armazenar, organizar e acessar informações, fazer cálculos e controlar outras máquinas.",34311,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
 examination,exame,83,"COD: um teste formal de [conhecimento ou] proficiência em um assunto ou habilidade",7329,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
 test,testar,86,"COD: sujeito a um teste (de proficiência)",7330,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
@@ -2677,7 +2661,7 @@ training,treinamento,83,"FN: instrução em uma habilidade ou campo específico.
 instruct,instruir,86,"COD: para ensinar",7403,lus_imported_from_english_with_lemma_chunk34_2025-11-14_133656.csv
 instruction,instrução,83,"COD: educação.",7405,lus_imported_from_english_with_lemma_chunk35_2025-11-14_133948.csv
 master,dominar,86,"COD: adquirir conhecimento ou habilidade completa em",7408,lus_imported_from_english_with_lemma_chunk35_2025-11-14_133948.csv
-cram,"estudar intensivamente",86,"FN: estudar de forma intensa, geralmente por causa de um exame iminente",7412,lus_imported_from_english_with_lemma_chunk35_2025-11-14_133948.csv
+cram,estudar,86,"FN: estudar de forma intensa, geralmente por causa de um exame iminente",7412,lus_imported_from_english_with_lemma_chunk35_2025-11-14_133948.csv
 lesson,lição,83,"FN: uma unidade de atividade ou texto de ensino, seja para uma única aula ou referente a material específico a ser aprendido juntos",32551,lus_imported_from_english_with_lemma_chunk35_2025-11-14_133948.csv
 club,golpear,86,"COD: bater com um taco ou ferramenta semelhante.",7418,lus_imported_from_english_with_lemma_chunk35_2025-11-14_133948.csv
 hammer,martelar,86,"COD: acertar ou bater repetidamente com ou como um martelo.",7422,lus_imported_from_english_with_lemma_chunk35_2025-11-14_133948.csv
@@ -2737,7 +2721,7 @@ keep,manter,86,"FN: cumprir um compromisso",7582,lus_imported_from_english_with_
 circumvent,contornar,86,"FN: quebrar (um tratado ou acordo), com a intenção de não revelar a violação.",7589,lus_imported_from_english_with_lemma_chunk36_2025-11-14_134230.csv
 line,conformidade,83,"FN: estar em conformidade (com uma regra ou expectativa).",7591,lus_imported_from_english_with_lemma_chunk36_2025-11-14_134230.csv
 lack,falta,86,"COD: sem ou com deficiência de",7598,lus_imported_from_english_with_lemma_chunk36_2025-11-14_134230.csv
-possess,possessão,86,"COD: tem como pertencendo a um",7599,lus_imported_from_english_with_lemma_chunk36_2025-11-14_134230.csv
+possess,possuir,86,"COD: tem como pertencendo a um",7599,lus_imported_from_english_with_lemma_chunk36_2025-11-14_134230.csv
 want,querer,83,"COD: o desejo por algo.",7608,lus_imported_from_english_with_lemma_chunk36_2025-11-14_134230.csv
 get,obter,86,"Ter, ser capaz de uma entidade.",34415,lus_imported_from_english_with_lemma_chunk37_2025-11-14_134555.csv
 arraign,acusar,86,"COD: chamar antes de um tribunal para responder a uma acusação criminal",7721,lus_imported_from_english_with_lemma_chunk37_2025-11-14_134555.csv
@@ -2848,9 +2832,9 @@ print,estampa,83,"Uma imagem ou padrão feito em um pedaço de tecido.",34113,lu
 tartan,tartan,83,"Uma estampa de tecido escocês característica.",34115,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
 memory,memória,83,"FN: o ato cognitivo de recordar um evento ou entidade do passado",8045,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
 recollect,recordar,86,"FN: levar de volta ao nível da consciência",8047,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
-recollection,Lembrança,83,"COD: a ação ou faculdade de lembrar",8048,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
+recollection,lembrança,83,"COD: a ação ou faculdade de lembrar",8048,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
 retain,reter,86,"COD: manter na memória",8049,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
-"bethink oneself",Lembrar-se,86,"FN: lembrar, lembrar-se",8050,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
+"bethink oneself",lembrar-se,86,"FN: lembrar, lembrar-se",8050,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
 ace,ace,83,"COD: uma pessoa que se destaca em uma atividade específica",8063,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
 novice,iniciante,83,"COD: uma pessoa nova e inexperiente em um emprego ou situação",8074,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
 adeptness,habilidade,83,"FN: o fato de ser muito habilidoso ou proficiente",8084,lus_imported_from_english_with_lemma_chunk40_2025-11-14_135651.csv
@@ -2865,7 +2849,6 @@ treat,oferecer,86,"COD: fornecer a alguém (alimentos, bebidas ou entretenimento
 hand,entregar,86,"COD: pegar (algo) e dar (a alguém).",8145,lus_imported_from_english_with_lemma_chunk41_2025-11-14_135930.csv
 "hand in",entregar,86,"FN: dar a uma autoridade de acordo com a obrigação",8146,lus_imported_from_english_with_lemma_chunk41_2025-11-14_135930.csv
 contribute,contribuir,86,"COD: dar para ajudar a alcançar ou fornecer algo.",8148,lus_imported_from_english_with_lemma_chunk41_2025-11-14_135930.csv
-volunteer,voluntariar,86,"FN: dar algo a um destinatário necessitado",8151,lus_imported_from_english_with_lemma_chunk41_2025-11-14_135930.csv
 will,legar,86,"Deixar algo para alguém de acordo com uma testamento escrito",8152,lus_imported_from_english_with_lemma_chunk41_2025-11-14_135930.csv
 leave,deixar,86,"deixar em herança",8154,lus_imported_from_english_with_lemma_chunk41_2025-11-14_135930.csv
 advance,adiantar,86,"FN: dar antes do horário marcado",8155,lus_imported_from_english_with_lemma_chunk41_2025-11-14_135930.csv
@@ -2906,7 +2889,7 @@ kilogram,quilograma,83,"COD: a unidade SI de massa, igual a 1.000 gramas (aproxi
 milligram,miligrama,83,"COD: também miligrama abreviatura: mg [Medida] n",8301,lus_imported_from_english_with_lemma_chunk43_2025-11-14_140610.csv
 restart,reiniciar,86,"FN: resumir para acontecer",8304,lus_imported_from_english_with_lemma_chunk43_2025-11-14_140610.csv
 yard,jarda,83,"COD: uma unidade de medida linear igual a 3 pés (0,9144 metro).",8307,lus_imported_from_english_with_lemma_chunk43_2025-11-14_140610.csv
-foot,"pé (unidade de medida)",83,"COD: uma unidade de medida linear igual a 12 polegadas (30,48 cm).",8308,lus_imported_from_english_with_lemma_chunk43_2025-11-14_140610.csv
+foot,pé,83,"COD: uma unidade de medida linear igual a 12 polegadas (30,48 cm).",8308,lus_imported_from_english_with_lemma_chunk43_2025-11-14_140610.csv
 block,quarteirão,83,"FN: um comprimento de rua da cidade",8315,lus_imported_from_english_with_lemma_chunk43_2025-11-14_140610.csv
 cup,xícara,83,"COD: principalmente N. Amer. uma medida de capacidade utilizada na culinária, igual a meia xícara americana (0,237 litro)",8317,lus_imported_from_english_with_lemma_chunk43_2025-11-14_140610.csv
 bottle,garrafa,83,"FN: o volume de um recipiente com pescoço estreito, usado para armazenar líquidos",8318,lus_imported_from_english_with_lemma_chunk43_2025-11-14_140610.csv
@@ -2951,7 +2934,6 @@ helmet,capacete,83,"COD: um capacete duro ou acolchoado de proteção.",8471,lus
 gorget,gorgueira,83,"COD: um artigo de vestuário ou peça de armadura que cobre o pescoço",8472,lus_imported_from_english_with_lemma_chunk44_2025-11-14_141008.csv
 shower,banhar-se,86,"COD: lavar-se no chuveiro.",8481,lus_imported_from_english_with_lemma_chunk44_2025-11-14_141008.csv
 pluck,Arrancar,86,"COD: puxe alguns pelos das sobrancelhas para deixá-las mais arrumadas",8482,lus_imported_from_english_with_lemma_chunk44_2025-11-14_141008.csv
-shampoo,xampuar,86,"FN: lavar ou limpar com xampu",8487,lus_imported_from_english_with_lemma_chunk45_2025-11-14_141248.csv
 manicure,"fazer manicure",86,"COD: dar uma manicure em.",8488,lus_imported_from_english_with_lemma_chunk45_2025-11-14_141248.csv
 soap,ensaboar,86,"COD: lave com sabão",8492,lus_imported_from_english_with_lemma_chunk45_2025-11-14_141248.csv
 manicure,manicure,83,"COD: um tratamento cosmético das mãos e unhas.",8495,lus_imported_from_english_with_lemma_chunk45_2025-11-14_141248.csv
@@ -2986,7 +2968,6 @@ apartment,apartamento,83,"Um conjunto de quartos normalmente no mesmo andar de u
 bungalow,bangalô,83,"COD: uma casa com apenas um andar principal.",8625,lus_imported_from_english_with_lemma_chunk46_2025-11-14_141639.csv
 cabin,cabana,83,"COD: abrigo ou casa pequena de madeira.",8626,lus_imported_from_english_with_lemma_chunk46_2025-11-14_141639.csv
 monastery,mosteiro,83,"FN: um edifício que abriga uma ordem de monges.",8641,lus_imported_from_english_with_lemma_chunk46_2025-11-14_141639.csv
-pueblo,pueblo,83,"FN: edifícios em uma cidade ou vila na Espanha, América Latina ou sudoeste dos EUA, especialmente um assentamento indígena americano",8645,lus_imported_from_english_with_lemma_chunk46_2025-11-14_141639.csv
 caravan,caravana,83,"COD: um veículo equipado para viver nele, geralmente projetado para ser rebocado.",8663,lus_imported_from_english_with_lemma_chunk46_2025-11-14_141639.csv
 kennel,canil,83,"COD: um pequeno abrigo para um cão.",8676,lus_imported_from_english_with_lemma_chunk46_2025-11-14_141639.csv
 center,centro,83,,20377,lus_imported_from_english_with_lemma_chunk48_2025-11-14_142241.csv
@@ -3049,7 +3030,7 @@ deem,considerar,86,"COD refere-se ou considera de uma maneira especificada.",425
 read,ler,86,"FN: interpretar de uma certa forma",4260,lus_imported_from_english_with_lemma_chunk4_2025-11-14_121202.csv
 hold,considerar,86,"FN: considerar como",32363,lus_imported_from_english_with_lemma_chunk4_2025-11-14_121202.csv
 look,olhar,86,"FN: considerar algo como um item de uma categoria",32364,lus_imported_from_english_with_lemma_chunk4_2025-11-14_121202.csv
-brood,remoe,86,"COD: pense profundamente sobre algo que o deixa infeliz.",4262,lus_imported_from_english_with_lemma_chunk4_2025-11-14_121202.csv
+brood,remoer,86,"COD: pense profundamente sobre algo que o deixa infeliz.",4262,lus_imported_from_english_with_lemma_chunk4_2025-11-14_121202.csv
 consider,considerar,86,"FN: leve em consideração os fatos num processo de raciocínio",4263,lus_imported_from_english_with_lemma_chunk4_2025-11-14_121202.csv
 contemplate,contemplar,86,"Pense sobre",4265,lus_imported_from_english_with_lemma_chunk4_2025-11-14_121202.csv
 meditate,Meditar,86,"COD: pense cuidadosamente sobre",4270,lus_imported_from_english_with_lemma_chunk4_2025-11-14_121202.csv
@@ -3094,7 +3075,6 @@ heap,acúmulo,83,"slew e slewing são termos que podem se referir à orientaçã
 sound,canal,83,"COD: uma estreita faixa de água que forma uma entrada ou conecta dois corpos d'água maiores.",8925,lus_imported_from_english_with_lemma_chunk51_2025-11-14_143517.csv
 pool,piscina,83,"COD: uma pequena área de água parada, geralmente formada naturalmente.",8931,lus_imported_from_english_with_lemma_chunk51_2025-11-14_143517.csv
 headland,promontório,83,"COD: uma estreita peça de terra projetando-se no mar.",8947,lus_imported_from_english_with_lemma_chunk51_2025-11-14_143517.csv
-mesa,inselberg,83,"COD: uma colina isolada de topo plano com encostas íngremes, encontrada em paisagens com estratos horizontais.",8967,lus_imported_from_english_with_lemma_chunk52_2025-11-14_143916.csv
 key,cai,83,"COD: uma ilha baixa ou recife (especialmente no Caribe)",8973,lus_imported_from_english_with_lemma_chunk52_2025-11-14_143916.csv
 bar,"banco de areia",83,"COD: uma duna ou banco de areia na boca de um porto ou estuário.",8975,lus_imported_from_english_with_lemma_chunk52_2025-11-14_143916.csv
 depression,depressão,83,"COD: um lugar afundado ou cavo.",8984,lus_imported_from_english_with_lemma_chunk52_2025-11-14_143916.csv
@@ -3235,14 +3215,13 @@ collection,cobrança,83,"FN: receber dinheiro em troca de bens ou serviços prom
 fiend,viciado,83,"FN: um viciado",9432,lus_imported_from_english_with_lemma_chunk57_2025-11-14_145533.csv
 alcoholic,alcoólatra,83,"COD: uma pessoa que sofre de alcoolismo.",9436,lus_imported_from_english_with_lemma_chunk57_2025-11-14_145533.csv
 high,chapado,84,"COD: euforico, especialmente dos efeitos de drogas ou álcool",9440,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
-trip,"viagem alucinógena",83,"COD: uma experiência alucinatória causada pelo uso de uma droga psicodélica.",9448,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
+trip,viagem,83,"COD: uma experiência alucinatória causada pelo uso de uma droga psicodélica.",9448,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
 up,"para cima",89,"COD: em direção a um lugar ou posição mais elevada.",9455,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
 down,abaixo,89,"FN: em direção a uma posição mais baixa.",9464,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
 discipline,disciplinar,86,"COD: punir ou repreender formalmente por uma ofensa.",9476,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
 penalty,penalidade,83,"COD: uma punição imposta por quebrar uma lei, regra ou contrato",9478,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
 couple,casal,83,"COD: duas pessoas do mesmo tipo consideradas juntas",9489,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
 score,vinte,83,"COD: um grupo ou conjunto de vinte",9491,lus_imported_from_english_with_lemma_chunk58_2025-11-14_145843.csv
-execrative,execrativo,84,"FN: característica de ou associada a atos de denunciar",9547,lus_imported_from_english_with_lemma_chunk59_2025-11-14_150116.csv
 recrimination,recriminação,83,"COD: uma acusação em resposta a uma de alguém",9558,lus_imported_from_english_with_lemma_chunk59_2025-11-14_150116.csv
 critique,criticar,86,"COD: avaliar de forma detalhada e analítica",9562,lus_imported_from_english_with_lemma_chunk59_2025-11-14_150116.csv
 blast,criticar,86,"COD: critique ferozmente",9569,lus_imported_from_english_with_lemma_chunk59_2025-11-14_150116.csv
@@ -3343,7 +3322,7 @@ finale,final,83,"COD: a última parte de uma peça musical, um espetáculo ou um
 pass,acabar,86,"COD: acabar",9803,lus_imported_from_english_with_lemma_chunk61_2025-11-14_150759.csv
 conservation,conservação,83,"A ação ou processo de conservar algo ou fazer com que ele esteja em boas condições.",34234,lus_imported_from_english_with_lemma_chunk61_2025-11-14_150759.csv
 renovate,renovar,86,"Ato e processo de fazer as coisas novas novamente.",34252,lus_imported_from_english_with_lemma_chunk61_2025-11-14_150759.csv
-braise,Brasar,86,"COD: fritar levemente e depois cozinhar lentamente em um recipiente fechado",9828,lus_imported_from_english_with_lemma_chunk61_2025-11-14_150759.csv
+braise,refogar,86,"COD: fritar levemente e depois cozinhar lentamente em um recipiente fechado",9828,lus_imported_from_english_with_lemma_chunk61_2025-11-14_150759.csv
 toast,torrar,86,"COD: cozinhar ou dourar por exposição a calor radiante",9839,lus_imported_from_english_with_lemma_chunk61_2025-11-14_150759.csv
 saute,saltear,86,"FN: para fritar comida em uma substância gordurosa",9840,lus_imported_from_english_with_lemma_chunk61_2025-11-14_150759.csv
 steam,"cozinhar no vapor",86,"COD: cozinhar por aquecimento em vapor de água fervente",9842,lus_imported_from_english_with_lemma_chunk61_2025-11-14_150759.csv
@@ -3353,9 +3332,8 @@ roast,assar,86,"COD: cozinhar por exposição prolongada ao calor em um forno ou
 cook,cozinhar,86,"FN: preparar alimentos aplicando calor",9848,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
 bake,assar,86,"COD: cozinhar por calor seco sem exposição direta a uma chama, normalmente em um forno",9849,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
 barbecue,churrasquear,86,"COD: cozinhar (alimentos) em uma churrasqueira.",9850,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
-"deep fry","fritar em imersão",86,"FN: cozinhar por imersão em gordura ou óleo aquecido",9851,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
-plank,"cozinhar em tábua",86,"F: cozinhar em uma tábua sobre calor.",9854,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
-scorch,Chamuscado,86,"FN: queimar algo levemente na superfície ou nas bordas",9855,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
+"deep fry",fritar,86,"FN: cozinhar por imersão em gordura ou óleo aquecido",9851,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
+scorch,chamuscar,86,"FN: queimar algo levemente na superfície ou nas bordas",9855,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
 grilling,grelhar,83,"FN: o processo de cozimento por calor direto, como em uma grelha ou sobre um fogo quente",9857,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
 melt,derreter,86,"FN: para amolecer pelo calor ou calor",9861,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
 anorexia,anorexia,83,"COD: falta de apetite para comida, em especial também anorexia nervosa um transtorno emocional caracterizado por um desejo obsessivo de perder peso através da recusa em comer",9872,lus_imported_from_english_with_lemma_chunk62_2025-11-14_151155.csv
@@ -3378,8 +3356,6 @@ transport,transportar,86,"COD: pegar ou transportar de um lugar para outro por m
 take,levar,86,"COD: transportar ou trazer com um; transmitir ou guiar.",9965,lus_imported_from_english_with_lemma_chunk63_2025-11-14_151449.csv
 drive,dirigir,86,"COD: conduzir num carro.",9966,lus_imported_from_english_with_lemma_chunk63_2025-11-14_151449.csv
 truck,transportar,86,"COD: transportar por caminhão.",9968,lus_imported_from_english_with_lemma_chunk63_2025-11-14_151449.csv
-jet,jatear,86,"FN: transporte por meio de jato de água",9972,lus_imported_from_english_with_lemma_chunk63_2025-11-14_151449.csv
-motor,motorizado,86,"FN: transporte por veículo motorizado",9974,lus_imported_from_english_with_lemma_chunk63_2025-11-14_151449.csv
 row,remar,86,"FN: transporte por meio de embarcação não motorizada",9975,lus_imported_from_english_with_lemma_chunk63_2025-11-14_151449.csv
 bike,pedalar,86,"FN: para transportar de bicicleta.",9977,lus_imported_from_english_with_lemma_chunk63_2025-11-14_151449.csv
 bear,carregar,86,"COD: transportar.",9979,lus_imported_from_english_with_lemma_chunk63_2025-11-14_151449.csv
@@ -3464,7 +3440,6 @@ nosh,lanchar,86,"FN: tem um lanche",10295,lus_imported_from_english_with_lemma_c
 feast,festejar,86,"COD: Comer e beber com extravagância. ""Os homens se reuniam e faziam uma festa depois da caça.",10296,lus_imported_from_english_with_lemma_chunk66_2025-11-14_152418.csv
 feed,alimentar,86,"COD: comer",10297,lus_imported_from_english_with_lemma_chunk66_2025-11-14_152418.csv
 snack,lanchar,86,"COD: no obj. comer um lanche.",10298,lus_imported_from_english_with_lemma_chunk66_2025-11-14_152418.csv
-breakfast,"tomar café da manhã",86,"FN: comer (alguma comida como) a primeira refeição do dia. ""Ela tomou café da manhã de pão frito e bacon.",10299,lus_imported_from_english_with_lemma_chunk66_2025-11-14_152418.csv
 lunch,almoçar,86,"COD: no obj., com advérbio comer almoço.",10300,lus_imported_from_english_with_lemma_chunk66_2025-11-14_152418.csv
 ingest,ingerir,86,"COD: com objeto tomar (alimento ou bebida) no corpo por engolir ou absorver.",10302,lus_imported_from_english_with_lemma_chunk66_2025-11-14_152418.csv
 sip,gole,83,"COD: uma pequena boca de líquido",10310,lus_imported_from_english_with_lemma_chunk66_2025-11-14_152418.csv
@@ -3481,7 +3456,7 @@ bungle,estragar,86,"COD: executar (uma tarefa) de forma desajeitada ou incompete
 ruin,estragar,86,"FN: estragar algo de forma irreparável.",10363,lus_imported_from_english_with_lemma_chunk67_2025-11-14_152715.csv
 screw-up,falha,83,"COD: uma situação que foi completamente mal administrada ou mal tratada",10367,lus_imported_from_english_with_lemma_chunk67_2025-11-14_152715.csv
 mess-up,bagunça,83,"FN: um pequeno erro.",10368,lus_imported_from_english_with_lemma_chunk67_2025-11-14_152715.csv
-screw-up,desastrado,83,"FN: uma pessoa que costuma cometer erros",10370,lus_imported_from_english_with_lemma_chunk67_2025-11-14_152715.csv
+screw-up,desastrado,84,"FN: uma pessoa que costuma cometer erros",10370,lus_imported_from_english_with_lemma_chunk67_2025-11-14_152715.csv
 bumble,tropeçar,86,"COD: agir ou falar de maneira estranha ou confusa.",10377,lus_imported_from_english_with_lemma_chunk67_2025-11-14_152715.csv
 stumble,errar,86,"FN: cometer um erro ou cometer erros repetidas vezes",10380,lus_imported_from_english_with_lemma_chunk67_2025-11-14_152715.csv
 bollix,bagunçar,86,"FN: causar acidentalmente estar em um estado indesejável.",10381,lus_imported_from_english_with_lemma_chunk67_2025-11-14_152715.csv
@@ -3778,7 +3753,6 @@ drench,ensopar,86,"COD: molhar bem; embebecer",11176,lus_imported_from_english_w
 soak,ensopar,86,"COD: fazer extremamente molhado",11177,lus_imported_from_english_with_lemma_chunk77_2025-11-14_160249.csv
 hydrate,hidratar,86,"COD: causa de absorver ou combinar com água.",11185,lus_imported_from_english_with_lemma_chunk77_2025-11-14_160249.csv
 sop,absorver,86,"COD: absorver líquido.",11187,lus_imported_from_english_with_lemma_chunk77_2025-11-14_160249.csv
-living,vivos,83,"FN: os seres humanos que estão vivos",11194,lus_imported_from_english_with_lemma_chunk77_2025-11-14_160249.csv
 live,viver,86,"FN: possuir vida orgânica",11198,lus_imported_from_english_with_lemma_chunk77_2025-11-14_160249.csv
 mortal,Mortal,84,"subjetivo à morte; tendo uma vida transitória.",32130,lus_imported_from_english_with_lemma_chunk77_2025-11-14_160249.csv
 impact,impactar,86,"COD: entrar em contato com outro objeto de forma forçada.",11206,lus_imported_from_english_with_lemma_chunk77_2025-11-14_160249.csv
@@ -3936,7 +3910,7 @@ cascade,despejar,86,"COD: derrama-se rapidamente e em grandes quantidades",11602
 dribble,gotejar,86,"COD: (de um líquido) cair lentamente em gotas ou em uma corrente fina",11603,lus_imported_from_english_with_lemma_chunk81_2025-11-14_161401.csv
 spew,jorrar,86,"FN: emerge em grandes quantidades rapidamente e de forma forçada.",11605,lus_imported_from_english_with_lemma_chunk81_2025-11-14_161401.csv
 leak,vazar,86,"COD: (de líquidos, gases, etc.) passar por ou através de uma fenda ou rachadura de uma forma ou outra.",11609,lus_imported_from_english_with_lemma_chunk81_2025-11-14_161401.csv
-jet,jatear,86,"COD: Surtar como um jato.",11610,lus_imported_from_english_with_lemma_chunk81_2025-11-14_161401.csv
+jet,esguichar,86,"COD: Surtar como um jato.",11610,lus_imported_from_english_with_lemma_chunk81_2025-11-14_161401.csv
 soak,Escorrer,86,"FN: escorrer por",11611,lus_imported_from_english_with_lemma_chunk81_2025-11-14_161401.csv
 run,fluir,86,"COD: fluxo",11612,lus_imported_from_english_with_lemma_chunk81_2025-11-14_161401.csv
 course,correr,86,"COD: (de líquido) fluxo",11617,lus_imported_from_english_with_lemma_chunk81_2025-11-14_161401.csv
@@ -4067,7 +4041,7 @@ venture,aventurar,86,"COD: embarcar em uma jornada arriscada ou ousada ou um cur
 risk,arriscar,86,"COD: agir de uma forma que incorra no risco de.",12264,lus_imported_from_english_with_lemma_chunk89_2025-11-14_163415.csv
 risk,risco,83,"COD: a possibilidade de algo desagradável acontecer.",12265,lus_imported_from_english_with_lemma_chunk89_2025-11-14_163415.csv
 chance,chance,83,"COD: uma possibilidade de algo acontecer.",12266,lus_imported_from_english_with_lemma_chunk89_2025-11-14_163415.csv
-"a pain","um desafio",83,"FN: uma tarefa muito difícil",12278,lus_imported_from_english_with_lemma_chunk89_2025-11-14_163415.csv
+"a pain",desafio,83,"FN: uma tarefa muito difícil",12278,lus_imported_from_english_with_lemma_chunk89_2025-11-14_163415.csv
 arduous,árduo,84,"COD: difícil e cansativo",12283,lus_imported_from_english_with_lemma_chunk89_2025-11-14_163415.csv
 consent,consentir,86,"FN: concordar com um plano ou proposta de outra pessoa",4582,lus_imported_from_english_with_lemma_chunk8_2025-11-14_122310.csv
 threat,ameaça,83,"COD: uma declaração de intenção de infligir lesão, dano ou outra ação hostil como retaliação.",4591,lus_imported_from_english_with_lemma_chunk8_2025-11-14_122310.csv
@@ -4158,7 +4132,6 @@ pull,puxar,86,"COD: dano (de um músculo, ligamento, etc.) por esforço anormal.
 tear,rasgar,86,"COD: danificar (um músculo ou ligamento) por alongá-lo demais.",12427,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 cut,cortar,86,"FN: ferir-se ao fazer uma incisão com um objeto afiado",12428,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 smack,Estapear,86,"FN: ser atingido com um tapa forte",12430,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
-bruise,hematomar,86,"FN: sustentar um hematoma em uma parte do corpo especificada",12433,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 scrape,raspar,86,"FN: machucar esfregando contra uma superfície áspera.",12434,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 gas,gás,83,"FN: uma substância caracterizada por sua completa falta de rigidez estrutural e liberdade de movimento em qualquer direção do espaço.",12444,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 pull,tragar,86,"COD: Inspire profundamente enquanto traga (um cigarro).",12454,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
@@ -4166,7 +4139,7 @@ inject,injetar,86,"FN: introduzir um líquido, especialmente uma droga, no corpo
 shoot,injetar,86,"COD: injetar-se com uma droga narcótica.",12457,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 take,tomar,86,"FN: consome drogas ou remédios",12461,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 have,comer,86,"FN: ingest com intenção plena",12463,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
-topical,"tópico (uso externo)",84,"Usado ou aplicado fora do corpo do usuário.",34293,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
+topical,tópico,84,"Usado ou aplicado fora do corpo do usuário.",34293,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 penitentiary,penitenciária,83,"COD: uma prisão para pessoas condenadas por crimes graves.",12464,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 jailhouse,cadeia,83,"COD: uma prisão.",12469,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
 pen,penitenciária,83,"COD: abreviatura de penitenciária",12472,lus_imported_from_english_with_lemma_chunk91_2025-11-14_163954.csv
@@ -4283,7 +4256,6 @@ film,filmar,86,"COD: fazer um filme de; gravar em filme.",12869,lus_imported_fro
 score,partitura,83,"COD: uma representação escrita de uma composição musical mostrando todas as partes vocais e instrumentais.",12870,lus_imported_from_english_with_lemma_chunk95_2025-11-14_165148.csv
 compose,compor,86,"FN: crie uma peça musical",12872,lus_imported_from_english_with_lemma_chunk95_2025-11-14_165148.csv
 choreographer,coreógrafo,83,"FN: pessoa que planeja como os intérpretes dançam em uma apresentação.",30956,lus_imported_from_english_with_lemma_chunk95_2025-11-14_165148.csv
-busk,"fazer música na rua",86,"O ato de usar um chapéu ou recipiente para receber dinheiro de pedestres enquanto se faz uma espécie de arte nas ruas.",34056,lus_imported_from_english_with_lemma_chunk95_2025-11-14_165148.csv
 presage,presságio,83,"COD: uma profecia ou presságio.",12890,lus_imported_from_english_with_lemma_chunk95_2025-11-14_165148.csv
 bode,pressagiar,86,"COD: ser um presságio de um resultado bom ou ruim.",12894,lus_imported_from_english_with_lemma_chunk95_2025-11-14_165148.csv
 harbinger,Arauto,83,"COD: uma pessoa ou coisa que anuncia ou sinaliza a aproximação de algo.",12896,lus_imported_from_english_with_lemma_chunk95_2025-11-14_165148.csv
@@ -4417,7 +4389,7 @@ cry,gritar,86,"COD: gritar ou gritar alto.",4684,lus_imported_from_english_with_
 rasp,raspar,86,"COD: fazer um barulho agudo e estridente.",4699,lus_imported_from_english_with_lemma_chunk9_2025-11-14_122602.csv
 rattle,chacoalhar,86,"COD: fazer ou causar uma rápida sucessão de curtos e fortes sons de batidas ou estalidos.",4700,lus_imported_from_english_with_lemma_chunk9_2025-11-14_122602.csv
 scream,gritar,86,"COD: fazer um grito ou som alto e penetrante, especialmente para expressar extrema emoção ou dor.",4703,lus_imported_from_english_with_lemma_chunk9_2025-11-14_122602.csv
-shriek,"Gritar estridentemente",86,"COD: emitir um som agudo e penetrante, chorar ou falar palavras.",4705,lus_imported_from_english_with_lemma_chunk9_2025-11-14_122602.csv
+shriek,esganiçar,86,"COD: emitir um som agudo e penetrante, chorar ou falar palavras.",4705,lus_imported_from_english_with_lemma_chunk9_2025-11-14_122602.csv
 sputter,balbuciar,86,"COD: falar em uma série de explosões incoerentes.",4710,lus_imported_from_english_with_lemma_chunk9_2025-11-14_122602.csv
 trill,trilar,86,"FN: falar produzindo um som trêmulo ou varíola; cantar ou pronunciar com um trilo",4716,lus_imported_from_english_with_lemma_chunk9_2025-11-14_122602.csv
 trumpet,proclamar,86,"COD: proclamar amplamente ou alto.",4717,lus_imported_from_english_with_lemma_chunk9_2025-11-14_122602.csv
