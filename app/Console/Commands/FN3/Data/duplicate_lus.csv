@@ -1,0 +1,260 @@
+idLU,frameName,luName,origin,status
+40320,frm_accoutrements,sombreiro.noun,WEBTOOL,CREATED
+40264,frm_accoutrements,sombreiro.noun,WEBTOOL,CREATED
+40321,frm_accoutrements,sombreiro.noun,WEBTOOL,CREATED
+40265,frm_accoutrements,sombreiro.noun,WEBTOOL,CREATED
+38031,frm_addiction,alcoolista.adj,WEBTOOL,CREATED
+41402,frm_addiction,alcoolista.adj,WEBTOOL,CREATED
+43445,frm_adjusting,adaptar.verb,LOME,PENDING
+24849,frm_adjusting,adaptar.verb,WEBTOOL,CREATED
+43119,frm_aggregate,colônia.noun,USER,CREATED
+22413,frm_aggregate,colônia.noun,WEBTOOL,CREATED
+22655,frm_aggregate,multiplicidade.noun,WEBTOOL,CREATED
+18945,frm_aggregate,multiplicidade.noun,WEBTOOL,CREATED
+51499,frm_animals,cavalo-marinho.noun,FNBK,PENDING
+52181,frm_animals,cavalo-marinho.noun,USER,PENDING
+40386,frm_architectural_part,torneira.noun,WEBTOOL,CREATED
+40387,frm_architectural_part,torneira.noun,WEBTOOL,CREATED
+43194,frm_arriving,vê.verb,LOME,PENDING
+43187,frm_arriving,vê.verb,LOME,PENDING
+32217,frm_artifact,mesa.noun,WEBTOOL,CREATED
+32218,frm_artifact,mesa.noun,WEBTOOL,CREATED
+40984,"frm_assistive technology",libras.noun,WEBTOOL,CREATED
+41011,"frm_assistive technology",libras.noun,WEBTOOL,CREATED
+24200,frm_attributes,qualidade.noun,WEBTOOL,CREATED
+43535,frm_attributes,qualidade.noun,LOME,PENDING
+40599,frm_bedding,fronha.noun,WEBTOOL,CREATED
+40691,frm_bedding,fronha.noun,WEBTOOL,CREATED
+43830,frm_being_at_risk,insegurança.noun,USER,CREATED
+43336,frm_being_at_risk,insegurança.noun,LOME,PENDING
+43355,frm_being_at_risk,segurança.noun,LOME,PENDING
+26456,frm_being_at_risk,segurança.noun,WEBTOOL,CREATED
+35454,frm_body_parts,cintura.noun,WEBTOOL,CREATED
+32315,frm_body_parts,cintura.noun,WEBTOOL,CREATED
+42610,frm_body_parts,pênis.noun,WEBTOOL,CREATED
+52052,frm_body_parts,pênis.noun,FNBK,PENDING
+40391,frm_body_parts,tireoide.noun,WEBTOOL,CREATED
+35397,frm_body_parts,tireoide.noun,WEBTOOL,CREATED
+40365,frm_building_subparts,andar.noun,WEBTOOL,CREATED
+22525,frm_building_subparts,andar.noun,WEBTOOL,CREATED
+48716,frm_calendric_unit,maio.noun,FNBK,PENDING
+28148,frm_calendric_unit,maio.noun,WEBTOOL,CREATED
+35768,frm_calendric_unit,quarta-feira.noun,WEBTOOL,CREATED
+43812,frm_calendric_unit,quarta-feira.noun,USER,CREATED
+24472,frm_capability,capacitar.verb,WEBTOOL,CREATED
+43086,frm_capability,capacitar.verb,USER,CREATED
+43698,frm_cardinal_numbers,"com certeza.num",LOME,PENDING
+43689,frm_cardinal_numbers,"com certeza.num",LOME,PENDING
+43700,frm_cardinal_numbers,"com certeza.num",LOME,PENDING
+43690,frm_cardinal_numbers,"com certeza.num",LOME,PENDING
+43422,frm_cardinal_numbers,diálogos.num,LOME,PENDING
+43411,frm_cardinal_numbers,diálogos.num,LOME,PENDING
+43419,frm_cardinal_numbers,diálogos.num,LOME,PENDING
+43399,frm_cardinal_numbers,diálogos.num,LOME,PENDING
+34781,frm_cardinal_numbers,"dois mil.num",WEBTOOL,CREATED
+43310,frm_cardinal_numbers,"dois mil.num",LOME,PENDING
+43674,frm_cardinal_numbers,enfrentar.num,LOME,PENDING
+43675,frm_cardinal_numbers,enfrentar.num,LOME,PENDING
+43620,frm_cardinal_numbers,gasta.num,LOME,PENDING
+43624,frm_cardinal_numbers,gasta.num,LOME,PENDING
+43651,frm_cardinal_numbers,gastos.num,LOME,PENDING
+43652,frm_cardinal_numbers,gastos.num,LOME,PENDING
+43653,frm_cardinal_numbers,gastos.num,LOME,PENDING
+43466,frm_cardinal_numbers,leias.num,LOME,PENDING
+43460,frm_cardinal_numbers,leias.num,LOME,PENDING
+43490,frm_cardinal_numbers,leias.num,LOME,PENDING
+43463,frm_cardinal_numbers,leias.num,LOME,PENDING
+43712,frm_cardinal_numbers,realmente.num,LOME,PENDING
+43713,frm_cardinal_numbers,realmente.num,LOME,PENDING
+28910,frm_cardinal_numbers,"trinta e dois.num",WEBTOOL,CREATED
+43311,frm_cardinal_numbers,"trinta e dois.num",LOME,PENDING
+22921,frm_cardinal_numbers,"vinte e cinco.num",WEBTOOL,CREATED
+43296,frm_cardinal_numbers,"vinte e cinco.num",LOME,PENDING
+28878,frm_cardinal_numbers,"vinte e três.num",WEBTOOL,CREATED
+43211,frm_cardinal_numbers,"vinte e três.num",LOME,PENDING
+43783,frm_catastrophe,calamidade.noun,USER,CREATED
+43695,frm_catastrophe,calamidade.noun,LOME,PENDING
+43514,frm_causation,municipal.det,LOME,PENDING
+43515,frm_causation,municipal.det,LOME,PENDING
+43503,frm_causation,portas.det,LOME,PENDING
+43502,frm_causation,portas.det,LOME,PENDING
+28482,frm_causation,resultado.noun,WEBTOOL,CREATED
+18860,frm_causation,resultado.noun,WEBTOOL,CREATED
+43733,frm_cause_change,reverter.verb,USER,CREATED
+43629,frm_cause_change,reverter.verb,LOME,PENDING
+32389,frm_change_operational_state,ligar.verb,WEBTOOL,CREATED
+32390,frm_change_operational_state,ligar.verb,WEBTOOL,CREATED
+32388,frm_change_operational_state,ligar.verb,WEBTOOL,CREATED
+33653,frm_clothing,camiseta.noun,WEBTOOL,CREATED
+32398,frm_clothing,camiseta.noun,WEBTOOL,CREATED
+33352,frm_commerce_pay,pagar.verb,WEBTOOL,CREATED
+43063,frm_commerce_pay,pagar.verb,USER,CREATED
+42135,frm_concessive,mas.cconj,WEBTOOL,CREATED
+18707,frm_concessive,mas.cconj,WEBTOOL,CREATED
+44682,frm_confronting_problem,enfrentar.verb,FNBK,PENDING
+19432,frm_confronting_problem,enfrentar.verb,WEBTOOL,CREATED
+51665,frm_crime,crime.noun,FNBK,PENDING
+983,frm_crime,crime.noun,WEBTOOL,CREATED
+43345,frm_degree,extremamente.adv,LOME,PENDING
+24301,frm_degree,extremamente.adv,WEBTOOL,CREATED
+24291,frm_degree,realmente.adv,WEBTOOL,CREATED
+43707,frm_degree,realmente.adv,LOME,PENDING
+43268,frm_difficulty,"de frente.det",LOME,PENDING
+43269,frm_difficulty,"de frente.det",LOME,PENDING
+43250,frm_difficulty,parceria.det,LOME,PENDING
+43251,frm_difficulty,parceria.det,LOME,PENDING
+43609,frm_difficulty,transtorno.noun,LOME,PENDING
+43723,frm_difficulty,transtorno.noun,USER,CREATED
+32527,frm_direction,"para cima.adv",WEBTOOL,CREATED
+32528,frm_direction,"para cima.adv",WEBTOOL,CREATED
+38075,frm_documents,"ficha de atendimento.noun",WEBTOOL,CREATED
+38144,frm_documents,"ficha de atendimento.noun",WEBTOOL,CREATED
+38076,frm_documents,"ficha de notificação.noun",WEBTOOL,CREATED
+38143,frm_documents,"ficha de notificação.noun",WEBTOOL,CREATED
+38073,frm_documents,prontuário.noun,WEBTOOL,CREATED
+38146,frm_documents,prontuário.noun,WEBTOOL,CREATED
+38066,frm_documents,relatório.noun,WEBTOOL,CREATED
+38837,frm_documents,relatório.noun,WEBTOOL,CREATED
+43431,frm_earnings_and_losses,"ao todo.det",LOME,PENDING
+43430,frm_earnings_and_losses,"ao todo.det",LOME,PENDING
+43467,frm_earnings_and_losses,leias.det,LOME,PENDING
+43468,frm_earnings_and_losses,leias.det,LOME,PENDING
+40624,frm_emotion_directed,encabulado.adj,WEBTOOL,CREATED
+40491,frm_emotion_directed,encabulado.adj,WEBTOOL,CREATED
+18901,frm_entity,nada.noun,WEBTOOL,CREATED
+33245,frm_entity,nada.noun,WEBTOOL,CREATED
+43767,frm_estimating,estimar.verb,USER,CREATED
+43642,frm_estimating,estimar.verb,LOME,PENDING
+23269,frm_experiencer_focused_emotion,lastimar.verb,WEBTOOL,CREATED
+352,frm_experiencer_focused_emotion,lastimar.verb,WEBTOOL,CREATED
+22943,frm_feeling,sentir.verb,WEBTOOL,CREATED
+3738,frm_feeling,sentir.verb,WEBTOOL,CREATED
+18769,frm_fields,arte.noun,WEBTOOL,CREATED
+34775,frm_fields,arte.noun,WEBTOOL,CREATED
+43114,frm_fields,científico.adj,USER,CREATED
+27567,frm_fields,científico.adj,WEBTOOL,CREATED
+43237,frm_first_rank,principalmente.adv,LOME,PENDING
+24295,frm_first_rank,principalmente.adv,WEBTOOL,CREATED
+40548,frm_food,"carne de porco.noun",WEBTOOL,CREATED
+40547,frm_food,"carne de porco.noun",WEBTOOL,CREATED
+24059,frm_food,nachos.noun,WEBTOOL,CREATED
+40416,frm_food,nachos.noun,WEBTOOL,CREATED
+40507,frm_food,presunto.noun,WEBTOOL,CREATED
+40630,frm_food,presunto.noun,WEBTOOL,CREATED
+40267,frm_gesture,acenar.verb,WEBTOOL,CREATED
+40268,frm_gesture,acenar.verb,WEBTOOL,CREATED
+42578,frm_giving_affection,abraçar.verb,WEBTOOL,CREATED
+40693,frm_giving_affection,abracar.verb,WEBTOOL,CREATED
+40343,frm_greeting,"boa noite.intj",WEBTOOL,CREATED
+43757,frm_greeting,"boa noite.intj",USER,CREATED
+47954,frm_hair_configuration,trança.noun,FNBK,PENDING
+40726,frm_hair_configuration,trança.noun,WEBTOOL,CREATED
+40985,frm_inhibit_movement,trancar.verb,WEBTOOL,CREATED
+48806,frm_inhibit_movement,trancar.verb,FNBK,PENDING
+43465,frm_intentionally_create,leias.det,LOME,PENDING
+43456,frm_intentionally_create,leias.det,LOME,PENDING
+43512,frm_interrupt_process,municipal.det,LOME,PENDING
+43520,frm_interrupt_process,municipal.det,LOME,PENDING
+26486,frm_kinship,avó.noun,WEBTOOL,CREATED
+38921,frm_kinship,avô.noun,WEBTOOL,CREATED
+40665,frm_labeling,rotulagem.noun,WEBTOOL,CREATED
+40666,frm_labeling,rotulagem.noun,WEBTOOL,CREATED
+33583,frm_level_of_light,luz.noun,WEBTOOL,CREATED
+43070,frm_level_of_light,luz.noun,USER,CREATED
+41012,frm_línguas,libras.noun,WEBTOOL,CREATED
+40998,frm_línguas,libras.noun,WEBTOOL,CREATED
+40563,frm_literary_musical_and_cinematic_genre,aventura.noun,WEBTOOL,CREATED
+40564,frm_literary_musical_and_cinematic_genre,aventura.noun,WEBTOOL,CREATED
+43121,frm_locale,região.noun,USER,CREATED
+3761,frm_locale,região.noun,WEBTOOL,CREATED
+32712,frm_locale,terra.noun,WEBTOOL,CREATED
+40422,frm_locale,terra.noun,WEBTOOL,CREATED
+43818,frm_location_in_time,hora.noun,USER,CREATED
+28441,frm_location_in_time,hora.noun,WEBTOOL,CREATED
+40529,frm_make_noise,burburinho.noun,WEBTOOL,CREATED
+40445,frm_make_noise,burburinho.noun,WEBTOOL,CREATED
+1542,frm_means_of_transportation,"barco de passeio.noun",WEBTOOL,CREATED
+42734,frm_means_of_transportation,"barco de passeio.noun",WEBTOOL,CREATED
+1263,frm_means_of_transportation,metrô.noun,WEBTOOL,CREATED
+45128,frm_means_of_transportation,metrô.noun,FNBK,PENDING
+48125,frm_measure_of_distance_and_length,metro.noun,FNBK,PENDING
+19133,frm_measure_of_distance_and_length,metrô.noun,WEBTOOL,CREATED
+29575,frm_measure_volume,gota.noun,WEBTOOL,CREATED
+39358,frm_measure_volume,gota.noun,WEBTOOL,CREATED
+28378,frm_medical_conditions,câncer.noun,WEBTOOL,CREATED
+28185,frm_medical_conditions,câncer.noun,WEBTOOL,CREATED
+38070,frm_medical_intervention,orientação.noun,WEBTOOL,CREATED
+42171,frm_medical_intervention,orientação.noun,WEBTOOL,CREATED
+40484,frm_money,cartão.noun,WEBTOOL,CREATED
+24331,frm_money,cartão.noun,WEBTOOL,CREATED
+43301,frm_needing,"atrás de.aux",LOME,PENDING
+43305,frm_needing,"atrás de.aux",LOME,PENDING
+43321,frm_needing,"cerca de.aux",LOME,PENDING
+43319,frm_needing,"cerca de.aux",LOME,PENDING
+43223,frm_needing,"vinte e três.aux",LOME,PENDING
+43229,frm_needing,"vinte e três.aux",LOME,PENDING
+43219,frm_needing,"vinte e três.aux",LOME,PENDING
+40411,frm_openness,fresta.noun,WEBTOOL,CREATED
+40266,frm_openness,fresta.noun,WEBTOOL,CREATED
+43132,frm_ordinal_numbers,quinto.num,USER,CREATED
+26135,frm_ordinal_numbers,quinto.num,WEBTOOL,CREATED
+28885,frm_ordinal_numbers,segundo.num,WEBTOOL,CREATED
+43130,frm_ordinal_numbers,segundo.num,USER,CREATED
+40968,frm_origin,gaúcho.adj,WEBTOOL,CREATED
+43730,frm_origin,gaúcho.adj,USER,CREATED
+43227,frm_performers_and_roles,"vinte e três.aux",LOME,PENDING
+43213,frm_performers_and_roles,"vinte e três.aux",LOME,PENDING
+18708,frm_personal_relationship,namorado.noun,WEBTOOL,CREATED
+28437,frm_personal_relationship,namorado.noun,WEBTOOL,CREATED
+36853,frm_pessoas_por_condição_médica,paciente.noun,WEBTOOL,CREATED
+24281,frm_pessoas_por_condição_médica,paciente.noun,WEBTOOL,CREATED
+40642,frm_physical_artworks,"instalação artística interativa.noun",WEBTOOL,CREATED
+40641,frm_physical_artworks,"instalação artística interativa.noun",WEBTOOL,CREATED
+40380,frm_physical_artworks,vídeo.noun,WEBTOOL,CREATED
+40379,frm_physical_artworks,vídeo.noun,WEBTOOL,CREATED
+40471,frm_plants,arbusto.noun,WEBTOOL,CREATED
+40472,frm_plants,arbusto.noun,WEBTOOL,CREATED
+40611,frm_plants,baobá.noun,WEBTOOL,CREATED
+40610,frm_plants,baobá.noun,WEBTOOL,CREATED
+43541,frm_project,projeto.noun,LOME,PENDING
+24536,frm_project,projeto.noun,WEBTOOL,CREATED
+38550,frm_proliferating_in_number,multiplicar.verb,WEBTOOL,CREATED
+43748,frm_proliferating_in_number,multiplicar.verb,USER,CREATED
+43583,frm_public_services,"serviço público.noun",LOME,PENDING
+37988,frm_public_services,"serviço público.noun",WEBTOOL,CREATED
+43519,frm_roadways,municipal.noun,LOME,PENDING
+43511,frm_roadways,municipal.noun,LOME,PENDING
+40327,frm_shapes,seta.noun,WEBTOOL,CREATED
+40326,frm_shapes,seta.noun,WEBTOOL,CREATED
+40689,frm_social_interaction_evaluation,polido.adj,WEBTOOL,CREATED
+40690,frm_social_interaction_evaluation,polido.adj,WEBTOOL,CREATED
+24527,frm_speak_on_topic,debater.verb,WEBTOOL,CREATED
+43377,frm_speak_on_topic,debater.verb,LOME,PENDING
+18808,frm_statement,contar.verb,WEBTOOL,CREATED
+20247,frm_statement,contar.verb,WEBTOOL,CREATED
+39343,frm_statement,recomendação.noun,WEBTOOL,CREATED
+40629,frm_statement,recomendação.noun,WEBTOOL,CREATED
+43215,frm_state_of_entity,"vinte e três.noun",LOME,PENDING
+43228,frm_state_of_entity,"vinte e três.noun",LOME,PENDING
+22323,frm_stimulus_focus,irritante.adj,WEBTOOL,CREATED
+18645,frm_stimulus_focus,irritante.adj,WEBTOOL,CREATED
+29207,frm_substance,metal.noun,WEBTOOL,CREATED
+43154,frm_substance,metal.noun,USER,CREATED
+33109,frm_temporal_collocation,"a medida que.sconj",WEBTOOL,CREATED
+42432,frm_temporal_collocation,"à medida que.sconj",WEBTOOL,CREATED
+22644,frm_temporal_subregion,início.noun,WEBTOOL,CREATED
+3760,frm_temporal_subregion,início.noun,WEBTOOL,CREATED
+33781,frm_time_vector,"daqui a pouco.adv",WEBTOOL,CREATED
+43375,frm_time_vector,"daqui a pouco.adv",LOME,PENDING
+18705,frm_undergo_change,transição.noun,WEBTOOL,CREATED
+26110,frm_undergo_change,transição.noun,WEBTOOL,CREATED
+40684,frm_using,mexer.verb,WEBTOOL,CREATED
+40685,frm_using,mexer.verb,WEBTOOL,CREATED
+22847,frm_vehicle,bonde.noun,WEBTOOL,CREATED
+49922,frm_vehicle,bonde.noun,FNBK,PENDING
+40295,frm_vehicle_subpart,carroceria.noun,WEBTOOL,CREATED
+40296,frm_vehicle_subpart,carroceria.noun,WEBTOOL,CREATED
+43256,frm_verification,certificar.verb,LOME,PENDING
+43739,frm_verification,certificar.verb,USER,CREATED
+2298,frm_winning_moves,suplê.noun,WEBTOOL,CREATED
+31885,frm_winning_moves,suplê.noun,WEBTOOL,CREATED

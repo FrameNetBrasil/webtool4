@@ -20,7 +20,10 @@
       "mcp__laravel-boost__browser-logs",
       "mcp__laravel-boost__tinker",
       "mcp__laravel-boost__database-query",
-      "Bash(php artisan:*)"
+      "Bash(php artisan:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nImplement frame cloning with complete relation preservation\n\nEnables creating full copies of frames including all frame elements, internal FE relations, frame-to-frame relations, FE-FE relations between frames, classifications, and multilingual entries. Cloned frames are named with _cloned suffix while frame elements retain original names.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
