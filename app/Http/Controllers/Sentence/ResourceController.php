@@ -17,26 +17,26 @@ use Collective\Annotations\Routing\Attributes\Attributes\Put;
 class ResourceController extends Controller
 {
 
-    #[Get(path: '/sentence')]
-    public function browse()
-    {
-        $search = session('searchLexicon') ?? SearchData::from();
-        return view("Sentence.resource", [
-            'search' => $search
-        ]);
-    }
-
-    #[Get(path: '/sentence/grid/{fragment?}')]
-    #[Post(path: '/sentence/grid/{fragment?}')]
-    public function grid(SearchData $search, ?string $fragment = null)
-    {
-        $view = view("Sentence.grid", [
-            'search' => $search,
-            'sentences' => [],
-        ]);
-        return (is_null($fragment) ? $view : $view->fragment('search'));
-    }
-
+//    #[Get(path: '/sentence')]
+//    public function browse()
+//    {
+//        $search = session('searchLexicon') ?? SearchData::from();
+//        return view("Sentence.resource", [
+//            'search' => $search
+//        ]);
+//    }
+//
+//    #[Get(path: '/sentence/grid/{fragment?}')]
+//    #[Post(path: '/sentence/grid/{fragment?}')]
+//    public function grid(SearchData $search, ?string $fragment = null)
+//    {
+//        $view = view("Sentence.grid", [
+//            'search' => $search,
+//            'sentences' => [],
+//        ]);
+//        return (is_null($fragment) ? $view : $view->fragment('search'));
+//    }
+//
     #[Get(path: '/sentence/new')]
     public function formSentenceNew()
     {
@@ -52,14 +52,14 @@ class ResourceController extends Controller
         ]);
     }
 
-    #[Get(path: '/sentence/{id}/editForm')]
-    public function editForm(string $id)
+    #[Get(path: '/sentence/{id}/formEdit')]
+    public function formEdit(string $id)
     {
         $sentence = Criteria::byId("view_sentence","idSentence",$id);
         $as = Criteria::table("annotationset")
             ->where("idSentence", $id)
             ->all();
-        return view("Sentence.editForm",[
+        return view("Sentence.formEdit",[
             'sentence' => $sentence,
             'hasAS' => !empty($as)
         ]);
