@@ -7,6 +7,7 @@
         'lucandidate' => ['LU Candidate', '/luCandidate', '','ui::icon.frame'],
         'constructicon' => ['Constructicon', '/constructicon', '','ui::icon.construction'],
         'reframing' => ['Reframing', '/reframing', '','ui::icon.lu'],
+        'sentence' => ['Sentence', '/sentence', '','ui::icon.sentence'],
         'class' => ['Class', '/class', '','ui::icon.frame'],
         'microframe' => ['MicroFrame', '/microframe', '','ui::icon.microframe'],
     ];
@@ -15,6 +16,7 @@
         'frame' => ['title' => "Frame", "pages" => ['frame','reframing']],
 //        'lexicon' => ['title' => "Lexicon", "pages" => ['lemma','form','lucandidate']],
         'lexicon' => ['title' => "Lexicon", "pages" => ['lucandidate','lemma']],
+        'text' => ['title'=> "Text", "pages" => ['sentence']],
 //        'construction' => ['title' => "Construction", "pages" => ['constructicon']],
         'ontology' => ['title' => "Ontology", "pages" => ['class','microframe']],
     ];

@@ -56,17 +56,16 @@ class ExportDuplicateLusCommand extends Command
 
     private function findDuplicateLus(): array
     {
-        // First, find which (name, idFrame) combinations have duplicates
+        // First, find which (lemmaName, idFrame) combinations have duplicates
         $duplicateGroups = DB::select("
             SELECT
-                lu.name,
-                lu.idFrame,
+                lemmaName,
+                idFrame,
                 COUNT(*) as duplicate_count
-            FROM lu
-            JOIN lemma lem ON lu.idLemma = lem.idLemma
-            WHERE lu.status IN ('CREATED', 'PENDING')
-            AND lem.idLanguage = 1
-            GROUP BY lu.name, lu.idFrame
+            FROM view_lu_full
+            WHERE status IN ('CREATED', 'PENDING')
+            AND idLanguage = 1
+            GROUP BY lemmaName, idFrame
             HAVING COUNT(*) > 1
         ");
 
@@ -89,8 +88,8 @@ class ExportDuplicateLusCommand extends Command
         $bindings = [];
 
         foreach ($duplicateGroups as $group) {
-            $conditions[] = "(lu.name = ? AND lu.idFrame = ?)";
-            $bindings[] = $group->name;
+            $conditions[] = "(lem_view.name = ? AND lu.idFrame = ?)";
+            $bindings[] = $group->lemmaName;
             $bindings[] = $group->idFrame;
         }
 
@@ -102,13 +101,20 @@ class ExportDuplicateLusCommand extends Command
                 f.entry as frameName,
                 lu.name as luName,
                 lu.origin,
-                lu.status
+                lu.status,
+                lu.senseDescription,
+                COUNT(DISTINCT ans.idAnnotationSet) as annotationset_count,
+                COUNT(DISTINCT ann.idAnnotation) as annotation_count
             FROM lu
             JOIN frame f ON lu.idFrame = f.idFrame
             JOIN lemma lem ON lu.idLemma = lem.idLemma
+            JOIN view_lemma lem_view ON lu.idLemma = lem_view.idLemma
+            LEFT JOIN annotationset ans ON lu.idLU = ans.idLU
+            LEFT JOIN annotation ann ON lu.idEntity = ann.idEntity
             WHERE lu.status IN ('CREATED', 'PENDING')
             AND lem.idLanguage = 1
             AND ({$whereClause})
+            GROUP BY lu.idLU, f.entry, lu.name, lu.origin, lu.status, lu.senseDescription
             ORDER BY f.entry ASC, lu.name ASC
         ";
 
@@ -123,7 +129,7 @@ class ExportDuplicateLusCommand extends Command
         $handle = fopen($path, 'w');
 
         // Write header
-        fputcsv($handle, ['idLU', 'frameName', 'luName', 'origin', 'status']);
+        fputcsv($handle, ['idLU', 'frameName', 'luName', 'origin', 'status', 'senseDescription', 'annotationset_count', 'annotation_count']);
 
         // Write data with progress bar
         $progressBar = $this->output->createProgressBar(count($duplicates));
@@ -136,6 +142,9 @@ class ExportDuplicateLusCommand extends Command
                 $duplicate->luName,
                 $duplicate->origin ?? '',
                 $duplicate->status,
+                $duplicate->senseDescription ?? '',
+                $duplicate->annotationset_count ?? 0,
+                $duplicate->annotation_count ?? 0,
             ]);
             $progressBar->advance();
         }
@@ -165,7 +174,7 @@ class ExportDuplicateLusCommand extends Command
         $this->newLine();
         $this->info("✓ CSV exported to: {$outputPath}");
         $this->newLine();
-        $this->comment('Note: An LU is considered duplicate if it shares the same name with another LU in the same frame,');
-        $this->comment('regardless of POS (part of speech). Only LUs with status CREATED or PENDING and idLanguage=1 are included.');
+        $this->comment('Note: An LU is considered duplicate if it shares the same lemma with another LU in the same frame.');
+        $this->comment('Different POS (part of speech) are considered duplicates. Only LUs with status CREATED or PENDING and idLanguage=1 are included.');
     }
 }
