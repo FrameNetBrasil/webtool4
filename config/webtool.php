@@ -11,7 +11,7 @@ return [
     'mainTitle' => 'FrameNet Brasil Webtool 4.2',
     'headerTitle' => 'Webtool',
     'footer' => '&copy; 2014-2025 FrameNet Brasil Lab, UFJF.',
-    'version' => 'v.4.2',
+    'version' => '4.2.1',
     'mediaURL' => env('APP_MEDIA_URL'),
     'login' => [
         'handler' => env('APP_AUTH'),
