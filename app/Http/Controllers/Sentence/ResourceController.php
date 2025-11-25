@@ -6,6 +6,8 @@ use App\Data\Sentence\SearchData;
 use App\Data\Sentence\UpdateData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Repositories\AnnotationSet;
+use App\Services\Annotation\CorpusService;
 use App\Services\AppService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -63,6 +65,14 @@ class ResourceController extends Controller
             'sentence' => $sentence,
             'hasAS' => !empty($as)
         ]);
+    }
+
+    #[Get(path: '/sentence/{id}/annotations')]
+    public function annotations(string $id)
+    {
+        $data = CorpusService::getResourceDataByIdSentence($id, null, 'as');
+        $data['annotationSets'] = AnnotationSet::getTargetsByIdSentence($id);
+        return view("Sentence.annotations",$data);
     }
 
     #[Put(path: '/sentence')]

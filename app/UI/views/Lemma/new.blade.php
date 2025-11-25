@@ -37,13 +37,13 @@
                                                 value=""
                                             ></x-ui::text-field>
                                         </div>
-                                        <div class="field">
-                                            <x-combobox::ud-pos
-                                                id="idUDPOS"
-                                                label="POS"
-                                                value=""
-                                            ></x-combobox::ud-pos>
-                                        </div>
+{{--                                        <div class="field">--}}
+{{--                                            <x-combobox::ud-pos--}}
+{{--                                                id="idUDPOS"--}}
+{{--                                                label="POS"--}}
+{{--                                                value=""--}}
+{{--                                            ></x-combobox::ud-pos>--}}
+{{--                                        </div>--}}
                                         <div class="field">
                                             <x-combobox::language
                                                 id="idLanguage"

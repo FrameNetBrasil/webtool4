@@ -21,6 +21,41 @@ use Illuminate\Support\Facades\DB;
 
 class CorpusService
 {
+    public static function getResourceDataByIdSentence(int $idSentence, ?int $idAnnotationSet = null, string $corpusAnnotationType = 'fe'): array
+    {
+        $sentence = Criteria::table('view_sentence as s')
+            ->where('s.idSentence', $idSentence)
+            ->select('s.idSentence', 's.text')
+            ->first();
+        $words = self::getWordsByIdSentence($sentence);
+        foreach ($words as $i => $word) {
+            if (!$word['hasLU']) {
+                $words[$i]['hasLU'] = WordForm::wordHasLU($word['word']);
+            }
+        }
+
+        // tokens
+        $tokens = [];
+        $word = '';
+        foreach ($words as $i => $token) {
+            $tokens[$i] = $token;
+            if ($token['idAS'] == $idAnnotationSet) {
+                $word = $token['word'];
+            }
+        }
+
+        return [
+            'idSentence' => $idSentence,
+            'sentence' => $sentence,
+            'text' => $sentence->text,
+            'tokens' => $tokens,
+            'idAnnotationSet' => $idAnnotationSet,
+            'word' => $word,
+            'corpusAnnotationType' => $corpusAnnotationType
+        ];
+
+    }
+
     public static function getResourceData(int $idDocumentSentence, ?int $idAnnotationSet = null, string $corpusAnnotationType = 'fe'): array
     {
         $sentence = Criteria::table('view_sentence as s')
@@ -28,7 +63,7 @@ class CorpusService
             ->where('ds.idDocumentSentence', $idDocumentSentence)
             ->select('s.idSentence', 's.text', 'ds.idDocumentSentence', 'ds.idDocument')
             ->first();
-        $words = self::getWords($sentence);
+        $words = self::getWordsByIdDocumentSentence($sentence);
         foreach ($words as $i => $word) {
             if (!$word['hasLU']) {
                 $words[$i]['hasLU'] = WordForm::wordHasLU($word['word']);
@@ -264,12 +299,18 @@ class CorpusService
         return $layerGroups;
     }
 
-    public static function getWords(object $sentence): array
-    {
+    public static function getWordsByIdSentence(object $sentence) {
+        $targets = AnnotationSet::getTargetsByIdSentence($sentence->idSentence);
+        return self::getWords($targets, $sentence->text);
+    }
+
+    public static function getWordsByIdDocumentSentence(object $sentence) {
         $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
-        // get words/chars
-        //$text = htmlspecialchars_decode($sentence->text);
-        $text = $sentence->text;
+        return self::getWords($targets, $sentence->text);
+    }
+
+    public static function getWords(array $targets, string $text): array
+    {
         debug($text);
         $wordsChars = AnnotationSet::getWordsChars($text);
         $words = $wordsChars->words;
@@ -291,10 +332,7 @@ class CorpusService
         }
         $wordList = [];
         $nextChar = 0;
-        debug($wordsByChar);
-        debug($wordTarget);
         while ($nextChar < count($wordsChars->chars)) {
-            debug($nextChar);
             if (isset($wordTarget[$nextChar])) {
                 $wordList[] = $wordTarget[$nextChar];
                 $nextChar = $wordTarget[$nextChar]['endChar'] + 1;
