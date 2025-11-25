@@ -33,6 +33,9 @@
                 <a href="/" hx-boost="true">
                     <span>{!! config('webtool.headerTitle') !!}</span>
                 </a>
+                <span class="version">
+                    {!! config('webtool.version') !!}
+                </span>
             </div>
         </div>
         <div class="menu">

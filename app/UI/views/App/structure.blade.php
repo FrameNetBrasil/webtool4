@@ -9,6 +9,7 @@
         'reframing' => ['Reframing', '/reframing', '','ui::icon.lu'],
         'sentence' => ['Sentence', '/sentence', '','ui::icon.sentence'],
         'class' => ['Class', '/class', '','ui::icon.frame'],
+        'cluster' => ['Cluster', '/cluster', '','ui::icon.cluster'],
         'microframe' => ['MicroFrame', '/microframe', '','ui::icon.microframe'],
     ];
 
@@ -18,7 +19,7 @@
         'lexicon' => ['title' => "Lexicon", "pages" => ['lucandidate','lemma']],
         'text' => ['title'=> "Text", "pages" => ['sentence']],
 //        'construction' => ['title' => "Construction", "pages" => ['constructicon']],
-        'ontology' => ['title' => "Ontology", "pages" => ['class','microframe']],
+        'ontology' => ['title' => "Ontology", "pages" => ['class','microframe','cluster']],
     ];
 @endphp
 
