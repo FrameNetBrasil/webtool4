@@ -2,7 +2,7 @@
     <div class="app-layout minimal">
         <x-layout::header></x-layout::header>
         <x-layout::breadcrumb
-            :sections="[['/','Home'],['/sentence','Sentence'],['', 'Sentence #' . $sentence->idSentence]]"
+            :sections="[['/','Home'],['/structure','Structure'],['/sentence','Sentence'],['', 'Sentence #' . $sentence->idSentence]]"
         ></x-layout::breadcrumb>
         <main class="app-main">
             <div class="ui container page-edit">
@@ -29,6 +29,7 @@
                         style="secondary pointing"
                         :tabs="[
                             'edit' => ['id' => 'edit', 'label' => 'Edit', 'url' => '/sentence/'.$sentence->idSentence.'/formEdit'],
+                            'annotations' => ['id' => 'annotations', 'label' => 'Annotations', 'url' => '/sentence/'.$sentence->idSentence.'/annotations'],
 //                            'documents' => ['id' => 'documents', 'label' => 'Documents', 'url' => '/corpus/'.$corpus->idCorpus.'/documents'],
                         ]"
                         defaultTab="edit"

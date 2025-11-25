@@ -2,11 +2,11 @@
     hx-trigger="load"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/lemma/{{$lemma->idLemma}}/expressionsForm"
+    hx-get="/lemma/{{$lemma->idLemma}}/posForm"
 ></div>
 <div
     hx-trigger="load"
     hx-target="this"
     hx-swap="outerHTML"
-    hx-get="/lemma/{{$lemma->idLemma}}/expressionsGrid"
+    hx-get="/lemma/{{$lemma->idLemma}}/posGrid"
 ></div>

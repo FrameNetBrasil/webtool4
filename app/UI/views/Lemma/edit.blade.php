@@ -28,115 +28,16 @@
                     </dic>
                 </div>
                 <div class="page-content">
-                    <form>
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <div class="ui fluid card form-card">
-                            <div class="content">
-                                <div class="header">
-                                    Edit Lemma
-                                </div>
-                                <div class="description">
-
-                                </div>
-                            </div>
-                            <div class="content">
-                                <div class="ui form">
-                                    <div class="three fields">
-                                        <div class="field">
-                                            <x-ui::text-field
-                                                label="Name"
-                                                id="name"
-                                                :value="$lemma->name"
-                                            ></x-ui::text-field>
-                                        </div>
-                                        <div class="field">
-                                            <x-combobox::ud-pos
-                                                id="idUDPOS"
-                                                label="POS"
-                                                :value="$lemma->idUDPOS"
-                                            ></x-combobox::ud-pos>
-                                        </div>
-                                        <div class="field">
-                                            <x-combobox::language
-                                                id="idLanguage"
-                                                label="Language"
-                                                :value="$lemma->idLanguage"
-                                            ></x-combobox::language>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="extra content">
-                                <div class="ui buttons">
-                                    <button
-                                        class="ui button primary"
-                                        hx-put="/lemma/{{$lemma->idLemma}}"
-                                    >Update
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <form>
-                        <input type="hidden" name="idLemma" value="{{$lemma->idLemma}}">
-
-                        <div class="ui fluid card form-card">
-                            <div class="content">
-                                <div class="header">
-                                    Add Expressions
-                                </div>
-                                <div class="description">
-                                </div>
-                            </div>
-                            <div class="content">
-                                <div class="ui form">
-                                    <div class="fields">
-                                        <div class="field">
-                                            <x-ui::text-field
-                                                label="Wordform"
-                                                id="form"
-                                                value=""
-                                            ></x-ui::text-field>
-                                        </div>
-                                        <div class="field">
-                                            <x-ui::text-field
-                                                label="Position"
-                                                id="position"
-                                                :value="1"
-                                            ></x-ui::text-field>
-                                        </div>
-                                        <div class="field">
-                                            <x-ui::checkbox
-                                                id="headWord"
-                                                name="head"
-                                                label="Is Head?"
-                                                :active="true"
-                                            ></x-ui::checkbox>
-                                        </div>
-                                        <div class="field">
-                                            <x-ui::checkbox
-                                                id="breakBefore"
-                                                label="Break before?"
-                                                :active="false"
-                                            ></x-ui::checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="extra content">
-                                <div class="ui buttons">
-                                    <button
-                                        class="ui button primary"
-                                        hx-post="/lemma/{{$lemma->idLemma}}/expression"
-                                    >Add Expression
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <h3 class="ui header">Expressions</h3>
-                    @include("Lemma.expressions")
+                    <x-ui::tabs
+                        id="lemmaTabs"
+                        style="secondary pointing"
+                        :tabs="[
+                            'edit' => ['id' => 'edit', 'label' => 'Edit', 'url' => '/lemma/'.$lemma->idLemma.'/formEdit'],
+                            'expressions' => ['id' => 'expressions', 'label' => 'Expressions', 'url' => '/lemma/'.$lemma->idLemma.'/expressions'],
+                            'pos' => ['id' => 'pos', 'label' => 'POS', 'url' => '/lemma/'.$lemma->idLemma.'/formPOS'],
+                        ]"
+                        defaultTab="edit"
+                    />
                 </div>
             </div>
         </main>

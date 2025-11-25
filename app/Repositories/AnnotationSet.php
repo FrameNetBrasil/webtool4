@@ -36,6 +36,16 @@ class AnnotationSet
             ->all();
     }
 
+    public static function getTargetsByIdSentence(int $idSentence): array
+    {
+        return Criteria::table("view_annotationset as a")
+            ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
+            ->select('a.idSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet')
+            ->where("a.idSentence", $idSentence)
+            ->orderby("gl.startChar")
+            ->all();
+    }
+
     public static function getWordsChars(string $text): object
     {
         $array = array();
