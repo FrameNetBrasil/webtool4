@@ -1,3 +1,9 @@
+@use("App\Repositories\Frame")
+@php
+debug($lus);
+    $namespaces = collect($lus)->groupBy('namespace')->toArray();
+    debug($namespace);
+@endphp
 <div x-data="luComponent({{$idDocumentSentence}},'{{$corpusAnnotationType}}')" class="ui container">
     <div class="ui card w-full">
         <div class="content">
@@ -29,22 +35,28 @@
     </div>
 
     <h3>Candidate LU for word "<span class="color-lu">{{$words[$idWord]['word']}}</span>"</h3>
-    <div class="card-grid dense">
-        @foreach($lus as $lu)
-        <div
-            class="ui card option-card cursor-pointer"
-            @click="onCreateAS({{$lu->idLU}})"
-        >
-            <div class="content overflow-hidden">
-                <div class="header">
-                    <x-ui::element.frame name="{{$lu->frameName}}"></x-ui::element.frame>
-                    <x-ui::element.lu name="{{$lu->lu}}"></x-ui::element.lu>
-                </div>
-                <div class="description">
-                    {{$lu->senseDescription}}
-                </div>
-            </div>
+
+    @foreach($namespaces as $namespace => $lus)
+        <div>
+            <h3 class="ui header">{{$namespace}}</h3>
         </div>
-        @endforeach
-    </div>
+        <div class="card-grid dense">
+            @foreach($lus as $lu)
+                <div
+                    class="ui card option-card cursor-pointer"
+                    @click="onCreateAS({{$lu->idLU}})"
+                >
+                    <div class="content overflow-hidden">
+                        <div class="header">
+                            @php($frame = Frame::byId($lu->idFrame))
+                            <x-ui::element.frame_ns :frame="$frame"></x-ui::element.frame_ns>
+                            <x-ui::element.lu name="{{$lu->lu}}"></x-ui::element.lu>
+                        </div>
+                        <div class="description">
+                            {{$lu->senseDescription}}
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
 </div>

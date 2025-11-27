@@ -189,7 +189,7 @@ class WordForm
 //order by `frame`.`name` asc, `l2`.`lu` asc;
 
         $criteria = Criteria::table("view_lexicon as l1")
-            ->select("lu.idLU", "l2.lu", "lu.senseDescription", "frame.name as frameName")
+            ->select("lu.idLU", "lu.name as lu", "lu.senseDescription", "frame.name as frameName","lu.idFrame","frame.namespace")
             ->distinct()
             ->join("view_lexicon as l2", "l1.lemmaName","=","l2.form")
             ->join("view_lu as lu", "l2.idLemma","=","lu.idLemma")
@@ -201,6 +201,7 @@ class WordForm
             ->where("l1.idLanguage", "=", $idLanguage)
             ->where("l2.idLanguage", "=", $idLanguage)
             ->where("lu.status", Status::CREATED)
+            ->orderBy("frame.namespace")
             ->orderBy("frame.name")
             ->orderBy("l2.lu");
         return $criteria->all();

@@ -9,7 +9,7 @@
                 <div class="page-header-object">
                     <div class="page-object">
                         <div class="page-object-name">
-                            <span>{{$lemma->fullName}}</span>
+                            <span>{{$lemma->name}}</span>
                         </div>
                         <div class="page-object-data">
                             <div class="ui label wt-tag-id">
@@ -18,7 +18,7 @@
                             <button
                                 class="ui danger button"
                                 x-data
-                                @click.prevent="messenger.confirmDelete(`Removing Lemma '{{$lemma->fullName}}'.`, '/lemma/{{$lemma->idLemma}}')"
+                                @click.prevent="messenger.confirmDelete(`Removing Lemma '{{$lemma->name}}'.`, '/lemma/{{$lemma->idLemma}}')"
                             >Delete
                             </button>
                         </div>

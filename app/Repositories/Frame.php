@@ -5,36 +5,44 @@ namespace App\Repositories;
 use App\Database\Criteria;
 use App\Services\AppService;
 use App\Services\RelationService;
-use Illuminate\Support\Facades\DB;
 
 class Frame
 {
     public static function byId(int $id): object
     {
-        $frame = Criteria::byFilterLanguage("view_frame", ['idFrame', '=', $id])->first();
+        $frame = Criteria::byFilterLanguage('view_frame', ['idFrame', '=', $id])->first();
+
+        return $frame;
+    }
+
+    public static function byIdAll(int $id): object
+    {
+        $frame = Criteria::byFilterLanguage('view_frame_all', ['idFrame', '=', $id])->first();
+
         return $frame;
     }
 
     public static function byIdEntity(int $idEntity): object
     {
-        return Criteria::byFilterLanguage("view_frame", ['idEntity', '=', $idEntity])->first();
+        return Criteria::byFilterLanguage('view_frame', ['idEntity', '=', $idEntity])->first();
     }
+
     public static function listFECoreSet(int $idFrame): array
     {
         $idLanguage = AppService::getCurrentIdLanguage();
-        $result = Criteria::table("view_fe_internal_relation")
-            ->where("relationType", 'rel_coreset')
-            ->where("fe1IdFrame", $idFrame)
-            ->where("idLanguage", $idLanguage)
+        $result = Criteria::table('view_fe_internal_relation')
+            ->where('relationType', 'rel_coreset')
+            ->where('fe1IdFrame', $idFrame)
+            ->where('idLanguage', $idLanguage)
             ->all();
         $index = [];
         $i = 0;
         foreach ($result as $row) {
-            if (!isset($index[$row->fe1Name]) && !isset($index[$row->fe2Name])) {
+            if (! isset($index[$row->fe1Name]) && ! isset($index[$row->fe2Name])) {
                 $i++;
                 $index[$row->fe1Name] = $i;
                 $index[$row->fe2Name] = $i;
-            } elseif (!isset($index[$row->fe1Name])) {
+            } elseif (! isset($index[$row->fe1Name])) {
                 $index[$row->fe1Name] = $index[$row->fe2Name];
             } else {
                 $index[$row->fe2Name] = $index[$row->fe1Name];
@@ -44,6 +52,7 @@ class Frame
         foreach ($index as $fe => $i) {
             $feCoreSet[$i][] = $fe;
         }
+
         return $feCoreSet;
     }
 
@@ -51,6 +60,7 @@ class Frame
     {
         $children = [];
         self::listScenarioChildren($idFrameScenario, $children);
+
         return $children;
     }
 
@@ -67,7 +77,7 @@ class Frame
 
     public static function getClassification(int $idFrame): array
     {
-        return Criteria::byFilterLanguage("view_frame_classification", ['idFrame', '=', $idFrame])
+        return Criteria::byFilterLanguage('view_frame_classification', ['idFrame', '=', $idFrame])
             ->treeResult('relationType')->all();
     }
 
@@ -80,10 +90,10 @@ class Frame
                 $classification[$framal][] = $row->name;
             }
         }
-        $classification['id'][] = "#" . $idFrame;
-        $frame = Criteria::byFilterLanguage("view_frame", ['idFrame', '=', $idFrame], 'idLanguage', 2)->first();
-        $classification['en'][] = $frame->name . " [en]";
+        $classification['id'][] = '#'.$idFrame;
+        $frame = Criteria::byFilterLanguage('view_frame', ['idFrame', '=', $idFrame], 'idLanguage', 2)->first();
+        $classification['en'][] = $frame->name.' [en]';
+
         return $classification;
     }
-
 }
