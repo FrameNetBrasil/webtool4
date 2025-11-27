@@ -36,7 +36,8 @@
                 </div>
             @endif
             <div class="stat-item">
-                <div class="stat-value">{{ array_sum(array_map('count', $lus)) }}</div>
+{{--                <div class="stat-value">{{ array_sum(array_map('count', $lus)) }}</div>--}}
+                <div class="stat-value">{{ count($lus) }}</div>
                 <div class="stat-label">Lexical Units</div>
             </div>
             <div class="stat-item">
