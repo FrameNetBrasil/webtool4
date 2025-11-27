@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class ValidateLuPosCommand extends Command
 {
     protected $signature = 'fn3:validate-lu-pos
-                            {--output=storage/app/lu_pos_validation_errors.csv : Path to output CSV file}
+                            {--output=/home/ematos/devel/fnbr/webtool4/app/Console/Commands/FN3/Data/lu_pos_validation_errors.csv : Path to output CSV file}
                             {--language=1 : Language ID to filter LUs (default: 1 for Portuguese)}';
 
     protected $description = 'Validate LU POS based on frame namespace heuristics and export failures to CSV';
@@ -66,9 +66,9 @@ class ValidateLuPosCommand extends Command
         'aria',     // piratear → pirataria
         'eria',     // correger → corregeria (less common)
         'io',       // começar → começo (when derived)
-        'a',        // lutar → luta, buscar → busca
-        'e',        // combater → combate, cortar → corte
-        'o',        // abraçar → abraço, grito
+//        'a',        // lutar → luta, buscar → busca
+//        'e',        // combater → combate, cortar → corte
+//        'o',        // abraçar → abraço, grito
     ];
 
     public function handle(): int
@@ -119,13 +119,15 @@ class ValidateLuPosCommand extends Command
                 lu.senseDescription,
                 lu.frameName,
                 lu.lemmaName,
+                lu.status,
                 f.namespace,
                 lemma.udPOS
             FROM view_lu_full lu
             JOIN view_frame f ON lu.idFrame = f.idFrame AND lu.idLanguage = f.idLanguage
             JOIN view_lemma lemma ON lu.idLemma = lemma.idLemma
             WHERE lu.idLanguage = ?
-              AND lu.status != 'PENDING'
+              AND lu.status != 'DELETED'
+              AND lu.origin != 'LOME'
         ";
 
         return DB::select($query, [$languageId]);
@@ -166,6 +168,7 @@ class ValidateLuPosCommand extends Command
                     'namespace' => $namespace,
                     'expectedPOS' => implode(' or ', $allowedPos),
                     'lemmaName' => $lemmaName,
+                    'status' => $lu->status,
                 ];
             }
         }
@@ -212,18 +215,19 @@ class ValidateLuPosCommand extends Command
         usort($failures, fn($a, $b) => strcasecmp($a['frameName'], $b['frameName']));
 
         // Write header
-        fputcsv($handle, ['idLU', 'frameName', 'name', 'udPOS', 'senseDescription', 'namespace', 'expectedPOS']);
+        fputcsv($handle, ['idLU', 'frameName', 'namespace', 'expected_pos', 'lu_name', 'udPOS', 'lu_status', 'senseDescription']);
 
         // Write data
         foreach ($failures as $row) {
             fputcsv($handle, [
                 $row['idLU'],
                 $row['frameName'],
-                $row['name'],
-                $row['udPOS'],
-                $row['senseDescription'],
                 $row['namespace'],
                 $row['expectedPOS'],
+                $row['name'],
+                $row['udPOS'],
+                $row['status'],
+                $row['senseDescription'],
             ]);
         }
 
