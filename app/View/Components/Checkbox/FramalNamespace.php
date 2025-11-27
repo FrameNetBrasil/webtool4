@@ -2,8 +2,10 @@
 
 namespace App\View\Components\Checkbox;
 
+use App\Database\Criteria;
 use App\Repositories\Frame;
 use App\Repositories\SemanticType;
+use App\Services\AppService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -20,18 +22,17 @@ class FramalNamespace extends Component
         public array  $options = []
     )
     {
-        $frameClassification = Frame::getClassification($idFrame);
-        $classification = $frameClassification['rel_namespace'] ?? collect([]);
-        $names = $classification->pluck('name')->all();
-        debug($names);
-        $domains = SemanticType::listNamespace();
-        debug($domains);
+        $frame = Frame::byId($this->idFrame);
+        $namespaces = Criteria::table("view_namespace")
+            ->where("idLanguage",AppService::getCurrentIdLanguage())
+            ->orderBy("name")
+            ->all();
         $this->options = [];
-        foreach ($domains as $domain) {
+        foreach ($namespaces as $namespace) {
             $this->options[] = [
-                'value' => $domain->idSemanticType,
-                'name' => $domain->name,
-                'checked' => in_array($domain->name, $names) ? 'checked' : '',
+                'value' => $namespace->idNamespace,
+                'name' => $namespace->name,
+                'checked' => ($frame->idNamespace == $namespace->idNamespace) ? 'checked' : '',
                 'disable' => false,
             ];
         }

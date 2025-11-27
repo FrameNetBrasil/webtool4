@@ -7,6 +7,7 @@ use App\Data\CreateRelationFEInternalData;
 use App\Data\Frame\UpdateClassificationData;
 use App\Data\SearchFrameData;
 use App\Data\UpdateFrameClassificationData;
+use App\Database\Criteria;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FE\FEController;
 use App\Repositories\Entry;
@@ -81,7 +82,11 @@ class ClassificationController extends Controller
     public function framalNamespace(UpdateClassificationData $data)
     {
         try {
-            RelationService::updateFramalNamespace($data);
+            Criteria::table("frame")
+                ->where("idFrame", $data->idFrame)
+                ->update([
+                    'idNamespace' => $data->idNamespace
+                ]);
             return $this->renderNotify("success", "Namespace updated.");
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
