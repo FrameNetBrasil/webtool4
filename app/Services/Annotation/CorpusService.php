@@ -353,15 +353,14 @@ class CorpusService
         return $wordList;
     }
 
-    public
-    static function getLUs(int $idDocumentSentence, int $idWord): array
+    public static function getLUs(int $idDocumentSentence, int $idWord): array
     {
         $sentence = Criteria::table('view_sentence as s')
             ->join('document_sentence as ds', 's.idSentence', '=', 'ds.idSentence')
             ->where('ds.idDocumentSentence', $idDocumentSentence)
             ->select('s.idSentence', 's.text', 'ds.idDocumentSentence', 'ds.idDocument')
             ->first();
-        $words = self::getWords($sentence);
+        $words = self::getWordsByIdSentence($sentence);
         $wordsToShow = [];
         for ($i = $idWord - 10; $i <= $idWord + 10; $i++) {
             if (isset($words[$i])) {
