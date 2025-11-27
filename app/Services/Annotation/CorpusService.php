@@ -13,6 +13,7 @@ use App\Repositories\Corpus;
 use App\Repositories\Document;
 use App\Repositories\Frame;
 use App\Repositories\LayerType;
+use App\Repositories\LU;
 use App\Repositories\Timeline;
 use App\Repositories\WordForm;
 use App\Services\AppService;
@@ -121,6 +122,7 @@ class CorpusService
         }
         $lu = Criteria::byFilter("view_lu_full", ['idLU', '=', $as->idLU])->first();
         $lu->frame = Frame::byId($lu->idFrame);
+        $lu->idUDPOS = LU::getidUDPOS($lu->idLemma);
         $alternativeLU = Criteria::table("view_lu as lu1")
             ->join("view_lu as lu2", "lu1.idLemma", "=", "lu2.idLemma")
             ->where("lu2.idLU", $lu->idLU)
