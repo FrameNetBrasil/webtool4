@@ -1,0 +1,265 @@
+/*******************************
+    Dashboard Pages Styling
+    Converted to use Fomantic-UI Variables
+*******************************/
+
+/*******************************
+    Dashboard Color Variables
+    (Legacy compatibility)
+*******************************/
+@wt-dashboard-color1: #688bc9;  // Blue
+@wt-dashboard-color2: #a55394;  // Purple
+@wt-dashboard-color3: #407e42;  // Green
+@wt-dashboard-color4: #e9a122;  // Orange/Yellow
+@wt-dashboard-color5: #5f479e;  // Deep Purple
+@wt-dashboard-color6: #85c04c;  // Light Green
+@wt-dashboard-color7: #54c5af;  // Teal
+@wt-dashboard-color8: #e33357;  // Red
+
+/*******************************
+    Legacy Dashboard Components
+    (Used by current HTML templates)
+*******************************/
+
+.dashboard-title {
+    background-color: @gray300;                 // #d1d5db (close to original #CCCCCC)
+    width: 100%;
+    padding: @relative8px;                      // 8px
+    font-weight: @bold;                         // 700
+    font-size: 1.75em;                          // ~24.5px
+    margin-top: @relativeMedium;                // 1em
+    margin-bottom: @relative8px;                // 0.5em (8px)
+    line-height: @lineHeightTight;              // 1.25 (close to original 1.3333)
+}
+
+.dashboard-title2 {
+    width: 100%;
+    padding: @relative8px;                      // 8px
+    font-weight: @bold;                         // 700
+    font-size: 1.75em;                          // ~24.5px
+    margin-top: @relativeMedium;                // 1em
+    margin-bottom: @relative8px;                // 0.5em (8px)
+    line-height: @lineHeightTight;              // 1.25 (close to original 1.3333)
+}
+
+.dashboard-corpus {
+    padding: 0 @relativeMedium @relativeMedium @relativeMedium;  // 0 1em 1em 1em
+    background-color: @gray200;                 // #e5e7eb (close to original #DDDDDD)
+}
+
+.dashboard-subtitle {
+    padding: @relative16px @relative8px @relative8px @relative8px;  // 16px 8px 8px 8px
+    font-weight: @bold;                         // 700
+    font-size: 1.5em;                           // 21px
+    line-height: @lineHeightTight;              // 1.25 (close to original 1.3333)
+}
+
+.dashboard-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: @defaultBorderRadius;        // 5px (Fomantic default)
+    width: 24rem;
+
+    .header {
+        height: @relative24px;                  // 24px
+        line-height: @relative24px;             // 24px
+        font-size: @large;                      // 16px (16/14 = 1.142em)
+    }
+
+    .body {
+        height: @relative60px;                  // 60px
+        line-height: @relative60px;             // 60px
+        font-size: 40px;
+    }
+}
+
+.dashboard-card1 {
+    position: static;
+    padding: @relative8px @relative16px;        // 8px 16px
+    background-color: @wt-dashboard-color1 !important;
+
+    .header {
+        color: @white;
+        font-weight: @semibold;                 // 600
+    }
+
+    .body {
+        color: @white;
+        font-weight: @semibold;                 // 600
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        font-weight: @semibold;                 // 600
+        color: @white;
+    }
+}
+
+.dashboard-card2 {
+    position: static;
+    padding: @relative8px @relative16px;        // 8px 16px
+    background-color: @wt-dashboard-color2 !important;
+
+    .header {
+        color: @white;
+        font-weight: @semibold;                 // 600
+    }
+
+    .body {
+        color: @white;
+        font-weight: @semibold;                 // 600
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        font-weight: @semibold;                 // 600
+        color: @white;
+    }
+}
+
+.dashboard-card3 {
+    position: static;
+    padding: @relative8px @relative16px;        // 8px 16px
+    background-color: @wt-dashboard-color3 !important;
+
+    .header {
+        color: @white;
+        font-weight: @semibold;                 // 600
+    }
+
+    .body {
+        color: @white;
+        font-weight: @semibold;                 // 600
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        font-weight: @semibold;                 // 600
+        color: @white;
+    }
+}
+
+.dashboard-card4 {
+    position: static;
+    padding: @relative8px @relative16px;        // 8px 16px
+    background-color: @wt-dashboard-color4 !important;
+
+    .header {
+        color: @black;
+        font-weight: @semibold;                 // 600
+    }
+
+    .body {
+        color: @white;
+        font-weight: @semibold;                 // 600
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        font-weight: @semibold;                 // 600
+        color: @white;
+    }
+}
+
+.dashboard-card5 {
+    position: static;
+    padding: @relative8px @relative16px;        // 8px 16px
+    background-color: @wt-dashboard-color5 !important;
+
+    .header {
+        color: @white;
+        font-weight: @semibold;                 // 600
+    }
+
+    .body {
+        color: @white;
+        font-weight: @semibold;                 // 600
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        font-weight: @semibold;                 // 600
+        color: @white;
+    }
+}
+
+.dashboard-card6 {
+    position: static;
+    padding: @relative8px @relative16px;        // 8px 16px
+    background-color: @wt-dashboard-color6 !important;
+
+    .header {
+        color: @gray800;                        // #262824 -> @gray800 (#1f2937)
+        font-weight: @semibold;                 // 600
+    }
+
+    .body {
+        color: @white;
+        font-weight: @semibold;                 // 600
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        font-weight: @semibold;                 // 600
+        color: @white;
+    }
+}
+
+.dashboard-card7 {
+    position: static;
+    padding: @relative8px @relative16px;        // 8px 16px
+    background-color: @wt-dashboard-color7 !important;
+
+    .header {
+        color: @gray800;                        // #262824 -> @gray800 (#1f2937)
+        font-weight: @semibold;                 // 600
+    }
+
+    .body {
+        color: @white;
+        font-weight: @semibold;                 // 600
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        font-weight: @semibold;                 // 600
+        color: @white;
+    }
+}
+
+.dashboard-card8 {
+    position: static;
+    padding: @relative8px @relative16px;        // 8px 16px
+    background-color: @wt-dashboard-color8 !important;
+
+    .header {
+        color: @white;
+        font-weight: @semibold;                 // 600
+    }
+
+    .body {
+        color: @white;
+        font-weight: @semibold;                 // 600
+        font-size: 2.5rem;
+    }
+
+    .footer {
+        font-weight: @semibold;                 // 600
+        color: @white;
+    }
+}
+
+/*******************************
+    Modern Dashboard Components
+    (Removed - contained undefined variables)
+
+    The modern .dashboard-page section that was here has been
+    removed because it used custom variables (@fontSize4XL,
+    @textPrimary, @surfacePrimary, @borderSubtle, etc.) that
+    are not defined in the Fomantic-UI variable system.
+
+    If you need to re-add modern dashboard components, please
+    either define these custom variables first, or use the
+    existing Fomantic-UI variables from site.variables.
+*******************************/

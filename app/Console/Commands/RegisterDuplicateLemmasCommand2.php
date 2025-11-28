@@ -24,7 +24,7 @@ class RegisterDuplicateLemmasCommand2 extends Command
         $this->newLine();
 
         // Clear existing temp data
-//        $this->clearTempTable();
+        //        $this->clearTempTable();
 
         // Find and register lemmas
         $this->registerDuplicates();
@@ -48,7 +48,7 @@ class RegisterDuplicateLemmasCommand2 extends Command
         $lemmaNames = DB::select("
             SELECT name, MIN(idLemma) as min
             FROM view_lemma
-            WHERE (name >= 'd') AND (name < 'g')
+            WHERE (name >= 'c') AND (name < 'e')
             GROUP BY name COLLATE 'utf8mb4_bin'
         ");
 
@@ -63,11 +63,10 @@ class RegisterDuplicateLemmasCommand2 extends Command
         $progressBar = $this->output->createProgressBar(count($lemmaNames));
         $progressBar->start();
 
-
         foreach ($lemmaNames as $lemmaName) {
 
-            $temp = Criteria::table("lemma_temp")
-                ->where("idLemmaMantido",$lemmaName->min)
+            $temp = Criteria::table('lemma_temp')
+                ->where('idLemmaMantido', $lemmaName->min)
                 ->first();
 
             if ($temp) {

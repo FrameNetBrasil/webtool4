@@ -5,8 +5,9 @@
     <div class="grouped fields">
         @foreach($options as $i => $option)
             <div class="field">
-                <div class="ui checkbox {{$option['checked']}}">
-                    <input type="checkbox" name="{{$id}}[{{$i}}]" value="{{$option['value']}}" {{$option['checked']}}>
+                <div class="ui radio checkbox {{$option['checked']}}">
+{{--                    <input type="checkbox" name="{{$id}}[{{$i}}]" value="{{$option['value']}}" {{$option['checked']}}>--}}
+                    <input type="radio" name="{{$id}}" value="{{$option['value']}}" {{$option['checked']}}>
                     <label>{{$option['name']}}</label>
                 </div>
             </div>
@@ -15,7 +16,7 @@
 </div>
 <script>
     $(function() {
-        $(".ui.checkbox")
+        $(".ui.radio.checkbox")
             .checkbox()
         ;
     });
