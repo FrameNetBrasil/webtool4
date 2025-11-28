@@ -19,13 +19,27 @@ class AnnotationSet
             ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
             ->join("lu","a.idLU","=", "lu.idLU")
             ->join("view_frame as f","lu.idFrame","=","f.idFrame")
-            ->select('a.idDocumentSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet','f.name as frameName')
+            ->select('a.idDocumentSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet','f.name as frameName','a.idLU')
             ->whereIn("a.idDocumentSentence", $idDocumentSentences)
             ->where("f.idLanguage", $idLanguage)
             ->orderby("gl.startChar")
             ->get();
     }
 
+    public static function listTargetsForAnnotationSet(array $idAnnotationSet): Collection
+    {
+        $idLanguage = AppService::getCurrentIdLanguage();
+//        debug("docsen",$idDocumentSentences);
+        return Criteria::table("view_annotationset as a")
+            ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
+            ->join("lu","a.idLU","=", "lu.idLU")
+            ->join("view_frame as f","lu.idFrame","=","f.idFrame")
+            ->select('a.idDocumentSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet','f.name as frameName','a.idLU')
+            ->whereIn("a.idAnnotationSet", $idAnnotationSet)
+            ->where("f.idLanguage", $idLanguage)
+            ->orderby("gl.startChar")
+            ->get();
+    }
     public static function getTargets(int $idDocumentSentence): array
     {
         return Criteria::table("view_annotationset as a")
@@ -42,6 +56,28 @@ class AnnotationSet
             ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
             ->select('a.idSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet')
             ->where("a.idSentence", $idSentence)
+            ->orderby("gl.startChar")
+            ->all();
+    }
+
+    public static function getTargetsByIdLU(int $idLU): array
+    {
+        return Criteria::table("view_annotationset as a")
+            ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
+            ->join("view_sentence as s", "a.idSentence", "=", "s.idSentence")
+            ->select('a.idSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet','a.idDocumentSentence')
+            ->where("a.idLU", $idLU)
+            ->orderby("gl.startChar")
+            ->all();
+    }
+
+    public static function getTargetsByIdAnnotationSet(int $idAnnotationSet): array
+    {
+        return Criteria::table("view_annotationset as a")
+            ->join("view_annotation_text_target as gl", "a.idAnnotationSet", "=", "gl.idAnnotationSet")
+            ->join("view_sentence as s", "a.idSentence", "=", "s.idSentence")
+            ->select('a.idSentence', 'gl.startChar', 'gl.endChar', 'a.idAnnotationSet','a.idDocumentSentence')
+            ->where("a.idAnnotationSet", $idAnnotationSet)
             ->orderby("gl.startChar")
             ->all();
     }

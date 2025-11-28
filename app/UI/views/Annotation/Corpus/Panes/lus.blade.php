@@ -37,7 +37,7 @@
         <div class="ui card w-full">
             <div class="content">
                 <div class="header">
-                    <x-ui::element.namespace :namespace="{{$ns}}"></x-ui::element.namespace>
+                    <x-ui::element.namespace :namespace="$ns"></x-ui::element.namespace>
                 </div>
             </div>
             <div class="content">
@@ -50,11 +50,15 @@
                             <div class="content overflow-hidden">
                                 <div class="header">
                                     @php($frame = Frame::byId($lu->idFrame))
-                                    <x-ui::element.frame_ns :frame="$frame"></x-ui::element.frame_ns>
                                     <x-ui::element.lu name="{{$lu->lu}}"></x-ui::element.lu>
                                 </div>
                                 <div class="description">
-                                    {{$lu->senseDescription}}
+                                    <div>
+                                        <x-ui::element.frame_ns :frame="$frame"></x-ui::element.frame_ns>
+                                    </div>
+                                    <div>
+                                        {{$lu->senseDescription}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
