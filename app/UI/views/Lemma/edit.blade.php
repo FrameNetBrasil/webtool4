@@ -34,7 +34,7 @@
                         :tabs="[
                             'edit' => ['id' => 'edit', 'label' => 'Edit', 'url' => '/lemma/'.$lemma->idLemma.'/formEdit'],
                             'expressions' => ['id' => 'expressions', 'label' => 'Expressions', 'url' => '/lemma/'.$lemma->idLemma.'/expressions'],
-                            'pos' => ['id' => 'pos', 'label' => 'POS', 'url' => '/lemma/'.$lemma->idLemma.'/formPOS'],
+                            'pos' => ['id' => 'pos', 'label' => 'POS', 'url' => '/lemma/'.$lemma->idLemma.'/pos'],
                         ]"
                         defaultTab="edit"
                     />

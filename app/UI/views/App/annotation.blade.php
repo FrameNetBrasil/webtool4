@@ -2,7 +2,8 @@
     $annotation = [
         'annotationfe' => ['FE', '/annotation/fe', 'Corpus annotation for FE layer','ui::icon.frame'],
         'annotationfulltext' => ['Full text', '/annotation/fullText', 'Corpus annotation for all layers','ui::icon.frame'],
-        'annotationset' => ['Annotation Sets', '/annotation/as', 'Check annotation sets.','ui::icon.frame'],
+        'annotationset' => ['Annotation Sets by sentence', '/annotation/as', 'Check annotation sets by sentence.','ui::icon.frame'],
+        'annotationsetlu' => ['Annotation Sets by LU', '/annotation/lu', 'Check annotation sets by LU.','ui::icon.frame'],
         'annotationsession' => ['Sessions', '/annotation/session', 'Sessions Report.','ui::icon.frame'],
         'annotationcxn' => ['Construction', '/annotation/cxn', 'Corpus annotation for constructions','ui::icon.construction'],
         'annotationdynamic' => ['Dynamic mode', '/annotation/dynamicMode', 'Video annotation.', 'ui::icon.video' ],
@@ -12,7 +13,7 @@
         'annotationstaticevent' => ['Static event', '/annotation/staticEvent', 'Image annotation for eventive frames.','ui::icon.image'],
     ];
     $annotationType = [
-        'corpus' => ['title' => "Corpus", "pages" => ['annotationfe','annotationfulltext','annotationset','annotationcxn','annotationsession']],
+        'corpus' => ['title' => "Corpus", "pages" => ['annotationfe','annotationfulltext','annotationcxn','annotationset','annotationsetlu','annotationsession']],
         'video' => ['title' => "Video", "pages" => ['annotationdynamic','annotationdeixis','annotationcanvas']],
         //'video' => ['title' => "Video", "pages" => ['annotationdeixis']],
         'image' => ['title' => "Image", "pages" => ['annotationstaticbbox','annotationstaticevent']],
