@@ -60,6 +60,15 @@
     grid-template-rows: @headerHeight @breadcrumbHeight 1fr;
 }
 
+.app-layout.dashboard {
+    grid-template-areas:
+        "header"
+        "breadcrumb"
+        "annotation";
+    grid-template-columns: 1fr;
+    grid-template-rows: @headerHeight @breadcrumbHeight 1fr;
+}
+
 .app-layout.annotation-clean {
     grid-template-areas:
         "annotation";

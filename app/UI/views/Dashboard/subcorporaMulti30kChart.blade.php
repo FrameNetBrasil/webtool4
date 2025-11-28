@@ -2,19 +2,19 @@
 <div class="chart-container" style="position: static; height:40vh; width:80vw">
     <canvas id="boxesPerMonth"></canvas>
 </div>
-</div>
 
 @php
 $labels = [];
 $values = [];
-foreach($multi30k['chart'] as $c) {
+debug($multi30kChart);
+foreach($multi30kChart as $c) {
     $labels[] = $c['m'];
     $values[] = $c['value'];
 }
 @endphp
 <script type="application/javascript">
-    document.addEventListener("DOMContentLoaded", function(e) {
-        (async function() {
+    $(function() {
+        // (async function() {
             const ctx = document.getElementById('boxesPerMonth');
             const labels = {{ Js::from($labels) }};
             const data = {
@@ -28,10 +28,11 @@ foreach($multi30k['chart'] as $c) {
                     tension: 0.1
                 }]
             };
+            console.log(data);
             new window.Chart(ctx, {
                 type: 'line',
                 data: data
             });
-        })();
+        // })();
     });
 </script>

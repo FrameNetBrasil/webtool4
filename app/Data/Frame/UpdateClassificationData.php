@@ -10,10 +10,9 @@ class UpdateClassificationData extends Data
         public int $idFrame,
         public ?array $framalDomain = [],
         public ?array $framalType = [],
-        public ?array $namespace = [],
+        //        public ?array $namespace = [],
         public ?int $idNamespace = null,
-    )
-    {
-        $this->idNamespace = $this->namespace[array_key_first($namespace)] ?? 1;
+    ) {
+        $this->idNamespace ??= 1;
     }
 }

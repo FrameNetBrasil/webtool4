@@ -6,9 +6,9 @@ use App\Database\Criteria;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class RegisterDuplicateLemmasCommand4 extends Command
+class RegisterDuplicateLemmasCommand7 extends Command
 {
-    protected $signature = 'lemma:register-duplicates4';
+    protected $signature = 'lemma:register-duplicates7';
 
     protected $description = 'Register all lemmas with their minimum idLemma in lemma_temp table for refactoring';
 
@@ -48,7 +48,7 @@ class RegisterDuplicateLemmasCommand4 extends Command
         $lemmaNames = DB::select("
             SELECT name, MIN(idLemma) as min
             FROM view_lemma
-            WHERE (name >= 'g') AND (name < 'j')
+            WHERE (name >= 'o') and (name < 'r')
             GROUP BY name COLLATE 'utf8mb4_bin'
         ");
 

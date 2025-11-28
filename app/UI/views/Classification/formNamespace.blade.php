@@ -10,7 +10,7 @@
         <div style="height:300px; overflow:auto">
             <div class="field">
                 <x-checkbox.framal-namespace
-                    id="namespace"
+                    id="idNamespace"
                     :idFrame="$idFrame"
                     label=""
                 ></x-checkbox.framal-namespace>

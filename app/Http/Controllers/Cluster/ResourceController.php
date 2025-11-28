@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\Cluster;
 
 use App\Data\Microframe\CreateData;
-use App\Data\SemanticType\SearchData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
-use App\Repositories\Frame;
-use App\Repositories\Microframe;
-use App\Repositories\SemanticType;
+use App\Repositories\Cluster;
 use App\Services\AppService;
-use App\Services\RelationService;
-use App\Services\SemanticType\BrowseService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
@@ -31,7 +26,8 @@ class ResourceController extends Controller
     {
         try {
             $idFrame = Criteria::function('frame_create(?)', [$data->toJson()]);
-            return $this->clientRedirect('/cluster/'. $idFrame);
+
+            return $this->clientRedirect('/cluster/'.$idFrame);
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
@@ -56,15 +52,15 @@ class ResourceController extends Controller
     public function get(string $id)
     {
         return view('Cluster.edit', [
-            'frame' => Microframe::byId($id),
+            'frame' => Cluster::byId($id),
         ]);
     }
 
     #[Get(path: '/cluster/nextFrom/{id}')]
     public function nextFrom(string $id)
     {
-        $current = Microframe::byId($id);
-        $next = Criteria::table('view_microframe')
+        $current = Cluster::byId($id);
+        $next = Criteria::table('view_cluster')
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->where('name', '>', $current->name)
             ->orderBy('name')

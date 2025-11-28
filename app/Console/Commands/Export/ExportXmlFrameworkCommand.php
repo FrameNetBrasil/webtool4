@@ -27,7 +27,9 @@ class ExportXmlFrameworkCommand extends Command
                            {--corpus= : Corpus ID filter}
                            {--language=2 : Language ID (default: 2)}
                            {--output= : Output directory}
-                           {--validate : Validate against XSD}';
+                           {--validate : Validate against XSD}
+                           {--limit= : Process only N items (for batch processing)}
+                           {--offset= : Skip first N items (for batch processing)}';
 
     /**
      * The console command description.
@@ -174,11 +176,32 @@ class ExportXmlFrameworkCommand extends Command
         $typeOutputDir = $this->getTypeOutputDirectory('fulltext');
         $this->ensureDirectoryExists($typeOutputDir);
 
-        // Get total count first
+        // Get query and apply limit/offset for batch processing
         $query = $this->getDocumentsQuery($idDocument);
         $totalCount = $query->count();
 
+        // Apply offset and limit for batch processing
+        $offset = (int) ($this->option('offset') ?? 0);
+        $limit = (int) ($this->option('limit') ?? $totalCount);
+
+        if ($offset > 0) {
+            $query = $this->getDocumentsQuery($idDocument);
+            $query->offset($offset);
+        }
+
+        if ($limit > 0 && $limit < $totalCount) {
+            $query = $this->getDocumentsQuery($idDocument);
+            if ($offset > 0) {
+                $query->offset($offset);
+            }
+            $query->limit($limit);
+            $totalCount = min($limit, $totalCount - $offset);
+        }
+
         $this->info('Exporting '.$totalCount.' document(s) as full text annotations');
+        if ($offset > 0 || $limit > 0) {
+            $this->info("Batch processing: offset={$offset}, limit={$limit}");
+        }
         $this->info("Output directory: {$typeOutputDir}");
 
         $progressBar = $this->output->createProgressBar($totalCount);
@@ -187,6 +210,13 @@ class ExportXmlFrameworkCommand extends Command
         // Process in chunks to avoid memory exhaustion
         $chunkSize = $this->config['batch_size'] ?? 100;
         $query = $this->getDocumentsQuery($idDocument);
+
+        if ($offset > 0) {
+            $query->offset($offset);
+        }
+        if ($limit > 0) {
+            $query->limit($limit);
+        }
 
         $query->chunk($chunkSize, function ($documents) use ($progressBar) {
             foreach ($documents as $document) {
@@ -216,19 +246,33 @@ class ExportXmlFrameworkCommand extends Command
         $typeOutputDir = $this->getTypeOutputDirectory('frames');
         $this->ensureDirectoryExists($typeOutputDir);
 
-        // Get total count first
+        // Get query and apply limit/offset for batch processing
         $query = $this->getFramesQuery($idFrame);
         $totalCount = $query->count();
 
+        // Apply offset and limit for batch processing
+        $offset = (int) ($this->option('offset') ?? 0);
+        $limit = (int) ($this->option('limit') ?? $totalCount);
+
         $this->info('Exporting '.$totalCount.' frame(s)');
+        if ($offset > 0 || ($limit > 0 && $limit < $totalCount)) {
+            $this->info("Batch processing: offset={$offset}, limit={$limit}");
+        }
         $this->info("Output directory: {$typeOutputDir}");
 
-        $progressBar = $this->output->createProgressBar($totalCount);
+        $progressBar = $this->output->createProgressBar(min($limit, $totalCount - $offset));
         $progressBar->start();
 
         // Process in chunks to avoid memory exhaustion
         $chunkSize = $this->config['batch_size'] ?? 100;
         $query = $this->getFramesQuery($idFrame);
+
+        if ($offset > 0) {
+            $query->offset($offset);
+        }
+        if ($limit > 0) {
+            $query->limit($limit);
+        }
 
         $query->chunk($chunkSize, function ($frames) use ($progressBar) {
             foreach ($frames as $frame) {
@@ -258,19 +302,33 @@ class ExportXmlFrameworkCommand extends Command
         $typeOutputDir = $this->getTypeOutputDirectory('lexunit');
         $this->ensureDirectoryExists($typeOutputDir);
 
-        // Get total count first
+        // Get query and apply limit/offset for batch processing
         $query = $this->getLexicalUnitsQuery($idLU);
         $totalCount = $query->count();
 
+        // Apply offset and limit for batch processing
+        $offset = (int) ($this->option('offset') ?? 0);
+        $limit = (int) ($this->option('limit') ?? $totalCount);
+
         $this->info('Exporting '.$totalCount.' lexical unit(s)');
+        if ($offset > 0 || ($limit > 0 && $limit < $totalCount)) {
+            $this->info("Batch processing: offset={$offset}, limit={$limit}");
+        }
         $this->info("Output directory: {$typeOutputDir}");
 
-        $progressBar = $this->output->createProgressBar($totalCount);
+        $progressBar = $this->output->createProgressBar(min($limit, $totalCount - $offset));
         $progressBar->start();
 
         // Process in chunks to avoid memory exhaustion
         $chunkSize = $this->config['batch_size'] ?? 100;
         $query = $this->getLexicalUnitsQuery($idLU);
+
+        if ($offset > 0) {
+            $query->offset($offset);
+        }
+        if ($limit > 0) {
+            $query->limit($limit);
+        }
 
         $query->chunk($chunkSize, function ($lexicalUnits) use ($progressBar) {
             foreach ($lexicalUnits as $lu) {
@@ -456,6 +514,7 @@ class ExportXmlFrameworkCommand extends Command
             ->join('view_frame as f', 'lu.idFrame', '=', 'f.idFrame')
             ->join('language as l', 'lu.idLanguage', '=', 'l.idLanguage')
             ->where('f.idLanguage', $this->idLanguage)
+            ->where('lu.idLanguage', $this->idLanguage)
             ->where('lu.active', 1)
             ->select('lu.idLU', 'lu.name', 'f.name as frameName', 'lu.idFrame', 'l.language')
             ->orderBy('lu.name');
@@ -504,6 +563,9 @@ class ExportXmlFrameworkCommand extends Command
             $query->where('active', 1);
         }
 
+        if (count($this->config['filters']['default_corpus']) > 0) {
+            $query->whereIN('idCorpus', $this->config['filters']['default_corpus']);
+        }
         if ($idCorpus) {
             $query->where('idCorpus', $idCorpus);
         }

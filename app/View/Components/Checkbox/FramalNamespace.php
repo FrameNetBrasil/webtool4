@@ -4,7 +4,6 @@ namespace App\View\Components\Checkbox;
 
 use App\Database\Criteria;
 use App\Repositories\Frame;
-use App\Repositories\SemanticType;
 use App\Services\AppService;
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -18,15 +17,18 @@ class FramalNamespace extends Component
     public function __construct(
         public string $id,
         public string $label,
-        public int    $idFrame,
-        public array  $options = []
-    )
-    {
+        public int $idFrame,
+        public array $options = [],
+        public string $type = 'frame'
+    ) {
         $frame = Frame::byId($this->idFrame);
-        $namespaces = Criteria::table("view_namespace")
-            ->where("idLanguage",AppService::getCurrentIdLanguage())
-            ->orderBy("name")
-            ->all();
+        $query = Criteria::table('view_namespace')
+            ->where('idLanguage', AppService::getCurrentIdLanguage())
+            ->orderBy('name');
+        if ($type == 'frame') {
+            $query = $query->whereNotIn('nameEn', ['Class', 'Microframe', 'Cluster']);
+        }
+        $namespaces = $query->all();
         $this->options = [];
         foreach ($namespaces as $namespace) {
             $this->options[] = [
