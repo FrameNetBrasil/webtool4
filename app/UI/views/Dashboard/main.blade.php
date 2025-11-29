@@ -72,6 +72,14 @@
                         <x-loader></x-loader>
                     </div>
 
+                    <div class="dashboard-title">{{ __("dashboard.annotatorProfile") }}</div>
+                    <div
+                        hx-trigger="load"
+                        hx-target="this"
+                        hx-get="/dashboard/profile"
+                    >
+                        <x-loader></x-loader>
+                    </div>
 
                 </div>
             </div>
