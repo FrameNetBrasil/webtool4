@@ -2,8 +2,8 @@
     //  #688bc9; #a55394; #407e42; #e9a122; #5f479e; #85c04c; #54c5af; #e33357;
     //$ageLabels = __('dashboard.profileAgeLabels');
 //    $schoolingLabels = __('dashboard.profileSchoolingLabels');
-    $ethnicityLabels = __('dashboard.profileEthnicityLabels');
-    $genderLabels = __('dashboard.profileGenderLabels');
+//    $ethnicityLabels = __('dashboard.profileEthnicityLabels');
+    //$genderLabels = __('dashboard.profileGenderLabels');
 
     $ageLabels = [];
     $ageCounts = [];
@@ -14,8 +14,20 @@
     $schoolingLabels = [];
     $schoolingCounts = [];
     foreach($profile['schoolGroups'] as $schoolGroup) {
-        $schoolingLabels[] = $schoolGroup->escolaridade;
+        $schoolingLabels[] = __('dashboard.profileSchoolingLabels.'.$schoolGroup->escolaridade);
         $schoolingCounts[] = $schoolGroup->count;
+    }
+    $ethnicityLabels = [];
+    $ethnicityCounts = [];
+    foreach($profile['ethnicityGroups'] as $ethnicityGroup) {
+        $ethnicityLabels[] = __('dashboard.profileEthnicityLabels.'.$ethnicityGroup->etnia);
+        $ethnicityCounts[] = $ethnicityGroup->count;
+    }
+    $genderLabels = [];
+    $genderCounts = [];
+    foreach($profile['genderGroups'] as $genderGroup) {
+        $genderLabels[] = __('dashboard.profileGenderLabels.'.$genderGroup->gender);
+        $genderCounts[] = $genderGroup->count;
     }
 
 @endphp
@@ -88,7 +100,8 @@
             const data = {
                 labels: {{ Js::from($ethnicityLabels) }},
                 datasets: [{
-                    data: [49, 1, 5, 15, 3],
+                    //data: [49, 1, 5, 15, 3],
+                    data: {{ Js::from($ethnicityCounts) }},
                     backgroundColor: ["#688bc9", "#a55394", "#407e42", "#e9a122", "#5f479e"],
                     hoverOffset: 4
                 }]
@@ -111,8 +124,9 @@
             const data = {
                 labels: {{ Js::from($genderLabels) }},
                 datasets: [{
-                    data: [24, 45, 1, 1],
-                    backgroundColor: ["#688bc9", "#a55394", "#407e42", "#e9a122"],
+                    //data: [24, 45, 1, 1],
+                    data: {{ Js::from($genderCounts) }},
+                    backgroundColor: ["#688bc9", "#a55394", "#407e42", "#e9a122", "#5f479e"],
                     hoverOffset: 4
                 }]
             };

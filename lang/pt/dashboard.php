@@ -35,11 +35,32 @@ return [
     'profileAge' => 'Idade',
     'profileAgeLabels' => ['18-19', '20-29', '30-39', '40-49', '50-59'],
     'profileSchooling' => 'Escolaridade',
-    'profileSchoolingLabels' => ['Doutorado completo', 'Mestrado completo', 'Superior completo', 'Superior em curso'],
+    'profileSchoolingLabels' => [
+        'Superior em curso' => 'Superior em curso',
+        'Superior completo' => 'Superior completo',
+        'Doutorado completo' => 'Doutorado completo',
+        'Mestrado completo' => 'Mestrado completo',
+        'Educação Básica completa' => 'Educação Básica completa',
+        'Mestrado em curso' => 'Mestrado em curso',
+        'Doutorado em curso' => 'Doutorado em curso'
+    ],
     'profileEthnicity' => 'Etnia',
-    'profileEthnicityLabels' => ['Branco', 'Indígena', 'Negro', 'Pardo', 'Prefiro não informar'],
+    //'profileEthnicityLabels' => ['Branco', 'Indígena', 'Negro', 'Pardo', 'Prefiro não informar'],
+    'profileEthnicityLabels' => [
+        'Branco' => 'Branco',
+        'Indígena' => 'Indígena',
+        'Negro' => 'Negro',
+        'Pardo' => 'Pardo',
+        'Prefiro não informar' => 'Não informado'
+    ],
     'profileGender' => 'Gênero',
-    'profileGenderLabels' => ['Homem', 'Mulher', 'Não-binário', 'Não-binário, Transgênero, Agênero, Gênero não-conformista'],
+    'profileGenderLabels' => [
+        'Homem' => 'Homem',
+        'Mulher' => 'Mulher',
+        'Não-binário' => 'Não-binário',
+        'Não-binário, Transgênero, Agênero, Gênero não-conformista' => 'Não-binário, Transgênero, Agênero, Não-conformista',
+        'Mulher, Transgênero' => 'Mulher, Transgênero'
+    ],
     'qualiaLabels' => [
         'caused_by',
         'causes_naturally',

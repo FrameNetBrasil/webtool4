@@ -35,11 +35,36 @@ return [
     'profileAge' => 'Age',
     'profileAgeLabels' => ['18-19', '20-29', '30-39', '40-49', '50-59'],
     'profileSchooling' => 'Schooling',
-    'profileSchoolingLabels' => ['Doctorate Degree', 'Masters Degree', 'Bachelors Degree', 'University student'],
+    //'profileSchoolingLabels' => ['Doctorate Degree', 'Masters Degree', 'Bachelors Degree', 'University student'],
+    'profileSchoolingLabels' => [
+        'Superior em curso' => 'University student',
+        'Superior completo' => 'Bachelors Degree',
+        'Doutorado completo' => 'Doctorate Degree',
+        'Mestrado completo' => 'Masters Degree',
+        'Educação Básica completa' => 'Basic Education',
+        'Mestrado em curso' => 'Masters student',
+        'Doutorado em curso' => 'Doctorate student'
+    ],
     'profileEthnicity' => 'Ethnicity',
-    'profileEthnicityLabels' => ['Caucasian', 'Native-Brazilian', 'Black', 'Brown', 'Not informed'],
+    //'profileEthnicityLabels' => ['Caucasian', 'Native-Brazilian', 'Black', 'Brown', 'Not informed'],
+    'profileEthnicityLabels' => [
+        'Branco' => 'Causacsian',
+        'Indígena' => 'Native-Brazilian',
+        'Negro' => 'Black',
+        'Pardo' => 'Brown',
+        'Prefiro não informar' => 'Not informed'
+    ],
+
     'profileGender' => 'Gender',
-    'profileGenderLabels' => ['Man', 'Woman', 'Non-binary', 'Non-binary, transgender, agender, non-conforming'],
+    //'profileGenderLabels' => ['Man', 'Woman', 'Non-binary', 'Non-binary, transgender, agender, non-conforming'],
+    'profileGenderLabels' => [
+        'Homem' => 'Man',
+        'Mulher' => 'Woman',
+        'Não-binário' => 'Non-binary',
+        'Não-binário, Transgênero, Agênero, Gênero não-conformista' => 'Non-binary, transgender, agender, non-conforming',
+        'Mulher, Transgênero' => 'Woman, transgender'
+    ],
+
     'origin_Audio description' => 'Audio description',
     'origin_Closed caption(CC)' => 'Closed caption(CC)',
     'origin_Original audio' => 'Original audio',

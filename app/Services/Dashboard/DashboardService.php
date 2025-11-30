@@ -245,9 +245,27 @@ FROM user_profile
 GROUP BY escolaridade
 ORDER BY escolaridade_ordem;
         ");
+        $ethnicityGroups = DB::connection('webtool')->select("
+SELECT
+    etnia,
+    COUNT(*) AS count
+FROM user_profile
+GROUP BY etnia
+ORDER By 1
+        ");
+        $genderGroups = DB::connection('webtool')->select("
+SELECT
+    gender,
+    COUNT(*) AS count
+FROM user_profile
+GROUP BY gender
+ORDER By 1
+        ");
         return [
             'ageGroups' => $ageGroups,
             'schoolGroups' => $schoolGroups,
+            'ethnicityGroups' => $ethnicityGroups,
+            'genderGroups' => $genderGroups,
         ];
     }
 

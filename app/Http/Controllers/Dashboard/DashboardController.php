@@ -32,9 +32,9 @@ class DashboardController extends Controller
     public function frame2()
     {
         App::setLocale(AppService::getCurrentLanguageCode());
-        if (session("dashboard_must_calculate")) {
-            UpdateService::frame2();
-        }
+//        if (session("dashboard_must_calculate")) {
+//            UpdateService::frame2();
+//        }
         $annotation = DashboardService::frame2();
         return view('Dashboard.frame2', [
             'annotation' => $annotation,
@@ -45,9 +45,9 @@ class DashboardController extends Controller
     public function frame2PPM()
     {
         App::setLocale(AppService::getCurrentLanguageCode());
-        if (session("dashboard_must_calculate")) {
-            UpdateService::frame2PPM();
-        }
+//        if (session("dashboard_must_calculate")) {
+//            UpdateService::frame2PPM();
+//        }
         $annotation = DashboardService::frame2PPM();
         return view('Dashboard.frame2PPM', [
             'annotation' => $annotation,
@@ -58,9 +58,9 @@ class DashboardController extends Controller
     public function frame2NLG()
     {
         App::setLocale(AppService::getCurrentLanguageCode());
-        if (session("dashboard_must_calculate")) {
-            UpdateService::frame2NLG();
-        }
+//        if (session("dashboard_must_calculate")) {
+//            UpdateService::frame2NLG();
+//        }
         $annotation = DashboardService::frame2NLG();
         return view('Dashboard.frame2NLG', [
             'annotation' => $annotation,
@@ -71,9 +71,9 @@ class DashboardController extends Controller
     public function frame2Gesture()
     {
         App::setLocale(AppService::getCurrentLanguageCode());
-        if (session("dashboard_must_calculate")) {
-            UpdateService::frame2Gesture();
-        }
+//        if (session("dashboard_must_calculate")) {
+//            UpdateService::frame2Gesture();
+//        }
         $annotation = DashboardService::frame2Gesture();
         return view('Dashboard.frame2Gesture', [
             'annotation' => $annotation,
