@@ -27,7 +27,9 @@
       "Bash(git commit:*)",
       "mcp__laravel-boost__last-error",
       "Bash(git reset:*)",
-      "Bash(php:*)"
+      "Bash(php:*)",
+      "Bash(find:*)",
+      "Bash({} ;)"
     ]
   },
   "enableAllProjectMcpServers": true,
