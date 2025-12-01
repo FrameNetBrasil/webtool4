@@ -38,6 +38,42 @@ function boxComponent(idVideoDOMElement) {
         annotationType: '',
         baseURL: '',
         idObject: '',
+        isDisplayingAllBBoxes: false,
+
+        bgcolors: [
+            "#ffff00",
+            "#f21f26",
+            "#91c879",
+            "#5780d4",
+            "#cdeb2d",
+            "#4a3c44",
+            "#69e2da",
+            "#012aaf",
+            "#f88006",
+            "#53e052",
+            "#199601",
+            "#ff31d5",
+            "#bf5e70",
+            "#84059a",
+            "#999867",
+            "#f8b90d"],
+        fgcolors: [
+            "#000",
+            "#FFF",
+            "#000",
+            "#000",
+            "#000",
+            "#FFF",
+            "#000",
+            "#FFF",
+            "#000",
+            "#000",
+            "#000",
+            "#000",
+            "#000",
+            "#FFF",
+            "#000",
+            "#000"],
 
 
         async init() {
@@ -655,6 +691,85 @@ function boxComponent(idVideoDOMElement) {
                     $dom.css("display", "block");
                 }
             }
+        },
+
+        async onBBoxDisplayAll(e) {
+            const $allBBoxesContainer = $(".allBBoxes");
+
+            if (this.isDisplayingAllBBoxes) {
+                // Hide and clear all displayed bboxes
+                $allBBoxesContainer.empty();
+                $allBBoxesContainer.css("display", "none");
+                this.isDisplayingAllBBoxes = false;
+            } else {
+                console.log(e.detail);
+                let bboxes = await ky.get(`${this.baseURL}/getAllBBoxes/${e.detail.idDocument}/${e.detail.frame}`).json();
+                console.log(bboxes);
+
+                // Clear any existing bboxes before adding new ones
+                $allBBoxesContainer.empty();
+
+                // Create DOM elements for each bbox
+                for (let i = 0; i < bboxes.length; i++) {
+                    let bbox = bboxes[i];
+
+                    // Get colors from the arrays in sequence
+                    let bgColor = this.bgcolors[i % this.bgcolors.length];
+                    let fgColor = this.fgcolors[i % this.fgcolors.length];
+
+                    // Create bbox container div
+                    let $bboxDiv = $('<div class="bbox bbox-display-all"></div>');
+
+                    // Create objectId label div
+                    let $objectIdDiv = $('<div class="objectId"></div>');
+                    $objectIdDiv.text(bbox.idDynamicObject);
+
+                    // Append label to bbox
+                    $bboxDiv.append($objectIdDiv);
+
+                    // Style the bbox container
+                    $bboxDiv.css({
+                        position: "absolute",
+                        display: "block",
+                        width: bbox.width + "px",
+                        height: bbox.height + "px",
+                        left: bbox.x + "px",
+                        top: bbox.y + "px",
+                        borderColor: bgColor,
+                        borderStyle: "solid",
+                        borderWidth: "4px",
+                        backgroundColor: "transparent",
+                        opacity: 1,
+                        pointerEvents: "none" // Make non-interactive
+                    });
+
+                    // Style the objectId label
+                    $objectIdDiv.css({
+                        backgroundColor: bgColor,
+                        color: fgColor,
+                        display: "inline-block", // Prevent stretching
+                        position: "relative",
+                        zIndex: 100 // Ensure label appears above bbox borders
+                    });
+
+                    // Handle blocked state
+                    if (bbox.blocked) {
+                        $bboxDiv.css({
+                            borderStyle: "dashed",
+                            backgroundColor: "white",
+                            opacity: 0.4
+                        });
+                    }
+
+                    // Append to the allBBoxes container
+                    $allBBoxesContainer.append($bboxDiv);
+                }
+
+                // Show the container
+                $allBBoxesContainer.css("display", "block");
+                this.isDisplayingAllBBoxes = true;
+            }
+
         },
 
 

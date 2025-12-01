@@ -184,7 +184,7 @@ class VideoService
                 }
             }
         }
-        debug($result);
+//        debug($result);
 
         return $result;
     }
@@ -415,7 +415,7 @@ class VideoService
             ->where('idDynamicObject', $data->idObject)
             ->orderBy('frameNumber')
             ->all();
-        debug($object->bboxes);
+//        debug($object->bboxes);
         if (! empty($object->bboxes)) {
             $frameFirstBBox = $object->bboxes[0]->frameNumber;
             // se o novo startFrame for menor que o atual, remove todas as bboxes
@@ -594,7 +594,7 @@ class VideoService
 
     public static function createBBox(CreateBBoxData $data): int
     {
-        debug($data);
+//        debug($data);
         $boundingBox = Criteria::table('dynamicobject_boundingbox as dbb')
             ->join('boundingbox as bb', 'dbb.idBoundingBox', '=', 'bb.idBoundingBox')
             ->where('dbb.idDynamicObject', $data->idObject)

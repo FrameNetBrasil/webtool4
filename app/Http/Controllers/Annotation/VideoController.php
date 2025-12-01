@@ -12,6 +12,7 @@ use App\Data\Annotation\Video\ObjectSearchData;
 use App\Data\Annotation\Video\UpdateBBoxData;
 use App\Database\Criteria;
 use App\Http\Controllers\Controller;
+use App\Services\AppService;
 use App\Services\Annotation\VideoService;
 use App\Services\CommentService;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -33,7 +34,7 @@ class VideoController extends Controller
     #[Get(path: '/annotation/video/object')]
     public function getObject(ObjectSearchData $data)
     {
-        debug($data);
+//        debug($data);
         if ($data->idObject == 0) {
             return view('Annotation.Video.Forms.formNewObject');
         }
@@ -69,7 +70,7 @@ class VideoController extends Controller
     #[Post(path: '/annotation/video/createNewObjectAtLayer')]
     public function createNewObjectAtLayer(CreateObjectData $data)
     {
-        debug($data);
+//        debug($data);
         try {
             $object = VideoService::createNewObjectAtLayer($data);
             if ($data->annotationType == 'dynamicAnnotation') {
@@ -97,7 +98,7 @@ class VideoController extends Controller
     #[Post(path: '/annotation/video/updateObjectAnnotation')]
     public function updateObjectAnnotation(ObjectAnnotationData $data)
     {
-        debug($data);
+//        debug($data);
         try {
             $idDynamicObject = VideoService::updateObjectAnnotation($data);
             $this->trigger('updateObjectAnnotationEvent');
@@ -106,8 +107,6 @@ class VideoController extends Controller
             //return $this->renderNotify('success', 'Object updated.');
             return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$idDynamicObject}");
         } catch (\Exception $e) {
-            debug($e->getMessage());
-
             return $this->renderNotify('error', $e->getMessage());
         }
     }
@@ -116,7 +115,7 @@ class VideoController extends Controller
     public function updateObjectRange(ObjectFrameData $data)
     {
         try {
-            debug($data);
+//            debug($data);
             VideoService::updateObjectFrame($data);
 
             return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$data->idObject}");
@@ -141,7 +140,7 @@ class VideoController extends Controller
     #[Post(path: '/annotation/video/createBBox')]
     public function createBBox(CreateBBoxData $data)
     {
-        debug($data);
+//        debug($data);
         try {
             return VideoService::createBBox($data);
         } catch (\Exception $e) {
@@ -160,6 +159,58 @@ class VideoController extends Controller
             }
 
             return $boundingBox;
+        } catch (\Exception $e) {
+            return $this->renderNotify('error', $e->getMessage());
+        }
+    }
+
+    #[Get(path: '/annotation/video/getAllBBoxes/{idDocument}/{frameNumber}')]
+    public function getAllBBoxes(int $idDocument, int $frameNumber)
+    {
+        try {
+            $idLanguage = AppService::getCurrentIdLanguage();
+
+            $bboxes = Criteria::table('view_dynamicobject_boundingbox as db')
+                ->join("video_dynamicobject as do", "db.idDynamicObject", "=", "do.idDynamicObject")
+                ->join("document_video as vd", "do.idVideo", "=", "vd.idVideo")
+                ->join("view_annotation_dynamic as ad", function($join) use ($idLanguage) {
+                    $join->on("do.idDynamicObject", "=", "ad.idDynamicObject")
+                         ->where("ad.idLanguage", "=", $idLanguage);
+                })
+                ->where('vd.idDocument', $idDocument)
+                ->where('db.frameNumber', $frameNumber)
+                ->select(
+                    'db.idBoundingBox', 'db.idDynamicObject', 'db.frameNumber',
+                    'db.x', 'db.y', 'db.width', 'db.height', 'db.blocked',
+                    'ad.gl', 'ad.lu', 'ad.fe', 'ad.frame',
+                    'ad.fgColorGL', 'ad.bgColorGL', 'ad.fgColorFE', 'ad.bgColorFE'
+                )
+                ->all();
+
+            // Process each bbox to compute final colors based on annotation type
+            foreach ($bboxes as $bbox) {
+                if ($bbox->gl == '') {
+                    // No generic label - check for frame element colors
+                    if ($bbox->fe != '') {
+                        $bbox->bgColor = "#{$bbox->bgColorFE}";
+                        $bbox->fgColor = "#{$bbox->fgColorFE}";
+                    } else {
+                        // Default colors
+                        $bbox->bgColor = 'white';
+                        $bbox->fgColor = 'black';
+                    }
+                } else {
+                    // Generic label exists - use GL colors
+                    $bbox->bgColor = "#{$bbox->bgColorGL}";
+                    $bbox->fgColor = "#{$bbox->fgColorGL}";
+                }
+
+                // Clean up - remove the raw color fields from response
+                unset($bbox->fgColorGL, $bbox->bgColorGL, $bbox->fgColorFE, $bbox->bgColorFE);
+                unset($bbox->gl, $bbox->lu, $bbox->fe, $bbox->frame);
+            }
+
+            return $bboxes;
         } catch (\Exception $e) {
             return $this->renderNotify('error', $e->getMessage());
         }
