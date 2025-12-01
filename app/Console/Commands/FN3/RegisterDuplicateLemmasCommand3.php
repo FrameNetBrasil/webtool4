@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\FN3;
 
 use App\Database\Criteria;
 use Illuminate\Console\Command;

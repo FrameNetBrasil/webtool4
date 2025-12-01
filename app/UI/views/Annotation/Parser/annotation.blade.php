@@ -5,10 +5,10 @@
             :sections="[['/','Home'],['/annotation','Annotation'],[$url,$page],['','#' . $idDocumentSentence]]"
         ></x-layout::breadcrumb>
         <div class="annotation-action">
-            @include("Annotation.Session.Panes.sessionPane")
+{{--            @include("Annotation.Session.Panes.sessionPane")--}}
         </div>
         <div class="annotation-corpus">
-            <script type="text/javascript" src="/annotation/corpus/script/components"></script>
+            <script type="text/javascript" src="/annotation/parser/script/components"></script>
             <div class="annotation-canvas">
                 <div class="annotation-navigation">
                     <div class="tag">
@@ -49,7 +49,7 @@
                             @else
                                 <div
                                     class="ui medium button mb-2 {!! $hasAS ? 'hasAS' : 'hasLU' !!}"
-                                    hx-get="{!! $hasAS ? '/annotation/corpus/as/'. $corpusAnnotationType. '/'.  $token['idAS'] . '/' . $token['word']  : '/annotation/corpus/lus/'.$corpusAnnotationType.'/'. $idDocumentSentence . '/'. $i !!}"
+                                    hx-get="{!! $hasAS ? '/annotation/parser/as/'. $corpusAnnotationType. '/'.  $token['idAS'] . '/' . $token['word']  : '/annotation/corpus/lus/'.$corpusAnnotationType.'/'. $idDocumentSentence . '/'. $i !!}"
                                     hx-target=".annotation-panel"
                                     hx-swap="innerHTML"
                                 >{{$token['word']}}
