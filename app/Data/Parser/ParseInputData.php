@@ -16,7 +16,7 @@ class ParseInputData extends Data
     {
         return [
             'sentence' => ['required', 'string', 'min:1', 'max:1000'],
-            'idGrammarGraph' => ['required', 'integer', 'exists:grammar_graph,idGrammarGraph'],
+            'idGrammarGraph' => ['required', 'integer', 'exists:parser_grammar_graph,idGrammarGraph'],
             'queueStrategy' => ['required', 'string', 'in:fifo,lifo'],
         ];
     }

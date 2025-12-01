@@ -191,9 +191,9 @@ class ParseEdge
      */
     public static function getWithNodes(int $id): object
     {
-        return Criteria::table('parse_edge as pe')
-            ->join('parse_node as pn_source', 'pe.idSourceNode', '=', 'pn_source.idParserNode')
-            ->join('parse_node as pn_target', 'pe.idTargetNode', '=', 'pn_target.idParserNode')
+        return Criteria::table('parser_link as pe')
+            ->join('parser_node as pn_source', 'pe.idSourceNode', '=', 'pn_source.idParserNode')
+            ->join('parser_node as pn_target', 'pe.idTargetNode', '=', 'pn_target.idParserNode')
             ->select(
                 'pe.*',
                 'pn_source.label as sourceLabel',
@@ -210,9 +210,9 @@ class ParseEdge
      */
     public static function listWithNodes(int $idParserGraph): array
     {
-        return Criteria::table('parse_edge as pe')
-            ->join('parse_node as pn_source', 'pe.idSourceNode', '=', 'pn_source.idParserNode')
-            ->join('parse_node as pn_target', 'pe.idTargetNode', '=', 'pn_target.idParserNode')
+        return Criteria::table('parser_link as pe')
+            ->join('parser_node as pn_source', 'pe.idSourceNode', '=', 'pn_source.idParserNode')
+            ->join('parser_node as pn_target', 'pe.idTargetNode', '=', 'pn_target.idParserNode')
             ->select(
                 'pe.*',
                 'pn_source.label as sourceLabel',

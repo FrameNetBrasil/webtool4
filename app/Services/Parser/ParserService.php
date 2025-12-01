@@ -169,7 +169,7 @@ class ParserService
                     'idParserGraph' => $idParserGraph,
                     'idSourceNode' => $focus->idParserNode,
                     'idTargetNode' => $wordNode->idParserNode,
-                    'edgeType' => 'dependency',
+                    'linkType' => 'dependency',
                 ]);
 
                 // Remove focus from queue
@@ -203,7 +203,7 @@ class ParserService
                     'idParserGraph' => $idParserGraph,
                     'idSourceNode' => $newNode->idParserNode,
                     'idTargetNode' => $focus->idParserNode,
-                    'edgeType' => 'dependency',
+                    'linkType' => 'dependency',
                 ]);
 
                 // Remove focus from queue
@@ -289,7 +289,7 @@ class ParserService
             nodes: $parseGraph->nodes,
             edges: $parseGraph->edges,
             nodeCount: $stats->nodeCount ?? 0,
-            edgeCount: $stats->edgeCount ?? 0,
+            edgeCount: $stats->linkCount ?? 0,
             focusNodeCount: $stats->focusNodeCount ?? 0,
             mweNodeCount: $stats->mweNodeCount ?? 0,
             isValid: $parseGraph->status === 'complete',
