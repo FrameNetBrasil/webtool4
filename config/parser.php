@@ -120,7 +120,7 @@ return [
     // Word type mappings (UPOS to parser types)
     'wordTypeMappings' => [
         // Entities
-        'E' => ['NOUN', 'PROPN', 'PRON'],
+        'E' => ['NOUN', 'PROPN'],
 
         // Eventive
         'V' => ['VERB', 'AUX'],
@@ -129,7 +129,7 @@ return [
         'A' => ['ADJ', 'ADV', 'NUM'],
 
         // Fixed (function words)
-        'F' => ['ADP', 'DET', 'CONJ', 'CCONJ', 'SCONJ', 'PART', 'INTJ'],
+        'F' => ['PRON', 'ADP', 'DET', 'CONJ', 'CCONJ', 'SCONJ', 'PART', 'INTJ'],
     ],
 
     // Logging parameters

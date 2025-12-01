@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Annotation;
 
+use App\Data\Annotation\Browse\SearchData;
 use App\Data\Annotation\Corpus\AnnotationData;
 use App\Data\Annotation\Corpus\CreateASData;
 use App\Data\Annotation\Corpus\DeleteObjectData;
@@ -13,6 +14,7 @@ use App\Enum\AnnotationSetStatus;
 use App\Enum\Status;
 use App\Http\Controllers\Controller;
 use App\Repositories\AnnotationSet;
+use App\Services\Annotation\BrowseService;
 use App\Services\Annotation\CorpusService;
 use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
@@ -20,32 +22,53 @@ use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
 
 #[Middleware(name: 'auth')]
-class CorpusController extends Controller
+class ParserController extends Controller
 {
 
-    #[Get(path: '/annotation/corpus/script/{folder}')]
+    #[Get(path: '/annotation/parser/script/{folder}')]
     public function jsObjects(string $folder)
     {
         return response()
-            ->view("Annotation.Corpus.Scripts.{$folder}")
+            ->view("Annotation.Parser.Scripts.{$folder}")
             ->header('Content-type', 'text/javascript');
     }
 
-    #[Get(path: '/annotation/corpus/as/{corpusAnnotationType}/{idAS}/{token?}')]
+    #[Get(path: '/annotation/parser')]
+    public function browse(SearchData $search)
+    {
+        $data = BrowseService::browseCorpusBySearch($search, [], 'CorpusAnnotation');
+        session(["corpusAnnotationType" => "parser"]);
+        return view('Annotation.browseSentences', [
+            'page' => 'Parser Annotation',
+            'url' => '/annotation/parser',
+            'data' => $data,
+        ]);
+    }
+
+    #[Get(path: '/annotation/parser/sentence/{idDocumentSentence}/{idAnnotationSet?}')]
+    public function annotation(int $idDocumentSentence, ?int $idAnnotationSet = null)
+    {
+        $data = CorpusService::getResourceData($idDocumentSentence, $idAnnotationSet, 'fe');
+        $page = 'Parser Annotation';
+        $url = '/annotation/fe';
+
+        return view('Annotation.Parser.annotation', array_merge($data, compact('page', 'url')));
+    }
+    #[Get(path: '/annotation/parser/as/{corpusAnnotationType}/{idAS}/{token?}')]
     public function annotationSet(string $corpusAnnotationType, int $idAS, string $token = '')
     {
         $data = CorpusService::getAnnotationSetData($idAS, $token,$corpusAnnotationType);
-        return view('Annotation.Corpus.Panes.annotationSet', $data);
+        return view('Annotation.Parser.Panes.annotationSet', $data);
     }
 
 
-    #[Get(path: '/annotation/corpus/lus/{corpusAnnotationType}/{idDocumentSentence}/{idWord}')]
+    #[Get(path: '/annotation/parser/lus/{corpusAnnotationType}/{idDocumentSentence}/{idWord}')]
     public function getLUs(string $corpusAnnotationType, int $idDocumentSentence, int $idWord)
     {
         $data = CorpusService::getLUs($idDocumentSentence, $idWord);
-        return view("Annotation.Corpus.Panes.lus", array_merge($data,compact("idWord","idDocumentSentence","corpusAnnotationType")));
+        return view("Annotation.Parser.Panes.lus", array_merge($data,compact("idWord","idDocumentSentence","corpusAnnotationType")));
     }
-    #[Delete(path: '/annotation/corpus/annotationset/{idAnnotationSet}/{corpusAnnotationType}')]
+    #[Delete(path: '/annotation/parser/annotationset/{idAnnotationSet}/{corpusAnnotationType}')]
     public function deleteAS(int $idAnnotationSet, string $corpusAnnotationType)
     {
         try {
@@ -57,7 +80,7 @@ class CorpusController extends Controller
         }
     }
 
-    #[Post(path: '/annotation/corpus/createAS')]
+    #[Post(path: '/annotation/parser/createAS')]
     public function createAS(CreateASData $input)
     {
         $idAnnotationSet = CorpusService::createAnnotationSet($input);
@@ -67,7 +90,7 @@ class CorpusController extends Controller
             return $this->clientRedirect("/annotation/{$input->corpusAnnotationType}/sentence/{$input->idDocumentSentence}/{$idAnnotationSet}");
         }
     }
-    #[Post(path: '/annotation/corpus/object')]
+    #[Post(path: '/annotation/parser/object')]
     public function annotate(AnnotationData $object)
     {
         try {
@@ -78,9 +101,9 @@ class CorpusController extends Controller
             if ($object->range->type != '') {
                 $data = CorpusService::annotateObject($object);
                 if ($object->corpusAnnotationType == 'fe') {
-                    return view("Annotation.Corpus.Panes.FE.asAnnotation", $data);
+                    return view("Annotation.Parser.Panes.FE.asAnnotation", $data);
                 } else {
-                    return view("Annotation.Corpus.Panes.FullText.asAnnotation", $data);
+                    return view("Annotation.Parser.Panes.FullText.asAnnotation", $data);
                 }
             } else {
                 return $this->renderNotify("error", "No selection.");
@@ -89,23 +112,23 @@ class CorpusController extends Controller
             return $this->renderNotify("error", $e->getMessage());
         }
     }
-    #[Delete(path: '/annotation/corpus/object')]
+    #[Delete(path: '/annotation/parser/object')]
     public function deleteObject(DeleteObjectData $object)
     {
         try {
             CorpusService::deleteObject($object);
             $data = CorpusService::getAnnotationSetData($object->idAnnotationSet, $object->token);
             if ($object->corpusAnnotationType == 'fe') {
-                return view("Annotation.Corpus.Panes.FE.asAnnotation", $data);
+                return view("Annotation.Parser.Panes.FE.asAnnotation", $data);
             } else {
-                return view("Annotation.Corpus.Panes.FullText.asAnnotation", $data);
+                return view("Annotation.Parser.Panes.FullText.asAnnotation", $data);
             }
         } catch (\Exception $e) {
             return $this->renderNotify("error", $e->getMessage());
         }
     }
 
-    #[Post(path: '/annotation/corpus/annotationset/{idAnnotationSet}/change/{idLU}/{corpusAnnotationType}')]
+    #[Post(path: '/annotation/parser/annotationset/{idAnnotationSet}/change/{idLU}/{corpusAnnotationType}')]
     public function changeAnnotationSet(int $idAnnotationSet, int $idLU, string $corpusAnnotationType = '')
     {
         $target = Criteria::table("view_annotation_text_target")
@@ -126,11 +149,11 @@ class CorpusController extends Controller
         return $this->clientRedirect("/annotation/{$input->corpusAnnotationType}/sentence/{$input->idDocumentSentence}/{$idAnnotationSet}");
     }
 
-    #[Post(path: '/annotation/corpus/lome/accepted')]
+    #[Post(path: '/annotation/parser/lome/accepted')]
     public function lomeAccepted(LOMEAcceptedData $data) {
         AnnotationSet::updateStatusField($data->idAnnotationSet, Status::ACCEPTED->value);
         $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $data->idAnnotationSet);
-        return view("Annotation.Corpus.Panes.asStatusField", [
+        return view("Annotation.Parser.Panes.asStatusField", [
             "annotationSet" => $annotationSet
         ]);
     }

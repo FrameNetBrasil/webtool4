@@ -29,7 +29,10 @@
       "Bash(git reset:*)",
       "Bash(php:*)",
       "Bash(find:*)",
-      "Bash({} ;)"
+      "Bash({} ;)",
+      "mcp__playwright__browser_network_requests",
+      "mcp__playwright__browser_type",
+      "mcp__laravel-boost__read-log-entries"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -58,13 +58,14 @@ CREATE TABLE IF NOT EXISTS parser_mwe (
     idGrammarGraph INT NOT NULL,
     phrase VARCHAR(255) NOT NULL,
     components JSON NOT NULL,
-    semanticType ENUM('E', 'V', 'A') NOT NULL,
+    semanticType ENUM('E', 'V', 'A', 'F') NOT NULL,
     length INT NOT NULL,
+    firstWord VARCHAR(100) GENERATED ALWAYS AS (JSON_UNQUOTE(JSON_EXTRACT(components, '$[0]'))) VIRTUAL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (idGrammarGraph) REFERENCES parser_grammar_graph(idGrammarGraph) ON DELETE CASCADE,
     INDEX idx_mwe_phrase (idGrammarGraph, phrase),
-    INDEX idx_mwe_first_word (idGrammarGraph, (JSON_UNQUOTE(JSON_EXTRACT(components, '$[0]'))))
+    INDEX idx_mwe_first_word (idGrammarGraph, firstWord)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------------------------
@@ -222,16 +223,16 @@ INSERT INTO parser_node (idParserGraph, label, type, threshold, activation, isFo
 INSERT INTO parser_graph (idParserGraph, idGrammarGraph, sentence, status) VALUES
 (4, 1, 'Café quente da manhã', 'complete');
 
-INSERT INTO parser_node (idParserGraph, label, type, threshold, activation, isFocus, positionInSentence) VALUES
+INSERT INTO parser_node (idParserGraph, label, type, threshold, activation, isFocus, positionInSentence, idMWE) VALUES
 (4, 'café', 'E', 1, 1, TRUE, 1, NULL),
 (4, 'quente', 'A', 1, 1, TRUE, 2, NULL),
 (4, 'da', 'F', 1, 1, TRUE, 3, NULL),
 (4, 'manhã', 'E', 1, 1, TRUE, 4, NULL);
 
 INSERT INTO parser_link (idParserGraph, idSourceNode, idTargetNode, linkType) VALUES
-(4, 10, 11, 'dependency'),  -- café -> quente
-(4, 10, 12, 'dependency'),  -- café -> da
-(4, 12, 13, 'dependency');  -- da -> manhã
+(4, 7, 8, 'dependency'),  -- café -> quente
+(4, 7, 9, 'dependency'),  -- café -> da
+(4, 9, 10, 'dependency');  -- da -> manhã
 
 -- ============================================================================
 -- Utility Views
