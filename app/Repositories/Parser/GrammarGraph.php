@@ -84,9 +84,9 @@ class GrammarGraph
      */
     public static function getPredictedTypes(int $idGrammarGraph, string $sourceType): array
     {
-        return Criteria::table('grammar_edge as ge')
-            ->join('grammar_node as gn_source', 'ge.idSourceNode', '=', 'gn_source.idGrammarNode')
-            ->join('grammar_node as gn_target', 'ge.idTargetNode', '=', 'gn_target.idGrammarNode')
+        return Criteria::table('parser_grammar_link as ge')
+            ->join('parser_grammar_node as gn_source', 'ge.idSourceNode', '=', 'gn_source.idGrammarNode')
+            ->join('parser_grammar_node as gn_target', 'ge.idTargetNode', '=', 'gn_target.idGrammarNode')
             ->select('gn_target.type', 'gn_target.label', 'ge.weight')
             ->where('ge.idGrammarGraph', '=', $idGrammarGraph)
             ->where('gn_source.type', '=', $sourceType)

@@ -61,9 +61,9 @@ class VisualizationService
                 'id' => $edge->idParserLink,
                 'source' => $edge->idSourceNode,
                 'target' => $edge->idTargetNode,
-                'type' => $edge->edgeType,
+                'type' => $edge->linkType,
                 'weight' => $edge->weight,
-                'color' => $colors[$edge->edgeType] ?? '#000000',
+                'color' => $colors[$edge->linkType] ?? '#000000',
                 'width' => $this->calculateEdgeWidth($edge, $widthConfig),
                 'sourceLabel' => $edge->sourceLabel ?? '',
                 'targetLabel' => $edge->targetLabel ?? '',
@@ -160,7 +160,7 @@ class VisualizationService
         }
 
         foreach ($edges as $edge) {
-            $type = $edge->edgeType;
+            $type = $edge->linkType;
             $edgeTypes[$type] = ($edgeTypes[$type] ?? 0) + 1;
         }
 

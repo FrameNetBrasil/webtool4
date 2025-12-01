@@ -67,7 +67,7 @@ class ParserController extends Controller
         $result = $this->parserService->getParseResult($id);
         $stats = $this->visualizationService->getStatistics($id);
 
-        return view('Parser.parserResults', [
+        return view('Parser.parserResultPage', [
             'result' => $result,
             'stats' => $stats,
             'sentence' => $result->sentence,

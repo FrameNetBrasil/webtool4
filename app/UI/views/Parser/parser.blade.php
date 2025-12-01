@@ -93,7 +93,7 @@
                                     </span>
                                 </td>
                                 <td>{{ $parse->nodeCount }}</td>
-                                <td>{{ $parse->edgeCount }}</td>
+                                <td>{{ $parse->linkCount }}</td>
                                 <td>
                                     <a href="/parser/result/{{ $parse->idParserGraph }}" class="ui mini button">
                                         View

@@ -34,7 +34,7 @@ class MWE
 
         return Criteria::table('parser_mwe')
             ->where('idGrammarGraph', '=', $idGrammarGraph)
-            ->where("JSON_UNQUOTE(JSON_EXTRACT(components, '$[0]'))", '=', $firstWord)
+            ->where('firstWord', '=', $firstWord)
             ->all();
     }
 
@@ -47,7 +47,7 @@ class MWE
 
         return Criteria::table('parser_mwe')
             ->where('idGrammarGraph', '=', $idGrammarGraph)
-            ->where('JSON_CONTAINS(components, JSON_QUOTE(?))', '=', $word)
+            ->whereRaw('JSON_CONTAINS(components, JSON_QUOTE(?))', [$word])
             ->all();
     }
 
@@ -95,8 +95,8 @@ class MWE
     {
         // Ensure components is JSON encoded
         if (isset($data['components']) && is_array($data['components'])) {
-            $data['components'] = json_encode($data['components']);
             $data['length'] = count($data['components']);
+            $data['components'] = json_encode($data['components']);
         }
 
         return Criteria::create('parser_mwe', $data);
@@ -109,8 +109,8 @@ class MWE
     {
         // Ensure components is JSON encoded
         if (isset($data['components']) && is_array($data['components'])) {
-            $data['components'] = json_encode($data['components']);
             $data['length'] = count($data['components']);
+            $data['components'] = json_encode($data['components']);
         }
 
         Criteria::table('parser_mwe')
