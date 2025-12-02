@@ -115,7 +115,7 @@ return [
         'language' => ['Language', '/language', '', [
             '2' => ['English', '/changeLanguage/en', '', []],
             '1' => ['Portuguese', '/changeLanguage/pt', '', []],
-            '3' => ['Spanish', '/changeLanguage/es', '', []],
+//            '3' => ['Spanish', '/changeLanguage/es', '', []],
         ]],
         'profile' => ['Profile', '/profile', '', [
             'myprofile' => ['My Profile', '/profile', '', []],

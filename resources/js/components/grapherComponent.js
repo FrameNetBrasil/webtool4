@@ -173,15 +173,16 @@ export default function grapherComponent(config = {}) {
                         id: index,
                         z: 2,
                     });
+                    console.log(node);
                     rect.resize(w, 40);  // Increased height to accommodate energy label
                     rect.attr({
                         body: {
-                            class: `color_${node.type}`,
+                            class: `color_${node.idColor}_stroke`,
                         },
                         label: {
-                            class: `color_${node.type}--text`,
+                            class: `color_${node.idColor}_fill`,
                             text: text,
-                        }
+                        },
                     });
                 }
 
@@ -419,7 +420,11 @@ export default function grapherComponent(config = {}) {
                     distance: '50%',
                     offset: 0,
                     action: function (evt) {
-                        htmx.ajax('POST', `/grapher/framefe/graph/${data.id}`, { target: '#graph' });
+                        // Load FE relations into modal graph
+                        htmx.ajax('GET', `/grapher/frame/ferelations/${data.id}`, {
+                            target: '#feRelationsGraph',
+                            swap: 'innerHTML'
+                        });
                     }
                 });
             }
