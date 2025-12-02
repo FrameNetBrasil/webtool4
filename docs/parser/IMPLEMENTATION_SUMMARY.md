@@ -6,7 +6,9 @@ This document summarizes the implementation of the **Graph-Based Predictive Pars
 
 ## Implementation Date
 
-**Completed:** 2025-11-30
+**Initial Implementation:** 2025-11-30
+**UD Parser Integration:** 2025-12-01
+**Grammar Visualization:** 2025-12-02
 
 ## Architecture Overview
 
@@ -94,7 +96,7 @@ All extend `Spatie\LaravelData\Data` for type safety and validation:
 
 ---
 
-### 4. Service Layer (5 files)
+### 4. Service Layer (6 files)
 **Location:** `app/Services/Parser/`
 
 #### ParserService.php
@@ -103,16 +105,27 @@ All extend `Spatie\LaravelData\Data` for type safety and validation:
 ```php
 Algorithm Steps:
 1. Tokenize sentence
-2. For each word:
+2. Get UD parse (lemmas and POS tags) ✨ NEW
+3. For each word:
    a. Create word node (threshold=1, activation=1)
-   b. Instantiate MWE prefix nodes if word starts any MWE
-   c. Check existing MWE prefixes for activation
-   d. Check focus nodes for predictions
-   e. If no match, add to focus queue
-3. Garbage collect nodes below threshold
-4. Validate parse connectivity
-5. Mark status (complete/failed)
+   b. Determine type using UD POS tag ✨ NEW
+   c. Instantiate MWE prefix nodes if word starts any MWE
+   d. Check existing MWE prefixes for activation
+   e. Check focus nodes for predictions
+   f. If no match, add to focus queue
+4. Garbage collect nodes below threshold
+5. Validate parse connectivity
+6. Mark status (complete/failed)
 ```
+
+#### UDParserService.php ✨ NEW
+**Universal Dependencies integration:**
+- Integration with Trankit service
+- Lemma extraction for each word
+- POS tag extraction (UPOS)
+- Type mapping (NOUN→E, VERB→V, ADJ/ADV→A, ADP/DET/PRON→F)
+- Fallback handling when UD parsing fails
+- Error logging and graceful degradation
 
 #### MWEService.php
 **MWE-specific logic:**
@@ -169,6 +182,8 @@ Algorithm Steps:
 - `POST /parser/grammar/create` - Store grammar
 - `GET /parser/grammar/{id}/mwes` - List MWEs
 - `POST /parser/grammar/{id}/mwes` - Add MWE
+- `GET /parser/grammar/{id}/visualization` - Interactive graph (HTMX) ✨ NEW
+- `GET /parser/grammar/{id}/tables` - Filtered tables (HTMX) ✨ NEW
 
 #### ApiController.php
 **JSON API endpoints:**
@@ -181,7 +196,7 @@ Algorithm Steps:
 
 ---
 
-### 6. Blade Views (4 files)
+### 6. Blade Views (7 files)
 **Location:** `app/UI/views/Parser/`
 
 #### parser.blade.php
@@ -201,7 +216,7 @@ Results display with:
 - HTMX integration for graph loading
 
 #### parserGraph.blade.php
-D3.js visualization with:
+D3.js visualization for parse results with:
 - Force-directed graph layout
 - Draggable nodes
 - Color-coded by type
@@ -212,11 +227,31 @@ D3.js visualization with:
 Error display with retry functionality
 
 #### grammarView.blade.php
-Grammar details with:
-- Node list
-- MWE list
-- Validation warnings
-- Statistics
+Grammar details with reorganized layout:
+- Header and description
+- Statistics (nodes, edges, MWEs)
+- Filter controls with HTMX
+- Dynamic visualization area
+- Dynamic tables area
+- Validation warnings (at end)
+
+#### grammarGraph.blade.php ✨ NEW
+Interactive grammar visualization with:
+- Full-width D3.js force-directed graph
+- Pan/zoom controls (svgPanZoom)
+- Draggable nodes
+- Color-coded by type
+- Edge labels with weights
+- Statistics and legend
+- Filter indicator
+
+#### grammarTables.blade.php ✨ NEW
+On-demand filtered tables with:
+- Grammar nodes table
+- MWE table
+- Result counts
+- Empty state messages
+- Filtered results only
 
 ---
 
@@ -425,6 +460,102 @@ Caching is disabled by default but can be enabled:
 
 ---
 
+## Recent Updates (December 2025)
+
+### UD Parser Integration (2025-12-01)
+
+**Purpose:** Enhance word type determination using Universal Dependencies parsing.
+
+**Implementation:**
+- Created `UDParserService` in `app/Services/Parser/`
+- Integration with existing Trankit service (`app/Services/TrankitService.php`)
+- Automatic lemma and POS tag extraction for each word
+- Configurable UD-to-parser type mapping in `config/parser.php`
+
+**Features:**
+- Lemma extraction for lexicon lookup
+- POS tagging (UPOS tags: NOUN, VERB, ADJ, ADP, etc.)
+- Type mapping: NOUN→E, VERB→V, ADJ/ADV→A, ADP/DET/PRON→F
+- Fallback to word form when lemma unavailable
+- Error handling for service failures
+
+**Files Modified:**
+- `app/Services/Parser/ParserService.php` - Integrated UD parsing into main algorithm
+- `app/Services/Parser/UDParserService.php` (NEW) - UD service wrapper
+- `config/parser.php` - Added UPOS mapping configuration
+
+**Testing:**
+Successfully tested with Portuguese sentences using Trankit service.
+
+---
+
+### Grammar Graph Visualization (2025-12-02)
+
+**Purpose:** Provide interactive visualization and filtering for grammar graphs with thousands of nodes.
+
+**Implementation:**
+
+#### 1. Full-Width Interactive Visualization
+- **File:** `app/UI/views/Parser/grammarGraph.blade.php` (NEW)
+- D3.js force-directed graph with full-width responsive SVG
+- Pan/zoom controls using `svgPanZoom` library (matching frame grapher)
+- Color-coded nodes by type (E/V/A/F/MWE)
+- Interactive features: draggable nodes, tooltips, edge labels
+- Statistics display with node distribution by type
+
+#### 2. Filtering System
+- **Files Modified:** `app/Http/Controllers/Parser/GrammarController.php`
+- Word-based filtering for large grammars
+- Filters both nodes and connected edges
+- Dynamic statistics (filtered vs. total counts)
+- Clear filter functionality
+
+#### 3. On-Demand Table Display
+- **File:** `app/UI/views/Parser/grammarTables.blade.php` (NEW)
+- Tables hidden by default (performance optimization)
+- "Show Tables" button for filtered results only
+- Result counts displayed (e.g., "Grammar Nodes 3 results")
+- Separate displays for Grammar Nodes and MWEs
+
+#### 4. Page Layout Reorganization
+- **File Modified:** `app/UI/views/Parser/grammarView.blade.php`
+- New layout order:
+  1. Header (name, language)
+  2. Description
+  3. Statistics (total nodes, edges, MWEs)
+  4. Filter controls (after statistics)
+  5. Graph visualization area
+  6. Filtered tables area (on-demand)
+  7. Validation warnings (moved to end)
+
+**Controller Methods Added:**
+- `GET /parser/grammar/{id}/visualization` - HTMX endpoint for graph
+- `GET /parser/grammar/{id}/tables` - HTMX endpoint for filtered tables
+
+**Features:**
+- Full-width graph canvas (100% container width)
+- Pan/zoom controls (zoom in, zoom out, reset)
+- Filter by word (case-insensitive substring match)
+- On-demand table loading (prevents initial slowdown)
+- Clear button (resets filter, visualization, and tables)
+- Responsive design for various screen sizes
+
+**Files Created:**
+1. `app/UI/views/Parser/grammarGraph.blade.php` - D3.js visualization template
+2. `app/UI/views/Parser/grammarTables.blade.php` - Filtered table display
+
+**Files Modified:**
+1. `app/Http/Controllers/Parser/GrammarController.php` - Added visualization() and tables() methods
+2. `app/UI/views/Parser/grammarView.blade.php` - Reorganized layout, added filter controls
+
+**Testing:**
+- Tested with 17-node Portuguese grammar
+- Verified filtering (e.g., "café" → 3 MWE nodes)
+- Confirmed pan/zoom functionality
+- Validated full-width responsive behavior
+
+---
+
 ## Future Enhancements
 
 ### Phase 1 Completion ✓
@@ -435,13 +566,14 @@ Caching is disabled by default but can be enabled:
 - [x] D3.js visualization
 - [x] Sample Portuguese grammar
 
-### Phase 2 (Future)
-- [ ] POS tagging integration for word type determination
+### Phase 2 (In Progress)
+- [x] POS tagging integration for word type determination ✓ (UD Parser)
+- [x] Grammar visualization with filtering ✓
 - [ ] Lexicon integration for E/V/A classification
 - [ ] Advanced prediction mechanisms
 - [ ] Parse tree comparison and similarity scoring
 - [ ] Batch processing interface
-- [ ] Grammar editor UI
+- [ ] Grammar editor UI (creation/editing)
 - [ ] Unit/Feature tests with Pest
 
 ### Phase 3 (Future)
@@ -478,22 +610,22 @@ vendor/bin/pint --dirty
 
 ## Summary Statistics
 
-**Total Files Created:** 25
+**Total Files Created:** 28 (Initial: 25, Updates: +3)
 
 **Lines of Code:**
 - SQL: ~500 lines
-- PHP: ~3,800 lines
-- Blade: ~400 lines
+- PHP: ~4,100 lines (Initial: 3,800, Updates: +300)
+- Blade: ~650 lines (Initial: 400, Updates: +250)
 - LESS: ~250 lines
-- JavaScript (embedded): ~150 lines
+- JavaScript (embedded): ~300 lines (Initial: 150, Updates: +150)
 
 **Database Tables:** 7
 **Views:** 2
 **Repositories:** 5
-**Services:** 5
+**Services:** 6 (Initial: 5, Updates: +1 UDParserService)
 **Controllers:** 3
 **Data Classes:** 6
-**Blade Templates:** 5
+**Blade Templates:** 7 (Initial: 5, Updates: +2 grammarGraph, grammarTables)
 
 ---
 
