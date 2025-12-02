@@ -274,6 +274,11 @@ function videoComponent(config) {
             const targetTime = this.timeFromFrame(targetFrame);
             this.log(`Seeking to frame ${targetFrame} (${targetTime.toFixed(3)}s)`);
             this.player.currentTime = targetTime;
+            document.dispatchEvent(new CustomEvent("timeline-seek-frame", {
+                detail: {
+                    frameNumber: frame
+                }
+            }));
         },
 
         async preciseSeekToFrame(frame) {

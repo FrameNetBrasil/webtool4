@@ -450,8 +450,10 @@ class RelationService extends Controller
                 ->join("view_frame as f1", "r.idEntity1", "=", "f1.idEntity")
                 ->join("view_frame as f2", "r.idEntity2", "=", "f2.idEntity")
                 ->select('r.idEntityRelation', 'r.idRelationType', 'r.relationType', 'r.entity1Type', 'r.entity2Type', 'r.idEntity1', 'r.idEntity2',
-                    'f1.name as frame1Name',
-                    'f2.name as frame2Name',
+                    'f1.nsName as frame1Name',
+                    'f2.nsName as frame2Name',
+                    'f1.idColor as frame1IdColor',
+                    'f2.idColor as frame2IdColor',
                 )->where('f1.idLanguage', '=', $idLanguage)
                 ->where('f2.idLanguage', '=', $idLanguage)
                 ->whereRaw("((r.idEntity1 = {$idEntity}) or (r.idEntity2 = {$idEntity}))")
@@ -460,11 +462,13 @@ class RelationService extends Controller
                 if (in_array($r->idRelationType, $idRelationType)) {
                     $nodes[$r->idEntity1] = [
                         'type' => 'frame',
-                        'name' => $r->frame1Name
+                        'name' => $r->frame1Name,
+                        'idColor' => $r->frame1IdColor,
                     ];
                     $nodes[$r->idEntity2] = [
                         'type' => 'frame',
-                        'name' => $r->frame2Name
+                        'name' => $r->frame2Name,
+                        'idColor' => $r->frame2IdColor,
                     ];
                     $links[$r->idEntity1][$r->idEntity2] = [
                         'type' => 'ff',

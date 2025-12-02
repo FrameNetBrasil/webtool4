@@ -8,6 +8,14 @@
                 <div>
                     <button
                         class="ui tiny icon button"
+                        @click=""
+                    >
+                        <i class="layer group small icon"></i>
+                    </button>
+                </div>
+                <div>
+                    <button
+                        class="ui tiny icon button"
                         @click="$dispatch('video-seek-frame', {frameNumber: {{$object->startFrame}} })"
                     >
                         Go to StartFrame: {{$object->startFrame}}
@@ -35,7 +43,7 @@
                         id="btnClose"
                         class="ui tiny icon button"
                         title="Close Object"
-                        @click="window.location.assign('/annotation/{{$annotationType}}/{{$object->idDocument}}')"
+                        @click="window.location.assign('/annotation/{{$annotationType}}/{{$object->idDocument}}/videoFrame/{{$object->endFrame}}')"
                     >
                         <i class="close small icon"></i>
                     </button>

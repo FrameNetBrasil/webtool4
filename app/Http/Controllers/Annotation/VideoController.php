@@ -34,7 +34,6 @@ class VideoController extends Controller
     #[Get(path: '/annotation/video/object')]
     public function getObject(ObjectSearchData $data)
     {
-//        debug($data);
         if ($data->idObject == 0) {
             return view('Annotation.Video.Forms.formNewObject');
         }

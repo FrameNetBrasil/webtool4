@@ -33,7 +33,9 @@
       "mcp__playwright__browser_network_requests",
       "mcp__playwright__browser_type",
       "mcp__laravel-boost__read-log-entries",
-      "mcp__laravel-boost__list-routes"
+      "mcp__laravel-boost__list-routes",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_snapshot"
     ]
   },
   "enableAllProjectMcpServers": true,
