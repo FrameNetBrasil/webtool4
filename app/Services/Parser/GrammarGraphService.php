@@ -54,21 +54,29 @@ class GrammarGraphService
     }
 
     /**
-     * Get word type from label (for Portuguese words)
+     * Get word type from POS tag and word
      */
-    public function getWordType(string $word, int $idGrammarGraph): string
+    public function getWordType(string $word, string $pos, int $idGrammarGraph): string
     {
-        // Check if it's a fixed word
+        // First check if it's a fixed word in the grammar by lemma/word match
         $nodes = GrammarGraph::getNodes($idGrammarGraph);
 
         foreach ($nodes as $node) {
             if ($node->type === 'F' && strtolower($node->label) === strtolower($word)) {
-                return $node->type;
+                return 'F';
             }
         }
 
-        // Default to E (entity) for unknown words
-        // In a real implementation, this would use POS tagging or a lexicon
+        // Map POS to type using config
+        $mappings = config('parser.wordTypeMappings');
+
+        foreach ($mappings as $type => $posList) {
+            if (in_array($pos, $posList)) {
+                return $type;
+            }
+        }
+
+        // Default to E (entity) for unmapped POS tags
         return 'E';
     }
 

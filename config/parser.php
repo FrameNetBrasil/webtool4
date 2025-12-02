@@ -120,7 +120,7 @@ return [
     // Word type mappings (UPOS to parser types)
     'wordTypeMappings' => [
         // Entities
-        'E' => ['NOUN', 'PROPN'],
+        'E' => ['NOUN', 'PROPN', 'PRON'],
 
         // Eventive
         'V' => ['VERB', 'AUX'],
@@ -129,7 +129,19 @@ return [
         'A' => ['ADJ', 'ADV', 'NUM'],
 
         // Fixed (function words)
-        'F' => ['PRON', 'ADP', 'DET', 'CONJ', 'CCONJ', 'SCONJ', 'PART', 'INTJ'],
+        'F' => ['ADP', 'DET', 'CONJ', 'CCONJ', 'SCONJ', 'PART', 'INTJ'],
+    ],
+
+    // Trankit UD Parser configuration
+    'trankit' => [
+        'url' => config('udparser.trankit_url', env('TRANKIT_URL', 'http://localhost:8405')),
+        'timeout' => config('udparser.timeout', 300),
+    ],
+
+    // Language ID mappings
+    'languageMap' => [
+        'pt' => 1,  // Portuguese
+        'en' => 2,  // English
     ],
 
     // Logging parameters
