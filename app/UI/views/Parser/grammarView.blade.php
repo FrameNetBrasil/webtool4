@@ -12,17 +12,6 @@
                     </div>
                 </div>
 
-                @if(count($errors) > 0)
-                <div class="ui warning message">
-                    <div class="header">Grammar Validation Warnings</div>
-                    <ul class="list">
-                        @foreach($errors as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
-
                 @if($grammar->description)
                 <div class="ui segment">
                     <p>{{ $grammar->description }}</p>
@@ -46,65 +35,99 @@
 
                 <div class="ui divider"></div>
 
-                <h3 class="ui header">Grammar Nodes</h3>
-                <table class="ui celled table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Label</th>
-                            <th>Type</th>
-                            <th>Threshold</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($grammar->nodes as $node)
-                        <tr>
-                            <td>{{ $node->idGrammarNode }}</td>
-                            <td><strong>{{ $node->label }}</strong></td>
-                            <td>
-                                <span class="ui label" style="background-color: {{ config('parser.visualization.nodeColors.' . $node->type, '#999') }}; color: white;">
-                                    {{ $node->type }}
-                                </span>
-                            </td>
-                            <td>{{ $node->threshold }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="grammar-actions">
+                    <div class="ui form">
+                        <div class="inline fields">
+                            <div class="field">
+                                <label>Filter by word:</label>
+                                <input
+                                    type="text"
+                                    id="grammarFilter"
+                                    placeholder="Enter word to filter nodes..."
+                                    style="width: 300px;"
+                                    value="{{ request()->get('filter', '') }}"
+                                />
+                            </div>
+                            <div class="field">
+                                <button
+                                    class="ui primary button"
+                                    hx-get="/parser/grammar/{{ $grammar->idGrammarGraph }}/visualization"
+                                    hx-target="#grammarVisualization"
+                                    hx-swap="innerHTML"
+                                    hx-include="#grammarFilter"
+                                    hx-vals='js:{"filter": document.getElementById("grammarFilter").value}'
+                                >
+                                    <i class="project diagram icon"></i>
+                                    Show Graph Visualization
+                                </button>
+                            </div>
+                            <div class="field">
+                                <button
+                                    class="ui button"
+                                    onclick="document.getElementById('grammarFilter').value = ''; document.getElementById('grammarVisualization').innerHTML = ''; document.getElementById('filteredTables').innerHTML = '';"
+                                >
+                                    <i class="times icon"></i>
+                                    Clear
+                                </button>
+                            </div>
+                            <div class="field">
+                                <button
+                                    class="ui button"
+                                    hx-get="/parser/grammar/{{ $grammar->idGrammarGraph }}/tables"
+                                    hx-target="#filteredTables"
+                                    hx-swap="innerHTML"
+                                    hx-include="#grammarFilter"
+                                    hx-vals='js:{"filter": document.getElementById("grammarFilter").value}'
+                                >
+                                    <i class="list icon"></i>
+                                    Show Tables
+                                </button>
+                            </div>
+                            <div class="field">
+                                <a href="/parser" class="ui button">
+                                    <i class="arrow left icon"></i>
+                                    Back to Parser
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <h3 class="ui header">Multi-Word Expressions</h3>
-                <table class="ui celled table">
-                    <thead>
-                        <tr>
-                            <th>Phrase</th>
-                            <th>Components</th>
-                            <th>Semantic Type</th>
-                            <th>Length</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($grammar->mwes as $mwe)
-                        <tr>
-                            <td><strong>{{ $mwe->phrase }}</strong></td>
-                            <td>{{ is_string($mwe->components) ? $mwe->components : json_encode($mwe->components) }}</td>
-                            <td>
-                                <span class="ui mini label">{{ $mwe->semanticType }}</span>
-                            </td>
-                            <td>{{ $mwe->length }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="mt-6">
+                    <div id="grammarVisualization"></div>
+                </div>
 
+                <div class="mt-6">
+                    <div id="filteredTables"></div>
+                </div>
+
+                @if(count($errors) > 0)
                 <div class="ui divider"></div>
-
-                <a href="/parser" class="ui button">
-                    <i class="arrow left icon"></i>
-                    Back to Parser
-                </a>
+                <div class="ui warning message">
+                    <div class="header">Grammar Validation Warnings</div>
+                    <ul class="list">
+                        @foreach($errors as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
             </div>
         </main>
 
         <x-layout::footer></x-layout::footer>
     </div>
 </x-layout::index>
+
+<style>
+    .grammar-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+
+    .mt-6 {
+        margin-top: 1.5rem;
+    }
+</style>

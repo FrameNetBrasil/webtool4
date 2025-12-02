@@ -7,6 +7,7 @@ use App\Data\Parser\ParseOutputData;
 use App\Repositories\Parser\ParseEdge;
 use App\Repositories\Parser\ParseGraph;
 use App\Repositories\Parser\ParseNode;
+use App\Services\Trankit\TrankitService;
 use Illuminate\Support\Facades\DB;
 
 class ParserService
@@ -44,12 +45,24 @@ class ParserService
                     'status' => 'parsing',
                 ]);
 
-                // Tokenize sentence
-                $words = $this->tokenize($input->sentence);
+                // Get language ID from grammar graph
+                $grammar = \App\Repositories\Parser\GrammarGraph::byId($input->idGrammarGraph);
+                $idLanguage = config('parser.languageMap')[$grammar->language] ?? 1;
 
-                // Process each word
-                foreach ($words as $position => $word) {
-                    $this->processWord($word, $idParserGraph, $input->idGrammarGraph, $position + 1);
+                // Parse with UD instead of simple tokenization
+                $tokens = $this->parseWithUD($input->sentence, $idLanguage);
+
+                // Process each token
+                foreach ($tokens as $token) {
+                    $this->processWord(
+                        word: $token['word'],
+                        lemma: $token['lemma'] ?? $token['word'],
+                        pos: $token['pos'] ?? 'X',
+                        idParserGraph: $idParserGraph,
+                        idGrammarGraph: $input->idGrammarGraph,
+                        idLanguage: $idLanguage,
+                        position: $token['id']
+                    );
 
                     // Check timeout
                     if ((microtime(true) - $startTime) > config('parser.performance.maxParseTime', 30)) {
@@ -83,23 +96,42 @@ class ParserService
     }
 
     /**
-     * Process a single word
+     * Process a single word with UD information
      */
-    private function processWord(string $word, int $idParserGraph, int $idGrammarGraph, int $position): void
-    {
+    private function processWord(
+        string $word,
+        string $lemma,
+        string $pos,
+        int $idParserGraph,
+        int $idGrammarGraph,
+        int $idLanguage,
+        int $position
+    ): void {
         if (config('parser.logging.logSteps', false)) {
             logger()->info('Parser: Processing word', [
                 'word' => $word,
+                'lemma' => $lemma,
+                'pos' => $pos,
                 'position' => $position,
             ]);
         }
 
-        // Step 1: Create word node
-        $wordType = $this->grammarService->getWordType($word, $idGrammarGraph);
+        // Step 1: Get word type from POS
+        $wordType = $this->grammarService->getWordType($word, $pos, $idGrammarGraph);
 
+        // Step 2: Resolve lemma ID
+        $lemmaResolver = app(LemmaResolverService::class);
+        $idLemma = $lemmaResolver->getOrCreateLemma($lemma, $idLanguage, $pos);
+
+        // Step 3: Determine label (lemma for E/V/A, word for F)
+        $label = ($wordType === 'F') ? $word : $lemma;
+
+        // Step 4: Create word node
         $idWordNode = ParseNode::create([
             'idParserGraph' => $idParserGraph,
-            'label' => $word,
+            'label' => $label,
+            'idLemma' => $idLemma,
+            'pos' => $pos,
             'type' => $wordType,
             'threshold' => 1,
             'activation' => 1,
@@ -109,16 +141,18 @@ class ParserService
 
         $wordNode = ParseNode::byId($idWordNode);
 
-        // Step 2: If word is first in any MWE, instantiate prefix nodes
+        // Step 5: If word/lemma is first in any MWE, instantiate prefix nodes
+        // TODO: Update to use lemma for E/V/A types
         $this->mweService->instantiateMWENodes($word, $idParserGraph, $idGrammarGraph, $position);
 
-        // Step 3: Check existing MWE prefix nodes for matches
+        // Step 6: Check existing MWE prefix nodes for matches
+        // TODO: Update to use lemma for E/V/A types
         $this->checkMWEPrefixes($word, $idParserGraph, $position);
 
-        // Step 4: Check against current focus nodes
+        // Step 7: Check against current focus nodes
         $matched = $this->checkFociPredictions($wordNode, $idParserGraph, $idGrammarGraph);
 
-        // Step 5: If no match, add word as new waiting focus
+        // Step 8: If no match, add word as new waiting focus
         if (! $matched) {
             $this->queueService->enqueue($wordNode);
         }
@@ -262,16 +296,20 @@ class ParserService
     }
 
     /**
-     * Tokenize sentence into words
+     * Parse sentence with UD parser (Trankit)
      */
-    private function tokenize(string $sentence): array
+    private function parseWithUD(string $sentence, int $idLanguage): array
     {
-        // Simple whitespace tokenization
-        // In production, use a proper tokenizer
-        $words = preg_split('/\s+/', trim($sentence));
+        // Initialize Trankit service
+        $trankitService = app(TrankitService::class);
+        $trankitUrl = config('parser.trankit.url');
+        $trankitService->init($trankitUrl);
 
-        // Normalize to lowercase
-        return array_map('strtolower', $words);
+        // Get UD parse
+        $udResult = $trankitService->getUDTrankit($sentence, $idLanguage);
+        $tokens = $udResult->udpipe ?? [];
+
+        return $tokens;
     }
 
     /**

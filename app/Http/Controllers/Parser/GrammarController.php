@@ -122,4 +122,114 @@ class GrammarController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * Get filtered grammar tables (HTMX endpoint)
+     */
+    #[Get(path: '/parser/grammar/{id}/tables')]
+    public function tables(int $id)
+    {
+        $grammar = GrammarGraph::getWithStructure($id);
+        $filter = request()->get('filter', '');
+
+        // Filter nodes if filter is provided
+        $filteredNodes = [];
+        $filteredMwes = [];
+
+        if (! empty($filter)) {
+            $filteredNodes = array_values(array_filter($grammar->nodes, function ($node) use ($filter) {
+                return stripos($node->label, $filter) !== false;
+            }));
+
+            $filteredMwes = array_values(array_filter($grammar->mwes, function ($mwe) use ($filter) {
+                return stripos($mwe->phrase, $filter) !== false;
+            }));
+        }
+
+        return view('Parser.grammarTables', [
+            'nodes' => $filteredNodes,
+            'mwes' => $filteredMwes,
+            'filter' => $filter,
+        ]);
+    }
+
+    /**
+     * Get grammar graph visualization (HTMX endpoint)
+     */
+    #[Get(path: '/parser/grammar/{id}/visualization')]
+    public function visualization(int $id)
+    {
+        $grammar = GrammarGraph::getWithStructure($id);
+        $filter = request()->get('filter', '');
+
+        // Prepare D3 data format
+        $nodeColors = config('parser.visualization.nodeColors');
+        $edgeColors = config('parser.visualization.edgeColors');
+
+        // Filter nodes if filter is provided
+        $filteredNodes = $grammar->nodes;
+        $filteredNodeIds = [];
+
+        if (! empty($filter)) {
+            $filteredNodes = array_values(array_filter($grammar->nodes, function ($node) use ($filter) {
+                return stripos($node->label, $filter) !== false;
+            }));
+            $filteredNodeIds = array_map(fn ($node) => $node->idGrammarNode, $filteredNodes);
+        }
+
+        // Filter edges to only include those connected to filtered nodes
+        $filteredEdges = $grammar->edges;
+        if (! empty($filter)) {
+            $filteredEdges = array_values(array_filter($grammar->edges, function ($edge) use ($filteredNodeIds) {
+                return in_array($edge->idSourceNode, $filteredNodeIds) ||
+                       in_array($edge->idTargetNode, $filteredNodeIds);
+            }));
+        }
+
+        $d3Data = [
+            'nodes' => array_map(function ($node) use ($nodeColors) {
+                return [
+                    'id' => $node->idGrammarNode,
+                    'label' => $node->label,
+                    'type' => $node->type,
+                    'threshold' => $node->threshold,
+                    'color' => $nodeColors[$node->type] ?? '#999',
+                    'size' => 15,
+                ];
+            }, $filteredNodes),
+            'links' => array_map(function ($edge) use ($edgeColors) {
+                return [
+                    'source' => $edge->idSourceNode,
+                    'target' => $edge->idTargetNode,
+                    'type' => $edge->linkType,
+                    'weight' => $edge->weight,
+                    'color' => $edgeColors[$edge->linkType] ?? '#999',
+                    'width' => 2,
+                ];
+            }, $filteredEdges),
+        ];
+
+        // Calculate statistics
+        $stats = [
+            'totalNodes' => count($filteredNodes),
+            'totalEdges' => count($filteredEdges),
+            'avgDegree' => count($filteredNodes) > 0 ? (count($filteredEdges) * 2) / count($filteredNodes) : 0,
+            'nodesByType' => [],
+            'unfilteredTotalNodes' => count($grammar->nodes),
+            'unfilteredTotalEdges' => count($grammar->edges),
+        ];
+
+        foreach ($filteredNodes as $node) {
+            $type = $node->type;
+            $stats['nodesByType'][$type] = ($stats['nodesByType'][$type] ?? 0) + 1;
+        }
+
+        return view('Parser.grammarGraph', [
+            'idGrammarGraph' => $id,
+            'd3Data' => json_encode($d3Data),
+            'stats' => $stats,
+            'grammar' => $grammar,
+            'filter' => $filter,
+        ]);
+    }
 }

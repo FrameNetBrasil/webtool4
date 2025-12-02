@@ -40,6 +40,7 @@
                     <tr>
                         <th>Position</th>
                         <th>Label</th>
+                        <th>POS</th>
                         <th>Type</th>
                         <th>Activation</th>
                         <th>Focus</th>
@@ -53,6 +54,13 @@
                             <strong>{{ $node->label }}</strong>
                             @if($node->type === 'MWE')
                                 <span class="ui purple mini label">MWE</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if(isset($node->pos))
+                                <span class="ui mini basic label">{{ $node->pos }}</span>
+                            @else
+                                <span class="ui mini basic label grey">-</span>
                             @endif
                         </td>
                         <td>
