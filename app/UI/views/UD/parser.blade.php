@@ -13,9 +13,9 @@
                     </div>
                 </div>
                 <div class="grapher-controls">
-                    <form>
-                        <div class="ui fields">
-                            <div class="fourteen wide field">
+                    <form class="ui form">
+                        <div class="ui fields w-full">
+                            <div class="field w-1/3">
                                 <label for="sentence">Sentence</label>
                                 <div class="ui medium input">
                                     <input
@@ -28,6 +28,7 @@
                                 </div>
                             </div>
                             <div class="field">
+                                <label></label>
                                 <button
                                     class="ui primary button"
                                     hx-post="/ud/parser"
@@ -40,6 +41,7 @@
                                 </button>
                             </div>
                             <div class="field">
+                                <label></label>
                                 <button
                                     class="ui button"
                                     hx-target="#graph"
@@ -50,6 +52,7 @@
                                 </button>
                             </div>
                             <div class="field">
+                                <label></label>
                                 <button
                                     class="ui button"
                                     onclick="$('#grapherOptionsModal').modal('show');"
