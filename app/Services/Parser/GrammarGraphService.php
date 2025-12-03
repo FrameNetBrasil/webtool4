@@ -93,8 +93,8 @@ class GrammarGraphService
         // Create base type nodes
         $nodeMap = [];
 
-        // Create E, V, A type nodes
-        foreach (['E', 'V', 'A'] as $type) {
+        // Create E, R, A type nodes
+        foreach (['E', 'R', 'A'] as $type) {
             $nodeMap[$type] = GrammarGraph::createNode([
                 'idGrammarGraph' => $idGrammarGraph,
                 'label' => $type,
@@ -154,7 +154,7 @@ class GrammarGraphService
         $grammar = GrammarGraph::getWithStructure($idGrammarGraph);
 
         // Check for base types
-        $types = ['E', 'V', 'A'];
+        $types = ['E', 'R', 'A'];
         $foundTypes = [];
 
         foreach ($grammar->nodes as $node) {

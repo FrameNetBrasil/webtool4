@@ -30,7 +30,7 @@ The parser is implemented as a separate module under the `Parser` namespace, fol
 **File:** `database/parser_schema.sql`
 
 - 7 core tables for grammar graphs, MWEs, and parse instances
-- Sample Portuguese grammar with 4 word types (E, V, A, F)
+- Sample Portuguese grammar with 4 word types (E, R, A, F)
 - 5 Portuguese MWEs including "café da manhã", "café da tarde"
 - 4 test parse graphs demonstrating various scenarios
 - 2 utility views for statistics
@@ -123,7 +123,7 @@ Algorithm Steps:
 - Integration with Trankit service
 - Lemma extraction for each word
 - POS tag extraction (UPOS)
-- Type mapping (NOUN→E, VERB→V, ADJ/ADV→A, ADP/DET/PRON→F)
+- Type mapping (NOUN→E, VERB→R, ADJ/ADV→A, ADP/DET/PRON→F)
 - Fallback handling when UD parsing fails
 - Error logging and graceful degradation
 
@@ -265,7 +265,7 @@ Comprehensive configuration including:
 - Validation rules
 - Garbage collection settings
 - Visualization parameters (colors, sizes, layouts)
-- Word type mappings (UPOS to E/V/A/F)
+- Word type mappings (UPOS to E/R/A/F)
 - Logging flags
 - Performance limits
 
@@ -430,7 +430,7 @@ curl http://localhost:8001/api/parser/visualization/1
     'layout' => 'force', // 'force', 'hierarchical', or 'circular'
     'nodeColors' => [
         'E' => '#4CAF50',   // Green
-        'V' => '#2196F3',   // Blue
+        'R' => '#2196F3',   // Blue
         'A' => '#FF9800',   // Orange
         'F' => '#9E9E9E',   // Gray
         'MWE' => '#9C27B0', // Purple
@@ -475,7 +475,7 @@ Caching is disabled by default but can be enabled:
 **Features:**
 - Lemma extraction for lexicon lookup
 - POS tagging (UPOS tags: NOUN, VERB, ADJ, ADP, etc.)
-- Type mapping: NOUN→E, VERB→V, ADJ/ADV→A, ADP/DET/PRON→F
+- Type mapping: NOUN→E, VERB→R, ADJ/ADV→A, ADP/DET/PRON→F
 - Fallback to word form when lemma unavailable
 - Error handling for service failures
 
@@ -499,7 +499,7 @@ Successfully tested with Portuguese sentences using Trankit service.
 - **File:** `app/UI/views/Parser/grammarGraph.blade.php` (NEW)
 - D3.js force-directed graph with full-width responsive SVG
 - Pan/zoom controls using `svgPanZoom` library (matching frame grapher)
-- Color-coded nodes by type (E/V/A/F/MWE)
+- Color-coded nodes by type (E/R/A/F/MWE)
 - Interactive features: draggable nodes, tooltips, edge labels
 - Statistics display with node distribution by type
 
@@ -569,7 +569,7 @@ Successfully tested with Portuguese sentences using Trankit service.
 ### Phase 2 (In Progress)
 - [x] POS tagging integration for word type determination ✓ (UD Parser)
 - [x] Grammar visualization with filtering ✓
-- [ ] Lexicon integration for E/V/A classification
+- [ ] Lexicon integration for E/R/A classification
 - [ ] Advanced prediction mechanisms
 - [ ] Parse tree comparison and similarity scoring
 - [ ] Batch processing interface

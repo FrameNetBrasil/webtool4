@@ -88,7 +88,7 @@ return [
         // Node colors by type
         'nodeColors' => [
             'E' => '#4CAF50', // Green for Entities
-            'V' => '#2196F3', // Blue for Eventive
+            'R' => '#2196F3', // Blue for Relational
             'A' => '#FF9800', // Orange for Attributes
             'F' => '#9E9E9E', // Gray for Fixed
             'MWE' => '#9C27B0', // Purple for MWEs
@@ -122,8 +122,8 @@ return [
         // Entities
         'E' => ['NOUN', 'PROPN', 'PRON'],
 
-        // Eventive
-        'V' => ['VERB', 'AUX'],
+        // Relational
+        'R' => ['VERB', 'AUX'],
 
         // Attributes
         'A' => ['ADJ', 'ADV', 'NUM'],

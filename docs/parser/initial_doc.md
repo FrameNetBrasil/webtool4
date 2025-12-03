@@ -9,13 +9,13 @@ A predictive graph-based parser that processes sentences incrementally, building
 ### Primitives
 - **4 word types**: 
   - **E** (Entities): nouns, proper nouns
-  - **V** (Eventive): verbs, actions
+  - **R** (Relational): verbs, actions
   - **A** (Attributes): adjectives, adverbs
   - **F** (Fixed): function words treated individually (pronouns, determiners, prepositions)
 
 ### Grammar Base Graph
 A pre-defined graph structure containing:
-- **Nodes**: Individual words {F₁, F₂, ...} and abstract types {E, V, A}, plus MWE nodes
+- **Nodes**: Individual words {F₁, F₂, ...} and abstract types {E, R, A}, plus MWE nodes
 - **Edges**: Valid transitions between nodes (defines grammatical rules)
 - **MWE Hierarchy**: Each multi-word expression generates a complete prefix hierarchy
 
@@ -102,7 +102,7 @@ After processing all words:
 ```php
 - id
 - label (string): word or MWE phrase
-- type (enum): E, V, A, F, MWE
+- type (enum): E, R, A, F, MWE
 - threshold (int): required activation count
 - activation (int): current activation
 - is_focus (bool)
@@ -146,7 +146,7 @@ After processing all words:
 - id
 - phrase (string): "café da manhã"
 - components (json): ["café", "da", "manhã"]
-- semantic_type (enum): E, V, A
+- semantic_type (enum): E, R, A
 - grammar_graph_id (foreign key)
 - created_at, updated_at
 ```
@@ -267,10 +267,10 @@ id, parse_graph_id, source_node_id, target_node_id, created_at, updated_at
 
 ### Simple Sentences
 1. "Café está quente" (Coffee is hot)
-   - café (E) → está (V) → quente (A)
+   - café (E) → está (R) → quente (A)
 
 2. "Tomei café" (I drank coffee)
-   - Tomei (V) → café (E)
+   - Tomei (R) → café (E)
 
 ### MWE Tests
 3. "Café da manhã" (Breakfast)
@@ -309,7 +309,7 @@ id, parse_graph_id, source_node_id, target_node_id, created_at, updated_at
 
 5. **Edge Types**: Currently untyped - should we add types (dependency, modification, etc.) later?
 
-6. **Prediction Granularity**: How specific should focus predictions be? Just type (E/V/A) or also specific words?
+6. **Prediction Granularity**: How specific should focus predictions be? Just type (E/R/A) or also specific words?
 
 ## Implementation Phases
 

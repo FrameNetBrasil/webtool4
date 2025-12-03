@@ -123,7 +123,7 @@ class ParserService
         $lemmaResolver = app(LemmaResolverService::class);
         $idLemma = $lemmaResolver->getOrCreateLemma($lemma, $idLanguage, $pos);
 
-        // Step 3: Determine label (lemma for E/V/A, word for F)
+        // Step 3: Determine label (lemma for E/R/A, word for F)
         $label = ($wordType === 'F') ? $word : $lemma;
 
         // Step 4: Create word node
@@ -142,11 +142,11 @@ class ParserService
         $wordNode = ParseNode::byId($idWordNode);
 
         // Step 5: If word/lemma is first in any MWE, instantiate prefix nodes
-        // TODO: Update to use lemma for E/V/A types
+        // TODO: Update to use lemma for E/R/A types
         $this->mweService->instantiateMWENodes($word, $idParserGraph, $idGrammarGraph, $position);
 
         // Step 6: Check existing MWE prefix nodes for matches
-        // TODO: Update to use lemma for E/V/A types
+        // TODO: Update to use lemma for E/R/A types
         $this->checkMWEPrefixes($word, $idParserGraph, $position);
 
         // Step 7: Check against current focus nodes
