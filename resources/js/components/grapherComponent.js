@@ -184,6 +184,26 @@ export default function grapherComponent(config = {}) {
                             text: text,
                         },
                     });
+                } else if (node.type === 'grammar') {
+                    // Grammar node - similar to word nodes but with color support
+                    w = Math.max(text.length * 8, 80);
+                    rect = new joint.shapes.standard.Ellipse({
+                        id: index,
+                        z: 2,
+                    });
+                    rect.resize(w, 50);
+                    rect.attr({
+                        body: {
+                            fill: node.idColor || '#9E9E9E',
+                            stroke: '#fff',
+                            strokeWidth: 2
+                        },
+                        label: {
+                            fill: '#fff',
+                            text: text,
+                            fontWeight: 'bold'
+                        }
+                    });
                 }
 
                 if (node.type === 'fe') {

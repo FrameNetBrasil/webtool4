@@ -11,12 +11,14 @@
         'annotationcanvas' => ['Canvas', '/annotation/canvas', 'Video annotation for canvas.', 'ui::icon.video'],
         'annotationstaticbbox' => ['Static bbox', '/annotation/staticBBox', 'Image annotation.','ui::icon.image'],
         'annotationstaticevent' => ['Static event', '/annotation/staticEvent', 'Image annotation for eventive frames.','ui::icon.image'],
+        'udparser' => ['UD parser', '/ud/parser', 'UD parsing using Trankit.','ui::icon.image'],
     ];
     $annotationType = [
         'corpus' => ['title' => "Corpus", "pages" => ['annotationfe','annotationfulltext','annotationcxn','annotationset','annotationsetlu','annotationsession']],
         'video' => ['title' => "Video", "pages" => ['annotationdynamic','annotationdeixis','annotationcanvas']],
         //'video' => ['title' => "Video", "pages" => ['annotationdeixis']],
         'image' => ['title' => "Image", "pages" => ['annotationstaticbbox','annotationstaticevent']],
+        'parser' => ['title' => "Parser", "pages" => ['udparser']],
     ];
 
 @endphp

@@ -128,6 +128,7 @@ class BuildGrammarFromDocumentCommand extends Command
         $query = Criteria::table('sentence as s')
             ->join('document_sentence as ds', 's.idSentence', '=', 'ds.idSentence')
             ->where('ds.idDocument', $idDocument)
+            ->where('s.idLanguage', 1)
             ->select('s.idSentence', 's.text', 's.idLanguage', 'ds.idDocumentSentence')
             ->orderBy('ds.idDocumentSentence');
 

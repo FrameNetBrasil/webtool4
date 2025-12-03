@@ -4,7 +4,7 @@
         <x-layout::breadcrumb :sections="[['/','Home'],['/parser','Parser'],['/parser/grammar','Grammars']]"></x-layout::breadcrumb>
 
         <main class="app-main">
-            <div class="page-content">
+            <div class="page-content" id="grapherApp">
                 <div class="page-header">
                     <div class="page-header-content">
                         <div class="page-title">{{ $grammar->name }}</div>
@@ -35,16 +35,15 @@
 
                 <div class="ui divider"></div>
 
-                <div class="grammar-actions">
+                <div class="grapher-controls">
                     <div class="ui form">
-                        <div class="inline fields">
+                        <div class="ui fields">
                             <div class="field">
                                 <label>Filter by word:</label>
                                 <input
                                     type="text"
                                     id="grammarFilter"
                                     placeholder="Enter word to filter nodes..."
-                                    style="width: 300px;"
                                     value="{{ request()->get('filter', '') }}"
                                 />
                             </div>
@@ -52,7 +51,7 @@
                                 <button
                                     class="ui primary button"
                                     hx-get="/parser/grammar/{{ $grammar->idGrammarGraph }}/visualization"
-                                    hx-target="#grammarVisualization"
+                                    hx-target="#graph"
                                     hx-swap="innerHTML"
                                     hx-include="#grammarFilter"
                                     hx-vals='js:{"filter": document.getElementById("grammarFilter").value}'
@@ -64,7 +63,7 @@
                             <div class="field">
                                 <button
                                     class="ui button"
-                                    onclick="document.getElementById('grammarFilter').value = ''; document.getElementById('grammarVisualization').innerHTML = ''; document.getElementById('filteredTables').innerHTML = '';"
+                                    onclick="document.getElementById('grammarFilter').value = ''; document.getElementById('graph').innerHTML = ''; document.getElementById('filteredTables').innerHTML = '';"
                                 >
                                     <i class="times icon"></i>
                                     Clear
@@ -84,6 +83,16 @@
                                 </button>
                             </div>
                             <div class="field">
+                                <button
+                                    class="ui button"
+                                    onclick="$('#grapherOptionsModal').modal('show');"
+                                    type="button"
+                                >
+                                    <i class="list icon"></i>
+                                    Grapher options
+                                </button>
+                            </div>
+                            <div class="field">
                                 <a href="/parser" class="ui button">
                                     <i class="arrow left icon"></i>
                                     Back to Parser
@@ -93,8 +102,8 @@
                     </div>
                 </div>
 
-                <div class="mt-6">
-                    <div id="grammarVisualization"></div>
+                <div class="grapher-canvas">
+                    <div id="graph" class="wt-layout-grapher"></div>
                 </div>
 
                 <div class="mt-6">
@@ -112,6 +121,8 @@
                     </ul>
                 </div>
                 @endif
+
+                @include('Grapher.controls')
             </div>
         </main>
 
@@ -119,14 +130,27 @@
     </div>
 </x-layout::index>
 
-<style>
-    .grammar-actions {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        margin-bottom: 1.5rem;
-    }
+<script>
+    // Execute scripts after HTMX swaps content into #graph
+    document.body.addEventListener("htmx:afterSwap", function(evt) {
+        if (evt.detail.target && evt.detail.target.id === "graph") {
+            // Find and execute any script tags in the swapped content
+            const scripts = evt.detail.target.querySelectorAll("script");
+            scripts.forEach(script => {
+                const newScript = document.createElement("script");
+                if (script.src) {
+                    newScript.src = script.src;
+                } else {
+                    newScript.textContent = script.textContent;
+                }
+                // Replace the old script with a new one to trigger execution
+                script.parentNode.replaceChild(newScript, script);
+            });
+        }
+    });
+</script>
 
+<style>
     .mt-6 {
         margin-top: 1.5rem;
     }

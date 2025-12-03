@@ -162,7 +162,7 @@ class GrammarController extends Controller
         $grammar = GrammarGraph::getWithStructure($id);
         $filter = request()->get('filter', '');
 
-        // Prepare D3 data format
+        // Prepare JointJS graph data format (nodes/links)
         $nodeColors = config('parser.visualization.nodeColors');
         $edgeColors = config('parser.visualization.edgeColors');
 
@@ -171,42 +171,69 @@ class GrammarController extends Controller
         $filteredNodeIds = [];
 
         if (! empty($filter)) {
-            $filteredNodes = array_values(array_filter($grammar->nodes, function ($node) use ($filter) {
+            // First, find nodes matching the filter
+            $matchingNodes = array_filter($grammar->nodes, function ($node) use ($filter) {
                 return stripos($node->label, $filter) !== false;
-            }));
-            $filteredNodeIds = array_map(fn ($node) => $node->idGrammarNode, $filteredNodes);
-        }
+            });
+            $matchingNodeIds = array_map(fn ($node) => $node->idGrammarNode, $matchingNodes);
 
-        // Filter edges to only include those connected to filtered nodes
-        $filteredEdges = $grammar->edges;
-        if (! empty($filter)) {
+            // Find all edges connected to matching nodes (either as source or target)
+            $connectedEdges = array_filter($grammar->edges, function ($edge) use ($matchingNodeIds) {
+                return in_array($edge->idSourceNode, $matchingNodeIds) ||
+                       in_array($edge->idTargetNode, $matchingNodeIds);
+            });
+
+            // Collect all node IDs that are connected via these edges
+            $connectedNodeIds = $matchingNodeIds;
+            foreach ($connectedEdges as $edge) {
+                $connectedNodeIds[] = $edge->idSourceNode;
+                $connectedNodeIds[] = $edge->idTargetNode;
+            }
+            $connectedNodeIds = array_unique($connectedNodeIds);
+
+            // Filter nodes to include matching nodes and their connected neighbors
+            $filteredNodes = array_values(array_filter($grammar->nodes, function ($node) use ($connectedNodeIds) {
+                return in_array($node->idGrammarNode, $connectedNodeIds);
+            }));
+            $filteredNodeIds = $connectedNodeIds;
+
+            // Filter edges to only include those where BOTH source AND target are in the filtered set
             $filteredEdges = array_values(array_filter($grammar->edges, function ($edge) use ($filteredNodeIds) {
-                return in_array($edge->idSourceNode, $filteredNodeIds) ||
+                return in_array($edge->idSourceNode, $filteredNodeIds) &&
                        in_array($edge->idTargetNode, $filteredNodeIds);
             }));
+        } else {
+            $filteredEdges = $grammar->edges;
         }
 
-        $d3Data = [
-            'nodes' => array_map(function ($node) use ($nodeColors) {
-                return [
-                    'id' => $node->idGrammarNode,
-                    'label' => $node->label,
-                    'type' => $node->type,
-                    'threshold' => $node->threshold,
-                    'color' => $nodeColors[$node->type] ?? '#999',
-                    'size' => 15,
-                ];
-            }, $filteredNodes),
-            'links' => array_map(function ($edge) use ($edgeColors) {
-                return [
-                    'source' => $edge->idSourceNode,
-                    'target' => $edge->idTargetNode,
-                    'type' => $edge->linkType,
-                    'weight' => $edge->weight,
-                    'color' => $edgeColors[$edge->linkType] ?? '#999',
-                    'width' => 2,
-                ];
-            }, $filteredEdges),
+        // Build graph structure for JointJS grapherComponent
+        $nodes = [];
+        $links = [];
+
+        // Create nodes array indexed by node ID
+        foreach ($filteredNodes as $node) {
+            $nodes[$node->idGrammarNode] = [
+                'type' => 'grammar',
+                'name' => $node->label,
+                'grammarType' => $node->type,
+                'threshold' => $node->threshold,
+                'idColor' => $nodeColors[$node->type] ?? '#999',
+            ];
+        }
+
+        // Create links array (nested: source -> target -> relation data)
+        foreach ($filteredEdges as $edge) {
+            $links[$edge->idSourceNode][$edge->idTargetNode] = [
+                'type' => 'grammar',
+                'relationEntry' => $edge->linkType,
+                'weight' => $edge->weight,
+                'color' => $edgeColors[$edge->linkType] ?? '#999',
+            ];
+        }
+
+        $graph = [
+            'nodes' => $nodes,
+            'links' => $links,
         ];
 
         // Calculate statistics
@@ -226,7 +253,7 @@ class GrammarController extends Controller
 
         return view('Parser.grammarGraph', [
             'idGrammarGraph' => $id,
-            'd3Data' => json_encode($d3Data),
+            'graph' => $graph,
             'stats' => $stats,
             'grammar' => $grammar,
             'filter' => $filter,
