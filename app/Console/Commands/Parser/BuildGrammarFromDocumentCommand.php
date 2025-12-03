@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 class BuildGrammarFromDocumentCommand extends Command
 {
     protected $signature = 'parser:build-grammar-from-document
-                            {idDocument : Document ID to process}
+                            {idDocument : Document ID or range (e.g., 123 or 100-200)}
                             {--dry-run : Preview without applying changes}
                             {--limit= : Limit number of sentences to process}';
 
@@ -40,16 +40,25 @@ class BuildGrammarFromDocumentCommand extends Command
 
     public function handle(): int
     {
-        $idDocument = $this->argument('idDocument');
+        $idDocumentArg = $this->argument('idDocument');
         $this->isDryRun = $this->option('dry-run');
         $limit = $this->option('limit');
 
-        // Validate document exists
-        if (! $this->validateDocument($idDocument)) {
+        // Parse document ID or range
+        $documentIds = $this->parseDocumentArgument($idDocumentArg);
+
+        if (empty($documentIds)) {
+            $this->error('Invalid document ID or range format');
+
             return Command::FAILURE;
         }
 
-        $this->displayConfiguration($idDocument, $limit);
+        // Validate documents exist
+        if (! $this->validateDocuments($documentIds)) {
+            return Command::FAILURE;
+        }
+
+        $this->displayConfiguration($documentIds, $limit);
 
         // Initialize Trankit service
         $this->trankit = new TrankitService;
@@ -61,11 +70,11 @@ class BuildGrammarFromDocumentCommand extends Command
         // Create base type transition links
         $this->createBaseTypeLinks();
 
-        // Query sentences
-        $sentences = $this->querySentences($idDocument, $limit);
+        // Query sentences from all documents
+        $sentences = $this->querySentences($documentIds, $limit);
 
         if (empty($sentences)) {
-            $this->warn('No sentences found in document.');
+            $this->warn('No sentences found in document(s).');
 
             return Command::SUCCESS;
         }
@@ -92,28 +101,84 @@ class BuildGrammarFromDocumentCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function validateDocument(int $idDocument): bool
+    private function parseDocumentArgument(string $argument): array
     {
-        $document = Criteria::table('document')
-            ->where('idDocument', $idDocument)
-            ->first();
+        // Check if it's a range (e.g., "100-200")
+        if (str_contains($argument, '-')) {
+            $parts = explode('-', $argument);
+            if (count($parts) !== 2) {
+                return [];
+            }
 
-        if (! $document) {
-            $this->error("Document ID {$idDocument} not found");
+            $start = (int) trim($parts[0]);
+            $end = (int) trim($parts[1]);
 
-            return false;
+            if ($start <= 0 || $end <= 0 || $start > $end) {
+                return [];
+            }
+
+            return range($start, $end);
+        }
+
+        // Single document ID
+        $id = (int) $argument;
+        if ($id <= 0) {
+            return [];
+        }
+
+        return [$id];
+    }
+
+    private function validateDocuments(array $documentIds): bool
+    {
+        // Check if documents exist using BETWEEN for efficiency
+        if (count($documentIds) > 1) {
+            $min = min($documentIds);
+            $max = max($documentIds);
+
+            $existingDocuments = Criteria::table('document')
+                ->whereBetween('idDocument', [$min, $max])
+                ->whereIn('idDocument', $documentIds)
+                ->select('idDocument')
+                ->all();
+
+            $existingIds = array_map(fn ($doc) => $doc->idDocument, $existingDocuments);
+            $missingIds = array_diff($documentIds, $existingIds);
+
+            if (! empty($missingIds)) {
+                $this->error('Document IDs not found: '.implode(', ', $missingIds));
+
+                return false;
+            }
+        } else {
+            // Single document
+            $document = Criteria::table('document')
+                ->where('idDocument', $documentIds[0])
+                ->first();
+
+            if (! $document) {
+                $this->error("Document ID {$documentIds[0]} not found");
+
+                return false;
+            }
         }
 
         return true;
     }
 
-    private function displayConfiguration(int $idDocument, ?string $limit): void
+    private function displayConfiguration(array $documentIds, ?string $limit): void
     {
         $this->info('Building Grammar Graph from Document Sentences');
         $this->line(str_repeat('-', 60));
         $this->line('Configuration:');
         $this->line('  - Grammar ID: '.self::GRAMMAR_ID.' (Portuguese Basic)');
-        $this->line('  - Document ID: '.$idDocument);
+
+        if (count($documentIds) === 1) {
+            $this->line('  - Document ID: '.$documentIds[0]);
+        } else {
+            $this->line('  - Document IDs: '.min($documentIds).' - '.max($documentIds).' ('.count($documentIds).' documents)');
+        }
+
         $this->line('  - Limit: '.($limit ?: 'No limit'));
 
         if ($this->isDryRun) {
@@ -123,14 +188,25 @@ class BuildGrammarFromDocumentCommand extends Command
         $this->newLine();
     }
 
-    private function querySentences(int $idDocument, ?string $limit): array
+    private function querySentences(array $documentIds, ?string $limit): array
     {
         $query = Criteria::table('sentence as s')
             ->join('document_sentence as ds', 's.idSentence', '=', 'ds.idSentence')
-            ->where('ds.idDocument', $idDocument)
             ->where('s.idLanguage', 1)
-            ->select('s.idSentence', 's.text', 's.idLanguage', 'ds.idDocumentSentence')
+            ->select('s.idSentence', 's.text', 's.idLanguage', 'ds.idDocumentSentence', 'ds.idDocument')
+            ->orderBy('ds.idDocument')
             ->orderBy('ds.idDocumentSentence');
+
+        // Use whereIn or whereBetween based on number of documents
+        if (count($documentIds) === 1) {
+            $query->where('ds.idDocument', $documentIds[0]);
+        } elseif (count($documentIds) === (max($documentIds) - min($documentIds) + 1)) {
+            // Consecutive range - use BETWEEN for efficiency
+            $query->whereBetween('ds.idDocument', [min($documentIds), max($documentIds)]);
+        } else {
+            // Non-consecutive IDs - use IN
+            $query->whereIn('ds.idDocument', $documentIds);
+        }
 
         if ($limit) {
             $query->limit((int) $limit);
