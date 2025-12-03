@@ -190,7 +190,7 @@ curl -X POST http://localhost:8001/api/parser/parse \
 - [ ] Test force-directed layout
 - [ ] Test node dragging
 - [ ] Test hover tooltips
-- [ ] Test node colors (E=green, V=blue, A=orange, F=gray, MWE=purple)
+- [ ] Test node colors (E=green, R=blue, A=orange, F=gray, MWE=purple)
 - [ ] Test responsive design
 
 ### 7. Export Testing

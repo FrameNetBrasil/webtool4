@@ -21,12 +21,12 @@ CREATE TABLE IF NOT EXISTS parser_grammar_graph (
     INDEX idx_language (language)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Grammar nodes represent word types (E, V, A) and fixed words (F)
+-- Grammar nodes represent word types (E, R, A) and fixed words (F)
 CREATE TABLE IF NOT EXISTS parser_grammar_node (
     idGrammarNode INT AUTO_INCREMENT PRIMARY KEY,
     idGrammarGraph INT NOT NULL,
     label VARCHAR(100) NOT NULL,
-    type ENUM('E', 'V', 'A', 'F', 'MWE') NOT NULL,
+    type ENUM('E', 'R', 'A', 'F', 'MWE') NOT NULL,
     threshold INT DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS parser_mwe (
     idGrammarGraph INT NOT NULL,
     phrase VARCHAR(255) NOT NULL,
     components JSON NOT NULL,
-    semanticType ENUM('E', 'V', 'A', 'F') NOT NULL,
+    semanticType ENUM('E', 'R', 'A', 'F') NOT NULL,
     length INT NOT NULL,
     firstWord VARCHAR(100) GENERATED ALWAYS AS (JSON_UNQUOTE(JSON_EXTRACT(components, '$[0]'))) VIRTUAL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS parser_node (
     idParserNode INT AUTO_INCREMENT PRIMARY KEY,
     idParserGraph INT NOT NULL,
     label VARCHAR(255) NOT NULL,
-    type ENUM('E', 'V', 'A', 'F', 'MWE') NOT NULL,
+    type ENUM('E', 'R', 'A', 'F', 'MWE') NOT NULL,
     threshold INT DEFAULT 1,
     activation INT DEFAULT 1,
     isFocus BOOLEAN DEFAULT FALSE,
@@ -129,12 +129,12 @@ CREATE TABLE IF NOT EXISTS parser_link (
 
 -- Insert base Portuguese grammar graph
 INSERT INTO parser_grammar_graph (idGrammarGraph, name, language, description) VALUES
-(1, 'Portuguese Basic Grammar', 'pt', 'Basic Portuguese grammar with 4 word types (E, V, A, F) and common MWEs');
+(1, 'Portuguese Basic Grammar', 'pt', 'Basic Portuguese grammar with 4 word types (E, R, A, F) and common MWEs');
 
 -- Insert abstract word type nodes
 INSERT INTO parser_grammar_node (idGrammarNode, idGrammarGraph, label, type, threshold) VALUES
 (1, 1, 'E', 'E', 1),  -- Entities (nouns, proper nouns)
-(2, 1, 'V', 'V', 1),  -- Eventive (verbs, actions)
+(2, 1, 'R', 'R', 1),  -- Relational (verbs, actions)
 (3, 1, 'A', 'A', 1),  -- Attributes (adjectives, adverbs)
 (4, 1, 'F_o', 'F', 1),      -- Function word: "o" (the - masc)
 (5, 1, 'F_a', 'F', 1),      -- Function word: "a" (the - fem)
@@ -148,11 +148,11 @@ INSERT INTO parser_grammar_node (idGrammarNode, idGrammarGraph, label, type, thr
 
 -- Insert basic grammar links (simplified predictions)
 INSERT INTO parser_grammar_link (idGrammarGraph, idSourceNode, idTargetNode, linkType, weight) VALUES
--- V can predict E (verb -> object)
+-- R can predict E (verb -> object)
 (1, 2, 1, 'prediction', 0.9),
--- V can predict A (verb -> adverb)
+-- R can predict A (verb -> adverb)
 (1, 2, 3, 'prediction', 0.7),
--- E can predict V (subject -> verb)
+-- E can predict R (subject -> verb)
 (1, 1, 2, 'prediction', 0.8),
 -- E can predict A (noun -> adjective)
 (1, 1, 3, 'prediction', 0.6),
@@ -194,7 +194,7 @@ INSERT INTO parser_graph (idParserGraph, idGrammarGraph, sentence, status) VALUE
 
 INSERT INTO parser_node (idParserGraph, label, type, threshold, activation, isFocus, positionInSentence) VALUES
 (1, 'café', 'E', 1, 1, TRUE, 1),
-(1, 'está', 'V', 1, 1, TRUE, 2),
+(1, 'está', 'R', 1, 1, TRUE, 2),
 (1, 'quente', 'A', 1, 1, TRUE, 3);
 
 INSERT INTO parser_link (idParserGraph, idSourceNode, idTargetNode, linkType) VALUES
@@ -206,7 +206,7 @@ INSERT INTO parser_graph (idParserGraph, idGrammarGraph, sentence, status) VALUE
 (2, 1, 'Tomei café da manhã', 'complete');
 
 INSERT INTO parser_node (idParserGraph, label, type, threshold, activation, isFocus, positionInSentence, idMWE) VALUES
-(2, 'tomei', 'V', 1, 1, TRUE, 1, NULL),
+(2, 'tomei', 'R', 1, 1, TRUE, 1, NULL),
 (2, 'café da manhã', 'MWE', 3, 3, TRUE, 2, 1);
 
 INSERT INTO parser_link (idParserGraph, idSourceNode, idTargetNode, linkType) VALUES

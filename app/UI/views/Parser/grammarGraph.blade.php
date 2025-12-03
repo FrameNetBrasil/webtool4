@@ -61,7 +61,7 @@
             <div class="item">
                 <strong>Node Types:</strong>
                 <span class="ui mini label" style="background-color: {{ config('parser.visualization.nodeColors.E') }}; color: white;">E</span> Entity
-                <span class="ui mini label" style="background-color: {{ config('parser.visualization.nodeColors.V') }}; color: white;">V</span> Eventive
+                <span class="ui mini label" style="background-color: {{ config('parser.visualization.nodeColors.R') }}; color: white;">R</span> Relational
                 <span class="ui mini label" style="background-color: {{ config('parser.visualization.nodeColors.A') }}; color: white;">A</span> Attribute
                 <span class="ui mini label" style="background-color: {{ config('parser.visualization.nodeColors.F') }}; color: white;">F</span> Function
             </div>
