@@ -123,13 +123,13 @@ return [
         'E' => ['NOUN', 'PROPN', 'PRON'],
 
         // Relational
-        'R' => ['VERB', 'AUX'],
+        'R' => ['VERB', 'AUX', 'ADP', 'CONJ', 'CCONJ', 'SCONJ'],
 
         // Attributes
         'A' => ['ADJ', 'ADV', 'NUM'],
 
         // Fixed (function words)
-        'F' => ['ADP', 'DET', 'CONJ', 'CCONJ', 'SCONJ', 'PART', 'INTJ'],
+        'F' => ['DET', 'PART', 'INTJ'],
     ],
 
     // Trankit UD Parser configuration

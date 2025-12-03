@@ -35,7 +35,9 @@
       "mcp__laravel-boost__read-log-entries",
       "mcp__laravel-boost__list-routes",
       "mcp__playwright__browser_close",
-      "mcp__playwright__browser_snapshot"
+      "mcp__playwright__browser_snapshot",
+      "Bash(grep:*)",
+      "Bash(ls:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

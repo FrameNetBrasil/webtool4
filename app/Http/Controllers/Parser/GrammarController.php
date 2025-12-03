@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Parser;
 
 use App\Data\Parser\GrammarGraphData;
+use App\Data\Parser\GrammarNodeData;
 use App\Data\Parser\MWEData;
 use App\Http\Controllers\Controller;
 use App\Repositories\Parser\GrammarGraph;
 use App\Repositories\Parser\MWE;
 use App\Services\Parser\GrammarGraphService;
+use Collective\Annotations\Routing\Attributes\Attributes\Delete;
 use Collective\Annotations\Routing\Attributes\Attributes\Get;
 use Collective\Annotations\Routing\Attributes\Attributes\Middleware;
 use Collective\Annotations\Routing\Attributes\Attributes\Post;
@@ -17,18 +19,22 @@ class GrammarController extends Controller
 {
     public function __construct(
         private GrammarGraphService $grammarService
-    ) {}
+    )
+    {
+    }
 
     /**
-     * List all grammar graphs
+     * Browse nodes in grammar 1
      */
     #[Get(path: '/parser/grammar')]
     public function index()
     {
-        $grammars = GrammarGraph::list();
+        $grammar = GrammarGraph::byId(1);
+        $nodes = GrammarGraph::getNodes(1, 300);
 
-        return view('Parser.grammarList', [
-            'grammars' => $grammars,
+        return view('Parser.Grammar.browse', [
+            'grammar' => $grammar,
+            'data' => $nodes,
         ]);
     }
 
@@ -69,14 +75,14 @@ class GrammarController extends Controller
                 'description' => $data->description,
             ]);
 
-            return redirect('/parser/grammar/'.$idGrammar)
+            return redirect('/parser/grammar/' . $idGrammar)
                 ->with('success', 'Grammar graph created successfully');
         } catch (\Exception $e) {
-            logger()->error('Grammar creation error: '.$e->getMessage());
+            logger()->error('Grammar creation error: ' . $e->getMessage());
 
             return back()
                 ->withInput()
-                ->with('error', 'Failed to create grammar: '.$e->getMessage());
+                ->with('error', 'Failed to create grammar: ' . $e->getMessage());
         }
     }
 
@@ -115,7 +121,7 @@ class GrammarController extends Controller
                 'mwe' => $mwe,
             ]);
         } catch (\Exception $e) {
-            logger()->error('MWE creation error: '.$e->getMessage());
+            logger()->error('MWE creation error: ' . $e->getMessage());
 
             return response()->json([
                 'error' => $e->getMessage(),
@@ -136,7 +142,7 @@ class GrammarController extends Controller
         $filteredNodes = [];
         $filteredMwes = [];
 
-        if (! empty($filter)) {
+        if (!empty($filter)) {
             $filteredNodes = array_values(array_filter($grammar->nodes, function ($node) use ($filter) {
                 return stripos($node->label, $filter) !== false;
             }));
@@ -170,17 +176,17 @@ class GrammarController extends Controller
         $filteredNodes = $grammar->nodes;
         $filteredNodeIds = [];
 
-        if (! empty($filter)) {
+        if (!empty($filter)) {
             // First, find nodes matching the filter
             $matchingNodes = array_filter($grammar->nodes, function ($node) use ($filter) {
                 return stripos($node->label, $filter) !== false;
             });
-            $matchingNodeIds = array_map(fn ($node) => $node->idGrammarNode, $matchingNodes);
+            $matchingNodeIds = array_map(fn($node) => $node->idGrammarNode, $matchingNodes);
 
             // Find all edges connected to matching nodes (either as source or target)
             $connectedEdges = array_filter($grammar->edges, function ($edge) use ($matchingNodeIds) {
                 return in_array($edge->idSourceNode, $matchingNodeIds) ||
-                       in_array($edge->idTargetNode, $matchingNodeIds);
+                    in_array($edge->idTargetNode, $matchingNodeIds);
             });
 
             // Collect all node IDs that are connected via these edges
@@ -200,7 +206,7 @@ class GrammarController extends Controller
             // Filter edges to only include those where BOTH source AND target are in the filtered set
             $filteredEdges = array_values(array_filter($grammar->edges, function ($edge) use ($filteredNodeIds) {
                 return in_array($edge->idSourceNode, $filteredNodeIds) &&
-                       in_array($edge->idTargetNode, $filteredNodeIds);
+                    in_array($edge->idTargetNode, $filteredNodeIds);
             }));
         } else {
             $filteredEdges = $grammar->edges;
@@ -258,5 +264,113 @@ class GrammarController extends Controller
             'grammar' => $grammar,
             'filter' => $filter,
         ]);
+    }
+
+    /**
+     * Show create node form (HTMX partial)
+     */
+    #[Get(path: '/parser/grammar/node/create')]
+    public function createNode()
+    {
+        return view('Parser.Grammar.nodeForm', [
+            'idGrammarGraph' => 1,
+            'node' => null,
+        ]);
+    }
+
+    /**
+     * Store new grammar node
+     */
+    #[Post(path: '/parser/grammar/node')]
+    public function storeNode(GrammarNodeData $data)
+    {
+        try {
+            $nodeId = GrammarGraph::createNode([
+                'idGrammarGraph' => $data->idGrammarGraph,
+                'label' => $data->label,
+                'type' => $data->type,
+                'threshold' => $data->threshold,
+                'idLemma' => $data->idLemma,
+            ]);
+
+            return redirect('/parser/grammar')
+                ->with('success', 'Node created successfully');
+        } catch (\Exception $e) {
+            logger()->error('Node creation error: ' . $e->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', 'Failed to create node: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Show edit node form
+     */
+    #[Get(path: '/parser/grammar/node/{id}/edit')]
+    public function editNode(int $id)
+    {
+        // Verify node belongs to grammar 1
+        if (!GrammarGraph::nodeExistsInGrammar($id, 1)) {
+            abort(404, 'Node not found in grammar 1');
+        }
+
+        $node = GrammarGraph::getNodeById($id);
+        $grammar = GrammarGraph::byId(1);
+
+        return view('Parser.Grammar.nodeEdit', [
+            'grammar' => $grammar,
+            'node' => $node,
+        ]);
+    }
+
+    /**
+     * Update grammar node
+     */
+    #[Post(path: '/parser/grammar/node/{id}/update')]
+    public function updateNode(int $id, GrammarNodeData $data)
+    {
+        try {
+            // Verify node belongs to grammar 1
+            if (!GrammarGraph::nodeExistsInGrammar($id, 1)) {
+                abort(404, 'Node not found in grammar 1');
+            }
+
+            GrammarGraph::updateNode($id, [
+                'label' => $data->label,
+                'type' => $data->type,
+                'threshold' => $data->threshold,
+                'idLemma' => $data->idLemma,
+            ]);
+
+            return redirect('/parser/grammar')
+                ->with('success', 'Node updated successfully');
+        } catch (\Exception $e) {
+            logger()->error('Node update error: ' . $e->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', 'Failed to update node: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete grammar node
+     */
+    #[Delete(path: '/parser/grammar/node/{id}/delete')]
+    public function deleteNode(int $id)
+    {
+        try {
+            // Verify node belongs to grammar 1
+            if (!GrammarGraph::nodeExistsInGrammar($id, 1)) {
+                $this->renderNotify("error", "Node not found in grammar 1");
+            } else {
+                GrammarGraph::deleteNode($id);
+                return $this->clientRedirect("/parser/grammar");
+            }
+
+        } catch (\Exception $e) {
+            return $this->renderNotify("error", $e->getMessage());
+        }
     }
 }

@@ -64,7 +64,7 @@ class BuildGrammarFromDocumentCommand extends Command
         $this->trankit = new TrankitService;
         $this->trankit->init(config('parser.trankit.url'));
 
-        // Ensure base type nodes (E, V, A) exist
+        // Ensure base type nodes (E, R, A) exist
         $this->baseNodes = $this->ensureBaseTypeNodes();
 
         // Create base type transition links
@@ -219,7 +219,7 @@ class BuildGrammarFromDocumentCommand extends Command
     {
         $baseNodes = [];
 
-        foreach (['E', 'V', 'A'] as $type) {
+        foreach (['E', 'R', 'A'] as $type) {
             $node = Criteria::table('parser_grammar_node')
                 ->where('idGrammarGraph', self::GRAMMAR_ID)
                 ->where('label', $type)
@@ -249,23 +249,24 @@ class BuildGrammarFromDocumentCommand extends Command
 
     private function createBaseTypeLinks(): void
     {
-        // Create transition links between base types
-        // E → V, E → A, A → E, A → V, V → E, V → A
+        // Create basic grammar links as specified:
+        // F → E, E → R, R → E, A → R, R → A, R → R
+        // Note: F nodes are created dynamically, so F→E links are created during sentence processing
+
         $transitions = [
-            ['E', 'V'],
-            ['E', 'A'],
-            ['A', 'E'],
-            ['A', 'V'],
-            ['V', 'E'],
-            ['V', 'A'],
+            ['E', 'R', 0.9],  // Entity to Relational (subject -> verb)
+            ['R', 'E', 0.9],  // Relational to Entity (verb -> object)
+            ['A', 'R', 0.7],  // Attribute to Relational (adverb -> verb)
+            ['R', 'A', 0.7],  // Relational to Attribute (verb -> adverb/adjective)
+            ['R', 'R', 0.6],  // Relational to Relational (auxiliary verb -> main verb)
         ];
 
-        foreach ($transitions as [$sourceType, $targetType]) {
+        foreach ($transitions as [$sourceType, $targetType, $weight]) {
             $this->createLinkIfNotExists(
                 $this->baseNodes[$sourceType],
                 $this->baseNodes[$targetType],
                 'prediction',
-                1.0,
+                $weight,
                 true // isBaseLink flag
             );
         }
@@ -311,8 +312,8 @@ class BuildGrammarFromDocumentCommand extends Command
                 $sourceNode = $nodeMap[$token['id']];
                 $targetNode = $nodeMap[$token['parent']];
 
-                // Only create F → E/V/A links
-                if ($sourceNode['type'] == 'F' && in_array($targetNode['type'], ['E', 'V', 'A'])) {
+                // Only create F → E/R/A links (F → E is the basic link)
+                if ($sourceNode['type'] == 'F' && $targetNode['type'] == 'E') {
                     $this->createLinkIfNotExists(
                         $sourceNode['id'],
                         $targetNode['id'],
@@ -440,10 +441,10 @@ class BuildGrammarFromDocumentCommand extends Command
             [
                 ['Total Sentences', $this->stats['total_sentences']],
                 ['Sentences Processed', $this->stats['sentences_processed']],
-                ['Base Nodes Created (E,V,A)', $this->stats['base_nodes_created']],
-                ['Base Links Created (E↔V↔A)', $this->stats['base_links_created']],
+                ['Base Nodes Created (E,R,A)', $this->stats['base_nodes_created']],
+                ['Base Links Created (E→R→E, A→R→A, R→R)', $this->stats['base_links_created']],
                 ['F Nodes Created', $this->stats['f_nodes_created']],
-                ['Links Created (F→E/V/A)', $this->stats['links_created']],
+                ['Links Created (F→E)', $this->stats['links_created']],
                 ['Links Skipped (existing)', $this->stats['links_skipped']],
                 ['Unmapped UPOS', $this->stats['unmapped_upos']],
                 ['Parse Errors', $this->stats['parse_errors']],

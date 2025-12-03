@@ -51,12 +51,15 @@ class GrammarGraph
     /**
      * Get all nodes for a grammar graph
      */
-    public static function getNodes(int $idGrammarGraph): array
+    public static function getNodes(int $idGrammarGraph, int $limit = 0): array
     {
-        return Criteria::table('parser_grammar_node')
+        $query = Criteria::table('parser_grammar_node')
             ->where('idGrammarGraph', '=', $idGrammarGraph)
-            ->orderBy('label')
-            ->all();
+            ->orderBy('label');
+        if ($limit > 0) {
+            $query = $query->limit($limit);
+        }
+        return $query->all();
     }
 
     /**
@@ -149,5 +152,45 @@ class GrammarGraph
         Criteria::table('parser_grammar_node')
             ->where('idGrammarGraph', '=', $idGrammarGraph)
             ->delete();
+    }
+
+    /**
+     * Get grammar node by ID
+     */
+    public static function getNodeById(int $id): ?object
+    {
+        return Criteria::byId('parser_grammar_node', 'idGrammarNode', $id);
+    }
+
+    /**
+     * Update grammar node
+     */
+    public static function updateNode(int $id, array $data): void
+    {
+        Criteria::table('parser_grammar_node')
+            ->where('idGrammarNode', '=', $id)
+            ->update($data);
+    }
+
+    /**
+     * Delete grammar node
+     */
+    public static function deleteNode(int $id): void
+    {
+        // Edges cascade delete automatically via FK constraint
+        Criteria::deleteById('parser_grammar_node', 'idGrammarNode', $id);
+    }
+
+    /**
+     * Check if node belongs to specific grammar
+     */
+    public static function nodeExistsInGrammar(int $nodeId, int $grammarId): bool
+    {
+        $node = Criteria::table('parser_grammar_node')
+            ->where('idGrammarNode', '=', $nodeId)
+            ->where('idGrammarGraph', '=', $grammarId)
+            ->first();
+
+        return $node !== null;
     }
 }

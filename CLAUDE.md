@@ -14,7 +14,7 @@ This project currently uses a local development setup with Vite running directly
 - `yarn dev` - Start Vite development server with hot reload (current setup)
 - `npm run dev` - Alternative to yarn dev
 - `yarn install` - Install Node.js dependencies  
-- `npm run build` - Build production assets
+- `yarn build` - Build production assets
 
 ### PHP & Laravel
 - `php artisan serve` - Start development server
@@ -56,7 +56,10 @@ Uses a Laravel Authentication and Authorization classes. Can integrate with Auth
 
 ### Database Layer
 
-**Database Schema (file `database/webtool42_script.sql`)**:
+All access to database must be done using laravel-boost mcp.
+All Laravel commands access the database using the class Criteria for query builder.
+Database schema checks must use laravel-boost MCP capabilities (e.g., `mcp__laravel-boost__database-schema`).
+
 The schema is designed around linguistic annotation and FrameNet concepts:
 
 **Core Linguistic Entities:**
@@ -116,7 +119,6 @@ Uses PHPUnit for testing. Run tests with `vendor/bin/phpunit`.
   - Primary theme customization: `resources/css/fomantic-ui/site/globals/site.variables`
   - Entity-specific colors: `resources/css/colors/entities.less` (frames, lexical units, frame elements, etc.)
   - Component styling: Organized in `resources/css/components/` and `resources/css/layout/`
-- **Specialized Academic Context**: Design should reflect the specialized nature of linguistic annotation tools while maintaining usability
 
 ### Design Guidelines
 - **Respect Framework Patterns**: Enhance Fomantic-UI components rather than replacing them
@@ -136,14 +138,6 @@ IMMEDIATELY after implementing any front-end change:
 
 This verification ensures changes meet design standards and maintain framework integrity.
 
-### Comprehensive Design Review
-Invoke the `@agent-design-review` subagent for thorough design validation when:
-- Completing significant UI/UX features
-- Before finalizing PRs with visual changes
-- Needing comprehensive accessibility and responsiveness testing
-- Evaluating framework customization approaches
-
-
 ===
 
 <laravel-boost-guidelines>
@@ -151,7 +145,8 @@ Invoke the `@agent-design-review` subagent for thorough design validation when:
 
 # Laravel Boost Guidelines
 
-The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to enhance the user's satisfaction building Laravel applications.
+The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. 
+These guidelines should be followed closely to enhance the user's satisfaction building Laravel applications.
 
 ## Foundational Context
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
@@ -184,7 +179,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - Do not change the application's dependencies without approval.
 
 ## Frontend Bundling
-- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
+- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `yarn build`, `yarn dev`, or `composer run dev`. Ask them.
 
 ## Replies
 - Be concise in your explanations - focus on what's important rather than explaining obvious details.
@@ -281,20 +276,16 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `list-artisan-commands` to check the available options to `php artisan make:model`.
 
 ### APIs & Eloquent Resources
-- For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
+- This application DON'T implement Eloquent models or resources. The database access is done using Criteria class query builder.
 
 ### Controllers & Validation
-- Always create Form Request classes for validation rather than inline validation in controllers. Include both validation rules and custom error messages.
-- Check sibling Form Requests to see if the application uses array or string based validation rules.
+- Requests are handled by Spatie\LaravelData\Data at app/Data folder.
 
 ### Queues
 - Use queued jobs for time-consuming operations with the `ShouldQueue` interface.
 
-### Authentication & Authorization
-- Use Laravel's built-in authentication and authorization features (gates, policies, Sanctum, etc.).
-
 ### URL Generation
-- When generating links to other pages, prefer named routes and the `route()` function.
+- Routes uses PHP annotations in controllers.
 
 ### Configuration
 - Use environment variables only in configuration files - never use the `env()` function directly outside of config files. Always use `config('app.name')`, not `env('APP_NAME')`.
@@ -305,7 +296,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - When creating tests, make use of `php artisan make:test [options] <name>` to create a feature test, and pass `--unit` to create a unit test. Most tests should be feature tests.
 
 ### Vite Error
-- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
+- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `yarn build` or ask the user to run `yarn dev` or `composer run dev`.
 
 
 === laravel/v12 rules ===
@@ -324,10 +315,10 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 ### Database
 - When modifying a column, the migration must include all of the attributes that were previously defined on the column. Otherwise, they will be dropped and lost.
-- Laravel 11 allows limiting eagerly loaded records natively, without external packages: `$query->latest()->limit(10);`.
+- Laravel 12 allows limiting eagerly loaded records natively, without external packages: `$query->latest()->limit(10);`.
 
 ### Models
-- Casts can and likely should be set in a `casts()` method on a model rather than the `$casts` property. Follow existing conventions from other models.
+- This application don't use models.
 
 
 === pest/core rules ===
@@ -390,39 +381,6 @@ it('has emails', function (string $email) {
 
 - You must run `vendor/bin/pint --dirty` before finalizing changes to ensure your code matches the project's expected style.
 - Do not run `vendor/bin/pint --test`, simply run `vendor/bin/pint` to fix any formatting issues.
-
-
-=== tailwindcss/core rules ===
-
-## Tailwind Core
-
-- Use Tailwind CSS classes to style HTML, check and use existing tailwind conventions within the project before writing your own.
-- Offer to extract repeated patterns into components that match the project's conventions (i.e. Blade, JSX, Vue, etc..)
-- Think through class placement, order, priority, and defaults - remove redundant classes, add classes to parent or child carefully to limit repetition, group elements logically
-- You can use the `search-docs` tool to get exact examples from the official documentation when needed.
-
-### Spacing
-- When listing items, use gap utilities for spacing, don't use margins.
-
-    <code-snippet name="Valid Flex Gap Spacing Example" lang="html">
-        <div class="flex gap-8">
-            <div>Superior</div>
-            <div>Michigan</div>
-            <div>Erie</div>
-        </div>
-    </code-snippet>
-
-
-### Dark Mode
-- If existing pages and components support dark mode, new pages and components must support dark mode in a similar way, typically using `dark:`.
-
-
-=== tailwindcss/v3 rules ===
-
-## Tailwind 3
-
-- Always use Tailwind CSS v3 - verify you're using only classes supported by this version.
-
 
 === tests rules ===
 
