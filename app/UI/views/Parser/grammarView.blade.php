@@ -4,7 +4,8 @@
         <x-layout::breadcrumb :sections="[['/','Home'],['/parser','Parser'],['/parser/grammar','Grammars']]"></x-layout::breadcrumb>
 
         <main class="app-main">
-            <div class="page-content" id="grapherApp">
+            <div class="ui container overflow-y-auto">
+            <div class="page-content">
                 <div class="page-header">
                     <div class="page-header-content">
                         <div class="page-title">{{ $grammar->name }}</div>
@@ -50,11 +51,8 @@
                             <div class="field">
                                 <button
                                     class="ui primary button"
-                                    hx-get="/parser/grammar/{{ $grammar->idGrammarGraph }}/visualization"
-                                    hx-target="#graph"
-                                    hx-swap="innerHTML"
-                                    hx-include="#grammarFilter"
-                                    hx-vals='js:{"filter": document.getElementById("grammarFilter").value}'
+                                    onclick="loadGraphVisualization()"
+                                    type="button"
                                 >
                                     <i class="project diagram icon"></i>
                                     Show Graph Visualization
@@ -102,10 +100,6 @@
                     </div>
                 </div>
 
-                <div class="grapher-canvas">
-                    <div id="graph" class="wt-layout-grapher"></div>
-                </div>
-
                 <div class="mt-6">
                     <div id="filteredTables"></div>
                 </div>
@@ -121,8 +115,30 @@
                     </ul>
                 </div>
                 @endif
+            </div>
 
-                @include('Grapher.controls')
+            <!-- Graph Visualization Modal -->
+            <div class="ui large modal" id="graphVisualizationModal">
+                <i class="close icon"></i>
+                <div class="header">
+                    <span id="modalHeaderText">Grammar Graph Visualization</span>
+                    <span class="ui label" id="modalFilterBadge" style="display: none;">
+                        <i class="filter icon"></i>
+                        Filtered by: "<span id="modalFilterLabel"></span>"
+                    </span>
+                </div>
+                <div class="scrolling content">
+                    <div id="graphModalContent"></div>
+                    <div id="grapherAppModal" x-data="grapher({})" style="display: none;">
+                        <div id="graphModal" class="wt-layout-grapher" style="min-height: 400px;"></div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <div class="ui cancel button">Close</div>
+                </div>
+            </div>
+
+            @include('Grapher.controls')
             </div>
         </main>
 
@@ -131,9 +147,35 @@
 </x-layout::index>
 
 <script>
-    // Execute scripts after HTMX swaps content into #graph
+    // Load graph visualization via HTMX and show modal
+    function loadGraphVisualization() {
+        const filterValue = document.getElementById('grammarFilter').value;
+
+        // Update modal filter label if filter is applied
+        const filterBadge = document.getElementById('modalFilterBadge');
+        const filterLabel = document.getElementById('modalFilterLabel');
+
+        if (filterValue && filterBadge && filterLabel) {
+            filterLabel.textContent = filterValue;
+            filterBadge.style.display = 'inline-block';
+        } else if (filterBadge) {
+            filterBadge.style.display = 'none';
+        }
+
+        // Show modal immediately
+        $('#graphVisualizationModal').modal('show');
+
+        // Load graph data via HTMX into modal content area
+        htmx.ajax('GET', '/parser/grammar/{{ $grammar->idGrammarGraph }}/visualization', {
+            target: '#graphModalContent',
+            swap: 'innerHTML',
+            values: { filter: filterValue }
+        });
+    }
+
+    // Execute scripts after HTMX swaps content into modal
     document.body.addEventListener("htmx:afterSwap", function(evt) {
-        if (evt.detail.target && evt.detail.target.id === "graph") {
+        if (evt.detail.target && evt.detail.target.id === "graphModalContent") {
             // Find and execute any script tags in the swapped content
             const scripts = evt.detail.target.querySelectorAll("script");
             scripts.forEach(script => {
@@ -141,11 +183,32 @@
                 if (script.src) {
                     newScript.src = script.src;
                 } else {
-                    newScript.textContent = script.textContent;
+                    // Modify script to target modal's grapherApp instead of main page
+                    let scriptContent = script.textContent;
+                    scriptContent = scriptContent.replace(/getElementById\('grapherApp'\)/g, "getElementById('grapherAppModal')");
+                    scriptContent = scriptContent.replace(/getElementById\('graph'\)/g, "getElementById('graphModal')");
+                    newScript.textContent = scriptContent;
                 }
                 // Replace the old script with a new one to trigger execution
                 script.parentNode.replaceChild(newScript, script);
             });
+
+            // Show the graph container
+            const grapherAppModal = document.getElementById('grapherAppModal');
+            if (grapherAppModal) {
+                grapherAppModal.style.display = 'block';
+            }
+        }
+    });
+
+    // Clean up modal content when closed
+    $('#graphVisualizationModal').modal({
+        onHidden: function() {
+            document.getElementById('graphModalContent').innerHTML = '';
+            const grapherAppModal = document.getElementById('grapherAppModal');
+            if (grapherAppModal) {
+                grapherAppModal.style.display = 'none';
+            }
         }
     });
 </script>
@@ -153,5 +216,32 @@
 <style>
     .mt-6 {
         margin-top: 1.5rem;
+    }
+
+    /* Modal styling for graph visualization */
+    #graphVisualizationModal {
+        width: 90vw !important;
+        max-width: 90vw !important;
+    }
+
+    #graphVisualizationModal .scrolling.content {
+        height: 80vh !important;
+        max-height: 80vh !important;
+    }
+
+    #graphVisualizationModal #graphModal {
+        height: 100%;
+        min-height: 500px;
+        border: 1px solid #ddd;
+        background: #ffffff;
+    }
+
+    #graphVisualizationModal #grapherAppModal {
+        min-height: 500px;
+    }
+
+    /* Ensure JointJS tooltips appear above modal */
+    .joint-tools {
+        z-index: 1001 !important;
     }
 </style>

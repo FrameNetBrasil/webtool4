@@ -49,26 +49,90 @@ class ParserService
                 $grammar = \App\Repositories\Parser\GrammarGraph::byId($input->idGrammarGraph);
                 $idLanguage = config('parser.languageMap')[$grammar->language] ?? 1;
 
-                // Parse with UD instead of simple tokenization
+                // Parse with UD to get tokens with features
                 $tokens = $this->parseWithUD($input->sentence, $idLanguage);
 
-                // Process each token
-                foreach ($tokens as $token) {
-                    $this->processWord(
-                        word: $token['word'],
-                        lemma: $token['lemma'] ?? $token['word'],
-                        pos: $token['pos'] ?? 'X',
-                        idParserGraph: $idParserGraph,
-                        idGrammarGraph: $input->idGrammarGraph,
-                        idLanguage: $idLanguage,
-                        position: $token['id']
+                // === STAGE 1: TRANSCRIPTION ===
+                if (config('parser.stages.enableTranscription', true)) {
+                    if (config('parser.logging.logStages', false)) {
+                        logger()->info('Parser: Starting Transcription Stage');
+                    }
+
+                    // Use TranscriptionService for feature-aware lexical assembly
+                    $transcription = app(TranscriptionService::class);
+                    $nodes = $transcription->transcribe(
+                        $tokens,
+                        $idParserGraph,
+                        $input->idGrammarGraph,
+                        $idLanguage
                     );
 
-                    // Check timeout
-                    if ((microtime(true) - $startTime) > config('parser.performance.maxParseTime', 30)) {
-                        throw new \Exception('Parse timeout exceeded');
+                    // Transcribed nodes are in focus queue implicitly via existing logic
+                    // Get them and add to queue for prediction matching
+                    $transcribedNodes = ParseNode::listByStage($idParserGraph, 'transcription');
+                    foreach ($transcribedNodes as $node) {
+                        if ($node->isFocus && $node->type !== 'MWE') {
+                            // Check against existing focus predictions
+                            $matched = $this->checkFociPredictions($node, $idParserGraph, $input->idGrammarGraph);
+
+                            // If no match, add to queue
+                            if (! $matched) {
+                                $this->queueService->enqueue($node);
+                            }
+                        }
+                    }
+
+                    if (config('parser.logging.logStages', false)) {
+                        logger()->info('Parser: Transcription Stage Complete', [
+                            'nodes' => count($nodes),
+                        ]);
+                    }
+                } else {
+                    // Fallback: Use existing sequential processing (for comparison/debugging)
+                    foreach ($tokens as $token) {
+                        $this->processWord(
+                            word: $token['word'],
+                            lemma: $token['lemma'] ?? $token['word'],
+                            pos: $token['pos'] ?? 'X',
+                            idParserGraph: $idParserGraph,
+                            idGrammarGraph: $input->idGrammarGraph,
+                            idLanguage: $idLanguage,
+                            position: $token['id']
+                        );
+
+                        // Check timeout
+                        if ((microtime(true) - $startTime) > config('parser.performance.maxParseTime', 30)) {
+                            throw new \Exception('Parse timeout exceeded');
+                        }
                     }
                 }
+
+                // === STAGE 2: TRANSLATION ===
+                if (config('parser.stages.enableTranslation', true)) {
+                    if (config('parser.logging.logStages', false)) {
+                        logger()->info('Parser: Starting Translation Stage');
+                    }
+
+                    // Use TranslationService for feature-driven phrasal construction
+                    $translation = app(TranslationService::class);
+                    $phraseLinks = $translation->translate(
+                        $idParserGraph,
+                        $input->idGrammarGraph,
+                        $grammar->language
+                    );
+
+                    if (config('parser.logging.logStages', false)) {
+                        logger()->info('Parser: Translation Stage Complete', [
+                            'links' => count($phraseLinks),
+                        ]);
+                    }
+                }
+
+                // === STAGE 3: FOLDING === (Phase 3 - not implemented yet)
+                // if (config('parser.stages.enableFolding', false)) {
+                //     $folding = app(FoldingService::class);
+                //     $sentenceLinks = $folding->fold($idParserGraph, $input->idGrammarGraph, $grammar->language);
+                // }
 
                 // Garbage collection
                 if (config('parser.garbageCollection.enabled', true)) {

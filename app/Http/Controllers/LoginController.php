@@ -129,7 +129,8 @@ class LoginController extends Controller
     {
         $token = md5(uniqid(rand(), true));
         session(['mail_token' => $token]);
-        Mail::to("ely.matos@gmail.com")->send(new WebToolMail($token));
+        debug($token);
+        //Mail::to("ely.matos@gmail.com")->send(new WebToolMail($token));
         return view("App.impersonating", []);
     }
 
