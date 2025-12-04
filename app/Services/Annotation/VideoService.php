@@ -324,6 +324,11 @@ class VideoService
             $query->where('ad.idDynamicObject', $data->idObject);
         }
 
+        if ($data->useFrameNumber > 0) {
+            $query->where('ad.startFrame', "<=" ,$data->frameNumber);
+            $query->where('ad.endFrame', ">=" ,$data->frameNumber);
+        }
+
         $searchResults = $query
             ->select(
                 'ad.idDynamicObject as idObject',
