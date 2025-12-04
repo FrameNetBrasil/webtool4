@@ -29,19 +29,24 @@
         ])
     </div>
     @if($annotationType != 'canvas')
-    <div class="ui tab h-full w-full sentences" data-tab="sentences">
+    <div
+        class="ui tab h-full w-full sentences"
+        data-tab="sentences"
+        hx-trigger="load"
+        hx-get="/annotation/dynamicMode/sentences/{{$idDocument}}"
+    >
 
     </div>
     @endif
 </div>
 <script type="text/javascript">
-    $(function() {
-        $(".tabs .item").tab({
-            onLoad: (tabPath, parameterArray, historyEvent) => {
-                if(tabPath === 'sentences') {
-                    htmx.ajax("GET", "/annotation/dynamicMode/sentences/{{$idDocument}}", ".sentences");
-                }
-            }
-        });
-    });
+    {{--$(function() {--}}
+    {{--    $(".tabs .item").tab({--}}
+    {{--        onLoad: (tabPath, parameterArray, historyEvent) => {--}}
+    {{--            if(tabPath === 'sentences') {--}}
+    {{--                htmx.ajax("GET", "/annotation/dynamicMode/sentences/{{$idDocument}}", ".sentences");--}}
+    {{--            }--}}
+    {{--        }--}}
+    {{--    });--}}
+    {{--});--}}
 </script>
