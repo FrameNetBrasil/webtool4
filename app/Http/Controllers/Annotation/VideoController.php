@@ -57,7 +57,6 @@ class VideoController extends Controller
     #[Post(path: '/annotation/video/object/search')]
     public function objectSearch(ObjectSearchData $data)
     {
-        debug($data);
         $searchResults = VideoService::objectSearch($data);
 
         return view('Annotation.Video.Panes.search', [
