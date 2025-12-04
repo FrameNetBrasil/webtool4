@@ -4,7 +4,7 @@
         <x-layout::breadcrumb :sections="[['/','Home'],['/parser','Parser']]"></x-layout::breadcrumb>
 
         <main class="app-main">
-            <div class="page-content" id="parserApp">
+            <div class="page-content" id="grapherApp">
                 <div class="page-header">
                     <div class="page-header-content">
                         <div class="page-title">Graph-Based Predictive Parser</div>
@@ -12,10 +12,10 @@
                     </div>
                 </div>
 
-                <div class="parser-controls">
+                <div class="grapher-controls">
                     <form class="ui form" id="parserForm">
-                        <div class="fields">
-                            <div class="fourteen wide field">
+                        <div class="ui fields">
+                            <div class="field" style="flex: 1;">
                                 <label for="sentence">Sentence</label>
                                 <input
                                     type="text"
@@ -27,8 +27,8 @@
                             </div>
                         </div>
 
-                        <div class="fields">
-                            <div class="eight wide field">
+                        <div class="ui fields">
+                            <div class="field">
                                 <label for="idGrammarGraph">Grammar</label>
                                 <select id="idGrammarGraph" name="idGrammarGraph" class="ui dropdown" required>
                                     @foreach($grammars as $grammar)
@@ -39,72 +39,68 @@
                                 </select>
                             </div>
 
-                            <div class="six wide field">
+                            <div class="field">
                                 <label for="queueStrategy">Queue Strategy</label>
                                 <select id="queueStrategy" name="queueStrategy" class="ui dropdown">
                                     <option value="fifo">FIFO (First In, First Out)</option>
                                     <option value="lifo">LIFO (Last In, First Out)</option>
                                 </select>
                             </div>
+
+                            <div class="field">
+                                <label>&nbsp;</label>
+                                <button
+                                    class="ui primary button"
+                                    type="button"
+                                    hx-post="/parser/parse"
+                                    hx-target="#graph"
+                                    hx-swap="innerHTML"
+                                    hx-indicator="#parseLoader"
+                                >
+                                    <i class="play icon"></i>
+                                    Parse Sentence
+                                </button>
+                            </div>
+
+                            <div class="field">
+                                <label>&nbsp;</label>
+                                <button
+                                    class="ui button"
+                                    type="button"
+                                    onclick="document.getElementById('sentence').value = ''; document.getElementById('graph').innerHTML = '';"
+                                >
+                                    <i class="times icon"></i>
+                                    Clear
+                                </button>
+                            </div>
+
+                            <div class="field">
+                                <label>&nbsp;</label>
+                                <button
+                                    class="ui button"
+                                    onclick="$('#grapherOptionsModal').modal('show');"
+                                    type="button"
+                                >
+                                    <i class="list icon"></i>
+                                    Grapher options
+                                </button>
+                            </div>
+
+                            <div class="field">
+                                <label>&nbsp;</label>
+                                <div id="parseLoader" class="ui active inline loader htmx-indicator"></div>
+                            </div>
                         </div>
-
-                        <x-button
-                            id="btnParse"
-                            label="Parse Sentence"
-                            color="primary"
-                            hx-post="/parser/parse"
-                            hx-target="#parseResults"
-                            hx-indicator="#parseLoader"
-                        ></x-button>
-
-                        <div id="parseLoader" class="ui active inline loader htmx-indicator"></div>
                     </form>
                 </div>
 
-                <div class="mt-6">
-                    <div id="parseResults" class="parser-results"></div>
+                <div class="grapher-canvas">
+                    <div id="graph" class="wt-layout-grapher"></div>
                 </div>
 
-                @if(count($recentParses) > 0)
-                <div class="mt-8">
-                    <div class="ui divider"></div>
-                    <h3 class="ui header">Recent Parses</h3>
-                    <table class="ui celled table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Sentence</th>
-                                <th>Grammar</th>
-                                <th>Status</th>
-                                <th>Nodes</th>
-                                <th>Edges</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($recentParses as $parse)
-                            <tr>
-                                <td>{{ $parse->idParserGraph }}</td>
-                                <td>{{ $parse->sentence }}</td>
-                                <td>{{ $parse->grammarName }}</td>
-                                <td>
-                                    <span class="ui label {{ $parse->status === 'complete' ? 'green' : ($parse->status === 'failed' ? 'red' : 'yellow') }}">
-                                        {{ ucfirst($parse->status) }}
-                                    </span>
-                                </td>
-                                <td>{{ $parse->nodeCount }}</td>
-                                <td>{{ $parse->linkCount }}</td>
-                                <td>
-                                    <a href="/parser/result/{{ $parse->idParserGraph }}" class="ui mini button">
-                                        View
-                                    </a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                @endif
+                @include('Grapher.controls')
+                @include('Grapher.report')
+                @include('Grapher.contextMenu')
             </div>
         </main>
 
@@ -118,17 +114,39 @@
         $('.ui.dropdown').dropdown();
     });
 
-    // HTMX event handlers
-    document.body.addEventListener('htmx:afterSwap', function(evt) {
-        if (evt.detail.target.id === 'parseResults') {
-            // Scroll to results
-            evt.detail.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Execute scripts after HTMX swaps content into #graph
+    document.body.addEventListener('htmx:afterSwap', function (evt) {
+        if (evt.detail.target && evt.detail.target.id === 'graph') {
+            // Find and execute any script tags in the swapped content
+            const scripts = evt.detail.target.querySelectorAll('script');
+            scripts.forEach(script => {
+                const newScript = document.createElement('script');
+                if (script.src) {
+                    newScript.src = script.src;
+                } else {
+                    newScript.textContent = script.textContent;
+                }
+                // Replace the old script with a new one to trigger execution
+                script.parentNode.replaceChild(newScript, script);
+            });
         }
     });
 
+    // HTMX error handlers
     document.body.addEventListener('htmx:responseError', function(evt) {
-        if (evt.detail.target.id === 'parseResults') {
+        if (evt.detail.target.id === 'graph') {
             evt.detail.target.innerHTML = '<div class="ui negative message"><p>Parse error. Please try again.</p></div>';
+        }
+    });
+
+    // Wire context menu actions to grapher component
+    document.addEventListener('grapher-context-action', function (evt) {
+        const grapherApp = document.getElementById('grapherApp');
+        if (grapherApp && Alpine && Alpine.$data) {
+            const grapher = Alpine.$data(grapherApp);
+            if (grapher && grapher.handleContextMenuAction) {
+                grapher.handleContextMenuAction(evt.detail.action, evt.detail.nodeId);
+            }
         }
     });
 </script>

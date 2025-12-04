@@ -225,4 +225,109 @@ class ParseEdge
             ->where('pe.idParserGraph', '=', $idParserGraph)
             ->all();
     }
+
+    /**
+     * Create edge with stage and compatibility info
+     */
+    public static function createWithStage(array $data): int
+    {
+        // Set defaults for new columns
+        if (! isset($data['stage'])) {
+            $data['stage'] = 'translation';
+        }
+
+        if (! isset($data['compatibilityScore'])) {
+            $data['compatibilityScore'] = null;
+        }
+
+        if (! isset($data['featureMatch'])) {
+            $data['featureMatch'] = null;
+        } elseif (is_array($data['featureMatch'])) {
+            $data['featureMatch'] = json_encode($data['featureMatch']);
+        }
+
+        return self::create($data);
+    }
+
+    /**
+     * List edges by stage
+     */
+    public static function listByStage(int $idParserGraph, string $stage): array
+    {
+        return Criteria::table('parser_link')
+            ->where('idParserGraph', '=', $idParserGraph)
+            ->where('stage', '=', $stage)
+            ->all();
+    }
+
+    /**
+     * List edges by stage with node details
+     */
+    public static function listByStageWithNodes(int $idParserGraph, string $stage): array
+    {
+        return Criteria::table('parser_link as pe')
+            ->join('parser_node as pn_source', 'pe.idSourceNode', '=', 'pn_source.idParserNode')
+            ->join('parser_node as pn_target', 'pe.idTargetNode', '=', 'pn_target.idParserNode')
+            ->select(
+                'pe.*',
+                'pn_source.label as sourceLabel',
+                'pn_source.type as sourceType',
+                'pn_target.label as targetLabel',
+                'pn_target.type as targetType'
+            )
+            ->where('pe.idParserGraph', '=', $idParserGraph)
+            ->where('pe.stage', '=', $stage)
+            ->all();
+    }
+
+    /**
+     * Count edges by source node and stage
+     */
+    public static function countBySourceAndStage(int $idSourceNode, string $stage): int
+    {
+        return Criteria::table('parser_link')
+            ->where('idSourceNode', '=', $idSourceNode)
+            ->where('stage', '=', $stage)
+            ->count();
+    }
+
+    /**
+     * Count edges by target node and stage
+     */
+    public static function countByTargetAndStage(int $idTargetNode, string $stage): int
+    {
+        return Criteria::table('parser_link')
+            ->where('idTargetNode', '=', $idTargetNode)
+            ->where('stage', '=', $stage)
+            ->count();
+    }
+
+    /**
+     * Count all edges to target (any stage)
+     */
+    public static function countByTarget(int $idTargetNode): int
+    {
+        return Criteria::table('parser_link')
+            ->where('idTargetNode', '=', $idTargetNode)
+            ->count();
+    }
+
+    /**
+     * Set stage for edge
+     */
+    public static function setStage(int $idParserLink, string $stage): void
+    {
+        self::update($idParserLink, ['stage' => $stage]);
+    }
+
+    /**
+     * Count edges by stage
+     */
+    public static function countByStage(int $idParserGraph, string $stage): int
+    {
+        return Criteria::table('parser_link')
+            ->where('idParserGraph', '=', $idParserGraph)
+            ->where('stage', '=', $stage)
+            ->count();
+    }
 }

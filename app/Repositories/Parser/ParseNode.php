@@ -216,4 +216,82 @@ class ParseNode
 
         return $count > 0;
     }
+
+    /**
+     * Get nodes by stage
+     */
+    public static function listByStage(int $idParserGraph, string $stage): array
+    {
+        return Criteria::table('parser_node')
+            ->where('idParserGraph', '=', $idParserGraph)
+            ->where('stage', '=', $stage)
+            ->orderBy('positionInSentence')
+            ->all();
+    }
+
+    /**
+     * List nodes with filters (flexible query)
+     */
+    public static function listBy(array $filters): array
+    {
+        $query = Criteria::table('parser_node');
+
+        foreach ($filters as $field => $value) {
+            $query->where($field, '=', $value);
+        }
+
+        return $query->orderBy('positionInSentence')->all();
+    }
+
+    /**
+     * Get lexical features from node
+     *
+     * Decodes features JSON column
+     */
+    public static function getFeatures(int $idParserNode): array
+    {
+        $node = self::byId($idParserNode);
+
+        if (empty($node->features)) {
+            return ['lexical' => [], 'derived' => []];
+        }
+
+        $features = json_decode($node->features, true);
+
+        return $features ?? ['lexical' => [], 'derived' => []];
+    }
+
+    /**
+     * Update derived features
+     *
+     * Merges new derived features with existing features
+     */
+    public static function updateDerivedFeatures(int $idParserNode, array $derivedFeatures): void
+    {
+        $features = self::getFeatures($idParserNode);
+        $features['derived'] = array_merge($features['derived'], $derivedFeatures);
+
+        self::update($idParserNode, [
+            'features' => json_encode($features),
+        ]);
+    }
+
+    /**
+     * Set stage for node
+     */
+    public static function setStage(int $idParserNode, string $stage): void
+    {
+        self::update($idParserNode, ['stage' => $stage]);
+    }
+
+    /**
+     * Count nodes by stage
+     */
+    public static function countByStage(int $idParserGraph, string $stage): int
+    {
+        return Criteria::table('parser_node')
+            ->where('idParserGraph', '=', $idParserGraph)
+            ->where('stage', '=', $stage)
+            ->count();
+    }
 }

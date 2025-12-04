@@ -20,6 +20,65 @@ return [
     // Focus queue strategy: 'fifo' or 'lifo'
     'queueStrategy' => env('PARSER_QUEUE_STRATEGY', 'fifo'),
 
+    // Stage control (three-stage parsing framework)
+    'stages' => [
+        'enableTranscription' => env('PARSER_ENABLE_TRANSCRIPTION', true),  // Phase 1
+        'enableTranslation' => env('PARSER_ENABLE_TRANSLATION', true),      // Phase 2 - NOW ENABLED
+        'enableFolding' => env('PARSER_ENABLE_FOLDING', false),             // Phase 3
+    ],
+
+    // Feature system (morphological features from UD)
+    'features' => [
+        'enableCompatibilityCheck' => env('PARSER_ENABLE_FEATURES', true),
+        'minCompatibilityScore' => env('PARSER_MIN_COMPAT_SCORE', 0.5),
+        'extractedFeatures' => [
+            'Gender', 'Number', 'Case', 'Person',
+            'Tense', 'Aspect', 'Mood', 'VerbForm',
+            'Definite', 'PronType', 'Polarity',
+        ],
+    ],
+
+    // Language profiles (feature emphasis per language)
+    'languageProfiles' => [
+        'pt' => [
+            'name' => 'Portuguese',
+            'agreementFeatures' => [
+                'Gender' => 1.0,   // Strong gender agreement
+                'Number' => 1.0,   // Strong number agreement
+                'Person' => 0.8,   // Person agreement in verbs
+            ],
+            'caseFeatures' => [
+                'Case' => 0.5,     // Weak case (mostly pronouns)
+            ],
+            'positionWeight' => 0.3,  // Moderate word order constraints
+            'emphasis' => 'agreement',
+        ],
+        'en' => [
+            'name' => 'English',
+            'agreementFeatures' => [
+                'Number' => 0.6,   // Limited number agreement
+                'Person' => 0.5,
+            ],
+            'caseFeatures' => [
+                'Case' => 0.8,     // Moderate case (I/me, he/him)
+            ],
+            'positionWeight' => 1.5,  // Strong word order constraints
+            'emphasis' => 'position',
+        ],
+    ],
+
+    // Translation stage parameters (Phase 2)
+    'translation' => [
+        'maxPhraseDistance' => 3,      // Local dependencies only
+        'requireAgreement' => true,
+    ],
+
+    // Folding stage parameters (Phase 3)
+    'folding' => [
+        'allowNonProjective' => true,  // Allow crossing edges
+        'maxLongDistance' => 10,       // Max distance for long-range dependencies
+    ],
+
     // Activation parameters
     'activation' => [
         // Minimum threshold for single words
@@ -123,7 +182,7 @@ return [
         'E' => ['NOUN', 'PROPN', 'PRON'],
 
         // Relational
-        'R' => ['VERB', 'AUX', 'ADP', 'CONJ', 'CCONJ', 'SCONJ'],
+        'R' => ['VERB', 'AUX', 'ADP', 'CONJ', 'CCONJ', 'SCONJ', 'PUNCT'],
 
         // Attributes
         'A' => ['ADJ', 'ADV', 'NUM'],
@@ -154,6 +213,12 @@ return [
 
         // Log focus queue changes
         'logQueue' => env('PARSER_LOG_QUEUE', false),
+
+        // Log morphological features
+        'logFeatures' => env('PARSER_LOG_FEATURES', false),
+
+        // Log stage transitions
+        'logStages' => env('PARSER_LOG_STAGES', false),
     ],
 
     // Performance parameters
