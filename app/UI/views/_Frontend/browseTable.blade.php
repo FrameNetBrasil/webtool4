@@ -24,15 +24,17 @@
 
                 <x-slot:fields>
                     {{-- Input search fields --}}
-                    <div class="field">
-                        <div class="ui left icon input w-full">
-                            <i class="search icon"></i>
-                            <input
-                                type="search"
-                                name="fieldName"
-                                placeholder="Search Entity"
-                                autocomplete="off"
-                            >
+                    <div class="fields">
+                        <div class="field">
+                            <div class="ui left icon input w-full">
+                                <i class="search icon"></i>
+                                <input
+                                    type="search"
+                                    name="fieldName"
+                                    placeholder="Search Entity"
+                                    autocomplete="off"
+                                >
+                            </div>
                         </div>
                     </div>
                 </x-slot:fields>
