@@ -49,6 +49,34 @@ function timelineComponent(config) {
 
             document.addEventListener("video-update-state", (e) => {
                 this.videoFrame = e.detail.frame.current;
+
+                // Auto-scroll timeline to keep current frame visible during playback
+                if (e.detail.isPlaying) {
+                    const timelineContent = document.getElementById("timeline-content");
+                    if (timelineContent) {
+                        const framePosition = this.videoFrame * config.frameToPixel;
+                        const scrollLeft = timelineContent.scrollLeft;
+                        const viewportWidth = timelineContent.clientWidth;
+                        const scrollRight = scrollLeft + viewportWidth;
+
+                        // Check if current frame is outside visible viewport
+                        const margin = 100; // Keep 100px margin from edges
+                        if (framePosition < scrollLeft + margin || framePosition > scrollRight - margin) {
+                            // Smoothly scroll to center the current frame
+                            const centerOffset = viewportWidth / 2;
+                            let scrollPosition = framePosition - centerOffset;
+                            scrollPosition = Math.max(0, scrollPosition);
+
+                            const maxScroll = timelineContent.scrollWidth - timelineContent.clientWidth;
+                            scrollPosition = Math.min(scrollPosition, maxScroll);
+
+                            timelineContent.scrollTo({
+                                left: scrollPosition,
+                                behavior: "smooth"
+                            });
+                        }
+                    }
+                }
             });
         },
 

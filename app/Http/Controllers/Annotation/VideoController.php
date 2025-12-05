@@ -8,6 +8,7 @@ use App\Data\Annotation\Video\CreateObjectData;
 use App\Data\Annotation\Video\GetBBoxData;
 use App\Data\Annotation\Video\ObjectAnnotationData;
 use App\Data\Annotation\Video\ObjectFrameData;
+use App\Data\Annotation\Video\ObjectLayerLabelData;
 use App\Data\Annotation\Video\ObjectSearchData;
 use App\Data\Annotation\Video\UpdateBBoxData;
 use App\Database\Criteria;
@@ -64,6 +65,30 @@ class VideoController extends Controller
             'idDocument' => $data->idDocument,
             'annotationType' => $data->annotationType,
         ])->fragment('search');
+    }
+
+    #[Get(path: '/annotation/video/labels/{idLayerType}')]
+    public function getLabels(int $idLayerType)
+    {
+        $object = (object)[
+            "idLayerType" => $idLayerType,
+        ];
+        return view('Annotation.Video.Partials.comboboxLabel', [
+            'object' => $object,
+        ]);
+    }
+
+    #[Post(path: '/annotation/video/updateLayerLabel}')]
+    public function updateLayerLabel(ObjectLayerLabelData $data)
+    {
+        try {
+            VideoService::updateLayerLabel($data);
+
+            return $this->redirect("/annotation/{$data->annotationType}/{$data->idDocument}/{$data->idObject}");
+        } catch (\Exception $e) {
+            return $this->renderNotify('error', $e->getMessage());
+        }
+
     }
 
     #[Post(path: '/annotation/video/createNewObjectAtLayer')]

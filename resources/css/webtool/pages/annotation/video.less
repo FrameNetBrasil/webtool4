@@ -199,6 +199,40 @@
                             width: 0;
                             position: relative;
 
+                            // Video Frame Cursor
+                            .video-frame-cursor {
+                                position: absolute;
+                                top: 0;
+                                bottom: 0;
+                                left: 0;
+                                width: 0;
+                                z-index: 10; // Above timeline objects (z-index: 1)
+                                pointer-events: none; // Don't block clicks on objects
+
+                                .cursor-marker {
+                                    position: absolute;
+                                    top: -1px;
+                                    left: -6px; // Center triangle (12px wide)
+                                    width: 0;
+                                    height: 0;
+                                    border-left: 6px solid transparent;
+                                    border-right: 6px solid transparent;
+                                    border-top: 8px solid @orange-6; // Material Design Orange (#ff9800)
+                                    z-index: 11;
+                                }
+
+                                .cursor-line {
+                                    position: absolute;
+                                    top: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    width: 2px;
+                                    background-color: @orange-6;
+                                    box-shadow: 0 0 4px fade(@orange-6, 50%); // Subtle glow
+                                    z-index: 10;
+                                }
+                            }
+
                             .layer-row {
                                 position: relative;
                                 border-bottom: 1px solid #eee;

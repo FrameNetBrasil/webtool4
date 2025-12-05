@@ -8,14 +8,6 @@
                 <div>
                     <button
                         class="ui tiny icon button"
-                        @click=""
-                    >
-                        <i class="layer group small icon"></i>
-                    </button>
-                </div>
-                <div>
-                    <button
-                        class="ui tiny icon button"
                         @click="$dispatch('video-seek-frame', {frameNumber: {{$object->startFrame}} })"
                     >
                         Go to StartFrame: {{$object->startFrame}}
@@ -71,6 +63,13 @@
                 data-tab="modify-range"
                 :class="isPlaying && 'disabled'"
             >Modify range</a>
+            @if($annotationType == "deixis")
+            <a
+                class="item"
+                data-tab="modify-layer"
+                :class="isPlaying && 'disabled'"
+            >Modify layer/label</a>
+            @endif
             <a
                 class="item"
                 data-tab="comment"
@@ -99,6 +98,14 @@
             >
                 @include("Annotation.Video.Forms.formModifyRange")
             </div>
+            @if($annotationType == "deixis")
+            <div
+                class="ui tab h-full w-full"
+                data-tab="modify-layer"
+            >
+                @include("Annotation.Video.Forms.formModifyLayer")
+            </div>
+            @endif
             <div
                 class="ui tab h-full w-full"
                 data-tab="comment"
