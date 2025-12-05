@@ -216,6 +216,7 @@ return [
     ],
     'fe' => [
         'icon' => [
+            'cty_target' => 'black circle',
             'cty_core' => 'black circle',
             'cty_core-unexpressed' => 'black dot circle',
             'cty_peripheral' => 'black stop circle outline',
@@ -225,6 +226,7 @@ return [
             'cty_property' => 'black dot circle outline',
         ],
         'coreness' => [
+            'cty_target' => 'Target',
             'cty_core' => 'Core',
             'cty_core-unexpressed' => 'Core-Unexpressed',
             'cty_peripheral' => 'Peripheral',

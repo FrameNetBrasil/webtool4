@@ -137,6 +137,7 @@ class CorpusService
         $fes = Criteria::table("view_frameelement")
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->where("idFrame", $lu->idFrame)
+            ->where("coreType", "<>", "cty_target")
             ->keyBy("idEntity")
             ->all();
 
@@ -261,7 +262,7 @@ class CorpusService
         return $objectsRows;
     }
 
-    private static function getMatrixConfig($matrixData): array
+    public static function getMatrixConfig($matrixData): array
     {
         $minChar = PHP_INT_MAX;
         $maxChar = PHP_INT_MIN;
@@ -427,8 +428,11 @@ class CorpusService
             $fe = Criteria::byId("frameelement", "idEntity", $object->idEntity);
             $idLayerType = Criteria::byId("layertype", "entry", "lty_fe")->idLayerType;
             if (is_null($fe)) {
-                $idLayerType = Criteria::table("view_layertype_gl")
-                    ->where("idEntityGenericLabel", $object->idEntity)
+//                $idLayerType = Criteria::table("view_layertype_gl")
+//                    ->where("idEntityGenericLabel", $object->idEntity)
+//                    ->first()->idLayerType;
+                $idLayerType = Criteria::table("genericlabel")
+                    ->where("idEntity", $object->idEntity)
                     ->first()->idLayerType;
             }
             if ($object->range->type == 'word') {
@@ -462,7 +466,11 @@ class CorpusService
             Timeline::addTimeline("annotation", $idAnnotation, "C");
             AnnotationSet::updateStatusField($object->idAnnotationSet, Status::UPDATED->value);
         });
-        return CorpusService::getAnnotationSetData($object->idAnnotationSet, $object->token);
+        if ($object->corpusAnnotationType == 'flex') {
+            return FlexService::getAnnotationData($annotationSet->idDocumentSentence);
+        } else {
+            return CorpusService::getAnnotationSetData($object->idAnnotationSet, $object->token);
+        }
     }
 
     public static function deleteObject(DeleteObjectData $object): void
@@ -478,8 +486,11 @@ class CorpusService
             $idLayerType = Criteria::byId("layertype", "entry", "lty_fe")->idLayerType;
             if (is_null($fe)) {
                 $table = "view_annotation_text_gl";
-                $idLayerType = Criteria::table("view_layertype_gl")
-                    ->where("idEntityGenericLabel", $object->idEntity)
+//                $idLayerType = Criteria::table("view_layertype_gl")
+//                    ->where("idEntityGenericLabel", $object->idEntity)
+//                    ->first()->idLayerType;
+                $idLayerType = Criteria::table("genericlabel")
+                    ->where("idEntity", $object->idEntity)
                     ->first()->idLayerType;
             }
             $annotations = Criteria::table($table)
@@ -489,6 +500,7 @@ class CorpusService
                 ->where("idLanguage", AppService::getCurrentIdLanguage())
                 ->select("idAnnotation")
                 ->all();
+            debug($annotations);
             // Ao invés de remover fisicamente a anotaçao, apenas marca como "DELETED' e mantem o textSpan
             foreach ($annotations as $annotation) {
                 Criteria::table("annotation")

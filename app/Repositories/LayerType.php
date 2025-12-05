@@ -29,6 +29,16 @@ class LayerType
         return $criteria->all();
     }
 
+    public static function listToFlex(): array
+    {
+        return Criteria::table("view_layertype")
+            ->where('layerGroup', 'Flex-syntax')
+            ->where('idLanguage', AppService::getCurrentIdLanguage())
+            ->select('idLayerType', 'entry', 'name', 'layerOrder')
+            ->orderBy('layerOrder')
+            ->all();
+    }
+
     public static function listByLayerGroup(int $idLayerGroup): array
     {
         return Criteria::table("view_layertype")
