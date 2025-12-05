@@ -40,13 +40,13 @@
     @endif
 </div>
 <script type="text/javascript">
-    {{--$(function() {--}}
-    {{--    $(".tabs .item").tab({--}}
-    {{--        onLoad: (tabPath, parameterArray, historyEvent) => {--}}
-    {{--            if(tabPath === 'sentences') {--}}
-    {{--                htmx.ajax("GET", "/annotation/dynamicMode/sentences/{{$idDocument}}", ".sentences");--}}
-    {{--            }--}}
-    {{--        }--}}
-    {{--    });--}}
-    {{--});--}}
+    $(function() {
+        $(".tabs .item").tab({
+            {{--onLoad: (tabPath, parameterArray, historyEvent) => {--}}
+            {{--    if(tabPath === 'sentences') {--}}
+            {{--        htmx.ajax("GET", "/annotation/dynamicMode/sentences/{{$idDocument}}", ".sentences");--}}
+            {{--    }--}}
+            {{--}--}}
+        });
+    });
 </script>
