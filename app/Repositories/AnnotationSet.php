@@ -159,6 +159,7 @@ left join view_constructionelement ce on (a.idEntity = ce.idEntity)
 left join view_instantiationtype it ON (ts.idInstantiationType = it.idTypeInstance)
         WHERE (ts.idAnnotationSet = {$idAnnotationSet})
           and (lt.idLanguage = {$idLanguage})
+          and (gl.idLanguage = {$idLanguage})
           and (a.status <> 'DELETED')
             AND ((fe.idLanguage = {$idLanguage}) or (fe.idLanguage is null))
             AND ((ce.idLanguage = {$idLanguage}) or (ce.idLanguage is null))
@@ -271,6 +272,37 @@ HERE;
 
     }
 
+    public static function createForFlex(int $idDocumentSentence): object
+    {
+        DB::beginTransaction();
+        try {
+            $idUser = AppService::getCurrentIdUser();
+            $ti = Criteria::byId("typeinstance", "entry", AnnotationSetStatus::UNANNOTATED->value);
+            $annotationSet = [
+                'idDocumentSentence' => $idDocumentSentence,
+                'idAnnotationStatus' => $ti->idTypeInstance,
+                'idUser' => $idUser,
+                'status' => Status::CREATED->value
+            ];
+            $idAnnotationSet = Criteria::create("annotationset", $annotationSet);
+            Timeline::addTimeline('annotationset',$idAnnotationSet,'C');
+            $layerTypes = ['lty_phrasal_ce','lty_clausal_ce','lty_sentential_ce'];
+            foreach($layerTypes as $layerType) {
+                $idLayerType = Criteria::byId("layertype", "entry", $layerType)->idLayerType;
+                Criteria::create("layer", [
+                    'rank' => 0,
+                    'idLayerType' => $idLayerType,
+                    'idAnnotationSet' => $idAnnotationSet,
+                ]);
+            }
+            DB::commit();
+            return Criteria::byId("annotationSet","idAnnotationSet", $idAnnotationSet);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e->getMessage());
+        }
+
+    }
     public static function delete(int $idAnnotationSet): int
     {
         DB::beginTransaction();
