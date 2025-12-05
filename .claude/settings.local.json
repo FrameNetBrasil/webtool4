@@ -37,7 +37,9 @@
       "mcp__playwright__browser_close",
       "mcp__playwright__browser_snapshot",
       "Bash(grep:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(yarn build)",
+      "mcp__laravel-boost__get-absolute-url"
     ]
   },
   "enableAllProjectMcpServers": true,

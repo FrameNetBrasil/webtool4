@@ -7,6 +7,7 @@ use App\Data\Annotation\Video\CreateBBoxData;
 use App\Data\Annotation\Video\CreateObjectData;
 use App\Data\Annotation\Video\ObjectAnnotationData;
 use App\Data\Annotation\Video\ObjectFrameData;
+use App\Data\Annotation\Video\ObjectLayerLabelData;
 use App\Data\Annotation\Video\ObjectSearchData;
 use App\Data\Annotation\Video\UpdateBBoxData;
 use App\Database\Criteria;
@@ -458,6 +459,28 @@ class VideoService
         return $data->idObject;
     }
 
+    public static function updateLayerLabel(ObjectLayerLabelData $data): int
+    {
+        $searchData = ObjectSearchData::from($data);
+        $object = self::getObject($searchData);
+        if ($data->idGenericLabelNew) {
+            $gl = Criteria::byId('genericlabel', 'idGenericLabel', $data->idGenericLabelNew);
+            $annotation = json_encode([
+                'idDynamicObject' => $object->idObject,
+                'idEntity' => $gl->idEntity,
+                'idUser' => AppService::getCurrentIdUser(),
+            ]);
+            $idAnnotation = Criteria::function('annotation_create(?)', [$annotation]);
+            Timeline::addTimeline('annotation', $idAnnotation, 'C');
+        }
+        Criteria::table('dynamicobject')
+            ->where('idDynamicObject', $data->idObject)
+            ->update([
+                'idLayerType' => $data->idLayerTypeNew
+            ]);
+
+        return $data->idObject;
+    }
     private static function deleteBBoxesByObject(int $idObject)
     {
         $bboxes = Criteria::table('view_dynamicobject_boundingbox as db')
