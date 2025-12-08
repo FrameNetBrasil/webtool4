@@ -51,9 +51,17 @@ class LemmaController extends Controller
     {
         debug($data);
         $name = (strlen($data->lemmaName) > 0) ? $data->lemmaName : 'none';
+        $idLanguage = AppService::getCurrentIdLanguage();
 
-        return ['results' => Criteria::byFilterLanguage('view_lemma', ['name', 'startswith', trim($name)])
-            ->select('idLemma', 'name', 'fullName')
+        debug([
+            'searching' => $name,
+            'idLanguage from session' => $idLanguage,
+            'session currentLanguage' => session('currentLanguage'),
+            'session idLanguage' => session('idLanguage')
+        ]);
+
+        return ['results' => Criteria::byFilterLanguage('view_lemma', ['name', 'startswith', trim($name)], 'idLanguage', $idLanguage)
+            ->select('idLemma', 'name')
             ->limit(50)
             ->orderby('name')->all()];
     }
@@ -70,7 +78,7 @@ class LemmaController extends Controller
         try {
             $exists = Criteria::table('view_lemma')
                 ->whereRaw("name = '{$data->name}' collate 'utf8mb4_bin'")
-                ->where('idUDPOS', $data->idUDPOS)
+//                ->where('idUDPOS', $data->idUDPOS)
                 ->where('idLanguage', $data->idLanguage)
                 ->first();
             if (! is_null($exists)) {
@@ -79,7 +87,7 @@ class LemmaController extends Controller
             $newLemma = json_encode([
                 'name' => $data->name,
                 'idLanguage' => $data->idLanguage,
-                'idUDPOS' => $data->idUDPOS,
+//                'idUDPOS' => $data->idUDPOS,
                 'idUser' => AppService::getCurrentIdUser(),
             ]);
             $idLemma = Criteria::function('lemma_create(?)', [$newLemma]);

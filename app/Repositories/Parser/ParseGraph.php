@@ -204,4 +204,26 @@ class ParseGraph
         // This is a simplified check; a more thorough check would verify actual connectivity
         return $totalEdges >= ($totalNodes - 1);
     }
+
+    /**
+     * Set root node for the parse graph
+     */
+    public static function setRoot(int $idParserGraph, int $idRootNode): void
+    {
+        self::update($idParserGraph, ['idRootNode' => $idRootNode]);
+    }
+
+    /**
+     * Get root node for the parse graph
+     */
+    public static function getRootNode(int $idParserGraph): ?object
+    {
+        $graph = self::byId($idParserGraph);
+
+        if (empty($graph->idRootNode)) {
+            return null;
+        }
+
+        return ParseNode::byId($graph->idRootNode);
+    }
 }

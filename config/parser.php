@@ -22,9 +22,9 @@ return [
 
     // Stage control (three-stage parsing framework)
     'stages' => [
-        'enableTranscription' => env('PARSER_ENABLE_TRANSCRIPTION', true),  // Phase 1
-        'enableTranslation' => env('PARSER_ENABLE_TRANSLATION', true),      // Phase 2 - NOW ENABLED
-        'enableFolding' => env('PARSER_ENABLE_FOLDING', false),             // Phase 3
+        'enableTranscription' => env('PARSER_ENABLE_TRANSCRIPTION', true),  // Stage 1: Word → PhrasalCE
+        'enableTranslation' => env('PARSER_ENABLE_TRANSLATION', true),      // Stage 2: PhrasalCE → ClausalCE
+        'enableFolding' => env('PARSER_ENABLE_FOLDING', true),              // Stage 3: ClausalCE → SententialCE
     ],
 
     // Feature system (morphological features from UD)
