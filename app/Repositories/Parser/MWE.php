@@ -153,6 +153,26 @@ class MWE
     }
 
     /**
+     * Get POS for an MWE from view_lemma_pos
+     *
+     * MWEs are stored in the lexicon with space-separated components (e.g., "a não ser que")
+     *
+     * @param  string  $mwePhrase  Space-separated MWE (e.g., "a fim de")
+     * @param  int  $idLanguage  Language ID (default 1 for Portuguese)
+     * @return string|null POS tag or null if not found
+     */
+    public static function getPOS(string $mwePhrase, int $idLanguage = 1): ?string
+    {
+        // MWEs are stored with spaces in the lexicon (view_lemma_pos)
+        $result = Criteria::table('view_lemma_pos')
+            ->where('name', '=', $mwePhrase)
+            ->where('idLanguage', '=', $idLanguage)
+            ->first();
+
+        return $result ? $result->POS : null;
+    }
+
+    /**
      * Get all possible prefixes for MWEs starting with a word
      */
     public static function getPrefixesStartingWith(int $idGrammarGraph, string $firstWord): array

@@ -294,4 +294,12 @@ class ParseNode
             ->where('stage', '=', $stage)
             ->count();
     }
+
+    /**
+     * List all nodes for a parse graph (alias for listByParseGraph)
+     */
+    public static function listByGraph(int $idParserGraph): array
+    {
+        return self::listByParseGraph($idParserGraph);
+    }
 }

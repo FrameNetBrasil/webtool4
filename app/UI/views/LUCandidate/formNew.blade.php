@@ -26,7 +26,7 @@
                                                 id="idLemma"
                                                 label="Lemma"
                                                 search-field="lemmaName"
-                                                value=""
+                                                value="idLemma"
                                                 display-value=""
                                             ></x-search::lemma>
                                         </div>

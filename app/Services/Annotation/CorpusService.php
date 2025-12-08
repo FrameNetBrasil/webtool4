@@ -30,7 +30,7 @@ class CorpusService
             ->first();
         $words = self::getWordsByIdSentence($sentence);
         foreach ($words as $i => $word) {
-            if (!$word['hasLU']) {
+            if (! $word['hasLU']) {
                 $words[$i]['hasLU'] = WordForm::wordHasLU($word['word']);
             }
         }
@@ -52,7 +52,7 @@ class CorpusService
             'tokens' => $tokens,
             'idAnnotationSet' => $idAnnotationSet,
             'word' => $word,
-            'corpusAnnotationType' => $corpusAnnotationType
+            'corpusAnnotationType' => $corpusAnnotationType,
         ];
 
     }
@@ -66,7 +66,7 @@ class CorpusService
             ->first();
         $words = self::getWordsByIdDocumentSentence($sentence);
         foreach ($words as $i => $word) {
-            if (!$word['hasLU']) {
+            if (! $word['hasLU']) {
                 $words[$i]['hasLU'] = WordForm::wordHasLU($word['word']);
             }
         }
@@ -98,47 +98,47 @@ class CorpusService
             'tokens' => $tokens,
             'idAnnotationSet' => $idAnnotationSet,
             'word' => $word,
-            'corpusAnnotationType' => $corpusAnnotationType
+            'corpusAnnotationType' => $corpusAnnotationType,
         ];
 
     }
 
-    public static function getAnnotationSetData(int $idAnnotationSet, string $token = '', string $corpusAnnotationType = "fe"): array
+    public static function getAnnotationSetData(int $idAnnotationSet, string $token = '', string $corpusAnnotationType = 'fe'): array
     {
-        $it = Criteria::table("view_instantiationtype")
+        $it = Criteria::table('view_instantiationtype')
             ->where('idLanguage', AppService::getCurrentIdLanguage())
             ->all();
-        $as = Criteria::table("view_annotationset")
+        $as = Criteria::table('view_annotationset')
             ->where('idAnnotationSet', $idAnnotationSet)
             ->first();
-        $sentence = Criteria::table("view_sentence as s")
-            ->join("view_document_sentence as ds", "s.idSentence", "=", "ds.idSentence")
-            ->where("ds.idDocumentSentence", $as->idDocumentSentence)
-            ->select("s.idSentence", "s.text", "ds.idDocumentSentence", "ds.idDocument")
+        $sentence = Criteria::table('view_sentence as s')
+            ->join('view_document_sentence as ds', 's.idSentence', '=', 'ds.idSentence')
+            ->where('ds.idDocumentSentence', $as->idDocumentSentence)
+            ->select('s.idSentence', 's.text', 'ds.idDocumentSentence', 'ds.idDocument')
             ->first();
         if (is_null($sentence)) {
             return [
-                'idAnnotationSet' => null
+                'idAnnotationSet' => null,
             ];
         }
         $wordsChars = AnnotationSet::getWordsChars($sentence->text);
         foreach ($wordsChars->words as $i => $word) {
             $wordsChars->words[$i]['hasFE'] = false;
         }
-        $lu = Criteria::byFilter("view_lu_full", ['idLU', '=', $as->idLU])->first();
+        $lu = Criteria::byFilter('view_lu_full', ['idLU', '=', $as->idLU])->first();
         $lu->frame = Frame::byId($lu->idFrame);
         $lu->idUDPOS = LU::getidUDPOS($lu->idLemma);
-        $alternativeLU = Criteria::table("view_lu as lu1")
-            ->join("view_lu as lu2", "lu1.idLemma", "=", "lu2.idLemma")
-            ->where("lu2.idLU", $lu->idLU)
-            ->where("lu1.idLU", "<>", $lu->idLU)
-            ->select("lu1.idLU", "lu1.frameName", "lu1.name as lu")
+        $alternativeLU = Criteria::table('view_lu as lu1')
+            ->join('view_lu as lu2', 'lu1.idLemma', '=', 'lu2.idLemma')
+            ->where('lu2.idLU', $lu->idLU)
+            ->where('lu1.idLU', '<>', $lu->idLU)
+            ->select('lu1.idLU', 'lu1.frameName', 'lu1.name as lu')
             ->all();
-        $fes = Criteria::table("view_frameelement")
+        $fes = Criteria::table('view_frameelement')
             ->where('idLanguage', AppService::getCurrentIdLanguage())
-            ->where("idFrame", $lu->idFrame)
-            ->where("coreType", "<>", "cty_target")
-            ->keyBy("idEntity")
+            ->where('idFrame', $lu->idFrame)
+            ->where('coreType', '<>', 'cty_target')
+            ->keyBy('idEntity')
             ->all();
 
         $fesByType = [
@@ -158,22 +158,21 @@ class CorpusService
 
         $matrixData = self::getLayersByAnnotationSet($idAnnotationSet, $wordsChars);
         $matrixConfig = self::getMatrixConfig($matrixData);
-        //$groupedLayers = self::groupLayersByName($matrixData);
-
+        // $groupedLayers = self::groupLayersByName($matrixData);
 
         $firstWord = array_key_first($wordsChars->words);
         $lastWord = array_key_last($wordsChars->words);
 
-//        $spans = [];
-//        $idLayers = [];
-        $layersForLU = collect(LayerType::listToLU($lu))->keyBy("entry")->toArray();
+        //        $spans = [];
+        //        $idLayers = [];
+        $layersForLU = collect(LayerType::listToLU($lu))->keyBy('entry')->toArray();
 
-        $glsByLayerType = Criteria::table("view_layertype_gl")
+        $glsByLayerType = Criteria::table('view_layertype_gl')
             ->where('idLanguage', AppService::getCurrentIdLanguage())
-            ->whereIN("entry", array_keys($layersForLU))
-            ->select("entry", "idEntityGenericLabel as idEntity", "name", "idColor")
-            ->orderby("layerOrder")
-            ->get()->groupBy("entry")->toArray();
+            ->whereIN('entry', array_keys($layersForLU))
+            ->select('entry', 'idEntityGenericLabel as idEntity', 'name', 'idColor')
+            ->orderby('layerOrder')
+            ->get()->groupBy('entry')->toArray();
         $asStatus = AnnotationSet::updateStatus($as, $matrixData, $fesByType['Core']);
 
         return [
@@ -185,15 +184,15 @@ class CorpusService
             'annotationSet' => $as,
             'lu' => $lu,
             'alternativeLU' => $alternativeLU,
-//            'target' => $target[0],
-//            'spans' => $spans,
+            //            'target' => $target[0],
+            //            'spans' => $spans,
             'fes' => $fes,
             'fesByType' => $fesByType,
             'glsByLayerType' => $glsByLayerType,
-//            'nis' => $nis,
+            //            'nis' => $nis,
             'word' => $token,
             'matrix' => [
-//                'data' => $matrixData,
+                //                'data' => $matrixData,
                 'config' => $matrixConfig,
             ],
             'groupedLayers' => $matrixData,
@@ -207,13 +206,13 @@ class CorpusService
     {
         $layers = AnnotationSet::getLayers($idAnnotationSet);
         $spansByLayer = collect($layers)->groupBy('layerTypeEntry')->all();
-//        $objects = $spansByLayer['lty_fe'] ?? [];
-//        foreach ($spansByLayer as $objects) {
-//            foreach($objects as $object) {
-//                $object->startWord = ($object->startChar != -1) ? $wordsChars->chars[$object->startChar]['order'] : -1;
-//                $object->endWord = ($object->endChar != -1) ? $wordsChars->chars[$object->endChar]['order'] : -1;
-//            }
-//        }
+        //        $objects = $spansByLayer['lty_fe'] ?? [];
+        //        foreach ($spansByLayer as $objects) {
+        //            foreach($objects as $object) {
+        //                $object->startWord = ($object->startChar != -1) ? $wordsChars->chars[$object->startChar]['order'] : -1;
+        //                $object->endWord = ($object->endChar != -1) ? $wordsChars->chars[$object->endChar]['order'] : -1;
+        //            }
+        //        }
         $objectsRows = [];
         $objectsRowsEnd = [];
         foreach ($spansByLayer as $objects) {
@@ -236,7 +235,7 @@ class CorpusService
                                 break;
                             }
                         }
-                        if (!$allocated) {
+                        if (! $allocated) {
                             $idRow = count($objectsRows[$object->layerTypeEntry]);
                             $objectsRows[$object->layerTypeEntry][$idRow][] = $object;
                             $objectsRowsEnd[$object->layerTypeEntry][$idRow] = $object->endWord;
@@ -247,18 +246,19 @@ class CorpusService
                 }
             }
         }
-//        $result = [];
-//        debug($objectsRows);
-//        foreach ($objectsRows as $layerTypeEntry => $rows) {
-//            foreach ($rows as $idRow => $objects) {
-//                $result[] = [
-//                    'layer' => $layerTypeEntry,
-//                    'objects' => $objects,
-//                ];
-//            }
-//        }
-//
-//        return $result;
+
+        //        $result = [];
+        //        debug($objectsRows);
+        //        foreach ($objectsRows as $layerTypeEntry => $rows) {
+        //            foreach ($rows as $idRow => $objects) {
+        //                $result[] = [
+        //                    'layer' => $layerTypeEntry,
+        //                    'objects' => $objects,
+        //                ];
+        //            }
+        //        }
+        //
+        //        return $result;
         return $objectsRows;
     }
 
@@ -277,9 +277,9 @@ class CorpusService
             }
         }
 
-// Add padding
-//        $minFrame = max(0, $minFrame - 100);
-//        $maxFrame = $maxFrame + 100;
+        // Add padding
+        //        $minFrame = max(0, $minFrame - 100);
+        //        $maxFrame = $maxFrame + 100;
 
         return ['minChar' => $minChar,
             'maxChar' => $maxChar,
@@ -288,7 +288,7 @@ class CorpusService
             'objectHeight' => 24,
             'labelWidth' => 150,
             'matrixWidth' => ($maxChar - $minChar) * 1,
-            'matrixHeight' => (24 * count($matrixData)) + 10,];
+            'matrixHeight' => (24 * count($matrixData)) + 10, ];
     }
 
     private static function groupLayersByName($matrixData): array
@@ -298,24 +298,27 @@ class CorpusService
         foreach ($matrixData as $idRow => $layer) {
             $layerName = $layer['layer'];
 
-            if (!isset($layerGroups[$layerName])) {
+            if (! isset($layerGroups[$layerName])) {
                 $layerGroups[$layerName] = [];
             }
 
             $layerGroups[$layerName][$idRow] = $layer['objects'];
         }
+
         return $layerGroups;
     }
 
     public static function getWordsByIdSentence(object $sentence)
     {
         $targets = AnnotationSet::getTargetsByIdSentence($sentence->idSentence);
+
         return self::getWords($targets, $sentence->text);
     }
 
     public static function getWordsByIdDocumentSentence(object $sentence)
     {
         $targets = AnnotationSet::getTargets($sentence->idDocumentSentence);
+
         return self::getWords($targets, $sentence->text);
     }
 
@@ -395,8 +398,7 @@ class CorpusService
         ];
     }
 
-    public
-    static function createAnnotationSet(CreateASData $data): ?int
+    public static function createAnnotationSet(CreateASData $data): ?int
     {
         $startChar = 4000;
         $endChar = -1;
@@ -418,32 +420,34 @@ class CorpusService
 
     public static function annotateObject(AnnotationData $object): array
     {
-        $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $object->idAnnotationSet);
+        $annotationSet = Criteria::byId('view_annotationset', 'idAnnotationSet', $object->idAnnotationSet);
         $idUser = AppService::getCurrentIdUser();
-        if (!SessionService::isActive($annotationSet->idDocumentSentence, $idUser)) {
-            throw new \Exception("The annotation session is not active.");
+        if ($object->corpusAnnotationType != 'flex') {
+            if (! SessionService::isActive($annotationSet->idDocumentSentence, $idUser)) {
+                throw new \Exception('The annotation session is not active.');
+            }
         }
         DB::transaction(function () use ($object, $annotationSet) {
             // no caso do corpus annotation, o objeto pode ser um FE ou um GL
-            $fe = Criteria::byId("frameelement", "idEntity", $object->idEntity);
-            $idLayerType = Criteria::byId("layertype", "entry", "lty_fe")->idLayerType;
+            $fe = Criteria::byId('frameelement', 'idEntity', $object->idEntity);
+            $idLayerType = Criteria::byId('layertype', 'entry', 'lty_fe')->idLayerType;
             if (is_null($fe)) {
-//                $idLayerType = Criteria::table("view_layertype_gl")
-//                    ->where("idEntityGenericLabel", $object->idEntity)
-//                    ->first()->idLayerType;
-                $idLayerType = Criteria::table("genericlabel")
-                    ->where("idEntity", $object->idEntity)
+                //                $idLayerType = Criteria::table("view_layertype_gl")
+                //                    ->where("idEntityGenericLabel", $object->idEntity)
+                //                    ->first()->idLayerType;
+                $idLayerType = Criteria::table('genericlabel')
+                    ->where('idEntity', $object->idEntity)
                     ->first()->idLayerType;
             }
             if ($object->range->type == 'word') {
-                $it = Criteria::table("view_instantiationtype")
+                $it = Criteria::table('view_instantiationtype')
                     ->where('entry', 'int_normal')
                     ->first();
                 $idInstantiationType = $it->idInstantiationType;
-                $startChar = (int)$object->range->start;
-                $endChar = (int)$object->range->end;
-            } else if ($object->range->type == 'ni') {
-                $idInstantiationType = (int)$object->range->id;
+                $startChar = (int) $object->range->start;
+                $endChar = (int) $object->range->end;
+            } elseif ($object->range->type == 'ni') {
+                $idInstantiationType = (int) $object->range->id;
                 $startChar = -1;
                 $endChar = -1;
             }
@@ -456,14 +460,14 @@ class CorpusService
                 'idInstantiationType' => $idInstantiationType,
                 'idSentence' => $annotationSet->idSentence,
             ]);
-            $idTextSpan = Criteria::function("textspan_char_create(?)", [$data]);
+            $idTextSpan = Criteria::function('textspan_char_create(?)', [$data]);
             $data = json_encode([
                 'idTextSpan' => $idTextSpan,
                 'idEntity' => $object->idEntity,
-                'idUser' => AppService::getCurrentIdUser()
+                'idUser' => AppService::getCurrentIdUser(),
             ]);
-            $idAnnotation = Criteria::function("annotation_create(?)", [$data]);
-            Timeline::addTimeline("annotation", $idAnnotation, "C");
+            $idAnnotation = Criteria::function('annotation_create(?)', [$data]);
+            Timeline::addTimeline('annotation', $idAnnotation, 'C');
             AnnotationSet::updateStatusField($object->idAnnotationSet, Status::UPDATED->value);
         });
         if ($object->corpusAnnotationType == 'flex') {
@@ -475,41 +479,42 @@ class CorpusService
 
     public static function deleteObject(DeleteObjectData $object): void
     {
-        $annotationSet = Criteria::byId("view_annotationset", "idAnnotationSet", $object->idAnnotationSet);
+        $annotationSet = Criteria::byId('view_annotationset', 'idAnnotationSet', $object->idAnnotationSet);
         $idUser = AppService::getCurrentIdUser();
-        if (!SessionService::isActive($annotationSet->idDocumentSentence, $idUser)) {
-            throw new \Exception("The annotation session is not active.");
+        if ($object->corpusAnnotationType != 'flex') {
+            if (! SessionService::isActive($annotationSet->idDocumentSentence, $idUser)) {
+                throw new \Exception('The annotation session is not active.');
+            }
         }
         DB::transaction(function () use ($object) {
-            $fe = Criteria::byId("frameelement", "idEntity", $object->idEntity);
-            $table = "view_annotation_text_fe";
-            $idLayerType = Criteria::byId("layertype", "entry", "lty_fe")->idLayerType;
+            $fe = Criteria::byId('frameelement', 'idEntity', $object->idEntity);
+            $table = 'view_annotation_text_fe';
+            $idLayerType = Criteria::byId('layertype', 'entry', 'lty_fe')->idLayerType;
             if (is_null($fe)) {
-                $table = "view_annotation_text_gl";
-//                $idLayerType = Criteria::table("view_layertype_gl")
-//                    ->where("idEntityGenericLabel", $object->idEntity)
-//                    ->first()->idLayerType;
-                $idLayerType = Criteria::table("genericlabel")
-                    ->where("idEntity", $object->idEntity)
+                $table = 'view_annotation_text_gl';
+                //                $idLayerType = Criteria::table("view_layertype_gl")
+                //                    ->where("idEntityGenericLabel", $object->idEntity)
+                //                    ->first()->idLayerType;
+                $idLayerType = Criteria::table('genericlabel')
+                    ->where('idEntity', $object->idEntity)
                     ->first()->idLayerType;
             }
             $annotations = Criteria::table($table)
-                ->where("idAnnotationSet", $object->idAnnotationSet)
-                ->where("idEntity", $object->idEntity)
-                ->where("idLayerType", $idLayerType)
-                ->where("idLanguage", AppService::getCurrentIdLanguage())
-                ->select("idAnnotation")
+                ->where('idAnnotationSet', $object->idAnnotationSet)
+                ->where('idEntity', $object->idEntity)
+                ->where('idLayerType', $idLayerType)
+                ->where('idLanguage', AppService::getCurrentIdLanguage())
+                ->select('idAnnotation')
                 ->all();
             debug($annotations);
             // Ao invés de remover fisicamente a anotaçao, apenas marca como "DELETED' e mantem o textSpan
             foreach ($annotations as $annotation) {
-                Criteria::table("annotation")
-                    ->where("idAnnotation", $annotation->idAnnotation)
-                    ->update(["status" => 'DELETED']);
+                Criteria::table('annotation')
+                    ->where('idAnnotation', $annotation->idAnnotation)
+                    ->update(['status' => 'DELETED']);
                 Timeline::addTimeline('annotation', $annotation->idAnnotation, 'D');
             }
             AnnotationSet::updateStatusField($object->idAnnotationSet, Status::UPDATED->value);
         });
     }
-
 }

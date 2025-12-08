@@ -56,7 +56,7 @@ class LUCandidateController extends Controller
     public function resource(SearchData $search)
     {
         // Get data for each origin tab
-        $dataWebTool = $this->getData($search, 'WEBTOOL');
+        $dataWebTool = $this->getData($search, 'USER');
         $dataLome = $this->getData($search, 'LOME');
         $dataFnbk = $this->getData($search, 'FNBK');
 
@@ -138,7 +138,7 @@ class LUCandidateController extends Controller
                 throw new \Exception("Lemma is required");
             } else {
                 $lemma = Lemma::byId($data->idLemma);
-                $data->name = strtolower($lemma->shortName);
+                $data->name = strtolower($lemma->name);
                 debug($data);
                 Criteria::function('lu_create(?)', [$data->toJson()]);
 //

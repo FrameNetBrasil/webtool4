@@ -59,8 +59,35 @@ class TrankitService
         return implode(' ', $words);
     }
 
+    /**
+     * Normalize hyphens to commas for better UD parser recognition
+     *
+     * The UD parser doesn't always recognize hyphens as punctuation.
+     * This method replaces standalone hyphens with commas before parsing.
+     *
+     * Examples:
+     * - "word - word" → "word , word"
+     * - "dash-separated" → "dash-separated" (preserves compound words)
+     *
+     * @param  string  $sentence  Input sentence
+     * @return string Sentence with normalized punctuation
+     */
+    public function normalizeHyphens(string $sentence): string
+    {
+        // Replace standalone hyphens (with spaces around them) with commas
+        // Pattern: space + hyphen + space → space + comma + space
+        $sentence = preg_replace('/\s+-\s+/', ' , ', $sentence);
+
+        // Also handle hyphen at start/end with only one space
+        $sentence = preg_replace('/^-\s+/', ', ', $sentence);
+        $sentence = preg_replace('/\s+-$/', ' ,', $sentence);
+
+        return $sentence;
+    }
+
     public function handleSentence(string $sentence): string
     {
+        $sentence = $this->normalizeHyphens($sentence);
         $sentence = $this->handlePunct($sentence);
         $sentence = $this->handleContractions($sentence);
 
@@ -205,6 +232,9 @@ class TrankitService
 
     public function processTrankit($sentence, $idLanguage = 1)
     {
+        // Normalize hyphens to commas for better UD parser recognition
+        $sentence = $this->normalizeHyphens($sentence);
+
         debug($sentence);
         $client = $this->getClient();
         try {
@@ -397,6 +427,100 @@ class TrankitService
 
             return (object) ['udpipe' => $ud];
         } catch (\Exception $e) {
+            return (object) ['udpipe' => []];
+        }
+    }
+
+    /**
+     * Get UD parse from Trankit preserving original text of contractions.
+     *
+     * This method differs from getUDTrankit() by NOT expanding contractions.
+     * For example, "pelo" remains as "pelo" instead of being split into "por" + "o".
+     *
+     * This is crucial for correct MWE (Multi-Word Expression) identification,
+     * as MWEs like "pelo menos" need the original contracted form to be recognized
+     * in the database. If contractions are expanded first, MWE matching fails.
+     *
+     * Use this method BEFORE MWE processing, then use standard getUDTrankit()
+     * after MWE identification for full syntactic analysis.
+     *
+     * Example:
+     * Sentence: "O carro atropelou pelo menos 5 pessoas."
+     * - getUDTrankit() returns: [..., "por", "o", "menos", ...]  // MWE "pelo menos" not found
+     * - getUDTrankitText() returns: [..., "pelo", "menos", ...]  // MWE "pelo menos" found!
+     *
+     * @param  string  $sentence  The sentence to parse
+     * @param  int  $idLanguage  Language ID (1=Portuguese, 2=English)
+     * @return object Object with 'udpipe' array containing token data
+     */
+    public function getUDTrankitText(string $sentence, int $idLanguage = 1): object
+    {
+        try {
+            $ud = [];
+            $result = $this->processTrankit($sentence, $idLanguage);
+            // Process tokens without expanding contractions
+            // This preserves the original text like "pelo" instead of splitting to "por" + "o"
+            $array = [];
+            $dict = $result->tokens;
+            foreach ($dict as $node) {
+                // Do NOT expand contractions - keep the original text
+                // This allows proper MWE (Multi-Word Expression) identification
+                if (isset($node->expanded)) {
+                    // For contracted tokens, use the original text
+                    // but we need to create a simplified node structure
+                    $contractedNode = (object) [
+                        'id' => is_array($node->id) ? $node->id[0] : $node->id,
+                        'text' => $node->text, // This is the original contracted form like "pelo"
+                        'upos' => $node->expanded[0]->upos ?? '', // Use first expanded token's POS
+                        'lemma' => $node->text, // Keep original as lemma for MWE matching
+                        'deprel' => $node->expanded[0]->deprel ?? '',
+                        'head' => $node->expanded[0]->head ?? 0,
+                        'feats' => $node->expanded[0]->feats ?? '',
+                    ];
+                    $array[] = $contractedNode;
+                } else {
+                    $array[] = $node;
+                }
+            }
+            $parent = [];
+            $children = [];
+            foreach ($array as $j => $node) {
+                $id = $node->id;
+                $head = $node->head;
+                if ($id != $head) {
+                    $parent[$id] = $head;
+                    $children[$head][] = $id;
+                }
+
+            }
+            foreach ($array as $j => $node) {
+                $feats = [];
+                if (isset($node->feats)) {
+                    $f = explode('|', $node->feats);
+                    foreach ($f as $f0) {
+                        if (str_contains($f0, '=')) {
+                            [$feat, $value] = explode('=', $f0);
+                            $feats[$feat] = $value;
+                        }
+                    }
+                }
+                $ud[$j + 1] = [
+                    'id' => $node->id,
+                    'word' => $node->text, // Original text without expansion
+                    'pos' => $node->upos,
+                    'ud' => '',
+                    'morph' => $feats,
+                    'lemma' => $node->lemma ?? '',
+                    'rel' => $node->deprel,
+                    'parent' => $parent[$node->id] ?? 0,
+                    'children' => $children[$node->id] ?? [],
+                ];
+            }
+
+            return (object) ['udpipe' => $ud];
+        } catch (\Exception $e) {
+            debug($e->getMessage());
+
             return (object) ['udpipe' => []];
         }
     }

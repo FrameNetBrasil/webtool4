@@ -7,9 +7,13 @@
             :sections="[['','Home']]"
         ></x-layout::breadcrumb>
         <main class="app-main">
-            <div class="ui container overflow-y">
+            <div class="ui container page-simple">
                 <div class="page-content">
-                    Page content for simplest page
+                    <div class="content-container">
+                        <div class="content-section">
+                            Page content for simplest page
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

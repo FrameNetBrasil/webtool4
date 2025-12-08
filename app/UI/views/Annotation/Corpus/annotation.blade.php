@@ -5,7 +5,9 @@
             :sections="[['/','Home'],['/annotation','Annotation'],[$url,$page],['','#' . $idDocumentSentence]]"
         ></x-layout::breadcrumb>
         <div class="annotation-action">
-            @include("Annotation.Session.Panes.sessionPane")
+            @if($corpusAnnotationType != 'flex')
+                @include("Annotation.Session.Panes.sessionPane")
+            @endif
         </div>
         <div class="annotation-corpus">
             <script type="text/javascript" src="/annotation/corpus/script/components"></script>

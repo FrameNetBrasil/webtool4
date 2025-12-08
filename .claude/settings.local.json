@@ -39,7 +39,15 @@
       "Bash(grep:*)",
       "Bash(ls:*)",
       "Bash(yarn build)",
-      "mcp__laravel-boost__get-absolute-url"
+      "mcp__laravel-boost__get-absolute-url",
+      "Bash(python /home/ematos/devel/fnbr/webtool42/utils/md_to_pdf.py:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m venv:*)",
+      "Bash(venv/bin/pip install:*)",
+      "Bash(/home/ematos/devel/fnbr/webtool42/utils/venv/bin/python:*)",
+      "Bash(npm update:*)",
+      "Bash(curl:*)",
+      "mcp__laravel-boost__application-info"
     ]
   },
   "enableAllProjectMcpServers": true,

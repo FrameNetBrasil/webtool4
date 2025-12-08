@@ -128,11 +128,26 @@ class ParserService
                     }
                 }
 
-                // === STAGE 3: FOLDING === (Phase 3 - not implemented yet)
-                // if (config('parser.stages.enableFolding', false)) {
-                //     $folding = app(FoldingService::class);
-                //     $sentenceLinks = $folding->fold($idParserGraph, $input->idGrammarGraph, $grammar->language);
-                // }
+                // === STAGE 3: FOLDING ===
+                if (config('parser.stages.enableFolding', true)) {
+                    if (config('parser.logging.logStages', false)) {
+                        logger()->info('Parser: Starting Folding Stage');
+                    }
+
+                    // Use FoldingService for sentential integration
+                    $folding = app(FoldingService::class);
+                    $sentenceLinks = $folding->fold(
+                        $idParserGraph,
+                        $input->idGrammarGraph,
+                        $grammar->language
+                    );
+
+                    if (config('parser.logging.logStages', false)) {
+                        logger()->info('Parser: Folding Stage Complete', [
+                            'links' => count($sentenceLinks),
+                        ]);
+                    }
+                }
 
                 // Garbage collection
                 if (config('parser.garbageCollection.enabled', true)) {
