@@ -9,37 +9,46 @@ use App\Models\Parser\PhrasalCENode;
 use App\Repositories\Parser\MWE;
 use App\Services\Annotation\CorpusService;
 use App\Services\AppService;
+use App\Services\Parser\PhraseAssemblyService;
 use App\Services\Trankit\TrankitService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Register Stage 1 (Transcription) CE labels as annotations
+ * Register CE labels (Phrasal and Clausal) as annotations
  *
- * Processes sentences from a document, runs the Transcription stage parser,
- * and registers the resulting CE (Constructional Element) labels as annotations.
+ * Processes sentences from a document, runs the parser stages, and registers
+ * both Stage 1 (Phrasal CEs - idLayerType=57) and Stage 2 (Clausal CEs - idLayerType=58)
+ * labels as annotations.
  */
 class RegisterCEAnnotationsCommand extends Command
 {
     protected $signature = 'parser:register-ce-annotations
                             {idDocument : Document ID to process}
+                            {--sentence= : Process only a specific sentence (idDocumentSentence)}
                             {--language=pt : Language code (pt, en)}
                             {--grammar= : Grammar graph ID for MWE detection}
                             {--dry-run : Show what would be done without making changes}
-                            {--limit= : Limit number of sentences to process}';
+                            {--limit= : Limit number of sentences to process (ignored if --sentence is provided)}
+                            {--layers=both : Which CE layers to register (phrasal, clausal, or both)}';
 
-    protected $description = 'Register Stage 1 parser CE labels as annotations for document sentences';
+    protected $description = 'Register Phrasal and Clausal CE labels as annotations for document sentences';
 
     private TrankitService $trankit;
 
+    private PhraseAssemblyService $assemblyService;
+
     private ?int $idGrammarGraph = null;
 
-    private array $ceEntityMap = [];
+    private array $phrasalCEEntityMap = [];
+
+    private array $clausalCEEntityMap = [];
 
     private array $stats = [
         'sentences_processed' => 0,
         'sentences_skipped' => 0,
-        'annotations_created' => 0,
+        'phrasal_annotations_created' => 0,
+        'clausal_annotations_created' => 0,
         'parse_errors' => 0,
         'mwes_detected' => 0,
     ];
@@ -53,9 +62,18 @@ class RegisterCEAnnotationsCommand extends Command
         AppService::setCurrentLanguage(1);
 
         $idDocument = (int) $this->argument('idDocument');
+        $idDocumentSentence = $this->option('sentence') ? (int) $this->option('sentence') : null;
         $language = $this->option('language');
         $dryRun = $this->option('dry-run');
         $limit = $this->option('limit') ? (int) $this->option('limit') : null;
+        $layers = $this->option('layers') ?? 'both';
+
+        // Validate layers option
+        if (! in_array($layers, ['phrasal', 'clausal', 'both'])) {
+            $this->error("Invalid layers option: {$layers}. Must be 'phrasal', 'clausal', or 'both'");
+
+            return Command::FAILURE;
+        }
 
         // Grammar graph for MWE detection
         $this->idGrammarGraph = $this->option('grammar') ? (int) $this->option('grammar') : null;
@@ -68,21 +86,25 @@ class RegisterCEAnnotationsCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->displayConfiguration($idDocument, $language, $dryRun, $limit);
+        $this->displayConfiguration($idDocument, $language, $dryRun, $limit, $layers, $idDocumentSentence);
 
         // Initialize services
         if (! $this->initServices()) {
             return Command::FAILURE;
         }
 
-        // Load CE label entity map
-        $this->loadCEEntityMap();
+        // Load CE label entity maps
+        $this->loadCEEntityMaps($layers);
 
         // Fetch sentences with annotation sets
-        $sentences = $this->fetchDocumentSentences($idDocument, $limit);
+        $sentences = $this->fetchDocumentSentences($idDocument, $limit, $idDocumentSentence);
 
         if (empty($sentences)) {
-            $this->warn('No sentences with annotation sets found for this document.');
+            if ($idDocumentSentence) {
+                $this->warn("Sentence {$idDocumentSentence} not found or has no annotation set.");
+            } else {
+                $this->warn('No sentences with annotation sets found for this document.');
+            }
 
             return Command::SUCCESS;
         }
@@ -95,7 +117,7 @@ class RegisterCEAnnotationsCommand extends Command
         $progressBar->start();
 
         foreach ($sentences as $sentence) {
-            $this->processSentence($sentence, $language, $dryRun);
+            $this->processSentence($sentence, $language, $layers, $dryRun);
             $progressBar->advance();
         }
 
@@ -108,15 +130,24 @@ class RegisterCEAnnotationsCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function displayConfiguration(int $idDocument, string $language, bool $dryRun, ?int $limit): void
+    private function displayConfiguration(int $idDocument, string $language, bool $dryRun, ?int $limit, string $layers, ?int $idDocumentSentence = null): void
     {
         $this->info('Register CE Annotations Command');
         $this->line(str_repeat('─', 60));
         $this->line('Configuration:');
         $this->line("  • Document ID: {$idDocument}");
+
+        if ($idDocumentSentence) {
+            $this->line("  • Sentence ID: <fg=cyan>{$idDocumentSentence}</> (single sentence mode)");
+        }
+
         $this->line("  • Language: {$language}");
+        $this->line("  • CE Layers: {$layers}");
         $this->line('  • Dry run: '.($dryRun ? 'Yes' : 'No'));
-        $this->line('  • Limit: '.($limit ?: 'No limit'));
+
+        if (! $idDocumentSentence) {
+            $this->line('  • Limit: '.($limit ?: 'No limit'));
+        }
 
         if ($this->idGrammarGraph) {
             $this->line("  • Grammar Graph: ID {$this->idGrammarGraph}");
@@ -142,6 +173,9 @@ class RegisterCEAnnotationsCommand extends Command
             return false;
         }
 
+        // Initialize PhraseAssemblyService for Stage 2
+        $this->assemblyService = app(PhraseAssemblyService::class);
+
         // Count MWEs in the grammar if provided
         if ($this->idGrammarGraph) {
             $mwes = MWE::listByGrammar($this->idGrammarGraph);
@@ -151,24 +185,40 @@ class RegisterCEAnnotationsCommand extends Command
         return true;
     }
 
-    private function loadCEEntityMap(): void
+    private function loadCEEntityMaps(string $layers): void
     {
-        // Load CE label to idEntity mapping from genericlabel table
-        // idLayerType=57 is for CE labels, idLanguage=1 is Portuguese
-        $labels = Criteria::table('genericlabel')
-            ->where('idLayerType', 57)
-            ->where('idLanguage', 1)
-            ->select('idEntity', 'name')
-            ->get();
+        // Load Phrasal CE label to idEntity mapping (idLayerType=57)
+        if ($layers === 'phrasal' || $layers === 'both') {
+            $phrasalLabels = Criteria::table('genericlabel')
+                ->where('idLayerType', 57)
+                ->where('idLanguage', 1)
+                ->select('idEntity', 'name')
+                ->get();
 
-        foreach ($labels as $label) {
-            $this->ceEntityMap[$label->name] = $label->idEntity;
+            foreach ($phrasalLabels as $label) {
+                $this->phrasalCEEntityMap[$label->name] = $label->idEntity;
+            }
+
+            $this->info('Loaded '.count($this->phrasalCEEntityMap).' Phrasal CE labels: '.implode(', ', array_keys($this->phrasalCEEntityMap)));
         }
 
-        $this->info('Loaded '.count($this->ceEntityMap).' CE labels: '.implode(', ', array_keys($this->ceEntityMap)));
+        // Load Clausal CE label to idEntity mapping (idLayerType=58)
+        if ($layers === 'clausal' || $layers === 'both') {
+            $clausalLabels = Criteria::table('genericlabel')
+                ->where('idLayerType', 58)
+                ->where('idLanguage', 1)
+                ->select('idEntity', 'name')
+                ->get();
+
+            foreach ($clausalLabels as $label) {
+                $this->clausalCEEntityMap[$label->name] = $label->idEntity;
+            }
+
+            $this->info('Loaded '.count($this->clausalCEEntityMap).' Clausal CE labels: '.implode(', ', array_keys($this->clausalCEEntityMap)));
+        }
     }
 
-    private function fetchDocumentSentences(int $idDocument, ?int $limit): array
+    private function fetchDocumentSentences(int $idDocument, ?int $limit, ?int $idDocumentSentence = null): array
     {
         $query = Criteria::table('document_sentence as ds')
             ->join('sentence as s', 'ds.idSentence', '=', 's.idSentence')
@@ -183,7 +233,10 @@ class RegisterCEAnnotationsCommand extends Command
             )
             ->orderBy('ds.idDocumentSentence');
 
-        if ($limit) {
+        // If specific sentence requested, filter by it (takes precedence over limit)
+        if ($idDocumentSentence) {
+            $query->where('ds.idDocumentSentence', $idDocumentSentence);
+        } elseif ($limit) {
             $query->limit($limit);
         }
 
@@ -193,44 +246,62 @@ class RegisterCEAnnotationsCommand extends Command
         return $sentences;
     }
 
-    private function processSentence(object $sentence, string $language, bool $dryRun): void
+    private function processSentence(object $sentence, string $language, string $layers, bool $dryRun): void
     {
         try {
             // Get language ID
             $idLanguage = config('parser.languageMap')[$language] ?? 1;
 
-            // Parse with Trankit to get tokens
-            $textResult = $this->trankit->getUDTrankitText($sentence->text, $idLanguage);
-            $textTokens = $textResult->udpipe ?? [];
+            // NEW SINGLE-PASS TOKEN-BASED APPROACH
+            // This simplifies the workflow while enabling dependency-aware MWE detection
 
-            if (empty($textTokens)) {
+            // STEP 1: Tokenize (preserving contractions)
+            $tokens = $this->trankit->tokenizeSentence($sentence->text, false);
+
+            if (empty($tokens)) {
                 $this->stats['parse_errors']++;
 
                 return;
             }
 
-            // Build nodes from text tokens (with preserved contractions)
-            // These will be used for annotation to preserve original word forms like "do", "pelo", etc.
-            $textNodes = [];
-            foreach ($textTokens as $token) {
-                $textNodes[] = PhrasalCENode::fromUDToken($token);
+            // STEP 2: Parse with pre-tokenized input (preserving tokens in output)
+            $result = $this->trankit->getUDTrankitTokensPreserved($tokens, $idLanguage);
+            $udTokens = $result->udpipe ?? [];
+
+            if (empty($udTokens)) {
+                $this->stats['parse_errors']++;
+
+                return;
             }
 
-            // Detect MWEs if grammar is available
+            // STEP 3: Build PhrasalCENodes WITH dependency info
+            $phrasalNodes = [];
+            foreach ($udTokens as $token) {
+                $phrasalNodes[] = PhrasalCENode::fromUDToken($token);
+            }
+
+            // STEP 4: Detect MWEs using dependency-aware validation
+            // CRITICAL: MWE detection happens AFTER parsing to use deprel/head for disambiguation
+            $mweCandidates = [];
             $detectedMWEs = [];
             if ($this->idGrammarGraph) {
-                [, $detectedMWEs] = $this->detectMWEs($textNodes);
+                [$mweCandidates, $detectedMWEs] = $this->detectMWEsWithDependencies($phrasalNodes);
                 $this->stats['mwes_detected'] += count($detectedMWEs);
             }
 
-            // Apply MWE assembly to text nodes if detected
-            $finalNodes = $textNodes;
+            // STEP 5: Assemble validated MWEs into nodes
             if (! empty($detectedMWEs)) {
-                $finalNodes = $this->assembleMWEs($finalNodes, $detectedMWEs, $language);
+                $phrasalNodes = $this->assembleMWEs($phrasalNodes, $detectedMWEs, $language);
             }
 
-            // Register annotations using text nodes (preserves contractions like "do", "pelo")
-            $this->registerAnnotations($sentence, $finalNodes, $dryRun);
+            // STEP 6: Register annotations (unchanged)
+            if ($layers === 'phrasal' || $layers === 'both') {
+                $this->registerPhrasalAnnotations($sentence, $phrasalNodes, $dryRun);
+            }
+
+            if ($layers === 'clausal' || $layers === 'both') {
+                $this->registerClausalAnnotations($sentence, $phrasalNodes, $language, $dryRun);
+            }
 
         } catch (\Exception $e) {
             $this->stats['parse_errors']++;
@@ -240,20 +311,29 @@ class RegisterCEAnnotationsCommand extends Command
         }
     }
 
-    private function registerAnnotations(object $sentence, array $nodes, bool $dryRun): void
+    /**
+     * Map to store phrasal node index → annotation ID
+     * This allows clausal CEs to reference their component phrasal CEs
+     */
+    private array $phrasalAnnotationMap = [];
+
+    private function registerPhrasalAnnotations(object $sentence, array $nodes, bool $dryRun): void
     {
-        // Remove previous annotations for this annotationset before registering new ones
+        // Remove previous phrasal annotations for this annotationset before registering new ones
         if (! $dryRun) {
-            $this->removePreviousAnnotations($sentence->idAnnotationSet);
+            $this->removePreviousAnnotations($sentence->idAnnotationSet, 57);
         }
+
+        // Reset the annotation map for this sentence
+        $this->phrasalAnnotationMap = [];
 
         $sentenceText = $sentence->text;
         $currentPosition = 0;
 
         foreach ($nodes as $node) {
-            // Get idEntity for the CE label
+            // Get idEntity for the Phrasal CE label
             $ceLabel = $node->phrasalCE->value;
-            $idEntity = $this->ceEntityMap[$ceLabel] ?? null;
+            $idEntity = $this->phrasalCEEntityMap[$ceLabel] ?? null;
 
             if (is_null($idEntity)) {
                 if ($this->output->isVerbose()) {
@@ -294,6 +374,15 @@ class RegisterCEAnnotationsCommand extends Command
                 $currentPosition = $endChar + 1;
             }
 
+            // Store annotation data in map for later reference by clausal CEs
+            // This is done regardless of dry-run mode so clausal CEs can reference phrasal spans
+            $this->phrasalAnnotationMap[$node->index] = [
+                'startChar' => $startChar,
+                'endChar' => $endChar,
+                'word' => $wordText,
+                'idEntity' => $idEntity,
+            ];
+
             if ($dryRun) {
                 $this->line("  Would annotate: '{$wordText}' [{$startChar}-{$endChar}] as {$ceLabel}");
 
@@ -316,7 +405,7 @@ class RegisterCEAnnotationsCommand extends Command
                 );
 
                 CorpusService::annotateObject($annotationData);
-                $this->stats['annotations_created']++;
+                $this->stats['phrasal_annotations_created']++;
 
             } catch (\Exception $e) {
                 $this->warn("Failed to create annotation for '{$wordText}' (CE: {$ceLabel}): {$e->getMessage()}");
@@ -327,6 +416,153 @@ class RegisterCEAnnotationsCommand extends Command
         }
     }
 
+    private function registerClausalAnnotations(object $sentence, array $phrasalNodes, string $language, bool $dryRun): void
+    {
+        // Remove previous clausal annotations for this annotationset before registering new ones
+        if (! $dryRun) {
+            $this->removePreviousAnnotations($sentence->idAnnotationSet, 58);
+        }
+
+        // Use PhraseAssemblyService to transform PhrasalCE → ClausalCE (Stage 2)
+        $clausalNodes = $this->assemblyService->assemble($phrasalNodes, $language);
+
+        if ($dryRun && $this->output->isVerbose()) {
+            $this->info('  DEBUG: PhraseAssemblyService returned '.count($clausalNodes).' clausal nodes');
+            $this->info('  DEBUG: Input had '.count($phrasalNodes).' phrasal nodes');
+        }
+
+        foreach ($clausalNodes as $clausalNode) {
+            // Get idEntity for the Clausal CE label
+            $ceLabel = $clausalNode->clausalCE->value;
+            $idEntity = $this->clausalCEEntityMap[$ceLabel] ?? null;
+
+            if (is_null($idEntity)) {
+                if ($this->output->isVerbose()) {
+                    $this->warn("Clausal CE label not found in database: {$ceLabel}");
+                }
+
+                continue;
+            }
+
+            // Get text span from component phrasal CE(s)
+            // For simple nodes, this is just the single phrasal node's span
+            // For compound nodes (like FPM "de condições"), this spans all component phrasal nodes
+            $componentIndices = $this->getComponentIndices($clausalNode);
+
+            if (empty($componentIndices)) {
+                if ($this->output->isVerbose()) {
+                    $this->warn("  Clausal node '{$clausalNode->getWord()}' has no component phrasal nodes");
+                }
+
+                continue;
+            }
+
+            // Calculate text span from component phrasal annotations
+            $minStart = PHP_INT_MAX;
+            $maxEnd = 0;
+            $wordParts = [];
+
+            foreach ($componentIndices as $index) {
+                if (isset($this->phrasalAnnotationMap[$index])) {
+                    $phrasalData = $this->phrasalAnnotationMap[$index];
+                    $minStart = min($minStart, $phrasalData['startChar']);
+                    $maxEnd = max($maxEnd, $phrasalData['endChar']);
+                    $wordParts[] = $phrasalData['word'];
+                }
+            }
+
+            if ($minStart === PHP_INT_MAX) {
+                // No component phrasal CEs found in map, skip
+                if ($this->output->isVerbose()) {
+                    $this->warn("  No phrasal annotations found for clausal node '{$clausalNode->getWord()}'");
+                }
+
+                continue;
+            }
+
+            $startChar = $minStart;
+            $endChar = $maxEnd;
+            $wordText = implode(' ', $wordParts);
+
+            if ($dryRun) {
+                $this->line("  Would annotate (clausal): '{$wordText}' [{$startChar}-{$endChar}] as {$ceLabel}");
+
+                continue;
+            }
+
+            // Create annotation using CorpusService::annotateObject
+            try {
+                $annotationData = new AnnotationData(
+                    idAnnotationSet: $sentence->idAnnotationSet,
+                    idEntity: $idEntity,
+                    range: new SelectionData(
+                        type: 'word',
+                        start: (string) $startChar,
+                        end: (string) $endChar
+                    ),
+                    selection: $wordText,
+                    token: $wordText,
+                    corpusAnnotationType: 'flex'
+                );
+
+                CorpusService::annotateObject($annotationData);
+                $this->stats['clausal_annotations_created']++;
+
+            } catch (\Exception $e) {
+                $this->warn("Failed to create clausal annotation for '{$wordText}' (CE: {$ceLabel}): {$e->getMessage()}");
+                if ($this->output->isVerbose()) {
+                    $this->error($e->getTraceAsString());
+                }
+            }
+        }
+    }
+
+    /**
+     * Get component phrasal node indices from a clausal node
+     *
+     * For simple nodes: returns just the single node's index
+     * For compound nodes (MWE-like): extracts indices from all component words
+     *
+     * @return array Array of phrasal node indices
+     */
+    private function getComponentIndices(\App\Models\Parser\ClausalCENode $clausalNode): array
+    {
+        $phrasalNode = $clausalNode->phrasalNode;
+
+        // For MWE/compound nodes, we need to parse the word to find component indices
+        if ($phrasalNode->isMWE || str_contains($phrasalNode->word, '^') || str_contains($phrasalNode->word, ' ')) {
+            // Compound node - extract all component indices
+            // The compound was created from multiple nodes, and we need to find them all
+            // Since the compound uses the first node's index, we need to determine the range
+
+            // For now, we'll use a simple approach: look for consecutive nodes in the map
+            // starting from the compound's index
+            $startIndex = $phrasalNode->index;
+            $indices = [$startIndex];
+
+            // Count how many words are in the compound
+            // MWE uses ^, compound phrases from PhraseAssemblyService use space
+            $wordCount = 0;
+            if (str_contains($phrasalNode->word, '^')) {
+                $wordCount = count(explode('^', $phrasalNode->word));
+            } elseif (str_contains($phrasalNode->word, ' ')) {
+                $wordCount = count(explode(' ', $phrasalNode->word));
+            } else {
+                $wordCount = 1;
+            }
+
+            // Add subsequent indices
+            for ($i = 1; $i < $wordCount; $i++) {
+                $indices[] = $startIndex + $i;
+            }
+
+            return $indices;
+        }
+
+        // Simple node - just return its index
+        return [$phrasalNode->index];
+    }
+
     /**
      * Find word position in sentence text, handling UTF-8 and case-insensitive matching
      */
@@ -334,6 +570,147 @@ class RegisterCEAnnotationsCommand extends Command
     {
         // Use mb_stripos for case-insensitive UTF-8 handling
         return mb_stripos($text, $word, $offset);
+    }
+
+    /**
+     * Find a PhrasalCENode by its index
+     *
+     * @param  array  $nodes  Array of PhrasalCENode objects
+     * @param  int  $index  The index to search for
+     * @return \App\Models\Parser\PhrasalCENode|null The node or null if not found
+     */
+    private function findNodeByIndex(array $nodes, int $index): ?\App\Models\Parser\PhrasalCENode
+    {
+        foreach ($nodes as $node) {
+            if ($node->index === $index) {
+                return $node;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Validate an MWE candidate using dependency relations for disambiguation.
+     *
+     * CRITICAL: This method uses dependency info to disambiguate ambiguous cases like:
+     * - "gol contra" (compound noun MWE) vs "gol contra o adversário" (goal + PP)
+     *
+     * Disambiguation rules:
+     * 1. If candidate word has deprel=case and head is OUTSIDE the MWE span -> NOT an MWE
+     * 2. If candidate word has deprel=nmod/obl/obj/iobj linking to following noun -> NOT an MWE
+     *
+     * @param  array  $candidate  MWE candidate with startIndex and endIndex
+     * @param  array  $nodes  Array of PhrasalCENode objects WITH dependency info
+     * @return bool True if valid MWE, false if invalid
+     */
+    private function validateMWECandidate(array $candidate, array $nodes): bool
+    {
+        $candidateIndices = range($candidate['startIndex'], $candidate['endIndex']);
+
+        foreach ($candidateIndices as $idx) {
+            $node = $this->findNodeByIndex($nodes, $idx);
+            if (! $node) {
+                continue;
+            }
+
+            // Rule 1: Check if word is a case marker (ADP) linking outside the MWE
+            if ($node->deprel === 'case' && ! in_array($node->head, $candidateIndices)) {
+                // This ADP marks a phrase OUTSIDE the candidate -> NOT an MWE
+                // Example: "contra o adversário" - "contra" has head="adversário" (outside "gol contra")
+                return false;
+            }
+
+            // Rule 2: Check if word has a dependent that is outside the MWE span
+            // (indicating it's governing a phrase, not part of a compound)
+            foreach ($nodes as $otherNode) {
+                if ($otherNode->head === $idx && ! in_array($otherNode->index, $candidateIndices)) {
+                    // This word has dependents outside the MWE -> likely NOT an MWE
+                    if (in_array($otherNode->deprel, ['nmod', 'obl', 'obj', 'iobj'])) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true; // Passes all validation rules
+    }
+
+    /**
+     * Detect MWEs in parsed nodes using dependency relations for disambiguation.
+     *
+     * This method uses the same prefix matching algorithm as detectMWEs(),
+     * but adds dependency-based validation to disambiguate ambiguous cases.
+     *
+     * @param  array  $nodes  Array of PhrasalCENode objects WITH dependency info (deprel, head)
+     * @return array [candidates, detected] - detected MWEs have been validated
+     */
+    private function detectMWEsWithDependencies(array $nodes): array
+    {
+        $candidates = [];
+        $detected = [];
+
+        $nodesByPosition = array_values($nodes);
+
+        foreach ($nodesByPosition as $nodePosition => $node) {
+            $mwes = MWE::getStartingWith($this->idGrammarGraph, strtolower($node->word));
+
+            foreach ($mwes as $mwe) {
+                $components = MWE::getComponents($mwe);
+                $threshold = count($components);
+
+                $candidate = [
+                    'idMWE' => $mwe->idMWE,
+                    'phrase' => $mwe->phrase,
+                    'components' => $components,
+                    'threshold' => $threshold,
+                    'startIndex' => $node->index,
+                    'activation' => 1,
+                    'matchedWords' => [$node->word],
+                ];
+
+                $currentNodePosition = $nodePosition;
+                for ($i = 1; $i < $threshold; $i++) {
+                    $nextPosition = $currentNodePosition + 1;
+
+                    if (! isset($nodesByPosition[$nextPosition])) {
+                        break;
+                    }
+
+                    $nextNode = $nodesByPosition[$nextPosition];
+
+                    if (strtolower($nextNode->word) === strtolower($components[$i])) {
+                        $candidate['activation']++;
+                        $candidate['matchedWords'][] = $nextNode->word;
+                        $candidate['endIndex'] = $nextNode->index;
+                        $currentNodePosition = $nextPosition;
+                    } else {
+                        break;
+                    }
+                }
+
+                if (! isset($candidate['endIndex'])) {
+                    $candidate['endIndex'] = $node->index;
+                }
+
+                // CRITICAL: Validate MWE using dependency relations before marking as detected
+                if ($candidate['activation'] >= $threshold) {
+                    if ($this->validateMWECandidate($candidate, $nodes)) {
+                        $candidate['complete'] = true;
+                        $detected[] = $candidate;
+                    } else {
+                        // Failed validation - not a valid MWE
+                        $candidate['complete'] = false;
+                        $candidates[] = $candidate;
+                    }
+                } else {
+                    $candidate['complete'] = false;
+                    $candidates[] = $candidate;
+                }
+            }
+        }
+
+        return [$candidates, $detected];
     }
 
     /**
@@ -403,22 +780,29 @@ class RegisterCEAnnotationsCommand extends Command
     }
 
     /**
-     * Assemble MWEs from detected MWE candidates
-     * Works directly with text nodes to preserve contractions
+     * Assemble validated MWEs into PhrasalCENodes
+     *
+     * Since we now have preserved tokens with full dependency info,
+     * this method simply merges MWE component nodes.
+     *
+     * @param  array  $nodes  PhrasalCENodes with dependency info
+     * @param  array  $detectedMWEs  Validated MWE candidates
+     * @param  string  $language  Language code
+     * @return array Modified nodes with MWEs assembled
      */
     private function assembleMWEs(array $nodes, array $detectedMWEs, string $language): array
     {
         $idLanguage = config('parser.languageMap')[$language] ?? 1;
 
-        // Sort MWEs by start index in descending order to process from end to beginning
+        // Sort MWEs by start index (descending) to process from end to avoid index shifting
         usort($detectedMWEs, fn ($a, $b) => $b['startIndex'] <=> $a['startIndex']);
 
         foreach ($detectedMWEs as $mwe) {
+            // Find component nodes
             $componentNodes = [];
             $startArrayIdx = null;
             $endArrayIdx = null;
 
-            // Find the component nodes for this MWE
             foreach ($nodes as $arrayIdx => $node) {
                 if ($node->index >= $mwe['startIndex'] && $node->index <= $mwe['endIndex']) {
                     if ($startArrayIdx === null) {
@@ -430,18 +814,19 @@ class RegisterCEAnnotationsCommand extends Command
             }
 
             if ($startArrayIdx !== null && ! empty($componentNodes)) {
+                // Get POS from lexicon
                 $mwePos = MWE::getPOS($mwe['phrase'], $idLanguage);
 
+                // Create MWE node
                 $mweNode = PhrasalCENode::fromMWEComponents(
                     $componentNodes,
                     count($componentNodes),
                     $mwePos
                 );
 
-                // Set word to phrase with ^ separator for text span calculation
-                $mweNode->word = str_replace(' ', '^', $mwe['phrase']);
+                $mweNode->word = $mwe['phrase'];
 
-                // Replace the component nodes with the single MWE node
+                // Replace component nodes with single MWE node
                 array_splice($nodes, $startArrayIdx, count($componentNodes), [$mweNode]);
             }
         }
@@ -451,14 +836,22 @@ class RegisterCEAnnotationsCommand extends Command
 
     /**
      * Remove previous annotations and their associated textspans for an annotationset
+     *
+     * @param  int  $idAnnotationSet  The annotation set ID
+     * @param  int|null  $idLayerType  Optional layer type to filter (57=phrasal, 58=clausal)
      */
-    private function removePreviousAnnotations(int $idAnnotationSet): void
+    private function removePreviousAnnotations(int $idAnnotationSet, ?int $idLayerType = null): void
     {
         // Get all textspans associated with this annotationset
-        $textspans = Criteria::table('textspan')
-            ->where('idAnnotationSet', $idAnnotationSet)
-            ->pluck('idTextSpan')
-            ->toArray();
+        $query = Criteria::table('textspan')
+            ->where('idAnnotationSet', $idAnnotationSet);
+
+        // Filter by layer type if specified
+        if ($idLayerType !== null) {
+            $query->where('idLayerType', $idLayerType);
+        }
+
+        $textspans = $query->pluck('idTextSpan')->toArray();
 
         if (! empty($textspans)) {
             // Delete annotations associated with these textspans
@@ -481,7 +874,8 @@ class RegisterCEAnnotationsCommand extends Command
         $stats = [
             ['Sentences Processed', $this->stats['sentences_processed']],
             ['Sentences Skipped', $this->stats['sentences_skipped']],
-            ['Annotations Created', $this->stats['annotations_created']],
+            ['Phrasal Annotations Created', $this->stats['phrasal_annotations_created']],
+            ['Clausal Annotations Created', $this->stats['clausal_annotations_created']],
             ['Parse Errors', $this->stats['parse_errors']],
         ];
 

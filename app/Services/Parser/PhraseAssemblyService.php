@@ -170,11 +170,13 @@ class PhraseAssemblyService
             }
         }
 
-        // 2. Check PronType=Rel → Mark relative clause boundary
+        // 2. Check PronType=Rel → Relative pronouns become ARG at clausal level
+        // Note: REL is a sentential CE that marks entire relative clauses, not individual pronouns
+        // At the clausal level, relative pronouns function as arguments
         if (($features['PronType'] ?? null) === 'Rel') {
             return [
-                'clausalCE' => ClausalCE::REL,
-                'isRelativeBoundary' => true,
+                'clausalCE' => ClausalCE::ARG,
+                'isRelativeBoundary' => true,  // Keep this for potential sentential-level processing
             ];
         }
 
@@ -303,8 +305,9 @@ class PhraseAssemblyService
             $group = [$current];
             $used[$i] = true;
 
-            // For Arg (arguments), look for preceding/following modifiers
-            if ($current['clausalCE'] === ClausalCE::ARG && in_array($node->phrasalCE, [PhrasalCE::HEAD, PhrasalCE::MOD])) {
+            // For HEAD nodes (which can be Arg, Pred, Gen, etc.), look for modifiers
+            // This applies to any phrasal HEAD or MOD that hasn't been grouped yet
+            if (in_array($node->phrasalCE, [PhrasalCE::HEAD, PhrasalCE::MOD])) {
                 // Look backward for modifiers
                 for ($j = $i - 1; $j >= 0 && $j >= $i - 3; $j--) {
                     if (isset($used[$j])) {

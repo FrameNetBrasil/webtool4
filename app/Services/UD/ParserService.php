@@ -20,7 +20,11 @@ class ParserService
         $idLanguage = config('udparser.default_language', 1);
 
         // Parse sentence using Trankit
-        $result = $trankitService->getUDTrankit($data->sentence, $idLanguage);
+        // Step 1: Tokenize
+        $tokens = $trankitService->tokenizeSentence($data->sentence, false);
+        // Step 2: Parse with pre-tokenized input
+        $result = $trankitService->getUDTrankitTokens($tokens, $idLanguage);
+        //        $result = $trankitService->getUDTrankit($data->sentence, $idLanguage);
 
         // Check if parsing was successful
         if (empty($result->udpipe)) {

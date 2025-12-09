@@ -27,9 +27,6 @@ enum ClausalCE: string
     /** Flagged Phrase Modifier: phrases marked with adpositions/case that modify nominals */
     case FPM = 'FPM';
 
-    /** Relative clause marker or relativizer */
-    case REL = 'Rel';
-
     /** Coordinators or linking elements joining clauses */
     case CONJ = 'Conj';
 
@@ -93,12 +90,9 @@ enum ClausalCE: string
             return self::FPM;
         }
 
-        // Linkers - check if subordinating (relative clause marker)
+        // Linkers - all become CONJ at clausal level
+        // (Note: REL is a sentential CE, not clausal - it marks entire relative clauses)
         if ($phrasalCE === PhrasalCE::LNK) {
-            if ($pos === 'SCONJ' && in_array($deprel, ['mark', 'ref'])) {
-                return self::REL;
-            }
-
             return self::CONJ;
         }
 

@@ -282,9 +282,7 @@ class TrankitService
             ];
 
             debug(json_encode([
-                'articles' => [
-                    ['text' => ''],
-                ],
+                'articles' => [],
                 'tokens' => $tokens,
                 'model' => $model[$idLanguage],
             ]));
@@ -295,9 +293,7 @@ class TrankitService
                     'Accept' => 'application/text',
                 ],
                 'body' => json_encode([
-                    'articles' => [
-                        ['text' => ''],
-                    ],
+                    'articles' => [],
                     'tokens' => $tokens,
                     'model' => $model[$idLanguage],
                 ]),
@@ -384,14 +380,47 @@ class TrankitService
         }
     }
 
+    /**
+     * Tokenize a plain sentence into an array of tokens.
+     *
+     * This method converts a plain text sentence into an array of tokens
+     * that can be passed to the /tkbytoken API endpoint. It handles:
+     * - Punctuation separation
+     * - Contraction expansion (optional based on config)
+     * - Hyphen normalization
+     *
+     * @param  string  $sentence  The plain text sentence to tokenize
+     * @param  bool  $expandContractions  Whether to expand contractions (default: true)
+     * @return array Array of token strings
+     */
+    public function tokenizeSentence(string $sentence, bool $expandContractions = false): array
+    {
+        // Normalize hyphens first
+        $sentence = $this->normalizeHyphens($sentence);
+
+        // Handle punctuation
+        $sentence = $this->handlePunct($sentence);
+
+        // Handle contractions if requested
+        if ($expandContractions) {
+            $sentence = $this->handleContractions($sentence);
+        }
+
+        // Split into tokens and clean up
+        $tokens = explode(' ', $sentence);
+        $tokens = array_filter($tokens, fn ($token) => trim($token) !== '');
+
+        return array_values($tokens);
+    }
+
     public function getUDTrankitTokens($tokens, $idLanguage = 1)
     {
         try {
             $ud = [];
             $result = $this->processTrankitTokens($tokens, $idLanguage);
-            // mdump($result->result->sentences[0]->tokens);
+            // API response structure: {result: {tokens: [...], lang: "portuguese"}}
             $array = [];
-            $dict = $result->result->tokens;
+            $dict = $result->tokens;
             foreach ($dict as $node) {
                 if (isset($node->expanded)) {
                     foreach ($node->expanded as $expanded) {
@@ -413,12 +442,111 @@ class TrankitService
 
             }
             foreach ($array as $j => $node) {
+                $feats = [];
+                if (isset($node->feats)) {
+                    $f = explode('|', $node->feats);
+                    foreach ($f as $f0) {
+                        if (str_contains($f0, '=')) {
+                            [$feat, $value] = explode('=', $f0);
+                            $feats[$feat] = $value;
+                        }
+                    }
+                }
                 $ud[$j + 1] = [
                     'id' => $node->id,
                     'word' => $node->text,
                     'pos' => $node->upos,
                     'ud' => '',
-                    'morph' => $node->feats ?? '',
+                    'morph' => $feats,
+                    'lemma' => $node->lemma ?? '',
+                    'rel' => $node->deprel,
+                    'parent' => $parent[$node->id] ?? 0,
+                    'children' => $children[$node->id] ?? [],
+                ];
+            }
+
+            return (object) ['udpipe' => $ud];
+        } catch (\Exception $e) {
+            return (object) ['udpipe' => []];
+        }
+    }
+
+    /**
+     * Get UD parse from pre-tokenized input, preserving original tokens in output.
+     *
+     * Unlike getUDTrankitTokens() which expands contractions (e.g., "pelo" -> "por" + "o"),
+     * this method preserves the original token text while still providing full dependency info.
+     *
+     * This is critical for MWE detection after parsing because:
+     * 1. MWEs are stored with original forms (e.g., "pelo menos", not "por o menos")
+     * 2. Dependency relations are needed to disambiguate MWE candidates
+     *
+     * Example:
+     * Tokens: ["pelo", "menos"]
+     * - getUDTrankitTokens() returns: [{word: "por", ...}, {word: "o", ...}, {word: "menos", ...}]
+     * - getUDTrankitTokensPreserved() returns: [{word: "pelo", deprel: ..., head: ...}, {word: "menos", ...}]
+     *
+     * @param  array  $tokens  Pre-tokenized array of strings (with contractions preserved)
+     * @param  int  $idLanguage  Language ID (1=Portuguese, 2=English)
+     * @return object Object with 'udpipe' array containing token data
+     */
+    public function getUDTrankitTokensPreserved(array $tokens, int $idLanguage = 1): object
+    {
+        try {
+            $ud = [];
+            $result = $this->processTrankitTokens($tokens, $idLanguage);
+            // API response structure: {result: {tokens: [...], lang: "portuguese"}}
+            $array = [];
+            $dict = $result->tokens;
+            foreach ($dict as $node) {
+                // Do NOT expand contractions - keep the original text
+                // This allows proper MWE (Multi-Word Expression) identification
+                if (isset($node->expanded)) {
+                    // For contracted tokens, use the original text
+                    // but we need to create a simplified node structure
+                    $contractedNode = (object) [
+                        'id' => is_array($node->id) ? $node->id[0] : $node->id,
+                        'text' => $node->text, // This is the original contracted form like "pelo"
+                        'upos' => $node->expanded[0]->upos ?? '', // Use first expanded token's POS
+                        'lemma' => $node->text, // Keep original as lemma for MWE matching
+                        'deprel' => $node->expanded[0]->deprel ?? '',
+                        'head' => $node->expanded[0]->head ?? 0,
+                        'feats' => $node->expanded[0]->feats ?? '',
+                    ];
+                    $array[] = $contractedNode;
+                } else {
+                    $array[] = $node;
+                }
+            }
+            $parent = [];
+            $children = [];
+            foreach ($array as $j => $node) {
+                $id = $node->id;
+                $head = $node->head;
+                if ($id != $head) {
+                    $parent[$id] = $head;
+                    $children[$head][] = $id;
+                }
+
+            }
+            foreach ($array as $j => $node) {
+                $feats = [];
+                if (isset($node->feats)) {
+                    $f = explode('|', $node->feats);
+                    foreach ($f as $f0) {
+                        if (str_contains($f0, '=')) {
+                            [$feat, $value] = explode('=', $f0);
+                            $feats[$feat] = $value;
+                        }
+                    }
+                }
+                $ud[$j + 1] = [
+                    'id' => $node->id,
+                    'word' => $node->text,
+                    'pos' => $node->upos,
+                    'ud' => '',
+                    'morph' => $feats,
+                    'lemma' => $node->lemma ?? '',
                     'rel' => $node->deprel,
                     'parent' => $parent[$node->id] ?? 0,
                     'children' => $children[$node->id] ?? [],
