@@ -276,7 +276,10 @@ class TestTranslationCommand extends Command
     }
 
     /**
-     * Detect MWEs in a sequence of nodes using prefix activation
+     * Detect MWEs in a sequence of nodes using two-phase detection
+     *
+     * Phase 1: Anchored patterns (simple format + extended format with anchor words)
+     * Phase 2: Fully variable patterns (no fixed word anchors)
      *
      * @return array [candidates, detected]
      */
@@ -288,63 +291,115 @@ class TestTranslationCommand extends Command
         // Reindex nodes by array position for sequential access
         $nodesByPosition = array_values($nodes);
 
+        // Phase 1: Anchored patterns (simple format uses firstWord, extended uses anchorWord)
         foreach ($nodesByPosition as $nodePosition => $node) {
-            // Get MWEs starting with this word
-            $mwes = MWE::getStartingWith($this->idGrammarGraph, strtolower($node->word));
+            // Get simple-format MWEs starting with this word
+            $simpleMWEs = MWE::getStartingWith($this->idGrammarGraph, strtolower($node->word));
 
-            foreach ($mwes as $mwe) {
-                $components = MWE::getComponents($mwe);
-                $threshold = count($components);
+            // Get extended-format MWEs anchored by this word
+            $extendedMWEs = MWE::getByAnchorWord($this->idGrammarGraph, strtolower($node->word));
 
-                // Track as candidate
-                $candidate = [
-                    'idMWE' => $mwe->idMWE,
-                    'phrase' => $mwe->phrase,
-                    'components' => $components,
-                    'threshold' => $threshold,
-                    'startIndex' => $node->index,
-                    'activation' => 1,
-                    'matchedWords' => [$node->word],
-                ];
-
-                // Check if subsequent words match
-                $currentNodePosition = $nodePosition;
-                for ($i = 1; $i < $threshold; $i++) {
-                    $nextPosition = $currentNodePosition + 1;
-
-                    if (! isset($nodesByPosition[$nextPosition])) {
-                        break;
-                    }
-
-                    $nextNode = $nodesByPosition[$nextPosition];
-
-                    if (strtolower($nextNode->word) === strtolower($components[$i])) {
-                        $candidate['activation']++;
-                        $candidate['matchedWords'][] = $nextNode->word;
-                        $candidate['endIndex'] = $nextNode->index;
-                        $currentNodePosition = $nextPosition;
+            // Process all anchored MWEs
+            foreach (array_merge($simpleMWEs, $extendedMWEs) as $mwe) {
+                $result = $this->tryMatchMWE($mwe, $nodesByPosition, $nodePosition);
+                if ($result !== null) {
+                    if ($result['complete']) {
+                        $detected[] = $result;
                     } else {
-                        break;
+                        $candidates[] = $result;
                     }
                 }
+            }
+        }
 
-                // Set endIndex if not already set
-                if (! isset($candidate['endIndex'])) {
-                    $candidate['endIndex'] = $node->index;
-                }
-
-                // Check if MWE is complete
-                if ($candidate['activation'] >= $threshold) {
-                    $candidate['complete'] = true;
-                    $detected[] = $candidate;
-                } else {
-                    $candidate['complete'] = false;
-                    $candidates[] = $candidate;
+        // Phase 2: Fully variable patterns (no fixed word anchor)
+        $variableMWEs = MWE::getFullyVariable($this->idGrammarGraph);
+        foreach ($variableMWEs as $mwe) {
+            foreach ($nodesByPosition as $nodePosition => $node) {
+                $result = $this->tryMatchMWE($mwe, $nodesByPosition, $nodePosition);
+                if ($result !== null && $result['complete']) {
+                    $detected[] = $result;
                 }
             }
         }
 
         return [$candidates, $detected];
+    }
+
+    /**
+     * Try to match an MWE pattern starting at a given position.
+     *
+     * Handles both simple (string array) and extended (type/value array) component formats.
+     *
+     * @param  object  $mwe  The MWE definition from database
+     * @param  array  $nodesByPosition  Nodes indexed by position
+     * @param  int  $anchorPosition  Position where anchor word was found
+     * @return array|null Candidate array or null if no match possible
+     */
+    private function tryMatchMWE(object $mwe, array $nodesByPosition, int $anchorPosition): ?array
+    {
+        $components = MWE::getParsedComponents($mwe);
+        $threshold = count($components);
+
+        // Calculate pattern start position based on anchor offset
+        $anchorOffset = $mwe->anchorPosition ?? 0;
+        $patternStartPosition = $anchorPosition - $anchorOffset;
+
+        if ($patternStartPosition < 0) {
+            return null; // Pattern would start before sentence
+        }
+
+        // Check if we have enough nodes for this pattern
+        if ($patternStartPosition + $threshold > count($nodesByPosition)) {
+            return null;
+        }
+
+        $startNode = $nodesByPosition[$patternStartPosition] ?? null;
+        if ($startNode === null) {
+            return null;
+        }
+
+        $candidate = [
+            'idMWE' => $mwe->idMWE,
+            'phrase' => $mwe->phrase,
+            'components' => $components,
+            'threshold' => $threshold,
+            'startIndex' => $startNode->index,
+            'activation' => 0,
+            'matchedWords' => [],
+        ];
+
+        // Match each component
+        $currentPosition = $patternStartPosition;
+        foreach ($components as $i => $component) {
+            if (! isset($nodesByPosition[$currentPosition])) {
+                break;
+            }
+
+            $node = $nodesByPosition[$currentPosition];
+
+            if (MWE::componentMatchesToken($component, $node)) {
+                $candidate['activation']++;
+                $candidate['matchedWords'][] = $node->word;
+                $candidate['endIndex'] = $node->index;
+                $currentPosition++;
+            } else {
+                break;
+            }
+        }
+
+        if (! isset($candidate['endIndex'])) {
+            $candidate['endIndex'] = $candidate['startIndex'];
+        }
+
+        // Check if MWE is complete
+        if ($candidate['activation'] >= $threshold) {
+            $candidate['complete'] = true;
+        } else {
+            $candidate['complete'] = false;
+        }
+
+        return $candidate;
     }
 
     /**

@@ -21,6 +21,7 @@ class ParserController extends Controller
     #[Post(path: '/ud/parser')]
     public function parse(ParseInputData $data)
     {
+        debug($data);
         $graph = ParserService::parse($data);
 
         return view('UD.parserGraph', [

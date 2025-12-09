@@ -3,6 +3,8 @@
 namespace App\Repositories\Parser;
 
 use App\Database\Criteria;
+use App\Enums\Parser\MWEComponentType;
+use App\Models\Parser\PhrasalCENode;
 
 class MWE
 {
@@ -201,5 +203,175 @@ class MWE
         }
 
         return $prefixes;
+    }
+
+    // =========================================================================
+    // Variable Component Pattern Methods
+    // =========================================================================
+
+    /**
+     * Get extended-format MWEs anchored by a specific word
+     *
+     * Returns MWEs where anchorWord matches the given word.
+     * Used for efficient lookup of patterns with at least one fixed word component.
+     */
+    public static function getByAnchorWord(int $idGrammarGraph, string $anchorWord): array
+    {
+        $anchorWord = strtolower($anchorWord);
+
+        return Criteria::table('parser_mwe')
+            ->where('idGrammarGraph', '=', $idGrammarGraph)
+            ->where('componentFormat', '=', 'extended')
+            ->where('anchorWord', '=', $anchorWord)
+            ->all();
+    }
+
+    /**
+     * Get fully variable MWEs (no fixed word anchor)
+     *
+     * These patterns have no fixed word component and must be checked
+     * against every token position in the sentence.
+     */
+    public static function getFullyVariable(int $idGrammarGraph): array
+    {
+        return Criteria::table('parser_mwe')
+            ->where('idGrammarGraph', '=', $idGrammarGraph)
+            ->where('componentFormat', '=', 'extended')
+            ->whereNull('anchorWord')
+            ->all();
+    }
+
+    /**
+     * Get parsed components, normalizing both formats to extended structure
+     *
+     * Simple format: ["word1", "word2"] -> [{"type": "W", "value": "word1"}, ...]
+     * Extended format: returned as-is
+     *
+     * @return array<array{type: string, value: string}>
+     */
+    public static function getParsedComponents(object $mwe): array
+    {
+        $components = self::getComponents($mwe);
+        $format = $mwe->componentFormat ?? 'simple';
+
+        if ($format === 'extended') {
+            return $components;
+        }
+
+        // Convert simple format to extended format for uniform processing
+        return array_map(fn ($word) => [
+            'type' => 'W',
+            'value' => $word,
+        ], $components);
+    }
+
+    /**
+     * Check if a component matches a token
+     *
+     * @param  array{type: string, value: string}  $component
+     */
+    public static function componentMatchesToken(array $component, PhrasalCENode $token): bool
+    {
+        $type = MWEComponentType::from($component['type']);
+
+        return $type->matchesToken($component['value'] ?? '', $token);
+    }
+
+    /**
+     * Calculate anchor position and word from extended components
+     *
+     * Finds the first fixed-word (W type) component and returns its position and value.
+     * Returns null values if no fixed word component exists.
+     *
+     * @return array{position: int|null, word: string|null}
+     */
+    public static function calculateAnchor(array $components): array
+    {
+        foreach ($components as $position => $component) {
+            // Handle both simple (string) and extended (array) formats
+            if (is_string($component)) {
+                return [
+                    'position' => $position,
+                    'word' => strtolower($component),
+                ];
+            }
+
+            if (is_array($component) && ($component['type'] ?? '') === 'W') {
+                return [
+                    'position' => $position,
+                    'word' => strtolower($component['value']),
+                ];
+            }
+        }
+
+        // No fixed word found (fully variable pattern)
+        return ['position' => null, 'word' => null];
+    }
+
+    /**
+     * Detect component format from components array
+     *
+     * Simple format: All elements are strings
+     * Extended format: All elements are arrays with type/value keys
+     */
+    public static function detectComponentFormat(array $components): string
+    {
+        if (empty($components)) {
+            return 'simple';
+        }
+
+        $firstComponent = $components[0];
+
+        return is_array($firstComponent) ? 'extended' : 'simple';
+    }
+
+    /**
+     * Create MWE with automatic anchor calculation
+     *
+     * Handles both simple and extended formats, automatically
+     * calculating anchor position and word.
+     */
+    public static function createExtended(array $data): int
+    {
+        $components = $data['components'];
+        $format = $data['componentFormat'] ?? self::detectComponentFormat($components);
+
+        $data['componentFormat'] = $format;
+
+        if ($format === 'extended') {
+            $anchor = self::calculateAnchor($components);
+            $data['anchorPosition'] = $anchor['position'];
+            $data['anchorWord'] = $anchor['word'];
+        } else {
+            // Simple format: first word is always anchor
+            $data['anchorPosition'] = 0;
+            $data['anchorWord'] = strtolower($components[0]);
+        }
+
+        return self::create($data);
+    }
+
+    /**
+     * Get all MWEs for a grammar (both simple and extended formats)
+     */
+    public static function listAllByGrammar(int $idGrammarGraph): array
+    {
+        return Criteria::table('parser_mwe')
+            ->where('idGrammarGraph', '=', $idGrammarGraph)
+            ->orderBy('componentFormat')
+            ->orderBy('phrase')
+            ->all();
+    }
+
+    /**
+     * Get MWEs by component format
+     */
+    public static function listByFormat(int $idGrammarGraph, string $format): array
+    {
+        return Criteria::table('parser_mwe')
+            ->where('idGrammarGraph', '=', $idGrammarGraph)
+            ->where('componentFormat', '=', $format)
+            ->orderBy('phrase')
+            ->all();
     }
 }

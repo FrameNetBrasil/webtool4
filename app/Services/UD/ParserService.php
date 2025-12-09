@@ -25,7 +25,7 @@ class ParserService
         // Step 2: Parse with pre-tokenized input
         $result = $trankitService->getUDTrankitTokens($tokens, $idLanguage);
         //        $result = $trankitService->getUDTrankit($data->sentence, $idLanguage);
-
+        debug($result);
         // Check if parsing was successful
         if (empty($result->udpipe)) {
             return [
