@@ -13,9 +13,12 @@ use App\Repositories\Parser\ParseNode;
  * This is Stage 1 of the three-stage parsing framework (Transcription → Translation → Folding).
  *
  * V3 Enhancement: Three-layer detection priority:
- * 1. BNF Constructions (highest priority) - Complex patterns with semantics
- * 2. Variable MWEs - Patterns with slots
- * 3. Simple MWEs (legacy) - Fixed sequences
+ * 1. Simple MWEs (highest priority) - Fixed sequences (lexicalized expressions)
+ * 2. Variable MWEs - Patterns with slots (productive patterns)
+ * 3. BNF Constructions (lowest priority) - Complex patterns with semantics
+ *
+ * Rationale: Simple and variable MWEs can be components of BNF constructions,
+ * so they must be identified first before construction-level pattern matching.
  *
  * Biological Analogy: DNA → mRNA (Transcription)
  * - Resolves word types (E/R/A/F)
@@ -108,14 +111,18 @@ class TranscriptionService
      * Transcribe with V3 Construction Detection (NEW)
      *
      * Three-layer detection approach (in priority order):
-     * 1. BNF Constructions (highest priority) - Recursive patterns with semantics
-     * 2. Simple MWEs - Fixed word sequences (lexicalized expressions)
-     * 3. Variable MWEs - Patterns with POS/CE slots (productive patterns)
+     * 1. Simple MWEs (highest priority) - Fixed word sequences (lexicalized expressions)
+     * 2. Variable MWEs - Patterns with POS/CE slots (productive patterns)
+     * 3. BNF Constructions (lowest priority) - Recursive patterns with semantics
      *
-     * Note: Simple MWEs run before Variable MWEs because lexicalized expressions
-     * should take priority over productive patterns. For example, "a não ser que"
-     * is a fixed idiom that should be recognized before the general pattern
-     * "[VERB] que [VERB]" can match "ser que faça".
+     * Linguistic Rationale: Bottom-up assembly strategy
+     * - Simple MWEs are atomic lexicalized units and must be identified first
+     * - Variable MWEs are productive patterns that may contain simple MWEs
+     * - BNF Constructions are complex patterns that may contain both MWE types
+     *
+     * Example: "a não ser que" (simple MWE) should be recognized as a unit
+     * before any variable pattern like "[PREP] [NEG] [VERB] que" can match it,
+     * and before construction patterns like "CONDITIONAL → ... que ..." apply.
      *
      * @param  array  $tokens  UD tokens from TrankitService
      * @param  int  $idGrammarGraph  Grammar graph ID
@@ -143,19 +150,8 @@ class TranscriptionService
             ]);
         }
 
-        // Layer 1: BNF Construction Detection (highest priority)
-        $constructionMatches = $this->constructionService->detectAll($nodes, $idGrammarGraph);
-        $nodes = $this->applyConstructionMatches($nodes, $constructionMatches);
-
-        if ($this->getConfig('parser.logging.logStages', false)) {
-            logger()->info('Transcription V3: Applied construction matches', [
-                'matchCount' => count($constructionMatches),
-                'remainingNodes' => count($nodes),
-            ]);
-        }
-
-        // Layer 2: Simple MWE Detection (lexicalized expressions)
-        // These run BEFORE variable MWEs to ensure fixed idioms take priority
+        // Layer 1: Simple MWE Detection (highest priority - lexicalized expressions)
+        // Fixed sequences are identified first as they are atomic lexical units
         $simpleMWEs = $this->mweService->detectSimpleMWEs($nodes, $idGrammarGraph);
         $nodes = $this->applyMWEMatches($nodes, $simpleMWEs);
 
@@ -166,15 +162,27 @@ class TranscriptionService
             ]);
         }
 
-        // Layer 3: Variable MWE Detection (productive patterns)
-        // These run AFTER simple MWEs to avoid consuming lexicalized tokens
+        // Layer 2: Variable MWE Detection (productive patterns with slots)
+        // Run after simple MWEs to avoid breaking up lexicalized expressions
         $variableMWEs = $this->mweService->detectVariableMWEs($nodes, $idGrammarGraph);
         $nodes = $this->applyMWEMatches($nodes, $variableMWEs);
 
         if ($this->getConfig('parser.logging.logStages', false)) {
+            logger()->info('Transcription V3: Variable MWE matches applied', [
+                'variableMWEMatches' => count($variableMWEs),
+                'remainingNodes' => count($nodes),
+            ]);
+        }
+
+        // Layer 3: BNF Construction Detection (lowest priority - complex patterns)
+        // Run last because constructions may contain simple/variable MWEs as components
+        $constructionMatches = $this->constructionService->detectAll($nodes, $idGrammarGraph);
+        $nodes = $this->applyConstructionMatches($nodes, $constructionMatches);
+
+        if ($this->getConfig('parser.logging.logStages', false)) {
             logger()->info('Transcription V3: Complete', [
                 'finalNodeCount' => count($nodes),
-                'variableMWEMatches' => count($variableMWEs),
+                'constructionMatches' => count($constructionMatches),
                 'totalMWEMatches' => count($simpleMWEs) + count($variableMWEs),
             ]);
         }

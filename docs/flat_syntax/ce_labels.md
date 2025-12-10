@@ -3,16 +3,17 @@
 ## PHRASAL CE LABELS
 *Labels for elements within phrases (word-level components)*
 
-| Label | Full Name | Definition | Function | Examples from Paper | Additional Examples |
-|-------|-----------|------------|----------|---------------------|---------------------|
-| **Head** | Head | The核心 element of a phrase that determines its referential or semantic properties; can stand alone as a minimal phrase | Denotes the referent or core meaning; syntactically required element | • "brothers" in "The two **brothers**"<br>• "lose" in "might **lose**"<br>• "competition" in "the **competition**" | • "dog" in "the big **dog**"<br>• "quickly" in "very **quickly**"<br>• Single-word phrases are annotated as Head (§3.1) |
-| **Mod** | Modifier | Elements that specify, describe, or delimit the head referent; includes articles, demonstratives, numerals, quantifiers, adjectives | Restricts or elaborates the reference/meaning of the head | • "The two" in "**The two** brothers"<br>• "the" in "**the** game"<br>• "a rare but aggressive" in "**a rare but aggressive** cancer" (Table 3) | • "big" in "the **big** dog"<br>• "this" in "**this** book"<br>• "three" in "**three** cats"<br>• Subtypes not distinguished: Art, Dem, Num, Adj all labeled Mod (§3.1) |
-| **Adm** | Admodifier | Modifiers of modifiers; degree words, intensifiers, downtoners, hedging elements that modify adjectives, adverbs, or other modifiers | Grades or qualifies the property expressed by a modifier | • "very" in "a **very** large tree" (Table 2)<br>• "almost" in "**almost** fifty" (§2.1) | • "extremely" in "**extremely** hot"<br>• "quite" in "**quite** interesting"<br>• "somewhat" in "**somewhat** difficult"<br>• No separate attributive phrase level created (§2.1) |
-| **Adp** | Adposition | Prepositions or postpositions; mark spatial, temporal, or abstract relations between phrases | Strategy for expressing modification or argument relations | • "on" in "**on** top of" (before becoming MWE)<br>• "on" in "fell **on** {our} house" (Table 4) | • English: **in**, **at**, **from**, **to**<br>• Turkish: ev-**de** 'house-at' (postposition)<br>• Found in phrases but indicate clause-level CEs (§3.2, Table 7) |
-| **Lnk** | Linker | Grammatical elements connecting modifiers to heads; linking particles or morphemes | Strategy for marking modification relationships | • Spanish "de" in possessive constructions<br>• Tagalog linker particles (implied from typological context) | • Mandarin "de" (的): hóng **de** shū 'red **DE** book'<br>• Malay "yang": rumah **yang** besar 'house **THAT** big'<br>• Found in both phrasal and clausal contexts (Tables 6-7) |
-| **Clf** | Classifier | Numeral or noun classifiers categorizing referents by shape, animacy, or other properties | Strategy for expressing quantification or categorization | • Not exemplified in English examples<br>• Referenced in typological discussion (§3.1) | • Mandarin: sān **běn** shū 'three **CLF** book'<br>• Thai: rót sǎam **khan** 'car three **CLF**'<br>• Japanese: hon ni-**satsu** 'book two-**CLF**' |
-| **Idx** | Index | Agreement markers; person/number/gender indexes that cross-reference referents (when realized as separate words) | Strategy for marking grammatical relations through indexation | • Rare in English<br>• Implied in discussion of "indexation" throughout §3.2 | • Swahili: **wa**-toto **wa**-kubwa 'children big' (both have CL2 prefix)<br>• Usually bound morphemes, but labeled when orthographically separate (§3.1) |
-| **Conj** | Conjunction (Phrasal) | Coordinators linking modifiers or phrases within a larger phrase structure | Strategy for coordinating elements at phrase level | • "and" in "the adults **and** the kids" (Table 3)<br>• "but" in "a rare **but** aggressive cancer" (Table 3) | • "or" in "tea **or** coffee"<br>• "both...and" in "**both** the priest **and** the shopkeeper" (ex. 2)<br>• Comma in lists: "red, white, **and** blue" |
+| Label         | Full Name                       | Definition                                                                                                                           | Function | Examples from Paper                                                                                                                             | Additional Examples |
+|---------------|---------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
+| **Head**      | Head                            | The核心 element of a phrase that determines its referential or semantic properties; can stand alone as a minimal phrase                | Denotes the referent or core meaning; syntactically required element | • "brothers" in "The two **brothers**"<br>• "lose" in "might **lose**"<br>• "competition" in "the **competition**"                              | • "dog" in "the big **dog**"<br>• "quickly" in "very **quickly**"<br>• Single-word phrases are annotated as Head (§3.1) |
+| **Mod**       | Modifier                        | Elements that specify, describe, or delimit the head referent; includes articles, demonstratives, numerals, quantifiers, adjectives  | Restricts or elaborates the reference/meaning of the head | • "The two" in "**The two** brothers"<br>• "the" in "**the** game"<br>• "a rare but aggressive" in "**a rare but aggressive** cancer" (Table 3) | • "big" in "the **big** dog"<br>• "this" in "**this** book"<br>• "three" in "**three** cats"<br>• Subtypes not distinguished: Art, Dem, Num, Adj all labeled Mod (§3.1) |
+| **Adm**       | Admodifier                      | Modifiers of modifiers; degree words, intensifiers, downtoners, hedging elements that modify adjectives, adverbs, or other modifiers | Grades or qualifies the property expressed by a modifier | • "very" in "a **very** large tree" (Table 2)<br>• "almost" in "**almost** fifty" (§2.1)                                                        | • "extremely" in "**extremely** hot"<br>• "quite" in "**quite** interesting"<br>• "somewhat" in "**somewhat** difficult"<br>• No separate attributive phrase level created (§2.1) |
+| **Adp**       | Adposition                      | Prepositions or postpositions; mark spatial, temporal, or abstract relations between phrases                                         | Strategy for expressing modification or argument relations | • "on" in "**on** top of" (before becoming MWE)<br>• "on" in "fell **on** {our} house" (Table 4)                                                | • English: **in**, **at**, **from**, **to**<br>• Turkish: ev-**de** 'house-at' (postposition)<br>• Found in phrases but indicate clause-level CEs (§3.2, Table 7) |
+| **Lnk**       | Linker                          | Grammatical elements connecting modifiers to heads; linking particles or morphemes                                                   | Strategy for marking modification relationships | • Spanish "de" in possessive constructions<br>• Tagalog linker particles (implied from typological context)                                     | • Mandarin "de" (的): hóng **de** shū 'red **DE** book'<br>• Malay "yang": rumah **yang** besar 'house **THAT** big'<br>• Found in both phrasal and clausal contexts (Tables 6-7) |
+| **Clf**       | Classifier                      | Numeral or noun classifiers categorizing referents by shape, animacy, or other properties                                            | Strategy for expressing quantification or categorization | • Not exemplified in English examples<br>• Referenced in typological discussion (§3.1)                                                          | • Mandarin: sān **běn** shū 'three **CLF** book'<br>• Thai: rót sǎam **khan** 'car three **CLF**'<br>• Japanese: hon ni-**satsu** 'book two-**CLF**' |
+| **Idx**       | Index                           | Agreement markers; person/number/gender indexes that cross-reference referents (when realized as separate words)                     | Strategy for marking grammatical relations through indexation | • Rare in English<br>• Implied in discussion of "indexation" throughout §3.2                                                                    | • Swahili: **wa**-toto **wa**-kubwa 'children big' (both have CL2 prefix)<br>• Usually bound morphemes, but labeled when orthographically separate (§3.1) |
+| **Conj**      | Conjunction (Phrasal)           | Coordinators linking modifiers or phrases within a larger phrase structure                                                           | Strategy for coordinating elements at phrase level | • "and" in "the adults **and** the kids" (Table 3)<br>• "but" in "a rare **but** aggressive cancer" (Table 3)                                   | • "or" in "tea **or** coffee"<br>• "both...and" in "**both** the priest **and** the shopkeeper" (ex. 2)<br>• Comma in lists: "red, white, **and** blue" |
+| **Punct** | Punctation (Phrasal) | Characters used as punctation  | Organize writing, indicate pauses and intonation in speech, separate terms and sentences for clarity, and eliminate ambiguities.| ".", ",", ";", ":", "?", "!","-" etc       |  |
 
 ---
 
@@ -104,7 +105,7 @@ The tree + {that + fell + on {our} house} also + wrecked + your + car .
 ### Step 2: Three-Tier CE Labels (§3)
 ```
 Analyzed Text:  The tree + {that + fell + on {our} house} also + wrecked + your + car .
-Phrasal CEs:    Mod Head   Head   Head  Adp Head Head  Head   Head     Head  Head Head
+Phrasal CEs:    Mod Head   Head   Head  Adp Head Head  Head   Head     Head  Head Punct
 Clausal CEs:    Arg        Conj   Pred  Arg   Gen    CPP    Pred      Gen   Arg
 Sentential CEs: Main       Rel                        Main
 ```
@@ -120,16 +121,17 @@ This table format (compatible with CLDF) provides:
 ## AUTOMATIC ANNOTATION CUES (§3.2, Tables 6-8)
 
 ### For Phrasal CEs:
-| Label | Detection Cues |
-|-------|----------------|
-| **Head** | Has number/gender/definiteness/case morphology; content word class |
-| **Mod** | Closed-class (det, dem, num); adjective class; word order (Mod typically before Head in English) |
-| **Adm** | Degree word class; occurs before Mod in English (Adm-Mod-Head order) |
-| **Adp** | Adposition word class; precedes/follows NP |
-| **Lnk** | Linking particle/affix; language-specific |
-| **Clf** | Classifier word class; follows/precedes numeral |
-| **Idx** | Index word (rare); agreement morphology |
-| **Conj** | Conjunction word class; occurs between coordinated elements |
+| Label         | Detection Cues                                                                                   |
+|---------------|--------------------------------------------------------------------------------------------------|
+| **Head**      | Has number/gender/definiteness/case morphology; content word class                               |
+| **Mod**       | Closed-class (det, dem, num); adjective class; word order (Mod typically before Head in English) |
+| **Adm**       | Degree word class; occurs before Mod in English (Adm-Mod-Head order)                             |
+| **Adp**       | Adposition word class; precedes/follows NP                                                       |
+| **Lnk**       | Linking particle/affix; language-specific                                                        |
+| **Clf**       | Classifier word class; follows/precedes numeral                                                  |
+| **Idx**       | Index word (rare); agreement morphology                                                          |
+| **Conj**      | Conjunction word class; occurs between coordinated elements                                      |
+| **Punct** | PUNCT word class                                |
 
 ### For Clausal CEs:
 | Label | Detection Cues |

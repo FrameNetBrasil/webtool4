@@ -123,7 +123,7 @@ class BNFMatcher
         // No more tokens available
         if ($tokenIndex >= count($tokens)) {
             // Only control nodes can match with no tokens
-            return in_array($node['type'], ['START', 'END', 'REP_CHECK']) ? 0 : false;
+            return in_array($node['type'], ['START', 'END', 'INTERMEDIATE', 'REP_CHECK']) ? 0 : false;
         }
 
         $token = $tokens[$tokenIndex];
@@ -131,6 +131,7 @@ class BNFMatcher
         return match ($node['type']) {
             'START' => 0, // Control node, consumes nothing
             'END' => 0, // Control node, consumes nothing
+            'INTERMEDIATE' => 0, // Control node, consumes nothing (used by optionals/alternatives)
             'REP_CHECK' => 0, // Control node, consumes nothing
             'LITERAL' => $this->matchLiteral($node, $token, $result),
             'SLOT' => $this->matchSlot($node, $token, $result),

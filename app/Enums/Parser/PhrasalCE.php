@@ -36,6 +36,9 @@ enum PhrasalCE: string
     /** Coordinators linking modifiers or phrases within a larger phrase structure */
     case CONJ = 'Conj';
 
+    /** Punctuation characters used to organize writing, indicate pauses, and eliminate ambiguities */
+    case PUNCT = 'Punct';
+
     /**
      * Classify phrasal CE from Universal Dependencies POS tag and features
      *
@@ -48,6 +51,7 @@ enum PhrasalCE: string
      * - Clf: Numeral/noun classifiers
      * - Idx: Agreement markers (rare as separate words)
      * - Conj: Coordinators
+     * - Punct: Punctuation marks
      *
      * Note: v2 uses only POS-based classification. UD deprel is intentionally
      * not used because it becomes unreliable with null instantiation (ellipsis).
@@ -84,8 +88,11 @@ enum PhrasalCE: string
             // Interjections are standalone heads
             'INTJ' => self::HEAD,
 
-            // Punctuation, symbols, and unknown - treated as heads for completeness
-            'SYM', 'PUNCT', 'X' => self::HEAD,
+            // Punctuation marks
+            'PUNCT' => self::PUNCT,
+
+            // Symbols and unknown - treated as heads for completeness
+            'SYM', 'X' => self::HEAD,
 
             default => self::HEAD,
         };

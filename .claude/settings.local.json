@@ -51,7 +51,8 @@
       "Bash(mkdir:*)",
       "Bash(composer dump-autoload:*)",
       "mcp__playwright__browser_resize",
-      "Bash(PARSER_LOG_MWE=true php artisan:*)"
+      "Bash(PARSER_LOG_MWE=true php artisan:*)",
+      "Bash(PARSER_LOG_CONSTRUCTION=true php artisan:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
