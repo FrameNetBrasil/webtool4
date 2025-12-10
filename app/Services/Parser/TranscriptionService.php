@@ -2,6 +2,8 @@
 
 namespace App\Services\Parser;
 
+use App\Models\Parser\PhrasalCENode;
+use App\Repositories\Parser\MWE;
 use App\Repositories\Parser\ParseNode;
 
 /**
@@ -10,9 +12,14 @@ use App\Repositories\Parser\ParseNode;
  * Transforms UD tokens into stable lexical units with morphological features.
  * This is Stage 1 of the three-stage parsing framework (Transcription → Translation → Folding).
  *
+ * V3 Enhancement: Three-layer detection priority:
+ * 1. BNF Constructions (highest priority) - Complex patterns with semantics
+ * 2. Variable MWEs - Patterns with slots
+ * 3. Simple MWEs (legacy) - Fixed sequences
+ *
  * Biological Analogy: DNA → mRNA (Transcription)
  * - Resolves word types (E/R/A/F)
- * - Assembles multi-word expressions (MWEs) via prefix activation
+ * - Assembles multi-word expressions (MWEs) via prefix activation or BNF matching
  * - Extracts and stores morphological features from UD
  * - Quality control: garbage collects incomplete units
  */
@@ -24,14 +31,18 @@ class TranscriptionService
 
     private LemmaResolverService $lemmaResolver;
 
+    private ConstructionService $constructionService;
+
     public function __construct(
         GrammarGraphService $grammarService,
         MWEService $mweService,
-        LemmaResolverService $lemmaResolver
+        LemmaResolverService $lemmaResolver,
+        ?ConstructionService $constructionService = null
     ) {
         $this->grammarService = $grammarService;
         $this->mweService = $mweService;
         $this->lemmaResolver = $lemmaResolver;
+        $this->constructionService = $constructionService ?? new ConstructionService;
     }
 
     /**
@@ -91,6 +102,272 @@ class TranscriptionService
         }
 
         return $createdNodes;
+    }
+
+    /**
+     * Transcribe with V3 Construction Detection (NEW)
+     *
+     * Three-layer detection approach (in priority order):
+     * 1. BNF Constructions (highest priority) - Recursive patterns with semantics
+     * 2. Simple MWEs - Fixed word sequences (lexicalized expressions)
+     * 3. Variable MWEs - Patterns with POS/CE slots (productive patterns)
+     *
+     * Note: Simple MWEs run before Variable MWEs because lexicalized expressions
+     * should take priority over productive patterns. For example, "a não ser que"
+     * is a fixed idiom that should be recognized before the general pattern
+     * "[VERB] que [VERB]" can match "ser que faça".
+     *
+     * @param  array  $tokens  UD tokens from TrankitService
+     * @param  int  $idGrammarGraph  Grammar graph ID
+     * @param  int  $idLanguage  Language ID
+     * @return array Array of PhrasalCENode objects
+     */
+    public function transcribeV3(
+        array $tokens,
+        int $idGrammarGraph,
+        int $idLanguage
+    ): array {
+        if ($this->getConfig('parser.logging.logStages', false)) {
+            logger()->info('Transcription V3: Starting', [
+                'tokenCount' => count($tokens),
+                'idGrammarGraph' => $idGrammarGraph,
+            ]);
+        }
+
+        // Convert UD tokens to PhrasalCENodes first
+        $nodes = $this->createPhrasalNodes($tokens, $idLanguage);
+
+        if ($this->getConfig('parser.logging.logStages', false)) {
+            logger()->info('Transcription V3: Created phrasal nodes', [
+                'nodeCount' => count($nodes),
+            ]);
+        }
+
+        // Layer 1: BNF Construction Detection (highest priority)
+        $constructionMatches = $this->constructionService->detectAll($nodes, $idGrammarGraph);
+        $nodes = $this->applyConstructionMatches($nodes, $constructionMatches);
+
+        if ($this->getConfig('parser.logging.logStages', false)) {
+            logger()->info('Transcription V3: Applied construction matches', [
+                'matchCount' => count($constructionMatches),
+                'remainingNodes' => count($nodes),
+            ]);
+        }
+
+        // Layer 2: Simple MWE Detection (lexicalized expressions)
+        // These run BEFORE variable MWEs to ensure fixed idioms take priority
+        $simpleMWEs = $this->mweService->detectSimpleMWEs($nodes, $idGrammarGraph);
+        $nodes = $this->applyMWEMatches($nodes, $simpleMWEs);
+
+        if ($this->getConfig('parser.logging.logStages', false)) {
+            logger()->info('Transcription V3: Simple MWE matches applied', [
+                'simpleMWEMatches' => count($simpleMWEs),
+                'remainingNodes' => count($nodes),
+            ]);
+        }
+
+        // Layer 3: Variable MWE Detection (productive patterns)
+        // These run AFTER simple MWEs to avoid consuming lexicalized tokens
+        $variableMWEs = $this->mweService->detectVariableMWEs($nodes, $idGrammarGraph);
+        $nodes = $this->applyMWEMatches($nodes, $variableMWEs);
+
+        if ($this->getConfig('parser.logging.logStages', false)) {
+            logger()->info('Transcription V3: Complete', [
+                'finalNodeCount' => count($nodes),
+                'variableMWEMatches' => count($variableMWEs),
+                'totalMWEMatches' => count($simpleMWEs) + count($variableMWEs),
+            ]);
+        }
+
+        return $nodes;
+    }
+
+    /**
+     * Create PhrasalCENode objects from UD tokens
+     */
+    private function createPhrasalNodes(array $tokens, int $idLanguage): array
+    {
+        $nodes = [];
+
+        foreach ($tokens as $token) {
+            // Resolve lemma ID for database reference
+            $lemma = $token['lemma'] ?? $token['word'];
+            $pos = $token['pos'] ?? 'X';
+            $idLemma = $this->lemmaResolver->getOrCreateLemma($lemma, $idLanguage, $pos);
+
+            // Create PhrasalCENode
+            $node = PhrasalCENode::fromUDToken($token, $idLemma);
+            $nodes[] = $node;
+        }
+
+        return $nodes;
+    }
+
+    /**
+     * Apply construction matches to node array
+     *
+     * Replaces matched sequences with merged construction nodes
+     */
+    private function applyConstructionMatches(array $nodes, array $matches): array
+    {
+        if (empty($matches)) {
+            return $nodes;
+        }
+
+        // Sort matches by position (descending) to apply from end to start
+        // This prevents index shifting issues
+        usort($matches, fn ($a, $b) => $b->startPosition - $a->startPosition);
+
+        foreach ($matches as $match) {
+            // Extract matched component nodes
+            $components = array_slice(
+                $nodes,
+                $match->startPosition,
+                $match->getLength()
+            );
+
+            // Create merged construction node
+            $mergedNode = $this->createConstructionNode($components, $match);
+
+            // Replace matched nodes with single merged node
+            array_splice(
+                $nodes,
+                $match->startPosition,
+                $match->getLength(),
+                [$mergedNode]
+            );
+        }
+
+        return $nodes;
+    }
+
+    /**
+     * Create a PhrasalCENode from construction match
+     */
+    private function createConstructionNode(array $components, $match): PhrasalCENode
+    {
+        if (empty($components)) {
+            throw new \InvalidArgumentException('Construction must have at least one component');
+        }
+
+        $firstNode = $components[0];
+
+        // Combine words from all components
+        $combinedWord = implode(' ', array_map(fn ($n) => $n->word, $components));
+        $combinedLemma = implode(' ', array_map(fn ($n) => $n->lemma, $components));
+
+        // Determine POS - use semantic type or first component's POS
+        $pos = $this->derivePOSFromSemantics($match) ?? $firstNode->pos;
+
+        // Merge features from match semantics and first component
+        $features = [
+            'lexical' => array_merge(
+                $firstNode->features['lexical'] ?? [],
+                $match->features
+            ),
+            'derived' => [
+                'semanticValue' => $match->semanticValue,
+                'construction' => $match->name,
+                'slots' => $match->slots,
+            ],
+        ];
+
+        return new PhrasalCENode(
+            word: $combinedWord,
+            lemma: $combinedLemma,
+            pos: $pos,
+            phrasalCE: \App\Enums\Parser\PhrasalCE::fromPOS($pos, $features['lexical']),
+            features: $features,
+            index: $firstNode->index,
+            activation: count($components),
+            threshold: count($components),
+            isMWE: true,
+            idLemma: $firstNode->idLemma,
+            deprel: $firstNode->deprel,
+            head: $firstNode->head,
+        );
+    }
+
+    /**
+     * Derive POS tag from semantic type
+     */
+    private function derivePOSFromSemantics($match): ?string
+    {
+        // Map semantic features to POS tags
+        if (isset($match->features['NumType'])) {
+            return 'NUM';
+        }
+
+        // Default: no derivation
+        return null;
+    }
+
+    /**
+     * Apply MWE matches to node array
+     *
+     * Replaces matched sequences with merged MWE nodes
+     */
+    private function applyMWEMatches(array $nodes, array $matches): array
+    {
+        if (empty($matches)) {
+            return $nodes;
+        }
+
+        // Sort matches by position (descending) to apply from end to start
+        // This prevents index shifting issues
+        usort($matches, fn ($a, $b) => $b->startPosition - $a->startPosition);
+
+        foreach ($matches as $match) {
+            // Debug logging
+            if ($this->getConfig('parser.logging.logMWE', false)) {
+                logger()->info('Applying MWE match', [
+                    'phrase' => $match->phrase,
+                    'startPosition' => $match->startPosition,
+                    'length' => $match->length,
+                    'totalNodes' => count($nodes),
+                ]);
+            }
+
+            // Extract matched component nodes
+            $components = array_slice(
+                $nodes,
+                $match->startPosition,
+                $match->length
+            );
+
+            if ($this->getConfig('parser.logging.logMWE', false)) {
+                $componentWords = array_map(fn ($n) => $n->word, $components);
+                logger()->info('Extracted components', [
+                    'count' => count($components),
+                    'words' => $componentWords,
+                ]);
+            }
+
+            // Get POS from lexicon for this MWE (if available)
+            $mwePhrase = $match->phrase;
+            $pos = MWE::getPOS($mwePhrase) ?? $components[0]->pos;
+
+            // Create merged MWE node using PhrasalCENode factory method
+            $mergedNode = PhrasalCENode::fromMWEComponents($components, $match->length, $pos);
+
+            if ($this->getConfig('parser.logging.logMWE', false)) {
+                logger()->info('Created MWE node', [
+                    'word' => $mergedNode->word,
+                    'lemma' => $mergedNode->lemma,
+                    'pos' => $mergedNode->pos,
+                ]);
+            }
+
+            // Replace matched nodes with single merged node
+            array_splice(
+                $nodes,
+                $match->startPosition,
+                $match->length,
+                [$mergedNode]
+            );
+        }
+
+        return $nodes;
     }
 
     /**
@@ -282,5 +559,17 @@ class TranscriptionService
         $features = $this->getNodeFeatures($node);
 
         return $features['derived'] ?? [];
+    }
+
+    /**
+     * Safe config access (for testing compatibility)
+     */
+    private function getConfig(string $key, mixed $default = null): mixed
+    {
+        try {
+            return config($key, $default);
+        } catch (\Throwable $e) {
+            return $default;
+        }
     }
 }

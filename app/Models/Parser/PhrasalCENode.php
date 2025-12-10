@@ -52,7 +52,7 @@ class PhrasalCENode
             lemma: $token['lemma'] ?? $token['word'],
             pos: $pos,
             phrasalCE: PhrasalCE::fromPOS($pos, $parsedFeatures),
-            features: self::buildFeatureBundle($morphFeatures),
+            features: self::buildFeatureBundle($parsedFeatures),
             index: $token['id'],
             idLemma: $idLemma,
             deprel: $deprel,
